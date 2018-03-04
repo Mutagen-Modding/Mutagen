@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Container : NamedMajorRecord, IContainer, ILoquiObjectSetter, IEquatable<Container>
+    public partial class Container : NamedMajorRecord, IContainer, ILoquiObject<Container>, ILoquiObjectSetter, IEquatable<Container>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Container_Registration.Instance;
@@ -141,6 +141,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Container>.GetEqualsMask(Container rhs) => ContainerCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IContainerGetter>.GetEqualsMask(IContainerGetter rhs) => ContainerCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -163,6 +165,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Container_Mask<bool> GetHasBeenSetMask()
         {
             return ContainerCommon.GetHasBeenSetMask(this);
@@ -1027,31 +1030,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Container_CopyMask copyMask = null,
-            IContainerGetter def = null)
-            where CopyType : class, IContainer
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Container)))
-            {
-                ret = new Container() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Container Copy_ToLoqui(
             IContainerGetter item,
             Container_CopyMask copyMask = null,
@@ -1071,6 +1049,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IContainerGetter rhs,
+            Container_CopyMask copyMask,
+            IContainerGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IContainerGetter rhs,
+            out Container_ErrorMask errorMask,
+            Container_CopyMask copyMask = null,
+            IContainerGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Container_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Container_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            ContainerCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1188,7 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IContainer : IContainerGetter, INamedMajorRecord, ILoquiClass<IContainer, IContainerGetter>, ILoquiClass<Container, IContainerGetter>
+    public partial interface IContainer : IContainerGetter, INamedMajorRecord, ILoquiClass<IContainer, IContainerGetter>, ILoquiClass<Container, IContainerGetter>
     {
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
@@ -1205,7 +1226,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Sound CloseSound { get; set; }
     }
 
-    public interface IContainerGetter : INamedMajorRecordGetter
+    public partial interface IContainerGetter : INamedMajorRecordGetter
     {
         #region Model
         Model Model { get; }
@@ -1513,75 +1534,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IContainer item,
-            IContainerGetter rhs,
-            Container_CopyMask copyMask = null,
-            IContainerGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            ContainerCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IContainer item,
-            IContainerGetter rhs,
-            out Container_ErrorMask errorMask,
-            Container_CopyMask copyMask = null,
-            IContainerGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            ContainerCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IContainer item,
+            IContainer item,
             IContainerGetter rhs,
             IContainerGetter def,
             bool doMasks,
-            out Container_ErrorMask errorMask,
-            Container_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Container_ErrorMask retErrorMask = null;
-            Func<Container_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Container_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IContainer item,
-            IContainerGetter rhs,
-            IContainerGetter def,
-            bool doMasks,
-            Func<Container_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Container_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1616,11 +1573,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Model.Specific == null)
-                                            {
-                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.Model.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)Container_FieldIndex.Model, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Model.Specific,
@@ -1901,7 +1856,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Container_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
             if (item.Items.HasBeenSet == rhs.Items.HasBeenSet)
             {
@@ -1911,7 +1866,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.Items.Specific = item.Items.SelectAgainst<ContainerItem, MaskItem<bool, ContainerItem_Mask<bool>>>(rhs.Items, ((l, r) =>
                     {
                         MaskItem<bool, ContainerItem_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => ContainerItemCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
                     ), out ret.Items.Overall);

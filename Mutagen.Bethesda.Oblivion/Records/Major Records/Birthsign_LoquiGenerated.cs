@@ -25,7 +25,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Birthsign : NamedMajorRecord, IBirthsign, ILoquiObjectSetter, IEquatable<Birthsign>
+    public partial class Birthsign : NamedMajorRecord, IBirthsign, ILoquiObject<Birthsign>, ILoquiObjectSetter, IEquatable<Birthsign>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Birthsign_Registration.Instance;
@@ -106,6 +106,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Birthsign>.GetEqualsMask(Birthsign rhs) => BirthsignCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IBirthsignGetter>.GetEqualsMask(IBirthsignGetter rhs) => BirthsignCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -128,6 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Birthsign_Mask<bool> GetHasBeenSetMask()
         {
             return BirthsignCommon.GetHasBeenSetMask(this);
@@ -921,31 +924,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Birthsign_CopyMask copyMask = null,
-            IBirthsignGetter def = null)
-            where CopyType : class, IBirthsign
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Birthsign)))
-            {
-                ret = new Birthsign() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Birthsign Copy_ToLoqui(
             IBirthsignGetter item,
             Birthsign_CopyMask copyMask = null,
@@ -965,6 +943,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IBirthsignGetter rhs,
+            Birthsign_CopyMask copyMask,
+            IBirthsignGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IBirthsignGetter rhs,
+            out Birthsign_ErrorMask errorMask,
+            Birthsign_CopyMask copyMask = null,
+            IBirthsignGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Birthsign_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Birthsign_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            BirthsignCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1042,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IBirthsign : IBirthsignGetter, INamedMajorRecord, ILoquiClass<IBirthsign, IBirthsignGetter>, ILoquiClass<Birthsign, IBirthsignGetter>
+    public partial interface IBirthsign : IBirthsignGetter, INamedMajorRecord, ILoquiClass<IBirthsign, IBirthsignGetter>, ILoquiClass<Birthsign, IBirthsignGetter>
     {
         new FilePath Icon { get; set; }
         new INotifyingSetItem<FilePath> Icon_Property { get; }
@@ -1053,7 +1074,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<FormIDSetLink<Spell>> Spells { get; }
     }
 
-    public interface IBirthsignGetter : INamedMajorRecordGetter
+    public partial interface IBirthsignGetter : INamedMajorRecordGetter
     {
         #region Icon
         FilePath Icon { get; }
@@ -1289,75 +1310,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IBirthsign item,
-            IBirthsignGetter rhs,
-            Birthsign_CopyMask copyMask = null,
-            IBirthsignGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            BirthsignCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IBirthsign item,
-            IBirthsignGetter rhs,
-            out Birthsign_ErrorMask errorMask,
-            Birthsign_CopyMask copyMask = null,
-            IBirthsignGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            BirthsignCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IBirthsign item,
+            IBirthsign item,
             IBirthsignGetter rhs,
             IBirthsignGetter def,
             bool doMasks,
-            out Birthsign_ErrorMask errorMask,
-            Birthsign_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Birthsign_ErrorMask retErrorMask = null;
-            Func<Birthsign_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Birthsign_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IBirthsign item,
-            IBirthsignGetter rhs,
-            IBirthsignGetter def,
-            bool doMasks,
-            Func<Birthsign_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Birthsign_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

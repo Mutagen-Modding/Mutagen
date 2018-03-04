@@ -24,7 +24,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class ClassTraining : IClassTraining, ILoquiObjectSetter, IEquatable<ClassTraining>
+    public partial class ClassTraining : IClassTraining, ILoquiObject<ClassTraining>, ILoquiObjectSetter, IEquatable<ClassTraining>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClassTraining_Registration.Instance;
@@ -102,6 +102,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<ClassTraining>.GetEqualsMask(ClassTraining rhs) => ClassTrainingCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IClassTrainingGetter>.GetEqualsMask(IClassTrainingGetter rhs) => ClassTrainingCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -124,6 +126,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public ClassTraining_Mask<bool> GetHasBeenSetMask()
         {
             return ClassTrainingCommon.GetHasBeenSetMask(this);
@@ -798,31 +801,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            ClassTraining_CopyMask copyMask = null,
-            IClassTrainingGetter def = null)
-            where CopyType : class, IClassTraining
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(ClassTraining)))
-            {
-                ret = new ClassTraining() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static ClassTraining Copy_ToLoqui(
             IClassTrainingGetter item,
             ClassTraining_CopyMask copyMask = null,
@@ -842,6 +820,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IClassTrainingGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IClassTrainingGetter rhs,
+            ClassTraining_CopyMask copyMask,
+            IClassTrainingGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IClassTrainingGetter rhs,
+            out ClassTraining_ErrorMask errorMask,
+            ClassTraining_CopyMask copyMask = null,
+            IClassTrainingGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            ClassTraining_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new ClassTraining_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            ClassTrainingCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -930,7 +964,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IClassTraining : IClassTrainingGetter, ILoquiClass<IClassTraining, IClassTrainingGetter>, ILoquiClass<ClassTraining, IClassTrainingGetter>
+    public partial interface IClassTraining : IClassTrainingGetter, ILoquiClass<IClassTraining, IClassTrainingGetter>, ILoquiClass<ClassTraining, IClassTrainingGetter>
     {
         new Skill TrainedSkill { get; set; }
         new INotifyingItem<Skill> TrainedSkill_Property { get; }
@@ -943,7 +977,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IClassTrainingGetter : ILoquiObject
+    public partial interface IClassTrainingGetter : ILoquiObject
     {
         #region TrainedSkill
         Skill TrainedSkill { get; }
@@ -1169,75 +1203,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IClassTraining item,
-            IClassTrainingGetter rhs,
-            ClassTraining_CopyMask copyMask = null,
-            IClassTrainingGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            ClassTrainingCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IClassTraining item,
-            IClassTrainingGetter rhs,
-            out ClassTraining_ErrorMask errorMask,
-            ClassTraining_CopyMask copyMask = null,
-            IClassTrainingGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            ClassTrainingCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IClassTraining item,
+            IClassTraining item,
             IClassTrainingGetter rhs,
             IClassTrainingGetter def,
             bool doMasks,
-            out ClassTraining_ErrorMask errorMask,
-            ClassTraining_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            ClassTraining_ErrorMask retErrorMask = null;
-            Func<ClassTraining_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new ClassTraining_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IClassTraining item,
-            IClassTrainingGetter rhs,
-            IClassTrainingGetter def,
-            bool doMasks,
-            Func<ClassTraining_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             ClassTraining_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

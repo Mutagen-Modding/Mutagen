@@ -24,7 +24,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class RaceStats : IRaceStats, ILoquiObjectSetter, IEquatable<RaceStats>
+    public partial class RaceStats : IRaceStats, ILoquiObject<RaceStats>, ILoquiObjectSetter, IEquatable<RaceStats>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceStats_Registration.Instance;
@@ -181,6 +181,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<RaceStats>.GetEqualsMask(RaceStats rhs) => RaceStatsCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IRaceStatsGetter>.GetEqualsMask(IRaceStatsGetter rhs) => RaceStatsCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -203,6 +205,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public RaceStats_Mask<bool> GetHasBeenSetMask()
         {
             return RaceStatsCommon.GetHasBeenSetMask(this);
@@ -935,31 +938,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            RaceStats_CopyMask copyMask = null,
-            IRaceStatsGetter def = null)
-            where CopyType : class, IRaceStats
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(RaceStats)))
-            {
-                ret = new RaceStats() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static RaceStats Copy_ToLoqui(
             IRaceStatsGetter item,
             RaceStats_CopyMask copyMask = null,
@@ -979,6 +957,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IRaceStatsGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IRaceStatsGetter rhs,
+            RaceStats_CopyMask copyMask,
+            IRaceStatsGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IRaceStatsGetter rhs,
+            out RaceStats_ErrorMask errorMask,
+            RaceStats_CopyMask copyMask = null,
+            IRaceStatsGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            RaceStats_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new RaceStats_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            RaceStatsCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1117,7 +1151,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IRaceStats : IRaceStatsGetter, ILoquiClass<IRaceStats, IRaceStatsGetter>, ILoquiClass<RaceStats, IRaceStatsGetter>
+    public partial interface IRaceStats : IRaceStatsGetter, ILoquiClass<IRaceStats, IRaceStatsGetter>, ILoquiClass<RaceStats, IRaceStatsGetter>
     {
         new Byte Strength { get; set; }
         new INotifyingItem<Byte> Strength_Property { get; }
@@ -1145,7 +1179,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IRaceStatsGetter : ILoquiObject
+    public partial interface IRaceStatsGetter : ILoquiObject
     {
         #region Strength
         Byte Strength { get; }
@@ -1456,75 +1490,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IRaceStats item,
-            IRaceStatsGetter rhs,
-            RaceStats_CopyMask copyMask = null,
-            IRaceStatsGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            RaceStatsCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IRaceStats item,
-            IRaceStatsGetter rhs,
-            out RaceStats_ErrorMask errorMask,
-            RaceStats_CopyMask copyMask = null,
-            IRaceStatsGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            RaceStatsCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IRaceStats item,
+            IRaceStats item,
             IRaceStatsGetter rhs,
             IRaceStatsGetter def,
             bool doMasks,
-            out RaceStats_ErrorMask errorMask,
-            RaceStats_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            RaceStats_ErrorMask retErrorMask = null;
-            Func<RaceStats_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new RaceStats_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IRaceStats item,
-            IRaceStatsGetter rhs,
-            IRaceStatsGetter def,
-            bool doMasks,
-            Func<RaceStats_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             RaceStats_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

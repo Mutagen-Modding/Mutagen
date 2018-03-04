@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class OblivionMod : IOblivionMod, ILoquiObjectSetter, IEquatable<OblivionMod>
+    public partial class OblivionMod : IOblivionMod, ILoquiObject<OblivionMod>, ILoquiObjectSetter, IEquatable<OblivionMod>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionMod_Registration.Instance;
@@ -342,6 +342,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<OblivionMod>.GetEqualsMask(OblivionMod rhs) => OblivionModCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IOblivionModGetter>.GetEqualsMask(IOblivionModGetter rhs) => OblivionModCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -364,6 +366,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public OblivionMod_Mask<bool> GetHasBeenSetMask()
         {
             return OblivionModCommon.GetHasBeenSetMask(this);
@@ -771,8 +774,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "TES4":
-                    TES4Common.CopyFieldsFrom(
-                        item: item._TES4_Object,
+                    item._TES4_Object.CopyFieldsFrom(
                         rhs: TES4.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -789,8 +791,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, TES4_ErrorMask>.WrapValue(TES4_ErrorMask.Combine(TES4createMask, TES4copyMask)));
                     break;
                 case "GameSettings":
-                    GroupCommon.CopyFieldsFrom<GameSetting, GameSetting_ErrorMask, GameSetting_CopyMask>(
-                        item: item._GameSettings_Object,
+                    item._GameSettings_Object.CopyFieldsFrom<GameSetting_ErrorMask, GameSetting_CopyMask>(
                         rhs: Group<GameSetting>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -807,8 +808,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>.WrapValue(Group_ErrorMask<GameSetting_ErrorMask>.Combine(GameSettingscreateMask, GameSettingscopyMask)));
                     break;
                 case "Globals":
-                    GroupCommon.CopyFieldsFrom<Global, Global_ErrorMask, Global_CopyMask>(
-                        item: item._Globals_Object,
+                    item._Globals_Object.CopyFieldsFrom<Global_ErrorMask, Global_CopyMask>(
                         rhs: Group<Global>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -825,8 +825,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>>.WrapValue(Group_ErrorMask<Global_ErrorMask>.Combine(GlobalscreateMask, GlobalscopyMask)));
                     break;
                 case "Classes":
-                    GroupCommon.CopyFieldsFrom<Class, Class_ErrorMask, Class_CopyMask>(
-                        item: item._Classes_Object,
+                    item._Classes_Object.CopyFieldsFrom<Class_ErrorMask, Class_CopyMask>(
                         rhs: Group<Class>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -843,8 +842,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>>.WrapValue(Group_ErrorMask<Class_ErrorMask>.Combine(ClassescreateMask, ClassescopyMask)));
                     break;
                 case "Factions":
-                    GroupCommon.CopyFieldsFrom<Faction, Faction_ErrorMask, Faction_CopyMask>(
-                        item: item._Factions_Object,
+                    item._Factions_Object.CopyFieldsFrom<Faction_ErrorMask, Faction_CopyMask>(
                         rhs: Group<Faction>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -861,8 +859,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>>.WrapValue(Group_ErrorMask<Faction_ErrorMask>.Combine(FactionscreateMask, FactionscopyMask)));
                     break;
                 case "Hairs":
-                    GroupCommon.CopyFieldsFrom<Hair, Hair_ErrorMask, Hair_CopyMask>(
-                        item: item._Hairs_Object,
+                    item._Hairs_Object.CopyFieldsFrom<Hair_ErrorMask, Hair_CopyMask>(
                         rhs: Group<Hair>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -879,8 +876,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Hair_ErrorMask>>.WrapValue(Group_ErrorMask<Hair_ErrorMask>.Combine(HairscreateMask, HairscopyMask)));
                     break;
                 case "Eyes":
-                    GroupCommon.CopyFieldsFrom<Eye, Eye_ErrorMask, Eye_CopyMask>(
-                        item: item._Eyes_Object,
+                    item._Eyes_Object.CopyFieldsFrom<Eye_ErrorMask, Eye_CopyMask>(
                         rhs: Group<Eye>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -897,8 +893,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Eye_ErrorMask>>.WrapValue(Group_ErrorMask<Eye_ErrorMask>.Combine(EyescreateMask, EyescopyMask)));
                     break;
                 case "Races":
-                    GroupCommon.CopyFieldsFrom<Race, Race_ErrorMask, Race_CopyMask>(
-                        item: item._Races_Object,
+                    item._Races_Object.CopyFieldsFrom<Race_ErrorMask, Race_CopyMask>(
                         rhs: Group<Race>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -915,8 +910,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Race_ErrorMask>>.WrapValue(Group_ErrorMask<Race_ErrorMask>.Combine(RacescreateMask, RacescopyMask)));
                     break;
                 case "Sounds":
-                    GroupCommon.CopyFieldsFrom<Sound, Sound_ErrorMask, Sound_CopyMask>(
-                        item: item._Sounds_Object,
+                    item._Sounds_Object.CopyFieldsFrom<Sound_ErrorMask, Sound_CopyMask>(
                         rhs: Group<Sound>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -933,8 +927,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Sound_ErrorMask>>.WrapValue(Group_ErrorMask<Sound_ErrorMask>.Combine(SoundscreateMask, SoundscopyMask)));
                     break;
                 case "Skills":
-                    GroupCommon.CopyFieldsFrom<SkillRecord, SkillRecord_ErrorMask, SkillRecord_CopyMask>(
-                        item: item._Skills_Object,
+                    item._Skills_Object.CopyFieldsFrom<SkillRecord_ErrorMask, SkillRecord_CopyMask>(
                         rhs: Group<SkillRecord>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -951,8 +944,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<SkillRecord_ErrorMask>>.WrapValue(Group_ErrorMask<SkillRecord_ErrorMask>.Combine(SkillscreateMask, SkillscopyMask)));
                     break;
                 case "MagicEffects":
-                    GroupCommon.CopyFieldsFrom<MagicEffect, MagicEffect_ErrorMask, MagicEffect_CopyMask>(
-                        item: item._MagicEffects_Object,
+                    item._MagicEffects_Object.CopyFieldsFrom<MagicEffect_ErrorMask, MagicEffect_CopyMask>(
                         rhs: Group<MagicEffect>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -969,8 +961,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<MagicEffect_ErrorMask>>.WrapValue(Group_ErrorMask<MagicEffect_ErrorMask>.Combine(MagicEffectscreateMask, MagicEffectscopyMask)));
                     break;
                 case "Scripts":
-                    GroupCommon.CopyFieldsFrom<Script, Script_ErrorMask, Script_CopyMask>(
-                        item: item._Scripts_Object,
+                    item._Scripts_Object.CopyFieldsFrom<Script_ErrorMask, Script_CopyMask>(
                         rhs: Group<Script>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -987,8 +978,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Script_ErrorMask>>.WrapValue(Group_ErrorMask<Script_ErrorMask>.Combine(ScriptscreateMask, ScriptscopyMask)));
                     break;
                 case "LandTextures":
-                    GroupCommon.CopyFieldsFrom<LandTexture, LandTexture_ErrorMask, LandTexture_CopyMask>(
-                        item: item._LandTextures_Object,
+                    item._LandTextures_Object.CopyFieldsFrom<LandTexture_ErrorMask, LandTexture_CopyMask>(
                         rhs: Group<LandTexture>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1005,8 +995,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<LandTexture_ErrorMask>>.WrapValue(Group_ErrorMask<LandTexture_ErrorMask>.Combine(LandTexturescreateMask, LandTexturescopyMask)));
                     break;
                 case "Enchantments":
-                    GroupCommon.CopyFieldsFrom<Enchantment, Enchantment_ErrorMask, Enchantment_CopyMask>(
-                        item: item._Enchantments_Object,
+                    item._Enchantments_Object.CopyFieldsFrom<Enchantment_ErrorMask, Enchantment_CopyMask>(
                         rhs: Group<Enchantment>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1023,8 +1012,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Enchantment_ErrorMask>>.WrapValue(Group_ErrorMask<Enchantment_ErrorMask>.Combine(EnchantmentscreateMask, EnchantmentscopyMask)));
                     break;
                 case "Spells":
-                    GroupCommon.CopyFieldsFrom<SpellUnleveled, SpellUnleveled_ErrorMask, SpellUnleveled_CopyMask>(
-                        item: item._Spells_Object,
+                    item._Spells_Object.CopyFieldsFrom<SpellUnleveled_ErrorMask, SpellUnleveled_CopyMask>(
                         rhs: Group<SpellUnleveled>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1041,8 +1029,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<SpellUnleveled_ErrorMask>>.WrapValue(Group_ErrorMask<SpellUnleveled_ErrorMask>.Combine(SpellscreateMask, SpellscopyMask)));
                     break;
                 case "Birthsigns":
-                    GroupCommon.CopyFieldsFrom<Birthsign, Birthsign_ErrorMask, Birthsign_CopyMask>(
-                        item: item._Birthsigns_Object,
+                    item._Birthsigns_Object.CopyFieldsFrom<Birthsign_ErrorMask, Birthsign_CopyMask>(
                         rhs: Group<Birthsign>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1059,8 +1046,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Birthsign_ErrorMask>>.WrapValue(Group_ErrorMask<Birthsign_ErrorMask>.Combine(BirthsignscreateMask, BirthsignscopyMask)));
                     break;
                 case "Activators":
-                    GroupCommon.CopyFieldsFrom<Activator, Activator_ErrorMask, Activator_CopyMask>(
-                        item: item._Activators_Object,
+                    item._Activators_Object.CopyFieldsFrom<Activator_ErrorMask, Activator_CopyMask>(
                         rhs: Group<Activator>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1077,8 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Activator_ErrorMask>>.WrapValue(Group_ErrorMask<Activator_ErrorMask>.Combine(ActivatorscreateMask, ActivatorscopyMask)));
                     break;
                 case "AlchemicalApparatus":
-                    GroupCommon.CopyFieldsFrom<AlchemicalApparatus, AlchemicalApparatus_ErrorMask, AlchemicalApparatus_CopyMask>(
-                        item: item._AlchemicalApparatus_Object,
+                    item._AlchemicalApparatus_Object.CopyFieldsFrom<AlchemicalApparatus_ErrorMask, AlchemicalApparatus_CopyMask>(
                         rhs: Group<AlchemicalApparatus>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1095,8 +1080,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<AlchemicalApparatus_ErrorMask>>.WrapValue(Group_ErrorMask<AlchemicalApparatus_ErrorMask>.Combine(AlchemicalApparatuscreateMask, AlchemicalApparatuscopyMask)));
                     break;
                 case "Armors":
-                    GroupCommon.CopyFieldsFrom<Armor, Armor_ErrorMask, Armor_CopyMask>(
-                        item: item._Armors_Object,
+                    item._Armors_Object.CopyFieldsFrom<Armor_ErrorMask, Armor_CopyMask>(
                         rhs: Group<Armor>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1113,8 +1097,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Armor_ErrorMask>>.WrapValue(Group_ErrorMask<Armor_ErrorMask>.Combine(ArmorscreateMask, ArmorscopyMask)));
                     break;
                 case "Books":
-                    GroupCommon.CopyFieldsFrom<Book, Book_ErrorMask, Book_CopyMask>(
-                        item: item._Books_Object,
+                    item._Books_Object.CopyFieldsFrom<Book_ErrorMask, Book_CopyMask>(
                         rhs: Group<Book>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1131,8 +1114,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Book_ErrorMask>>.WrapValue(Group_ErrorMask<Book_ErrorMask>.Combine(BookscreateMask, BookscopyMask)));
                     break;
                 case "Clothes":
-                    GroupCommon.CopyFieldsFrom<Clothing, Clothing_ErrorMask, Clothing_CopyMask>(
-                        item: item._Clothes_Object,
+                    item._Clothes_Object.CopyFieldsFrom<Clothing_ErrorMask, Clothing_CopyMask>(
                         rhs: Group<Clothing>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1149,8 +1131,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Clothing_ErrorMask>>.WrapValue(Group_ErrorMask<Clothing_ErrorMask>.Combine(ClothescreateMask, ClothescopyMask)));
                     break;
                 case "Containers":
-                    GroupCommon.CopyFieldsFrom<Container, Container_ErrorMask, Container_CopyMask>(
-                        item: item._Containers_Object,
+                    item._Containers_Object.CopyFieldsFrom<Container_ErrorMask, Container_CopyMask>(
                         rhs: Group<Container>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1167,8 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Container_ErrorMask>>.WrapValue(Group_ErrorMask<Container_ErrorMask>.Combine(ContainerscreateMask, ContainerscopyMask)));
                     break;
                 case "Doors":
-                    GroupCommon.CopyFieldsFrom<Door, Door_ErrorMask, Door_CopyMask>(
-                        item: item._Doors_Object,
+                    item._Doors_Object.CopyFieldsFrom<Door_ErrorMask, Door_CopyMask>(
                         rhs: Group<Door>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1185,8 +1165,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Door_ErrorMask>>.WrapValue(Group_ErrorMask<Door_ErrorMask>.Combine(DoorscreateMask, DoorscopyMask)));
                     break;
                 case "Ingredients":
-                    GroupCommon.CopyFieldsFrom<Ingredient, Ingredient_ErrorMask, Ingredient_CopyMask>(
-                        item: item._Ingredients_Object,
+                    item._Ingredients_Object.CopyFieldsFrom<Ingredient_ErrorMask, Ingredient_CopyMask>(
                         rhs: Group<Ingredient>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1203,8 +1182,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Ingredient_ErrorMask>>.WrapValue(Group_ErrorMask<Ingredient_ErrorMask>.Combine(IngredientscreateMask, IngredientscopyMask)));
                     break;
                 case "Lights":
-                    GroupCommon.CopyFieldsFrom<Light, Light_ErrorMask, Light_CopyMask>(
-                        item: item._Lights_Object,
+                    item._Lights_Object.CopyFieldsFrom<Light_ErrorMask, Light_CopyMask>(
                         rhs: Group<Light>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1221,8 +1199,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Light_ErrorMask>>.WrapValue(Group_ErrorMask<Light_ErrorMask>.Combine(LightscreateMask, LightscopyMask)));
                     break;
                 case "Miscellaneous":
-                    GroupCommon.CopyFieldsFrom<Miscellaneous, Miscellaneous_ErrorMask, Miscellaneous_CopyMask>(
-                        item: item._Miscellaneous_Object,
+                    item._Miscellaneous_Object.CopyFieldsFrom<Miscellaneous_ErrorMask, Miscellaneous_CopyMask>(
                         rhs: Group<Miscellaneous>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1239,8 +1216,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Miscellaneous_ErrorMask>>.WrapValue(Group_ErrorMask<Miscellaneous_ErrorMask>.Combine(MiscellaneouscreateMask, MiscellaneouscopyMask)));
                     break;
                 case "Statics":
-                    GroupCommon.CopyFieldsFrom<Static, Static_ErrorMask, Static_CopyMask>(
-                        item: item._Statics_Object,
+                    item._Statics_Object.CopyFieldsFrom<Static_ErrorMask, Static_CopyMask>(
                         rhs: Group<Static>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1257,8 +1233,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Static_ErrorMask>>.WrapValue(Group_ErrorMask<Static_ErrorMask>.Combine(StaticscreateMask, StaticscopyMask)));
                     break;
                 case "Grasses":
-                    GroupCommon.CopyFieldsFrom<Grass, Grass_ErrorMask, Grass_CopyMask>(
-                        item: item._Grasses_Object,
+                    item._Grasses_Object.CopyFieldsFrom<Grass_ErrorMask, Grass_CopyMask>(
                         rhs: Group<Grass>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1275,8 +1250,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Grass_ErrorMask>>.WrapValue(Group_ErrorMask<Grass_ErrorMask>.Combine(GrassescreateMask, GrassescopyMask)));
                     break;
                 case "Trees":
-                    GroupCommon.CopyFieldsFrom<Tree, Tree_ErrorMask, Tree_CopyMask>(
-                        item: item._Trees_Object,
+                    item._Trees_Object.CopyFieldsFrom<Tree_ErrorMask, Tree_CopyMask>(
                         rhs: Group<Tree>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1293,8 +1267,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Tree_ErrorMask>>.WrapValue(Group_ErrorMask<Tree_ErrorMask>.Combine(TreescreateMask, TreescopyMask)));
                     break;
                 case "Flora":
-                    GroupCommon.CopyFieldsFrom<Flora, Flora_ErrorMask, Flora_CopyMask>(
-                        item: item._Flora_Object,
+                    item._Flora_Object.CopyFieldsFrom<Flora_ErrorMask, Flora_CopyMask>(
                         rhs: Group<Flora>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1311,8 +1284,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Flora_ErrorMask>>.WrapValue(Group_ErrorMask<Flora_ErrorMask>.Combine(FloracreateMask, FloracopyMask)));
                     break;
                 case "Furnature":
-                    GroupCommon.CopyFieldsFrom<Furnature, Furnature_ErrorMask, Furnature_CopyMask>(
-                        item: item._Furnature_Object,
+                    item._Furnature_Object.CopyFieldsFrom<Furnature_ErrorMask, Furnature_CopyMask>(
                         rhs: Group<Furnature>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1329,8 +1301,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Furnature_ErrorMask>>.WrapValue(Group_ErrorMask<Furnature_ErrorMask>.Combine(FurnaturecreateMask, FurnaturecopyMask)));
                     break;
                 case "Weapons":
-                    GroupCommon.CopyFieldsFrom<Weapon, Weapon_ErrorMask, Weapon_CopyMask>(
-                        item: item._Weapons_Object,
+                    item._Weapons_Object.CopyFieldsFrom<Weapon_ErrorMask, Weapon_CopyMask>(
                         rhs: Group<Weapon>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1347,8 +1318,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Weapon_ErrorMask>>.WrapValue(Group_ErrorMask<Weapon_ErrorMask>.Combine(WeaponscreateMask, WeaponscopyMask)));
                     break;
                 case "Ammo":
-                    GroupCommon.CopyFieldsFrom<Ammo, Ammo_ErrorMask, Ammo_CopyMask>(
-                        item: item._Ammo_Object,
+                    item._Ammo_Object.CopyFieldsFrom<Ammo_ErrorMask, Ammo_CopyMask>(
                         rhs: Group<Ammo>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1365,8 +1335,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Ammo_ErrorMask>>.WrapValue(Group_ErrorMask<Ammo_ErrorMask>.Combine(AmmocreateMask, AmmocopyMask)));
                     break;
                 case "NPCs":
-                    GroupCommon.CopyFieldsFrom<NPC, NPC_ErrorMask, NPC_CopyMask>(
-                        item: item._NPCs_Object,
+                    item._NPCs_Object.CopyFieldsFrom<NPC_ErrorMask, NPC_CopyMask>(
                         rhs: Group<NPC>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1383,8 +1352,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<NPC_ErrorMask>>.WrapValue(Group_ErrorMask<NPC_ErrorMask>.Combine(NPCscreateMask, NPCscopyMask)));
                     break;
                 case "Creatures":
-                    GroupCommon.CopyFieldsFrom<Creature, Creature_ErrorMask, Creature_CopyMask>(
-                        item: item._Creatures_Object,
+                    item._Creatures_Object.CopyFieldsFrom<Creature_ErrorMask, Creature_CopyMask>(
                         rhs: Group<Creature>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1401,8 +1369,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Creature_ErrorMask>>.WrapValue(Group_ErrorMask<Creature_ErrorMask>.Combine(CreaturescreateMask, CreaturescopyMask)));
                     break;
                 case "LeveledCreatures":
-                    GroupCommon.CopyFieldsFrom<LeveledCreature, LeveledCreature_ErrorMask, LeveledCreature_CopyMask>(
-                        item: item._LeveledCreatures_Object,
+                    item._LeveledCreatures_Object.CopyFieldsFrom<LeveledCreature_ErrorMask, LeveledCreature_CopyMask>(
                         rhs: Group<LeveledCreature>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1419,8 +1386,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<LeveledCreature_ErrorMask>>.WrapValue(Group_ErrorMask<LeveledCreature_ErrorMask>.Combine(LeveledCreaturescreateMask, LeveledCreaturescopyMask)));
                     break;
                 case "SoulGems":
-                    GroupCommon.CopyFieldsFrom<SoulGem, SoulGem_ErrorMask, SoulGem_CopyMask>(
-                        item: item._SoulGems_Object,
+                    item._SoulGems_Object.CopyFieldsFrom<SoulGem_ErrorMask, SoulGem_CopyMask>(
                         rhs: Group<SoulGem>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1437,8 +1403,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<SoulGem_ErrorMask>>.WrapValue(Group_ErrorMask<SoulGem_ErrorMask>.Combine(SoulGemscreateMask, SoulGemscopyMask)));
                     break;
                 case "Keys":
-                    GroupCommon.CopyFieldsFrom<Key, Key_ErrorMask, Key_CopyMask>(
-                        item: item._Keys_Object,
+                    item._Keys_Object.CopyFieldsFrom<Key_ErrorMask, Key_CopyMask>(
                         rhs: Group<Key>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1455,8 +1420,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Key_ErrorMask>>.WrapValue(Group_ErrorMask<Key_ErrorMask>.Combine(KeyscreateMask, KeyscopyMask)));
                     break;
                 case "Potions":
-                    GroupCommon.CopyFieldsFrom<Potion, Potion_ErrorMask, Potion_CopyMask>(
-                        item: item._Potions_Object,
+                    item._Potions_Object.CopyFieldsFrom<Potion_ErrorMask, Potion_CopyMask>(
                         rhs: Group<Potion>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1473,8 +1437,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Potion_ErrorMask>>.WrapValue(Group_ErrorMask<Potion_ErrorMask>.Combine(PotionscreateMask, PotionscopyMask)));
                     break;
                 case "Subspaces":
-                    GroupCommon.CopyFieldsFrom<Subspace, Subspace_ErrorMask, Subspace_CopyMask>(
-                        item: item._Subspaces_Object,
+                    item._Subspaces_Object.CopyFieldsFrom<Subspace_ErrorMask, Subspace_CopyMask>(
                         rhs: Group<Subspace>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1491,8 +1454,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Subspace_ErrorMask>>.WrapValue(Group_ErrorMask<Subspace_ErrorMask>.Combine(SubspacescreateMask, SubspacescopyMask)));
                     break;
                 case "SigilStones":
-                    GroupCommon.CopyFieldsFrom<SigilStone, SigilStone_ErrorMask, SigilStone_CopyMask>(
-                        item: item._SigilStones_Object,
+                    item._SigilStones_Object.CopyFieldsFrom<SigilStone_ErrorMask, SigilStone_CopyMask>(
                         rhs: Group<SigilStone>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1509,8 +1471,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<SigilStone_ErrorMask>>.WrapValue(Group_ErrorMask<SigilStone_ErrorMask>.Combine(SigilStonescreateMask, SigilStonescopyMask)));
                     break;
                 case "LeveledItems":
-                    GroupCommon.CopyFieldsFrom<LeveledItem, LeveledItem_ErrorMask, LeveledItem_CopyMask>(
-                        item: item._LeveledItems_Object,
+                    item._LeveledItems_Object.CopyFieldsFrom<LeveledItem_ErrorMask, LeveledItem_CopyMask>(
                         rhs: Group<LeveledItem>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1527,8 +1488,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<LeveledItem_ErrorMask>>.WrapValue(Group_ErrorMask<LeveledItem_ErrorMask>.Combine(LeveledItemscreateMask, LeveledItemscopyMask)));
                     break;
                 case "Weathers":
-                    GroupCommon.CopyFieldsFrom<Weather, Weather_ErrorMask, Weather_CopyMask>(
-                        item: item._Weathers_Object,
+                    item._Weathers_Object.CopyFieldsFrom<Weather_ErrorMask, Weather_CopyMask>(
                         rhs: Group<Weather>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1545,8 +1505,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Weather_ErrorMask>>.WrapValue(Group_ErrorMask<Weather_ErrorMask>.Combine(WeatherscreateMask, WeatherscopyMask)));
                     break;
                 case "Climates":
-                    GroupCommon.CopyFieldsFrom<Climate, Climate_ErrorMask, Climate_CopyMask>(
-                        item: item._Climates_Object,
+                    item._Climates_Object.CopyFieldsFrom<Climate_ErrorMask, Climate_CopyMask>(
                         rhs: Group<Climate>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -1563,8 +1522,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Climate_ErrorMask>>.WrapValue(Group_ErrorMask<Climate_ErrorMask>.Combine(ClimatescreateMask, ClimatescopyMask)));
                     break;
                 case "Regions":
-                    GroupCommon.CopyFieldsFrom<Region, Region_ErrorMask, Region_CopyMask>(
-                        item: item._Regions_Object,
+                    item._Regions_Object.CopyFieldsFrom<Region_ErrorMask, Region_CopyMask>(
                         rhs: Group<Region>.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -2053,8 +2011,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out TES4_ErrorMask TES4createMask);
-                    TES4Common.CopyFieldsFrom(
-                        item: item._TES4_Object,
+                    item._TES4_Object.CopyFieldsFrom(
                         rhs: tmpTES4,
                         def: null,
                         cmds: null,
@@ -2072,8 +2029,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<GameSetting_ErrorMask> GameSettingscreateMask);
-                    GroupCommon.CopyFieldsFrom<GameSetting, GameSetting_ErrorMask, GameSetting_CopyMask>(
-                        item: item._GameSettings_Object,
+                    item._GameSettings_Object.CopyFieldsFrom<GameSetting_ErrorMask, GameSetting_CopyMask>(
                         rhs: tmpGameSettings,
                         def: null,
                         cmds: null,
@@ -2091,8 +2047,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Global_ErrorMask> GlobalscreateMask);
-                    GroupCommon.CopyFieldsFrom<Global, Global_ErrorMask, Global_CopyMask>(
-                        item: item._Globals_Object,
+                    item._Globals_Object.CopyFieldsFrom<Global_ErrorMask, Global_CopyMask>(
                         rhs: tmpGlobals,
                         def: null,
                         cmds: null,
@@ -2110,8 +2065,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Class_ErrorMask> ClassescreateMask);
-                    GroupCommon.CopyFieldsFrom<Class, Class_ErrorMask, Class_CopyMask>(
-                        item: item._Classes_Object,
+                    item._Classes_Object.CopyFieldsFrom<Class_ErrorMask, Class_CopyMask>(
                         rhs: tmpClasses,
                         def: null,
                         cmds: null,
@@ -2129,8 +2083,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Faction_ErrorMask> FactionscreateMask);
-                    GroupCommon.CopyFieldsFrom<Faction, Faction_ErrorMask, Faction_CopyMask>(
-                        item: item._Factions_Object,
+                    item._Factions_Object.CopyFieldsFrom<Faction_ErrorMask, Faction_CopyMask>(
                         rhs: tmpFactions,
                         def: null,
                         cmds: null,
@@ -2148,8 +2101,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Hair_ErrorMask> HairscreateMask);
-                    GroupCommon.CopyFieldsFrom<Hair, Hair_ErrorMask, Hair_CopyMask>(
-                        item: item._Hairs_Object,
+                    item._Hairs_Object.CopyFieldsFrom<Hair_ErrorMask, Hair_CopyMask>(
                         rhs: tmpHairs,
                         def: null,
                         cmds: null,
@@ -2167,8 +2119,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Eye_ErrorMask> EyescreateMask);
-                    GroupCommon.CopyFieldsFrom<Eye, Eye_ErrorMask, Eye_CopyMask>(
-                        item: item._Eyes_Object,
+                    item._Eyes_Object.CopyFieldsFrom<Eye_ErrorMask, Eye_CopyMask>(
                         rhs: tmpEyes,
                         def: null,
                         cmds: null,
@@ -2186,8 +2137,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Race_ErrorMask> RacescreateMask);
-                    GroupCommon.CopyFieldsFrom<Race, Race_ErrorMask, Race_CopyMask>(
-                        item: item._Races_Object,
+                    item._Races_Object.CopyFieldsFrom<Race_ErrorMask, Race_CopyMask>(
                         rhs: tmpRaces,
                         def: null,
                         cmds: null,
@@ -2205,8 +2155,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Sound_ErrorMask> SoundscreateMask);
-                    GroupCommon.CopyFieldsFrom<Sound, Sound_ErrorMask, Sound_CopyMask>(
-                        item: item._Sounds_Object,
+                    item._Sounds_Object.CopyFieldsFrom<Sound_ErrorMask, Sound_CopyMask>(
                         rhs: tmpSounds,
                         def: null,
                         cmds: null,
@@ -2224,8 +2173,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<SkillRecord_ErrorMask> SkillscreateMask);
-                    GroupCommon.CopyFieldsFrom<SkillRecord, SkillRecord_ErrorMask, SkillRecord_CopyMask>(
-                        item: item._Skills_Object,
+                    item._Skills_Object.CopyFieldsFrom<SkillRecord_ErrorMask, SkillRecord_CopyMask>(
                         rhs: tmpSkills,
                         def: null,
                         cmds: null,
@@ -2243,8 +2191,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<MagicEffect_ErrorMask> MagicEffectscreateMask);
-                    GroupCommon.CopyFieldsFrom<MagicEffect, MagicEffect_ErrorMask, MagicEffect_CopyMask>(
-                        item: item._MagicEffects_Object,
+                    item._MagicEffects_Object.CopyFieldsFrom<MagicEffect_ErrorMask, MagicEffect_CopyMask>(
                         rhs: tmpMagicEffects,
                         def: null,
                         cmds: null,
@@ -2262,8 +2209,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Script_ErrorMask> ScriptscreateMask);
-                    GroupCommon.CopyFieldsFrom<Script, Script_ErrorMask, Script_CopyMask>(
-                        item: item._Scripts_Object,
+                    item._Scripts_Object.CopyFieldsFrom<Script_ErrorMask, Script_CopyMask>(
                         rhs: tmpScripts,
                         def: null,
                         cmds: null,
@@ -2281,8 +2227,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<LandTexture_ErrorMask> LandTexturescreateMask);
-                    GroupCommon.CopyFieldsFrom<LandTexture, LandTexture_ErrorMask, LandTexture_CopyMask>(
-                        item: item._LandTextures_Object,
+                    item._LandTextures_Object.CopyFieldsFrom<LandTexture_ErrorMask, LandTexture_CopyMask>(
                         rhs: tmpLandTextures,
                         def: null,
                         cmds: null,
@@ -2300,8 +2245,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Enchantment_ErrorMask> EnchantmentscreateMask);
-                    GroupCommon.CopyFieldsFrom<Enchantment, Enchantment_ErrorMask, Enchantment_CopyMask>(
-                        item: item._Enchantments_Object,
+                    item._Enchantments_Object.CopyFieldsFrom<Enchantment_ErrorMask, Enchantment_CopyMask>(
                         rhs: tmpEnchantments,
                         def: null,
                         cmds: null,
@@ -2319,8 +2263,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<SpellUnleveled_ErrorMask> SpellscreateMask);
-                    GroupCommon.CopyFieldsFrom<SpellUnleveled, SpellUnleveled_ErrorMask, SpellUnleveled_CopyMask>(
-                        item: item._Spells_Object,
+                    item._Spells_Object.CopyFieldsFrom<SpellUnleveled_ErrorMask, SpellUnleveled_CopyMask>(
                         rhs: tmpSpells,
                         def: null,
                         cmds: null,
@@ -2338,8 +2281,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Birthsign_ErrorMask> BirthsignscreateMask);
-                    GroupCommon.CopyFieldsFrom<Birthsign, Birthsign_ErrorMask, Birthsign_CopyMask>(
-                        item: item._Birthsigns_Object,
+                    item._Birthsigns_Object.CopyFieldsFrom<Birthsign_ErrorMask, Birthsign_CopyMask>(
                         rhs: tmpBirthsigns,
                         def: null,
                         cmds: null,
@@ -2357,8 +2299,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Activator_ErrorMask> ActivatorscreateMask);
-                    GroupCommon.CopyFieldsFrom<Activator, Activator_ErrorMask, Activator_CopyMask>(
-                        item: item._Activators_Object,
+                    item._Activators_Object.CopyFieldsFrom<Activator_ErrorMask, Activator_CopyMask>(
                         rhs: tmpActivators,
                         def: null,
                         cmds: null,
@@ -2376,8 +2317,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<AlchemicalApparatus_ErrorMask> AlchemicalApparatuscreateMask);
-                    GroupCommon.CopyFieldsFrom<AlchemicalApparatus, AlchemicalApparatus_ErrorMask, AlchemicalApparatus_CopyMask>(
-                        item: item._AlchemicalApparatus_Object,
+                    item._AlchemicalApparatus_Object.CopyFieldsFrom<AlchemicalApparatus_ErrorMask, AlchemicalApparatus_CopyMask>(
                         rhs: tmpAlchemicalApparatus,
                         def: null,
                         cmds: null,
@@ -2395,8 +2335,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Armor_ErrorMask> ArmorscreateMask);
-                    GroupCommon.CopyFieldsFrom<Armor, Armor_ErrorMask, Armor_CopyMask>(
-                        item: item._Armors_Object,
+                    item._Armors_Object.CopyFieldsFrom<Armor_ErrorMask, Armor_CopyMask>(
                         rhs: tmpArmors,
                         def: null,
                         cmds: null,
@@ -2414,8 +2353,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Book_ErrorMask> BookscreateMask);
-                    GroupCommon.CopyFieldsFrom<Book, Book_ErrorMask, Book_CopyMask>(
-                        item: item._Books_Object,
+                    item._Books_Object.CopyFieldsFrom<Book_ErrorMask, Book_CopyMask>(
                         rhs: tmpBooks,
                         def: null,
                         cmds: null,
@@ -2433,8 +2371,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Clothing_ErrorMask> ClothescreateMask);
-                    GroupCommon.CopyFieldsFrom<Clothing, Clothing_ErrorMask, Clothing_CopyMask>(
-                        item: item._Clothes_Object,
+                    item._Clothes_Object.CopyFieldsFrom<Clothing_ErrorMask, Clothing_CopyMask>(
                         rhs: tmpClothes,
                         def: null,
                         cmds: null,
@@ -2452,8 +2389,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Container_ErrorMask> ContainerscreateMask);
-                    GroupCommon.CopyFieldsFrom<Container, Container_ErrorMask, Container_CopyMask>(
-                        item: item._Containers_Object,
+                    item._Containers_Object.CopyFieldsFrom<Container_ErrorMask, Container_CopyMask>(
                         rhs: tmpContainers,
                         def: null,
                         cmds: null,
@@ -2471,8 +2407,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Door_ErrorMask> DoorscreateMask);
-                    GroupCommon.CopyFieldsFrom<Door, Door_ErrorMask, Door_CopyMask>(
-                        item: item._Doors_Object,
+                    item._Doors_Object.CopyFieldsFrom<Door_ErrorMask, Door_CopyMask>(
                         rhs: tmpDoors,
                         def: null,
                         cmds: null,
@@ -2490,8 +2425,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Ingredient_ErrorMask> IngredientscreateMask);
-                    GroupCommon.CopyFieldsFrom<Ingredient, Ingredient_ErrorMask, Ingredient_CopyMask>(
-                        item: item._Ingredients_Object,
+                    item._Ingredients_Object.CopyFieldsFrom<Ingredient_ErrorMask, Ingredient_CopyMask>(
                         rhs: tmpIngredients,
                         def: null,
                         cmds: null,
@@ -2509,8 +2443,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Light_ErrorMask> LightscreateMask);
-                    GroupCommon.CopyFieldsFrom<Light, Light_ErrorMask, Light_CopyMask>(
-                        item: item._Lights_Object,
+                    item._Lights_Object.CopyFieldsFrom<Light_ErrorMask, Light_CopyMask>(
                         rhs: tmpLights,
                         def: null,
                         cmds: null,
@@ -2528,8 +2461,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Miscellaneous_ErrorMask> MiscellaneouscreateMask);
-                    GroupCommon.CopyFieldsFrom<Miscellaneous, Miscellaneous_ErrorMask, Miscellaneous_CopyMask>(
-                        item: item._Miscellaneous_Object,
+                    item._Miscellaneous_Object.CopyFieldsFrom<Miscellaneous_ErrorMask, Miscellaneous_CopyMask>(
                         rhs: tmpMiscellaneous,
                         def: null,
                         cmds: null,
@@ -2547,8 +2479,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Static_ErrorMask> StaticscreateMask);
-                    GroupCommon.CopyFieldsFrom<Static, Static_ErrorMask, Static_CopyMask>(
-                        item: item._Statics_Object,
+                    item._Statics_Object.CopyFieldsFrom<Static_ErrorMask, Static_CopyMask>(
                         rhs: tmpStatics,
                         def: null,
                         cmds: null,
@@ -2566,8 +2497,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Grass_ErrorMask> GrassescreateMask);
-                    GroupCommon.CopyFieldsFrom<Grass, Grass_ErrorMask, Grass_CopyMask>(
-                        item: item._Grasses_Object,
+                    item._Grasses_Object.CopyFieldsFrom<Grass_ErrorMask, Grass_CopyMask>(
                         rhs: tmpGrasses,
                         def: null,
                         cmds: null,
@@ -2585,8 +2515,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Tree_ErrorMask> TreescreateMask);
-                    GroupCommon.CopyFieldsFrom<Tree, Tree_ErrorMask, Tree_CopyMask>(
-                        item: item._Trees_Object,
+                    item._Trees_Object.CopyFieldsFrom<Tree_ErrorMask, Tree_CopyMask>(
                         rhs: tmpTrees,
                         def: null,
                         cmds: null,
@@ -2604,8 +2533,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Flora_ErrorMask> FloracreateMask);
-                    GroupCommon.CopyFieldsFrom<Flora, Flora_ErrorMask, Flora_CopyMask>(
-                        item: item._Flora_Object,
+                    item._Flora_Object.CopyFieldsFrom<Flora_ErrorMask, Flora_CopyMask>(
                         rhs: tmpFlora,
                         def: null,
                         cmds: null,
@@ -2623,8 +2551,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Furnature_ErrorMask> FurnaturecreateMask);
-                    GroupCommon.CopyFieldsFrom<Furnature, Furnature_ErrorMask, Furnature_CopyMask>(
-                        item: item._Furnature_Object,
+                    item._Furnature_Object.CopyFieldsFrom<Furnature_ErrorMask, Furnature_CopyMask>(
                         rhs: tmpFurnature,
                         def: null,
                         cmds: null,
@@ -2642,8 +2569,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Weapon_ErrorMask> WeaponscreateMask);
-                    GroupCommon.CopyFieldsFrom<Weapon, Weapon_ErrorMask, Weapon_CopyMask>(
-                        item: item._Weapons_Object,
+                    item._Weapons_Object.CopyFieldsFrom<Weapon_ErrorMask, Weapon_CopyMask>(
                         rhs: tmpWeapons,
                         def: null,
                         cmds: null,
@@ -2661,8 +2587,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Ammo_ErrorMask> AmmocreateMask);
-                    GroupCommon.CopyFieldsFrom<Ammo, Ammo_ErrorMask, Ammo_CopyMask>(
-                        item: item._Ammo_Object,
+                    item._Ammo_Object.CopyFieldsFrom<Ammo_ErrorMask, Ammo_CopyMask>(
                         rhs: tmpAmmo,
                         def: null,
                         cmds: null,
@@ -2680,8 +2605,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<NPC_ErrorMask> NPCscreateMask);
-                    GroupCommon.CopyFieldsFrom<NPC, NPC_ErrorMask, NPC_CopyMask>(
-                        item: item._NPCs_Object,
+                    item._NPCs_Object.CopyFieldsFrom<NPC_ErrorMask, NPC_CopyMask>(
                         rhs: tmpNPCs,
                         def: null,
                         cmds: null,
@@ -2699,8 +2623,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Creature_ErrorMask> CreaturescreateMask);
-                    GroupCommon.CopyFieldsFrom<Creature, Creature_ErrorMask, Creature_CopyMask>(
-                        item: item._Creatures_Object,
+                    item._Creatures_Object.CopyFieldsFrom<Creature_ErrorMask, Creature_CopyMask>(
                         rhs: tmpCreatures,
                         def: null,
                         cmds: null,
@@ -2718,8 +2641,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<LeveledCreature_ErrorMask> LeveledCreaturescreateMask);
-                    GroupCommon.CopyFieldsFrom<LeveledCreature, LeveledCreature_ErrorMask, LeveledCreature_CopyMask>(
-                        item: item._LeveledCreatures_Object,
+                    item._LeveledCreatures_Object.CopyFieldsFrom<LeveledCreature_ErrorMask, LeveledCreature_CopyMask>(
                         rhs: tmpLeveledCreatures,
                         def: null,
                         cmds: null,
@@ -2737,8 +2659,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<SoulGem_ErrorMask> SoulGemscreateMask);
-                    GroupCommon.CopyFieldsFrom<SoulGem, SoulGem_ErrorMask, SoulGem_CopyMask>(
-                        item: item._SoulGems_Object,
+                    item._SoulGems_Object.CopyFieldsFrom<SoulGem_ErrorMask, SoulGem_CopyMask>(
                         rhs: tmpSoulGems,
                         def: null,
                         cmds: null,
@@ -2756,8 +2677,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Key_ErrorMask> KeyscreateMask);
-                    GroupCommon.CopyFieldsFrom<Key, Key_ErrorMask, Key_CopyMask>(
-                        item: item._Keys_Object,
+                    item._Keys_Object.CopyFieldsFrom<Key_ErrorMask, Key_CopyMask>(
                         rhs: tmpKeys,
                         def: null,
                         cmds: null,
@@ -2775,8 +2695,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Potion_ErrorMask> PotionscreateMask);
-                    GroupCommon.CopyFieldsFrom<Potion, Potion_ErrorMask, Potion_CopyMask>(
-                        item: item._Potions_Object,
+                    item._Potions_Object.CopyFieldsFrom<Potion_ErrorMask, Potion_CopyMask>(
                         rhs: tmpPotions,
                         def: null,
                         cmds: null,
@@ -2794,8 +2713,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Subspace_ErrorMask> SubspacescreateMask);
-                    GroupCommon.CopyFieldsFrom<Subspace, Subspace_ErrorMask, Subspace_CopyMask>(
-                        item: item._Subspaces_Object,
+                    item._Subspaces_Object.CopyFieldsFrom<Subspace_ErrorMask, Subspace_CopyMask>(
                         rhs: tmpSubspaces,
                         def: null,
                         cmds: null,
@@ -2813,8 +2731,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<SigilStone_ErrorMask> SigilStonescreateMask);
-                    GroupCommon.CopyFieldsFrom<SigilStone, SigilStone_ErrorMask, SigilStone_CopyMask>(
-                        item: item._SigilStones_Object,
+                    item._SigilStones_Object.CopyFieldsFrom<SigilStone_ErrorMask, SigilStone_CopyMask>(
                         rhs: tmpSigilStones,
                         def: null,
                         cmds: null,
@@ -2832,8 +2749,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<LeveledItem_ErrorMask> LeveledItemscreateMask);
-                    GroupCommon.CopyFieldsFrom<LeveledItem, LeveledItem_ErrorMask, LeveledItem_CopyMask>(
-                        item: item._LeveledItems_Object,
+                    item._LeveledItems_Object.CopyFieldsFrom<LeveledItem_ErrorMask, LeveledItem_CopyMask>(
                         rhs: tmpLeveledItems,
                         def: null,
                         cmds: null,
@@ -2851,8 +2767,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Weather_ErrorMask> WeatherscreateMask);
-                    GroupCommon.CopyFieldsFrom<Weather, Weather_ErrorMask, Weather_CopyMask>(
-                        item: item._Weathers_Object,
+                    item._Weathers_Object.CopyFieldsFrom<Weather_ErrorMask, Weather_CopyMask>(
                         rhs: tmpWeathers,
                         def: null,
                         cmds: null,
@@ -2870,8 +2785,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Climate_ErrorMask> ClimatescreateMask);
-                    GroupCommon.CopyFieldsFrom<Climate, Climate_ErrorMask, Climate_CopyMask>(
-                        item: item._Climates_Object,
+                    item._Climates_Object.CopyFieldsFrom<Climate_ErrorMask, Climate_CopyMask>(
                         rhs: tmpClimates,
                         def: null,
                         cmds: null,
@@ -2889,8 +2803,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out Group_ErrorMask<Region_ErrorMask> RegionscreateMask);
-                    GroupCommon.CopyFieldsFrom<Region, Region_ErrorMask, Region_CopyMask>(
-                        item: item._Regions_Object,
+                    item._Regions_Object.CopyFieldsFrom<Region_ErrorMask, Region_CopyMask>(
                         rhs: tmpRegions,
                         def: null,
                         cmds: null,
@@ -2943,31 +2856,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            OblivionMod_CopyMask copyMask = null,
-            IOblivionModGetter def = null)
-            where CopyType : class, IOblivionMod
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(OblivionMod)))
-            {
-                ret = new OblivionMod() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static OblivionMod Copy_ToLoqui(
             IOblivionModGetter item,
             OblivionMod_CopyMask copyMask = null,
@@ -2989,6 +2877,62 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public void CopyFieldsFrom(
+            IOblivionModGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IOblivionModGetter rhs,
+            OblivionMod_CopyMask copyMask,
+            IOblivionModGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IOblivionModGetter rhs,
+            out OblivionMod_ErrorMask errorMask,
+            OblivionMod_CopyMask copyMask = null,
+            IOblivionModGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            OblivionMod_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new OblivionMod_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            OblivionModCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
+        }
+
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
@@ -2999,136 +2943,136 @@ namespace Mutagen.Bethesda.Oblivion
                     this._TES4_Object.CopyFieldsFrom(rhs: (TES4)obj);
                     break;
                 case OblivionMod_FieldIndex.GameSettings:
-                    this._GameSettings_Object.CopyFieldsFrom<GameSetting, GameSetting_CopyMask>(rhs: (Group<GameSetting>)obj);
+                    this._GameSettings_Object.CopyFieldsFrom<GameSetting_CopyMask>(rhs: (Group<GameSetting>)obj);
                     break;
                 case OblivionMod_FieldIndex.Globals:
-                    this._Globals_Object.CopyFieldsFrom<Global, Global_CopyMask>(rhs: (Group<Global>)obj);
+                    this._Globals_Object.CopyFieldsFrom<Global_CopyMask>(rhs: (Group<Global>)obj);
                     break;
                 case OblivionMod_FieldIndex.Classes:
-                    this._Classes_Object.CopyFieldsFrom<Class, Class_CopyMask>(rhs: (Group<Class>)obj);
+                    this._Classes_Object.CopyFieldsFrom<Class_CopyMask>(rhs: (Group<Class>)obj);
                     break;
                 case OblivionMod_FieldIndex.Factions:
-                    this._Factions_Object.CopyFieldsFrom<Faction, Faction_CopyMask>(rhs: (Group<Faction>)obj);
+                    this._Factions_Object.CopyFieldsFrom<Faction_CopyMask>(rhs: (Group<Faction>)obj);
                     break;
                 case OblivionMod_FieldIndex.Hairs:
-                    this._Hairs_Object.CopyFieldsFrom<Hair, Hair_CopyMask>(rhs: (Group<Hair>)obj);
+                    this._Hairs_Object.CopyFieldsFrom<Hair_CopyMask>(rhs: (Group<Hair>)obj);
                     break;
                 case OblivionMod_FieldIndex.Eyes:
-                    this._Eyes_Object.CopyFieldsFrom<Eye, Eye_CopyMask>(rhs: (Group<Eye>)obj);
+                    this._Eyes_Object.CopyFieldsFrom<Eye_CopyMask>(rhs: (Group<Eye>)obj);
                     break;
                 case OblivionMod_FieldIndex.Races:
-                    this._Races_Object.CopyFieldsFrom<Race, Race_CopyMask>(rhs: (Group<Race>)obj);
+                    this._Races_Object.CopyFieldsFrom<Race_CopyMask>(rhs: (Group<Race>)obj);
                     break;
                 case OblivionMod_FieldIndex.Sounds:
-                    this._Sounds_Object.CopyFieldsFrom<Sound, Sound_CopyMask>(rhs: (Group<Sound>)obj);
+                    this._Sounds_Object.CopyFieldsFrom<Sound_CopyMask>(rhs: (Group<Sound>)obj);
                     break;
                 case OblivionMod_FieldIndex.Skills:
-                    this._Skills_Object.CopyFieldsFrom<SkillRecord, SkillRecord_CopyMask>(rhs: (Group<SkillRecord>)obj);
+                    this._Skills_Object.CopyFieldsFrom<SkillRecord_CopyMask>(rhs: (Group<SkillRecord>)obj);
                     break;
                 case OblivionMod_FieldIndex.MagicEffects:
-                    this._MagicEffects_Object.CopyFieldsFrom<MagicEffect, MagicEffect_CopyMask>(rhs: (Group<MagicEffect>)obj);
+                    this._MagicEffects_Object.CopyFieldsFrom<MagicEffect_CopyMask>(rhs: (Group<MagicEffect>)obj);
                     break;
                 case OblivionMod_FieldIndex.Scripts:
-                    this._Scripts_Object.CopyFieldsFrom<Script, Script_CopyMask>(rhs: (Group<Script>)obj);
+                    this._Scripts_Object.CopyFieldsFrom<Script_CopyMask>(rhs: (Group<Script>)obj);
                     break;
                 case OblivionMod_FieldIndex.LandTextures:
-                    this._LandTextures_Object.CopyFieldsFrom<LandTexture, LandTexture_CopyMask>(rhs: (Group<LandTexture>)obj);
+                    this._LandTextures_Object.CopyFieldsFrom<LandTexture_CopyMask>(rhs: (Group<LandTexture>)obj);
                     break;
                 case OblivionMod_FieldIndex.Enchantments:
-                    this._Enchantments_Object.CopyFieldsFrom<Enchantment, Enchantment_CopyMask>(rhs: (Group<Enchantment>)obj);
+                    this._Enchantments_Object.CopyFieldsFrom<Enchantment_CopyMask>(rhs: (Group<Enchantment>)obj);
                     break;
                 case OblivionMod_FieldIndex.Spells:
-                    this._Spells_Object.CopyFieldsFrom<SpellUnleveled, SpellUnleveled_CopyMask>(rhs: (Group<SpellUnleveled>)obj);
+                    this._Spells_Object.CopyFieldsFrom<SpellUnleveled_CopyMask>(rhs: (Group<SpellUnleveled>)obj);
                     break;
                 case OblivionMod_FieldIndex.Birthsigns:
-                    this._Birthsigns_Object.CopyFieldsFrom<Birthsign, Birthsign_CopyMask>(rhs: (Group<Birthsign>)obj);
+                    this._Birthsigns_Object.CopyFieldsFrom<Birthsign_CopyMask>(rhs: (Group<Birthsign>)obj);
                     break;
                 case OblivionMod_FieldIndex.Activators:
-                    this._Activators_Object.CopyFieldsFrom<Activator, Activator_CopyMask>(rhs: (Group<Activator>)obj);
+                    this._Activators_Object.CopyFieldsFrom<Activator_CopyMask>(rhs: (Group<Activator>)obj);
                     break;
                 case OblivionMod_FieldIndex.AlchemicalApparatus:
-                    this._AlchemicalApparatus_Object.CopyFieldsFrom<AlchemicalApparatus, AlchemicalApparatus_CopyMask>(rhs: (Group<AlchemicalApparatus>)obj);
+                    this._AlchemicalApparatus_Object.CopyFieldsFrom<AlchemicalApparatus_CopyMask>(rhs: (Group<AlchemicalApparatus>)obj);
                     break;
                 case OblivionMod_FieldIndex.Armors:
-                    this._Armors_Object.CopyFieldsFrom<Armor, Armor_CopyMask>(rhs: (Group<Armor>)obj);
+                    this._Armors_Object.CopyFieldsFrom<Armor_CopyMask>(rhs: (Group<Armor>)obj);
                     break;
                 case OblivionMod_FieldIndex.Books:
-                    this._Books_Object.CopyFieldsFrom<Book, Book_CopyMask>(rhs: (Group<Book>)obj);
+                    this._Books_Object.CopyFieldsFrom<Book_CopyMask>(rhs: (Group<Book>)obj);
                     break;
                 case OblivionMod_FieldIndex.Clothes:
-                    this._Clothes_Object.CopyFieldsFrom<Clothing, Clothing_CopyMask>(rhs: (Group<Clothing>)obj);
+                    this._Clothes_Object.CopyFieldsFrom<Clothing_CopyMask>(rhs: (Group<Clothing>)obj);
                     break;
                 case OblivionMod_FieldIndex.Containers:
-                    this._Containers_Object.CopyFieldsFrom<Container, Container_CopyMask>(rhs: (Group<Container>)obj);
+                    this._Containers_Object.CopyFieldsFrom<Container_CopyMask>(rhs: (Group<Container>)obj);
                     break;
                 case OblivionMod_FieldIndex.Doors:
-                    this._Doors_Object.CopyFieldsFrom<Door, Door_CopyMask>(rhs: (Group<Door>)obj);
+                    this._Doors_Object.CopyFieldsFrom<Door_CopyMask>(rhs: (Group<Door>)obj);
                     break;
                 case OblivionMod_FieldIndex.Ingredients:
-                    this._Ingredients_Object.CopyFieldsFrom<Ingredient, Ingredient_CopyMask>(rhs: (Group<Ingredient>)obj);
+                    this._Ingredients_Object.CopyFieldsFrom<Ingredient_CopyMask>(rhs: (Group<Ingredient>)obj);
                     break;
                 case OblivionMod_FieldIndex.Lights:
-                    this._Lights_Object.CopyFieldsFrom<Light, Light_CopyMask>(rhs: (Group<Light>)obj);
+                    this._Lights_Object.CopyFieldsFrom<Light_CopyMask>(rhs: (Group<Light>)obj);
                     break;
                 case OblivionMod_FieldIndex.Miscellaneous:
-                    this._Miscellaneous_Object.CopyFieldsFrom<Miscellaneous, Miscellaneous_CopyMask>(rhs: (Group<Miscellaneous>)obj);
+                    this._Miscellaneous_Object.CopyFieldsFrom<Miscellaneous_CopyMask>(rhs: (Group<Miscellaneous>)obj);
                     break;
                 case OblivionMod_FieldIndex.Statics:
-                    this._Statics_Object.CopyFieldsFrom<Static, Static_CopyMask>(rhs: (Group<Static>)obj);
+                    this._Statics_Object.CopyFieldsFrom<Static_CopyMask>(rhs: (Group<Static>)obj);
                     break;
                 case OblivionMod_FieldIndex.Grasses:
-                    this._Grasses_Object.CopyFieldsFrom<Grass, Grass_CopyMask>(rhs: (Group<Grass>)obj);
+                    this._Grasses_Object.CopyFieldsFrom<Grass_CopyMask>(rhs: (Group<Grass>)obj);
                     break;
                 case OblivionMod_FieldIndex.Trees:
-                    this._Trees_Object.CopyFieldsFrom<Tree, Tree_CopyMask>(rhs: (Group<Tree>)obj);
+                    this._Trees_Object.CopyFieldsFrom<Tree_CopyMask>(rhs: (Group<Tree>)obj);
                     break;
                 case OblivionMod_FieldIndex.Flora:
-                    this._Flora_Object.CopyFieldsFrom<Flora, Flora_CopyMask>(rhs: (Group<Flora>)obj);
+                    this._Flora_Object.CopyFieldsFrom<Flora_CopyMask>(rhs: (Group<Flora>)obj);
                     break;
                 case OblivionMod_FieldIndex.Furnature:
-                    this._Furnature_Object.CopyFieldsFrom<Furnature, Furnature_CopyMask>(rhs: (Group<Furnature>)obj);
+                    this._Furnature_Object.CopyFieldsFrom<Furnature_CopyMask>(rhs: (Group<Furnature>)obj);
                     break;
                 case OblivionMod_FieldIndex.Weapons:
-                    this._Weapons_Object.CopyFieldsFrom<Weapon, Weapon_CopyMask>(rhs: (Group<Weapon>)obj);
+                    this._Weapons_Object.CopyFieldsFrom<Weapon_CopyMask>(rhs: (Group<Weapon>)obj);
                     break;
                 case OblivionMod_FieldIndex.Ammo:
-                    this._Ammo_Object.CopyFieldsFrom<Ammo, Ammo_CopyMask>(rhs: (Group<Ammo>)obj);
+                    this._Ammo_Object.CopyFieldsFrom<Ammo_CopyMask>(rhs: (Group<Ammo>)obj);
                     break;
                 case OblivionMod_FieldIndex.NPCs:
-                    this._NPCs_Object.CopyFieldsFrom<NPC, NPC_CopyMask>(rhs: (Group<NPC>)obj);
+                    this._NPCs_Object.CopyFieldsFrom<NPC_CopyMask>(rhs: (Group<NPC>)obj);
                     break;
                 case OblivionMod_FieldIndex.Creatures:
-                    this._Creatures_Object.CopyFieldsFrom<Creature, Creature_CopyMask>(rhs: (Group<Creature>)obj);
+                    this._Creatures_Object.CopyFieldsFrom<Creature_CopyMask>(rhs: (Group<Creature>)obj);
                     break;
                 case OblivionMod_FieldIndex.LeveledCreatures:
-                    this._LeveledCreatures_Object.CopyFieldsFrom<LeveledCreature, LeveledCreature_CopyMask>(rhs: (Group<LeveledCreature>)obj);
+                    this._LeveledCreatures_Object.CopyFieldsFrom<LeveledCreature_CopyMask>(rhs: (Group<LeveledCreature>)obj);
                     break;
                 case OblivionMod_FieldIndex.SoulGems:
-                    this._SoulGems_Object.CopyFieldsFrom<SoulGem, SoulGem_CopyMask>(rhs: (Group<SoulGem>)obj);
+                    this._SoulGems_Object.CopyFieldsFrom<SoulGem_CopyMask>(rhs: (Group<SoulGem>)obj);
                     break;
                 case OblivionMod_FieldIndex.Keys:
-                    this._Keys_Object.CopyFieldsFrom<Key, Key_CopyMask>(rhs: (Group<Key>)obj);
+                    this._Keys_Object.CopyFieldsFrom<Key_CopyMask>(rhs: (Group<Key>)obj);
                     break;
                 case OblivionMod_FieldIndex.Potions:
-                    this._Potions_Object.CopyFieldsFrom<Potion, Potion_CopyMask>(rhs: (Group<Potion>)obj);
+                    this._Potions_Object.CopyFieldsFrom<Potion_CopyMask>(rhs: (Group<Potion>)obj);
                     break;
                 case OblivionMod_FieldIndex.Subspaces:
-                    this._Subspaces_Object.CopyFieldsFrom<Subspace, Subspace_CopyMask>(rhs: (Group<Subspace>)obj);
+                    this._Subspaces_Object.CopyFieldsFrom<Subspace_CopyMask>(rhs: (Group<Subspace>)obj);
                     break;
                 case OblivionMod_FieldIndex.SigilStones:
-                    this._SigilStones_Object.CopyFieldsFrom<SigilStone, SigilStone_CopyMask>(rhs: (Group<SigilStone>)obj);
+                    this._SigilStones_Object.CopyFieldsFrom<SigilStone_CopyMask>(rhs: (Group<SigilStone>)obj);
                     break;
                 case OblivionMod_FieldIndex.LeveledItems:
-                    this._LeveledItems_Object.CopyFieldsFrom<LeveledItem, LeveledItem_CopyMask>(rhs: (Group<LeveledItem>)obj);
+                    this._LeveledItems_Object.CopyFieldsFrom<LeveledItem_CopyMask>(rhs: (Group<LeveledItem>)obj);
                     break;
                 case OblivionMod_FieldIndex.Weathers:
-                    this._Weathers_Object.CopyFieldsFrom<Weather, Weather_CopyMask>(rhs: (Group<Weather>)obj);
+                    this._Weathers_Object.CopyFieldsFrom<Weather_CopyMask>(rhs: (Group<Weather>)obj);
                     break;
                 case OblivionMod_FieldIndex.Climates:
-                    this._Climates_Object.CopyFieldsFrom<Climate, Climate_CopyMask>(rhs: (Group<Climate>)obj);
+                    this._Climates_Object.CopyFieldsFrom<Climate_CopyMask>(rhs: (Group<Climate>)obj);
                     break;
                 case OblivionMod_FieldIndex.Regions:
-                    this._Regions_Object.CopyFieldsFrom<Region, Region_CopyMask>(rhs: (Group<Region>)obj);
+                    this._Regions_Object.CopyFieldsFrom<Region_CopyMask>(rhs: (Group<Region>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3171,136 +3115,136 @@ namespace Mutagen.Bethesda.Oblivion
                     obj._TES4_Object.CopyFieldsFrom(rhs: (TES4)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.GameSettings:
-                    obj._GameSettings_Object.CopyFieldsFrom<GameSetting, GameSetting_CopyMask>(rhs: (Group<GameSetting>)pair.Value);
+                    obj._GameSettings_Object.CopyFieldsFrom<GameSetting_CopyMask>(rhs: (Group<GameSetting>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Globals:
-                    obj._Globals_Object.CopyFieldsFrom<Global, Global_CopyMask>(rhs: (Group<Global>)pair.Value);
+                    obj._Globals_Object.CopyFieldsFrom<Global_CopyMask>(rhs: (Group<Global>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Classes:
-                    obj._Classes_Object.CopyFieldsFrom<Class, Class_CopyMask>(rhs: (Group<Class>)pair.Value);
+                    obj._Classes_Object.CopyFieldsFrom<Class_CopyMask>(rhs: (Group<Class>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Factions:
-                    obj._Factions_Object.CopyFieldsFrom<Faction, Faction_CopyMask>(rhs: (Group<Faction>)pair.Value);
+                    obj._Factions_Object.CopyFieldsFrom<Faction_CopyMask>(rhs: (Group<Faction>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Hairs:
-                    obj._Hairs_Object.CopyFieldsFrom<Hair, Hair_CopyMask>(rhs: (Group<Hair>)pair.Value);
+                    obj._Hairs_Object.CopyFieldsFrom<Hair_CopyMask>(rhs: (Group<Hair>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Eyes:
-                    obj._Eyes_Object.CopyFieldsFrom<Eye, Eye_CopyMask>(rhs: (Group<Eye>)pair.Value);
+                    obj._Eyes_Object.CopyFieldsFrom<Eye_CopyMask>(rhs: (Group<Eye>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Races:
-                    obj._Races_Object.CopyFieldsFrom<Race, Race_CopyMask>(rhs: (Group<Race>)pair.Value);
+                    obj._Races_Object.CopyFieldsFrom<Race_CopyMask>(rhs: (Group<Race>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Sounds:
-                    obj._Sounds_Object.CopyFieldsFrom<Sound, Sound_CopyMask>(rhs: (Group<Sound>)pair.Value);
+                    obj._Sounds_Object.CopyFieldsFrom<Sound_CopyMask>(rhs: (Group<Sound>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Skills:
-                    obj._Skills_Object.CopyFieldsFrom<SkillRecord, SkillRecord_CopyMask>(rhs: (Group<SkillRecord>)pair.Value);
+                    obj._Skills_Object.CopyFieldsFrom<SkillRecord_CopyMask>(rhs: (Group<SkillRecord>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.MagicEffects:
-                    obj._MagicEffects_Object.CopyFieldsFrom<MagicEffect, MagicEffect_CopyMask>(rhs: (Group<MagicEffect>)pair.Value);
+                    obj._MagicEffects_Object.CopyFieldsFrom<MagicEffect_CopyMask>(rhs: (Group<MagicEffect>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Scripts:
-                    obj._Scripts_Object.CopyFieldsFrom<Script, Script_CopyMask>(rhs: (Group<Script>)pair.Value);
+                    obj._Scripts_Object.CopyFieldsFrom<Script_CopyMask>(rhs: (Group<Script>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.LandTextures:
-                    obj._LandTextures_Object.CopyFieldsFrom<LandTexture, LandTexture_CopyMask>(rhs: (Group<LandTexture>)pair.Value);
+                    obj._LandTextures_Object.CopyFieldsFrom<LandTexture_CopyMask>(rhs: (Group<LandTexture>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Enchantments:
-                    obj._Enchantments_Object.CopyFieldsFrom<Enchantment, Enchantment_CopyMask>(rhs: (Group<Enchantment>)pair.Value);
+                    obj._Enchantments_Object.CopyFieldsFrom<Enchantment_CopyMask>(rhs: (Group<Enchantment>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Spells:
-                    obj._Spells_Object.CopyFieldsFrom<SpellUnleveled, SpellUnleveled_CopyMask>(rhs: (Group<SpellUnleveled>)pair.Value);
+                    obj._Spells_Object.CopyFieldsFrom<SpellUnleveled_CopyMask>(rhs: (Group<SpellUnleveled>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Birthsigns:
-                    obj._Birthsigns_Object.CopyFieldsFrom<Birthsign, Birthsign_CopyMask>(rhs: (Group<Birthsign>)pair.Value);
+                    obj._Birthsigns_Object.CopyFieldsFrom<Birthsign_CopyMask>(rhs: (Group<Birthsign>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Activators:
-                    obj._Activators_Object.CopyFieldsFrom<Activator, Activator_CopyMask>(rhs: (Group<Activator>)pair.Value);
+                    obj._Activators_Object.CopyFieldsFrom<Activator_CopyMask>(rhs: (Group<Activator>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.AlchemicalApparatus:
-                    obj._AlchemicalApparatus_Object.CopyFieldsFrom<AlchemicalApparatus, AlchemicalApparatus_CopyMask>(rhs: (Group<AlchemicalApparatus>)pair.Value);
+                    obj._AlchemicalApparatus_Object.CopyFieldsFrom<AlchemicalApparatus_CopyMask>(rhs: (Group<AlchemicalApparatus>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Armors:
-                    obj._Armors_Object.CopyFieldsFrom<Armor, Armor_CopyMask>(rhs: (Group<Armor>)pair.Value);
+                    obj._Armors_Object.CopyFieldsFrom<Armor_CopyMask>(rhs: (Group<Armor>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Books:
-                    obj._Books_Object.CopyFieldsFrom<Book, Book_CopyMask>(rhs: (Group<Book>)pair.Value);
+                    obj._Books_Object.CopyFieldsFrom<Book_CopyMask>(rhs: (Group<Book>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Clothes:
-                    obj._Clothes_Object.CopyFieldsFrom<Clothing, Clothing_CopyMask>(rhs: (Group<Clothing>)pair.Value);
+                    obj._Clothes_Object.CopyFieldsFrom<Clothing_CopyMask>(rhs: (Group<Clothing>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Containers:
-                    obj._Containers_Object.CopyFieldsFrom<Container, Container_CopyMask>(rhs: (Group<Container>)pair.Value);
+                    obj._Containers_Object.CopyFieldsFrom<Container_CopyMask>(rhs: (Group<Container>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Doors:
-                    obj._Doors_Object.CopyFieldsFrom<Door, Door_CopyMask>(rhs: (Group<Door>)pair.Value);
+                    obj._Doors_Object.CopyFieldsFrom<Door_CopyMask>(rhs: (Group<Door>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Ingredients:
-                    obj._Ingredients_Object.CopyFieldsFrom<Ingredient, Ingredient_CopyMask>(rhs: (Group<Ingredient>)pair.Value);
+                    obj._Ingredients_Object.CopyFieldsFrom<Ingredient_CopyMask>(rhs: (Group<Ingredient>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Lights:
-                    obj._Lights_Object.CopyFieldsFrom<Light, Light_CopyMask>(rhs: (Group<Light>)pair.Value);
+                    obj._Lights_Object.CopyFieldsFrom<Light_CopyMask>(rhs: (Group<Light>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Miscellaneous:
-                    obj._Miscellaneous_Object.CopyFieldsFrom<Miscellaneous, Miscellaneous_CopyMask>(rhs: (Group<Miscellaneous>)pair.Value);
+                    obj._Miscellaneous_Object.CopyFieldsFrom<Miscellaneous_CopyMask>(rhs: (Group<Miscellaneous>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Statics:
-                    obj._Statics_Object.CopyFieldsFrom<Static, Static_CopyMask>(rhs: (Group<Static>)pair.Value);
+                    obj._Statics_Object.CopyFieldsFrom<Static_CopyMask>(rhs: (Group<Static>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Grasses:
-                    obj._Grasses_Object.CopyFieldsFrom<Grass, Grass_CopyMask>(rhs: (Group<Grass>)pair.Value);
+                    obj._Grasses_Object.CopyFieldsFrom<Grass_CopyMask>(rhs: (Group<Grass>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Trees:
-                    obj._Trees_Object.CopyFieldsFrom<Tree, Tree_CopyMask>(rhs: (Group<Tree>)pair.Value);
+                    obj._Trees_Object.CopyFieldsFrom<Tree_CopyMask>(rhs: (Group<Tree>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Flora:
-                    obj._Flora_Object.CopyFieldsFrom<Flora, Flora_CopyMask>(rhs: (Group<Flora>)pair.Value);
+                    obj._Flora_Object.CopyFieldsFrom<Flora_CopyMask>(rhs: (Group<Flora>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Furnature:
-                    obj._Furnature_Object.CopyFieldsFrom<Furnature, Furnature_CopyMask>(rhs: (Group<Furnature>)pair.Value);
+                    obj._Furnature_Object.CopyFieldsFrom<Furnature_CopyMask>(rhs: (Group<Furnature>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Weapons:
-                    obj._Weapons_Object.CopyFieldsFrom<Weapon, Weapon_CopyMask>(rhs: (Group<Weapon>)pair.Value);
+                    obj._Weapons_Object.CopyFieldsFrom<Weapon_CopyMask>(rhs: (Group<Weapon>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Ammo:
-                    obj._Ammo_Object.CopyFieldsFrom<Ammo, Ammo_CopyMask>(rhs: (Group<Ammo>)pair.Value);
+                    obj._Ammo_Object.CopyFieldsFrom<Ammo_CopyMask>(rhs: (Group<Ammo>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.NPCs:
-                    obj._NPCs_Object.CopyFieldsFrom<NPC, NPC_CopyMask>(rhs: (Group<NPC>)pair.Value);
+                    obj._NPCs_Object.CopyFieldsFrom<NPC_CopyMask>(rhs: (Group<NPC>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Creatures:
-                    obj._Creatures_Object.CopyFieldsFrom<Creature, Creature_CopyMask>(rhs: (Group<Creature>)pair.Value);
+                    obj._Creatures_Object.CopyFieldsFrom<Creature_CopyMask>(rhs: (Group<Creature>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.LeveledCreatures:
-                    obj._LeveledCreatures_Object.CopyFieldsFrom<LeveledCreature, LeveledCreature_CopyMask>(rhs: (Group<LeveledCreature>)pair.Value);
+                    obj._LeveledCreatures_Object.CopyFieldsFrom<LeveledCreature_CopyMask>(rhs: (Group<LeveledCreature>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.SoulGems:
-                    obj._SoulGems_Object.CopyFieldsFrom<SoulGem, SoulGem_CopyMask>(rhs: (Group<SoulGem>)pair.Value);
+                    obj._SoulGems_Object.CopyFieldsFrom<SoulGem_CopyMask>(rhs: (Group<SoulGem>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Keys:
-                    obj._Keys_Object.CopyFieldsFrom<Key, Key_CopyMask>(rhs: (Group<Key>)pair.Value);
+                    obj._Keys_Object.CopyFieldsFrom<Key_CopyMask>(rhs: (Group<Key>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Potions:
-                    obj._Potions_Object.CopyFieldsFrom<Potion, Potion_CopyMask>(rhs: (Group<Potion>)pair.Value);
+                    obj._Potions_Object.CopyFieldsFrom<Potion_CopyMask>(rhs: (Group<Potion>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Subspaces:
-                    obj._Subspaces_Object.CopyFieldsFrom<Subspace, Subspace_CopyMask>(rhs: (Group<Subspace>)pair.Value);
+                    obj._Subspaces_Object.CopyFieldsFrom<Subspace_CopyMask>(rhs: (Group<Subspace>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.SigilStones:
-                    obj._SigilStones_Object.CopyFieldsFrom<SigilStone, SigilStone_CopyMask>(rhs: (Group<SigilStone>)pair.Value);
+                    obj._SigilStones_Object.CopyFieldsFrom<SigilStone_CopyMask>(rhs: (Group<SigilStone>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.LeveledItems:
-                    obj._LeveledItems_Object.CopyFieldsFrom<LeveledItem, LeveledItem_CopyMask>(rhs: (Group<LeveledItem>)pair.Value);
+                    obj._LeveledItems_Object.CopyFieldsFrom<LeveledItem_CopyMask>(rhs: (Group<LeveledItem>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Weathers:
-                    obj._Weathers_Object.CopyFieldsFrom<Weather, Weather_CopyMask>(rhs: (Group<Weather>)pair.Value);
+                    obj._Weathers_Object.CopyFieldsFrom<Weather_CopyMask>(rhs: (Group<Weather>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Climates:
-                    obj._Climates_Object.CopyFieldsFrom<Climate, Climate_CopyMask>(rhs: (Group<Climate>)pair.Value);
+                    obj._Climates_Object.CopyFieldsFrom<Climate_CopyMask>(rhs: (Group<Climate>)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.Regions:
-                    obj._Regions_Object.CopyFieldsFrom<Region, Region_CopyMask>(rhs: (Group<Region>)pair.Value);
+                    obj._Regions_Object.CopyFieldsFrom<Region_CopyMask>(rhs: (Group<Region>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -3315,11 +3259,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IOblivionMod : IOblivionModGetter, ILoquiClass<IOblivionMod, IOblivionModGetter>, ILoquiClass<OblivionMod, IOblivionModGetter>
+    public partial interface IOblivionMod : IOblivionModGetter, ILoquiClass<IOblivionMod, IOblivionModGetter>, ILoquiClass<OblivionMod, IOblivionModGetter>
     {
     }
 
-    public interface IOblivionModGetter : ILoquiObject
+    public partial interface IOblivionModGetter : ILoquiObject
     {
         #region TES4
         TES4 TES4 { get; }
@@ -4229,75 +4173,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IOblivionMod item,
-            IOblivionModGetter rhs,
-            OblivionMod_CopyMask copyMask = null,
-            IOblivionModGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            OblivionModCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IOblivionMod item,
-            IOblivionModGetter rhs,
-            out OblivionMod_ErrorMask errorMask,
-            OblivionMod_CopyMask copyMask = null,
-            IOblivionModGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            OblivionModCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IOblivionMod item,
+            IOblivionMod item,
             IOblivionModGetter rhs,
             IOblivionModGetter def,
             bool doMasks,
-            out OblivionMod_ErrorMask errorMask,
-            OblivionMod_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            OblivionMod_ErrorMask retErrorMask = null;
-            Func<OblivionMod_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new OblivionMod_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IOblivionMod item,
-            IOblivionModGetter rhs,
-            IOblivionModGetter def,
-            bool doMasks,
-            Func<OblivionMod_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             OblivionMod_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -4313,11 +4193,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<TES4_ErrorMask>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.TES4.Specific == null)
-                            {
-                                baseMask.TES4 = new MaskItem<Exception, TES4_ErrorMask>(null, new TES4_ErrorMask());
-                            }
-                            return baseMask.TES4.Specific;
+                            var mask = new TES4_ErrorMask();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.TES4, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.TES4.Specific,
@@ -4341,11 +4219,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<GameSetting_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.GameSettings.Specific == null)
-                            {
-                                baseMask.GameSettings = new MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>(null, new Group_ErrorMask<GameSetting_ErrorMask>());
-                            }
-                            return baseMask.GameSettings.Specific;
+                            var mask = new Group_ErrorMask<GameSetting_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.GameSettings, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.GameSettings.Specific,
@@ -4369,11 +4245,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Global_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Globals.Specific == null)
-                            {
-                                baseMask.Globals = new MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>>(null, new Group_ErrorMask<Global_ErrorMask>());
-                            }
-                            return baseMask.Globals.Specific;
+                            var mask = new Group_ErrorMask<Global_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Globals, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Globals.Specific,
@@ -4397,11 +4271,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Class_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Classes.Specific == null)
-                            {
-                                baseMask.Classes = new MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>>(null, new Group_ErrorMask<Class_ErrorMask>());
-                            }
-                            return baseMask.Classes.Specific;
+                            var mask = new Group_ErrorMask<Class_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Classes, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Classes.Specific,
@@ -4425,11 +4297,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Faction_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Factions.Specific == null)
-                            {
-                                baseMask.Factions = new MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>>(null, new Group_ErrorMask<Faction_ErrorMask>());
-                            }
-                            return baseMask.Factions.Specific;
+                            var mask = new Group_ErrorMask<Faction_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Factions, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Factions.Specific,
@@ -4453,11 +4323,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Hair_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Hairs.Specific == null)
-                            {
-                                baseMask.Hairs = new MaskItem<Exception, Group_ErrorMask<Hair_ErrorMask>>(null, new Group_ErrorMask<Hair_ErrorMask>());
-                            }
-                            return baseMask.Hairs.Specific;
+                            var mask = new Group_ErrorMask<Hair_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Hairs, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Hairs.Specific,
@@ -4481,11 +4349,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Eye_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Eyes.Specific == null)
-                            {
-                                baseMask.Eyes = new MaskItem<Exception, Group_ErrorMask<Eye_ErrorMask>>(null, new Group_ErrorMask<Eye_ErrorMask>());
-                            }
-                            return baseMask.Eyes.Specific;
+                            var mask = new Group_ErrorMask<Eye_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Eyes, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Eyes.Specific,
@@ -4509,11 +4375,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Race_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Races.Specific == null)
-                            {
-                                baseMask.Races = new MaskItem<Exception, Group_ErrorMask<Race_ErrorMask>>(null, new Group_ErrorMask<Race_ErrorMask>());
-                            }
-                            return baseMask.Races.Specific;
+                            var mask = new Group_ErrorMask<Race_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Races, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Races.Specific,
@@ -4537,11 +4401,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Sound_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Sounds.Specific == null)
-                            {
-                                baseMask.Sounds = new MaskItem<Exception, Group_ErrorMask<Sound_ErrorMask>>(null, new Group_ErrorMask<Sound_ErrorMask>());
-                            }
-                            return baseMask.Sounds.Specific;
+                            var mask = new Group_ErrorMask<Sound_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Sounds, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Sounds.Specific,
@@ -4565,11 +4427,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<SkillRecord_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Skills.Specific == null)
-                            {
-                                baseMask.Skills = new MaskItem<Exception, Group_ErrorMask<SkillRecord_ErrorMask>>(null, new Group_ErrorMask<SkillRecord_ErrorMask>());
-                            }
-                            return baseMask.Skills.Specific;
+                            var mask = new Group_ErrorMask<SkillRecord_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Skills, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Skills.Specific,
@@ -4593,11 +4453,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<MagicEffect_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.MagicEffects.Specific == null)
-                            {
-                                baseMask.MagicEffects = new MaskItem<Exception, Group_ErrorMask<MagicEffect_ErrorMask>>(null, new Group_ErrorMask<MagicEffect_ErrorMask>());
-                            }
-                            return baseMask.MagicEffects.Specific;
+                            var mask = new Group_ErrorMask<MagicEffect_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.MagicEffects, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.MagicEffects.Specific,
@@ -4621,11 +4479,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Script_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Scripts.Specific == null)
-                            {
-                                baseMask.Scripts = new MaskItem<Exception, Group_ErrorMask<Script_ErrorMask>>(null, new Group_ErrorMask<Script_ErrorMask>());
-                            }
-                            return baseMask.Scripts.Specific;
+                            var mask = new Group_ErrorMask<Script_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Scripts, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Scripts.Specific,
@@ -4649,11 +4505,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<LandTexture_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.LandTextures.Specific == null)
-                            {
-                                baseMask.LandTextures = new MaskItem<Exception, Group_ErrorMask<LandTexture_ErrorMask>>(null, new Group_ErrorMask<LandTexture_ErrorMask>());
-                            }
-                            return baseMask.LandTextures.Specific;
+                            var mask = new Group_ErrorMask<LandTexture_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.LandTextures, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.LandTextures.Specific,
@@ -4677,11 +4531,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Enchantment_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Enchantments.Specific == null)
-                            {
-                                baseMask.Enchantments = new MaskItem<Exception, Group_ErrorMask<Enchantment_ErrorMask>>(null, new Group_ErrorMask<Enchantment_ErrorMask>());
-                            }
-                            return baseMask.Enchantments.Specific;
+                            var mask = new Group_ErrorMask<Enchantment_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Enchantments, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Enchantments.Specific,
@@ -4705,11 +4557,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<SpellUnleveled_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Spells.Specific == null)
-                            {
-                                baseMask.Spells = new MaskItem<Exception, Group_ErrorMask<SpellUnleveled_ErrorMask>>(null, new Group_ErrorMask<SpellUnleveled_ErrorMask>());
-                            }
-                            return baseMask.Spells.Specific;
+                            var mask = new Group_ErrorMask<SpellUnleveled_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Spells, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Spells.Specific,
@@ -4733,11 +4583,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Birthsign_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Birthsigns.Specific == null)
-                            {
-                                baseMask.Birthsigns = new MaskItem<Exception, Group_ErrorMask<Birthsign_ErrorMask>>(null, new Group_ErrorMask<Birthsign_ErrorMask>());
-                            }
-                            return baseMask.Birthsigns.Specific;
+                            var mask = new Group_ErrorMask<Birthsign_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Birthsigns, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Birthsigns.Specific,
@@ -4761,11 +4609,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Activator_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Activators.Specific == null)
-                            {
-                                baseMask.Activators = new MaskItem<Exception, Group_ErrorMask<Activator_ErrorMask>>(null, new Group_ErrorMask<Activator_ErrorMask>());
-                            }
-                            return baseMask.Activators.Specific;
+                            var mask = new Group_ErrorMask<Activator_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Activators, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Activators.Specific,
@@ -4789,11 +4635,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<AlchemicalApparatus_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.AlchemicalApparatus.Specific == null)
-                            {
-                                baseMask.AlchemicalApparatus = new MaskItem<Exception, Group_ErrorMask<AlchemicalApparatus_ErrorMask>>(null, new Group_ErrorMask<AlchemicalApparatus_ErrorMask>());
-                            }
-                            return baseMask.AlchemicalApparatus.Specific;
+                            var mask = new Group_ErrorMask<AlchemicalApparatus_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.AlchemicalApparatus, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.AlchemicalApparatus.Specific,
@@ -4817,11 +4661,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Armor_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Armors.Specific == null)
-                            {
-                                baseMask.Armors = new MaskItem<Exception, Group_ErrorMask<Armor_ErrorMask>>(null, new Group_ErrorMask<Armor_ErrorMask>());
-                            }
-                            return baseMask.Armors.Specific;
+                            var mask = new Group_ErrorMask<Armor_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Armors, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Armors.Specific,
@@ -4845,11 +4687,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Book_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Books.Specific == null)
-                            {
-                                baseMask.Books = new MaskItem<Exception, Group_ErrorMask<Book_ErrorMask>>(null, new Group_ErrorMask<Book_ErrorMask>());
-                            }
-                            return baseMask.Books.Specific;
+                            var mask = new Group_ErrorMask<Book_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Books, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Books.Specific,
@@ -4873,11 +4713,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Clothing_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Clothes.Specific == null)
-                            {
-                                baseMask.Clothes = new MaskItem<Exception, Group_ErrorMask<Clothing_ErrorMask>>(null, new Group_ErrorMask<Clothing_ErrorMask>());
-                            }
-                            return baseMask.Clothes.Specific;
+                            var mask = new Group_ErrorMask<Clothing_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Clothes, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Clothes.Specific,
@@ -4901,11 +4739,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Container_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Containers.Specific == null)
-                            {
-                                baseMask.Containers = new MaskItem<Exception, Group_ErrorMask<Container_ErrorMask>>(null, new Group_ErrorMask<Container_ErrorMask>());
-                            }
-                            return baseMask.Containers.Specific;
+                            var mask = new Group_ErrorMask<Container_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Containers, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Containers.Specific,
@@ -4929,11 +4765,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Door_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Doors.Specific == null)
-                            {
-                                baseMask.Doors = new MaskItem<Exception, Group_ErrorMask<Door_ErrorMask>>(null, new Group_ErrorMask<Door_ErrorMask>());
-                            }
-                            return baseMask.Doors.Specific;
+                            var mask = new Group_ErrorMask<Door_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Doors, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Doors.Specific,
@@ -4957,11 +4791,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Ingredient_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Ingredients.Specific == null)
-                            {
-                                baseMask.Ingredients = new MaskItem<Exception, Group_ErrorMask<Ingredient_ErrorMask>>(null, new Group_ErrorMask<Ingredient_ErrorMask>());
-                            }
-                            return baseMask.Ingredients.Specific;
+                            var mask = new Group_ErrorMask<Ingredient_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Ingredients, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Ingredients.Specific,
@@ -4985,11 +4817,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Light_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Lights.Specific == null)
-                            {
-                                baseMask.Lights = new MaskItem<Exception, Group_ErrorMask<Light_ErrorMask>>(null, new Group_ErrorMask<Light_ErrorMask>());
-                            }
-                            return baseMask.Lights.Specific;
+                            var mask = new Group_ErrorMask<Light_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Lights, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Lights.Specific,
@@ -5013,11 +4843,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Miscellaneous_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Miscellaneous.Specific == null)
-                            {
-                                baseMask.Miscellaneous = new MaskItem<Exception, Group_ErrorMask<Miscellaneous_ErrorMask>>(null, new Group_ErrorMask<Miscellaneous_ErrorMask>());
-                            }
-                            return baseMask.Miscellaneous.Specific;
+                            var mask = new Group_ErrorMask<Miscellaneous_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Miscellaneous, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Miscellaneous.Specific,
@@ -5041,11 +4869,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Static_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Statics.Specific == null)
-                            {
-                                baseMask.Statics = new MaskItem<Exception, Group_ErrorMask<Static_ErrorMask>>(null, new Group_ErrorMask<Static_ErrorMask>());
-                            }
-                            return baseMask.Statics.Specific;
+                            var mask = new Group_ErrorMask<Static_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Statics, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Statics.Specific,
@@ -5069,11 +4895,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Grass_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Grasses.Specific == null)
-                            {
-                                baseMask.Grasses = new MaskItem<Exception, Group_ErrorMask<Grass_ErrorMask>>(null, new Group_ErrorMask<Grass_ErrorMask>());
-                            }
-                            return baseMask.Grasses.Specific;
+                            var mask = new Group_ErrorMask<Grass_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Grasses, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Grasses.Specific,
@@ -5097,11 +4921,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Tree_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Trees.Specific == null)
-                            {
-                                baseMask.Trees = new MaskItem<Exception, Group_ErrorMask<Tree_ErrorMask>>(null, new Group_ErrorMask<Tree_ErrorMask>());
-                            }
-                            return baseMask.Trees.Specific;
+                            var mask = new Group_ErrorMask<Tree_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Trees, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Trees.Specific,
@@ -5125,11 +4947,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Flora_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Flora.Specific == null)
-                            {
-                                baseMask.Flora = new MaskItem<Exception, Group_ErrorMask<Flora_ErrorMask>>(null, new Group_ErrorMask<Flora_ErrorMask>());
-                            }
-                            return baseMask.Flora.Specific;
+                            var mask = new Group_ErrorMask<Flora_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Flora, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Flora.Specific,
@@ -5153,11 +4973,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Furnature_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Furnature.Specific == null)
-                            {
-                                baseMask.Furnature = new MaskItem<Exception, Group_ErrorMask<Furnature_ErrorMask>>(null, new Group_ErrorMask<Furnature_ErrorMask>());
-                            }
-                            return baseMask.Furnature.Specific;
+                            var mask = new Group_ErrorMask<Furnature_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Furnature, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Furnature.Specific,
@@ -5181,11 +4999,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Weapon_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Weapons.Specific == null)
-                            {
-                                baseMask.Weapons = new MaskItem<Exception, Group_ErrorMask<Weapon_ErrorMask>>(null, new Group_ErrorMask<Weapon_ErrorMask>());
-                            }
-                            return baseMask.Weapons.Specific;
+                            var mask = new Group_ErrorMask<Weapon_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Weapons, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Weapons.Specific,
@@ -5209,11 +5025,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Ammo_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Ammo.Specific == null)
-                            {
-                                baseMask.Ammo = new MaskItem<Exception, Group_ErrorMask<Ammo_ErrorMask>>(null, new Group_ErrorMask<Ammo_ErrorMask>());
-                            }
-                            return baseMask.Ammo.Specific;
+                            var mask = new Group_ErrorMask<Ammo_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Ammo, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Ammo.Specific,
@@ -5237,11 +5051,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<NPC_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.NPCs.Specific == null)
-                            {
-                                baseMask.NPCs = new MaskItem<Exception, Group_ErrorMask<NPC_ErrorMask>>(null, new Group_ErrorMask<NPC_ErrorMask>());
-                            }
-                            return baseMask.NPCs.Specific;
+                            var mask = new Group_ErrorMask<NPC_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.NPCs, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.NPCs.Specific,
@@ -5265,11 +5077,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Creature_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Creatures.Specific == null)
-                            {
-                                baseMask.Creatures = new MaskItem<Exception, Group_ErrorMask<Creature_ErrorMask>>(null, new Group_ErrorMask<Creature_ErrorMask>());
-                            }
-                            return baseMask.Creatures.Specific;
+                            var mask = new Group_ErrorMask<Creature_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Creatures, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Creatures.Specific,
@@ -5293,11 +5103,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<LeveledCreature_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.LeveledCreatures.Specific == null)
-                            {
-                                baseMask.LeveledCreatures = new MaskItem<Exception, Group_ErrorMask<LeveledCreature_ErrorMask>>(null, new Group_ErrorMask<LeveledCreature_ErrorMask>());
-                            }
-                            return baseMask.LeveledCreatures.Specific;
+                            var mask = new Group_ErrorMask<LeveledCreature_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.LeveledCreatures, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.LeveledCreatures.Specific,
@@ -5321,11 +5129,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<SoulGem_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.SoulGems.Specific == null)
-                            {
-                                baseMask.SoulGems = new MaskItem<Exception, Group_ErrorMask<SoulGem_ErrorMask>>(null, new Group_ErrorMask<SoulGem_ErrorMask>());
-                            }
-                            return baseMask.SoulGems.Specific;
+                            var mask = new Group_ErrorMask<SoulGem_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.SoulGems, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.SoulGems.Specific,
@@ -5349,11 +5155,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Key_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Keys.Specific == null)
-                            {
-                                baseMask.Keys = new MaskItem<Exception, Group_ErrorMask<Key_ErrorMask>>(null, new Group_ErrorMask<Key_ErrorMask>());
-                            }
-                            return baseMask.Keys.Specific;
+                            var mask = new Group_ErrorMask<Key_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Keys, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Keys.Specific,
@@ -5377,11 +5181,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Potion_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Potions.Specific == null)
-                            {
-                                baseMask.Potions = new MaskItem<Exception, Group_ErrorMask<Potion_ErrorMask>>(null, new Group_ErrorMask<Potion_ErrorMask>());
-                            }
-                            return baseMask.Potions.Specific;
+                            var mask = new Group_ErrorMask<Potion_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Potions, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Potions.Specific,
@@ -5405,11 +5207,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Subspace_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Subspaces.Specific == null)
-                            {
-                                baseMask.Subspaces = new MaskItem<Exception, Group_ErrorMask<Subspace_ErrorMask>>(null, new Group_ErrorMask<Subspace_ErrorMask>());
-                            }
-                            return baseMask.Subspaces.Specific;
+                            var mask = new Group_ErrorMask<Subspace_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Subspaces, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Subspaces.Specific,
@@ -5433,11 +5233,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<SigilStone_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.SigilStones.Specific == null)
-                            {
-                                baseMask.SigilStones = new MaskItem<Exception, Group_ErrorMask<SigilStone_ErrorMask>>(null, new Group_ErrorMask<SigilStone_ErrorMask>());
-                            }
-                            return baseMask.SigilStones.Specific;
+                            var mask = new Group_ErrorMask<SigilStone_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.SigilStones, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.SigilStones.Specific,
@@ -5461,11 +5259,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<LeveledItem_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.LeveledItems.Specific == null)
-                            {
-                                baseMask.LeveledItems = new MaskItem<Exception, Group_ErrorMask<LeveledItem_ErrorMask>>(null, new Group_ErrorMask<LeveledItem_ErrorMask>());
-                            }
-                            return baseMask.LeveledItems.Specific;
+                            var mask = new Group_ErrorMask<LeveledItem_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.LeveledItems, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.LeveledItems.Specific,
@@ -5489,11 +5285,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Weather_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Weathers.Specific == null)
-                            {
-                                baseMask.Weathers = new MaskItem<Exception, Group_ErrorMask<Weather_ErrorMask>>(null, new Group_ErrorMask<Weather_ErrorMask>());
-                            }
-                            return baseMask.Weathers.Specific;
+                            var mask = new Group_ErrorMask<Weather_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Weathers, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Weathers.Specific,
@@ -5517,11 +5311,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Climate_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Climates.Specific == null)
-                            {
-                                baseMask.Climates = new MaskItem<Exception, Group_ErrorMask<Climate_ErrorMask>>(null, new Group_ErrorMask<Climate_ErrorMask>());
-                            }
-                            return baseMask.Climates.Specific;
+                            var mask = new Group_ErrorMask<Climate_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Climates, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Climates.Specific,
@@ -5545,11 +5337,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<Group_ErrorMask<Region_ErrorMask>>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.Regions.Specific == null)
-                            {
-                                baseMask.Regions = new MaskItem<Exception, Group_ErrorMask<Region_ErrorMask>>(null, new Group_ErrorMask<Region_ErrorMask>());
-                            }
-                            return baseMask.Regions.Specific;
+                            var mask = new Group_ErrorMask<Region_ErrorMask>();
+                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Regions, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.Regions.Specific,
@@ -5956,7 +5746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMod_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.TES4 = item.TES4_Property.LoquiEqualsHelper(rhs.TES4_Property, (loqLhs, loqRhs) => TES4Common.GetEqualsMask(loqLhs, loqRhs));
+            ret.TES4 = item.TES4_Property.LoquiEqualsHelper(rhs.TES4_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.GameSettings = new MaskItem<bool, Group_Mask<bool>>();
             ret.GameSettings.Specific = GroupCommon.GetEqualsMask(item.GameSettings, rhs.GameSettings);
             ret.GameSettings.Overall = ret.GameSettings.Specific.AllEqual((b) => b);

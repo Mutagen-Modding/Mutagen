@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class SpellLeveled : Spell, ISpellLeveled, ILoquiObjectSetter, IEquatable<SpellLeveled>
+    public partial class SpellLeveled : Spell, ISpellLeveled, ILoquiObject<SpellLeveled>, ILoquiObjectSetter, IEquatable<SpellLeveled>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SpellLeveled_Registration.Instance;
@@ -59,6 +59,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<SpellLeveled>.GetEqualsMask(SpellLeveled rhs) => SpellLeveledCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ISpellLeveledGetter>.GetEqualsMask(ISpellLeveledGetter rhs) => SpellLeveledCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -81,6 +83,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new SpellLeveled_Mask<bool> GetHasBeenSetMask()
         {
             return SpellLeveledCommon.GetHasBeenSetMask(this);
@@ -791,31 +794,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            SpellLeveled_CopyMask copyMask = null,
-            ISpellLeveledGetter def = null)
-            where CopyType : class, ISpellLeveled
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(SpellLeveled)))
-            {
-                ret = new SpellLeveled() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static SpellLeveled Copy_ToLoqui(
             ISpellLeveledGetter item,
             SpellLeveled_CopyMask copyMask = null,
@@ -835,6 +813,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            ISpellLeveledGetter rhs,
+            SpellLeveled_CopyMask copyMask,
+            ISpellLeveledGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ISpellLeveledGetter rhs,
+            out SpellLeveled_ErrorMask errorMask,
+            SpellLeveled_CopyMask copyMask = null,
+            ISpellLeveledGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            SpellLeveled_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new SpellLeveled_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            SpellLeveledCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -886,11 +907,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface ISpellLeveled : ISpellLeveledGetter, ISpell, ILoquiClass<ISpellLeveled, ISpellLeveledGetter>, ILoquiClass<SpellLeveled, ISpellLeveledGetter>
+    public partial interface ISpellLeveled : ISpellLeveledGetter, ISpell, ILoquiClass<ISpellLeveled, ISpellLeveledGetter>, ILoquiClass<SpellLeveled, ISpellLeveledGetter>
     {
     }
 
-    public interface ISpellLeveledGetter : ISpellGetter
+    public partial interface ISpellLeveledGetter : ISpellGetter
     {
 
     }
@@ -1068,75 +1089,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this ISpellLeveled item,
-            ISpellLeveledGetter rhs,
-            SpellLeveled_CopyMask copyMask = null,
-            ISpellLeveledGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            SpellLeveledCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ISpellLeveled item,
-            ISpellLeveledGetter rhs,
-            out SpellLeveled_ErrorMask errorMask,
-            SpellLeveled_CopyMask copyMask = null,
-            ISpellLeveledGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            SpellLeveledCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ISpellLeveled item,
+            ISpellLeveled item,
             ISpellLeveledGetter rhs,
             ISpellLeveledGetter def,
             bool doMasks,
-            out SpellLeveled_ErrorMask errorMask,
-            SpellLeveled_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            SpellLeveled_ErrorMask retErrorMask = null;
-            Func<SpellLeveled_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new SpellLeveled_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this ISpellLeveled item,
-            ISpellLeveledGetter rhs,
-            ISpellLeveledGetter def,
-            bool doMasks,
-            Func<SpellLeveled_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             SpellLeveled_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

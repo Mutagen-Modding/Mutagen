@@ -24,7 +24,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Relation : IRelation, ILoquiObjectSetter, IEquatable<Relation>
+    public partial class Relation : IRelation, ILoquiObject<Relation>, ILoquiObjectSetter, IEquatable<Relation>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Relation_Registration.Instance;
@@ -83,6 +83,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Relation>.GetEqualsMask(Relation rhs) => RelationCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IRelationGetter>.GetEqualsMask(IRelationGetter rhs) => RelationCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -105,6 +107,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public Relation_Mask<bool> GetHasBeenSetMask()
         {
             return RelationCommon.GetHasBeenSetMask(this);
@@ -768,31 +771,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Relation_CopyMask copyMask = null,
-            IRelationGetter def = null)
-            where CopyType : class, IRelation
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Relation)))
-            {
-                ret = new Relation() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Relation Copy_ToLoqui(
             IRelationGetter item,
             Relation_CopyMask copyMask = null,
@@ -812,6 +790,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IRelationGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IRelationGetter rhs,
+            Relation_CopyMask copyMask,
+            IRelationGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IRelationGetter rhs,
+            out Relation_ErrorMask errorMask,
+            Relation_CopyMask copyMask = null,
+            IRelationGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Relation_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Relation_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            RelationCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -890,7 +924,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IRelation : IRelationGetter, ILoquiClass<IRelation, IRelationGetter>, ILoquiClass<Relation, IRelationGetter>
+    public partial interface IRelation : IRelationGetter, ILoquiClass<IRelation, IRelationGetter>, ILoquiClass<Relation, IRelationGetter>
     {
         new Faction Faction { get; set; }
         new Int32 Modifier { get; set; }
@@ -898,7 +932,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IRelationGetter : ILoquiObject
+    public partial interface IRelationGetter : ILoquiObject
     {
         #region Faction
         Faction Faction { get; }
@@ -1109,75 +1143,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IRelation item,
-            IRelationGetter rhs,
-            Relation_CopyMask copyMask = null,
-            IRelationGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            RelationCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IRelation item,
-            IRelationGetter rhs,
-            out Relation_ErrorMask errorMask,
-            Relation_CopyMask copyMask = null,
-            IRelationGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            RelationCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IRelation item,
+            IRelation item,
             IRelationGetter rhs,
             IRelationGetter def,
             bool doMasks,
-            out Relation_ErrorMask errorMask,
-            Relation_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Relation_ErrorMask retErrorMask = null;
-            Func<Relation_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Relation_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IRelation item,
-            IRelationGetter rhs,
-            IRelationGetter def,
-            bool doMasks,
-            Func<Relation_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Relation_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

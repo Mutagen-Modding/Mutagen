@@ -25,7 +25,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class LocalVariable : ILocalVariable, ILoquiObjectSetter, IEquatable<LocalVariable>
+    public partial class LocalVariable : ILocalVariable, ILoquiObject<LocalVariable>, ILoquiObjectSetter, IEquatable<LocalVariable>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocalVariable_Registration.Instance;
@@ -90,6 +90,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<LocalVariable>.GetEqualsMask(LocalVariable rhs) => LocalVariableCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ILocalVariableGetter>.GetEqualsMask(ILocalVariableGetter rhs) => LocalVariableCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -112,6 +114,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public LocalVariable_Mask<bool> GetHasBeenSetMask()
         {
             return LocalVariableCommon.GetHasBeenSetMask(this);
@@ -824,31 +827,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            LocalVariable_CopyMask copyMask = null,
-            ILocalVariableGetter def = null)
-            where CopyType : class, ILocalVariable
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(LocalVariable)))
-            {
-                ret = new LocalVariable() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static LocalVariable Copy_ToLoqui(
             ILocalVariableGetter item,
             LocalVariable_CopyMask copyMask = null,
@@ -868,6 +846,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            ILocalVariableGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ILocalVariableGetter rhs,
+            LocalVariable_CopyMask copyMask,
+            ILocalVariableGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ILocalVariableGetter rhs,
+            out LocalVariable_ErrorMask errorMask,
+            LocalVariable_CopyMask copyMask = null,
+            ILocalVariableGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            LocalVariable_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new LocalVariable_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            LocalVariableCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -946,7 +980,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface ILocalVariable : ILocalVariableGetter, ILoquiClass<ILocalVariable, ILocalVariableGetter>, ILoquiClass<LocalVariable, ILocalVariableGetter>
+    public partial interface ILocalVariable : ILocalVariableGetter, ILoquiClass<ILocalVariable, ILocalVariableGetter>, ILoquiClass<LocalVariable, ILocalVariableGetter>
     {
         new LocalVariableData Data { get; set; }
         new INotifyingSetItem<LocalVariableData> Data_Property { get; }
@@ -956,7 +990,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface ILocalVariableGetter : ILoquiObject
+    public partial interface ILocalVariableGetter : ILoquiObject
     {
         #region Data
         LocalVariableData Data { get; }
@@ -1180,75 +1214,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this ILocalVariable item,
-            ILocalVariableGetter rhs,
-            LocalVariable_CopyMask copyMask = null,
-            ILocalVariableGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            LocalVariableCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ILocalVariable item,
-            ILocalVariableGetter rhs,
-            out LocalVariable_ErrorMask errorMask,
-            LocalVariable_CopyMask copyMask = null,
-            ILocalVariableGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            LocalVariableCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ILocalVariable item,
+            ILocalVariable item,
             ILocalVariableGetter rhs,
             ILocalVariableGetter def,
             bool doMasks,
-            out LocalVariable_ErrorMask errorMask,
-            LocalVariable_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            LocalVariable_ErrorMask retErrorMask = null;
-            Func<LocalVariable_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new LocalVariable_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this ILocalVariable item,
-            ILocalVariableGetter rhs,
-            ILocalVariableGetter def,
-            bool doMasks,
-            Func<LocalVariable_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             LocalVariable_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1275,11 +1245,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<LocalVariableData_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Data.Specific == null)
-                                            {
-                                                baseMask.Data = new MaskItem<Exception, LocalVariableData_ErrorMask>(null, new LocalVariableData_ErrorMask());
-                                            }
-                                            return baseMask.Data.Specific;
+                                            var mask = new LocalVariableData_ErrorMask();
+                                            baseMask.SetNthMask((int)LocalVariable_FieldIndex.Data, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Data.Specific,
@@ -1416,7 +1384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LocalVariable_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Data = item.Data_Property.LoquiEqualsHelper(rhs.Data_Property, (loqLhs, loqRhs) => LocalVariableDataCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Data = item.Data_Property.LoquiEqualsHelper(rhs.Data_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
         }
 

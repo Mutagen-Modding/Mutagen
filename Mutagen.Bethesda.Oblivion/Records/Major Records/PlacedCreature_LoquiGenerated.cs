@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class PlacedCreature : MajorRecord, IPlacedCreature, ILoquiObjectSetter, IEquatable<PlacedCreature>
+    public partial class PlacedCreature : MajorRecord, IPlacedCreature, ILoquiObject<PlacedCreature>, ILoquiObjectSetter, IEquatable<PlacedCreature>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedCreature_Registration.Instance;
@@ -151,6 +151,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<PlacedCreature>.GetEqualsMask(PlacedCreature rhs) => PlacedCreatureCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IPlacedCreatureGetter>.GetEqualsMask(IPlacedCreatureGetter rhs) => PlacedCreatureCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -173,6 +175,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new PlacedCreature_Mask<bool> GetHasBeenSetMask()
         {
             return PlacedCreatureCommon.GetHasBeenSetMask(this);
@@ -996,31 +999,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            PlacedCreature_CopyMask copyMask = null,
-            IPlacedCreatureGetter def = null)
-            where CopyType : class, IPlacedCreature
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(PlacedCreature)))
-            {
-                ret = new PlacedCreature() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static PlacedCreature Copy_ToLoqui(
             IPlacedCreatureGetter item,
             PlacedCreature_CopyMask copyMask = null,
@@ -1040,6 +1018,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IPlacedCreatureGetter rhs,
+            PlacedCreature_CopyMask copyMask,
+            IPlacedCreatureGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IPlacedCreatureGetter rhs,
+            out PlacedCreature_ErrorMask errorMask,
+            PlacedCreature_CopyMask copyMask = null,
+            IPlacedCreatureGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            PlacedCreature_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new PlacedCreature_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            PlacedCreatureCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1161,7 +1182,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IPlacedCreature : IPlacedCreatureGetter, IMajorRecord, ILoquiClass<IPlacedCreature, IPlacedCreatureGetter>, ILoquiClass<PlacedCreature, IPlacedCreatureGetter>
+    public partial interface IPlacedCreature : IPlacedCreatureGetter, IMajorRecord, ILoquiClass<IPlacedCreature, IPlacedCreatureGetter>, ILoquiClass<PlacedCreature, IPlacedCreatureGetter>
     {
         new MajorRecord Object { get; set; }
         new Ownership Ownership { get; set; }
@@ -1184,7 +1205,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IPlacedCreatureGetter : IMajorRecordGetter
+    public partial interface IPlacedCreatureGetter : IMajorRecordGetter
     {
         #region Object
         MajorRecord Object { get; }
@@ -1494,75 +1515,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IPlacedCreature item,
-            IPlacedCreatureGetter rhs,
-            PlacedCreature_CopyMask copyMask = null,
-            IPlacedCreatureGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            PlacedCreatureCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IPlacedCreature item,
-            IPlacedCreatureGetter rhs,
-            out PlacedCreature_ErrorMask errorMask,
-            PlacedCreature_CopyMask copyMask = null,
-            IPlacedCreatureGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            PlacedCreatureCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IPlacedCreature item,
+            IPlacedCreature item,
             IPlacedCreatureGetter rhs,
             IPlacedCreatureGetter def,
             bool doMasks,
-            out PlacedCreature_ErrorMask errorMask,
-            PlacedCreature_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            PlacedCreature_ErrorMask retErrorMask = null;
-            Func<PlacedCreature_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new PlacedCreature_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IPlacedCreature item,
-            IPlacedCreatureGetter rhs,
-            IPlacedCreatureGetter def,
-            bool doMasks,
-            Func<PlacedCreature_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             PlacedCreature_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1612,11 +1569,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Ownership_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Ownership.Specific == null)
-                                            {
-                                                baseMask.Ownership = new MaskItem<Exception, Ownership_ErrorMask>(null, new Ownership_ErrorMask());
-                                            }
-                                            return baseMask.Ownership.Specific;
+                                            var mask = new Ownership_ErrorMask();
+                                            baseMask.SetNthMask((int)PlacedCreature_FieldIndex.Ownership, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Ownership.Specific,
@@ -1663,11 +1618,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<EnableParent_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.EnableParent.Specific == null)
-                                            {
-                                                baseMask.EnableParent = new MaskItem<Exception, EnableParent_ErrorMask>(null, new EnableParent_ErrorMask());
-                                            }
-                                            return baseMask.EnableParent.Specific;
+                                            var mask = new EnableParent_ErrorMask();
+                                            baseMask.SetNthMask((int)PlacedCreature_FieldIndex.EnableParent, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.EnableParent.Specific,
@@ -1902,8 +1855,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Object = item.Object_Property.Equals(rhs.Object_Property, (l, r) => l == r);
-            ret.Ownership = item.Ownership_Property.LoquiEqualsHelper(rhs.Ownership_Property, (loqLhs, loqRhs) => OwnershipCommon.GetEqualsMask(loqLhs, loqRhs));
-            ret.EnableParent = item.EnableParent_Property.LoquiEqualsHelper(rhs.EnableParent_Property, (loqLhs, loqRhs) => EnableParentCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Ownership = item.Ownership_Property.LoquiEqualsHelper(rhs.Ownership_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.EnableParent = item.EnableParent_Property.LoquiEqualsHelper(rhs.EnableParent_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.RagdollData = item.RagdollData_Property.Equals(rhs.RagdollData_Property, (l, r) => l.EqualsFast(r));
             ret.Scale = item.Scale_Property.Equals(rhs.Scale_Property, (l, r) => l == r);
             ret.Position = item.Position == rhs.Position;

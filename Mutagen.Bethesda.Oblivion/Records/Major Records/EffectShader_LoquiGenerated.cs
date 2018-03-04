@@ -25,7 +25,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class EffectShader : MajorRecord, IEffectShader, ILoquiObjectSetter, IEquatable<EffectShader>
+    public partial class EffectShader : MajorRecord, IEffectShader, ILoquiObject<EffectShader>, ILoquiObjectSetter, IEquatable<EffectShader>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectShader_Registration.Instance;
@@ -58,6 +58,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<EffectShader>.GetEqualsMask(EffectShader rhs) => EffectShaderCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IEffectShaderGetter>.GetEqualsMask(IEffectShaderGetter rhs) => EffectShaderCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -80,6 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new EffectShader_Mask<bool> GetHasBeenSetMask()
         {
             return EffectShaderCommon.GetHasBeenSetMask(this);
@@ -742,31 +745,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            EffectShader_CopyMask copyMask = null,
-            IEffectShaderGetter def = null)
-            where CopyType : class, IEffectShader
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(EffectShader)))
-            {
-                ret = new EffectShader() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static EffectShader Copy_ToLoqui(
             IEffectShaderGetter item,
             EffectShader_CopyMask copyMask = null,
@@ -786,6 +764,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IEffectShaderGetter rhs,
+            EffectShader_CopyMask copyMask,
+            IEffectShaderGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IEffectShaderGetter rhs,
+            out EffectShader_ErrorMask errorMask,
+            EffectShader_CopyMask copyMask = null,
+            IEffectShaderGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            EffectShader_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new EffectShader_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            EffectShaderCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -837,11 +858,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IEffectShader : IEffectShaderGetter, IMajorRecord, ILoquiClass<IEffectShader, IEffectShaderGetter>, ILoquiClass<EffectShader, IEffectShaderGetter>
+    public partial interface IEffectShader : IEffectShaderGetter, IMajorRecord, ILoquiClass<IEffectShader, IEffectShaderGetter>, ILoquiClass<EffectShader, IEffectShaderGetter>
     {
     }
 
-    public interface IEffectShaderGetter : IMajorRecordGetter
+    public partial interface IEffectShaderGetter : IMajorRecordGetter
     {
 
     }
@@ -1018,75 +1039,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IEffectShader item,
-            IEffectShaderGetter rhs,
-            EffectShader_CopyMask copyMask = null,
-            IEffectShaderGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            EffectShaderCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IEffectShader item,
-            IEffectShaderGetter rhs,
-            out EffectShader_ErrorMask errorMask,
-            EffectShader_CopyMask copyMask = null,
-            IEffectShaderGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            EffectShaderCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IEffectShader item,
+            IEffectShader item,
             IEffectShaderGetter rhs,
             IEffectShaderGetter def,
             bool doMasks,
-            out EffectShader_ErrorMask errorMask,
-            EffectShader_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            EffectShader_ErrorMask retErrorMask = null;
-            Func<EffectShader_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new EffectShader_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IEffectShader item,
-            IEffectShaderGetter rhs,
-            IEffectShaderGetter def,
-            bool doMasks,
-            Func<EffectShader_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             EffectShader_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

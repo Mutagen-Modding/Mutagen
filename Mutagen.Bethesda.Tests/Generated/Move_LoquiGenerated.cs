@@ -22,7 +22,7 @@ using System.Diagnostics;
 namespace Mutagen.Bethesda.Tests
 {
     #region Class
-    public partial class Move : IMove, ILoquiObjectSetter, IEquatable<Move>
+    public partial class Move : IMove, ILoquiObject<Move>, ILoquiObjectSetter, IEquatable<Move>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Move_Registration.Instance;
@@ -65,6 +65,8 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
+        IMask<bool> IEqualsMask<Move>.GetEqualsMask(Move rhs) => MoveCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IMoveGetter>.GetEqualsMask(IMoveGetter rhs) => MoveCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -87,6 +89,7 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public Move_Mask<bool> GetHasBeenSetMask()
         {
             return MoveCommon.GetHasBeenSetMask(this);
@@ -450,31 +453,6 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Move_CopyMask copyMask = null,
-            IMoveGetter def = null)
-            where CopyType : class, IMove
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Move)))
-            {
-                ret = new Move() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Move Copy_ToLoqui(
             IMoveGetter item,
             Move_CopyMask copyMask = null,
@@ -494,6 +472,62 @@ namespace Mutagen.Bethesda.Tests
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IMoveGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IMoveGetter rhs,
+            Move_CopyMask copyMask,
+            IMoveGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IMoveGetter rhs,
+            out Move_ErrorMask errorMask,
+            Move_CopyMask copyMask = null,
+            IMoveGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Move_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Move_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            MoveCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -564,7 +598,7 @@ namespace Mutagen.Bethesda.Tests
     #endregion
 
     #region Interface
-    public interface IMove : IMoveGetter, ILoquiClass<IMove, IMoveGetter>, ILoquiClass<Move, IMoveGetter>
+    public partial interface IMove : IMoveGetter, ILoquiClass<IMove, IMoveGetter>, ILoquiClass<Move, IMoveGetter>
     {
         new RangeInt64 SectionToMove { get; set; }
 
@@ -572,7 +606,7 @@ namespace Mutagen.Bethesda.Tests
 
     }
 
-    public interface IMoveGetter : ILoquiObject
+    public partial interface IMoveGetter : ILoquiObject
     {
         #region SectionToMove
         RangeInt64 SectionToMove { get; }
@@ -777,75 +811,11 @@ namespace Mutagen.Bethesda.Tests.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IMove item,
-            IMoveGetter rhs,
-            Move_CopyMask copyMask = null,
-            IMoveGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            MoveCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IMove item,
-            IMoveGetter rhs,
-            out Move_ErrorMask errorMask,
-            Move_CopyMask copyMask = null,
-            IMoveGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            MoveCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IMove item,
+            IMove item,
             IMoveGetter rhs,
             IMoveGetter def,
             bool doMasks,
-            out Move_ErrorMask errorMask,
-            Move_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Move_ErrorMask retErrorMask = null;
-            Func<Move_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Move_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IMove item,
-            IMoveGetter rhs,
-            IMoveGetter def,
-            bool doMasks,
-            Func<Move_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Move_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

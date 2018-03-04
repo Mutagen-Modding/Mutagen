@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public abstract partial class ClothingAbstract : NamedMajorRecord, IClothingAbstract, ILoquiObjectSetter, IEquatable<ClothingAbstract>
+    public abstract partial class ClothingAbstract : NamedMajorRecord, IClothingAbstract, ILoquiObject<ClothingAbstract>, ILoquiObjectSetter, IEquatable<ClothingAbstract>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClothingAbstract_Registration.Instance;
@@ -200,6 +200,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<ClothingAbstract>.GetEqualsMask(ClothingAbstract rhs) => ClothingAbstractCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IClothingAbstractGetter>.GetEqualsMask(IClothingAbstractGetter rhs) => ClothingAbstractCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -222,6 +224,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new ClothingAbstract_Mask<bool> GetHasBeenSetMask()
         {
             return ClothingAbstractCommon.GetHasBeenSetMask(this);
@@ -862,23 +865,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            ClothingAbstract_CopyMask copyMask = null,
-            IClothingAbstractGetter def = null)
-            where CopyType : class, IClothingAbstract
-        {
-            CopyType ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static ClothingAbstract Copy_ToLoqui(
             IClothingAbstractGetter item,
             ClothingAbstract_CopyMask copyMask = null,
@@ -890,6 +876,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IClothingAbstractGetter rhs,
+            ClothingAbstract_CopyMask copyMask,
+            IClothingAbstractGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IClothingAbstractGetter rhs,
+            out ClothingAbstract_ErrorMask errorMask,
+            ClothingAbstract_CopyMask copyMask = null,
+            IClothingAbstractGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            ClothingAbstract_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new ClothingAbstract_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            ClothingAbstractCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1041,7 +1070,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IClothingAbstract : IClothingAbstractGetter, INamedMajorRecord, ILoquiClass<IClothingAbstract, IClothingAbstractGetter>, ILoquiClass<ClothingAbstract, IClothingAbstractGetter>
+    public partial interface IClothingAbstract : IClothingAbstractGetter, INamedMajorRecord, ILoquiClass<IClothingAbstract, IClothingAbstractGetter>, ILoquiClass<ClothingAbstract, IClothingAbstractGetter>
     {
         new Script Script { get; set; }
         new Enchantment Enchantment { get; set; }
@@ -1074,7 +1103,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IClothingAbstractGetter : INamedMajorRecordGetter
+    public partial interface IClothingAbstractGetter : INamedMajorRecordGetter
     {
         #region Script
         Script Script { get; }
@@ -1508,75 +1537,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IClothingAbstract item,
-            IClothingAbstractGetter rhs,
-            ClothingAbstract_CopyMask copyMask = null,
-            IClothingAbstractGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            ClothingAbstractCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IClothingAbstract item,
-            IClothingAbstractGetter rhs,
-            out ClothingAbstract_ErrorMask errorMask,
-            ClothingAbstract_CopyMask copyMask = null,
-            IClothingAbstractGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            ClothingAbstractCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IClothingAbstract item,
+            IClothingAbstract item,
             IClothingAbstractGetter rhs,
             IClothingAbstractGetter def,
             bool doMasks,
-            out ClothingAbstract_ErrorMask errorMask,
-            ClothingAbstract_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            ClothingAbstract_ErrorMask retErrorMask = null;
-            Func<ClothingAbstract_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new ClothingAbstract_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IClothingAbstract item,
-            IClothingAbstractGetter rhs,
-            IClothingAbstractGetter def,
-            bool doMasks,
-            Func<ClothingAbstract_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             ClothingAbstract_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1684,11 +1649,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.MaleBipedModel.Specific == null)
-                                            {
-                                                baseMask.MaleBipedModel = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.MaleBipedModel.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)ClothingAbstract_FieldIndex.MaleBipedModel, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.MaleBipedModel.Specific,
@@ -1735,11 +1698,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.MaleWorldModel.Specific == null)
-                                            {
-                                                baseMask.MaleWorldModel = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.MaleWorldModel.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)ClothingAbstract_FieldIndex.MaleWorldModel, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.MaleWorldModel.Specific,
@@ -1801,11 +1762,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.FemaleBipedModel.Specific == null)
-                                            {
-                                                baseMask.FemaleBipedModel = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.FemaleBipedModel.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)ClothingAbstract_FieldIndex.FemaleBipedModel, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.FemaleBipedModel.Specific,
@@ -1852,11 +1811,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.FemaleWorldModel.Specific == null)
-                                            {
-                                                baseMask.FemaleWorldModel = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.FemaleWorldModel.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)ClothingAbstract_FieldIndex.FemaleWorldModel, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.FemaleWorldModel.Specific,
@@ -2096,11 +2053,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.EnchantmentPoints = item.EnchantmentPoints_Property.Equals(rhs.EnchantmentPoints_Property, (l, r) => l == r);
             ret.BipedFlags = item.BipedFlags == rhs.BipedFlags;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.MaleBipedModel = item.MaleBipedModel_Property.LoquiEqualsHelper(rhs.MaleBipedModel_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
-            ret.MaleWorldModel = item.MaleWorldModel_Property.LoquiEqualsHelper(rhs.MaleWorldModel_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.MaleBipedModel = item.MaleBipedModel_Property.LoquiEqualsHelper(rhs.MaleBipedModel_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.MaleWorldModel = item.MaleWorldModel_Property.LoquiEqualsHelper(rhs.MaleWorldModel_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.MaleIcon = item.MaleIcon_Property.Equals(rhs.MaleIcon_Property, (l, r) => object.Equals(l, r));
-            ret.FemaleBipedModel = item.FemaleBipedModel_Property.LoquiEqualsHelper(rhs.FemaleBipedModel_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
-            ret.FemaleWorldModel = item.FemaleWorldModel_Property.LoquiEqualsHelper(rhs.FemaleWorldModel_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.FemaleBipedModel = item.FemaleBipedModel_Property.LoquiEqualsHelper(rhs.FemaleBipedModel_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.FemaleWorldModel = item.FemaleWorldModel_Property.LoquiEqualsHelper(rhs.FemaleWorldModel_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.FemaleIcon = item.FemaleIcon_Property.Equals(rhs.FemaleIcon_Property, (l, r) => object.Equals(l, r));
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }

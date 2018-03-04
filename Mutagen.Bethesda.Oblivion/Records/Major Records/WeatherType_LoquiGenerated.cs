@@ -25,7 +25,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class WeatherType : IWeatherType, ILoquiObjectSetter, IEquatable<WeatherType>
+    public partial class WeatherType : IWeatherType, ILoquiObject<WeatherType>, ILoquiObjectSetter, IEquatable<WeatherType>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherType_Registration.Instance;
@@ -122,6 +122,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<WeatherType>.GetEqualsMask(WeatherType rhs) => WeatherTypeCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IWeatherTypeGetter>.GetEqualsMask(IWeatherTypeGetter rhs) => WeatherTypeCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -144,6 +146,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public WeatherType_Mask<bool> GetHasBeenSetMask()
         {
             return WeatherTypeCommon.GetHasBeenSetMask(this);
@@ -832,31 +835,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            WeatherType_CopyMask copyMask = null,
-            IWeatherTypeGetter def = null)
-            where CopyType : class, IWeatherType
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(WeatherType)))
-            {
-                ret = new WeatherType() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static WeatherType Copy_ToLoqui(
             IWeatherTypeGetter item,
             WeatherType_CopyMask copyMask = null,
@@ -876,6 +854,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IWeatherTypeGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IWeatherTypeGetter rhs,
+            WeatherType_CopyMask copyMask,
+            IWeatherTypeGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IWeatherTypeGetter rhs,
+            out WeatherType_ErrorMask errorMask,
+            WeatherType_CopyMask copyMask = null,
+            IWeatherTypeGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            WeatherType_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new WeatherType_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            WeatherTypeCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -974,7 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IWeatherType : IWeatherTypeGetter, ILoquiClass<IWeatherType, IWeatherTypeGetter>, ILoquiClass<WeatherType, IWeatherTypeGetter>
+    public partial interface IWeatherType : IWeatherTypeGetter, ILoquiClass<IWeatherType, IWeatherTypeGetter>, ILoquiClass<WeatherType, IWeatherTypeGetter>
     {
         new Color Sunrise { get; set; }
         new INotifyingItem<Color> Sunrise_Property { get; }
@@ -990,7 +1024,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IWeatherTypeGetter : ILoquiObject
+    public partial interface IWeatherTypeGetter : ILoquiObject
     {
         #region Sunrise
         Color Sunrise { get; }
@@ -1233,75 +1267,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IWeatherType item,
-            IWeatherTypeGetter rhs,
-            WeatherType_CopyMask copyMask = null,
-            IWeatherTypeGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            WeatherTypeCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IWeatherType item,
-            IWeatherTypeGetter rhs,
-            out WeatherType_ErrorMask errorMask,
-            WeatherType_CopyMask copyMask = null,
-            IWeatherTypeGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            WeatherTypeCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IWeatherType item,
+            IWeatherType item,
             IWeatherTypeGetter rhs,
             IWeatherTypeGetter def,
             bool doMasks,
-            out WeatherType_ErrorMask errorMask,
-            WeatherType_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            WeatherType_ErrorMask retErrorMask = null;
-            Func<WeatherType_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new WeatherType_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IWeatherType item,
-            IWeatherTypeGetter rhs,
-            IWeatherTypeGetter def,
-            bool doMasks,
-            Func<WeatherType_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             WeatherType_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

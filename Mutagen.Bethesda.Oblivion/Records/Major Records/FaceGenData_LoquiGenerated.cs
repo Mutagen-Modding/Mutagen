@@ -24,7 +24,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class FaceGenData : IFaceGenData, ILoquiObjectSetter, IEquatable<FaceGenData>
+    public partial class FaceGenData : IFaceGenData, ILoquiObject<FaceGenData>, ILoquiObjectSetter, IEquatable<FaceGenData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceGenData_Registration.Instance;
@@ -103,6 +103,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<FaceGenData>.GetEqualsMask(FaceGenData rhs) => FaceGenDataCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IFaceGenDataGetter>.GetEqualsMask(IFaceGenDataGetter rhs) => FaceGenDataCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -125,6 +127,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public FaceGenData_Mask<bool> GetHasBeenSetMask()
         {
             return FaceGenDataCommon.GetHasBeenSetMask(this);
@@ -863,31 +866,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            FaceGenData_CopyMask copyMask = null,
-            IFaceGenDataGetter def = null)
-            where CopyType : class, IFaceGenData
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(FaceGenData)))
-            {
-                ret = new FaceGenData() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static FaceGenData Copy_ToLoqui(
             IFaceGenDataGetter item,
             FaceGenData_CopyMask copyMask = null,
@@ -907,6 +885,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IFaceGenDataGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IFaceGenDataGetter rhs,
+            FaceGenData_CopyMask copyMask,
+            IFaceGenDataGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IFaceGenDataGetter rhs,
+            out FaceGenData_ErrorMask errorMask,
+            FaceGenData_CopyMask copyMask = null,
+            IFaceGenDataGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            FaceGenData_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new FaceGenData_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            FaceGenDataCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -995,7 +1029,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IFaceGenData : IFaceGenDataGetter, ILoquiClass<IFaceGenData, IFaceGenDataGetter>, ILoquiClass<FaceGenData, IFaceGenDataGetter>
+    public partial interface IFaceGenData : IFaceGenDataGetter, ILoquiClass<IFaceGenData, IFaceGenDataGetter>, ILoquiClass<FaceGenData, IFaceGenDataGetter>
     {
         new Byte[] SymmetricGeometry { get; set; }
         new INotifyingSetItem<Byte[]> SymmetricGeometry_Property { get; }
@@ -1008,7 +1042,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IFaceGenDataGetter : ILoquiObject
+    public partial interface IFaceGenDataGetter : ILoquiObject
     {
         #region SymmetricGeometry
         Byte[] SymmetricGeometry { get; }
@@ -1250,75 +1284,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IFaceGenData item,
-            IFaceGenDataGetter rhs,
-            FaceGenData_CopyMask copyMask = null,
-            IFaceGenDataGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            FaceGenDataCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IFaceGenData item,
-            IFaceGenDataGetter rhs,
-            out FaceGenData_ErrorMask errorMask,
-            FaceGenData_CopyMask copyMask = null,
-            IFaceGenDataGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            FaceGenDataCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IFaceGenData item,
+            IFaceGenData item,
             IFaceGenDataGetter rhs,
             IFaceGenDataGetter def,
             bool doMasks,
-            out FaceGenData_ErrorMask errorMask,
-            FaceGenData_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            FaceGenData_ErrorMask retErrorMask = null;
-            Func<FaceGenData_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new FaceGenData_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IFaceGenData item,
-            IFaceGenDataGetter rhs,
-            IFaceGenDataGetter def,
-            bool doMasks,
-            Func<FaceGenData_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             FaceGenData_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

@@ -24,7 +24,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class WeatherSound : IWeatherSound, ILoquiObjectSetter, IEquatable<WeatherSound>
+    public partial class WeatherSound : IWeatherSound, ILoquiObject<WeatherSound>, ILoquiObjectSetter, IEquatable<WeatherSound>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherSound_Registration.Instance;
@@ -83,6 +83,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<WeatherSound>.GetEqualsMask(WeatherSound rhs) => WeatherSoundCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IWeatherSoundGetter>.GetEqualsMask(IWeatherSoundGetter rhs) => WeatherSoundCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -105,6 +107,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public WeatherSound_Mask<bool> GetHasBeenSetMask()
         {
             return WeatherSoundCommon.GetHasBeenSetMask(this);
@@ -769,31 +772,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            WeatherSound_CopyMask copyMask = null,
-            IWeatherSoundGetter def = null)
-            where CopyType : class, IWeatherSound
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(WeatherSound)))
-            {
-                ret = new WeatherSound() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static WeatherSound Copy_ToLoqui(
             IWeatherSoundGetter item,
             WeatherSound_CopyMask copyMask = null,
@@ -813,6 +791,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IWeatherSoundGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IWeatherSoundGetter rhs,
+            WeatherSound_CopyMask copyMask,
+            IWeatherSoundGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IWeatherSoundGetter rhs,
+            out WeatherSound_ErrorMask errorMask,
+            WeatherSound_CopyMask copyMask = null,
+            IWeatherSoundGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            WeatherSound_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new WeatherSound_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            WeatherSoundCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -891,7 +925,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IWeatherSound : IWeatherSoundGetter, ILoquiClass<IWeatherSound, IWeatherSoundGetter>, ILoquiClass<WeatherSound, IWeatherSoundGetter>
+    public partial interface IWeatherSound : IWeatherSoundGetter, ILoquiClass<IWeatherSound, IWeatherSoundGetter>, ILoquiClass<WeatherSound, IWeatherSoundGetter>
     {
         new Sound Sound { get; set; }
         new WeatherSound.SoundType Type { get; set; }
@@ -899,7 +933,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IWeatherSoundGetter : ILoquiObject
+    public partial interface IWeatherSoundGetter : ILoquiObject
     {
         #region Sound
         Sound Sound { get; }
@@ -1110,75 +1144,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IWeatherSound item,
-            IWeatherSoundGetter rhs,
-            WeatherSound_CopyMask copyMask = null,
-            IWeatherSoundGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            WeatherSoundCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IWeatherSound item,
-            IWeatherSoundGetter rhs,
-            out WeatherSound_ErrorMask errorMask,
-            WeatherSound_CopyMask copyMask = null,
-            IWeatherSoundGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            WeatherSoundCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IWeatherSound item,
+            IWeatherSound item,
             IWeatherSoundGetter rhs,
             IWeatherSoundGetter def,
             bool doMasks,
-            out WeatherSound_ErrorMask errorMask,
-            WeatherSound_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            WeatherSound_ErrorMask retErrorMask = null;
-            Func<WeatherSound_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new WeatherSound_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IWeatherSound item,
-            IWeatherSoundGetter rhs,
-            IWeatherSoundGetter def,
-            bool doMasks,
-            Func<WeatherSound_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             WeatherSound_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

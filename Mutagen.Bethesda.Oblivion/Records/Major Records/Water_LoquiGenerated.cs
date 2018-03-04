@@ -25,7 +25,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Water : MajorRecord, IWater, ILoquiObjectSetter, IEquatable<Water>
+    public partial class Water : MajorRecord, IWater, ILoquiObject<Water>, ILoquiObjectSetter, IEquatable<Water>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Water_Registration.Instance;
@@ -58,6 +58,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Water>.GetEqualsMask(Water rhs) => WaterCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IWaterGetter>.GetEqualsMask(IWaterGetter rhs) => WaterCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -80,6 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Water_Mask<bool> GetHasBeenSetMask()
         {
             return WaterCommon.GetHasBeenSetMask(this);
@@ -742,31 +745,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Water_CopyMask copyMask = null,
-            IWaterGetter def = null)
-            where CopyType : class, IWater
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Water)))
-            {
-                ret = new Water() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Water Copy_ToLoqui(
             IWaterGetter item,
             Water_CopyMask copyMask = null,
@@ -786,6 +764,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IWaterGetter rhs,
+            Water_CopyMask copyMask,
+            IWaterGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IWaterGetter rhs,
+            out Water_ErrorMask errorMask,
+            Water_CopyMask copyMask = null,
+            IWaterGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Water_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Water_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            WaterCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -837,11 +858,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IWater : IWaterGetter, IMajorRecord, ILoquiClass<IWater, IWaterGetter>, ILoquiClass<Water, IWaterGetter>
+    public partial interface IWater : IWaterGetter, IMajorRecord, ILoquiClass<IWater, IWaterGetter>, ILoquiClass<Water, IWaterGetter>
     {
     }
 
-    public interface IWaterGetter : IMajorRecordGetter
+    public partial interface IWaterGetter : IMajorRecordGetter
     {
 
     }
@@ -1018,75 +1039,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IWater item,
-            IWaterGetter rhs,
-            Water_CopyMask copyMask = null,
-            IWaterGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            WaterCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IWater item,
-            IWaterGetter rhs,
-            out Water_ErrorMask errorMask,
-            Water_CopyMask copyMask = null,
-            IWaterGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            WaterCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IWater item,
+            IWater item,
             IWaterGetter rhs,
             IWaterGetter def,
             bool doMasks,
-            out Water_ErrorMask errorMask,
-            Water_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Water_ErrorMask retErrorMask = null;
-            Func<Water_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Water_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IWater item,
-            IWaterGetter rhs,
-            IWaterGetter def,
-            bool doMasks,
-            Func<Water_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Water_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Key : NamedMajorRecord, IKey, ILoquiObjectSetter, IEquatable<Key>
+    public partial class Key : NamedMajorRecord, IKey, ILoquiObject<Key>, ILoquiObjectSetter, IEquatable<Key>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Key_Registration.Instance;
@@ -124,6 +124,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Key>.GetEqualsMask(Key rhs) => KeyCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IKeyGetter>.GetEqualsMask(IKeyGetter rhs) => KeyCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -146,6 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Key_Mask<bool> GetHasBeenSetMask()
         {
             return KeyCommon.GetHasBeenSetMask(this);
@@ -947,31 +950,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Key_CopyMask copyMask = null,
-            IKeyGetter def = null)
-            where CopyType : class, IKey
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Key)))
-            {
-                ret = new Key() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Key Copy_ToLoqui(
             IKeyGetter item,
             Key_CopyMask copyMask = null,
@@ -991,6 +969,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IKeyGetter rhs,
+            Key_CopyMask copyMask,
+            IKeyGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IKeyGetter rhs,
+            out Key_ErrorMask errorMask,
+            Key_CopyMask copyMask = null,
+            IKeyGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Key_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Key_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            KeyCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1092,7 +1113,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IKey : IKeyGetter, INamedMajorRecord, ILoquiClass<IKey, IKeyGetter>, ILoquiClass<Key, IKeyGetter>
+    public partial interface IKey : IKeyGetter, INamedMajorRecord, ILoquiClass<IKey, IKeyGetter>, ILoquiClass<Key, IKeyGetter>
     {
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
@@ -1109,7 +1130,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IKeyGetter : INamedMajorRecordGetter
+    public partial interface IKeyGetter : INamedMajorRecordGetter
     {
         #region Model
         Model Model { get; }
@@ -1382,75 +1403,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IKey item,
-            IKeyGetter rhs,
-            Key_CopyMask copyMask = null,
-            IKeyGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            KeyCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IKey item,
-            IKeyGetter rhs,
-            out Key_ErrorMask errorMask,
-            Key_CopyMask copyMask = null,
-            IKeyGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            KeyCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IKey item,
+            IKey item,
             IKeyGetter rhs,
             IKeyGetter def,
             bool doMasks,
-            out Key_ErrorMask errorMask,
-            Key_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Key_ErrorMask retErrorMask = null;
-            Func<Key_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Key_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IKey item,
-            IKeyGetter rhs,
-            IKeyGetter def,
-            bool doMasks,
-            Func<Key_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Key_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1485,11 +1442,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Model.Specific == null)
-                                            {
-                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.Model.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)Key_FieldIndex.Model, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Model.Specific,
@@ -1701,7 +1656,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Key_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
             ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
             ret.Value = item.Value == rhs.Value;

@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Static : MajorRecord, IStatic, ILoquiObjectSetter, IEquatable<Static>
+    public partial class Static : MajorRecord, IStatic, ILoquiObject<Static>, ILoquiObjectSetter, IEquatable<Static>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Static_Registration.Instance;
@@ -72,6 +72,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Static>.GetEqualsMask(Static rhs) => StaticCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IStaticGetter>.GetEqualsMask(IStaticGetter rhs) => StaticCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -94,6 +96,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Static_Mask<bool> GetHasBeenSetMask()
         {
             return StaticCommon.GetHasBeenSetMask(this);
@@ -797,31 +800,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Static_CopyMask copyMask = null,
-            IStaticGetter def = null)
-            where CopyType : class, IStatic
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Static)))
-            {
-                ret = new Static() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Static Copy_ToLoqui(
             IStaticGetter item,
             Static_CopyMask copyMask = null,
@@ -841,6 +819,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IStaticGetter rhs,
+            Static_CopyMask copyMask,
+            IStaticGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IStaticGetter rhs,
+            out Static_ErrorMask errorMask,
+            Static_CopyMask copyMask = null,
+            IStaticGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Static_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Static_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            StaticCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -902,14 +923,14 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IStatic : IStaticGetter, IMajorRecord, ILoquiClass<IStatic, IStaticGetter>, ILoquiClass<Static, IStaticGetter>
+    public partial interface IStatic : IStaticGetter, IMajorRecord, ILoquiClass<IStatic, IStaticGetter>, ILoquiClass<Static, IStaticGetter>
     {
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
 
     }
 
-    public interface IStaticGetter : IMajorRecordGetter
+    public partial interface IStaticGetter : IMajorRecordGetter
     {
         #region Model
         Model Model { get; }
@@ -1109,75 +1130,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IStatic item,
-            IStaticGetter rhs,
-            Static_CopyMask copyMask = null,
-            IStaticGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            StaticCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IStatic item,
-            IStaticGetter rhs,
-            out Static_ErrorMask errorMask,
-            Static_CopyMask copyMask = null,
-            IStaticGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            StaticCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IStatic item,
+            IStatic item,
             IStaticGetter rhs,
             IStaticGetter def,
             bool doMasks,
-            out Static_ErrorMask errorMask,
-            Static_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Static_ErrorMask retErrorMask = null;
-            Func<Static_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Static_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IStatic item,
-            IStaticGetter rhs,
-            IStaticGetter def,
-            bool doMasks,
-            Func<Static_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Static_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1212,11 +1169,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Model.Specific == null)
-                                            {
-                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.Model.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)Static_FieldIndex.Model, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Model.Specific,
@@ -1329,7 +1284,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Static_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 

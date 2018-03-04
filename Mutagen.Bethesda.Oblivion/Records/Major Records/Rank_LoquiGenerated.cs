@@ -24,7 +24,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Rank : IRank, ILoquiObjectSetter, IEquatable<Rank>
+    public partial class Rank : IRank, ILoquiObject<Rank>, ILoquiObjectSetter, IEquatable<Rank>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Rank_Registration.Instance;
@@ -121,6 +121,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Rank>.GetEqualsMask(Rank rhs) => RankCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IRankGetter>.GetEqualsMask(IRankGetter rhs) => RankCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -143,6 +145,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public Rank_Mask<bool> GetHasBeenSetMask()
         {
             return RankCommon.GetHasBeenSetMask(this);
@@ -903,31 +906,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Rank_CopyMask copyMask = null,
-            IRankGetter def = null)
-            where CopyType : class, IRank
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Rank)))
-            {
-                ret = new Rank() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Rank Copy_ToLoqui(
             IRankGetter item,
             Rank_CopyMask copyMask = null,
@@ -947,6 +925,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IRankGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IRankGetter rhs,
+            Rank_CopyMask copyMask,
+            IRankGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IRankGetter rhs,
+            out Rank_ErrorMask errorMask,
+            Rank_CopyMask copyMask = null,
+            IRankGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Rank_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Rank_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            RankCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1045,7 +1079,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IRank : IRankGetter, ILoquiClass<IRank, IRankGetter>, ILoquiClass<Rank, IRankGetter>
+    public partial interface IRank : IRankGetter, ILoquiClass<IRank, IRankGetter>, ILoquiClass<Rank, IRankGetter>
     {
         new Int32 RankNumber { get; set; }
         new INotifyingSetItem<Int32> RankNumber_Property { get; }
@@ -1061,7 +1095,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IRankGetter : ILoquiObject
+    public partial interface IRankGetter : ILoquiObject
     {
         #region RankNumber
         Int32 RankNumber { get; }
@@ -1322,75 +1356,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IRank item,
-            IRankGetter rhs,
-            Rank_CopyMask copyMask = null,
-            IRankGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            RankCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IRank item,
-            IRankGetter rhs,
-            out Rank_ErrorMask errorMask,
-            Rank_CopyMask copyMask = null,
-            IRankGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            RankCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IRank item,
+            IRank item,
             IRankGetter rhs,
             IRankGetter def,
             bool doMasks,
-            out Rank_ErrorMask errorMask,
-            Rank_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Rank_ErrorMask retErrorMask = null;
-            Func<Rank_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Rank_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IRank item,
-            IRankGetter rhs,
-            IRankGetter def,
-            bool doMasks,
-            Func<Rank_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Rank_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

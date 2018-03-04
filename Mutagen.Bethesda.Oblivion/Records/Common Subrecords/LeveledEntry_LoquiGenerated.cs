@@ -24,8 +24,8 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class LeveledEntry<T> : ILeveledEntry<T>, ILoquiObjectSetter, IEquatable<LeveledEntry<T>>
-        where T : Bethesda.MajorRecord, ILoquiObjectGetter
+    public partial class LeveledEntry<T> : ILeveledEntry<T>, ILoquiObject<LeveledEntry<T>>, ILoquiObjectSetter, IEquatable<LeveledEntry<T>>
+        where T : Bethesda.MajorRecord, ILoquiObject<T>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledEntry_Registration.Instance;
@@ -129,6 +129,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<LeveledEntry<T>>.GetEqualsMask(LeveledEntry<T> rhs) => LeveledEntryCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ILeveledEntryGetter<T>>.GetEqualsMask(ILeveledEntryGetter<T> rhs) => LeveledEntryCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -151,6 +153,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public LeveledEntry_Mask<bool> GetHasBeenSetMask()
         {
             return LeveledEntryCommon.GetHasBeenSetMask(this);
@@ -449,7 +452,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 writer.Formatting = Formatting.Indented;
                 writer.Indentation = 3;
-                Write_XML(
+                Write_XML<T_ErrMask>(
                     writer: writer,
                     name: name);
             }
@@ -473,7 +476,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 writer.Formatting = Formatting.Indented;
                 writer.Indentation = 3;
-                Write_XML(
+                Write_XML<T_ErrMask>(
                     writer: writer,
                     name: name);
             }
@@ -821,7 +824,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (var writer = new MutagenWriter(path))
             {
-                Write_Binary(writer: writer);
+                Write_Binary<T_ErrMask>(writer: writer);
             }
         }
 
@@ -835,7 +838,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (var writer = new MutagenWriter(stream))
             {
-                Write_Binary(writer: writer);
+                Write_Binary<T_ErrMask>(writer: writer);
             }
         }
 
@@ -961,35 +964,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = (LeveledEntry<T>)System.Activator.CreateInstance(item.GetType());
             }
-            ret.CopyFieldsFrom(
+            ret.CopyFieldsFrom<T_CopyMask>(
                 item,
                 copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-
-        public static CopyType CopyGeneric<CopyType, T_CopyMask>(
-            CopyType item,
-            LeveledEntry_CopyMask<T_CopyMask> copyMask = null,
-            ILeveledEntryGetter<T> def = null)
-            where T_CopyMask : MajorRecord_CopyMask, new()
-            where CopyType : class, ILeveledEntry<T>
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(LeveledEntry<T>)))
-            {
-                ret = new LeveledEntry<T>() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom<T, MajorRecord_ErrorMask, T_CopyMask>(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
                 def: def);
             return ret;
         }
@@ -1009,11 +986,71 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = (LeveledEntry<T>)System.Activator.CreateInstance(item.GetType());
             }
-            ret.CopyFieldsFrom(
+            ret.CopyFieldsFrom<T_CopyMask>(
                 item,
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom<T_CopyMask>(
+            ILeveledEntryGetter<T> rhs,
+            NotifyingFireParameters cmds = null)
+            where T_CopyMask : MajorRecord_CopyMask, new()
+        {
+            this.CopyFieldsFrom<MajorRecord_ErrorMask, T_CopyMask>(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom<T_CopyMask>(
+            ILeveledEntryGetter<T> rhs,
+            LeveledEntry_CopyMask<T_CopyMask> copyMask,
+            ILeveledEntryGetter<T> def = null,
+            NotifyingFireParameters cmds = null)
+            where T_CopyMask : MajorRecord_CopyMask, new()
+        {
+            this.CopyFieldsFrom<MajorRecord_ErrorMask, T_CopyMask>(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom<T_ErrMask, T_CopyMask>(
+            ILeveledEntryGetter<T> rhs,
+            out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
+            LeveledEntry_CopyMask<T_CopyMask> copyMask = null,
+            ILeveledEntryGetter<T> def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_CopyMask : MajorRecord_CopyMask, new()
+        {
+            LeveledEntry_ErrorMask<T_ErrMask> retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new LeveledEntry_ErrorMask<T_ErrMask>();
+                }
+                return retErrorMask;
+            };
+            LeveledEntryCommon.CopyFieldsFrom<T, T_CopyMask>(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1122,8 +1159,8 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface ILeveledEntry<T> : ILeveledEntryGetter<T>, ILoquiClass<ILeveledEntry<T>, ILeveledEntryGetter<T>>, ILoquiClass<LeveledEntry<T>, ILeveledEntryGetter<T>>
-        where T : Bethesda.MajorRecord, ILoquiObjectGetter
+    public partial interface ILeveledEntry<T> : ILeveledEntryGetter<T>, ILoquiClass<ILeveledEntry<T>, ILeveledEntryGetter<T>>, ILoquiClass<LeveledEntry<T>, ILeveledEntryGetter<T>>
+        where T : Bethesda.MajorRecord, ILoquiObject<T>
     {
         new Int16 Level { get; set; }
         new INotifyingItem<Int16> Level_Property { get; }
@@ -1140,8 +1177,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface ILeveledEntryGetter<T> : ILoquiObject
-        where T : Bethesda.MajorRecord, ILoquiObjectGetter
+    public partial interface ILeveledEntryGetter<T> : ILoquiObject
+        where T : Bethesda.MajorRecord, ILoquiObject<T>
     {
         #region Level
         Int16 Level { get; }
@@ -1380,7 +1417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
 
     public class LeveledEntry_Registration<T> : LeveledEntry_Registration
-        where T : Bethesda.MajorRecord, ILoquiObjectGetter
+        where T : Bethesda.MajorRecord, ILoquiObject<T>
     {
         public static readonly LeveledEntry_Registration<T> GenericInstance = new LeveledEntry_Registration<T>();
 
@@ -1412,87 +1449,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom<T, T_CopyMask>(
-            this ILeveledEntry<T> item,
-            ILeveledEntryGetter<T> rhs,
-            LeveledEntry_CopyMask<T_CopyMask> copyMask = null,
-            ILeveledEntryGetter<T> def = null,
-            NotifyingFireParameters cmds = null)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
-            where T_CopyMask : MajorRecord_CopyMask, new()
-        {
-            LeveledEntryCommon.CopyFieldsFrom<T, MajorRecord_ErrorMask, T_CopyMask>(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom<T, T_ErrMask, T_CopyMask>(
-            this ILeveledEntry<T> item,
-            ILeveledEntryGetter<T> rhs,
-            out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
-            LeveledEntry_CopyMask<T_CopyMask> copyMask = null,
-            ILeveledEntryGetter<T> def = null,
-            NotifyingFireParameters cmds = null)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-            where T_CopyMask : MajorRecord_CopyMask, new()
-        {
-            LeveledEntryCommon.CopyFieldsFrom<T, T_ErrMask, T_CopyMask>(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom<T, T_ErrMask, T_CopyMask>(
-            this ILeveledEntry<T> item,
+            ILeveledEntry<T> item,
             ILeveledEntryGetter<T> rhs,
             ILeveledEntryGetter<T> def,
             bool doMasks,
-            out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
+            Func<IErrorMask> errorMask,
             LeveledEntry_CopyMask<T_CopyMask> copyMask,
             NotifyingFireParameters cmds = null)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-            where T_CopyMask : MajorRecord_CopyMask, new()
-        {
-            LeveledEntry_ErrorMask<T_ErrMask> retErrorMask = null;
-            Func<LeveledEntry_ErrorMask<T_ErrMask>> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new LeveledEntry_ErrorMask<T_ErrMask>();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom<T, T_ErrMask, T_CopyMask>(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom<T, T_ErrMask, T_CopyMask>(
-            this ILeveledEntry<T> item,
-            ILeveledEntryGetter<T> rhs,
-            ILeveledEntryGetter<T> def,
-            bool doMasks,
-            Func<LeveledEntry_ErrorMask<T_ErrMask>> errorMask,
-            LeveledEntry_CopyMask<T_CopyMask> copyMask,
-            NotifyingFireParameters cmds = null)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T : Bethesda.MajorRecord, ILoquiObject<T>
             where T_CopyMask : MajorRecord_CopyMask, new()
         {
             if (copyMask?.Level ?? true)
@@ -1576,7 +1540,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool on,
             ILeveledEntry<T> obj,
             NotifyingFireParameters cmds = null)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : Bethesda.MajorRecord, ILoquiObject<T>
         {
             LeveledEntry_FieldIndex enu = (LeveledEntry_FieldIndex)index;
             switch (enu)
@@ -1601,7 +1565,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ushort index,
             ILeveledEntry<T> obj,
             NotifyingUnsetParameters cmds = null)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : Bethesda.MajorRecord, ILoquiObject<T>
         {
             LeveledEntry_FieldIndex enu = (LeveledEntry_FieldIndex)index;
             switch (enu)
@@ -1629,7 +1593,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static bool GetNthObjectHasBeenSet<T>(
             ushort index,
             ILeveledEntry<T> obj)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : Bethesda.MajorRecord, ILoquiObject<T>
         {
             LeveledEntry_FieldIndex enu = (LeveledEntry_FieldIndex)index;
             switch (enu)
@@ -1650,7 +1614,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static object GetNthObject<T>(
             ushort index,
             ILeveledEntryGetter<T> obj)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : Bethesda.MajorRecord, ILoquiObject<T>
         {
             LeveledEntry_FieldIndex enu = (LeveledEntry_FieldIndex)index;
             switch (enu)
@@ -1673,7 +1637,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Clear<T>(
             ILeveledEntry<T> item,
             NotifyingUnsetParameters cmds = null)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : Bethesda.MajorRecord, ILoquiObject<T>
         {
             item.Level = default(Int16);
             item.Fluff = default(Byte[]);
@@ -1685,7 +1649,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static LeveledEntry_Mask<bool> GetEqualsMask<T>(
             this ILeveledEntryGetter<T> item,
             ILeveledEntryGetter<T> rhs)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : Bethesda.MajorRecord, ILoquiObject<T>
         {
             var ret = new LeveledEntry_Mask<bool>();
             FillEqualsMask(item, rhs, ret);
@@ -1696,7 +1660,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILeveledEntryGetter<T> item,
             ILeveledEntryGetter<T> rhs,
             LeveledEntry_Mask<bool> ret)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : Bethesda.MajorRecord, ILoquiObject<T>
         {
             if (rhs == null) return;
             ret.Level = item.Level == rhs.Level;
@@ -1710,7 +1674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this ILeveledEntryGetter<T> item,
             string name = null,
             LeveledEntry_Mask<bool> printMask = null)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : Bethesda.MajorRecord, ILoquiObject<T>
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -1722,7 +1686,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             string name = null,
             LeveledEntry_Mask<bool> printMask = null)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : Bethesda.MajorRecord, ILoquiObject<T>
         {
             if (name == null)
             {
@@ -1762,7 +1726,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static bool HasBeenSet<T>(
             this ILeveledEntryGetter<T> item,
             LeveledEntry_Mask<bool?> checkMask)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : Bethesda.MajorRecord, ILoquiObject<T>
         {
             if (checkMask.Count.HasValue && checkMask.Count.Value != item.Count_Property.HasBeenSet) return false;
             if (checkMask.Fluff2.HasValue && checkMask.Fluff2.Value != item.Fluff2_Property.HasBeenSet) return false;
@@ -1770,7 +1734,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static LeveledEntry_Mask<bool> GetHasBeenSetMask<T>(ILeveledEntryGetter<T> item)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : Bethesda.MajorRecord, ILoquiObject<T>
         {
             var ret = new LeveledEntry_Mask<bool>();
             ret.Level = true;
@@ -1789,7 +1753,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
             string name = null)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : Bethesda.MajorRecord, ILoquiObject<T>
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             LeveledEntry_ErrorMask<T_ErrMask> errMaskRet = null;
@@ -1806,7 +1770,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILeveledEntryGetter<T> item,
             Func<LeveledEntry_ErrorMask<T_ErrMask>> errorMask,
             string name = null)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : Bethesda.MajorRecord, ILoquiObject<T>
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             try
@@ -1873,7 +1837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out LeveledEntry_ErrorMask<T_ErrMask> errorMask)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : Bethesda.MajorRecord, ILoquiObject<T>
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             LeveledEntry_ErrorMask<T_ErrMask> errMaskRet = null;
@@ -1890,7 +1854,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LeveledEntry<T> item,
             RecordTypeConverter recordTypeConverter,
             Func<LeveledEntry_ErrorMask<T_ErrMask>> errorMask)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : Bethesda.MajorRecord, ILoquiObject<T>
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             try
@@ -1918,7 +1882,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LeveledEntry<T> item,
             MutagenWriter writer,
             Func<LeveledEntry_ErrorMask<T_ErrMask>> errorMask)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : Bethesda.MajorRecord, ILoquiObject<T>
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(

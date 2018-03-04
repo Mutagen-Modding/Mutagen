@@ -23,7 +23,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda
 {
     #region Class
-    public abstract partial class MajorRecord : IMajorRecord, ILoquiObjectSetter, IEquatable<MajorRecord>
+    public abstract partial class MajorRecord : IMajorRecord, ILoquiObject<MajorRecord>, ILoquiObjectSetter, IEquatable<MajorRecord>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MajorRecord_Registration.Instance;
@@ -130,6 +130,8 @@ namespace Mutagen.Bethesda
 
         #endregion
 
+        IMask<bool> IEqualsMask<MajorRecord>.GetEqualsMask(MajorRecord rhs) => MajorRecordCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IMajorRecordGetter>.GetEqualsMask(IMajorRecordGetter rhs) => MajorRecordCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -152,6 +154,7 @@ namespace Mutagen.Bethesda
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public MajorRecord_Mask<bool> GetHasBeenSetMask()
         {
             return MajorRecordCommon.GetHasBeenSetMask(this);
@@ -597,23 +600,6 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            MajorRecord_CopyMask copyMask = null,
-            IMajorRecordGetter def = null)
-            where CopyType : class, IMajorRecord
-        {
-            CopyType ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static MajorRecord Copy_ToLoqui(
             IMajorRecordGetter item,
             MajorRecord_CopyMask copyMask = null,
@@ -625,6 +611,62 @@ namespace Mutagen.Bethesda
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            MajorRecord_CopyMask copyMask,
+            IMajorRecordGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            out MajorRecord_ErrorMask errorMask,
+            MajorRecord_CopyMask copyMask = null,
+            IMajorRecordGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            MajorRecord_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new MajorRecord_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            MajorRecordCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -715,7 +757,7 @@ namespace Mutagen.Bethesda
     #endregion
 
     #region Interface
-    public interface IMajorRecord : IMajorRecordGetter, ILoquiClass<IMajorRecord, IMajorRecordGetter>, ILoquiClass<MajorRecord, IMajorRecordGetter>
+    public partial interface IMajorRecord : IMajorRecordGetter, ILoquiClass<IMajorRecord, IMajorRecordGetter>, ILoquiClass<MajorRecord, IMajorRecordGetter>
     {
         new MajorRecord.MajorRecordFlag MajorRecordFlags { get; set; }
         new INotifyingItem<MajorRecord.MajorRecordFlag> MajorRecordFlags_Property { get; }
@@ -728,7 +770,7 @@ namespace Mutagen.Bethesda
 
     }
 
-    public interface IMajorRecordGetter : ILoquiObject
+    public partial interface IMajorRecordGetter : ILoquiObject
     {
         #region MajorRecordFlags
         MajorRecord.MajorRecordFlag MajorRecordFlags { get; }
@@ -1111,75 +1153,11 @@ namespace Mutagen.Bethesda.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IMajorRecord item,
-            IMajorRecordGetter rhs,
-            MajorRecord_CopyMask copyMask = null,
-            IMajorRecordGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            MajorRecordCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IMajorRecord item,
-            IMajorRecordGetter rhs,
-            out MajorRecord_ErrorMask errorMask,
-            MajorRecord_CopyMask copyMask = null,
-            IMajorRecordGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            MajorRecordCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IMajorRecord item,
+            IMajorRecord item,
             IMajorRecordGetter rhs,
             IMajorRecordGetter def,
             bool doMasks,
-            out MajorRecord_ErrorMask errorMask,
-            MajorRecord_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            MajorRecord_ErrorMask retErrorMask = null;
-            Func<MajorRecord_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new MajorRecord_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IMajorRecord item,
-            IMajorRecordGetter rhs,
-            IMajorRecordGetter def,
-            bool doMasks,
-            Func<MajorRecord_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             MajorRecord_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

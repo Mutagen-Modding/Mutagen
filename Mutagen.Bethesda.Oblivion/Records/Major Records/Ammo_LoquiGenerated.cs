@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Ammo : ItemAbstract, IAmmo, ILoquiObjectSetter, IEquatable<Ammo>
+    public partial class Ammo : ItemAbstract, IAmmo, ILoquiObject<Ammo>, ILoquiObjectSetter, IEquatable<Ammo>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ammo_Registration.Instance;
@@ -199,6 +199,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Ammo>.GetEqualsMask(Ammo rhs) => AmmoCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IAmmoGetter>.GetEqualsMask(IAmmoGetter rhs) => AmmoCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -221,6 +223,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Ammo_Mask<bool> GetHasBeenSetMask()
         {
             return AmmoCommon.GetHasBeenSetMask(this);
@@ -1104,31 +1107,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Ammo_CopyMask copyMask = null,
-            IAmmoGetter def = null)
-            where CopyType : class, IAmmo
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Ammo)))
-            {
-                ret = new Ammo() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Ammo Copy_ToLoqui(
             IAmmoGetter item,
             Ammo_CopyMask copyMask = null,
@@ -1148,6 +1126,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IAmmoGetter rhs,
+            Ammo_CopyMask copyMask,
+            IAmmoGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IAmmoGetter rhs,
+            out Ammo_ErrorMask errorMask,
+            Ammo_CopyMask copyMask = null,
+            IAmmoGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Ammo_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Ammo_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            AmmoCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1299,7 +1320,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IAmmo : IAmmoGetter, IItemAbstract, ILoquiClass<IAmmo, IAmmoGetter>, ILoquiClass<Ammo, IAmmoGetter>
+    public partial interface IAmmo : IAmmoGetter, IItemAbstract, ILoquiClass<IAmmo, IAmmoGetter>, ILoquiClass<Ammo, IAmmoGetter>
     {
         new String Name { get; set; }
         new INotifyingSetItem<String> Name_Property { get; }
@@ -1331,7 +1352,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IAmmoGetter : IItemAbstractGetter
+    public partial interface IAmmoGetter : IItemAbstractGetter
     {
         #region Name
         String Name { get; }
@@ -1690,75 +1711,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IAmmo item,
-            IAmmoGetter rhs,
-            Ammo_CopyMask copyMask = null,
-            IAmmoGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            AmmoCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IAmmo item,
-            IAmmoGetter rhs,
-            out Ammo_ErrorMask errorMask,
-            Ammo_CopyMask copyMask = null,
-            IAmmoGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            AmmoCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IAmmo item,
+            IAmmo item,
             IAmmoGetter rhs,
             IAmmoGetter def,
             bool doMasks,
-            out Ammo_ErrorMask errorMask,
-            Ammo_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Ammo_ErrorMask retErrorMask = null;
-            Func<Ammo_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Ammo_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IAmmo item,
-            IAmmoGetter rhs,
-            IAmmoGetter def,
-            bool doMasks,
-            Func<Ammo_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Ammo_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1808,11 +1765,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Model.Specific == null)
-                                            {
-                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.Model.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)Ammo_FieldIndex.Model, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Model.Specific,
@@ -2128,7 +2083,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
             ret.Enchantment = item.Enchantment_Property.Equals(rhs.Enchantment_Property, (l, r) => l == r);
             ret.EnchantmentPoints = item.EnchantmentPoints_Property.Equals(rhs.EnchantmentPoints_Property, (l, r) => l == r);

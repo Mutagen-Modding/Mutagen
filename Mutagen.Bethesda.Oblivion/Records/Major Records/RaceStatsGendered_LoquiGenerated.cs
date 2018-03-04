@@ -25,7 +25,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class RaceStatsGendered : IRaceStatsGendered, ILoquiObjectSetter, IEquatable<RaceStatsGendered>
+    public partial class RaceStatsGendered : IRaceStatsGendered, ILoquiObject<RaceStatsGendered>, ILoquiObjectSetter, IEquatable<RaceStatsGendered>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceStatsGendered_Registration.Instance;
@@ -82,6 +82,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<RaceStatsGendered>.GetEqualsMask(RaceStatsGendered rhs) => RaceStatsGenderedCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IRaceStatsGenderedGetter>.GetEqualsMask(IRaceStatsGenderedGetter rhs) => RaceStatsGenderedCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -104,6 +106,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public RaceStatsGendered_Mask<bool> GetHasBeenSetMask()
         {
             return RaceStatsGenderedCommon.GetHasBeenSetMask(this);
@@ -767,31 +770,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            RaceStatsGendered_CopyMask copyMask = null,
-            IRaceStatsGenderedGetter def = null)
-            where CopyType : class, IRaceStatsGendered
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(RaceStatsGendered)))
-            {
-                ret = new RaceStatsGendered() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static RaceStatsGendered Copy_ToLoqui(
             IRaceStatsGenderedGetter item,
             RaceStatsGendered_CopyMask copyMask = null,
@@ -811,6 +789,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IRaceStatsGenderedGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IRaceStatsGenderedGetter rhs,
+            RaceStatsGendered_CopyMask copyMask,
+            IRaceStatsGenderedGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IRaceStatsGenderedGetter rhs,
+            out RaceStatsGendered_ErrorMask errorMask,
+            RaceStatsGendered_CopyMask copyMask = null,
+            IRaceStatsGenderedGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            RaceStatsGendered_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new RaceStatsGendered_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            RaceStatsGenderedCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -889,7 +923,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IRaceStatsGendered : IRaceStatsGenderedGetter, ILoquiClass<IRaceStatsGendered, IRaceStatsGenderedGetter>, ILoquiClass<RaceStatsGendered, IRaceStatsGenderedGetter>
+    public partial interface IRaceStatsGendered : IRaceStatsGenderedGetter, ILoquiClass<IRaceStatsGendered, IRaceStatsGenderedGetter>, ILoquiClass<RaceStatsGendered, IRaceStatsGenderedGetter>
     {
         new RaceStats Male { get; set; }
         new INotifyingItem<RaceStats> Male_Property { get; }
@@ -899,7 +933,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IRaceStatsGenderedGetter : ILoquiObject
+    public partial interface IRaceStatsGenderedGetter : ILoquiObject
     {
         #region Male
         RaceStats Male { get; }
@@ -1110,75 +1144,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IRaceStatsGendered item,
-            IRaceStatsGenderedGetter rhs,
-            RaceStatsGendered_CopyMask copyMask = null,
-            IRaceStatsGenderedGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            RaceStatsGenderedCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IRaceStatsGendered item,
-            IRaceStatsGenderedGetter rhs,
-            out RaceStatsGendered_ErrorMask errorMask,
-            RaceStatsGendered_CopyMask copyMask = null,
-            IRaceStatsGenderedGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            RaceStatsGenderedCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IRaceStatsGendered item,
+            IRaceStatsGendered item,
             IRaceStatsGenderedGetter rhs,
             IRaceStatsGenderedGetter def,
             bool doMasks,
-            out RaceStatsGendered_ErrorMask errorMask,
-            RaceStatsGendered_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            RaceStatsGendered_ErrorMask retErrorMask = null;
-            Func<RaceStatsGendered_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new RaceStatsGendered_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IRaceStatsGendered item,
-            IRaceStatsGenderedGetter rhs,
-            IRaceStatsGenderedGetter def,
-            bool doMasks,
-            Func<RaceStatsGendered_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             RaceStatsGendered_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1200,11 +1170,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 errorMask: (doMasks ? new Func<RaceStats_ErrorMask>(() =>
                                 {
                                     var baseMask = errorMask();
-                                    if (baseMask.Male.Specific == null)
-                                    {
-                                        baseMask.Male = new MaskItem<Exception, RaceStats_ErrorMask>(null, new RaceStats_ErrorMask());
-                                    }
-                                    return baseMask.Male.Specific;
+                                    var mask = new RaceStats_ErrorMask();
+                                    baseMask.SetNthMask((int)RaceStatsGendered_FieldIndex.Male, mask);
+                                    return mask;
                                 }
                                 ) : null),
                                 copyMask: copyMask?.Male.Specific,
@@ -1251,11 +1219,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 errorMask: (doMasks ? new Func<RaceStats_ErrorMask>(() =>
                                 {
                                     var baseMask = errorMask();
-                                    if (baseMask.Female.Specific == null)
-                                    {
-                                        baseMask.Female = new MaskItem<Exception, RaceStats_ErrorMask>(null, new RaceStats_ErrorMask());
-                                    }
-                                    return baseMask.Female.Specific;
+                                    var mask = new RaceStats_ErrorMask();
+                                    baseMask.SetNthMask((int)RaceStatsGendered_FieldIndex.Female, mask);
+                                    return mask;
                                 }
                                 ) : null),
                                 copyMask: copyMask?.Female.Specific,

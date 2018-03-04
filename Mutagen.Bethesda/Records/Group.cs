@@ -11,14 +11,14 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda
 {
     public partial class Group<T>
-        where T : MajorRecord, ILoquiObjectGetter
+        where T : ILoquiObject<T>, IFormID
     {
         static partial void FillBinary_ContainedRecordType_Custom<T_ErrMask>(
             MutagenFrame frame, 
             Group<T> item,
             int fieldIndex,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
             frame.Reader.Position += 4;
         }
@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda
             Group<T> item,
             int fieldIndex, 
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer,

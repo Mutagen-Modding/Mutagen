@@ -25,7 +25,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public abstract partial class NPCSpawn : MajorRecord, INPCSpawn, ILoquiObjectSetter, IEquatable<NPCSpawn>
+    public abstract partial class NPCSpawn : MajorRecord, INPCSpawn, ILoquiObject<NPCSpawn>, ILoquiObjectSetter, IEquatable<NPCSpawn>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NPCSpawn_Registration.Instance;
@@ -58,6 +58,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<NPCSpawn>.GetEqualsMask(NPCSpawn rhs) => NPCSpawnCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<INPCSpawnGetter>.GetEqualsMask(INPCSpawnGetter rhs) => NPCSpawnCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -80,6 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new NPCSpawn_Mask<bool> GetHasBeenSetMask()
         {
             return NPCSpawnCommon.GetHasBeenSetMask(this);
@@ -447,23 +450,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            NPCSpawn_CopyMask copyMask = null,
-            INPCSpawnGetter def = null)
-            where CopyType : class, INPCSpawn
-        {
-            CopyType ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static NPCSpawn Copy_ToLoqui(
             INPCSpawnGetter item,
             NPCSpawn_CopyMask copyMask = null,
@@ -475,6 +461,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            INPCSpawnGetter rhs,
+            NPCSpawn_CopyMask copyMask,
+            INPCSpawnGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            INPCSpawnGetter rhs,
+            out NPCSpawn_ErrorMask errorMask,
+            NPCSpawn_CopyMask copyMask = null,
+            INPCSpawnGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            NPCSpawn_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new NPCSpawn_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            NPCSpawnCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -516,11 +545,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface INPCSpawn : INPCSpawnGetter, IMajorRecord, ILoquiClass<INPCSpawn, INPCSpawnGetter>, ILoquiClass<NPCSpawn, INPCSpawnGetter>
+    public partial interface INPCSpawn : INPCSpawnGetter, IMajorRecord, ILoquiClass<INPCSpawn, INPCSpawnGetter>, ILoquiClass<NPCSpawn, INPCSpawnGetter>
     {
     }
 
-    public interface INPCSpawnGetter : IMajorRecordGetter
+    public partial interface INPCSpawnGetter : IMajorRecordGetter
     {
 
     }
@@ -697,75 +726,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this INPCSpawn item,
-            INPCSpawnGetter rhs,
-            NPCSpawn_CopyMask copyMask = null,
-            INPCSpawnGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            NPCSpawnCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this INPCSpawn item,
-            INPCSpawnGetter rhs,
-            out NPCSpawn_ErrorMask errorMask,
-            NPCSpawn_CopyMask copyMask = null,
-            INPCSpawnGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            NPCSpawnCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this INPCSpawn item,
+            INPCSpawn item,
             INPCSpawnGetter rhs,
             INPCSpawnGetter def,
             bool doMasks,
-            out NPCSpawn_ErrorMask errorMask,
-            NPCSpawn_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            NPCSpawn_ErrorMask retErrorMask = null;
-            Func<NPCSpawn_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new NPCSpawn_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this INPCSpawn item,
-            INPCSpawnGetter rhs,
-            INPCSpawnGetter def,
-            bool doMasks,
-            Func<NPCSpawn_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             NPCSpawn_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

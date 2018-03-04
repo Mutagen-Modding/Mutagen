@@ -24,7 +24,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class RegionArea : IRegionArea, ILoquiObjectSetter, IEquatable<RegionArea>
+    public partial class RegionArea : IRegionArea, ILoquiObject<RegionArea>, ILoquiObjectSetter, IEquatable<RegionArea>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionArea_Registration.Instance;
@@ -94,6 +94,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<RegionArea>.GetEqualsMask(RegionArea rhs) => RegionAreaCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IRegionAreaGetter>.GetEqualsMask(IRegionAreaGetter rhs) => RegionAreaCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -116,6 +118,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public RegionArea_Mask<bool> GetHasBeenSetMask()
         {
             return RegionAreaCommon.GetHasBeenSetMask(this);
@@ -847,31 +850,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            RegionArea_CopyMask copyMask = null,
-            IRegionAreaGetter def = null)
-            where CopyType : class, IRegionArea
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(RegionArea)))
-            {
-                ret = new RegionArea() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static RegionArea Copy_ToLoqui(
             IRegionAreaGetter item,
             RegionArea_CopyMask copyMask = null,
@@ -891,6 +869,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IRegionAreaGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IRegionAreaGetter rhs,
+            RegionArea_CopyMask copyMask,
+            IRegionAreaGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IRegionAreaGetter rhs,
+            out RegionArea_ErrorMask errorMask,
+            RegionArea_CopyMask copyMask = null,
+            IRegionAreaGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            RegionArea_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new RegionArea_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            RegionAreaCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -965,7 +999,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IRegionArea : IRegionAreaGetter, ILoquiClass<IRegionArea, IRegionAreaGetter>, ILoquiClass<RegionArea, IRegionAreaGetter>
+    public partial interface IRegionArea : IRegionAreaGetter, ILoquiClass<IRegionArea, IRegionAreaGetter>, ILoquiClass<RegionArea, IRegionAreaGetter>
     {
         new UInt32 EdgeFallOff { get; set; }
         new INotifyingSetItem<UInt32> EdgeFallOff_Property { get; }
@@ -973,7 +1007,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<P2Float> RegionPoints { get; }
     }
 
-    public interface IRegionAreaGetter : ILoquiObject
+    public partial interface IRegionAreaGetter : ILoquiObject
     {
         #region EdgeFallOff
         UInt32 EdgeFallOff { get; }
@@ -1195,75 +1229,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IRegionArea item,
-            IRegionAreaGetter rhs,
-            RegionArea_CopyMask copyMask = null,
-            IRegionAreaGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            RegionAreaCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IRegionArea item,
-            IRegionAreaGetter rhs,
-            out RegionArea_ErrorMask errorMask,
-            RegionArea_CopyMask copyMask = null,
-            IRegionAreaGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            RegionAreaCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IRegionArea item,
+            IRegionArea item,
             IRegionAreaGetter rhs,
             IRegionAreaGetter def,
             bool doMasks,
-            out RegionArea_ErrorMask errorMask,
-            RegionArea_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            RegionArea_ErrorMask retErrorMask = null;
-            Func<RegionArea_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new RegionArea_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IRegionArea item,
-            IRegionAreaGetter rhs,
-            IRegionAreaGetter def,
-            bool doMasks,
-            Func<RegionArea_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             RegionArea_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

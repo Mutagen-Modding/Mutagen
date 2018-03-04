@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Class : NamedMajorRecord, IClass, ILoquiObjectSetter, IEquatable<Class>
+    public partial class Class : NamedMajorRecord, IClass, ILoquiObject<Class>, ILoquiObjectSetter, IEquatable<Class>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Class_Registration.Instance;
@@ -180,6 +180,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Class>.GetEqualsMask(Class rhs) => ClassCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IClassGetter>.GetEqualsMask(IClassGetter rhs) => ClassCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -202,6 +204,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Class_Mask<bool> GetHasBeenSetMask()
         {
             return ClassCommon.GetHasBeenSetMask(this);
@@ -1084,31 +1087,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Class_CopyMask copyMask = null,
-            IClassGetter def = null)
-            where CopyType : class, IClass
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Class)))
-            {
-                ret = new Class() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Class Copy_ToLoqui(
             IClassGetter item,
             Class_CopyMask copyMask = null,
@@ -1128,6 +1106,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IClassGetter rhs,
+            Class_CopyMask copyMask,
+            IClassGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IClassGetter rhs,
+            out Class_ErrorMask errorMask,
+            Class_CopyMask copyMask = null,
+            IClassGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Class_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Class_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            ClassCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1251,7 +1272,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IClass : IClassGetter, INamedMajorRecord, ILoquiClass<IClass, IClassGetter>, ILoquiClass<Class, IClassGetter>
+    public partial interface IClass : IClassGetter, INamedMajorRecord, ILoquiClass<IClass, IClassGetter>, ILoquiClass<Class, IClassGetter>
     {
         new String Description { get; set; }
         new INotifyingSetItem<String> Description_Property { get; }
@@ -1275,7 +1296,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IClassGetter : INamedMajorRecordGetter
+    public partial interface IClassGetter : INamedMajorRecordGetter
     {
         #region Description
         String Description { get; }
@@ -1595,75 +1616,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IClass item,
-            IClassGetter rhs,
-            Class_CopyMask copyMask = null,
-            IClassGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            ClassCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IClass item,
-            IClassGetter rhs,
-            out Class_ErrorMask errorMask,
-            Class_CopyMask copyMask = null,
-            IClassGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            ClassCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IClass item,
+            IClass item,
             IClassGetter rhs,
             IClassGetter def,
             bool doMasks,
-            out Class_ErrorMask errorMask,
-            Class_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Class_ErrorMask retErrorMask = null;
-            Func<Class_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Class_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IClass item,
-            IClassGetter rhs,
-            IClassGetter def,
-            bool doMasks,
-            Func<Class_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Class_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1795,11 +1752,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 errorMask: (doMasks ? new Func<ClassTraining_ErrorMask>(() =>
                                 {
                                     var baseMask = errorMask();
-                                    if (baseMask.Training.Specific == null)
-                                    {
-                                        baseMask.Training = new MaskItem<Exception, ClassTraining_ErrorMask>(null, new ClassTraining_ErrorMask());
-                                    }
-                                    return baseMask.Training.Specific;
+                                    var mask = new ClassTraining_ErrorMask();
+                                    baseMask.SetNthMask((int)Class_FieldIndex.Training, mask);
+                                    return mask;
                                 }
                                 ) : null),
                                 copyMask: copyMask?.Training.Specific,

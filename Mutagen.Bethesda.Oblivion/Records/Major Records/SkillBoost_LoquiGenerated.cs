@@ -24,7 +24,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class SkillBoost : ISkillBoost, ILoquiObjectSetter, IEquatable<SkillBoost>
+    public partial class SkillBoost : ISkillBoost, ILoquiObject<SkillBoost>, ILoquiObjectSetter, IEquatable<SkillBoost>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillBoost_Registration.Instance;
@@ -91,6 +91,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<SkillBoost>.GetEqualsMask(SkillBoost rhs) => SkillBoostCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ISkillBoostGetter>.GetEqualsMask(ISkillBoostGetter rhs) => SkillBoostCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -113,6 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public SkillBoost_Mask<bool> GetHasBeenSetMask()
         {
             return SkillBoostCommon.GetHasBeenSetMask(this);
@@ -774,31 +777,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            SkillBoost_CopyMask copyMask = null,
-            ISkillBoostGetter def = null)
-            where CopyType : class, ISkillBoost
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(SkillBoost)))
-            {
-                ret = new SkillBoost() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static SkillBoost Copy_ToLoqui(
             ISkillBoostGetter item,
             SkillBoost_CopyMask copyMask = null,
@@ -818,6 +796,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            ISkillBoostGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ISkillBoostGetter rhs,
+            SkillBoost_CopyMask copyMask,
+            ISkillBoostGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ISkillBoostGetter rhs,
+            out SkillBoost_ErrorMask errorMask,
+            SkillBoost_CopyMask copyMask = null,
+            ISkillBoostGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            SkillBoost_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new SkillBoost_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            SkillBoostCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -896,7 +930,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface ISkillBoost : ISkillBoostGetter, ILoquiClass<ISkillBoost, ISkillBoostGetter>, ILoquiClass<SkillBoost, ISkillBoostGetter>
+    public partial interface ISkillBoost : ISkillBoostGetter, ILoquiClass<ISkillBoost, ISkillBoostGetter>, ILoquiClass<SkillBoost, ISkillBoostGetter>
     {
         new ActorValue Skill { get; set; }
         new INotifyingItem<ActorValue> Skill_Property { get; }
@@ -906,7 +940,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface ISkillBoostGetter : ILoquiObject
+    public partial interface ISkillBoostGetter : ILoquiObject
     {
         #region Skill
         ActorValue Skill { get; }
@@ -1115,75 +1149,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this ISkillBoost item,
-            ISkillBoostGetter rhs,
-            SkillBoost_CopyMask copyMask = null,
-            ISkillBoostGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            SkillBoostCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ISkillBoost item,
-            ISkillBoostGetter rhs,
-            out SkillBoost_ErrorMask errorMask,
-            SkillBoost_CopyMask copyMask = null,
-            ISkillBoostGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            SkillBoostCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ISkillBoost item,
+            ISkillBoost item,
             ISkillBoostGetter rhs,
             ISkillBoostGetter def,
             bool doMasks,
-            out SkillBoost_ErrorMask errorMask,
-            SkillBoost_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            SkillBoost_ErrorMask retErrorMask = null;
-            Func<SkillBoost_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new SkillBoost_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this ISkillBoost item,
-            ISkillBoostGetter rhs,
-            ISkillBoostGetter def,
-            bool doMasks,
-            Func<SkillBoost_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             SkillBoost_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

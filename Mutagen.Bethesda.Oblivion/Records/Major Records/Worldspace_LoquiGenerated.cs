@@ -25,7 +25,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Worldspace : NamedMajorRecord, IWorldspace, ILoquiObjectSetter, IEquatable<Worldspace>
+    public partial class Worldspace : NamedMajorRecord, IWorldspace, ILoquiObject<Worldspace>, ILoquiObjectSetter, IEquatable<Worldspace>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Worldspace_Registration.Instance;
@@ -58,6 +58,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Worldspace>.GetEqualsMask(Worldspace rhs) => WorldspaceCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IWorldspaceGetter>.GetEqualsMask(IWorldspaceGetter rhs) => WorldspaceCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -80,6 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Worldspace_Mask<bool> GetHasBeenSetMask()
         {
             return WorldspaceCommon.GetHasBeenSetMask(this);
@@ -766,31 +769,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Worldspace_CopyMask copyMask = null,
-            IWorldspaceGetter def = null)
-            where CopyType : class, IWorldspace
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Worldspace)))
-            {
-                ret = new Worldspace() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Worldspace Copy_ToLoqui(
             IWorldspaceGetter item,
             Worldspace_CopyMask copyMask = null,
@@ -810,6 +788,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IWorldspaceGetter rhs,
+            Worldspace_CopyMask copyMask,
+            IWorldspaceGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IWorldspaceGetter rhs,
+            out Worldspace_ErrorMask errorMask,
+            Worldspace_CopyMask copyMask = null,
+            IWorldspaceGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Worldspace_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Worldspace_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            WorldspaceCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -861,11 +882,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IWorldspace : IWorldspaceGetter, INamedMajorRecord, ILoquiClass<IWorldspace, IWorldspaceGetter>, ILoquiClass<Worldspace, IWorldspaceGetter>
+    public partial interface IWorldspace : IWorldspaceGetter, INamedMajorRecord, ILoquiClass<IWorldspace, IWorldspaceGetter>, ILoquiClass<Worldspace, IWorldspaceGetter>
     {
     }
 
-    public interface IWorldspaceGetter : INamedMajorRecordGetter
+    public partial interface IWorldspaceGetter : INamedMajorRecordGetter
     {
 
     }
@@ -1043,75 +1064,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IWorldspace item,
-            IWorldspaceGetter rhs,
-            Worldspace_CopyMask copyMask = null,
-            IWorldspaceGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            WorldspaceCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IWorldspace item,
-            IWorldspaceGetter rhs,
-            out Worldspace_ErrorMask errorMask,
-            Worldspace_CopyMask copyMask = null,
-            IWorldspaceGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            WorldspaceCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IWorldspace item,
+            IWorldspace item,
             IWorldspaceGetter rhs,
             IWorldspaceGetter def,
             bool doMasks,
-            out Worldspace_ErrorMask errorMask,
-            Worldspace_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Worldspace_ErrorMask retErrorMask = null;
-            Func<Worldspace_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Worldspace_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IWorldspace item,
-            IWorldspaceGetter rhs,
-            IWorldspaceGetter def,
-            bool doMasks,
-            Func<Worldspace_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Worldspace_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

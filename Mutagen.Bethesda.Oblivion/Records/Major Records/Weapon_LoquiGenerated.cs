@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Weapon : NamedMajorRecord, IWeapon, ILoquiObjectSetter, IEquatable<Weapon>
+    public partial class Weapon : NamedMajorRecord, IWeapon, ILoquiObject<Weapon>, ILoquiObjectSetter, IEquatable<Weapon>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weapon_Registration.Instance;
@@ -236,6 +236,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Weapon>.GetEqualsMask(Weapon rhs) => WeaponCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IWeaponGetter>.GetEqualsMask(IWeaponGetter rhs) => WeaponCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -258,6 +260,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Weapon_Mask<bool> GetHasBeenSetMask()
         {
             return WeaponCommon.GetHasBeenSetMask(this);
@@ -1177,31 +1180,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Weapon_CopyMask copyMask = null,
-            IWeaponGetter def = null)
-            where CopyType : class, IWeapon
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Weapon)))
-            {
-                ret = new Weapon() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Weapon Copy_ToLoqui(
             IWeaponGetter item,
             Weapon_CopyMask copyMask = null,
@@ -1221,6 +1199,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IWeaponGetter rhs,
+            Weapon_CopyMask copyMask,
+            IWeaponGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IWeaponGetter rhs,
+            out Weapon_ErrorMask errorMask,
+            Weapon_CopyMask copyMask = null,
+            IWeaponGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Weapon_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Weapon_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            WeaponCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1402,7 +1423,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IWeapon : IWeaponGetter, INamedMajorRecord, ILoquiClass<IWeapon, IWeaponGetter>, ILoquiClass<Weapon, IWeaponGetter>
+    public partial interface IWeapon : IWeaponGetter, INamedMajorRecord, ILoquiClass<IWeapon, IWeaponGetter>, ILoquiClass<Weapon, IWeaponGetter>
     {
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
@@ -1441,7 +1462,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IWeaponGetter : INamedMajorRecordGetter
+    public partial interface IWeaponGetter : INamedMajorRecordGetter
     {
         #region Model
         Model Model { get; }
@@ -1852,75 +1873,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IWeapon item,
-            IWeaponGetter rhs,
-            Weapon_CopyMask copyMask = null,
-            IWeaponGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            WeaponCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IWeapon item,
-            IWeaponGetter rhs,
-            out Weapon_ErrorMask errorMask,
-            Weapon_CopyMask copyMask = null,
-            IWeaponGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            WeaponCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IWeapon item,
+            IWeapon item,
             IWeaponGetter rhs,
             IWeaponGetter def,
             bool doMasks,
-            out Weapon_ErrorMask errorMask,
-            Weapon_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Weapon_ErrorMask retErrorMask = null;
-            Func<Weapon_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Weapon_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IWeapon item,
-            IWeaponGetter rhs,
-            IWeaponGetter def,
-            bool doMasks,
-            Func<Weapon_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Weapon_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1955,11 +1912,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Model.Specific == null)
-                                            {
-                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.Model.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)Weapon_FieldIndex.Model, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Model.Specific,
@@ -2355,7 +2310,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Weapon_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
             ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
             ret.Enchantment = item.Enchantment_Property.Equals(rhs.Enchantment_Property, (l, r) => l == r);

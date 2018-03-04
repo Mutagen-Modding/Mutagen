@@ -24,7 +24,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class DistantLODData : IDistantLODData, ILoquiObjectSetter, IEquatable<DistantLODData>
+    public partial class DistantLODData : IDistantLODData, ILoquiObject<DistantLODData>, ILoquiObjectSetter, IEquatable<DistantLODData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DistantLODData_Registration.Instance;
@@ -106,6 +106,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<DistantLODData>.GetEqualsMask(DistantLODData rhs) => DistantLODDataCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IDistantLODDataGetter>.GetEqualsMask(IDistantLODDataGetter rhs) => DistantLODDataCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -128,6 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public DistantLODData_Mask<bool> GetHasBeenSetMask()
         {
             return DistantLODDataCommon.GetHasBeenSetMask(this);
@@ -800,31 +803,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            DistantLODData_CopyMask copyMask = null,
-            IDistantLODDataGetter def = null)
-            where CopyType : class, IDistantLODData
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(DistantLODData)))
-            {
-                ret = new DistantLODData() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static DistantLODData Copy_ToLoqui(
             IDistantLODDataGetter item,
             DistantLODData_CopyMask copyMask = null,
@@ -844,6 +822,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IDistantLODDataGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IDistantLODDataGetter rhs,
+            DistantLODData_CopyMask copyMask,
+            IDistantLODDataGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IDistantLODDataGetter rhs,
+            out DistantLODData_ErrorMask errorMask,
+            DistantLODData_CopyMask copyMask = null,
+            IDistantLODDataGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            DistantLODData_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new DistantLODData_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            DistantLODDataCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -932,7 +966,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IDistantLODData : IDistantLODDataGetter, ILoquiClass<IDistantLODData, IDistantLODDataGetter>, ILoquiClass<DistantLODData, IDistantLODDataGetter>
+    public partial interface IDistantLODData : IDistantLODDataGetter, ILoquiClass<IDistantLODData, IDistantLODDataGetter>, ILoquiClass<DistantLODData, IDistantLODDataGetter>
     {
         new Single Unknown0 { get; set; }
         new INotifyingItem<Single> Unknown0_Property { get; }
@@ -945,7 +979,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IDistantLODDataGetter : ILoquiObject
+    public partial interface IDistantLODDataGetter : ILoquiObject
     {
         #region Unknown0
         Single Unknown0 { get; }
@@ -1171,75 +1205,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IDistantLODData item,
-            IDistantLODDataGetter rhs,
-            DistantLODData_CopyMask copyMask = null,
-            IDistantLODDataGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            DistantLODDataCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IDistantLODData item,
-            IDistantLODDataGetter rhs,
-            out DistantLODData_ErrorMask errorMask,
-            DistantLODData_CopyMask copyMask = null,
-            IDistantLODDataGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            DistantLODDataCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IDistantLODData item,
+            IDistantLODData item,
             IDistantLODDataGetter rhs,
             IDistantLODDataGetter def,
             bool doMasks,
-            out DistantLODData_ErrorMask errorMask,
-            DistantLODData_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            DistantLODData_ErrorMask retErrorMask = null;
-            Func<DistantLODData_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new DistantLODData_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IDistantLODData item,
-            IDistantLODDataGetter rhs,
-            IDistantLODDataGetter def,
-            bool doMasks,
-            Func<DistantLODData_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             DistantLODData_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

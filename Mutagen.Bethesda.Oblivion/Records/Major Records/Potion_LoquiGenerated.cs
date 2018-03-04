@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Potion : NamedMajorRecord, IPotion, ILoquiObjectSetter, IEquatable<Potion>
+    public partial class Potion : NamedMajorRecord, IPotion, ILoquiObject<Potion>, ILoquiObjectSetter, IEquatable<Potion>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Potion_Registration.Instance;
@@ -157,6 +157,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Potion>.GetEqualsMask(Potion rhs) => PotionCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IPotionGetter>.GetEqualsMask(IPotionGetter rhs) => PotionCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -179,6 +181,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Potion_Mask<bool> GetHasBeenSetMask()
         {
             return PotionCommon.GetHasBeenSetMask(this);
@@ -1043,31 +1046,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Potion_CopyMask copyMask = null,
-            IPotionGetter def = null)
-            where CopyType : class, IPotion
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Potion)))
-            {
-                ret = new Potion() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Potion Copy_ToLoqui(
             IPotionGetter item,
             Potion_CopyMask copyMask = null,
@@ -1087,6 +1065,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IPotionGetter rhs,
+            Potion_CopyMask copyMask,
+            IPotionGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IPotionGetter rhs,
+            out Potion_ErrorMask errorMask,
+            Potion_CopyMask copyMask = null,
+            IPotionGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Potion_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Potion_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            PotionCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1204,7 +1225,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IPotion : IPotionGetter, INamedMajorRecord, ILoquiClass<IPotion, IPotionGetter>, ILoquiClass<Potion, IPotionGetter>
+    public partial interface IPotion : IPotionGetter, INamedMajorRecord, ILoquiClass<IPotion, IPotionGetter>, ILoquiClass<Potion, IPotionGetter>
     {
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
@@ -1225,7 +1246,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<Effect> Effects { get; }
     }
 
-    public interface IPotionGetter : INamedMajorRecordGetter
+    public partial interface IPotionGetter : INamedMajorRecordGetter
     {
         #region Model
         Model Model { get; }
@@ -1533,75 +1554,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IPotion item,
-            IPotionGetter rhs,
-            Potion_CopyMask copyMask = null,
-            IPotionGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            PotionCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IPotion item,
-            IPotionGetter rhs,
-            out Potion_ErrorMask errorMask,
-            Potion_CopyMask copyMask = null,
-            IPotionGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            PotionCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IPotion item,
+            IPotion item,
             IPotionGetter rhs,
             IPotionGetter def,
             bool doMasks,
-            out Potion_ErrorMask errorMask,
-            Potion_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Potion_ErrorMask retErrorMask = null;
-            Func<Potion_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Potion_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IPotion item,
-            IPotionGetter rhs,
-            IPotionGetter def,
-            bool doMasks,
-            Func<Potion_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Potion_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1636,11 +1593,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Model.Specific == null)
-                                            {
-                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.Model.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)Potion_FieldIndex.Model, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Model.Specific,
@@ -1921,7 +1876,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Potion_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
             ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
             ret.Weight = item.Weight_Property.Equals(rhs.Weight_Property, (l, r) => l == r);
@@ -1935,7 +1890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.Effects.Specific = item.Effects.SelectAgainst<Effect, MaskItem<bool, Effect_Mask<bool>>>(rhs.Effects, ((l, r) =>
                     {
                         MaskItem<bool, Effect_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => EffectCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
                     ), out ret.Effects.Overall);

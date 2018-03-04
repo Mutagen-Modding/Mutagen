@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Hair : NamedMajorRecord, IHair, ILoquiObjectSetter, IEquatable<Hair>
+    public partial class Hair : NamedMajorRecord, IHair, ILoquiObject<Hair>, ILoquiObjectSetter, IEquatable<Hair>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Hair_Registration.Instance;
@@ -102,6 +102,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Hair>.GetEqualsMask(Hair rhs) => HairCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IHairGetter>.GetEqualsMask(IHairGetter rhs) => HairCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -124,6 +126,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Hair_Mask<bool> GetHasBeenSetMask()
         {
             return HairCommon.GetHasBeenSetMask(this);
@@ -896,31 +899,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Hair_CopyMask copyMask = null,
-            IHairGetter def = null)
-            where CopyType : class, IHair
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Hair)))
-            {
-                ret = new Hair() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Hair Copy_ToLoqui(
             IHairGetter item,
             Hair_CopyMask copyMask = null,
@@ -940,6 +918,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IHairGetter rhs,
+            Hair_CopyMask copyMask,
+            IHairGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IHairGetter rhs,
+            out Hair_ErrorMask errorMask,
+            Hair_CopyMask copyMask = null,
+            IHairGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Hair_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Hair_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            HairCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1021,7 +1042,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IHair : IHairGetter, INamedMajorRecord, ILoquiClass<IHair, IHairGetter>, ILoquiClass<Hair, IHairGetter>
+    public partial interface IHair : IHairGetter, INamedMajorRecord, ILoquiClass<IHair, IHairGetter>, ILoquiClass<Hair, IHairGetter>
     {
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
@@ -1034,7 +1055,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IHairGetter : INamedMajorRecordGetter
+    public partial interface IHairGetter : INamedMajorRecordGetter
     {
         #region Model
         Model Model { get; }
@@ -1272,75 +1293,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IHair item,
-            IHairGetter rhs,
-            Hair_CopyMask copyMask = null,
-            IHairGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            HairCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IHair item,
-            IHairGetter rhs,
-            out Hair_ErrorMask errorMask,
-            Hair_CopyMask copyMask = null,
-            IHairGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            HairCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IHair item,
+            IHair item,
             IHairGetter rhs,
             IHairGetter def,
             bool doMasks,
-            out Hair_ErrorMask errorMask,
-            Hair_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Hair_ErrorMask retErrorMask = null;
-            Func<Hair_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Hair_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IHair item,
-            IHairGetter rhs,
-            IHairGetter def,
-            bool doMasks,
-            Func<Hair_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Hair_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1375,11 +1332,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Model.Specific == null)
-                                            {
-                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.Model.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)Hair_FieldIndex.Model, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Model.Specific,
@@ -1544,7 +1499,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Hair_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
             ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);

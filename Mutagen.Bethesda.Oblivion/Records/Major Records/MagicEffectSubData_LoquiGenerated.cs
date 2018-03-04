@@ -24,7 +24,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class MagicEffectSubData : IMagicEffectSubData, ILoquiObjectSetter, IEquatable<MagicEffectSubData>
+    public partial class MagicEffectSubData : IMagicEffectSubData, ILoquiObject<MagicEffectSubData>, ILoquiObjectSetter, IEquatable<MagicEffectSubData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectSubData_Registration.Instance;
@@ -126,6 +126,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<MagicEffectSubData>.GetEqualsMask(MagicEffectSubData rhs) => MagicEffectSubDataCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IMagicEffectSubDataGetter>.GetEqualsMask(IMagicEffectSubDataGetter rhs) => MagicEffectSubDataCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -148,6 +150,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public MagicEffectSubData_Mask<bool> GetHasBeenSetMask()
         {
             return MagicEffectSubDataCommon.GetHasBeenSetMask(this);
@@ -868,31 +871,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            MagicEffectSubData_CopyMask copyMask = null,
-            IMagicEffectSubDataGetter def = null)
-            where CopyType : class, IMagicEffectSubData
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(MagicEffectSubData)))
-            {
-                ret = new MagicEffectSubData() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static MagicEffectSubData Copy_ToLoqui(
             IMagicEffectSubDataGetter item,
             MagicEffectSubData_CopyMask copyMask = null,
@@ -912,6 +890,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IMagicEffectSubDataGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IMagicEffectSubDataGetter rhs,
+            MagicEffectSubData_CopyMask copyMask,
+            IMagicEffectSubDataGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IMagicEffectSubDataGetter rhs,
+            out MagicEffectSubData_ErrorMask errorMask,
+            MagicEffectSubData_CopyMask copyMask = null,
+            IMagicEffectSubDataGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            MagicEffectSubData_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new MagicEffectSubData_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            MagicEffectSubDataCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1040,7 +1074,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IMagicEffectSubData : IMagicEffectSubDataGetter, ILoquiClass<IMagicEffectSubData, IMagicEffectSubDataGetter>, ILoquiClass<MagicEffectSubData, IMagicEffectSubDataGetter>
+    public partial interface IMagicEffectSubData : IMagicEffectSubDataGetter, ILoquiClass<IMagicEffectSubData, IMagicEffectSubDataGetter>, ILoquiClass<MagicEffectSubData, IMagicEffectSubDataGetter>
     {
         new EffectShader EnchantEffect { get; set; }
         new Sound CastingSound { get; set; }
@@ -1055,7 +1089,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IMagicEffectSubDataGetter : ILoquiObject
+    public partial interface IMagicEffectSubDataGetter : ILoquiObject
     {
         #region EnchantEffect
         EffectShader EnchantEffect { get; }
@@ -1349,75 +1383,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IMagicEffectSubData item,
-            IMagicEffectSubDataGetter rhs,
-            MagicEffectSubData_CopyMask copyMask = null,
-            IMagicEffectSubDataGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            MagicEffectSubDataCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IMagicEffectSubData item,
-            IMagicEffectSubDataGetter rhs,
-            out MagicEffectSubData_ErrorMask errorMask,
-            MagicEffectSubData_CopyMask copyMask = null,
-            IMagicEffectSubDataGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            MagicEffectSubDataCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IMagicEffectSubData item,
+            IMagicEffectSubData item,
             IMagicEffectSubDataGetter rhs,
             IMagicEffectSubDataGetter def,
             bool doMasks,
-            out MagicEffectSubData_ErrorMask errorMask,
-            MagicEffectSubData_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            MagicEffectSubData_ErrorMask retErrorMask = null;
-            Func<MagicEffectSubData_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new MagicEffectSubData_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IMagicEffectSubData item,
-            IMagicEffectSubDataGetter rhs,
-            IMagicEffectSubDataGetter def,
-            bool doMasks,
-            Func<MagicEffectSubData_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             MagicEffectSubData_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

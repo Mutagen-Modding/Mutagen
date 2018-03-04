@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Book : NamedMajorRecord, IBook, ILoquiObjectSetter, IEquatable<Book>
+    public partial class Book : NamedMajorRecord, IBook, ILoquiObject<Book>, ILoquiObjectSetter, IEquatable<Book>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Book_Registration.Instance;
@@ -191,6 +191,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Book>.GetEqualsMask(Book rhs) => BookCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IBookGetter>.GetEqualsMask(IBookGetter rhs) => BookCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -213,6 +215,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Book_Mask<bool> GetHasBeenSetMask()
         {
             return BookCommon.GetHasBeenSetMask(this);
@@ -1107,31 +1110,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Book_CopyMask copyMask = null,
-            IBookGetter def = null)
-            where CopyType : class, IBook
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Book)))
-            {
-                ret = new Book() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Book Copy_ToLoqui(
             IBookGetter item,
             Book_CopyMask copyMask = null,
@@ -1151,6 +1129,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IBookGetter rhs,
+            Book_CopyMask copyMask,
+            IBookGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IBookGetter rhs,
+            out Book_ErrorMask errorMask,
+            Book_CopyMask copyMask = null,
+            IBookGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Book_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Book_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            BookCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1302,7 +1323,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IBook : IBookGetter, INamedMajorRecord, ILoquiClass<IBook, IBookGetter>, ILoquiClass<Book, IBookGetter>
+    public partial interface IBook : IBookGetter, INamedMajorRecord, ILoquiClass<IBook, IBookGetter>, ILoquiClass<Book, IBookGetter>
     {
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
@@ -1332,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IBookGetter : INamedMajorRecordGetter
+    public partial interface IBookGetter : INamedMajorRecordGetter
     {
         #region Model
         Model Model { get; }
@@ -1693,75 +1714,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IBook item,
-            IBookGetter rhs,
-            Book_CopyMask copyMask = null,
-            IBookGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            BookCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IBook item,
-            IBookGetter rhs,
-            out Book_ErrorMask errorMask,
-            Book_CopyMask copyMask = null,
-            IBookGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            BookCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IBook item,
+            IBook item,
             IBookGetter rhs,
             IBookGetter def,
             bool doMasks,
-            out Book_ErrorMask errorMask,
-            Book_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Book_ErrorMask retErrorMask = null;
-            Func<Book_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Book_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IBook item,
-            IBookGetter rhs,
-            IBookGetter def,
-            bool doMasks,
-            Func<Book_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Book_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1796,11 +1753,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Model.Specific == null)
-                                            {
-                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.Model.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)Book_FieldIndex.Model, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Model.Specific,
@@ -2134,7 +2089,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Book_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
             ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
             ret.Enchantment = item.Enchantment_Property.Equals(rhs.Enchantment_Property, (l, r) => l == r);

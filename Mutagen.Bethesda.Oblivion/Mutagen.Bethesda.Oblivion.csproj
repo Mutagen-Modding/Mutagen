@@ -461,9 +461,6 @@
     <Compile Include="Records\Major Records\LeveledCreature_LoquiGenerated.cs">
       <DependentUpon>LeveledCreature.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\LeveledCreatureEntry_LoquiGenerated.cs">
-      <DependentUpon>LeveledCreature.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\NPCAbstract_LoquiGenerated.cs">
       <DependentUpon>NPCAbstract.xml</DependentUpon>
     </Compile>

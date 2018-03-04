@@ -25,7 +25,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public abstract partial class ItemAbstract : MajorRecord, IItemAbstract, ILoquiObjectSetter, IEquatable<ItemAbstract>
+    public abstract partial class ItemAbstract : MajorRecord, IItemAbstract, ILoquiObject<ItemAbstract>, ILoquiObjectSetter, IEquatable<ItemAbstract>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ItemAbstract_Registration.Instance;
@@ -58,6 +58,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<ItemAbstract>.GetEqualsMask(ItemAbstract rhs) => ItemAbstractCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IItemAbstractGetter>.GetEqualsMask(IItemAbstractGetter rhs) => ItemAbstractCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -80,6 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new ItemAbstract_Mask<bool> GetHasBeenSetMask()
         {
             return ItemAbstractCommon.GetHasBeenSetMask(this);
@@ -447,23 +450,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            ItemAbstract_CopyMask copyMask = null,
-            IItemAbstractGetter def = null)
-            where CopyType : class, IItemAbstract
-        {
-            CopyType ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static ItemAbstract Copy_ToLoqui(
             IItemAbstractGetter item,
             ItemAbstract_CopyMask copyMask = null,
@@ -475,6 +461,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IItemAbstractGetter rhs,
+            ItemAbstract_CopyMask copyMask,
+            IItemAbstractGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IItemAbstractGetter rhs,
+            out ItemAbstract_ErrorMask errorMask,
+            ItemAbstract_CopyMask copyMask = null,
+            IItemAbstractGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            ItemAbstract_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new ItemAbstract_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            ItemAbstractCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -516,11 +545,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IItemAbstract : IItemAbstractGetter, IMajorRecord, ILoquiClass<IItemAbstract, IItemAbstractGetter>, ILoquiClass<ItemAbstract, IItemAbstractGetter>
+    public partial interface IItemAbstract : IItemAbstractGetter, IMajorRecord, ILoquiClass<IItemAbstract, IItemAbstractGetter>, ILoquiClass<ItemAbstract, IItemAbstractGetter>
     {
     }
 
-    public interface IItemAbstractGetter : IMajorRecordGetter
+    public partial interface IItemAbstractGetter : IMajorRecordGetter
     {
 
     }
@@ -697,75 +726,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IItemAbstract item,
-            IItemAbstractGetter rhs,
-            ItemAbstract_CopyMask copyMask = null,
-            IItemAbstractGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            ItemAbstractCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IItemAbstract item,
-            IItemAbstractGetter rhs,
-            out ItemAbstract_ErrorMask errorMask,
-            ItemAbstract_CopyMask copyMask = null,
-            IItemAbstractGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            ItemAbstractCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IItemAbstract item,
+            IItemAbstract item,
             IItemAbstractGetter rhs,
             IItemAbstractGetter def,
             bool doMasks,
-            out ItemAbstract_ErrorMask errorMask,
-            ItemAbstract_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            ItemAbstract_ErrorMask retErrorMask = null;
-            Func<ItemAbstract_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new ItemAbstract_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IItemAbstract item,
-            IItemAbstractGetter rhs,
-            IItemAbstractGetter def,
-            bool doMasks,
-            Func<ItemAbstract_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             ItemAbstract_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

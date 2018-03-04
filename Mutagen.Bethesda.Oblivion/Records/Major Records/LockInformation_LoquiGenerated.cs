@@ -24,7 +24,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class LockInformation : ILockInformation, ILoquiObjectSetter, IEquatable<LockInformation>
+    public partial class LockInformation : ILockInformation, ILoquiObject<LockInformation>, ILoquiObjectSetter, IEquatable<LockInformation>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LockInformation_Registration.Instance;
@@ -98,6 +98,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<LockInformation>.GetEqualsMask(LockInformation rhs) => LockInformationCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ILockInformationGetter>.GetEqualsMask(ILockInformationGetter rhs) => LockInformationCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -120,6 +122,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public LockInformation_Mask<bool> GetHasBeenSetMask()
         {
             return LockInformationCommon.GetHasBeenSetMask(this);
@@ -794,31 +797,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            LockInformation_CopyMask copyMask = null,
-            ILockInformationGetter def = null)
-            where CopyType : class, ILockInformation
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(LockInformation)))
-            {
-                ret = new LockInformation() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static LockInformation Copy_ToLoqui(
             ILockInformationGetter item,
             LockInformation_CopyMask copyMask = null,
@@ -838,6 +816,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            ILockInformationGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ILockInformationGetter rhs,
+            LockInformation_CopyMask copyMask,
+            ILockInformationGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ILockInformationGetter rhs,
+            out LockInformation_ErrorMask errorMask,
+            LockInformation_CopyMask copyMask = null,
+            ILockInformationGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            LockInformation_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new LockInformation_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            LockInformationCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -926,7 +960,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface ILockInformation : ILockInformationGetter, ILoquiClass<ILockInformation, ILockInformationGetter>, ILoquiClass<LockInformation, ILockInformationGetter>
+    public partial interface ILockInformation : ILockInformationGetter, ILoquiClass<ILockInformation, ILockInformationGetter>, ILoquiClass<LockInformation, ILockInformationGetter>
     {
         new Byte LockLevel { get; set; }
         new INotifyingItem<Byte> LockLevel_Property { get; }
@@ -937,7 +971,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface ILockInformationGetter : ILoquiObject
+    public partial interface ILockInformationGetter : ILoquiObject
     {
         #region LockLevel
         Byte LockLevel { get; }
@@ -1163,75 +1197,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this ILockInformation item,
-            ILockInformationGetter rhs,
-            LockInformation_CopyMask copyMask = null,
-            ILockInformationGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            LockInformationCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ILockInformation item,
-            ILockInformationGetter rhs,
-            out LockInformation_ErrorMask errorMask,
-            LockInformation_CopyMask copyMask = null,
-            ILockInformationGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            LockInformationCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ILockInformation item,
+            ILockInformation item,
             ILockInformationGetter rhs,
             ILockInformationGetter def,
             bool doMasks,
-            out LockInformation_ErrorMask errorMask,
-            LockInformation_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            LockInformation_ErrorMask retErrorMask = null;
-            Func<LockInformation_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new LockInformation_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this ILockInformation item,
-            ILockInformationGetter rhs,
-            ILockInformationGetter def,
-            bool doMasks,
-            Func<LockInformation_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             LockInformation_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

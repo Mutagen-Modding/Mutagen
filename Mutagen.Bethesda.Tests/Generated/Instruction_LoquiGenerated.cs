@@ -23,7 +23,7 @@ using System.Diagnostics;
 namespace Mutagen.Bethesda.Tests
 {
     #region Class
-    public partial class Instruction : IInstruction, ILoquiObjectSetter, IEquatable<Instruction>
+    public partial class Instruction : IInstruction, ILoquiObject<Instruction>, ILoquiObjectSetter, IEquatable<Instruction>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Instruction_Registration.Instance;
@@ -168,6 +168,8 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
+        IMask<bool> IEqualsMask<Instruction>.GetEqualsMask(Instruction rhs) => InstructionCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IInstructionGetter>.GetEqualsMask(IInstructionGetter rhs) => InstructionCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -190,6 +192,7 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public Instruction_Mask<bool> GetHasBeenSetMask()
         {
             return InstructionCommon.GetHasBeenSetMask(this);
@@ -660,31 +663,6 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Instruction_CopyMask copyMask = null,
-            IInstructionGetter def = null)
-            where CopyType : class, IInstruction
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Instruction)))
-            {
-                ret = new Instruction() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Instruction Copy_ToLoqui(
             IInstructionGetter item,
             Instruction_CopyMask copyMask = null,
@@ -704,6 +682,62 @@ namespace Mutagen.Bethesda.Tests
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IInstructionGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IInstructionGetter rhs,
+            Instruction_CopyMask copyMask,
+            IInstructionGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IInstructionGetter rhs,
+            out Instruction_ErrorMask errorMask,
+            Instruction_CopyMask copyMask = null,
+            IInstructionGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Instruction_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Instruction_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            InstructionCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -798,7 +832,7 @@ namespace Mutagen.Bethesda.Tests
     #endregion
 
     #region Interface
-    public interface IInstruction : IInstructionGetter, ILoquiClass<IInstruction, IInstructionGetter>, ILoquiClass<Instruction, IInstructionGetter>
+    public partial interface IInstruction : IInstructionGetter, ILoquiClass<IInstruction, IInstructionGetter>, ILoquiClass<Instruction, IInstructionGetter>
     {
         new INotifyingList<Move> Moves { get; }
         new INotifyingList<DataTarget> Substitutions { get; }
@@ -808,7 +842,7 @@ namespace Mutagen.Bethesda.Tests
         new INotifyingList<RangeInt64> IgnoreDifferenceSections { get; }
     }
 
-    public interface IInstructionGetter : ILoquiObject
+    public partial interface IInstructionGetter : ILoquiObject
     {
         #region Moves
         INotifyingListGetter<Move> Moves { get; }
@@ -1072,75 +1106,11 @@ namespace Mutagen.Bethesda.Tests.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IInstruction item,
-            IInstructionGetter rhs,
-            Instruction_CopyMask copyMask = null,
-            IInstructionGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            InstructionCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IInstruction item,
-            IInstructionGetter rhs,
-            out Instruction_ErrorMask errorMask,
-            Instruction_CopyMask copyMask = null,
-            IInstructionGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            InstructionCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IInstruction item,
+            IInstruction item,
             IInstructionGetter rhs,
             IInstructionGetter def,
             bool doMasks,
-            out Instruction_ErrorMask errorMask,
-            Instruction_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Instruction_ErrorMask retErrorMask = null;
-            Func<Instruction_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Instruction_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IInstruction item,
-            IInstructionGetter rhs,
-            IInstructionGetter def,
-            bool doMasks,
-            Func<Instruction_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Instruction_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

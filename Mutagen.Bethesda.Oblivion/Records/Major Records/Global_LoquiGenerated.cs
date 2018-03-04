@@ -25,7 +25,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public abstract partial class Global : MajorRecord, IGlobal, ILoquiObjectSetter, IEquatable<Global>
+    public abstract partial class Global : MajorRecord, IGlobal, ILoquiObject<Global>, ILoquiObjectSetter, IEquatable<Global>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Global_Registration.Instance;
@@ -86,6 +86,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Global>.GetEqualsMask(Global rhs) => GlobalCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IGlobalGetter>.GetEqualsMask(IGlobalGetter rhs) => GlobalCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -108,6 +110,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Global_Mask<bool> GetHasBeenSetMask()
         {
             return GlobalCommon.GetHasBeenSetMask(this);
@@ -567,23 +570,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Global_CopyMask copyMask = null,
-            IGlobalGetter def = null)
-            where CopyType : class, IGlobal
-        {
-            CopyType ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Global Copy_ToLoqui(
             IGlobalGetter item,
             Global_CopyMask copyMask = null,
@@ -595,6 +581,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IGlobalGetter rhs,
+            Global_CopyMask copyMask,
+            IGlobalGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IGlobalGetter rhs,
+            out Global_ErrorMask errorMask,
+            Global_CopyMask copyMask = null,
+            IGlobalGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Global_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Global_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            GlobalCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -648,14 +677,14 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IGlobal : IGlobalGetter, IMajorRecord, ILoquiClass<IGlobal, IGlobalGetter>, ILoquiClass<Global, IGlobalGetter>
+    public partial interface IGlobal : IGlobalGetter, IMajorRecord, ILoquiClass<IGlobal, IGlobalGetter>, ILoquiClass<Global, IGlobalGetter>
     {
         new Single RawFloat { get; set; }
         new INotifyingSetItem<Single> RawFloat_Property { get; }
 
     }
 
-    public interface IGlobalGetter : IMajorRecordGetter
+    public partial interface IGlobalGetter : IMajorRecordGetter
     {
         #region TypeChar
         Char TypeChar { get; }
@@ -875,75 +904,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IGlobal item,
-            IGlobalGetter rhs,
-            Global_CopyMask copyMask = null,
-            IGlobalGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            GlobalCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IGlobal item,
-            IGlobalGetter rhs,
-            out Global_ErrorMask errorMask,
-            Global_CopyMask copyMask = null,
-            IGlobalGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            GlobalCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IGlobal item,
+            IGlobal item,
             IGlobalGetter rhs,
             IGlobalGetter def,
             bool doMasks,
-            out Global_ErrorMask errorMask,
-            Global_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Global_ErrorMask retErrorMask = null;
-            Func<Global_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Global_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IGlobal item,
-            IGlobalGetter rhs,
-            IGlobalGetter def,
-            bool doMasks,
-            Func<Global_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Global_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

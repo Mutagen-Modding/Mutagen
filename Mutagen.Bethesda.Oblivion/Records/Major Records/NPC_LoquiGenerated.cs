@@ -27,7 +27,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class NPC : NamedMajorRecord, INPC, ILoquiObjectSetter, IEquatable<NPC>
+    public partial class NPC : NamedMajorRecord, INPC, ILoquiObject<NPC>, ILoquiObjectSetter, IEquatable<NPC>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NPC_Registration.Instance;
@@ -983,6 +983,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<NPC>.GetEqualsMask(NPC rhs) => NPCCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<INPCGetter>.GetEqualsMask(INPCGetter rhs) => NPCCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -1005,6 +1007,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new NPC_Mask<bool> GetHasBeenSetMask()
         {
             return NPCCommon.GetHasBeenSetMask(this);
@@ -2808,31 +2811,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            NPC_CopyMask copyMask = null,
-            INPCGetter def = null)
-            where CopyType : class, INPC
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(NPC)))
-            {
-                ret = new NPC() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static NPC Copy_ToLoqui(
             INPCGetter item,
             NPC_CopyMask copyMask = null,
@@ -2852,6 +2830,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            INPCGetter rhs,
+            NPC_CopyMask copyMask,
+            INPCGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            INPCGetter rhs,
+            out NPC_ErrorMask errorMask,
+            NPC_CopyMask copyMask = null,
+            INPCGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            NPC_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new NPC_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            NPCCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -3519,7 +3540,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface INPC : INPCGetter, INamedMajorRecord, ILoquiClass<INPC, INPCGetter>, ILoquiClass<NPC, INPCGetter>
+    public partial interface INPC : INPCGetter, INamedMajorRecord, ILoquiClass<INPC, INPCGetter>, ILoquiClass<NPC, INPCGetter>
     {
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
@@ -3691,7 +3712,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface INPCGetter : INamedMajorRecordGetter
+    public partial interface INPCGetter : INamedMajorRecordGetter
     {
         #region Model
         Model Model { get; }
@@ -4974,75 +4995,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this INPC item,
-            INPCGetter rhs,
-            NPC_CopyMask copyMask = null,
-            INPCGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            NPCCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this INPC item,
-            INPCGetter rhs,
-            out NPC_ErrorMask errorMask,
-            NPC_CopyMask copyMask = null,
-            INPCGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            NPCCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this INPC item,
+            INPC item,
             INPCGetter rhs,
             INPCGetter def,
             bool doMasks,
-            out NPC_ErrorMask errorMask,
-            NPC_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            NPC_ErrorMask retErrorMask = null;
-            Func<NPC_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new NPC_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this INPC item,
-            INPCGetter rhs,
-            INPCGetter def,
-            bool doMasks,
-            Func<NPC_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             NPC_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -5077,11 +5034,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Model.Specific == null)
-                                            {
-                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.Model.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)NPC_FieldIndex.Model, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Model.Specific,
@@ -6689,7 +6644,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NPC_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.NPCFlags = item.NPCFlags == rhs.NPCFlags;
             ret.BaseSpellPoints = item.BaseSpellPoints == rhs.BaseSpellPoints;
             ret.Fatigue = item.Fatigue == rhs.Fatigue;
@@ -6705,7 +6660,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.Factions.Specific = item.Factions.SelectAgainst<RankPlacement, MaskItem<bool, RankPlacement_Mask<bool>>>(rhs.Factions, ((l, r) =>
                     {
                         MaskItem<bool, RankPlacement_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => RankPlacementCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
                     ), out ret.Factions.Overall);
@@ -6752,7 +6707,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.Items.Specific = item.Items.SelectAgainst<ItemEntry, MaskItem<bool, ItemEntry_Mask<bool>>>(rhs.Items, ((l, r) =>
                     {
                         MaskItem<bool, ItemEntry_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => ItemEntryCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
                     ), out ret.Items.Overall);

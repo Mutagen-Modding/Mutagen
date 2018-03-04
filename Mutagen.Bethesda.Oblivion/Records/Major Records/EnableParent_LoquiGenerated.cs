@@ -24,7 +24,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class EnableParent : IEnableParent, ILoquiObjectSetter, IEquatable<EnableParent>
+    public partial class EnableParent : IEnableParent, ILoquiObject<EnableParent>, ILoquiObjectSetter, IEquatable<EnableParent>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EnableParent_Registration.Instance;
@@ -83,6 +83,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<EnableParent>.GetEqualsMask(EnableParent rhs) => EnableParentCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IEnableParentGetter>.GetEqualsMask(IEnableParentGetter rhs) => EnableParentCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -105,6 +107,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public EnableParent_Mask<bool> GetHasBeenSetMask()
         {
             return EnableParentCommon.GetHasBeenSetMask(this);
@@ -766,31 +769,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            EnableParent_CopyMask copyMask = null,
-            IEnableParentGetter def = null)
-            where CopyType : class, IEnableParent
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(EnableParent)))
-            {
-                ret = new EnableParent() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static EnableParent Copy_ToLoqui(
             IEnableParentGetter item,
             EnableParent_CopyMask copyMask = null,
@@ -810,6 +788,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IEnableParentGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IEnableParentGetter rhs,
+            EnableParent_CopyMask copyMask,
+            IEnableParentGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IEnableParentGetter rhs,
+            out EnableParent_ErrorMask errorMask,
+            EnableParent_CopyMask copyMask = null,
+            IEnableParentGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            EnableParent_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new EnableParent_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            EnableParentCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -888,7 +922,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IEnableParent : IEnableParentGetter, ILoquiClass<IEnableParent, IEnableParentGetter>, ILoquiClass<EnableParent, IEnableParentGetter>
+    public partial interface IEnableParent : IEnableParentGetter, ILoquiClass<IEnableParent, IEnableParentGetter>, ILoquiClass<EnableParent, IEnableParentGetter>
     {
         new PlacedObject Reference { get; set; }
         new EnableParent.Flag Flags { get; set; }
@@ -896,7 +930,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IEnableParentGetter : ILoquiObject
+    public partial interface IEnableParentGetter : ILoquiObject
     {
         #region Reference
         PlacedObject Reference { get; }
@@ -1105,75 +1139,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IEnableParent item,
-            IEnableParentGetter rhs,
-            EnableParent_CopyMask copyMask = null,
-            IEnableParentGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            EnableParentCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IEnableParent item,
-            IEnableParentGetter rhs,
-            out EnableParent_ErrorMask errorMask,
-            EnableParent_CopyMask copyMask = null,
-            IEnableParentGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            EnableParentCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IEnableParent item,
+            IEnableParent item,
             IEnableParentGetter rhs,
             IEnableParentGetter def,
             bool doMasks,
-            out EnableParent_ErrorMask errorMask,
-            EnableParent_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            EnableParent_ErrorMask retErrorMask = null;
-            Func<EnableParent_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new EnableParent_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IEnableParent item,
-            IEnableParentGetter rhs,
-            IEnableParentGetter def,
-            bool doMasks,
-            Func<EnableParent_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             EnableParent_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

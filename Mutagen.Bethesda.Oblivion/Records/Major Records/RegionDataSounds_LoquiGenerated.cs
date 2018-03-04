@@ -25,7 +25,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class RegionDataSounds : RegionData, IRegionDataSounds, ILoquiObjectSetter, IEquatable<RegionDataSounds>
+    public partial class RegionDataSounds : RegionData, IRegionDataSounds, ILoquiObject<RegionDataSounds>, ILoquiObjectSetter, IEquatable<RegionDataSounds>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionDataSounds_Registration.Instance;
@@ -91,6 +91,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<RegionDataSounds>.GetEqualsMask(RegionDataSounds rhs) => RegionDataSoundsCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IRegionDataSoundsGetter>.GetEqualsMask(IRegionDataSoundsGetter rhs) => RegionDataSoundsCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -113,6 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new RegionDataSounds_Mask<bool> GetHasBeenSetMask()
         {
             return RegionDataSoundsCommon.GetHasBeenSetMask(this);
@@ -876,31 +879,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            RegionDataSounds_CopyMask copyMask = null,
-            IRegionDataSoundsGetter def = null)
-            where CopyType : class, IRegionDataSounds
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(RegionDataSounds)))
-            {
-                ret = new RegionDataSounds() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static RegionDataSounds Copy_ToLoqui(
             IRegionDataSoundsGetter item,
             RegionDataSounds_CopyMask copyMask = null,
@@ -920,6 +898,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IRegionDataSoundsGetter rhs,
+            RegionDataSounds_CopyMask copyMask,
+            IRegionDataSoundsGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IRegionDataSoundsGetter rhs,
+            out RegionDataSounds_ErrorMask errorMask,
+            RegionDataSounds_CopyMask copyMask = null,
+            IRegionDataSoundsGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            RegionDataSounds_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new RegionDataSounds_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            RegionDataSoundsCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -987,7 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IRegionDataSounds : IRegionDataSoundsGetter, IRegionData, ILoquiClass<IRegionDataSounds, IRegionDataSoundsGetter>, ILoquiClass<RegionDataSounds, IRegionDataSoundsGetter>
+    public partial interface IRegionDataSounds : IRegionDataSoundsGetter, IRegionData, ILoquiClass<IRegionDataSounds, IRegionDataSoundsGetter>, ILoquiClass<RegionDataSounds, IRegionDataSoundsGetter>
     {
         new MusicType MusicType { get; set; }
         new INotifyingSetItem<MusicType> MusicType_Property { get; }
@@ -995,7 +1016,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<RegionSound> Sounds { get; }
     }
 
-    public interface IRegionDataSoundsGetter : IRegionDataGetter
+    public partial interface IRegionDataSoundsGetter : IRegionDataGetter
     {
         #region MusicType
         MusicType MusicType { get; }
@@ -1211,75 +1232,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IRegionDataSounds item,
-            IRegionDataSoundsGetter rhs,
-            RegionDataSounds_CopyMask copyMask = null,
-            IRegionDataSoundsGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            RegionDataSoundsCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IRegionDataSounds item,
-            IRegionDataSoundsGetter rhs,
-            out RegionDataSounds_ErrorMask errorMask,
-            RegionDataSounds_CopyMask copyMask = null,
-            IRegionDataSoundsGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            RegionDataSoundsCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IRegionDataSounds item,
+            IRegionDataSounds item,
             IRegionDataSoundsGetter rhs,
             IRegionDataSoundsGetter def,
             bool doMasks,
-            out RegionDataSounds_ErrorMask errorMask,
-            RegionDataSounds_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            RegionDataSounds_ErrorMask retErrorMask = null;
-            Func<RegionDataSounds_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new RegionDataSounds_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IRegionDataSounds item,
-            IRegionDataSoundsGetter rhs,
-            IRegionDataSoundsGetter def,
-            bool doMasks,
-            Func<RegionDataSounds_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             RegionDataSounds_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

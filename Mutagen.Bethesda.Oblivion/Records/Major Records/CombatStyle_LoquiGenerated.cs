@@ -25,7 +25,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class CombatStyle : MajorRecord, ICombatStyle, ILoquiObjectSetter, IEquatable<CombatStyle>
+    public partial class CombatStyle : MajorRecord, ICombatStyle, ILoquiObject<CombatStyle>, ILoquiObjectSetter, IEquatable<CombatStyle>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyle_Registration.Instance;
@@ -58,6 +58,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<CombatStyle>.GetEqualsMask(CombatStyle rhs) => CombatStyleCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ICombatStyleGetter>.GetEqualsMask(ICombatStyleGetter rhs) => CombatStyleCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -80,6 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new CombatStyle_Mask<bool> GetHasBeenSetMask()
         {
             return CombatStyleCommon.GetHasBeenSetMask(this);
@@ -742,31 +745,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            CombatStyle_CopyMask copyMask = null,
-            ICombatStyleGetter def = null)
-            where CopyType : class, ICombatStyle
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(CombatStyle)))
-            {
-                ret = new CombatStyle() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static CombatStyle Copy_ToLoqui(
             ICombatStyleGetter item,
             CombatStyle_CopyMask copyMask = null,
@@ -786,6 +764,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            ICombatStyleGetter rhs,
+            CombatStyle_CopyMask copyMask,
+            ICombatStyleGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ICombatStyleGetter rhs,
+            out CombatStyle_ErrorMask errorMask,
+            CombatStyle_CopyMask copyMask = null,
+            ICombatStyleGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            CombatStyle_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new CombatStyle_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            CombatStyleCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -837,11 +858,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface ICombatStyle : ICombatStyleGetter, IMajorRecord, ILoquiClass<ICombatStyle, ICombatStyleGetter>, ILoquiClass<CombatStyle, ICombatStyleGetter>
+    public partial interface ICombatStyle : ICombatStyleGetter, IMajorRecord, ILoquiClass<ICombatStyle, ICombatStyleGetter>, ILoquiClass<CombatStyle, ICombatStyleGetter>
     {
     }
 
-    public interface ICombatStyleGetter : IMajorRecordGetter
+    public partial interface ICombatStyleGetter : IMajorRecordGetter
     {
 
     }
@@ -1018,75 +1039,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this ICombatStyle item,
-            ICombatStyleGetter rhs,
-            CombatStyle_CopyMask copyMask = null,
-            ICombatStyleGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            CombatStyleCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ICombatStyle item,
-            ICombatStyleGetter rhs,
-            out CombatStyle_ErrorMask errorMask,
-            CombatStyle_CopyMask copyMask = null,
-            ICombatStyleGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            CombatStyleCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ICombatStyle item,
+            ICombatStyle item,
             ICombatStyleGetter rhs,
             ICombatStyleGetter def,
             bool doMasks,
-            out CombatStyle_ErrorMask errorMask,
-            CombatStyle_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            CombatStyle_ErrorMask retErrorMask = null;
-            Func<CombatStyle_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new CombatStyle_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this ICombatStyle item,
-            ICombatStyleGetter rhs,
-            ICombatStyleGetter def,
-            bool doMasks,
-            Func<CombatStyle_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             CombatStyle_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

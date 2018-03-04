@@ -22,7 +22,7 @@ using System.Diagnostics;
 namespace Mutagen.Bethesda.Tests
 {
     #region Class
-    public partial class DataTarget : IDataTarget, ILoquiObjectSetter, IEquatable<DataTarget>
+    public partial class DataTarget : IDataTarget, ILoquiObject<DataTarget>, ILoquiObjectSetter, IEquatable<DataTarget>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DataTarget_Registration.Instance;
@@ -70,6 +70,8 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
+        IMask<bool> IEqualsMask<DataTarget>.GetEqualsMask(DataTarget rhs) => DataTargetCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IDataTargetGetter>.GetEqualsMask(IDataTargetGetter rhs) => DataTargetCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -92,6 +94,7 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public DataTarget_Mask<bool> GetHasBeenSetMask()
         {
             return DataTargetCommon.GetHasBeenSetMask(this);
@@ -455,31 +458,6 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            DataTarget_CopyMask copyMask = null,
-            IDataTargetGetter def = null)
-            where CopyType : class, IDataTarget
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(DataTarget)))
-            {
-                ret = new DataTarget() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static DataTarget Copy_ToLoqui(
             IDataTargetGetter item,
             DataTarget_CopyMask copyMask = null,
@@ -499,6 +477,62 @@ namespace Mutagen.Bethesda.Tests
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IDataTargetGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IDataTargetGetter rhs,
+            DataTarget_CopyMask copyMask,
+            IDataTargetGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IDataTargetGetter rhs,
+            out DataTarget_ErrorMask errorMask,
+            DataTarget_CopyMask copyMask = null,
+            IDataTargetGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            DataTarget_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new DataTarget_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            DataTargetCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -569,7 +603,7 @@ namespace Mutagen.Bethesda.Tests
     #endregion
 
     #region Interface
-    public interface IDataTarget : IDataTargetGetter, ILoquiClass<IDataTarget, IDataTargetGetter>, ILoquiClass<DataTarget, IDataTargetGetter>
+    public partial interface IDataTarget : IDataTargetGetter, ILoquiClass<IDataTarget, IDataTargetGetter>, ILoquiClass<DataTarget, IDataTargetGetter>
     {
         new Int64 Location { get; set; }
 
@@ -577,7 +611,7 @@ namespace Mutagen.Bethesda.Tests
 
     }
 
-    public interface IDataTargetGetter : ILoquiObject
+    public partial interface IDataTargetGetter : ILoquiObject
     {
         #region Location
         Int64 Location { get; }
@@ -782,75 +816,11 @@ namespace Mutagen.Bethesda.Tests.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IDataTarget item,
-            IDataTargetGetter rhs,
-            DataTarget_CopyMask copyMask = null,
-            IDataTargetGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            DataTargetCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IDataTarget item,
-            IDataTargetGetter rhs,
-            out DataTarget_ErrorMask errorMask,
-            DataTarget_CopyMask copyMask = null,
-            IDataTargetGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            DataTargetCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IDataTarget item,
+            IDataTarget item,
             IDataTargetGetter rhs,
             IDataTargetGetter def,
             bool doMasks,
-            out DataTarget_ErrorMask errorMask,
-            DataTarget_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            DataTarget_ErrorMask retErrorMask = null;
-            Func<DataTarget_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new DataTarget_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IDataTarget item,
-            IDataTargetGetter rhs,
-            IDataTargetGetter def,
-            bool doMasks,
-            Func<DataTarget_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             DataTarget_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

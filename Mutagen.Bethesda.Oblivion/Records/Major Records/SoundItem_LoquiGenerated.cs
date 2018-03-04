@@ -24,7 +24,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class SoundItem : ISoundItem, ILoquiObjectSetter, IEquatable<SoundItem>
+    public partial class SoundItem : ISoundItem, ILoquiObject<SoundItem>, ILoquiObjectSetter, IEquatable<SoundItem>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundItem_Registration.Instance;
@@ -83,6 +83,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<SoundItem>.GetEqualsMask(SoundItem rhs) => SoundItemCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ISoundItemGetter>.GetEqualsMask(ISoundItemGetter rhs) => SoundItemCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -105,6 +107,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public SoundItem_Mask<bool> GetHasBeenSetMask()
         {
             return SoundItemCommon.GetHasBeenSetMask(this);
@@ -817,31 +820,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            SoundItem_CopyMask copyMask = null,
-            ISoundItemGetter def = null)
-            where CopyType : class, ISoundItem
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(SoundItem)))
-            {
-                ret = new SoundItem() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static SoundItem Copy_ToLoqui(
             ISoundItemGetter item,
             SoundItem_CopyMask copyMask = null,
@@ -861,6 +839,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            ISoundItemGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ISoundItemGetter rhs,
+            SoundItem_CopyMask copyMask,
+            ISoundItemGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ISoundItemGetter rhs,
+            out SoundItem_ErrorMask errorMask,
+            SoundItem_CopyMask copyMask = null,
+            ISoundItemGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            SoundItem_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new SoundItem_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            SoundItemCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -939,7 +973,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface ISoundItem : ISoundItemGetter, ILoquiClass<ISoundItem, ISoundItemGetter>, ILoquiClass<SoundItem, ISoundItemGetter>
+    public partial interface ISoundItem : ISoundItemGetter, ILoquiClass<ISoundItem, ISoundItemGetter>, ILoquiClass<SoundItem, ISoundItemGetter>
     {
         new Sound Sound { get; set; }
         new Byte Chance { get; set; }
@@ -947,7 +981,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface ISoundItemGetter : ILoquiObject
+    public partial interface ISoundItemGetter : ILoquiObject
     {
         #region Sound
         Sound Sound { get; }
@@ -1170,75 +1204,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this ISoundItem item,
-            ISoundItemGetter rhs,
-            SoundItem_CopyMask copyMask = null,
-            ISoundItemGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            SoundItemCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ISoundItem item,
-            ISoundItemGetter rhs,
-            out SoundItem_ErrorMask errorMask,
-            SoundItem_CopyMask copyMask = null,
-            ISoundItemGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            SoundItemCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ISoundItem item,
+            ISoundItem item,
             ISoundItemGetter rhs,
             ISoundItemGetter def,
             bool doMasks,
-            out SoundItem_ErrorMask errorMask,
-            SoundItem_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            SoundItem_ErrorMask retErrorMask = null;
-            Func<SoundItem_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new SoundItem_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this ISoundItem item,
-            ISoundItemGetter rhs,
-            ISoundItemGetter def,
-            bool doMasks,
-            Func<SoundItem_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             SoundItem_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

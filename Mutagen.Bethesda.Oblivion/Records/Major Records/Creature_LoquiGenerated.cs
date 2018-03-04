@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Creature : NamedMajorRecord, ICreature, ILoquiObjectSetter, IEquatable<Creature>
+    public partial class Creature : NamedMajorRecord, ICreature, ILoquiObject<Creature>, ILoquiObjectSetter, IEquatable<Creature>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Creature_Registration.Instance;
@@ -765,6 +765,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Creature>.GetEqualsMask(Creature rhs) => CreatureCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ICreatureGetter>.GetEqualsMask(ICreatureGetter rhs) => CreatureCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -787,6 +789,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Creature_Mask<bool> GetHasBeenSetMask()
         {
             return CreatureCommon.GetHasBeenSetMask(this);
@@ -2415,31 +2418,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Creature_CopyMask copyMask = null,
-            ICreatureGetter def = null)
-            where CopyType : class, ICreature
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Creature)))
-            {
-                ret = new Creature() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Creature Copy_ToLoqui(
             ICreatureGetter item,
             Creature_CopyMask copyMask = null,
@@ -2459,6 +2437,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            ICreatureGetter rhs,
+            Creature_CopyMask copyMask,
+            ICreatureGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ICreatureGetter rhs,
+            out Creature_ErrorMask errorMask,
+            Creature_CopyMask copyMask = null,
+            ICreatureGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Creature_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Creature_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            CreatureCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -2962,7 +2983,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface ICreature : ICreatureGetter, INamedMajorRecord, ILoquiClass<ICreature, ICreatureGetter>, ILoquiClass<Creature, ICreatureGetter>
+    public partial interface ICreature : ICreatureGetter, INamedMajorRecord, ILoquiClass<ICreature, ICreatureGetter>, ILoquiClass<Creature, ICreatureGetter>
     {
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
@@ -3088,7 +3109,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<CreatureSound> Sounds { get; }
     }
 
-    public interface ICreatureGetter : INamedMajorRecordGetter
+    public partial interface ICreatureGetter : INamedMajorRecordGetter
     {
         #region Model
         Model Model { get; }
@@ -4099,75 +4120,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this ICreature item,
-            ICreatureGetter rhs,
-            Creature_CopyMask copyMask = null,
-            ICreatureGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            CreatureCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ICreature item,
-            ICreatureGetter rhs,
-            out Creature_ErrorMask errorMask,
-            Creature_CopyMask copyMask = null,
-            ICreatureGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            CreatureCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ICreature item,
+            ICreature item,
             ICreatureGetter rhs,
             ICreatureGetter def,
             bool doMasks,
-            out Creature_ErrorMask errorMask,
-            Creature_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Creature_ErrorMask retErrorMask = null;
-            Func<Creature_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Creature_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this ICreature item,
-            ICreatureGetter rhs,
-            ICreatureGetter def,
-            bool doMasks,
-            Func<Creature_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Creature_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -4202,11 +4159,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Model.Specific == null)
-                                            {
-                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.Model.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)Creature_FieldIndex.Model, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Model.Specific,
@@ -5479,7 +5434,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Creature_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             if (item.Items.HasBeenSet == rhs.Items.HasBeenSet)
             {
                 if (item.Items.HasBeenSet)
@@ -5488,7 +5443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.Items.Specific = item.Items.SelectAgainst<ItemEntry, MaskItem<bool, ItemEntry_Mask<bool>>>(rhs.Items, ((l, r) =>
                     {
                         MaskItem<bool, ItemEntry_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => ItemEntryCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
                     ), out ret.Items.Overall);
@@ -5559,7 +5514,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.Factions.Specific = item.Factions.SelectAgainst<RankPlacement, MaskItem<bool, RankPlacement_Mask<bool>>>(rhs.Factions, ((l, r) =>
                     {
                         MaskItem<bool, RankPlacement_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => RankPlacementCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
                     ), out ret.Factions.Overall);
@@ -5654,7 +5609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.Sounds.Specific = item.Sounds.SelectAgainst<CreatureSound, MaskItem<bool, CreatureSound_Mask<bool>>>(rhs.Sounds, ((l, r) =>
                     {
                         MaskItem<bool, CreatureSound_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => CreatureSoundCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
                     ), out ret.Sounds.Overall);

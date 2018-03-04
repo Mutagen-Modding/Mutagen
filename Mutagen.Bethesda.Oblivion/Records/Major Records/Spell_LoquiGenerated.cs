@@ -25,7 +25,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public abstract partial class Spell : NamedMajorRecord, ISpell, ILoquiObjectSetter, IEquatable<Spell>
+    public abstract partial class Spell : NamedMajorRecord, ISpell, ILoquiObject<Spell>, ILoquiObjectSetter, IEquatable<Spell>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Spell_Registration.Instance;
@@ -58,6 +58,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Spell>.GetEqualsMask(Spell rhs) => SpellCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ISpellGetter>.GetEqualsMask(ISpellGetter rhs) => SpellCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -80,6 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Spell_Mask<bool> GetHasBeenSetMask()
         {
             return SpellCommon.GetHasBeenSetMask(this);
@@ -471,23 +474,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Spell_CopyMask copyMask = null,
-            ISpellGetter def = null)
-            where CopyType : class, ISpell
-        {
-            CopyType ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Spell Copy_ToLoqui(
             ISpellGetter item,
             Spell_CopyMask copyMask = null,
@@ -499,6 +485,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            ISpellGetter rhs,
+            Spell_CopyMask copyMask,
+            ISpellGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ISpellGetter rhs,
+            out Spell_ErrorMask errorMask,
+            Spell_CopyMask copyMask = null,
+            ISpellGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Spell_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Spell_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            SpellCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -540,11 +569,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface ISpell : ISpellGetter, INamedMajorRecord, ILoquiClass<ISpell, ISpellGetter>, ILoquiClass<Spell, ISpellGetter>
+    public partial interface ISpell : ISpellGetter, INamedMajorRecord, ILoquiClass<ISpell, ISpellGetter>, ILoquiClass<Spell, ISpellGetter>
     {
     }
 
-    public interface ISpellGetter : INamedMajorRecordGetter
+    public partial interface ISpellGetter : INamedMajorRecordGetter
     {
 
     }
@@ -736,75 +765,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this ISpell item,
-            ISpellGetter rhs,
-            Spell_CopyMask copyMask = null,
-            ISpellGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            SpellCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ISpell item,
-            ISpellGetter rhs,
-            out Spell_ErrorMask errorMask,
-            Spell_CopyMask copyMask = null,
-            ISpellGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            SpellCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ISpell item,
+            ISpell item,
             ISpellGetter rhs,
             ISpellGetter def,
             bool doMasks,
-            out Spell_ErrorMask errorMask,
-            Spell_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Spell_ErrorMask retErrorMask = null;
-            Func<Spell_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Spell_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this ISpell item,
-            ISpellGetter rhs,
-            ISpellGetter def,
-            bool doMasks,
-            Func<Spell_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Spell_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

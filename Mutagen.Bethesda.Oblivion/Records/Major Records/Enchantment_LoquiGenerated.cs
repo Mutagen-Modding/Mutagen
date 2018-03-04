@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Enchantment : NamedMajorRecord, IEnchantment, ILoquiObjectSetter, IEquatable<Enchantment>
+    public partial class Enchantment : NamedMajorRecord, IEnchantment, ILoquiObject<Enchantment>, ILoquiObjectSetter, IEquatable<Enchantment>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Enchantment_Registration.Instance;
@@ -137,6 +137,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Enchantment>.GetEqualsMask(Enchantment rhs) => EnchantmentCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IEnchantmentGetter>.GetEqualsMask(IEnchantmentGetter rhs) => EnchantmentCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -159,6 +161,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Enchantment_Mask<bool> GetHasBeenSetMask()
         {
             return EnchantmentCommon.GetHasBeenSetMask(this);
@@ -961,31 +964,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Enchantment_CopyMask copyMask = null,
-            IEnchantmentGetter def = null)
-            where CopyType : class, IEnchantment
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Enchantment)))
-            {
-                ret = new Enchantment() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Enchantment Copy_ToLoqui(
             IEnchantmentGetter item,
             Enchantment_CopyMask copyMask = null,
@@ -1005,6 +983,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IEnchantmentGetter rhs,
+            Enchantment_CopyMask copyMask,
+            IEnchantmentGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IEnchantmentGetter rhs,
+            out Enchantment_ErrorMask errorMask,
+            Enchantment_CopyMask copyMask = null,
+            IEnchantmentGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Enchantment_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Enchantment_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            EnchantmentCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1102,7 +1123,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IEnchantment : IEnchantmentGetter, INamedMajorRecord, ILoquiClass<IEnchantment, IEnchantmentGetter>, ILoquiClass<Enchantment, IEnchantmentGetter>
+    public partial interface IEnchantment : IEnchantmentGetter, INamedMajorRecord, ILoquiClass<IEnchantment, IEnchantmentGetter>, ILoquiClass<Enchantment, IEnchantmentGetter>
     {
         new Enchantment.EnchantmentType Type { get; set; }
         new INotifyingItem<Enchantment.EnchantmentType> Type_Property { get; }
@@ -1119,7 +1140,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<Effect> Effects { get; }
     }
 
-    public interface IEnchantmentGetter : INamedMajorRecordGetter
+    public partial interface IEnchantmentGetter : INamedMajorRecordGetter
     {
         #region Type
         Enchantment.EnchantmentType Type { get; }
@@ -1389,75 +1410,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IEnchantment item,
-            IEnchantmentGetter rhs,
-            Enchantment_CopyMask copyMask = null,
-            IEnchantmentGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            EnchantmentCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IEnchantment item,
-            IEnchantmentGetter rhs,
-            out Enchantment_ErrorMask errorMask,
-            Enchantment_CopyMask copyMask = null,
-            IEnchantmentGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            EnchantmentCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IEnchantment item,
+            IEnchantment item,
             IEnchantmentGetter rhs,
             IEnchantmentGetter def,
             bool doMasks,
-            out Enchantment_ErrorMask errorMask,
-            Enchantment_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Enchantment_ErrorMask retErrorMask = null;
-            Func<Enchantment_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Enchantment_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IEnchantment item,
-            IEnchantmentGetter rhs,
-            IEnchantmentGetter def,
-            bool doMasks,
-            Func<Enchantment_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Enchantment_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1693,7 +1650,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.Effects.Specific = item.Effects.SelectAgainst<Effect, MaskItem<bool, Effect_Mask<bool>>>(rhs.Effects, ((l, r) =>
                     {
                         MaskItem<bool, Effect_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => EffectCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
                     ), out ret.Effects.Overall);

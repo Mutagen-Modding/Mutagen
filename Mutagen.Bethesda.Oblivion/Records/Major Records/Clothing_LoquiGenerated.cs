@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Clothing : ClothingAbstract, IClothing, ILoquiObjectSetter, IEquatable<Clothing>
+    public partial class Clothing : ClothingAbstract, IClothing, ILoquiObject<Clothing>, ILoquiObjectSetter, IEquatable<Clothing>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Clothing_Registration.Instance;
@@ -89,6 +89,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Clothing>.GetEqualsMask(Clothing rhs) => ClothingCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IClothingGetter>.GetEqualsMask(IClothingGetter rhs) => ClothingCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -111,6 +113,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Clothing_Mask<bool> GetHasBeenSetMask()
         {
             return ClothingCommon.GetHasBeenSetMask(this);
@@ -871,31 +874,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Clothing_CopyMask copyMask = null,
-            IClothingGetter def = null)
-            where CopyType : class, IClothing
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Clothing)))
-            {
-                ret = new Clothing() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Clothing Copy_ToLoqui(
             IClothingGetter item,
             Clothing_CopyMask copyMask = null,
@@ -915,6 +893,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IClothingGetter rhs,
+            Clothing_CopyMask copyMask,
+            IClothingGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IClothingGetter rhs,
+            out Clothing_ErrorMask errorMask,
+            Clothing_CopyMask copyMask = null,
+            IClothingGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Clothing_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Clothing_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            ClothingCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -986,7 +1007,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IClothing : IClothingGetter, IClothingAbstract, ILoquiClass<IClothing, IClothingGetter>, ILoquiClass<Clothing, IClothingGetter>
+    public partial interface IClothing : IClothingGetter, IClothingAbstract, ILoquiClass<IClothing, IClothingGetter>, ILoquiClass<Clothing, IClothingGetter>
     {
         new UInt32 Value { get; set; }
         new INotifyingItem<UInt32> Value_Property { get; }
@@ -996,7 +1017,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IClothingGetter : IClothingAbstractGetter
+    public partial interface IClothingGetter : IClothingAbstractGetter
     {
         #region Value
         UInt32 Value { get; }
@@ -1225,75 +1246,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IClothing item,
-            IClothingGetter rhs,
-            Clothing_CopyMask copyMask = null,
-            IClothingGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            ClothingCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IClothing item,
-            IClothingGetter rhs,
-            out Clothing_ErrorMask errorMask,
-            Clothing_CopyMask copyMask = null,
-            IClothingGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            ClothingCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IClothing item,
+            IClothing item,
             IClothingGetter rhs,
             IClothingGetter def,
             bool doMasks,
-            out Clothing_ErrorMask errorMask,
-            Clothing_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Clothing_ErrorMask retErrorMask = null;
-            Func<Clothing_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Clothing_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IClothing item,
-            IClothingGetter rhs,
-            IClothingGetter def,
-            bool doMasks,
-            Func<Clothing_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Clothing_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

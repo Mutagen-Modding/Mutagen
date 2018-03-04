@@ -25,7 +25,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class BodyData : IBodyData, ILoquiObjectSetter, IEquatable<BodyData>
+    public partial class BodyData : IBodyData, ILoquiObject<BodyData>, ILoquiObjectSetter, IEquatable<BodyData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyData_Registration.Instance;
@@ -93,6 +93,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<BodyData>.GetEqualsMask(BodyData rhs) => BodyDataCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IBodyDataGetter>.GetEqualsMask(IBodyDataGetter rhs) => BodyDataCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -115,6 +117,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public BodyData_Mask<bool> GetHasBeenSetMask()
         {
             return BodyDataCommon.GetHasBeenSetMask(this);
@@ -845,31 +848,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            BodyData_CopyMask copyMask = null,
-            IBodyDataGetter def = null)
-            where CopyType : class, IBodyData
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(BodyData)))
-            {
-                ret = new BodyData() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static BodyData Copy_ToLoqui(
             IBodyDataGetter item,
             BodyData_CopyMask copyMask = null,
@@ -889,6 +867,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IBodyDataGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IBodyDataGetter rhs,
+            BodyData_CopyMask copyMask,
+            IBodyDataGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IBodyDataGetter rhs,
+            out BodyData_ErrorMask errorMask,
+            BodyData_CopyMask copyMask = null,
+            IBodyDataGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            BodyData_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new BodyData_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            BodyDataCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -963,7 +997,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IBodyData : IBodyDataGetter, ILoquiClass<IBodyData, IBodyDataGetter>, ILoquiClass<BodyData, IBodyDataGetter>
+    public partial interface IBodyData : IBodyDataGetter, ILoquiClass<IBodyData, IBodyDataGetter>, ILoquiClass<BodyData, IBodyDataGetter>
     {
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
@@ -971,7 +1005,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<BodyPart> BodyParts { get; }
     }
 
-    public interface IBodyDataGetter : ILoquiObject
+    public partial interface IBodyDataGetter : ILoquiObject
     {
         #region Model
         Model Model { get; }
@@ -1195,75 +1229,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IBodyData item,
-            IBodyDataGetter rhs,
-            BodyData_CopyMask copyMask = null,
-            IBodyDataGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            BodyDataCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IBodyData item,
-            IBodyDataGetter rhs,
-            out BodyData_ErrorMask errorMask,
-            BodyData_CopyMask copyMask = null,
-            IBodyDataGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            BodyDataCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IBodyData item,
+            IBodyData item,
             IBodyDataGetter rhs,
             IBodyDataGetter def,
             bool doMasks,
-            out BodyData_ErrorMask errorMask,
-            BodyData_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            BodyData_ErrorMask retErrorMask = null;
-            Func<BodyData_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new BodyData_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IBodyData item,
-            IBodyDataGetter rhs,
-            IBodyDataGetter def,
-            bool doMasks,
-            Func<BodyData_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             BodyData_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1290,11 +1260,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Model.Specific == null)
-                                            {
-                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.Model.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)BodyData_FieldIndex.Model, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Model.Specific,
@@ -1448,7 +1416,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BodyData_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             if (item.BodyParts.HasBeenSet == rhs.BodyParts.HasBeenSet)
             {
                 if (item.BodyParts.HasBeenSet)
@@ -1457,7 +1425,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.BodyParts.Specific = item.BodyParts.SelectAgainst<BodyPart, MaskItem<bool, BodyPart_Mask<bool>>>(rhs.BodyParts, ((l, r) =>
                     {
                         MaskItem<bool, BodyPart_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => BodyPartCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
                     ), out ret.BodyParts.Overall);

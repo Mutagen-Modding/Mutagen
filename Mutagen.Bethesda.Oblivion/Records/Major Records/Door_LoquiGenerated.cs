@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Door : NamedMajorRecord, IDoor, ILoquiObjectSetter, IEquatable<Door>
+    public partial class Door : NamedMajorRecord, IDoor, ILoquiObject<Door>, ILoquiObjectSetter, IEquatable<Door>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Door_Registration.Instance;
@@ -133,6 +133,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Door>.GetEqualsMask(Door rhs) => DoorCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IDoorGetter>.GetEqualsMask(IDoorGetter rhs) => DoorCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -155,6 +157,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Door_Mask<bool> GetHasBeenSetMask()
         {
             return DoorCommon.GetHasBeenSetMask(this);
@@ -1035,31 +1038,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Door_CopyMask copyMask = null,
-            IDoorGetter def = null)
-            where CopyType : class, IDoor
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Door)))
-            {
-                ret = new Door() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Door Copy_ToLoqui(
             IDoorGetter item,
             Door_CopyMask copyMask = null,
@@ -1079,6 +1057,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IDoorGetter rhs,
+            Door_CopyMask copyMask,
+            IDoorGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IDoorGetter rhs,
+            out Door_ErrorMask errorMask,
+            Door_CopyMask copyMask = null,
+            IDoorGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Door_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Door_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            DoorCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1196,7 +1217,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IDoor : IDoorGetter, INamedMajorRecord, ILoquiClass<IDoor, IDoorGetter>, ILoquiClass<Door, IDoorGetter>
+    public partial interface IDoor : IDoorGetter, INamedMajorRecord, ILoquiClass<IDoor, IDoorGetter>, ILoquiClass<Door, IDoorGetter>
     {
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
@@ -1211,7 +1232,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<FormIDSetLink<Worldspace>> RandomTeleportDestinations { get; }
     }
 
-    public interface IDoorGetter : INamedMajorRecordGetter
+    public partial interface IDoorGetter : INamedMajorRecordGetter
     {
         #region Model
         Model Model { get; }
@@ -1520,75 +1541,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IDoor item,
-            IDoorGetter rhs,
-            Door_CopyMask copyMask = null,
-            IDoorGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            DoorCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IDoor item,
-            IDoorGetter rhs,
-            out Door_ErrorMask errorMask,
-            Door_CopyMask copyMask = null,
-            IDoorGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            DoorCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IDoor item,
+            IDoor item,
             IDoorGetter rhs,
             IDoorGetter def,
             bool doMasks,
-            out Door_ErrorMask errorMask,
-            Door_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Door_ErrorMask retErrorMask = null;
-            Func<Door_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Door_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IDoor item,
-            IDoorGetter rhs,
-            IDoorGetter def,
-            bool doMasks,
-            Func<Door_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Door_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1623,11 +1580,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Model.Specific == null)
-                                            {
-                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.Model.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)Door_FieldIndex.Model, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Model.Specific,
@@ -1896,7 +1851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Door_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
             ret.OpenSound = item.OpenSound_Property.Equals(rhs.OpenSound_Property, (l, r) => l == r);
             ret.CloseSound = item.CloseSound_Property.Equals(rhs.CloseSound_Property, (l, r) => l == r);

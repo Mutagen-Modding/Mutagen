@@ -24,7 +24,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public abstract partial class ScriptReference : IScriptReference, ILoquiObjectSetter, IEquatable<ScriptReference>
+    public abstract partial class ScriptReference : IScriptReference, ILoquiObject<ScriptReference>, ILoquiObjectSetter, IEquatable<ScriptReference>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptReference_Registration.Instance;
@@ -61,6 +61,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<ScriptReference>.GetEqualsMask(ScriptReference rhs) => ScriptReferenceCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IScriptReferenceGetter>.GetEqualsMask(IScriptReferenceGetter rhs) => ScriptReferenceCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -83,6 +85,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public ScriptReference_Mask<bool> GetHasBeenSetMask()
         {
             return ScriptReferenceCommon.GetHasBeenSetMask(this);
@@ -433,23 +436,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            ScriptReference_CopyMask copyMask = null,
-            IScriptReferenceGetter def = null)
-            where CopyType : class, IScriptReference
-        {
-            CopyType ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static ScriptReference Copy_ToLoqui(
             IScriptReferenceGetter item,
             ScriptReference_CopyMask copyMask = null,
@@ -461,6 +447,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IScriptReferenceGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IScriptReferenceGetter rhs,
+            ScriptReference_CopyMask copyMask,
+            IScriptReferenceGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IScriptReferenceGetter rhs,
+            out ScriptReference_ErrorMask errorMask,
+            ScriptReference_CopyMask copyMask = null,
+            IScriptReferenceGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            ScriptReference_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new ScriptReference_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            ScriptReferenceCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -509,11 +551,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IScriptReference : IScriptReferenceGetter, ILoquiClass<IScriptReference, IScriptReferenceGetter>, ILoquiClass<ScriptReference, IScriptReferenceGetter>
+    public partial interface IScriptReference : IScriptReferenceGetter, ILoquiClass<IScriptReference, IScriptReferenceGetter>, ILoquiClass<ScriptReference, IScriptReferenceGetter>
     {
     }
 
-    public interface IScriptReferenceGetter : ILoquiObject
+    public partial interface IScriptReferenceGetter : ILoquiObject
     {
 
     }
@@ -697,75 +739,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IScriptReference item,
-            IScriptReferenceGetter rhs,
-            ScriptReference_CopyMask copyMask = null,
-            IScriptReferenceGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            ScriptReferenceCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IScriptReference item,
-            IScriptReferenceGetter rhs,
-            out ScriptReference_ErrorMask errorMask,
-            ScriptReference_CopyMask copyMask = null,
-            IScriptReferenceGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            ScriptReferenceCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IScriptReference item,
+            IScriptReference item,
             IScriptReferenceGetter rhs,
             IScriptReferenceGetter def,
             bool doMasks,
-            out ScriptReference_ErrorMask errorMask,
-            ScriptReference_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            ScriptReference_ErrorMask retErrorMask = null;
-            Func<ScriptReference_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new ScriptReference_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IScriptReference item,
-            IScriptReferenceGetter rhs,
-            IScriptReferenceGetter def,
-            bool doMasks,
-            Func<ScriptReference_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             ScriptReference_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

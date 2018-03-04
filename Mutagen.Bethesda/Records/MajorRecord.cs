@@ -12,6 +12,10 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
+    public partial interface IMajorRecord : IFormID
+    {
+    }
+
     [DebuggerDisplay("{GetType().Name} {this.EditorID?.ToString()} {this.FormID.ToString()}")]
     public partial class MajorRecord
     {

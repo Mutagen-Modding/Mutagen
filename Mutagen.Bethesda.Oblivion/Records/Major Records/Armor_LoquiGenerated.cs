@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Armor : ClothingAbstract, IArmor, ILoquiObjectSetter, IEquatable<Armor>
+    public partial class Armor : ClothingAbstract, IArmor, ILoquiObject<Armor>, ILoquiObjectSetter, IEquatable<Armor>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Armor_Registration.Instance;
@@ -119,6 +119,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Armor>.GetEqualsMask(Armor rhs) => ArmorCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IArmorGetter>.GetEqualsMask(IArmorGetter rhs) => ArmorCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -141,6 +143,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Armor_Mask<bool> GetHasBeenSetMask()
         {
             return ArmorCommon.GetHasBeenSetMask(this);
@@ -951,31 +954,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Armor_CopyMask copyMask = null,
-            IArmorGetter def = null)
-            where CopyType : class, IArmor
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Armor)))
-            {
-                ret = new Armor() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Armor Copy_ToLoqui(
             IArmorGetter item,
             Armor_CopyMask copyMask = null,
@@ -995,6 +973,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IArmorGetter rhs,
+            Armor_CopyMask copyMask,
+            IArmorGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IArmorGetter rhs,
+            out Armor_ErrorMask errorMask,
+            Armor_CopyMask copyMask = null,
+            IArmorGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Armor_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Armor_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            ArmorCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1086,7 +1107,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IArmor : IArmorGetter, IClothingAbstract, ILoquiClass<IArmor, IArmorGetter>, ILoquiClass<Armor, IArmorGetter>
+    public partial interface IArmor : IArmorGetter, IClothingAbstract, ILoquiClass<IArmor, IArmorGetter>, ILoquiClass<Armor, IArmorGetter>
     {
         new Single ArmorValue { get; set; }
         new INotifyingItem<Single> ArmorValue_Property { get; }
@@ -1102,7 +1123,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IArmorGetter : IClothingAbstractGetter
+    public partial interface IArmorGetter : IClothingAbstractGetter
     {
         #region ArmorValue
         Single ArmorValue { get; }
@@ -1365,75 +1386,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IArmor item,
-            IArmorGetter rhs,
-            Armor_CopyMask copyMask = null,
-            IArmorGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            ArmorCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IArmor item,
-            IArmorGetter rhs,
-            out Armor_ErrorMask errorMask,
-            Armor_CopyMask copyMask = null,
-            IArmorGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            ArmorCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IArmor item,
+            IArmor item,
             IArmorGetter rhs,
             IArmorGetter def,
             bool doMasks,
-            out Armor_ErrorMask errorMask,
-            Armor_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Armor_ErrorMask retErrorMask = null;
-            Func<Armor_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Armor_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IArmor item,
-            IArmorGetter rhs,
-            IArmorGetter def,
-            bool doMasks,
-            Func<Armor_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Armor_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

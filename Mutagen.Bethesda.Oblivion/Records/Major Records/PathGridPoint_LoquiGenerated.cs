@@ -24,7 +24,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class PathGridPoint : IPathGridPoint, ILoquiObjectSetter, IEquatable<PathGridPoint>
+    public partial class PathGridPoint : IPathGridPoint, ILoquiObject<PathGridPoint>, ILoquiObjectSetter, IEquatable<PathGridPoint>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PathGridPoint_Registration.Instance;
@@ -94,6 +94,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<PathGridPoint>.GetEqualsMask(PathGridPoint rhs) => PathGridPointCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IPathGridPointGetter>.GetEqualsMask(IPathGridPointGetter rhs) => PathGridPointCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -116,6 +118,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public PathGridPoint_Mask<bool> GetHasBeenSetMask()
         {
             return PathGridPointCommon.GetHasBeenSetMask(this);
@@ -749,7 +752,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ConnectionstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16, Exception>.Instance.ParseRepeatedItem(
                 frame: frame,
                 fieldIndex: (int)PathGridPoint_FieldIndex.Connections,
-                objType: ObjectType.Subrecord,
+                lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                 errorMask: errorMask,
                 transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                 {
@@ -795,31 +798,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            PathGridPoint_CopyMask copyMask = null,
-            IPathGridPointGetter def = null)
-            where CopyType : class, IPathGridPoint
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(PathGridPoint)))
-            {
-                ret = new PathGridPoint() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static PathGridPoint Copy_ToLoqui(
             IPathGridPointGetter item,
             PathGridPoint_CopyMask copyMask = null,
@@ -839,6 +817,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IPathGridPointGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IPathGridPointGetter rhs,
+            PathGridPoint_CopyMask copyMask,
+            IPathGridPointGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IPathGridPointGetter rhs,
+            out PathGridPoint_ErrorMask errorMask,
+            PathGridPoint_CopyMask copyMask = null,
+            IPathGridPointGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            PathGridPoint_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new PathGridPoint_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            PathGridPointCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -913,7 +947,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IPathGridPoint : IPathGridPointGetter, ILoquiClass<IPathGridPoint, IPathGridPointGetter>, ILoquiClass<PathGridPoint, IPathGridPointGetter>
+    public partial interface IPathGridPoint : IPathGridPointGetter, ILoquiClass<IPathGridPoint, IPathGridPointGetter>, ILoquiClass<PathGridPoint, IPathGridPointGetter>
     {
         new P3Float Point { get; set; }
         new INotifyingItem<P3Float> Point_Property { get; }
@@ -921,7 +955,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<Int16> Connections { get; }
     }
 
-    public interface IPathGridPointGetter : ILoquiObject
+    public partial interface IPathGridPointGetter : ILoquiObject
     {
         #region Point
         P3Float Point { get; }
@@ -1129,75 +1163,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IPathGridPoint item,
-            IPathGridPointGetter rhs,
-            PathGridPoint_CopyMask copyMask = null,
-            IPathGridPointGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            PathGridPointCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IPathGridPoint item,
-            IPathGridPointGetter rhs,
-            out PathGridPoint_ErrorMask errorMask,
-            PathGridPoint_CopyMask copyMask = null,
-            IPathGridPointGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            PathGridPointCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IPathGridPoint item,
+            IPathGridPoint item,
             IPathGridPointGetter rhs,
             IPathGridPointGetter def,
             bool doMasks,
-            out PathGridPoint_ErrorMask errorMask,
-            PathGridPoint_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            PathGridPoint_ErrorMask retErrorMask = null;
-            Func<PathGridPoint_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new PathGridPoint_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IPathGridPoint item,
-            IPathGridPointGetter rhs,
-            IPathGridPointGetter def,
-            bool doMasks,
-            Func<PathGridPoint_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             PathGridPoint_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

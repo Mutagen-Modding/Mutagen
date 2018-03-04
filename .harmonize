@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>68df7ae8834123e95c6820ebd4dd8ba522c29cd6</Sha>
+         <Sha>b32aa840bdabb8a1bd4c9258cee047dbdee51cd6</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>02-24-2018 21:34:07</CommitDate>
-         <Description>P3Float support</Description>
+         <CommitDate>03-04-2018 16:55:33</CommitDate>
+         <Description>Lots of refactors related to allowing generics to require being a Loqui object, without explicitly pointing to a defined base type</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

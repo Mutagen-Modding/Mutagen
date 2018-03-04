@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class GameSettingInt : GameSetting, IGameSettingInt, ILoquiObjectSetter, IEquatable<GameSettingInt>
+    public partial class GameSettingInt : GameSetting, IGameSettingInt, ILoquiObject<GameSettingInt>, ILoquiObjectSetter, IEquatable<GameSettingInt>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingInt_Registration.Instance;
@@ -74,6 +74,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<GameSettingInt>.GetEqualsMask(GameSettingInt rhs) => GameSettingIntCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IGameSettingIntGetter>.GetEqualsMask(IGameSettingIntGetter rhs) => GameSettingIntCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -96,6 +98,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new GameSettingInt_Mask<bool> GetHasBeenSetMask()
         {
             return GameSettingIntCommon.GetHasBeenSetMask(this);
@@ -824,31 +827,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            GameSettingInt_CopyMask copyMask = null,
-            IGameSettingIntGetter def = null)
-            where CopyType : class, IGameSettingInt
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(GameSettingInt)))
-            {
-                ret = new GameSettingInt() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static GameSettingInt Copy_ToLoqui(
             IGameSettingIntGetter item,
             GameSettingInt_CopyMask copyMask = null,
@@ -868,6 +846,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IGameSettingIntGetter rhs,
+            GameSettingInt_CopyMask copyMask,
+            IGameSettingIntGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IGameSettingIntGetter rhs,
+            out GameSettingInt_ErrorMask errorMask,
+            GameSettingInt_CopyMask copyMask = null,
+            IGameSettingIntGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            GameSettingInt_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new GameSettingInt_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            GameSettingIntCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -929,14 +950,14 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IGameSettingInt : IGameSettingIntGetter, IGameSetting, ILoquiClass<IGameSettingInt, IGameSettingIntGetter>, ILoquiClass<GameSettingInt, IGameSettingIntGetter>
+    public partial interface IGameSettingInt : IGameSettingIntGetter, IGameSetting, ILoquiClass<IGameSettingInt, IGameSettingIntGetter>, ILoquiClass<GameSettingInt, IGameSettingIntGetter>
     {
         new Int32 Data { get; set; }
         new INotifyingSetItem<Int32> Data_Property { get; }
 
     }
 
-    public interface IGameSettingIntGetter : IGameSettingGetter
+    public partial interface IGameSettingIntGetter : IGameSettingGetter
     {
         #region Data
         Int32 Data { get; }
@@ -1136,75 +1157,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IGameSettingInt item,
-            IGameSettingIntGetter rhs,
-            GameSettingInt_CopyMask copyMask = null,
-            IGameSettingIntGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            GameSettingIntCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IGameSettingInt item,
-            IGameSettingIntGetter rhs,
-            out GameSettingInt_ErrorMask errorMask,
-            GameSettingInt_CopyMask copyMask = null,
-            IGameSettingIntGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            GameSettingIntCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IGameSettingInt item,
+            IGameSettingInt item,
             IGameSettingIntGetter rhs,
             IGameSettingIntGetter def,
             bool doMasks,
-            out GameSettingInt_ErrorMask errorMask,
-            GameSettingInt_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            GameSettingInt_ErrorMask retErrorMask = null;
-            Func<GameSettingInt_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new GameSettingInt_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IGameSettingInt item,
-            IGameSettingIntGetter rhs,
-            IGameSettingIntGetter def,
-            bool doMasks,
-            Func<GameSettingInt_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             GameSettingInt_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

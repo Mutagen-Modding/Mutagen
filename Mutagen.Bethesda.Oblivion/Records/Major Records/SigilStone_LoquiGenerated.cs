@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class SigilStone : NamedMajorRecord, ISigilStone, ILoquiObjectSetter, IEquatable<SigilStone>
+    public partial class SigilStone : NamedMajorRecord, ISigilStone, ILoquiObject<SigilStone>, ILoquiObjectSetter, IEquatable<SigilStone>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SigilStone_Registration.Instance;
@@ -157,6 +157,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<SigilStone>.GetEqualsMask(SigilStone rhs) => SigilStoneCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ISigilStoneGetter>.GetEqualsMask(ISigilStoneGetter rhs) => SigilStoneCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -179,6 +181,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new SigilStone_Mask<bool> GetHasBeenSetMask()
         {
             return SigilStoneCommon.GetHasBeenSetMask(this);
@@ -1032,31 +1035,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            SigilStone_CopyMask copyMask = null,
-            ISigilStoneGetter def = null)
-            where CopyType : class, ISigilStone
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(SigilStone)))
-            {
-                ret = new SigilStone() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static SigilStone Copy_ToLoqui(
             ISigilStoneGetter item,
             SigilStone_CopyMask copyMask = null,
@@ -1076,6 +1054,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            ISigilStoneGetter rhs,
+            SigilStone_CopyMask copyMask,
+            ISigilStoneGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ISigilStoneGetter rhs,
+            out SigilStone_ErrorMask errorMask,
+            SigilStone_CopyMask copyMask = null,
+            ISigilStoneGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            SigilStone_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new SigilStone_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            SigilStoneCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1193,7 +1214,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface ISigilStone : ISigilStoneGetter, INamedMajorRecord, ILoquiClass<ISigilStone, ISigilStoneGetter>, ILoquiClass<SigilStone, ISigilStoneGetter>
+    public partial interface ISigilStone : ISigilStoneGetter, INamedMajorRecord, ILoquiClass<ISigilStone, ISigilStoneGetter>, ILoquiClass<SigilStone, ISigilStoneGetter>
     {
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
@@ -1214,7 +1235,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface ISigilStoneGetter : INamedMajorRecordGetter
+    public partial interface ISigilStoneGetter : INamedMajorRecordGetter
     {
         #region Model
         Model Model { get; }
@@ -1521,75 +1542,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this ISigilStone item,
-            ISigilStoneGetter rhs,
-            SigilStone_CopyMask copyMask = null,
-            ISigilStoneGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            SigilStoneCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ISigilStone item,
-            ISigilStoneGetter rhs,
-            out SigilStone_ErrorMask errorMask,
-            SigilStone_CopyMask copyMask = null,
-            ISigilStoneGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            SigilStoneCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ISigilStone item,
+            ISigilStone item,
             ISigilStoneGetter rhs,
             ISigilStoneGetter def,
             bool doMasks,
-            out SigilStone_ErrorMask errorMask,
-            SigilStone_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            SigilStone_ErrorMask retErrorMask = null;
-            Func<SigilStone_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new SigilStone_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this ISigilStone item,
-            ISigilStoneGetter rhs,
-            ISigilStoneGetter def,
-            bool doMasks,
-            Func<SigilStone_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             SigilStone_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1624,11 +1581,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Model.Specific == null)
-                                            {
-                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.Model.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)SigilStone_FieldIndex.Model, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Model.Specific,
@@ -1905,7 +1860,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SigilStone_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
             ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
             if (item.Effects.HasBeenSet == rhs.Effects.HasBeenSet)
@@ -1916,7 +1871,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.Effects.Specific = item.Effects.SelectAgainst<Effect, MaskItem<bool, Effect_Mask<bool>>>(rhs.Effects, ((l, r) =>
                     {
                         MaskItem<bool, Effect_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => EffectCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
                     ), out ret.Effects.Overall);

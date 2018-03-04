@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Faction : NamedMajorRecord, IFaction, ILoquiObjectSetter, IEquatable<Faction>
+    public partial class Faction : NamedMajorRecord, IFaction, ILoquiObject<Faction>, ILoquiObjectSetter, IEquatable<Faction>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Faction_Registration.Instance;
@@ -125,6 +125,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Faction>.GetEqualsMask(Faction rhs) => FactionCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IFactionGetter>.GetEqualsMask(IFactionGetter rhs) => FactionCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -147,6 +149,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Faction_Mask<bool> GetHasBeenSetMask()
         {
             return FactionCommon.GetHasBeenSetMask(this);
@@ -981,31 +984,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Faction_CopyMask copyMask = null,
-            IFactionGetter def = null)
-            where CopyType : class, IFaction
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Faction)))
-            {
-                ret = new Faction() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Faction Copy_ToLoqui(
             IFactionGetter item,
             Faction_CopyMask copyMask = null,
@@ -1025,6 +1003,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IFactionGetter rhs,
+            Faction_CopyMask copyMask,
+            IFactionGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IFactionGetter rhs,
+            out Faction_ErrorMask errorMask,
+            Faction_CopyMask copyMask = null,
+            IFactionGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Faction_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Faction_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            FactionCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1108,7 +1129,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IFaction : IFactionGetter, INamedMajorRecord, ILoquiClass<IFaction, IFactionGetter>, ILoquiClass<Faction, IFactionGetter>
+    public partial interface IFaction : IFactionGetter, INamedMajorRecord, ILoquiClass<IFaction, IFactionGetter>, ILoquiClass<Faction, IFactionGetter>
     {
         new INotifyingList<Relation> Relations { get; }
         new Faction.FactionFlag Flags { get; set; }
@@ -1120,7 +1141,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<Rank> Ranks { get; }
     }
 
-    public interface IFactionGetter : INamedMajorRecordGetter
+    public partial interface IFactionGetter : INamedMajorRecordGetter
     {
         #region Relations
         INotifyingListGetter<Relation> Relations { get; }
@@ -1376,75 +1397,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IFaction item,
-            IFactionGetter rhs,
-            Faction_CopyMask copyMask = null,
-            IFactionGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            FactionCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IFaction item,
-            IFactionGetter rhs,
-            out Faction_ErrorMask errorMask,
-            Faction_CopyMask copyMask = null,
-            IFactionGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            FactionCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IFaction item,
+            IFaction item,
             IFactionGetter rhs,
             IFactionGetter def,
             bool doMasks,
-            out Faction_ErrorMask errorMask,
-            Faction_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Faction_ErrorMask retErrorMask = null;
-            Func<Faction_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Faction_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IFaction item,
-            IFactionGetter rhs,
-            IFactionGetter def,
-            bool doMasks,
-            Func<Faction_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Faction_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1680,7 +1637,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.Relations.Specific = item.Relations.SelectAgainst<Relation, MaskItem<bool, Relation_Mask<bool>>>(rhs.Relations, ((l, r) =>
                     {
                         MaskItem<bool, Relation_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => RelationCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
                     ), out ret.Relations.Overall);
@@ -1707,7 +1664,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.Ranks.Specific = item.Ranks.SelectAgainst<Rank, MaskItem<bool, Rank_Mask<bool>>>(rhs.Ranks, ((l, r) =>
                     {
                         MaskItem<bool, Rank_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => RankCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
                     ), out ret.Ranks.Overall);

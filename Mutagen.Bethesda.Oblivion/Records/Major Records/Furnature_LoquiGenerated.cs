@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Furnature : NamedMajorRecord, IFurnature, ILoquiObjectSetter, IEquatable<Furnature>
+    public partial class Furnature : NamedMajorRecord, IFurnature, ILoquiObject<Furnature>, ILoquiObjectSetter, IEquatable<Furnature>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Furnature_Registration.Instance;
@@ -95,6 +95,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Furnature>.GetEqualsMask(Furnature rhs) => FurnatureCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IFurnatureGetter>.GetEqualsMask(IFurnatureGetter rhs) => FurnatureCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -117,6 +119,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Furnature_Mask<bool> GetHasBeenSetMask()
         {
             return FurnatureCommon.GetHasBeenSetMask(this);
@@ -889,31 +892,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Furnature_CopyMask copyMask = null,
-            IFurnatureGetter def = null)
-            where CopyType : class, IFurnature
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Furnature)))
-            {
-                ret = new Furnature() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Furnature Copy_ToLoqui(
             IFurnatureGetter item,
             Furnature_CopyMask copyMask = null,
@@ -933,6 +911,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IFurnatureGetter rhs,
+            Furnature_CopyMask copyMask,
+            IFurnatureGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IFurnatureGetter rhs,
+            out Furnature_ErrorMask errorMask,
+            Furnature_CopyMask copyMask = null,
+            IFurnatureGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Furnature_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Furnature_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            FurnatureCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1014,7 +1035,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IFurnature : IFurnatureGetter, INamedMajorRecord, ILoquiClass<IFurnature, IFurnatureGetter>, ILoquiClass<Furnature, IFurnatureGetter>
+    public partial interface IFurnature : IFurnatureGetter, INamedMajorRecord, ILoquiClass<IFurnature, IFurnatureGetter>, ILoquiClass<Furnature, IFurnatureGetter>
     {
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
@@ -1025,7 +1046,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IFurnatureGetter : INamedMajorRecordGetter
+    public partial interface IFurnatureGetter : INamedMajorRecordGetter
     {
         #region Model
         Model Model { get; }
@@ -1263,75 +1284,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IFurnature item,
-            IFurnatureGetter rhs,
-            Furnature_CopyMask copyMask = null,
-            IFurnatureGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            FurnatureCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IFurnature item,
-            IFurnatureGetter rhs,
-            out Furnature_ErrorMask errorMask,
-            Furnature_CopyMask copyMask = null,
-            IFurnatureGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            FurnatureCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IFurnature item,
+            IFurnature item,
             IFurnatureGetter rhs,
             IFurnatureGetter def,
             bool doMasks,
-            out Furnature_ErrorMask errorMask,
-            Furnature_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Furnature_ErrorMask retErrorMask = null;
-            Func<Furnature_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Furnature_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IFurnature item,
-            IFurnatureGetter rhs,
-            IFurnatureGetter def,
-            bool doMasks,
-            Func<Furnature_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Furnature_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1366,11 +1323,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Model.Specific == null)
-                                            {
-                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.Model.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)Furnature_FieldIndex.Model, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Model.Specific,
@@ -1535,7 +1490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Furnature_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
             ret.MarkerFlags = item.MarkerFlags_Property.Equals(rhs.MarkerFlags_Property, (l, r) => l.EqualsFast(r));
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);

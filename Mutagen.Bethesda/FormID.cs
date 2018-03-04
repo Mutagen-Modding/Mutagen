@@ -7,6 +7,11 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
+    public interface IFormID
+    {
+        FormID FormID { get; }
+    }
+
     public struct FormID : IEquatable<FormID>
     {
         public static readonly FormID NULL = new FormID();

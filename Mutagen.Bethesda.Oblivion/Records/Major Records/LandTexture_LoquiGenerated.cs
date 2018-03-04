@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class LandTexture : MajorRecord, ILandTexture, ILoquiObjectSetter, IEquatable<LandTexture>
+    public partial class LandTexture : MajorRecord, ILandTexture, ILoquiObject<LandTexture>, ILoquiObjectSetter, IEquatable<LandTexture>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LandTexture_Registration.Instance;
@@ -120,6 +120,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<LandTexture>.GetEqualsMask(LandTexture rhs) => LandTextureCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ILandTextureGetter>.GetEqualsMask(ILandTextureGetter rhs) => LandTextureCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -142,6 +144,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new LandTexture_Mask<bool> GetHasBeenSetMask()
         {
             return LandTextureCommon.GetHasBeenSetMask(this);
@@ -931,31 +934,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            LandTexture_CopyMask copyMask = null,
-            ILandTextureGetter def = null)
-            where CopyType : class, ILandTexture
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(LandTexture)))
-            {
-                ret = new LandTexture() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static LandTexture Copy_ToLoqui(
             ILandTextureGetter item,
             LandTexture_CopyMask copyMask = null,
@@ -975,6 +953,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            ILandTextureGetter rhs,
+            LandTexture_CopyMask copyMask,
+            ILandTextureGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ILandTextureGetter rhs,
+            out LandTexture_ErrorMask errorMask,
+            LandTexture_CopyMask copyMask = null,
+            ILandTextureGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            LandTexture_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new LandTexture_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            LandTextureCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1062,7 +1083,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface ILandTexture : ILandTextureGetter, IMajorRecord, ILoquiClass<ILandTexture, ILandTextureGetter>, ILoquiClass<LandTexture, ILandTextureGetter>
+    public partial interface ILandTexture : ILandTextureGetter, IMajorRecord, ILoquiClass<ILandTexture, ILandTextureGetter>, ILoquiClass<LandTexture, ILandTextureGetter>
     {
         new FilePath Icon { get; set; }
         new INotifyingSetItem<FilePath> Icon_Property { get; }
@@ -1076,7 +1097,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<FormIDSetLink<Grass>> PotentialGrass { get; }
     }
 
-    public interface ILandTextureGetter : IMajorRecordGetter
+    public partial interface ILandTextureGetter : IMajorRecordGetter
     {
         #region Icon
         FilePath Icon { get; }
@@ -1330,75 +1351,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this ILandTexture item,
-            ILandTextureGetter rhs,
-            LandTexture_CopyMask copyMask = null,
-            ILandTextureGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            LandTextureCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ILandTexture item,
-            ILandTextureGetter rhs,
-            out LandTexture_ErrorMask errorMask,
-            LandTexture_CopyMask copyMask = null,
-            ILandTextureGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            LandTextureCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ILandTexture item,
+            ILandTexture item,
             ILandTextureGetter rhs,
             ILandTextureGetter def,
             bool doMasks,
-            out LandTexture_ErrorMask errorMask,
-            LandTexture_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            LandTexture_ErrorMask retErrorMask = null;
-            Func<LandTexture_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new LandTexture_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this ILandTexture item,
-            ILandTextureGetter rhs,
-            ILandTextureGetter def,
-            bool doMasks,
-            Func<LandTexture_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             LandTexture_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1448,11 +1405,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<HavokData_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Havok.Specific == null)
-                                            {
-                                                baseMask.Havok = new MaskItem<Exception, HavokData_ErrorMask>(null, new HavokData_ErrorMask());
-                                            }
-                                            return baseMask.Havok.Specific;
+                                            var mask = new HavokData_ErrorMask();
+                                            baseMask.SetNthMask((int)LandTexture_FieldIndex.Havok, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Havok.Specific,
@@ -1629,7 +1584,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
-            ret.Havok = item.Havok_Property.LoquiEqualsHelper(rhs.Havok_Property, (loqLhs, loqRhs) => HavokDataCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Havok = item.Havok_Property.LoquiEqualsHelper(rhs.Havok_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.TextureSpecularExponent = item.TextureSpecularExponent_Property.Equals(rhs.TextureSpecularExponent_Property, (l, r) => l == r);
             if (item.PotentialGrass.HasBeenSet == rhs.PotentialGrass.HasBeenSet)
             {

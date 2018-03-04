@@ -24,7 +24,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class HavokData : IHavokData, ILoquiObjectSetter, IEquatable<HavokData>
+    public partial class HavokData : IHavokData, ILoquiObject<HavokData>, ILoquiObjectSetter, IEquatable<HavokData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HavokData_Registration.Instance;
@@ -106,6 +106,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<HavokData>.GetEqualsMask(HavokData rhs) => HavokDataCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IHavokDataGetter>.GetEqualsMask(IHavokDataGetter rhs) => HavokDataCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -128,6 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public HavokData_Mask<bool> GetHasBeenSetMask()
         {
             return HavokDataCommon.GetHasBeenSetMask(this);
@@ -804,31 +807,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            HavokData_CopyMask copyMask = null,
-            IHavokDataGetter def = null)
-            where CopyType : class, IHavokData
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(HavokData)))
-            {
-                ret = new HavokData() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static HavokData Copy_ToLoqui(
             IHavokDataGetter item,
             HavokData_CopyMask copyMask = null,
@@ -848,6 +826,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IHavokDataGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IHavokDataGetter rhs,
+            HavokData_CopyMask copyMask,
+            IHavokDataGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IHavokDataGetter rhs,
+            out HavokData_ErrorMask errorMask,
+            HavokData_CopyMask copyMask = null,
+            IHavokDataGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            HavokData_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new HavokData_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            HavokDataCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -936,7 +970,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IHavokData : IHavokDataGetter, ILoquiClass<IHavokData, IHavokDataGetter>, ILoquiClass<HavokData, IHavokDataGetter>
+    public partial interface IHavokData : IHavokDataGetter, ILoquiClass<IHavokData, IHavokDataGetter>, ILoquiClass<HavokData, IHavokDataGetter>
     {
         new HavokData.MaterialType Material { get; set; }
         new INotifyingItem<HavokData.MaterialType> Material_Property { get; }
@@ -949,7 +983,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IHavokDataGetter : ILoquiObject
+    public partial interface IHavokDataGetter : ILoquiObject
     {
         #region Material
         HavokData.MaterialType Material { get; }
@@ -1177,75 +1211,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IHavokData item,
-            IHavokDataGetter rhs,
-            HavokData_CopyMask copyMask = null,
-            IHavokDataGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            HavokDataCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IHavokData item,
-            IHavokDataGetter rhs,
-            out HavokData_ErrorMask errorMask,
-            HavokData_CopyMask copyMask = null,
-            IHavokDataGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            HavokDataCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IHavokData item,
+            IHavokData item,
             IHavokDataGetter rhs,
             IHavokDataGetter def,
             bool doMasks,
-            out HavokData_ErrorMask errorMask,
-            HavokData_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            HavokData_ErrorMask retErrorMask = null;
-            Func<HavokData_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new HavokData_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IHavokData item,
-            IHavokDataGetter rhs,
-            IHavokDataGetter def,
-            bool doMasks,
-            Func<HavokData_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             HavokData_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

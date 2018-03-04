@@ -24,7 +24,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class MapMarker : IMapMarker, ILoquiObjectSetter, IEquatable<MapMarker>
+    public partial class MapMarker : IMapMarker, ILoquiObject<MapMarker>, ILoquiObjectSetter, IEquatable<MapMarker>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapMarker_Registration.Instance;
@@ -91,6 +91,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<MapMarker>.GetEqualsMask(MapMarker rhs) => MapMarkerCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IMapMarkerGetter>.GetEqualsMask(IMapMarkerGetter rhs) => MapMarkerCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -113,6 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public MapMarker_Mask<bool> GetHasBeenSetMask()
         {
             return MapMarkerCommon.GetHasBeenSetMask(this);
@@ -815,31 +818,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            MapMarker_CopyMask copyMask = null,
-            IMapMarkerGetter def = null)
-            where CopyType : class, IMapMarker
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(MapMarker)))
-            {
-                ret = new MapMarker() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static MapMarker Copy_ToLoqui(
             IMapMarkerGetter item,
             MapMarker_CopyMask copyMask = null,
@@ -859,6 +837,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IMapMarkerGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IMapMarkerGetter rhs,
+            MapMarker_CopyMask copyMask,
+            IMapMarkerGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IMapMarkerGetter rhs,
+            out MapMarker_ErrorMask errorMask,
+            MapMarker_CopyMask copyMask = null,
+            IMapMarkerGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            MapMarker_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new MapMarker_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            MapMarkerCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -937,7 +971,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IMapMarker : IMapMarkerGetter, ILoquiClass<IMapMarker, IMapMarkerGetter>, ILoquiClass<MapMarker, IMapMarkerGetter>
+    public partial interface IMapMarker : IMapMarkerGetter, ILoquiClass<IMapMarker, IMapMarkerGetter>, ILoquiClass<MapMarker, IMapMarkerGetter>
     {
         new MapMarker.Flag Flags { get; set; }
         new INotifyingItem<MapMarker.Flag> Flags_Property { get; }
@@ -947,7 +981,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IMapMarkerGetter : ILoquiObject
+    public partial interface IMapMarkerGetter : ILoquiObject
     {
         #region Flags
         MapMarker.Flag Flags { get; }
@@ -1157,75 +1191,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IMapMarker item,
-            IMapMarkerGetter rhs,
-            MapMarker_CopyMask copyMask = null,
-            IMapMarkerGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            MapMarkerCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IMapMarker item,
-            IMapMarkerGetter rhs,
-            out MapMarker_ErrorMask errorMask,
-            MapMarker_CopyMask copyMask = null,
-            IMapMarkerGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            MapMarkerCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IMapMarker item,
+            IMapMarker item,
             IMapMarkerGetter rhs,
             IMapMarkerGetter def,
             bool doMasks,
-            out MapMarker_ErrorMask errorMask,
-            MapMarker_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            MapMarker_ErrorMask retErrorMask = null;
-            Func<MapMarker_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new MapMarker_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IMapMarker item,
-            IMapMarkerGetter rhs,
-            IMapMarkerGetter def,
-            bool doMasks,
-            Func<MapMarker_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             MapMarker_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

@@ -25,7 +25,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class CreatureSound : ICreatureSound, ILoquiObjectSetter, IEquatable<CreatureSound>
+    public partial class CreatureSound : ICreatureSound, ILoquiObject<CreatureSound>, ILoquiObjectSetter, IEquatable<CreatureSound>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreatureSound_Registration.Instance;
@@ -95,6 +95,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<CreatureSound>.GetEqualsMask(CreatureSound rhs) => CreatureSoundCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ICreatureSoundGetter>.GetEqualsMask(ICreatureSoundGetter rhs) => CreatureSoundCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -117,6 +119,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public CreatureSound_Mask<bool> GetHasBeenSetMask()
         {
             return CreatureSoundCommon.GetHasBeenSetMask(this);
@@ -849,31 +852,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            CreatureSound_CopyMask copyMask = null,
-            ICreatureSoundGetter def = null)
-            where CopyType : class, ICreatureSound
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(CreatureSound)))
-            {
-                ret = new CreatureSound() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static CreatureSound Copy_ToLoqui(
             ICreatureSoundGetter item,
             CreatureSound_CopyMask copyMask = null,
@@ -893,6 +871,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            ICreatureSoundGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ICreatureSoundGetter rhs,
+            CreatureSound_CopyMask copyMask,
+            ICreatureSoundGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ICreatureSoundGetter rhs,
+            out CreatureSound_ErrorMask errorMask,
+            CreatureSound_CopyMask copyMask = null,
+            ICreatureSoundGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            CreatureSound_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new CreatureSound_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            CreatureSoundCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -967,7 +1001,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface ICreatureSound : ICreatureSoundGetter, ILoquiClass<ICreatureSound, ICreatureSoundGetter>, ILoquiClass<CreatureSound, ICreatureSoundGetter>
+    public partial interface ICreatureSound : ICreatureSoundGetter, ILoquiClass<ICreatureSound, ICreatureSoundGetter>, ILoquiClass<CreatureSound, ICreatureSoundGetter>
     {
         new CreatureSound.CreatureSoundType SoundType { get; set; }
         new INotifyingSetItem<CreatureSound.CreatureSoundType> SoundType_Property { get; }
@@ -975,7 +1009,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<SoundItem> Sounds { get; }
     }
 
-    public interface ICreatureSoundGetter : ILoquiObject
+    public partial interface ICreatureSoundGetter : ILoquiObject
     {
         #region SoundType
         CreatureSound.CreatureSoundType SoundType { get; }
@@ -1200,75 +1234,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this ICreatureSound item,
-            ICreatureSoundGetter rhs,
-            CreatureSound_CopyMask copyMask = null,
-            ICreatureSoundGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            CreatureSoundCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ICreatureSound item,
-            ICreatureSoundGetter rhs,
-            out CreatureSound_ErrorMask errorMask,
-            CreatureSound_CopyMask copyMask = null,
-            ICreatureSoundGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            CreatureSoundCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ICreatureSound item,
+            ICreatureSound item,
             ICreatureSoundGetter rhs,
             ICreatureSoundGetter def,
             bool doMasks,
-            out CreatureSound_ErrorMask errorMask,
-            CreatureSound_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            CreatureSound_ErrorMask retErrorMask = null;
-            Func<CreatureSound_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new CreatureSound_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this ICreatureSound item,
-            ICreatureSoundGetter rhs,
-            ICreatureSoundGetter def,
-            bool doMasks,
-            Func<CreatureSound_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             CreatureSound_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1426,7 +1396,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.Sounds.Specific = item.Sounds.SelectAgainst<SoundItem, MaskItem<bool, SoundItem_Mask<bool>>>(rhs.Sounds, ((l, r) =>
                     {
                         MaskItem<bool, SoundItem_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => SoundItemCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
                     ), out ret.Sounds.Overall);

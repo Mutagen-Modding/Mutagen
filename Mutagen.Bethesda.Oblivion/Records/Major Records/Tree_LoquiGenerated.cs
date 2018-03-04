@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Tree : MajorRecord, ITree, ILoquiObjectSetter, IEquatable<Tree>
+    public partial class Tree : MajorRecord, ITree, ILoquiObject<Tree>, ILoquiObjectSetter, IEquatable<Tree>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Tree_Registration.Instance;
@@ -255,6 +255,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Tree>.GetEqualsMask(Tree rhs) => TreeCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ITreeGetter>.GetEqualsMask(ITreeGetter rhs) => TreeCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -277,6 +279,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Tree_Mask<bool> GetHasBeenSetMask()
         {
             return TreeCommon.GetHasBeenSetMask(this);
@@ -1175,31 +1178,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Tree_CopyMask copyMask = null,
-            ITreeGetter def = null)
-            where CopyType : class, ITree
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Tree)))
-            {
-                ret = new Tree() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Tree Copy_ToLoqui(
             ITreeGetter item,
             Tree_CopyMask copyMask = null,
@@ -1219,6 +1197,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            ITreeGetter rhs,
+            Tree_CopyMask copyMask,
+            ITreeGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ITreeGetter rhs,
+            out Tree_ErrorMask errorMask,
+            Tree_CopyMask copyMask = null,
+            ITreeGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Tree_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Tree_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            TreeCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1396,7 +1417,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface ITree : ITreeGetter, IMajorRecord, ILoquiClass<ITree, ITreeGetter>, ILoquiClass<Tree, ITreeGetter>
+    public partial interface ITree : ITreeGetter, IMajorRecord, ILoquiClass<ITree, ITreeGetter>, ILoquiClass<Tree, ITreeGetter>
     {
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
@@ -1437,7 +1458,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface ITreeGetter : IMajorRecordGetter
+    public partial interface ITreeGetter : IMajorRecordGetter
     {
         #region Model
         Model Model { get; }
@@ -1845,75 +1866,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this ITree item,
-            ITreeGetter rhs,
-            Tree_CopyMask copyMask = null,
-            ITreeGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            TreeCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ITree item,
-            ITreeGetter rhs,
-            out Tree_ErrorMask errorMask,
-            Tree_CopyMask copyMask = null,
-            ITreeGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            TreeCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ITree item,
+            ITree item,
             ITreeGetter rhs,
             ITreeGetter def,
             bool doMasks,
-            out Tree_ErrorMask errorMask,
-            Tree_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Tree_ErrorMask retErrorMask = null;
-            Func<Tree_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Tree_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this ITree item,
-            ITreeGetter rhs,
-            ITreeGetter def,
-            bool doMasks,
-            Func<Tree_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Tree_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1948,11 +1905,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Model.Specific == null)
-                                            {
-                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.Model.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)Tree_FieldIndex.Model, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Model.Specific,
@@ -2340,7 +2295,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Tree_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
             if (item.SpeedTreeSeeds.HasBeenSet == rhs.SpeedTreeSeeds.HasBeenSet)
             {

@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Climate : MajorRecord, IClimate, ILoquiObjectSetter, IEquatable<Climate>
+    public partial class Climate : MajorRecord, IClimate, ILoquiObject<Climate>, ILoquiObjectSetter, IEquatable<Climate>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Climate_Registration.Instance;
@@ -222,6 +222,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Climate>.GetEqualsMask(Climate rhs) => ClimateCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IClimateGetter>.GetEqualsMask(IClimateGetter rhs) => ClimateCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -244,6 +246,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Climate_Mask<bool> GetHasBeenSetMask()
         {
             return ClimateCommon.GetHasBeenSetMask(this);
@@ -1278,31 +1281,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Climate_CopyMask copyMask = null,
-            IClimateGetter def = null)
-            where CopyType : class, IClimate
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Climate)))
-            {
-                ret = new Climate() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Climate Copy_ToLoqui(
             IClimateGetter item,
             Climate_CopyMask copyMask = null,
@@ -1322,6 +1300,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IClimateGetter rhs,
+            Climate_CopyMask copyMask,
+            IClimateGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IClimateGetter rhs,
+            out Climate_ErrorMask errorMask,
+            Climate_CopyMask copyMask = null,
+            IClimateGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Climate_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Climate_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            ClimateCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1479,7 +1500,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IClimate : IClimateGetter, IMajorRecord, ILoquiClass<IClimate, IClimateGetter>, ILoquiClass<Climate, IClimateGetter>
+    public partial interface IClimate : IClimateGetter, IMajorRecord, ILoquiClass<IClimate, IClimateGetter>, ILoquiClass<Climate, IClimateGetter>
     {
         new INotifyingList<WeatherChance> Weathers { get; }
         new FilePath SunTexture { get; set; }
@@ -1514,7 +1535,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IClimateGetter : IMajorRecordGetter
+    public partial interface IClimateGetter : IMajorRecordGetter
     {
         #region Weathers
         INotifyingListGetter<WeatherChance> Weathers { get; }
@@ -1888,75 +1909,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IClimate item,
-            IClimateGetter rhs,
-            Climate_CopyMask copyMask = null,
-            IClimateGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            ClimateCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IClimate item,
-            IClimateGetter rhs,
-            out Climate_ErrorMask errorMask,
-            Climate_CopyMask copyMask = null,
-            IClimateGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            ClimateCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IClimate item,
+            IClimate item,
             IClimateGetter rhs,
             IClimateGetter def,
             bool doMasks,
-            out Climate_ErrorMask errorMask,
-            Climate_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Climate_ErrorMask retErrorMask = null;
-            Func<Climate_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Climate_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IClimate item,
-            IClimateGetter rhs,
-            IClimateGetter def,
-            bool doMasks,
-            Func<Climate_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Climate_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -2053,11 +2010,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Model.Specific == null)
-                                            {
-                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.Model.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)Climate_FieldIndex.Model, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Model.Specific,
@@ -2389,7 +2344,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             ret.SunTexture = item.SunTexture_Property.Equals(rhs.SunTexture_Property, (l, r) => object.Equals(l, r));
             ret.SunGlareTexture = item.SunGlareTexture_Property.Equals(rhs.SunGlareTexture_Property, (l, r) => object.Equals(l, r));
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.SunriseBegin = item.SunriseBegin == rhs.SunriseBegin;
             ret.SunriseEnd = item.SunriseEnd == rhs.SunriseEnd;
             ret.SunsetBegin = item.SunsetBegin == rhs.SunsetBegin;

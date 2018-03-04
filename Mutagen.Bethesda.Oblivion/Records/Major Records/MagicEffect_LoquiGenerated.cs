@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class MagicEffect : NamedMajorRecord, IMagicEffect, ILoquiObjectSetter, IEquatable<MagicEffect>
+    public partial class MagicEffect : NamedMajorRecord, IMagicEffect, ILoquiObject<MagicEffect>, ILoquiObjectSetter, IEquatable<MagicEffect>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffect_Registration.Instance;
@@ -248,6 +248,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<MagicEffect>.GetEqualsMask(MagicEffect rhs) => MagicEffectCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IMagicEffectGetter>.GetEqualsMask(IMagicEffectGetter rhs) => MagicEffectCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -270,6 +272,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new MagicEffect_Mask<bool> GetHasBeenSetMask()
         {
             return MagicEffectCommon.GetHasBeenSetMask(this);
@@ -1225,31 +1228,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            MagicEffect_CopyMask copyMask = null,
-            IMagicEffectGetter def = null)
-            where CopyType : class, IMagicEffect
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(MagicEffect)))
-            {
-                ret = new MagicEffect() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static MagicEffect Copy_ToLoqui(
             IMagicEffectGetter item,
             MagicEffect_CopyMask copyMask = null,
@@ -1269,6 +1247,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IMagicEffectGetter rhs,
+            MagicEffect_CopyMask copyMask,
+            IMagicEffectGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IMagicEffectGetter rhs,
+            out MagicEffect_ErrorMask errorMask,
+            MagicEffect_CopyMask copyMask = null,
+            IMagicEffectGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            MagicEffect_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new MagicEffect_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            MagicEffectCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1456,7 +1477,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IMagicEffect : IMagicEffectGetter, INamedMajorRecord, ILoquiClass<IMagicEffect, IMagicEffectGetter>, ILoquiClass<MagicEffect, IMagicEffectGetter>
+    public partial interface IMagicEffect : IMagicEffectGetter, INamedMajorRecord, ILoquiClass<IMagicEffect, IMagicEffectGetter>, ILoquiClass<MagicEffect, IMagicEffectGetter>
     {
         new String Description { get; set; }
         new INotifyingSetItem<String> Description_Property { get; }
@@ -1496,7 +1517,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<EDIDLink<MagicEffect>> CounterEffects { get; }
     }
 
-    public interface IMagicEffectGetter : INamedMajorRecordGetter
+    public partial interface IMagicEffectGetter : INamedMajorRecordGetter
     {
         #region Description
         String Description { get; }
@@ -1922,75 +1943,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IMagicEffect item,
-            IMagicEffectGetter rhs,
-            MagicEffect_CopyMask copyMask = null,
-            IMagicEffectGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            MagicEffectCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IMagicEffect item,
-            IMagicEffectGetter rhs,
-            out MagicEffect_ErrorMask errorMask,
-            MagicEffect_CopyMask copyMask = null,
-            IMagicEffectGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            MagicEffectCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IMagicEffect item,
+            IMagicEffect item,
             IMagicEffectGetter rhs,
             IMagicEffectGetter def,
             bool doMasks,
-            out MagicEffect_ErrorMask errorMask,
-            MagicEffect_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            MagicEffect_ErrorMask retErrorMask = null;
-            Func<MagicEffect_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new MagicEffect_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IMagicEffect item,
-            IMagicEffectGetter rhs,
-            IMagicEffectGetter def,
-            bool doMasks,
-            Func<MagicEffect_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             MagicEffect_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -2055,11 +2012,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Model.Specific == null)
-                                            {
-                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.Model.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)MagicEffect_FieldIndex.Model, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Model.Specific,
@@ -2227,11 +2182,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 errorMask: (doMasks ? new Func<MagicEffectSubData_ErrorMask>(() =>
                                 {
                                     var baseMask = errorMask();
-                                    if (baseMask.SubData.Specific == null)
-                                    {
-                                        baseMask.SubData = new MaskItem<Exception, MagicEffectSubData_ErrorMask>(null, new MagicEffectSubData_ErrorMask());
-                                    }
-                                    return baseMask.SubData.Specific;
+                                    var mask = new MagicEffectSubData_ErrorMask();
+                                    baseMask.SetNthMask((int)MagicEffect_FieldIndex.SubData, mask);
+                                    return mask;
                                 }
                                 ) : null),
                                 copyMask: copyMask?.SubData.Specific,
@@ -2482,7 +2435,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Description = item.Description_Property.Equals(rhs.Description_Property, (l, r) => object.Equals(l, r));
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Flags = item.Flags == rhs.Flags;
             ret.BaseCost = item.BaseCost == rhs.BaseCost;
             ret.Unused = item.Unused.EqualsFast(rhs.Unused);

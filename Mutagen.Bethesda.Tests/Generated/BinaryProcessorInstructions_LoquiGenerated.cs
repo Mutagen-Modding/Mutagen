@@ -23,7 +23,7 @@ using System.Diagnostics;
 namespace Mutagen.Bethesda.Tests
 {
     #region Class
-    public partial class BinaryProcessorInstructions : IBinaryProcessorInstructions, ILoquiObjectSetter, IEquatable<BinaryProcessorInstructions>
+    public partial class BinaryProcessorInstructions : IBinaryProcessorInstructions, ILoquiObject<BinaryProcessorInstructions>, ILoquiObjectSetter, IEquatable<BinaryProcessorInstructions>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BinaryProcessorInstructions_Registration.Instance;
@@ -78,6 +78,8 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
+        IMask<bool> IEqualsMask<BinaryProcessorInstructions>.GetEqualsMask(BinaryProcessorInstructions rhs) => BinaryProcessorInstructionsCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IBinaryProcessorInstructionsGetter>.GetEqualsMask(IBinaryProcessorInstructionsGetter rhs) => BinaryProcessorInstructionsCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -100,6 +102,7 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public BinaryProcessorInstructions_Mask<bool> GetHasBeenSetMask()
         {
             return BinaryProcessorInstructionsCommon.GetHasBeenSetMask(this);
@@ -475,31 +478,6 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            BinaryProcessorInstructions_CopyMask copyMask = null,
-            IBinaryProcessorInstructionsGetter def = null)
-            where CopyType : class, IBinaryProcessorInstructions
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(BinaryProcessorInstructions)))
-            {
-                ret = new BinaryProcessorInstructions() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static BinaryProcessorInstructions Copy_ToLoqui(
             IBinaryProcessorInstructionsGetter item,
             BinaryProcessorInstructions_CopyMask copyMask = null,
@@ -519,6 +497,62 @@ namespace Mutagen.Bethesda.Tests
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IBinaryProcessorInstructionsGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IBinaryProcessorInstructionsGetter rhs,
+            BinaryProcessorInstructions_CopyMask copyMask,
+            IBinaryProcessorInstructionsGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IBinaryProcessorInstructionsGetter rhs,
+            out BinaryProcessorInstructions_ErrorMask errorMask,
+            BinaryProcessorInstructions_CopyMask copyMask = null,
+            IBinaryProcessorInstructionsGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            BinaryProcessorInstructions_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new BinaryProcessorInstructions_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            BinaryProcessorInstructionsCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -593,14 +627,14 @@ namespace Mutagen.Bethesda.Tests
     #endregion
 
     #region Interface
-    public interface IBinaryProcessorInstructions : IBinaryProcessorInstructionsGetter, ILoquiClass<IBinaryProcessorInstructions, IBinaryProcessorInstructionsGetter>, ILoquiClass<BinaryProcessorInstructions, IBinaryProcessorInstructionsGetter>
+    public partial interface IBinaryProcessorInstructions : IBinaryProcessorInstructionsGetter, ILoquiClass<IBinaryProcessorInstructions, IBinaryProcessorInstructionsGetter>, ILoquiClass<BinaryProcessorInstructions, IBinaryProcessorInstructionsGetter>
     {
         new INotifyingKeyedCollection<FormID, RecordInstruction> CompressionInstructions { get; }
         new Instruction Instruction { get; set; }
 
     }
 
-    public interface IBinaryProcessorInstructionsGetter : ILoquiObject
+    public partial interface IBinaryProcessorInstructionsGetter : ILoquiObject
     {
         #region CompressionInstructions
         INotifyingKeyedCollectionGetter<FormID, RecordInstruction> CompressionInstructions { get; }
@@ -804,75 +838,11 @@ namespace Mutagen.Bethesda.Tests.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IBinaryProcessorInstructions item,
-            IBinaryProcessorInstructionsGetter rhs,
-            BinaryProcessorInstructions_CopyMask copyMask = null,
-            IBinaryProcessorInstructionsGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            BinaryProcessorInstructionsCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IBinaryProcessorInstructions item,
-            IBinaryProcessorInstructionsGetter rhs,
-            out BinaryProcessorInstructions_ErrorMask errorMask,
-            BinaryProcessorInstructions_CopyMask copyMask = null,
-            IBinaryProcessorInstructionsGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            BinaryProcessorInstructionsCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IBinaryProcessorInstructions item,
+            IBinaryProcessorInstructions item,
             IBinaryProcessorInstructionsGetter rhs,
             IBinaryProcessorInstructionsGetter def,
             bool doMasks,
-            out BinaryProcessorInstructions_ErrorMask errorMask,
-            BinaryProcessorInstructions_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            BinaryProcessorInstructions_ErrorMask retErrorMask = null;
-            Func<BinaryProcessorInstructions_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new BinaryProcessorInstructions_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IBinaryProcessorInstructions item,
-            IBinaryProcessorInstructionsGetter rhs,
-            IBinaryProcessorInstructionsGetter def,
-            bool doMasks,
-            Func<BinaryProcessorInstructions_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             BinaryProcessorInstructions_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -926,11 +896,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                                 errorMask: (doMasks ? new Func<Instruction_ErrorMask>(() =>
                                 {
                                     var baseMask = errorMask();
-                                    if (baseMask.Instruction.Specific == null)
-                                    {
-                                        baseMask.Instruction = new MaskItem<Exception, Instruction_ErrorMask>(null, new Instruction_ErrorMask());
-                                    }
-                                    return baseMask.Instruction.Specific;
+                                    var mask = new Instruction_ErrorMask();
+                                    baseMask.SetNthMask((int)BinaryProcessorInstructions_FieldIndex.Instruction, mask);
+                                    return mask;
                                 }
                                 ) : null),
                                 copyMask: copyMask?.Instruction.Specific,

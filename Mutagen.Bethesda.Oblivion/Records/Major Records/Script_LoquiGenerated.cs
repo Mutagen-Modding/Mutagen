@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Script : MajorRecord, IScript, ILoquiObjectSetter, IEquatable<Script>
+    public partial class Script : MajorRecord, IScript, ILoquiObject<Script>, ILoquiObjectSetter, IEquatable<Script>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Script_Registration.Instance;
@@ -139,6 +139,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Script>.GetEqualsMask(Script rhs) => ScriptCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IScriptGetter>.GetEqualsMask(IScriptGetter rhs) => ScriptCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -161,6 +163,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Script_Mask<bool> GetHasBeenSetMask()
         {
             return ScriptCommon.GetHasBeenSetMask(this);
@@ -530,8 +533,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "MetadataSummary":
-                    ScriptMetaSummaryCommon.CopyFieldsFrom(
-                        item: item._MetadataSummary_Object,
+                    item._MetadataSummary_Object.CopyFieldsFrom(
                         rhs: ScriptMetaSummary.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
@@ -910,8 +912,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out ScriptMetaSummary_ErrorMask MetadataSummarycreateMask);
-                    ScriptMetaSummaryCommon.CopyFieldsFrom(
-                        item: item._MetadataSummary_Object,
+                    item._MetadataSummary_Object.CopyFieldsFrom(
                         rhs: tmpMetadataSummary,
                         def: null,
                         cmds: null,
@@ -1034,31 +1035,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Script_CopyMask copyMask = null,
-            IScriptGetter def = null)
-            where CopyType : class, IScript
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Script)))
-            {
-                ret = new Script() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Script Copy_ToLoqui(
             IScriptGetter item,
             Script_CopyMask copyMask = null,
@@ -1078,6 +1054,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IScriptGetter rhs,
+            Script_CopyMask copyMask,
+            IScriptGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IScriptGetter rhs,
+            out Script_ErrorMask errorMask,
+            Script_CopyMask copyMask = null,
+            IScriptGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Script_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Script_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            ScriptCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1167,7 +1186,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IScript : IScriptGetter, IMajorRecord, ILoquiClass<IScript, IScriptGetter>, ILoquiClass<Script, IScriptGetter>
+    public partial interface IScript : IScriptGetter, IMajorRecord, ILoquiClass<IScript, IScriptGetter>, ILoquiClass<Script, IScriptGetter>
     {
         new Byte[] CompiledScript { get; set; }
         new INotifyingSetItem<Byte[]> CompiledScript_Property { get; }
@@ -1179,7 +1198,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<ScriptReference> References { get; }
     }
 
-    public interface IScriptGetter : IMajorRecordGetter
+    public partial interface IScriptGetter : IMajorRecordGetter
     {
         #region MetadataSummary
         ScriptMetaSummary MetadataSummary { get; }
@@ -1453,75 +1472,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IScript item,
-            IScriptGetter rhs,
-            Script_CopyMask copyMask = null,
-            IScriptGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            ScriptCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IScript item,
-            IScriptGetter rhs,
-            out Script_ErrorMask errorMask,
-            Script_CopyMask copyMask = null,
-            IScriptGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            ScriptCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IScript item,
+            IScript item,
             IScriptGetter rhs,
             IScriptGetter def,
             bool doMasks,
-            out Script_ErrorMask errorMask,
-            Script_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Script_ErrorMask retErrorMask = null;
-            Func<Script_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Script_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IScript item,
-            IScriptGetter rhs,
-            IScriptGetter def,
-            bool doMasks,
-            Func<Script_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Script_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1545,11 +1500,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: (doMasks ? new Func<ScriptMetaSummary_ErrorMask>(() =>
                         {
                             var baseMask = errorMask();
-                            if (baseMask.MetadataSummary.Specific == null)
-                            {
-                                baseMask.MetadataSummary = new MaskItem<Exception, ScriptMetaSummary_ErrorMask>(null, new ScriptMetaSummary_ErrorMask());
-                            }
-                            return baseMask.MetadataSummary.Specific;
+                            var mask = new ScriptMetaSummary_ErrorMask();
+                            baseMask.SetNthMask((int)Script_FieldIndex.MetadataSummary, mask);
+                            return mask;
                         }
                         ) : null),
                         copyMask: copyMask?.MetadataSummary.Specific,
@@ -1785,7 +1738,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Script_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.MetadataSummary = item.MetadataSummary_Property.LoquiEqualsHelper(rhs.MetadataSummary_Property, (loqLhs, loqRhs) => ScriptMetaSummaryCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.MetadataSummary = item.MetadataSummary_Property.LoquiEqualsHelper(rhs.MetadataSummary_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.CompiledScript = item.CompiledScript_Property.Equals(rhs.CompiledScript_Property, (l, r) => l.EqualsFast(r));
             ret.SourceCode = item.SourceCode_Property.Equals(rhs.SourceCode_Property, (l, r) => object.Equals(l, r));
             if (item.LocalVariables.HasBeenSet == rhs.LocalVariables.HasBeenSet)
@@ -1796,7 +1749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.LocalVariables.Specific = item.LocalVariables.SelectAgainst<LocalVariable, MaskItem<bool, LocalVariable_Mask<bool>>>(rhs.LocalVariables, ((l, r) =>
                     {
                         MaskItem<bool, LocalVariable_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => LocalVariableCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
                     ), out ret.LocalVariables.Overall);
@@ -1821,7 +1774,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.References.Specific = item.References.SelectAgainst<ScriptReference, MaskItem<bool, ScriptReference_Mask<bool>>>(rhs.References, ((l, r) =>
                     {
                         MaskItem<bool, ScriptReference_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => ScriptReferenceCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
                     ), out ret.References.Overall);

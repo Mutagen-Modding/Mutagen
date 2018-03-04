@@ -24,7 +24,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Ownership : IOwnership, ILoquiObjectSetter, IEquatable<Ownership>
+    public partial class Ownership : IOwnership, ILoquiObject<Ownership>, ILoquiObjectSetter, IEquatable<Ownership>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ownership_Registration.Instance;
@@ -90,6 +90,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Ownership>.GetEqualsMask(Ownership rhs) => OwnershipCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IOwnershipGetter>.GetEqualsMask(IOwnershipGetter rhs) => OwnershipCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -112,6 +114,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public Ownership_Mask<bool> GetHasBeenSetMask()
         {
             return OwnershipCommon.GetHasBeenSetMask(this);
@@ -847,31 +850,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Ownership_CopyMask copyMask = null,
-            IOwnershipGetter def = null)
-            where CopyType : class, IOwnership
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Ownership)))
-            {
-                ret = new Ownership() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Ownership Copy_ToLoqui(
             IOwnershipGetter item,
             Ownership_CopyMask copyMask = null,
@@ -891,6 +869,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IOwnershipGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IOwnershipGetter rhs,
+            Ownership_CopyMask copyMask,
+            IOwnershipGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IOwnershipGetter rhs,
+            out Ownership_ErrorMask errorMask,
+            Ownership_CopyMask copyMask = null,
+            IOwnershipGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Ownership_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Ownership_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            OwnershipCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -979,7 +1013,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IOwnership : IOwnershipGetter, ILoquiClass<IOwnership, IOwnershipGetter>, ILoquiClass<Ownership, IOwnershipGetter>
+    public partial interface IOwnership : IOwnershipGetter, ILoquiClass<IOwnership, IOwnershipGetter>, ILoquiClass<Ownership, IOwnershipGetter>
     {
         new Faction Owner { get; set; }
         new Int32 FactionRank { get; set; }
@@ -988,7 +1022,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Global GlobalVariable { get; set; }
     }
 
-    public interface IOwnershipGetter : ILoquiObject
+    public partial interface IOwnershipGetter : ILoquiObject
     {
         #region Owner
         Faction Owner { get; }
@@ -1230,75 +1264,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IOwnership item,
-            IOwnershipGetter rhs,
-            Ownership_CopyMask copyMask = null,
-            IOwnershipGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            OwnershipCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IOwnership item,
-            IOwnershipGetter rhs,
-            out Ownership_ErrorMask errorMask,
-            Ownership_CopyMask copyMask = null,
-            IOwnershipGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            OwnershipCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IOwnership item,
+            IOwnership item,
             IOwnershipGetter rhs,
             IOwnershipGetter def,
             bool doMasks,
-            out Ownership_ErrorMask errorMask,
-            Ownership_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Ownership_ErrorMask retErrorMask = null;
-            Func<Ownership_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Ownership_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IOwnership item,
-            IOwnershipGetter rhs,
-            IOwnershipGetter def,
-            bool doMasks,
-            Func<Ownership_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Ownership_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

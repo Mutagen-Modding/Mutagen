@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Race : NamedMajorRecord, IRace, ILoquiObjectSetter, IEquatable<Race>
+    public partial class Race : NamedMajorRecord, IRace, ILoquiObject<Race>, ILoquiObjectSetter, IEquatable<Race>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
@@ -397,6 +397,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Race>.GetEqualsMask(Race rhs) => RaceCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IRaceGetter>.GetEqualsMask(IRaceGetter rhs) => RaceCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -419,6 +421,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Race_Mask<bool> GetHasBeenSetMask()
         {
             return RaceCommon.GetHasBeenSetMask(this);
@@ -1660,31 +1663,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Race_CopyMask copyMask = null,
-            IRaceGetter def = null)
-            where CopyType : class, IRace
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Race)))
-            {
-                ret = new Race() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Race Copy_ToLoqui(
             IRaceGetter item,
             Race_CopyMask copyMask = null,
@@ -1704,6 +1682,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IRaceGetter rhs,
+            Race_CopyMask copyMask,
+            IRaceGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IRaceGetter rhs,
+            out Race_ErrorMask errorMask,
+            Race_CopyMask copyMask = null,
+            IRaceGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Race_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Race_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            RaceCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1951,7 +1972,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IRace : IRaceGetter, INamedMajorRecord, ILoquiClass<IRace, IRaceGetter>, ILoquiClass<Race, IRaceGetter>
+    public partial interface IRace : IRaceGetter, INamedMajorRecord, ILoquiClass<IRace, IRaceGetter>, ILoquiClass<Race, IRaceGetter>
     {
         new String Description { get; set; }
         new INotifyingSetItem<String> Description_Property { get; }
@@ -2009,7 +2030,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IRaceGetter : INamedMajorRecordGetter
+    public partial interface IRaceGetter : INamedMajorRecordGetter
     {
         #region Description
         String Description { get; }
@@ -2577,75 +2598,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IRace item,
-            IRaceGetter rhs,
-            Race_CopyMask copyMask = null,
-            IRaceGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            RaceCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IRace item,
-            IRaceGetter rhs,
-            out Race_ErrorMask errorMask,
-            Race_CopyMask copyMask = null,
-            IRaceGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            RaceCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IRace item,
+            IRace item,
             IRaceGetter rhs,
             IRaceGetter def,
             bool doMasks,
-            out Race_ErrorMask errorMask,
-            Race_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Race_ErrorMask retErrorMask = null;
-            Func<Race_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Race_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IRace item,
-            IRaceGetter rhs,
-            IRaceGetter def,
-            bool doMasks,
-            Func<Race_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Race_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -2858,11 +2815,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<RaceVoices_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Voices.Specific == null)
-                                            {
-                                                baseMask.Voices = new MaskItem<Exception, RaceVoices_ErrorMask>(null, new RaceVoices_ErrorMask());
-                                            }
-                                            return baseMask.Voices.Specific;
+                                            var mask = new RaceVoices_ErrorMask();
+                                            baseMask.SetNthMask((int)Race_FieldIndex.Voices, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Voices.Specific,
@@ -2909,11 +2864,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<RaceHair_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.DefaultHair.Specific == null)
-                                            {
-                                                baseMask.DefaultHair = new MaskItem<Exception, RaceHair_ErrorMask>(null, new RaceHair_ErrorMask());
-                                            }
-                                            return baseMask.DefaultHair.Specific;
+                                            var mask = new RaceHair_ErrorMask();
+                                            baseMask.SetNthMask((int)Race_FieldIndex.DefaultHair, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.DefaultHair.Specific,
@@ -3005,11 +2958,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<RaceStatsGendered_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.RaceStats.Specific == null)
-                                            {
-                                                baseMask.RaceStats = new MaskItem<Exception, RaceStatsGendered_ErrorMask>(null, new RaceStatsGendered_ErrorMask());
-                                            }
-                                            return baseMask.RaceStats.Specific;
+                                            var mask = new RaceStatsGendered_ErrorMask();
+                                            baseMask.SetNthMask((int)Race_FieldIndex.RaceStats, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.RaceStats.Specific,
@@ -3088,11 +3039,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<GenderedBodyData_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.BodyData.Specific == null)
-                                            {
-                                                baseMask.BodyData = new MaskItem<Exception, GenderedBodyData_ErrorMask>(null, new GenderedBodyData_ErrorMask());
-                                            }
-                                            return baseMask.BodyData.Specific;
+                                            var mask = new GenderedBodyData_ErrorMask();
+                                            baseMask.SetNthMask((int)Race_FieldIndex.BodyData, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.BodyData.Specific,
@@ -3169,11 +3118,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<FaceGenData_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.FaceGenData.Specific == null)
-                                            {
-                                                baseMask.FaceGenData = new MaskItem<Exception, FaceGenData_ErrorMask>(null, new FaceGenData_ErrorMask());
-                                            }
-                                            return baseMask.FaceGenData.Specific;
+                                            var mask = new FaceGenData_ErrorMask();
+                                            baseMask.SetNthMask((int)Race_FieldIndex.FaceGenData, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.FaceGenData.Specific,
@@ -3542,7 +3489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.Relations.Specific = item.Relations.SelectAgainst<Relation, MaskItem<bool, Relation_Mask<bool>>>(rhs.Relations, ((l, r) =>
                     {
                         MaskItem<bool, Relation_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => RelationCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
                     ), out ret.Relations.Overall);
@@ -3592,12 +3539,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.MaleWeight = item.MaleWeight == rhs.MaleWeight;
             ret.FemaleWeight = item.FemaleWeight == rhs.FemaleWeight;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Voices = item.Voices_Property.LoquiEqualsHelper(rhs.Voices_Property, (loqLhs, loqRhs) => RaceVoicesCommon.GetEqualsMask(loqLhs, loqRhs));
-            ret.DefaultHair = item.DefaultHair_Property.LoquiEqualsHelper(rhs.DefaultHair_Property, (loqLhs, loqRhs) => RaceHairCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Voices = item.Voices_Property.LoquiEqualsHelper(rhs.Voices_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.DefaultHair = item.DefaultHair_Property.LoquiEqualsHelper(rhs.DefaultHair_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.DefaultHairColor = item.DefaultHairColor_Property.Equals(rhs.DefaultHairColor_Property, (l, r) => l == r);
             ret.FaceGenMainClamp = item.FaceGenMainClamp_Property.Equals(rhs.FaceGenMainClamp_Property, (l, r) => l == r);
             ret.FaceGenFaceClamp = item.FaceGenFaceClamp_Property.Equals(rhs.FaceGenFaceClamp_Property, (l, r) => l == r);
-            ret.RaceStats = item.RaceStats_Property.LoquiEqualsHelper(rhs.RaceStats_Property, (loqLhs, loqRhs) => RaceStatsGenderedCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.RaceStats = item.RaceStats_Property.LoquiEqualsHelper(rhs.RaceStats_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             if (item.FaceData.HasBeenSet == rhs.FaceData.HasBeenSet)
             {
                 if (item.FaceData.HasBeenSet)
@@ -3606,7 +3553,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.FaceData.Specific = item.FaceData.SelectAgainst<FacePart, MaskItem<bool, FacePart_Mask<bool>>>(rhs.FaceData, ((l, r) =>
                     {
                         MaskItem<bool, FacePart_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => FacePartCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
                     ), out ret.FaceData.Overall);
@@ -3623,7 +3570,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.FaceData = new MaskItem<bool, IEnumerable<MaskItem<bool, FacePart_Mask<bool>>>>();
                 ret.FaceData.Overall = false;
             }
-            ret.BodyData = item.BodyData_Property.LoquiEqualsHelper(rhs.BodyData_Property, (loqLhs, loqRhs) => GenderedBodyDataCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.BodyData = item.BodyData_Property.LoquiEqualsHelper(rhs.BodyData_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             if (item.Hairs.HasBeenSet == rhs.Hairs.HasBeenSet)
             {
                 if (item.Hairs.HasBeenSet)
@@ -3662,7 +3609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Eyes = new MaskItem<bool, IEnumerable<bool>>();
                 ret.Eyes.Overall = false;
             }
-            ret.FaceGenData = item.FaceGenData_Property.LoquiEqualsHelper(rhs.FaceGenData_Property, (loqLhs, loqRhs) => FaceGenDataCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.FaceGenData = item.FaceGenData_Property.LoquiEqualsHelper(rhs.FaceGenData_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Unknown = item.Unknown_Property.Equals(rhs.Unknown_Property, (l, r) => l.EqualsFast(r));
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }

@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class PathGrid : MajorRecord, IPathGrid, ILoquiObjectSetter, IEquatable<PathGrid>
+    public partial class PathGrid : MajorRecord, IPathGrid, ILoquiObject<PathGrid>, ILoquiObjectSetter, IEquatable<PathGrid>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PathGrid_Registration.Instance;
@@ -91,6 +91,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<PathGrid>.GetEqualsMask(PathGrid rhs) => PathGridCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IPathGridGetter>.GetEqualsMask(IPathGridGetter rhs) => PathGridCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -113,6 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new PathGrid_Mask<bool> GetHasBeenSetMask()
         {
             return PathGridCommon.GetHasBeenSetMask(this);
@@ -903,31 +906,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            PathGrid_CopyMask copyMask = null,
-            IPathGridGetter def = null)
-            where CopyType : class, IPathGrid
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(PathGrid)))
-            {
-                ret = new PathGrid() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static PathGrid Copy_ToLoqui(
             IPathGridGetter item,
             PathGrid_CopyMask copyMask = null,
@@ -947,6 +925,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IPathGridGetter rhs,
+            PathGrid_CopyMask copyMask,
+            IPathGridGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IPathGridGetter rhs,
+            out PathGrid_ErrorMask errorMask,
+            PathGrid_CopyMask copyMask = null,
+            IPathGridGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            PathGrid_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new PathGrid_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            PathGridCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1014,7 +1035,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IPathGrid : IPathGridGetter, IMajorRecord, ILoquiClass<IPathGrid, IPathGridGetter>, ILoquiClass<PathGrid, IPathGridGetter>
+    public partial interface IPathGrid : IPathGridGetter, IMajorRecord, ILoquiClass<IPathGrid, IPathGridGetter>, ILoquiClass<PathGrid, IPathGridGetter>
     {
         new INotifyingList<PathGridPoint> Points { get; }
         new Byte[] Unknown { get; set; }
@@ -1022,7 +1043,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IPathGridGetter : IMajorRecordGetter
+    public partial interface IPathGridGetter : IMajorRecordGetter
     {
         #region Points
         INotifyingListGetter<PathGridPoint> Points { get; }
@@ -1240,75 +1261,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IPathGrid item,
-            IPathGridGetter rhs,
-            PathGrid_CopyMask copyMask = null,
-            IPathGridGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            PathGridCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IPathGrid item,
-            IPathGridGetter rhs,
-            out PathGrid_ErrorMask errorMask,
-            PathGrid_CopyMask copyMask = null,
-            IPathGridGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            PathGridCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IPathGrid item,
+            IPathGrid item,
             IPathGridGetter rhs,
             IPathGridGetter def,
             bool doMasks,
-            out PathGrid_ErrorMask errorMask,
-            PathGrid_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            PathGrid_ErrorMask retErrorMask = null;
-            Func<PathGrid_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new PathGrid_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IPathGrid item,
-            IPathGridGetter rhs,
-            IPathGridGetter def,
-            bool doMasks,
-            Func<PathGrid_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             PathGrid_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

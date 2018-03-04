@@ -25,7 +25,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Eye : NamedMajorRecord, IEye, ILoquiObjectSetter, IEquatable<Eye>
+    public partial class Eye : NamedMajorRecord, IEye, ILoquiObject<Eye>, ILoquiObjectSetter, IEquatable<Eye>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Eye_Registration.Instance;
@@ -88,6 +88,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Eye>.GetEqualsMask(Eye rhs) => EyeCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IEyeGetter>.GetEqualsMask(IEyeGetter rhs) => EyeCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -110,6 +112,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Eye_Mask<bool> GetHasBeenSetMask()
         {
             return EyeCommon.GetHasBeenSetMask(this);
@@ -861,31 +864,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Eye_CopyMask copyMask = null,
-            IEyeGetter def = null)
-            where CopyType : class, IEye
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Eye)))
-            {
-                ret = new Eye() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Eye Copy_ToLoqui(
             IEyeGetter item,
             Eye_CopyMask copyMask = null,
@@ -905,6 +883,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IEyeGetter rhs,
+            Eye_CopyMask copyMask,
+            IEyeGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IEyeGetter rhs,
+            out Eye_ErrorMask errorMask,
+            Eye_CopyMask copyMask = null,
+            IEyeGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Eye_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Eye_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            EyeCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -976,7 +997,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IEye : IEyeGetter, INamedMajorRecord, ILoquiClass<IEye, IEyeGetter>, ILoquiClass<Eye, IEyeGetter>
+    public partial interface IEye : IEyeGetter, INamedMajorRecord, ILoquiClass<IEye, IEyeGetter>, ILoquiClass<Eye, IEyeGetter>
     {
         new FilePath Icon { get; set; }
         new INotifyingSetItem<FilePath> Icon_Property { get; }
@@ -986,7 +1007,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IEyeGetter : INamedMajorRecordGetter
+    public partial interface IEyeGetter : INamedMajorRecordGetter
     {
         #region Icon
         FilePath Icon { get; }
@@ -1205,75 +1226,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IEye item,
-            IEyeGetter rhs,
-            Eye_CopyMask copyMask = null,
-            IEyeGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            EyeCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IEye item,
-            IEyeGetter rhs,
-            out Eye_ErrorMask errorMask,
-            Eye_CopyMask copyMask = null,
-            IEyeGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            EyeCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IEye item,
+            IEye item,
             IEyeGetter rhs,
             IEyeGetter def,
             bool doMasks,
-            out Eye_ErrorMask errorMask,
-            Eye_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Eye_ErrorMask retErrorMask = null;
-            Func<Eye_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Eye_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IEye item,
-            IEyeGetter rhs,
-            IEyeGetter def,
-            bool doMasks,
-            Func<Eye_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Eye_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

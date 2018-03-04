@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Grass : MajorRecord, IGrass, ILoquiObjectSetter, IEquatable<Grass>
+    public partial class Grass : MajorRecord, IGrass, ILoquiObject<Grass>, ILoquiObjectSetter, IEquatable<Grass>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Grass_Registration.Instance;
@@ -222,6 +222,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Grass>.GetEqualsMask(Grass rhs) => GrassCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IGrassGetter>.GetEqualsMask(IGrassGetter rhs) => GrassCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -244,6 +246,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Grass_Mask<bool> GetHasBeenSetMask()
         {
             return GrassCommon.GetHasBeenSetMask(this);
@@ -1127,31 +1130,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Grass_CopyMask copyMask = null,
-            IGrassGetter def = null)
-            where CopyType : class, IGrass
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Grass)))
-            {
-                ret = new Grass() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Grass Copy_ToLoqui(
             IGrassGetter item,
             Grass_CopyMask copyMask = null,
@@ -1171,6 +1149,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IGrassGetter rhs,
+            Grass_CopyMask copyMask,
+            IGrassGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IGrassGetter rhs,
+            out Grass_ErrorMask errorMask,
+            Grass_CopyMask copyMask = null,
+            IGrassGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Grass_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Grass_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            GrassCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1332,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IGrass : IGrassGetter, IMajorRecord, ILoquiClass<IGrass, IGrassGetter>, ILoquiClass<Grass, IGrassGetter>
+    public partial interface IGrass : IGrassGetter, IMajorRecord, ILoquiClass<IGrass, IGrassGetter>, ILoquiClass<Grass, IGrassGetter>
     {
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
@@ -1369,7 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IGrassGetter : IMajorRecordGetter
+    public partial interface IGrassGetter : IMajorRecordGetter
     {
         #region Model
         Model Model { get; }
@@ -1741,75 +1762,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IGrass item,
-            IGrassGetter rhs,
-            Grass_CopyMask copyMask = null,
-            IGrassGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            GrassCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IGrass item,
-            IGrassGetter rhs,
-            out Grass_ErrorMask errorMask,
-            Grass_CopyMask copyMask = null,
-            IGrassGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            GrassCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IGrass item,
+            IGrass item,
             IGrassGetter rhs,
             IGrassGetter def,
             bool doMasks,
-            out Grass_ErrorMask errorMask,
-            Grass_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Grass_ErrorMask retErrorMask = null;
-            Func<Grass_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Grass_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IGrass item,
-            IGrassGetter rhs,
-            IGrassGetter def,
-            bool doMasks,
-            Func<Grass_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Grass_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1844,11 +1801,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Model.Specific == null)
-                                            {
-                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.Model.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)Grass_FieldIndex.Model, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Model.Specific,
@@ -2184,7 +2139,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Grass_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Density = item.Density == rhs.Density;
             ret.MinSlope = item.MinSlope == rhs.MinSlope;
             ret.MaxSlope = item.MaxSlope == rhs.MaxSlope;

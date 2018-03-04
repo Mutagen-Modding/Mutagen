@@ -25,7 +25,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Subspace : MajorRecord, ISubspace, ILoquiObjectSetter, IEquatable<Subspace>
+    public partial class Subspace : MajorRecord, ISubspace, ILoquiObject<Subspace>, ILoquiObjectSetter, IEquatable<Subspace>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Subspace_Registration.Instance;
@@ -103,6 +103,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Subspace>.GetEqualsMask(Subspace rhs) => SubspaceCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ISubspaceGetter>.GetEqualsMask(ISubspaceGetter rhs) => SubspaceCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -125,6 +127,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Subspace_Mask<bool> GetHasBeenSetMask()
         {
             return SubspaceCommon.GetHasBeenSetMask(this);
@@ -849,31 +852,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Subspace_CopyMask copyMask = null,
-            ISubspaceGetter def = null)
-            where CopyType : class, ISubspace
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Subspace)))
-            {
-                ret = new Subspace() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Subspace Copy_ToLoqui(
             ISubspaceGetter item,
             Subspace_CopyMask copyMask = null,
@@ -893,6 +871,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            ISubspaceGetter rhs,
+            Subspace_CopyMask copyMask,
+            ISubspaceGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ISubspaceGetter rhs,
+            out Subspace_ErrorMask errorMask,
+            Subspace_CopyMask copyMask = null,
+            ISubspaceGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Subspace_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Subspace_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            SubspaceCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -974,7 +995,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface ISubspace : ISubspaceGetter, IMajorRecord, ILoquiClass<ISubspace, ISubspaceGetter>, ILoquiClass<Subspace, ISubspaceGetter>
+    public partial interface ISubspace : ISubspaceGetter, IMajorRecord, ILoquiClass<ISubspace, ISubspaceGetter>, ILoquiClass<Subspace, ISubspaceGetter>
     {
         new Single X { get; set; }
         new INotifyingItem<Single> X_Property { get; }
@@ -987,7 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface ISubspaceGetter : IMajorRecordGetter
+    public partial interface ISubspaceGetter : IMajorRecordGetter
     {
         #region X
         Single X { get; }
@@ -1221,75 +1242,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this ISubspace item,
-            ISubspaceGetter rhs,
-            Subspace_CopyMask copyMask = null,
-            ISubspaceGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            SubspaceCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ISubspace item,
-            ISubspaceGetter rhs,
-            out Subspace_ErrorMask errorMask,
-            Subspace_CopyMask copyMask = null,
-            ISubspaceGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            SubspaceCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ISubspace item,
+            ISubspace item,
             ISubspaceGetter rhs,
             ISubspaceGetter def,
             bool doMasks,
-            out Subspace_ErrorMask errorMask,
-            Subspace_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Subspace_ErrorMask retErrorMask = null;
-            Func<Subspace_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Subspace_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this ISubspace item,
-            ISubspaceGetter rhs,
-            ISubspaceGetter def,
-            bool doMasks,
-            Func<Subspace_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Subspace_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

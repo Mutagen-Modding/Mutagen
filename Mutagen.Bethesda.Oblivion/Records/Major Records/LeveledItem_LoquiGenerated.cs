@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class LeveledItem : MajorRecord, ILeveledItem, ILoquiObjectSetter, IEquatable<LeveledItem>
+    public partial class LeveledItem : MajorRecord, ILeveledItem, ILoquiObject<LeveledItem>, ILoquiObjectSetter, IEquatable<LeveledItem>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledItem_Registration.Instance;
@@ -107,6 +107,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<LeveledItem>.GetEqualsMask(LeveledItem rhs) => LeveledItemCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ILeveledItemGetter>.GetEqualsMask(ILeveledItemGetter rhs) => LeveledItemCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -129,6 +131,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new LeveledItem_Mask<bool> GetHasBeenSetMask()
         {
             return LeveledItemCommon.GetHasBeenSetMask(this);
@@ -923,31 +926,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            LeveledItem_CopyMask copyMask = null,
-            ILeveledItemGetter def = null)
-            where CopyType : class, ILeveledItem
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(LeveledItem)))
-            {
-                ret = new LeveledItem() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static LeveledItem Copy_ToLoqui(
             ILeveledItemGetter item,
             LeveledItem_CopyMask copyMask = null,
@@ -967,6 +945,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            ILeveledItemGetter rhs,
+            LeveledItem_CopyMask copyMask,
+            ILeveledItemGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ILeveledItemGetter rhs,
+            out LeveledItem_ErrorMask errorMask,
+            LeveledItem_CopyMask copyMask = null,
+            ILeveledItemGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            LeveledItem_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new LeveledItem_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            LeveledItemCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1044,7 +1065,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface ILeveledItem : ILeveledItemGetter, IMajorRecord, ILoquiClass<ILeveledItem, ILeveledItemGetter>, ILoquiClass<LeveledItem, ILeveledItemGetter>
+    public partial interface ILeveledItem : ILeveledItemGetter, IMajorRecord, ILoquiClass<ILeveledItem, ILeveledItemGetter>, ILoquiClass<LeveledItem, ILeveledItemGetter>
     {
         new Byte ChanceNone { get; set; }
         new INotifyingSetItem<Byte> ChanceNone_Property { get; }
@@ -1055,7 +1076,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<LeveledEntry<ItemAbstract>> Entries { get; }
     }
 
-    public interface ILeveledItemGetter : IMajorRecordGetter
+    public partial interface ILeveledItemGetter : IMajorRecordGetter
     {
         #region ChanceNone
         Byte ChanceNone { get; }
@@ -1292,75 +1313,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this ILeveledItem item,
-            ILeveledItemGetter rhs,
-            LeveledItem_CopyMask copyMask = null,
-            ILeveledItemGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            LeveledItemCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ILeveledItem item,
-            ILeveledItemGetter rhs,
-            out LeveledItem_ErrorMask errorMask,
-            LeveledItem_CopyMask copyMask = null,
-            ILeveledItemGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            LeveledItemCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ILeveledItem item,
+            ILeveledItem item,
             ILeveledItemGetter rhs,
             ILeveledItemGetter def,
             bool doMasks,
-            out LeveledItem_ErrorMask errorMask,
-            LeveledItem_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            LeveledItem_ErrorMask retErrorMask = null;
-            Func<LeveledItem_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new LeveledItem_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this ILeveledItem item,
-            ILeveledItemGetter rhs,
-            ILeveledItemGetter def,
-            bool doMasks,
-            Func<LeveledItem_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             LeveledItem_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1555,7 +1512,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.Entries.Specific = item.Entries.SelectAgainst<LeveledEntry<ItemAbstract>, MaskItem<bool, LeveledEntry_Mask<bool>>>(rhs.Entries, ((l, r) =>
                     {
                         MaskItem<bool, LeveledEntry_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => LeveledEntryCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
                     ), out ret.Entries.Overall);

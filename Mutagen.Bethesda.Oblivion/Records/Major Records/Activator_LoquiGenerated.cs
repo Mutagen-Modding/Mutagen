@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Activator : NamedMajorRecord, IActivator, ILoquiObjectSetter, IEquatable<Activator>
+    public partial class Activator : NamedMajorRecord, IActivator, ILoquiObject<Activator>, ILoquiObjectSetter, IEquatable<Activator>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Activator_Registration.Instance;
@@ -86,6 +86,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Activator>.GetEqualsMask(Activator rhs) => ActivatorCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IActivatorGetter>.GetEqualsMask(IActivatorGetter rhs) => ActivatorCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -108,6 +110,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Activator_Mask<bool> GetHasBeenSetMask()
         {
             return ActivatorCommon.GetHasBeenSetMask(this);
@@ -879,31 +882,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Activator_CopyMask copyMask = null,
-            IActivatorGetter def = null)
-            where CopyType : class, IActivator
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Activator)))
-            {
-                ret = new Activator() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Activator Copy_ToLoqui(
             IActivatorGetter item,
             Activator_CopyMask copyMask = null,
@@ -923,6 +901,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IActivatorGetter rhs,
+            Activator_CopyMask copyMask,
+            IActivatorGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IActivatorGetter rhs,
+            out Activator_ErrorMask errorMask,
+            Activator_CopyMask copyMask = null,
+            IActivatorGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Activator_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Activator_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            ActivatorCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1004,7 +1025,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IActivator : IActivatorGetter, INamedMajorRecord, ILoquiClass<IActivator, IActivatorGetter>, ILoquiClass<Activator, IActivatorGetter>
+    public partial interface IActivator : IActivatorGetter, INamedMajorRecord, ILoquiClass<IActivator, IActivatorGetter>, ILoquiClass<Activator, IActivatorGetter>
     {
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
@@ -1013,7 +1034,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Sound Sound { get; set; }
     }
 
-    public interface IActivatorGetter : INamedMajorRecordGetter
+    public partial interface IActivatorGetter : INamedMajorRecordGetter
     {
         #region Model
         Model Model { get; }
@@ -1251,75 +1272,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IActivator item,
-            IActivatorGetter rhs,
-            Activator_CopyMask copyMask = null,
-            IActivatorGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            ActivatorCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IActivator item,
-            IActivatorGetter rhs,
-            out Activator_ErrorMask errorMask,
-            Activator_CopyMask copyMask = null,
-            IActivatorGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            ActivatorCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IActivator item,
+            IActivator item,
             IActivatorGetter rhs,
             IActivatorGetter def,
             bool doMasks,
-            out Activator_ErrorMask errorMask,
-            Activator_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Activator_ErrorMask retErrorMask = null;
-            Func<Activator_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Activator_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IActivator item,
-            IActivatorGetter rhs,
-            IActivatorGetter def,
-            bool doMasks,
-            Func<Activator_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Activator_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1354,11 +1311,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Model.Specific == null)
-                                            {
-                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.Model.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)Activator_FieldIndex.Model, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Model.Specific,
@@ -1523,7 +1478,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Activator_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
             ret.Sound = item.Sound_Property.Equals(rhs.Sound_Property, (l, r) => l == r);
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);

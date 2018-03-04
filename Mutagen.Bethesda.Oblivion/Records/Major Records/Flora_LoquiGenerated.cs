@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Flora : NamedMajorRecord, IFlora, ILoquiObjectSetter, IEquatable<Flora>
+    public partial class Flora : NamedMajorRecord, IFlora, ILoquiObject<Flora>, ILoquiObjectSetter, IEquatable<Flora>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Flora_Registration.Instance;
@@ -146,6 +146,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Flora>.GetEqualsMask(Flora rhs) => FloraCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IFloraGetter>.GetEqualsMask(IFloraGetter rhs) => FloraCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -168,6 +170,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Flora_Mask<bool> GetHasBeenSetMask()
         {
             return FloraCommon.GetHasBeenSetMask(this);
@@ -993,31 +996,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Flora_CopyMask copyMask = null,
-            IFloraGetter def = null)
-            where CopyType : class, IFlora
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Flora)))
-            {
-                ret = new Flora() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Flora Copy_ToLoqui(
             IFloraGetter item,
             Flora_CopyMask copyMask = null,
@@ -1037,6 +1015,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IFloraGetter rhs,
+            Flora_CopyMask copyMask,
+            IFloraGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IFloraGetter rhs,
+            out Flora_ErrorMask errorMask,
+            Flora_CopyMask copyMask = null,
+            IFloraGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Flora_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Flora_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            FloraCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1158,7 +1179,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IFlora : IFloraGetter, INamedMajorRecord, ILoquiClass<IFlora, IFloraGetter>, ILoquiClass<Flora, IFloraGetter>
+    public partial interface IFlora : IFloraGetter, INamedMajorRecord, ILoquiClass<IFlora, IFloraGetter>, ILoquiClass<Flora, IFloraGetter>
     {
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
@@ -1179,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IFloraGetter : INamedMajorRecordGetter
+    public partial interface IFloraGetter : INamedMajorRecordGetter
     {
         #region Model
         Model Model { get; }
@@ -1486,75 +1507,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IFlora item,
-            IFloraGetter rhs,
-            Flora_CopyMask copyMask = null,
-            IFloraGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            FloraCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IFlora item,
-            IFloraGetter rhs,
-            out Flora_ErrorMask errorMask,
-            Flora_CopyMask copyMask = null,
-            IFloraGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            FloraCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IFlora item,
+            IFlora item,
             IFloraGetter rhs,
             IFloraGetter def,
             bool doMasks,
-            out Flora_ErrorMask errorMask,
-            Flora_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Flora_ErrorMask retErrorMask = null;
-            Func<Flora_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Flora_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IFlora item,
-            IFloraGetter rhs,
-            IFloraGetter def,
-            bool doMasks,
-            Func<Flora_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Flora_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1589,11 +1546,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Model.Specific == null)
-                                            {
-                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.Model.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)Flora_FieldIndex.Model, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Model.Specific,
@@ -1849,7 +1804,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Flora_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
             ret.Ingredient = item.Ingredient_Property.Equals(rhs.Ingredient_Property, (l, r) => l == r);
             ret.Spring = item.Spring == rhs.Spring;

@@ -27,7 +27,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Cell : NamedMajorRecord, ICell, ILoquiObjectSetter, IEquatable<Cell>
+    public partial class Cell : NamedMajorRecord, ICell, ILoquiObject<Cell>, ILoquiObjectSetter, IEquatable<Cell>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Cell_Registration.Instance;
@@ -300,6 +300,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Cell>.GetEqualsMask(Cell rhs) => CellCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ICellGetter>.GetEqualsMask(ICellGetter rhs) => CellCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -322,6 +324,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Cell_Mask<bool> GetHasBeenSetMask()
         {
             return CellCommon.GetHasBeenSetMask(this);
@@ -1254,7 +1257,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var RegionstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Region>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Cell_FieldIndex.Regions,
-                        objType: ObjectType.Subrecord,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {
@@ -1343,31 +1346,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Cell_CopyMask copyMask = null,
-            ICellGetter def = null)
-            where CopyType : class, ICell
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Cell)))
-            {
-                ret = new Cell() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Cell Copy_ToLoqui(
             ICellGetter item,
             Cell_CopyMask copyMask = null,
@@ -1387,6 +1365,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            ICellGetter rhs,
+            Cell_CopyMask copyMask,
+            ICellGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ICellGetter rhs,
+            out Cell_ErrorMask errorMask,
+            Cell_CopyMask copyMask = null,
+            ICellGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Cell_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Cell_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            CellCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1604,7 +1625,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface ICell : ICellGetter, INamedMajorRecord, ILoquiClass<ICell, ICellGetter>, ILoquiClass<Cell, ICellGetter>
+    public partial interface ICell : ICellGetter, INamedMajorRecord, ILoquiClass<ICell, ICellGetter>, ILoquiClass<Cell, ICellGetter>
     {
         new Cell.Flag Flags { get; set; }
         new INotifyingSetItem<Cell.Flag> Flags_Property { get; }
@@ -1653,7 +1674,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface ICellGetter : INamedMajorRecordGetter
+    public partial interface ICellGetter : INamedMajorRecordGetter
     {
         #region Flags
         Cell.Flag Flags { get; }
@@ -2136,75 +2157,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this ICell item,
-            ICellGetter rhs,
-            Cell_CopyMask copyMask = null,
-            ICellGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            CellCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ICell item,
-            ICellGetter rhs,
-            out Cell_ErrorMask errorMask,
-            Cell_CopyMask copyMask = null,
-            ICellGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            CellCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ICell item,
+            ICell item,
             ICellGetter rhs,
             ICellGetter def,
             bool doMasks,
-            out Cell_ErrorMask errorMask,
-            Cell_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Cell_ErrorMask retErrorMask = null;
-            Func<Cell_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Cell_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this ICell item,
-            ICellGetter rhs,
-            ICellGetter def,
-            bool doMasks,
-            Func<Cell_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Cell_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -2470,11 +2427,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Ownership_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Ownership.Specific == null)
-                                            {
-                                                baseMask.Ownership = new MaskItem<Exception, Ownership_ErrorMask>(null, new Ownership_ErrorMask());
-                                            }
-                                            return baseMask.Ownership.Specific;
+                                            var mask = new Ownership_ErrorMask();
+                                            baseMask.SetNthMask((int)Cell_FieldIndex.Ownership, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Ownership.Specific,
@@ -2773,7 +2728,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.WaterHeight = item.WaterHeight_Property.Equals(rhs.WaterHeight_Property, (l, r) => l == r);
             ret.Climate = item.Climate_Property.Equals(rhs.Climate_Property, (l, r) => l == r);
             ret.Water = item.Water_Property.Equals(rhs.Water_Property, (l, r) => l == r);
-            ret.Ownership = item.Ownership_Property.LoquiEqualsHelper(rhs.Ownership_Property, (loqLhs, loqRhs) => OwnershipCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Ownership = item.Ownership_Property.LoquiEqualsHelper(rhs.Ownership_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 

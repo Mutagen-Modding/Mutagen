@@ -24,7 +24,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Header : IHeader, ILoquiObjectSetter, IEquatable<Header>
+    public partial class Header : IHeader, ILoquiObject<Header>, ILoquiObjectSetter, IEquatable<Header>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Header_Registration.Instance;
@@ -106,6 +106,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Header>.GetEqualsMask(Header rhs) => HeaderCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IHeaderGetter>.GetEqualsMask(IHeaderGetter rhs) => HeaderCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -128,6 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public Header_Mask<bool> GetHasBeenSetMask()
         {
             return HeaderCommon.GetHasBeenSetMask(this);
@@ -803,31 +806,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Header_CopyMask copyMask = null,
-            IHeaderGetter def = null)
-            where CopyType : class, IHeader
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Header)))
-            {
-                ret = new Header() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Header Copy_ToLoqui(
             IHeaderGetter item,
             Header_CopyMask copyMask = null,
@@ -847,6 +825,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IHeaderGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IHeaderGetter rhs,
+            Header_CopyMask copyMask,
+            IHeaderGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IHeaderGetter rhs,
+            out Header_ErrorMask errorMask,
+            Header_CopyMask copyMask = null,
+            IHeaderGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Header_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Header_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            HeaderCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -935,7 +969,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IHeader : IHeaderGetter, ILoquiClass<IHeader, IHeaderGetter>, ILoquiClass<Header, IHeaderGetter>
+    public partial interface IHeader : IHeaderGetter, ILoquiClass<IHeader, IHeaderGetter>, ILoquiClass<Header, IHeaderGetter>
     {
         new Single Version { get; set; }
         new INotifyingItem<Single> Version_Property { get; }
@@ -948,7 +982,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IHeaderGetter : ILoquiObject
+    public partial interface IHeaderGetter : ILoquiObject
     {
         #region Version
         Single Version { get; }
@@ -1176,75 +1210,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IHeader item,
-            IHeaderGetter rhs,
-            Header_CopyMask copyMask = null,
-            IHeaderGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            HeaderCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IHeader item,
-            IHeaderGetter rhs,
-            out Header_ErrorMask errorMask,
-            Header_CopyMask copyMask = null,
-            IHeaderGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            HeaderCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IHeader item,
+            IHeader item,
             IHeaderGetter rhs,
             IHeaderGetter def,
             bool doMasks,
-            out Header_ErrorMask errorMask,
-            Header_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Header_ErrorMask retErrorMask = null;
-            Func<Header_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Header_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IHeader item,
-            IHeaderGetter rhs,
-            IHeaderGetter def,
-            bool doMasks,
-            Func<Header_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Header_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

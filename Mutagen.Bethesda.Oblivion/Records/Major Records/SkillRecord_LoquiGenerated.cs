@@ -25,7 +25,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class SkillRecord : MajorRecord, ISkillRecord, ILoquiObjectSetter, IEquatable<SkillRecord>
+    public partial class SkillRecord : MajorRecord, ISkillRecord, ILoquiObject<SkillRecord>, ILoquiObjectSetter, IEquatable<SkillRecord>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillRecord_Registration.Instance;
@@ -238,6 +238,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<SkillRecord>.GetEqualsMask(SkillRecord rhs) => SkillRecordCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ISkillRecordGetter>.GetEqualsMask(ISkillRecordGetter rhs) => SkillRecordCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -260,6 +262,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new SkillRecord_Mask<bool> GetHasBeenSetMask()
         {
             return SkillRecordCommon.GetHasBeenSetMask(this);
@@ -1171,31 +1174,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            SkillRecord_CopyMask copyMask = null,
-            ISkillRecordGetter def = null)
-            where CopyType : class, ISkillRecord
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(SkillRecord)))
-            {
-                ret = new SkillRecord() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static SkillRecord Copy_ToLoqui(
             ISkillRecordGetter item,
             SkillRecord_CopyMask copyMask = null,
@@ -1215,6 +1193,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            ISkillRecordGetter rhs,
+            SkillRecord_CopyMask copyMask,
+            ISkillRecordGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ISkillRecordGetter rhs,
+            out SkillRecord_ErrorMask errorMask,
+            SkillRecord_CopyMask copyMask = null,
+            ISkillRecordGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            SkillRecord_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new SkillRecord_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            SkillRecordCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1386,7 +1407,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface ISkillRecord : ISkillRecordGetter, IMajorRecord, ILoquiClass<ISkillRecord, ISkillRecordGetter>, ILoquiClass<SkillRecord, ISkillRecordGetter>
+    public partial interface ISkillRecord : ISkillRecordGetter, IMajorRecord, ILoquiClass<ISkillRecord, ISkillRecordGetter>, ILoquiClass<SkillRecord, ISkillRecordGetter>
     {
         new ActorValue Skill { get; set; }
         new INotifyingSetItem<ActorValue> Skill_Property { get; }
@@ -1426,7 +1447,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface ISkillRecordGetter : IMajorRecordGetter
+    public partial interface ISkillRecordGetter : IMajorRecordGetter
     {
         #region Skill
         ActorValue Skill { get; }
@@ -1820,75 +1841,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this ISkillRecord item,
-            ISkillRecordGetter rhs,
-            SkillRecord_CopyMask copyMask = null,
-            ISkillRecordGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            SkillRecordCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ISkillRecord item,
-            ISkillRecordGetter rhs,
-            out SkillRecord_ErrorMask errorMask,
-            SkillRecord_CopyMask copyMask = null,
-            ISkillRecordGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            SkillRecordCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ISkillRecord item,
+            ISkillRecord item,
             ISkillRecordGetter rhs,
             ISkillRecordGetter def,
             bool doMasks,
-            out SkillRecord_ErrorMask errorMask,
-            SkillRecord_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            SkillRecord_ErrorMask retErrorMask = null;
-            Func<SkillRecord_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new SkillRecord_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this ISkillRecord item,
-            ISkillRecordGetter rhs,
-            ISkillRecordGetter def,
-            bool doMasks,
-            Func<SkillRecord_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             SkillRecord_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

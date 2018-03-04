@@ -24,7 +24,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class TeleportDestination : ITeleportDestination, ILoquiObjectSetter, IEquatable<TeleportDestination>
+    public partial class TeleportDestination : ITeleportDestination, ILoquiObject<TeleportDestination>, ILoquiObjectSetter, IEquatable<TeleportDestination>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TeleportDestination_Registration.Instance;
@@ -98,6 +98,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<TeleportDestination>.GetEqualsMask(TeleportDestination rhs) => TeleportDestinationCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ITeleportDestinationGetter>.GetEqualsMask(ITeleportDestinationGetter rhs) => TeleportDestinationCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -120,6 +122,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public TeleportDestination_Mask<bool> GetHasBeenSetMask()
         {
             return TeleportDestinationCommon.GetHasBeenSetMask(this);
@@ -792,31 +795,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            TeleportDestination_CopyMask copyMask = null,
-            ITeleportDestinationGetter def = null)
-            where CopyType : class, ITeleportDestination
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(TeleportDestination)))
-            {
-                ret = new TeleportDestination() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static TeleportDestination Copy_ToLoqui(
             ITeleportDestinationGetter item,
             TeleportDestination_CopyMask copyMask = null,
@@ -836,6 +814,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            ITeleportDestinationGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ITeleportDestinationGetter rhs,
+            TeleportDestination_CopyMask copyMask,
+            ITeleportDestinationGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ITeleportDestinationGetter rhs,
+            out TeleportDestination_ErrorMask errorMask,
+            TeleportDestination_CopyMask copyMask = null,
+            ITeleportDestinationGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            TeleportDestination_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new TeleportDestination_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            TeleportDestinationCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -924,7 +958,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface ITeleportDestination : ITeleportDestinationGetter, ILoquiClass<ITeleportDestination, ITeleportDestinationGetter>, ILoquiClass<TeleportDestination, ITeleportDestinationGetter>
+    public partial interface ITeleportDestination : ITeleportDestinationGetter, ILoquiClass<ITeleportDestination, ITeleportDestinationGetter>, ILoquiClass<TeleportDestination, ITeleportDestinationGetter>
     {
         new Door Door { get; set; }
         new P3Float Position { get; set; }
@@ -935,7 +969,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface ITeleportDestinationGetter : ILoquiObject
+    public partial interface ITeleportDestinationGetter : ILoquiObject
     {
         #region Door
         Door Door { get; }
@@ -1161,75 +1195,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this ITeleportDestination item,
-            ITeleportDestinationGetter rhs,
-            TeleportDestination_CopyMask copyMask = null,
-            ITeleportDestinationGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            TeleportDestinationCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ITeleportDestination item,
-            ITeleportDestinationGetter rhs,
-            out TeleportDestination_ErrorMask errorMask,
-            TeleportDestination_CopyMask copyMask = null,
-            ITeleportDestinationGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            TeleportDestinationCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ITeleportDestination item,
+            ITeleportDestination item,
             ITeleportDestinationGetter rhs,
             ITeleportDestinationGetter def,
             bool doMasks,
-            out TeleportDestination_ErrorMask errorMask,
-            TeleportDestination_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            TeleportDestination_ErrorMask retErrorMask = null;
-            Func<TeleportDestination_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new TeleportDestination_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this ITeleportDestination item,
-            ITeleportDestinationGetter rhs,
-            ITeleportDestinationGetter def,
-            bool doMasks,
-            Func<TeleportDestination_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             TeleportDestination_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

@@ -25,7 +25,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class AIPackage : MajorRecord, IAIPackage, ILoquiObjectSetter, IEquatable<AIPackage>
+    public partial class AIPackage : MajorRecord, IAIPackage, ILoquiObject<AIPackage>, ILoquiObjectSetter, IEquatable<AIPackage>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackage_Registration.Instance;
@@ -58,6 +58,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<AIPackage>.GetEqualsMask(AIPackage rhs) => AIPackageCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IAIPackageGetter>.GetEqualsMask(IAIPackageGetter rhs) => AIPackageCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -80,6 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new AIPackage_Mask<bool> GetHasBeenSetMask()
         {
             return AIPackageCommon.GetHasBeenSetMask(this);
@@ -742,31 +745,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            AIPackage_CopyMask copyMask = null,
-            IAIPackageGetter def = null)
-            where CopyType : class, IAIPackage
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(AIPackage)))
-            {
-                ret = new AIPackage() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static AIPackage Copy_ToLoqui(
             IAIPackageGetter item,
             AIPackage_CopyMask copyMask = null,
@@ -786,6 +764,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IAIPackageGetter rhs,
+            AIPackage_CopyMask copyMask,
+            IAIPackageGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IAIPackageGetter rhs,
+            out AIPackage_ErrorMask errorMask,
+            AIPackage_CopyMask copyMask = null,
+            IAIPackageGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            AIPackage_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new AIPackage_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            AIPackageCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -837,11 +858,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IAIPackage : IAIPackageGetter, IMajorRecord, ILoquiClass<IAIPackage, IAIPackageGetter>, ILoquiClass<AIPackage, IAIPackageGetter>
+    public partial interface IAIPackage : IAIPackageGetter, IMajorRecord, ILoquiClass<IAIPackage, IAIPackageGetter>, ILoquiClass<AIPackage, IAIPackageGetter>
     {
     }
 
-    public interface IAIPackageGetter : IMajorRecordGetter
+    public partial interface IAIPackageGetter : IMajorRecordGetter
     {
 
     }
@@ -1018,75 +1039,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IAIPackage item,
-            IAIPackageGetter rhs,
-            AIPackage_CopyMask copyMask = null,
-            IAIPackageGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            AIPackageCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IAIPackage item,
-            IAIPackageGetter rhs,
-            out AIPackage_ErrorMask errorMask,
-            AIPackage_CopyMask copyMask = null,
-            IAIPackageGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            AIPackageCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IAIPackage item,
+            IAIPackage item,
             IAIPackageGetter rhs,
             IAIPackageGetter def,
             bool doMasks,
-            out AIPackage_ErrorMask errorMask,
-            AIPackage_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            AIPackage_ErrorMask retErrorMask = null;
-            Func<AIPackage_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new AIPackage_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IAIPackage item,
-            IAIPackageGetter rhs,
-            IAIPackageGetter def,
-            bool doMasks,
-            Func<AIPackage_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             AIPackage_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

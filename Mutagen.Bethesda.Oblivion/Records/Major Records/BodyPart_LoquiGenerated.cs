@@ -24,7 +24,7 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class BodyPart : IBodyPart, ILoquiObjectSetter, IEquatable<BodyPart>
+    public partial class BodyPart : IBodyPart, ILoquiObject<BodyPart>, ILoquiObjectSetter, IEquatable<BodyPart>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyPart_Registration.Instance;
@@ -91,6 +91,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<BodyPart>.GetEqualsMask(BodyPart rhs) => BodyPartCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IBodyPartGetter>.GetEqualsMask(IBodyPartGetter rhs) => BodyPartCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -113,6 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public BodyPart_Mask<bool> GetHasBeenSetMask()
         {
             return BodyPartCommon.GetHasBeenSetMask(this);
@@ -826,31 +829,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            BodyPart_CopyMask copyMask = null,
-            IBodyPartGetter def = null)
-            where CopyType : class, IBodyPart
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(BodyPart)))
-            {
-                ret = new BodyPart() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static BodyPart Copy_ToLoqui(
             IBodyPartGetter item,
             BodyPart_CopyMask copyMask = null,
@@ -870,6 +848,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IBodyPartGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IBodyPartGetter rhs,
+            BodyPart_CopyMask copyMask,
+            IBodyPartGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IBodyPartGetter rhs,
+            out BodyPart_ErrorMask errorMask,
+            BodyPart_CopyMask copyMask = null,
+            IBodyPartGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            BodyPart_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new BodyPart_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            BodyPartCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -948,7 +982,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IBodyPart : IBodyPartGetter, ILoquiClass<IBodyPart, IBodyPartGetter>, ILoquiClass<BodyPart, IBodyPartGetter>
+    public partial interface IBodyPart : IBodyPartGetter, ILoquiClass<IBodyPart, IBodyPartGetter>, ILoquiClass<BodyPart, IBodyPartGetter>
     {
         new Race.BodyIndex Index { get; set; }
         new INotifyingSetItem<Race.BodyIndex> Index_Property { get; }
@@ -958,7 +992,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IBodyPartGetter : ILoquiObject
+    public partial interface IBodyPartGetter : ILoquiObject
     {
         #region Index
         Race.BodyIndex Index { get; }
@@ -1181,75 +1215,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IBodyPart item,
-            IBodyPartGetter rhs,
-            BodyPart_CopyMask copyMask = null,
-            IBodyPartGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            BodyPartCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IBodyPart item,
-            IBodyPartGetter rhs,
-            out BodyPart_ErrorMask errorMask,
-            BodyPart_CopyMask copyMask = null,
-            IBodyPartGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            BodyPartCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IBodyPart item,
+            IBodyPart item,
             IBodyPartGetter rhs,
             IBodyPartGetter def,
             bool doMasks,
-            out BodyPart_ErrorMask errorMask,
-            BodyPart_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            BodyPart_ErrorMask retErrorMask = null;
-            Func<BodyPart_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new BodyPart_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IBodyPart item,
-            IBodyPartGetter rhs,
-            IBodyPartGetter def,
-            bool doMasks,
-            Func<BodyPart_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             BodyPart_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

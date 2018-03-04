@@ -27,38 +27,31 @@ namespace Mutagen.Bethesda.Generation
             string maskAccessor)
         {
             var loquiGen = typeGen as LoquiType;
-            if (loquiGen.TargetObjectGeneration != null)
+            if (loquiGen.TryGetFieldData(out var data)
+                && data.MarkerType.HasValue)
             {
-                if (loquiGen.TryGetFieldData(out var data)
-                    && data.MarkerType.HasValue)
-                {
-                    fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER, ObjectType.Subrecord)) {{ }}");
-                }
-                using (var args = new ArgsWrapper(fg,
-                    $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.Mask(MaskType.Error)}>.Instance.Write"))
-                {
-                    args.Add($"writer: {writerAccessor}");
-                    args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
-                    if (loquiGen.HasIndex)
-                    {
-                        args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                        args.Add($"errorMask: {maskAccessor}");
-                    }
-                    else
-                    {
-                        args.Add($"doMasks: {doMaskAccessor}");
-                        args.Add($"errorMask: out {maskAccessor}");
-                    }
-                    if (data?.RecordTypeConverter != null
-                        && data.RecordTypeConverter.FromConversions.Count > 0)
-                    {
-                        args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
-                    }
-                }
+                fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER, ObjectType.Subrecord)) {{ }}");
             }
-            else
+            using (var args = new ArgsWrapper(fg,
+                $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.Mask(MaskType.Error)}>.Instance.Write"))
             {
-                throw new NotImplementedException();
+                args.Add($"writer: {writerAccessor}");
+                args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
+                if (loquiGen.HasIndex)
+                {
+                    args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
+                    args.Add($"errorMask: {maskAccessor}");
+                }
+                else
+                {
+                    args.Add($"doMasks: {doMaskAccessor}");
+                    args.Add($"errorMask: out {maskAccessor}");
+                }
+                if (data?.RecordTypeConverter != null
+                    && data.RecordTypeConverter.FromConversions.Count > 0)
+                {
+                    args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
+                }
             }
         }
 
@@ -97,9 +90,8 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"errorMask: out {loquiGen.Mask(MaskType.Error)} {loquiGen.Name}createMask");
                     }
                     using (var args = new ArgsWrapper(fg,
-                        $"{loquiGen.TargetObjectGeneration.ExtCommonName}.CopyFieldsFrom{loquiGen.GetGenericTypes(MaskType.Normal, MaskType.Error, MaskType.Copy)}"))
+                        $"{itemAccessor.DirectAccess}.CopyFieldsFrom{loquiGen.GetGenericTypes(MaskType.Error, MaskType.Copy)}"))
                     {
-                        args.Add($"item: {itemAccessor.DirectAccess}");
                         args.Add($"rhs: tmp{typeGen.Name}");
                         args.Add("def: null");
                         args.Add("cmds: null");
@@ -186,44 +178,27 @@ namespace Mutagen.Bethesda.Generation
         {
             var targetLoquiGen = targetGen as LoquiType;
             var loquiGen = typeGen as LoquiType;
-            if (loquiGen.TargetObjectGeneration != null)
+            var data = loquiGen.GetFieldData();
+            using (var args = new ArgsWrapper(fg,
+                $"{retAccessor.DirectAccess}LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.Mask(MaskType.Error)}>.Instance.Parse",
+                suffixLine: (targetGen == typeGen ? string.Empty : $".Bubble<{typeGen.TypeName}, {targetGen.TypeName}>()")))
             {
-                var data = loquiGen.GetFieldData();
-                using (var args = new ArgsWrapper(fg,
-                    $"{retAccessor.DirectAccess}LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.Mask(MaskType.Error)}>.Instance.Parse",
-                    suffixLine: (targetGen == typeGen ? string.Empty : $".Bubble<{typeGen.TypeName}, {targetGen.TypeName}>()")))
+                args.Add($"frame: {readerAccessor}.Spawn(snapToFinalPosition: false)");
+                if (loquiGen.HasIndex)
                 {
-                    args.Add($"frame: {readerAccessor}{(loquiGen.TargetObjectGeneration.GetObjectType() == ObjectType.Subrecord ? ".Spawn(snapToFinalPosition: false)" : null)}");
-                    if (loquiGen.HasIndex)
-                    {
-                        args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                        args.Add($"errorMask: {maskAccessor}");
-                    }
-                    else
-                    {
-                        args.Add($"doMasks: {doMaskAccessor}");
-                        args.Add($"errorMask: out {maskAccessor}");
-                    }
-                    if (data?.RecordTypeConverter != null
-                        && data.RecordTypeConverter.FromConversions.Count > 0)
-                    {
-                        args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
-                    }
+                    args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
+                    args.Add($"errorMask: {maskAccessor}");
                 }
-            }
-            else
-            {
-                UnsafeXmlTranslationGeneration unsafeXml = new UnsafeXmlTranslationGeneration()
+                else
                 {
-                    ErrMaskString = $"MaskItem<Exception, {loquiGen.Mask(MaskType.Error)}>"
-                };
-                unsafeXml.GenerateCopyInRet(
-                    fg: fg,
-                    typeGen: typeGen,
-                    nodeAccessor: readerAccessor,
-                    retAccessor: retAccessor,
-                    doMaskAccessor: doMaskAccessor,
-                    maskAccessor: maskAccessor);
+                    args.Add($"doMasks: {doMaskAccessor}");
+                    args.Add($"errorMask: out {maskAccessor}");
+                }
+                if (data?.RecordTypeConverter != null
+                    && data.RecordTypeConverter.FromConversions.Count > 0)
+                {
+                    args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
+                }
             }
         }
     }

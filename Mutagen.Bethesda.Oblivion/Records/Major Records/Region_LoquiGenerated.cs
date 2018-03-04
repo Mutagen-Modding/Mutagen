@@ -27,7 +27,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Region : MajorRecord, IRegion, ILoquiObjectSetter, IEquatable<Region>
+    public partial class Region : MajorRecord, IRegion, ILoquiObject<Region>, ILoquiObjectSetter, IEquatable<Region>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Region_Registration.Instance;
@@ -180,6 +180,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Region>.GetEqualsMask(Region rhs) => RegionCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IRegionGetter>.GetEqualsMask(IRegionGetter rhs) => RegionCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -202,6 +204,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Region_Mask<bool> GetHasBeenSetMask()
         {
             return RegionCommon.GetHasBeenSetMask(this);
@@ -1097,31 +1100,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Region_CopyMask copyMask = null,
-            IRegionGetter def = null)
-            where CopyType : class, IRegion
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Region)))
-            {
-                ret = new Region() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Region Copy_ToLoqui(
             IRegionGetter item,
             Region_CopyMask copyMask = null,
@@ -1141,6 +1119,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IRegionGetter rhs,
+            Region_CopyMask copyMask,
+            IRegionGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IRegionGetter rhs,
+            out Region_ErrorMask errorMask,
+            Region_CopyMask copyMask = null,
+            IRegionGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Region_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Region_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            RegionCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1278,7 +1299,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IRegion : IRegionGetter, IMajorRecord, ILoquiClass<IRegion, IRegionGetter>, ILoquiClass<Region, IRegionGetter>
+    public partial interface IRegion : IRegionGetter, IMajorRecord, ILoquiClass<IRegion, IRegionGetter>, ILoquiClass<Region, IRegionGetter>
     {
         new FilePath Icon { get; set; }
         new INotifyingSetItem<FilePath> Icon_Property { get; }
@@ -1305,7 +1326,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IRegionGetter : IMajorRecordGetter
+    public partial interface IRegionGetter : IMajorRecordGetter
     {
         #region Icon
         FilePath Icon { get; }
@@ -1646,75 +1667,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IRegion item,
-            IRegionGetter rhs,
-            Region_CopyMask copyMask = null,
-            IRegionGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            RegionCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IRegion item,
-            IRegionGetter rhs,
-            out Region_ErrorMask errorMask,
-            Region_CopyMask copyMask = null,
-            IRegionGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            RegionCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IRegion item,
+            IRegion item,
             IRegionGetter rhs,
             IRegionGetter def,
             bool doMasks,
-            out Region_ErrorMask errorMask,
-            Region_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Region_ErrorMask retErrorMask = null;
-            Func<Region_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Region_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IRegion item,
-            IRegionGetter rhs,
-            IRegionGetter def,
-            bool doMasks,
-            Func<Region_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Region_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1826,11 +1783,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<RegionDataObjects_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Objects.Specific == null)
-                                            {
-                                                baseMask.Objects = new MaskItem<Exception, RegionDataObjects_ErrorMask>(null, new RegionDataObjects_ErrorMask());
-                                            }
-                                            return baseMask.Objects.Specific;
+                                            var mask = new RegionDataObjects_ErrorMask();
+                                            baseMask.SetNthMask((int)Region_FieldIndex.Objects, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Objects.Specific,
@@ -1877,11 +1832,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<RegionDataWeather_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Weather.Specific == null)
-                                            {
-                                                baseMask.Weather = new MaskItem<Exception, RegionDataWeather_ErrorMask>(null, new RegionDataWeather_ErrorMask());
-                                            }
-                                            return baseMask.Weather.Specific;
+                                            var mask = new RegionDataWeather_ErrorMask();
+                                            baseMask.SetNthMask((int)Region_FieldIndex.Weather, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Weather.Specific,
@@ -1928,11 +1881,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<RegionDataMapName_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.MapName.Specific == null)
-                                            {
-                                                baseMask.MapName = new MaskItem<Exception, RegionDataMapName_ErrorMask>(null, new RegionDataMapName_ErrorMask());
-                                            }
-                                            return baseMask.MapName.Specific;
+                                            var mask = new RegionDataMapName_ErrorMask();
+                                            baseMask.SetNthMask((int)Region_FieldIndex.MapName, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.MapName.Specific,
@@ -1979,11 +1930,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<RegionDataGrasses_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Grasses.Specific == null)
-                                            {
-                                                baseMask.Grasses = new MaskItem<Exception, RegionDataGrasses_ErrorMask>(null, new RegionDataGrasses_ErrorMask());
-                                            }
-                                            return baseMask.Grasses.Specific;
+                                            var mask = new RegionDataGrasses_ErrorMask();
+                                            baseMask.SetNthMask((int)Region_FieldIndex.Grasses, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Grasses.Specific,
@@ -2030,11 +1979,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<RegionDataSounds_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Sounds.Specific == null)
-                                            {
-                                                baseMask.Sounds = new MaskItem<Exception, RegionDataSounds_ErrorMask>(null, new RegionDataSounds_ErrorMask());
-                                            }
-                                            return baseMask.Sounds.Specific;
+                                            var mask = new RegionDataSounds_ErrorMask();
+                                            baseMask.SetNthMask((int)Region_FieldIndex.Sounds, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Sounds.Specific,
@@ -2246,7 +2193,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.Areas.Specific = item.Areas.SelectAgainst<RegionArea, MaskItem<bool, RegionArea_Mask<bool>>>(rhs.Areas, ((l, r) =>
                     {
                         MaskItem<bool, RegionArea_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => RegionAreaCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
                     ), out ret.Areas.Overall);
@@ -2263,11 +2210,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Areas = new MaskItem<bool, IEnumerable<MaskItem<bool, RegionArea_Mask<bool>>>>();
                 ret.Areas.Overall = false;
             }
-            ret.Objects = item.Objects_Property.LoquiEqualsHelper(rhs.Objects_Property, (loqLhs, loqRhs) => RegionDataObjectsCommon.GetEqualsMask(loqLhs, loqRhs));
-            ret.Weather = item.Weather_Property.LoquiEqualsHelper(rhs.Weather_Property, (loqLhs, loqRhs) => RegionDataWeatherCommon.GetEqualsMask(loqLhs, loqRhs));
-            ret.MapName = item.MapName_Property.LoquiEqualsHelper(rhs.MapName_Property, (loqLhs, loqRhs) => RegionDataMapNameCommon.GetEqualsMask(loqLhs, loqRhs));
-            ret.Grasses = item.Grasses_Property.LoquiEqualsHelper(rhs.Grasses_Property, (loqLhs, loqRhs) => RegionDataGrassesCommon.GetEqualsMask(loqLhs, loqRhs));
-            ret.Sounds = item.Sounds_Property.LoquiEqualsHelper(rhs.Sounds_Property, (loqLhs, loqRhs) => RegionDataSoundsCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Objects = item.Objects_Property.LoquiEqualsHelper(rhs.Objects_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Weather = item.Weather_Property.LoquiEqualsHelper(rhs.Weather_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.MapName = item.MapName_Property.LoquiEqualsHelper(rhs.MapName_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Grasses = item.Grasses_Property.LoquiEqualsHelper(rhs.Grasses_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Sounds = item.Sounds_Property.LoquiEqualsHelper(rhs.Sounds_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 

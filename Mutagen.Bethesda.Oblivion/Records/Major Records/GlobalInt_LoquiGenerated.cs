@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class GlobalInt : Global, IGlobalInt, ILoquiObjectSetter, IEquatable<GlobalInt>
+    public partial class GlobalInt : Global, IGlobalInt, ILoquiObject<GlobalInt>, ILoquiObjectSetter, IEquatable<GlobalInt>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalInt_Registration.Instance;
@@ -72,6 +72,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<GlobalInt>.GetEqualsMask(GlobalInt rhs) => GlobalIntCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IGlobalIntGetter>.GetEqualsMask(IGlobalIntGetter rhs) => GlobalIntCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -94,6 +96,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new GlobalInt_Mask<bool> GetHasBeenSetMask()
         {
             return GlobalIntCommon.GetHasBeenSetMask(this);
@@ -788,31 +791,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            GlobalInt_CopyMask copyMask = null,
-            IGlobalIntGetter def = null)
-            where CopyType : class, IGlobalInt
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(GlobalInt)))
-            {
-                ret = new GlobalInt() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static GlobalInt Copy_ToLoqui(
             IGlobalIntGetter item,
             GlobalInt_CopyMask copyMask = null,
@@ -832,6 +810,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IGlobalIntGetter rhs,
+            GlobalInt_CopyMask copyMask,
+            IGlobalIntGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IGlobalIntGetter rhs,
+            out GlobalInt_ErrorMask errorMask,
+            GlobalInt_CopyMask copyMask = null,
+            IGlobalIntGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            GlobalInt_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new GlobalInt_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            GlobalIntCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -885,11 +906,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IGlobalInt : IGlobalIntGetter, IGlobal, ILoquiClass<IGlobalInt, IGlobalIntGetter>, ILoquiClass<GlobalInt, IGlobalIntGetter>
+    public partial interface IGlobalInt : IGlobalIntGetter, IGlobal, ILoquiClass<IGlobalInt, IGlobalIntGetter>, ILoquiClass<GlobalInt, IGlobalIntGetter>
     {
     }
 
-    public interface IGlobalIntGetter : IGlobalGetter
+    public partial interface IGlobalIntGetter : IGlobalGetter
     {
         #region Data
         Int32 Data { get; }
@@ -1090,75 +1111,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IGlobalInt item,
-            IGlobalIntGetter rhs,
-            GlobalInt_CopyMask copyMask = null,
-            IGlobalIntGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            GlobalIntCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IGlobalInt item,
-            IGlobalIntGetter rhs,
-            out GlobalInt_ErrorMask errorMask,
-            GlobalInt_CopyMask copyMask = null,
-            IGlobalIntGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            GlobalIntCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IGlobalInt item,
+            IGlobalInt item,
             IGlobalIntGetter rhs,
             IGlobalIntGetter def,
             bool doMasks,
-            out GlobalInt_ErrorMask errorMask,
-            GlobalInt_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            GlobalInt_ErrorMask retErrorMask = null;
-            Func<GlobalInt_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new GlobalInt_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IGlobalInt item,
-            IGlobalIntGetter rhs,
-            IGlobalIntGetter def,
-            bool doMasks,
-            Func<GlobalInt_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             GlobalInt_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {

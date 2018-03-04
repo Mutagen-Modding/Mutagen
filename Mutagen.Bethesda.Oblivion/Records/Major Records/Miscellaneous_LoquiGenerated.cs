@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Miscellaneous : NamedMajorRecord, IMiscellaneous, ILoquiObjectSetter, IEquatable<Miscellaneous>
+    public partial class Miscellaneous : NamedMajorRecord, IMiscellaneous, ILoquiObject<Miscellaneous>, ILoquiObjectSetter, IEquatable<Miscellaneous>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Miscellaneous_Registration.Instance;
@@ -124,6 +124,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<Miscellaneous>.GetEqualsMask(Miscellaneous rhs) => MiscellaneousCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IMiscellaneousGetter>.GetEqualsMask(IMiscellaneousGetter rhs) => MiscellaneousCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -146,6 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public new Miscellaneous_Mask<bool> GetHasBeenSetMask()
         {
             return MiscellaneousCommon.GetHasBeenSetMask(this);
@@ -947,31 +950,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            Miscellaneous_CopyMask copyMask = null,
-            IMiscellaneousGetter def = null)
-            where CopyType : class, IMiscellaneous
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(Miscellaneous)))
-            {
-                ret = new Miscellaneous() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static Miscellaneous Copy_ToLoqui(
             IMiscellaneousGetter item,
             Miscellaneous_CopyMask copyMask = null,
@@ -991,6 +969,49 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            IMiscellaneousGetter rhs,
+            Miscellaneous_CopyMask copyMask,
+            IMiscellaneousGetter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            IMiscellaneousGetter rhs,
+            out Miscellaneous_ErrorMask errorMask,
+            Miscellaneous_CopyMask copyMask = null,
+            IMiscellaneousGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            Miscellaneous_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new Miscellaneous_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            MiscellaneousCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1092,7 +1113,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IMiscellaneous : IMiscellaneousGetter, INamedMajorRecord, ILoquiClass<IMiscellaneous, IMiscellaneousGetter>, ILoquiClass<Miscellaneous, IMiscellaneousGetter>
+    public partial interface IMiscellaneous : IMiscellaneousGetter, INamedMajorRecord, ILoquiClass<IMiscellaneous, IMiscellaneousGetter>, ILoquiClass<Miscellaneous, IMiscellaneousGetter>
     {
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
@@ -1109,7 +1130,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IMiscellaneousGetter : INamedMajorRecordGetter
+    public partial interface IMiscellaneousGetter : INamedMajorRecordGetter
     {
         #region Model
         Model Model { get; }
@@ -1382,75 +1403,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IMiscellaneous item,
-            IMiscellaneousGetter rhs,
-            Miscellaneous_CopyMask copyMask = null,
-            IMiscellaneousGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            MiscellaneousCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IMiscellaneous item,
-            IMiscellaneousGetter rhs,
-            out Miscellaneous_ErrorMask errorMask,
-            Miscellaneous_CopyMask copyMask = null,
-            IMiscellaneousGetter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            MiscellaneousCommon.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this IMiscellaneous item,
+            IMiscellaneous item,
             IMiscellaneousGetter rhs,
             IMiscellaneousGetter def,
             bool doMasks,
-            out Miscellaneous_ErrorMask errorMask,
-            Miscellaneous_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            Miscellaneous_ErrorMask retErrorMask = null;
-            Func<Miscellaneous_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Miscellaneous_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this IMiscellaneous item,
-            IMiscellaneousGetter rhs,
-            IMiscellaneousGetter def,
-            bool doMasks,
-            Func<Miscellaneous_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             Miscellaneous_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1485,11 +1442,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Model.Specific == null)
-                                            {
-                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                            }
-                                            return baseMask.Model.Specific;
+                                            var mask = new Model_ErrorMask();
+                                            baseMask.SetNthMask((int)Miscellaneous_FieldIndex.Model, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Model.Specific,
@@ -1701,7 +1656,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Miscellaneous_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
             ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
             ret.Value = item.Value == rhs.Value;

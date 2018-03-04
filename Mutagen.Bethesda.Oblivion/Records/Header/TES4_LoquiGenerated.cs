@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class TES4 : ITES4, ILoquiObjectSetter, IEquatable<TES4>
+    public partial class TES4 : ITES4, ILoquiObject<TES4>, ILoquiObjectSetter, IEquatable<TES4>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TES4_Registration.Instance;
@@ -176,6 +176,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> IEqualsMask<TES4>.GetEqualsMask(TES4 rhs) => TES4Common.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ITES4Getter>.GetEqualsMask(ITES4Getter rhs) => TES4Common.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
@@ -198,6 +200,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
         public TES4_Mask<bool> GetHasBeenSetMask()
         {
             return TES4Common.GetHasBeenSetMask(this);
@@ -1032,31 +1035,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CopyType CopyGeneric<CopyType>(
-            CopyType item,
-            TES4_CopyMask copyMask = null,
-            ITES4Getter def = null)
-            where CopyType : class, ITES4
-        {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(TES4)))
-            {
-                ret = new TES4() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
-            }
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                doMasks: false,
-                errorMask: null,
-                cmds: null,
-                def: def);
-            return ret;
-        }
-
         public static TES4 Copy_ToLoqui(
             ITES4Getter item,
             TES4_CopyMask copyMask = null,
@@ -1076,6 +1054,62 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public void CopyFieldsFrom(
+            ITES4Getter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ITES4Getter rhs,
+            TES4_CopyMask copyMask,
+            ITES4Getter def = null,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: rhs,
+                def: def,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: copyMask,
+                cmds: cmds);
+        }
+
+        public void CopyFieldsFrom(
+            ITES4Getter rhs,
+            out TES4_ErrorMask errorMask,
+            TES4_CopyMask copyMask = null,
+            ITES4Getter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            TES4_ErrorMask retErrorMask = null;
+            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
+            {
+                if (retErrorMask == null)
+                {
+                    retErrorMask = new TES4_ErrorMask();
+                }
+                return retErrorMask;
+            };
+            TES4Common.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                doMasks: true,
+                errorMask: maskGetter,
+                copyMask: copyMask,
+                cmds: cmds);
+            errorMask = retErrorMask;
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1200,7 +1234,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface ITES4 : ITES4Getter, ILoquiClass<ITES4, ITES4Getter>, ILoquiClass<TES4, ITES4Getter>
+    public partial interface ITES4 : ITES4Getter, ILoquiClass<ITES4, ITES4Getter>, ILoquiClass<TES4, ITES4Getter>
     {
         new Byte[] Fluff { get; set; }
         new INotifyingItem<Byte[]> Fluff_Property { get; }
@@ -1223,7 +1257,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<MasterReference> MasterReferences { get; }
     }
 
-    public interface ITES4Getter : ILoquiObject
+    public partial interface ITES4Getter : ILoquiObject
     {
         #region Fluff
         Byte[] Fluff { get; }
@@ -1526,75 +1560,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this ITES4 item,
-            ITES4Getter rhs,
-            TES4_CopyMask copyMask = null,
-            ITES4Getter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            TES4Common.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: false,
-                errorMask: null,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ITES4 item,
-            ITES4Getter rhs,
-            out TES4_ErrorMask errorMask,
-            TES4_CopyMask copyMask = null,
-            ITES4Getter def = null,
-            NotifyingFireParameters cmds = null)
-        {
-            TES4Common.CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: out errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
-        }
-
-        public static void CopyFieldsFrom(
-            this ITES4 item,
+            ITES4 item,
             ITES4Getter rhs,
             ITES4Getter def,
             bool doMasks,
-            out TES4_ErrorMask errorMask,
-            TES4_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
-        {
-            TES4_ErrorMask retErrorMask = null;
-            Func<TES4_ErrorMask> maskGetter = () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new TES4_ErrorMask();
-                }
-                return retErrorMask;
-            };
-            CopyFieldsFrom(
-                item: item,
-                rhs: rhs,
-                def: def,
-                doMasks: true,
-                errorMask: maskGetter,
-                copyMask: copyMask,
-                cmds: cmds);
-            errorMask = retErrorMask;
-        }
-
-        public static void CopyFieldsFrom(
-            this ITES4 item,
-            ITES4Getter rhs,
-            ITES4Getter def,
-            bool doMasks,
-            Func<TES4_ErrorMask> errorMask,
+            Func<IErrorMask> errorMask,
             TES4_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1635,11 +1605,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         errorMask: (doMasks ? new Func<Header_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Header.Specific == null)
-                                            {
-                                                baseMask.Header = new MaskItem<Exception, Header_ErrorMask>(null, new Header_ErrorMask());
-                                            }
-                                            return baseMask.Header.Specific;
+                                            var mask = new Header_ErrorMask();
+                                            baseMask.SetNthMask((int)TES4_FieldIndex.Header, mask);
+                                            return mask;
                                         }
                                         ) : null),
                                         copyMask: copyMask?.Header.Specific,
@@ -1909,7 +1877,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
-            ret.Header = item.Header_Property.LoquiEqualsHelper(rhs.Header_Property, (loqLhs, loqRhs) => HeaderCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Header = item.Header_Property.LoquiEqualsHelper(rhs.Header_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.TypeOffsets = item.TypeOffsets_Property.Equals(rhs.TypeOffsets_Property, (l, r) => l.EqualsFast(r));
             ret.Deleted = item.Deleted_Property.Equals(rhs.Deleted_Property, (l, r) => l.EqualsFast(r));
             ret.Author = item.Author_Property.Equals(rhs.Author_Property, (l, r) => object.Equals(l, r));
@@ -1922,7 +1890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.MasterReferences.Specific = item.MasterReferences.SelectAgainst<MasterReference, MaskItem<bool, MasterReference_Mask<bool>>>(rhs.MasterReferences, ((l, r) =>
                     {
                         MaskItem<bool, MasterReference_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => MasterReferenceCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
                     ), out ret.MasterReferences.Overall);
