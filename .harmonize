@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>f9e9ad707a6c7a06e42358f1abc1dc31a1c4e915</Sha>
+         <Sha>4a37b068d3ec2e62e19750bb89530b2c76fbdc85</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>02-24-2018 21:23:19</CommitDate>
-         <Description>P3Float and equals accessors</Description>
+         <CommitDate>03-04-2018 23:05:14</CommitDate>
+         <Description>Merge remote-tracking branch 'origin/Laptop' into Dev</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>047efcd5c5565ad2e1e6f1966728a87a3dcd7d44</Sha>
+         <Sha>562497bb9788dd170e1360d8a340e2c55a17d283</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>03-04-2018 22:35:48</CommitDate>
-         <Description>Bugfixes equals mask in a generic list</Description>
+         <CommitDate>03-04-2018 23:12:10</CommitDate>
+         <Description>Merge fix</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

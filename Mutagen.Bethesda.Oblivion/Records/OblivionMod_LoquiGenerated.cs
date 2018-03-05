@@ -1546,8 +1546,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        private Dictionary<FormID, MajorRecord> _majorRecords = new Dictionary<FormID, MajorRecord>();
-        public IEnumerable<MajorRecord> MajorRecords => _majorRecords.Values;
+        private NotifyingDictionary<FormID, MajorRecord> _majorRecords = new NotifyingDictionary<FormID, MajorRecord>();
+        public INotifyingDictionaryGetter<FormID, MajorRecord> MajorRecords => _majorRecords;
         public MajorRecord this[FormID id]
         {
             get => _majorRecords[id];
