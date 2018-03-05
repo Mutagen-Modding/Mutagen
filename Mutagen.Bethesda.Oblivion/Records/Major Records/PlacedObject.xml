@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="PlacedObject" baseClass="Bethesda.MajorRecord" recordType="REFR" objType="Record" GUID="7a559a46-7ef9-49e9-98c1-ec16c3df81f2" ID="121">
+  <Object name="PlacedObject" baseClass="Placed" recordType="REFR" objType="Record" GUID="7a559a46-7ef9-49e9-98c1-ec16c3df81f2" ID="121">
     <Fields>
       <FormIDLink name="Object" recordType="NAME" refName="Bethesda.MajorRecord" />
       <RefDirect name="TeleportDestination" recordType="XTEL" refName="TeleportDestination" />

@@ -39,7 +39,7 @@
       <Group name="Creatures" refName="Creature" />
       <Group name="LeveledCreatures" refName="LeveledCreature" />
       <Group name="SoulGems" refName="SoulGem" />
-      <Group name="Keys" refName="Key" />
+      <Group name="Keys" refName="Key" /> 
       <Group name="Potions" refName="Potion" />
       <Group name="Subspaces" refName="Subspace" />
       <Group name="SigilStones" refName="SigilStone" />
@@ -47,6 +47,11 @@
       <Group name="Weathers" refName="Weather" />
       <Group name="Climates" refName="Climate" />
       <Group name="Regions" refName="Region" />
+      <!--<Ref name="Cells" nullable="Singleton">
+        <Direct refName="Bethesda.ListGroup" >
+          <GenericSpecification Definition="Oblivion.CellGroup" TypeToSpecify="T" />
+        </Direct>
+      </Ref>-->
     </Fields>
   </Object>
 </Loqui>

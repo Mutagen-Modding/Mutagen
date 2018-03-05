@@ -1296,25 +1296,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Point = item.Point == rhs.Point;
-            if (item.Connections.HasBeenSet == rhs.Connections.HasBeenSet)
-            {
-                if (item.Connections.HasBeenSet)
-                {
-                    ret.Connections = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Connections.Specific = item.Connections.SelectAgainst<Int16, bool>(rhs.Connections, ((l, r) => object.Equals(l, r)), out ret.Connections.Overall);
-                    ret.Connections.Overall = ret.Connections.Overall && ret.Connections.Specific.All((b) => b);
-                }
-                else
-                {
-                    ret.Connections = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Connections.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Connections = new MaskItem<bool, IEnumerable<bool>>();
-                ret.Connections.Overall = false;
-            }
+            ret.Connections = new MaskItem<bool, IEnumerable<bool>>();
+            ret.Connections.Specific = item.Connections.SelectAgainst<Int16, bool>(rhs.Connections, ((l, r) => object.Equals(l, r)), out ret.Connections.Overall);
+            ret.Connections.Overall = ret.Connections.Overall && ret.Connections.Specific.All((b) => b);
         }
 
         public static string ToString(

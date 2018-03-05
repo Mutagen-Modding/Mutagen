@@ -3506,33 +3506,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, Relation_Mask<bool>>>>();
                 ret.Relations.Overall = false;
             }
-            if (item.SkillBoosts.HasBeenSet == rhs.SkillBoosts.HasBeenSet)
+            ret.SkillBoosts = new MaskItem<bool, IEnumerable<MaskItem<bool, SkillBoost_Mask<bool>>>>();
+            ret.SkillBoosts.Specific = item.SkillBoosts.SelectAgainst<SkillBoost, MaskItem<bool, SkillBoost_Mask<bool>>>(rhs.SkillBoosts, ((l, r) =>
             {
-                if (item.SkillBoosts.HasBeenSet)
-                {
-                    ret.SkillBoosts = new MaskItem<bool, IEnumerable<MaskItem<bool, SkillBoost_Mask<bool>>>>();
-                    ret.SkillBoosts.Specific = item.SkillBoosts.SelectAgainst<SkillBoost, MaskItem<bool, SkillBoost_Mask<bool>>>(rhs.SkillBoosts, ((l, r) =>
-                    {
-                        MaskItem<bool, SkillBoost_Mask<bool>> itemRet;
-                        itemRet = new MaskItem<bool, SkillBoost_Mask<bool>>();
-                        itemRet.Specific = SkillBoostCommon.GetEqualsMask(l, r);
-                        itemRet.Overall = itemRet.Specific.AllEqual((b) => b);
-                        return itemRet;
-                    }
-                    ), out ret.SkillBoosts.Overall);
-                    ret.SkillBoosts.Overall = ret.SkillBoosts.Overall && ret.SkillBoosts.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.SkillBoosts = new MaskItem<bool, IEnumerable<MaskItem<bool, SkillBoost_Mask<bool>>>>();
-                    ret.SkillBoosts.Overall = true;
-                }
+                MaskItem<bool, SkillBoost_Mask<bool>> itemRet;
+                itemRet = new MaskItem<bool, SkillBoost_Mask<bool>>();
+                itemRet.Specific = SkillBoostCommon.GetEqualsMask(l, r);
+                itemRet.Overall = itemRet.Specific.AllEqual((b) => b);
+                return itemRet;
             }
-            else
-            {
-                ret.SkillBoosts = new MaskItem<bool, IEnumerable<MaskItem<bool, SkillBoost_Mask<bool>>>>();
-                ret.SkillBoosts.Overall = false;
-            }
+            ), out ret.SkillBoosts.Overall);
+            ret.SkillBoosts.Overall = ret.SkillBoosts.Overall && ret.SkillBoosts.Specific.All((b) => b.Overall);
             ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
             ret.MaleHeight = item.MaleHeight == rhs.MaleHeight;
             ret.FemaleHeight = item.FemaleHeight == rhs.FemaleHeight;

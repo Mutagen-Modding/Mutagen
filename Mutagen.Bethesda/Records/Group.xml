@@ -1,20 +1,33 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Group" objType="Group" recordType="GRUP" GUID="35a37d0b-4676-4dba-9410-a5972e262f5d" ID="11">
-    <Generic name="T" isLoqui="true" >
+    <Generic name="T" isLoqui="true">
       <Where>IFormID</Where>
     </Generic>
     <Fields>
       <String name="ContainedRecordType" derivative="true" customBinary="true" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
       <ByteArray name="LastModified" length="4" nullable="NotNull" />
-      <Dict name="Items" lengthLength="4" >
-        <KeyedValue keyAccessor="FormID" keyType="FormID" >
+      <Dict name="Items" lengthLength="4">
+        <KeyedValue keyAccessor="FormID" keyType="FormID">
           <Ref>
             <Generic>T</Generic>
           </Ref>
         </KeyedValue>
       </Dict>
+    </Fields>
+  </Object>
+  <Object name="ListGroup" objType="Group" recordType="GRUP" GUID="e0e6ef16-9b52-4726-ba0d-7e7c9b0277cb" ID="12">
+    <Generic name="T" isLoqui="true" />
+    <Fields>
+      <String name="ContainedRecordType" derivative="true" customBinary="true" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <ByteArray name="LastModified" length="4" nullable="NotNull" />
+      <List name="Items" lengthLength="4" hasBeenSet="False">
+        <Ref>
+          <Generic>T</Generic>
+        </Ref>
+      </List>
     </Fields>
   </Object>
 </Loqui>

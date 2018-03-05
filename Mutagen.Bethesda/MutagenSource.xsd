@@ -139,6 +139,14 @@
       </xs:complexContent>
     </xs:complexType>
 
+    <xs:complexType name="List">
+      <xs:complexContent>
+        <xs:extension base="List">
+          <xs:attribute name="lengthLength" type="xs:byte" />
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+
     <xs:complexType name="Enum">
       <xs:complexContent>
         <xs:extension base="Enum">

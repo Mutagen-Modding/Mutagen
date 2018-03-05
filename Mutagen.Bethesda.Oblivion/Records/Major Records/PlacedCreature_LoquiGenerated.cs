@@ -26,7 +26,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class PlacedCreature : MajorRecord, IPlacedCreature, ILoquiObject<PlacedCreature>, ILoquiObjectSetter, IEquatable<PlacedCreature>
+    public partial class PlacedCreature : Placed, IPlacedCreature, ILoquiObject<PlacedCreature>, ILoquiObjectSetter, IEquatable<PlacedCreature>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedCreature_Registration.Instance;
@@ -408,6 +408,18 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_XML(
             XElement root,
+            out Placed_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out PlacedCreature_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
             out MajorRecord_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
@@ -591,7 +603,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 default:
-                    MajorRecord.Fill_XML_Internal(
+                    Placed.Fill_XML_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -784,6 +796,18 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_Binary(
             MutagenFrame frame,
+            out Placed_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_Binary(
+                frame: frame,
+                errorMask: out PlacedCreature_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        public override void CopyIn_Binary(
+            MutagenFrame frame,
             out MajorRecord_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
@@ -890,7 +914,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<PlacedCreature_ErrorMask> errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            Placed.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 errorMask: errorMask);
@@ -959,7 +983,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<PlacedCreature_FieldIndex?>.Succeed(PlacedCreature_FieldIndex.Rotation);
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return Placed.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         errorMask: errorMask).Bubble((i) => PlacedCreatureCommon.ConvertFieldIndex(i));
@@ -1130,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out PlacedCreature_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_Placed(obj, pair);
             }
             switch (enu)
             {
@@ -1182,7 +1206,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IPlacedCreature : IPlacedCreatureGetter, IMajorRecord, ILoquiClass<IPlacedCreature, IPlacedCreatureGetter>, ILoquiClass<PlacedCreature, IPlacedCreatureGetter>
+    public partial interface IPlacedCreature : IPlacedCreatureGetter, IPlaced, ILoquiClass<IPlacedCreature, IPlacedCreatureGetter>, ILoquiClass<PlacedCreature, IPlacedCreatureGetter>
     {
         new MajorRecord Object { get; set; }
         new Ownership Ownership { get; set; }
@@ -1205,7 +1229,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IPlacedCreatureGetter : IMajorRecordGetter
+    public partial interface IPlacedCreatureGetter : IPlacedGetter
     {
         #region Object
         MajorRecord Object { get; }
@@ -1344,7 +1368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.Rotation:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return Placed_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1363,7 +1387,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.Rotation:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return Placed_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1381,7 +1405,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.Rotation:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return Placed_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1405,7 +1429,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.Rotation:
                     return "Rotation";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return Placed_Registration.GetNthName(index);
             }
         }
 
@@ -1423,7 +1447,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.Rotation:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return Placed_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1441,7 +1465,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.Rotation:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return Placed_Registration.IsProtected(index);
             }
         }
 
@@ -1465,7 +1489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.Rotation:
                     return typeof(P3Float);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return Placed_Registration.GetNthType(index);
             }
         }
 
@@ -1523,7 +1547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PlacedCreature_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            PlacedCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1735,7 +1759,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Scale_Property.HasBeenSet = on;
                     break;
                 default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    PlacedCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -1770,7 +1794,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Rotation = default(P3Float);
                     break;
                 default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
+                    PlacedCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -1796,7 +1820,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.Scale:
                     return obj.Scale_Property.HasBeenSet;
                 default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
+                    return PlacedCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -1822,7 +1846,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.Rotation:
                     return obj.Rotation;
                 default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
+                    return PlacedCommon.GetNthObject(index, obj);
             }
         }
 
@@ -1861,7 +1885,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Scale = item.Scale_Property.Equals(rhs.Scale_Property, (l, r) => l == r);
             ret.Position = item.Position == rhs.Position;
             ret.Rotation = item.Rotation == rhs.Rotation;
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            PlacedCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -1948,6 +1972,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Position = true;
             ret.Rotation = true;
             return ret;
+        }
+
+        public static PlacedCreature_FieldIndex? ConvertFieldIndex(Placed_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static PlacedCreature_FieldIndex ConvertFieldIndex(Placed_FieldIndex index)
+        {
+            switch (index)
+            {
+                case Placed_FieldIndex.MajorRecordFlags:
+                    return (PlacedCreature_FieldIndex)((int)index);
+                case Placed_FieldIndex.FormID:
+                    return (PlacedCreature_FieldIndex)((int)index);
+                case Placed_FieldIndex.Version:
+                    return (PlacedCreature_FieldIndex)((int)index);
+                case Placed_FieldIndex.EditorID:
+                    return (PlacedCreature_FieldIndex)((int)index);
+                case Placed_FieldIndex.RecordType:
+                    return (PlacedCreature_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         public static PlacedCreature_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
@@ -2191,7 +2240,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Modules
 
     #region Mask
-    public class PlacedCreature_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<PlacedCreature_Mask<T>>
+    public class PlacedCreature_Mask<T> : Placed_Mask<T>, IMask<T>, IEquatable<PlacedCreature_Mask<T>>
     {
         #region Ctors
         public PlacedCreature_Mask()
@@ -2377,7 +2426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class PlacedCreature_ErrorMask : MajorRecord_ErrorMask, IErrorMask<PlacedCreature_ErrorMask>
+    public class PlacedCreature_ErrorMask : Placed_ErrorMask, IErrorMask<PlacedCreature_ErrorMask>
     {
         #region Members
         public Exception Object;
@@ -2530,7 +2579,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class PlacedCreature_CopyMask : MajorRecord_CopyMask
+    public class PlacedCreature_CopyMask : Placed_CopyMask
     {
         #region Members
         public bool Object;

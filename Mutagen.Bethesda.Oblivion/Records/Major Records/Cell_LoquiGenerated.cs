@@ -281,6 +281,55 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Ownership> ICellGetter.Ownership_Property => this.Ownership_Property;
         #endregion
+        #region PathGrid
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly INotifyingSetItem<PathGrid> _PathGrid = new NotifyingSetItem<PathGrid>();
+        public INotifyingSetItem<PathGrid> PathGrid_Property => this._PathGrid;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        PathGrid ICellGetter.PathGrid => this.PathGrid;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public PathGrid PathGrid { get => _PathGrid.Item; set => _PathGrid.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItem<PathGrid> ICell.PathGrid_Property => this.PathGrid_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<PathGrid> ICellGetter.PathGrid_Property => this.PathGrid_Property;
+        #endregion
+        #region Persistent
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly INotifyingList<Placed> _Persistent = new NotifyingList<Placed>();
+        public INotifyingList<Placed> Persistent => _Persistent;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IEnumerable<Placed> PersistentEnumerable
+        {
+            get => _Persistent;
+            set => _Persistent.SetTo(value);
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingList<Placed> ICell.Persistent => _Persistent;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingListGetter<Placed> ICellGetter.Persistent => _Persistent;
+        #endregion
+
+        #endregion
+        #region Temporary
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly INotifyingList<Placed> _Temporary = new NotifyingList<Placed>();
+        public INotifyingList<Placed> Temporary => _Temporary;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IEnumerable<Placed> TemporaryEnumerable
+        {
+            get => _Temporary;
+            set => _Temporary.SetTo(value);
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingList<Placed> ICell.Temporary => _Temporary;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingListGetter<Placed> ICellGetter.Temporary => _Temporary;
+        #endregion
+
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -389,6 +438,21 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!object.Equals(Ownership, rhs.Ownership)) return false;
             }
+            if (PathGrid_Property.HasBeenSet != rhs.PathGrid_Property.HasBeenSet) return false;
+            if (PathGrid_Property.HasBeenSet)
+            {
+                if (!object.Equals(PathGrid, rhs.PathGrid)) return false;
+            }
+            if (Persistent.HasBeenSet != rhs.Persistent.HasBeenSet) return false;
+            if (Persistent.HasBeenSet)
+            {
+                if (!Persistent.SequenceEqual(rhs.Persistent)) return false;
+            }
+            if (Temporary.HasBeenSet != rhs.Temporary.HasBeenSet) return false;
+            if (Temporary.HasBeenSet)
+            {
+                if (!Temporary.SequenceEqual(rhs.Temporary)) return false;
+            }
             return true;
         }
 
@@ -435,6 +499,18 @@ namespace Mutagen.Bethesda.Oblivion
             if (Ownership_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Ownership).CombineHashCode(ret);
+            }
+            if (PathGrid_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(PathGrid).CombineHashCode(ret);
+            }
+            if (Persistent.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Persistent).CombineHashCode(ret);
+            }
+            if (Temporary.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Temporary).CombineHashCode(ret);
             }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -863,6 +939,40 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Cell_FieldIndex.Ownership,
                         errorMask: errorMask));
                     break;
+                case "PathGrid":
+                    item._PathGrid.SetIfSucceeded(LoquiXmlTranslation<PathGrid, PathGrid_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Cell_FieldIndex.PathGrid,
+                        errorMask: errorMask));
+                    break;
+                case "Persistent":
+                    item._Persistent.SetIfSucceeded(ListXmlTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Cell_FieldIndex.Persistent,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
+                        {
+                            return LoquiXmlTranslation<Placed, Placed_ErrorMask>.Instance.Parse(
+                                root: r,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        ));
+                    break;
+                case "Temporary":
+                    item._Temporary.SetIfSucceeded(ListXmlTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Cell_FieldIndex.Temporary,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
+                        {
+                            return LoquiXmlTranslation<Placed, Placed_ErrorMask>.Instance.Parse(
+                                root: r,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        ));
+                    break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
                         item: item,
@@ -1155,6 +1265,27 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
+        static partial void FillBinary_CellContents_Custom(
+            MutagenFrame frame,
+            Cell item,
+            Func<Cell_ErrorMask> errorMask);
+
+        static partial void WriteBinary_CellContents_Custom(
+            MutagenWriter writer,
+            Cell item,
+            Func<Cell_ErrorMask> errorMask);
+
+        public static void WriteBinary_CellContents(
+            MutagenWriter writer,
+            Cell item,
+            Func<Cell_ErrorMask> errorMask)
+        {
+            WriteBinary_CellContents_Custom(
+                writer: writer,
+                item: item,
+                errorMask: errorMask);
+        }
+
         private static Cell Create_Binary_Internal(
             MutagenFrame frame,
             Func<Cell_ErrorMask> errorMask,
@@ -1178,6 +1309,10 @@ namespace Mutagen.Bethesda.Oblivion
             NamedMajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
+                errorMask: errorMask);
+            FillBinary_CellContents_Custom(
+                frame: frame,
+                item: item,
                 errorMask: errorMask);
         }
 
@@ -1498,6 +1633,17 @@ namespace Mutagen.Bethesda.Oblivion
                         (Ownership)obj,
                         cmds);
                     break;
+                case Cell_FieldIndex.PathGrid:
+                    this._PathGrid.Set(
+                        (PathGrid)obj,
+                        cmds);
+                    break;
+                case Cell_FieldIndex.Persistent:
+                    this._Persistent.SetTo((IEnumerable<Placed>)obj, cmds);
+                    break;
+                case Cell_FieldIndex.Temporary:
+                    this._Temporary.SetTo((IEnumerable<Placed>)obj, cmds);
+                    break;
                 default:
                     base.SetNthObject(index, obj, cmds);
                     break;
@@ -1612,6 +1758,17 @@ namespace Mutagen.Bethesda.Oblivion
                         (Ownership)pair.Value,
                         null);
                     break;
+                case Cell_FieldIndex.PathGrid:
+                    obj._PathGrid.Set(
+                        (PathGrid)pair.Value,
+                        null);
+                    break;
+                case Cell_FieldIndex.Persistent:
+                    obj._Persistent.SetTo((IEnumerable<Placed>)pair.Value, null);
+                    break;
+                case Cell_FieldIndex.Temporary:
+                    obj._Temporary.SetTo((IEnumerable<Placed>)pair.Value, null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -1672,6 +1829,11 @@ namespace Mutagen.Bethesda.Oblivion
         new Ownership Ownership { get; set; }
         new INotifyingSetItem<Ownership> Ownership_Property { get; }
 
+        new PathGrid PathGrid { get; set; }
+        new INotifyingSetItem<PathGrid> PathGrid_Property { get; }
+
+        new INotifyingList<Placed> Persistent { get; }
+        new INotifyingList<Placed> Temporary { get; }
     }
 
     public partial interface ICellGetter : INamedMajorRecordGetter
@@ -1759,6 +1921,17 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Ownership> Ownership_Property { get; }
 
         #endregion
+        #region PathGrid
+        PathGrid PathGrid { get; }
+        INotifyingSetItemGetter<PathGrid> PathGrid_Property { get; }
+
+        #endregion
+        #region Persistent
+        INotifyingListGetter<Placed> Persistent { get; }
+        #endregion
+        #region Temporary
+        INotifyingListGetter<Placed> Temporary { get; }
+        #endregion
 
     }
 
@@ -1794,6 +1967,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Climate = 20,
         Water = 21,
         Ownership = 22,
+        PathGrid = 23,
+        Persistent = 24,
+        Temporary = 25,
     }
     #endregion
 
@@ -1811,7 +1987,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "d54abb07-d896-4ddb-b857-9b9df945dd1e";
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(Cell_Mask<>);
 
@@ -1873,6 +2049,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Cell_FieldIndex.Water;
                 case "OWNERSHIP":
                     return (ushort)Cell_FieldIndex.Ownership;
+                case "PATHGRID":
+                    return (ushort)Cell_FieldIndex.PathGrid;
+                case "PERSISTENT":
+                    return (ushort)Cell_FieldIndex.Persistent;
+                case "TEMPORARY":
+                    return (ushort)Cell_FieldIndex.Temporary;
                 default:
                     return null;
             }
@@ -1884,6 +2066,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Cell_FieldIndex.Regions:
+                case Cell_FieldIndex.Persistent:
+                case Cell_FieldIndex.Temporary:
                     return true;
                 case Cell_FieldIndex.Flags:
                 case Cell_FieldIndex.Grid:
@@ -1901,6 +2085,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Climate:
                 case Cell_FieldIndex.Water:
                 case Cell_FieldIndex.Ownership:
+                case Cell_FieldIndex.PathGrid:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1913,6 +2098,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Cell_FieldIndex.Ownership:
+                case Cell_FieldIndex.PathGrid:
+                case Cell_FieldIndex.Persistent:
+                case Cell_FieldIndex.Temporary:
                     return true;
                 case Cell_FieldIndex.Flags:
                 case Cell_FieldIndex.Grid:
@@ -1958,6 +2146,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Climate:
                 case Cell_FieldIndex.Water:
                 case Cell_FieldIndex.Ownership:
+                case Cell_FieldIndex.PathGrid:
+                case Cell_FieldIndex.Persistent:
+                case Cell_FieldIndex.Temporary:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsSingleton(index);
@@ -2003,6 +2194,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Water";
                 case Cell_FieldIndex.Ownership:
                     return "Ownership";
+                case Cell_FieldIndex.PathGrid:
+                    return "PathGrid";
+                case Cell_FieldIndex.Persistent:
+                    return "Persistent";
+                case Cell_FieldIndex.Temporary:
+                    return "Temporary";
                 default:
                     return NamedMajorRecord_Registration.GetNthName(index);
             }
@@ -2030,6 +2227,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Climate:
                 case Cell_FieldIndex.Water:
                 case Cell_FieldIndex.Ownership:
+                case Cell_FieldIndex.PathGrid:
+                case Cell_FieldIndex.Persistent:
+                case Cell_FieldIndex.Temporary:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.IsNthDerivative(index);
@@ -2058,6 +2258,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Climate:
                 case Cell_FieldIndex.Water:
                 case Cell_FieldIndex.Ownership:
+                case Cell_FieldIndex.PathGrid:
+                case Cell_FieldIndex.Persistent:
+                case Cell_FieldIndex.Temporary:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.IsProtected(index);
@@ -2103,6 +2306,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(FormIDSetLink<Water>);
                 case Cell_FieldIndex.Ownership:
                     return typeof(Ownership);
+                case Cell_FieldIndex.PathGrid:
+                    return typeof(PathGrid);
+                case Cell_FieldIndex.Persistent:
+                    return typeof(NotifyingList<Placed>);
+                case Cell_FieldIndex.Temporary:
+                    return typeof(NotifyingList<Placed>);
                 default:
                     return NamedMajorRecord_Registration.GetNthType(index);
             }
@@ -2120,9 +2329,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType XOWN_HEADER = new RecordType("XOWN");
         public static readonly RecordType XRNK_HEADER = new RecordType("XRNK");
         public static readonly RecordType XGLB_HEADER = new RecordType("XGLB");
+        public static readonly RecordType PGRD_HEADER = new RecordType("PGRD");
+        public static readonly RecordType ACRE_HEADER = new RecordType("ACRE");
+        public static readonly RecordType REFR_HEADER = new RecordType("REFR");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = CELL_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 8;
+        public const int NumTypedFields = 11;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2453,6 +2665,119 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)Cell_FieldIndex.Ownership, ex);
                 }
             }
+            if (copyMask?.PathGrid.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.PathGrid_Property.SetToWithDefault(
+                        rhs.PathGrid_Property,
+                        def?.PathGrid_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.PathGrid.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    PathGridCommon.CopyFieldsFrom(
+                                        item: item.PathGrid,
+                                        rhs: rhs.PathGrid,
+                                        def: def?.PathGrid,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<PathGrid_ErrorMask>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            var mask = new PathGrid_ErrorMask();
+                                            baseMask.SetNthMask((int)Cell_FieldIndex.PathGrid, mask);
+                                            return mask;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.PathGrid.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(PathGrid);
+                                    return PathGrid.Copy(
+                                        r,
+                                        copyMask?.PathGrid?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.PathGrid?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Cell_FieldIndex.PathGrid, ex);
+                }
+            }
+            if (copyMask?.Persistent.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Persistent.SetToWithDefault(
+                        rhs: rhs.Persistent,
+                        def: def?.Persistent,
+                        cmds: cmds,
+                        converter: (r, d) =>
+                        {
+                            switch (copyMask?.Persistent.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Placed);
+                                    return Placed.Copy(
+                                        r,
+                                        copyMask?.Persistent?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Persistent.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Cell_FieldIndex.Persistent, ex);
+                }
+            }
+            if (copyMask?.Temporary.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Temporary.SetToWithDefault(
+                        rhs: rhs.Temporary,
+                        def: def?.Temporary,
+                        cmds: cmds,
+                        converter: (r, d) =>
+                        {
+                            switch (copyMask?.Temporary.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Placed);
+                                    return Placed.Copy(
+                                        r,
+                                        copyMask?.Temporary?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Temporary.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Cell_FieldIndex.Temporary, ex);
+                }
+            }
         }
 
         #endregion
@@ -2500,6 +2825,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Cell_FieldIndex.Ownership:
                     obj.Ownership_Property.HasBeenSet = on;
+                    break;
+                case Cell_FieldIndex.PathGrid:
+                    obj.PathGrid_Property.HasBeenSet = on;
+                    break;
+                case Cell_FieldIndex.Persistent:
+                    obj.Persistent.HasBeenSet = on;
+                    break;
+                case Cell_FieldIndex.Temporary:
+                    obj.Temporary.HasBeenSet = on;
                     break;
                 default:
                     NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
@@ -2566,6 +2900,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Ownership:
                     obj.Ownership_Property.Unset(cmds);
                     break;
+                case Cell_FieldIndex.PathGrid:
+                    obj.PathGrid_Property.Unset(cmds);
+                    break;
+                case Cell_FieldIndex.Persistent:
+                    obj.Persistent.Unset(cmds);
+                    break;
+                case Cell_FieldIndex.Temporary:
+                    obj.Temporary.Unset(cmds);
+                    break;
                 default:
                     NamedMajorRecordCommon.UnsetNthObject(index, obj);
                     break;
@@ -2605,6 +2948,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Water_Property.HasBeenSet;
                 case Cell_FieldIndex.Ownership:
                     return obj.Ownership_Property.HasBeenSet;
+                case Cell_FieldIndex.PathGrid:
+                    return obj.PathGrid_Property.HasBeenSet;
+                case Cell_FieldIndex.Persistent:
+                    return obj.Persistent.HasBeenSet;
+                case Cell_FieldIndex.Temporary:
+                    return obj.Temporary.HasBeenSet;
                 default:
                     return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -2651,6 +3000,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Water;
                 case Cell_FieldIndex.Ownership:
                     return obj.Ownership;
+                case Cell_FieldIndex.PathGrid:
+                    return obj.PathGrid;
+                case Cell_FieldIndex.Persistent:
+                    return obj.Persistent;
+                case Cell_FieldIndex.Temporary:
+                    return obj.Temporary;
                 default:
                     return NamedMajorRecordCommon.GetNthObject(index, obj);
             }
@@ -2677,6 +3032,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Climate_Property.Unset(cmds.ToUnsetParams());
             item.Water_Property.Unset(cmds.ToUnsetParams());
             item.Ownership_Property.Unset(cmds.ToUnsetParams());
+            item.PathGrid_Property.Unset(cmds.ToUnsetParams());
+            item.Persistent.Unset(cmds.ToUnsetParams());
+            item.Temporary.Unset(cmds.ToUnsetParams());
         }
 
         public static Cell_Mask<bool> GetEqualsMask(
@@ -2729,6 +3087,57 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Climate = item.Climate_Property.Equals(rhs.Climate_Property, (l, r) => l == r);
             ret.Water = item.Water_Property.Equals(rhs.Water_Property, (l, r) => l == r);
             ret.Ownership = item.Ownership_Property.LoquiEqualsHelper(rhs.Ownership_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.PathGrid = item.PathGrid_Property.LoquiEqualsHelper(rhs.PathGrid_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            if (item.Persistent.HasBeenSet == rhs.Persistent.HasBeenSet)
+            {
+                if (item.Persistent.HasBeenSet)
+                {
+                    ret.Persistent = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>();
+                    ret.Persistent.Specific = item.Persistent.SelectAgainst<Placed, MaskItem<bool, Placed_Mask<bool>>>(rhs.Persistent, ((l, r) =>
+                    {
+                        MaskItem<bool, Placed_Mask<bool>> itemRet;
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+                        return itemRet;
+                    }
+                    ), out ret.Persistent.Overall);
+                    ret.Persistent.Overall = ret.Persistent.Overall && ret.Persistent.Specific.All((b) => b.Overall);
+                }
+                else
+                {
+                    ret.Persistent = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>();
+                    ret.Persistent.Overall = true;
+                }
+            }
+            else
+            {
+                ret.Persistent = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>();
+                ret.Persistent.Overall = false;
+            }
+            if (item.Temporary.HasBeenSet == rhs.Temporary.HasBeenSet)
+            {
+                if (item.Temporary.HasBeenSet)
+                {
+                    ret.Temporary = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>();
+                    ret.Temporary.Specific = item.Temporary.SelectAgainst<Placed, MaskItem<bool, Placed_Mask<bool>>>(rhs.Temporary, ((l, r) =>
+                    {
+                        MaskItem<bool, Placed_Mask<bool>> itemRet;
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+                        return itemRet;
+                    }
+                    ), out ret.Temporary.Overall);
+                    ret.Temporary.Overall = ret.Temporary.Overall && ret.Temporary.Specific.All((b) => b.Overall);
+                }
+                else
+                {
+                    ret.Temporary = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>();
+                    ret.Temporary.Overall = true;
+                }
+            }
+            else
+            {
+                ret.Temporary = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>();
+                ret.Temporary.Overall = false;
+            }
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -2841,6 +3250,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Ownership?.ToString(fg, "Ownership");
                 }
+                if (printMask?.PathGrid?.Overall ?? true)
+                {
+                    item.PathGrid?.ToString(fg, "PathGrid");
+                }
+                if (printMask?.Persistent?.Overall ?? true)
+                {
+                    fg.AppendLine("Persistent =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        foreach (var subItem in item.Persistent)
+                        {
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                subItem?.ToString(fg, "Item");
+                            }
+                            fg.AppendLine("]");
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (printMask?.Temporary?.Overall ?? true)
+                {
+                    fg.AppendLine("Temporary =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        foreach (var subItem in item.Temporary)
+                        {
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                subItem?.ToString(fg, "Item");
+                            }
+                            fg.AppendLine("]");
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             fg.AppendLine("]");
         }
@@ -2858,6 +3307,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Water.HasValue && checkMask.Water.Value != item.Water_Property.HasBeenSet) return false;
             if (checkMask.Ownership.Overall.HasValue && checkMask.Ownership.Overall.Value != item.Ownership_Property.HasBeenSet) return false;
             if (checkMask.Ownership.Specific != null && (item.Ownership_Property.Item == null || !item.Ownership_Property.Item.HasBeenSet(checkMask.Ownership.Specific))) return false;
+            if (checkMask.PathGrid.Overall.HasValue && checkMask.PathGrid.Overall.Value != item.PathGrid_Property.HasBeenSet) return false;
+            if (checkMask.PathGrid.Specific != null && (item.PathGrid_Property.Item == null || !item.PathGrid_Property.Item.HasBeenSet(checkMask.PathGrid.Specific))) return false;
+            if (checkMask.Persistent.Overall.HasValue && checkMask.Persistent.Overall.Value != item.Persistent.HasBeenSet) return false;
+            if (checkMask.Temporary.Overall.HasValue && checkMask.Temporary.Overall.Value != item.Temporary.HasBeenSet) return false;
             return true;
         }
 
@@ -2881,6 +3334,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Climate = item.Climate_Property.HasBeenSet;
             ret.Water = item.Water_Property.HasBeenSet;
             ret.Ownership = new MaskItem<bool, Ownership_Mask<bool>>(item.Ownership_Property.HasBeenSet, OwnershipCommon.GetHasBeenSetMask(item.Ownership_Property.Item));
+            ret.PathGrid = new MaskItem<bool, PathGrid_Mask<bool>>(item.PathGrid_Property.HasBeenSet, PathGridCommon.GetHasBeenSetMask(item.PathGrid_Property.Item));
+            ret.Persistent = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>(item.Persistent.HasBeenSet, item.Persistent.Select((i) => new MaskItem<bool, Placed_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Temporary = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>(item.Temporary.HasBeenSet, item.Temporary.Select((i) => new MaskItem<bool, Placed_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -3103,6 +3559,53 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: nameof(item.Ownership),
                             fieldIndex: (int)Cell_FieldIndex.Ownership,
                             errorMask: errorMask);
+                    }
+                    if (item.PathGrid_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<PathGrid, PathGrid_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: item.PathGrid_Property,
+                            name: nameof(item.PathGrid),
+                            fieldIndex: (int)Cell_FieldIndex.PathGrid,
+                            errorMask: errorMask);
+                    }
+                    if (item.Persistent.HasBeenSet)
+                    {
+                        ListXmlTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Persistent),
+                            item: item.Persistent,
+                            fieldIndex: (int)Cell_FieldIndex.Persistent,
+                            errorMask: errorMask,
+                            transl: (Placed subItem, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
+                            {
+                                LoquiXmlTranslation<Placed, Placed_ErrorMask>.Instance.Write(
+                                    writer: writer,
+                                    item: subItem,
+                                    name: "Item",
+                                    doMasks: errorMask != null,
+                                    errorMask: out listSubMask);
+                            }
+                            );
+                    }
+                    if (item.Temporary.HasBeenSet)
+                    {
+                        ListXmlTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Temporary),
+                            item: item.Temporary,
+                            fieldIndex: (int)Cell_FieldIndex.Temporary,
+                            errorMask: errorMask,
+                            transl: (Placed subItem, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
+                            {
+                                LoquiXmlTranslation<Placed, Placed_ErrorMask>.Instance.Write(
+                                    writer: writer,
+                                    item: subItem,
+                                    name: "Item",
+                                    doMasks: errorMask != null,
+                                    errorMask: out listSubMask);
+                            }
+                            );
                     }
                 }
             }
@@ -3328,6 +3831,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Climate = initialValue;
             this.Water = initialValue;
             this.Ownership = new MaskItem<T, Ownership_Mask<T>>(initialValue, new Ownership_Mask<T>(initialValue));
+            this.PathGrid = new MaskItem<T, PathGrid_Mask<T>>(initialValue, new PathGrid_Mask<T>(initialValue));
+            this.Persistent = new MaskItem<T, IEnumerable<MaskItem<T, Placed_Mask<T>>>>(initialValue, null);
+            this.Temporary = new MaskItem<T, IEnumerable<MaskItem<T, Placed_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
@@ -3349,6 +3855,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T Climate;
         public T Water;
         public MaskItem<T, Ownership_Mask<T>> Ownership { get; set; }
+        public MaskItem<T, PathGrid_Mask<T>> PathGrid { get; set; }
+        public MaskItem<T, IEnumerable<MaskItem<T, Placed_Mask<T>>>> Persistent;
+        public MaskItem<T, IEnumerable<MaskItem<T, Placed_Mask<T>>>> Temporary;
         #endregion
 
         #region Equals
@@ -3379,6 +3888,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Climate, rhs.Climate)) return false;
             if (!object.Equals(this.Water, rhs.Water)) return false;
             if (!object.Equals(this.Ownership, rhs.Ownership)) return false;
+            if (!object.Equals(this.PathGrid, rhs.PathGrid)) return false;
+            if (!object.Equals(this.Persistent, rhs.Persistent)) return false;
+            if (!object.Equals(this.Temporary, rhs.Temporary)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -3401,6 +3913,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Climate?.GetHashCode());
             ret = ret.CombineHashCode(this.Water?.GetHashCode());
             ret = ret.CombineHashCode(this.Ownership?.GetHashCode());
+            ret = ret.CombineHashCode(this.PathGrid?.GetHashCode());
+            ret = ret.CombineHashCode(this.Persistent?.GetHashCode());
+            ret = ret.CombineHashCode(this.Temporary?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -3441,6 +3956,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!eval(this.Ownership.Overall)) return false;
                 if (this.Ownership.Specific != null && !this.Ownership.Specific.AllEqual(eval)) return false;
+            }
+            if (PathGrid != null)
+            {
+                if (!eval(this.PathGrid.Overall)) return false;
+                if (this.PathGrid.Specific != null && !this.PathGrid.Specific.AllEqual(eval)) return false;
+            }
+            if (this.Persistent != null)
+            {
+                if (!eval(this.Persistent.Overall)) return false;
+                if (this.Persistent.Specific != null)
+                {
+                    foreach (var item in this.Persistent.Specific)
+                    {
+                        if (!eval(item.Overall)) return false;
+                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                    }
+                }
+            }
+            if (this.Temporary != null)
+            {
+                if (!eval(this.Temporary.Overall)) return false;
+                if (this.Temporary.Specific != null)
+                {
+                    foreach (var item in this.Temporary.Specific)
+                    {
+                        if (!eval(item.Overall)) return false;
+                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                    }
+                }
             }
             return true;
         }
@@ -3497,6 +4041,63 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Ownership.Specific = this.Ownership.Specific.Translate(eval);
                 }
             }
+            if (this.PathGrid != null)
+            {
+                obj.PathGrid = new MaskItem<R, PathGrid_Mask<R>>();
+                obj.PathGrid.Overall = eval(this.PathGrid.Overall);
+                if (this.PathGrid.Specific != null)
+                {
+                    obj.PathGrid.Specific = this.PathGrid.Specific.Translate(eval);
+                }
+            }
+            if (Persistent != null)
+            {
+                obj.Persistent = new MaskItem<R, IEnumerable<MaskItem<R, Placed_Mask<R>>>>();
+                obj.Persistent.Overall = eval(this.Persistent.Overall);
+                if (Persistent.Specific != null)
+                {
+                    List<MaskItem<R, Placed_Mask<R>>> l = new List<MaskItem<R, Placed_Mask<R>>>();
+                    obj.Persistent.Specific = l;
+                    foreach (var item in Persistent.Specific)
+                    {
+                        MaskItem<R, Placed_Mask<R>> mask = default(MaskItem<R, Placed_Mask<R>>);
+                        if (item != null)
+                        {
+                            mask = new MaskItem<R, Placed_Mask<R>>();
+                            mask.Overall = eval(item.Overall);
+                            if (item.Specific != null)
+                            {
+                                mask.Specific = item.Specific.Translate(eval);
+                            }
+                        }
+                        l.Add(mask);
+                    }
+                }
+            }
+            if (Temporary != null)
+            {
+                obj.Temporary = new MaskItem<R, IEnumerable<MaskItem<R, Placed_Mask<R>>>>();
+                obj.Temporary.Overall = eval(this.Temporary.Overall);
+                if (Temporary.Specific != null)
+                {
+                    List<MaskItem<R, Placed_Mask<R>>> l = new List<MaskItem<R, Placed_Mask<R>>>();
+                    obj.Temporary.Specific = l;
+                    foreach (var item in Temporary.Specific)
+                    {
+                        MaskItem<R, Placed_Mask<R>> mask = default(MaskItem<R, Placed_Mask<R>>);
+                        if (item != null)
+                        {
+                            mask = new MaskItem<R, Placed_Mask<R>>();
+                            mask.Overall = eval(item.Overall);
+                            if (item.Specific != null)
+                            {
+                                mask.Specific = item.Specific.Translate(eval);
+                            }
+                        }
+                        l.Add(mask);
+                    }
+                }
+            }
         }
         #endregion
 
@@ -3505,6 +4106,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             base.ClearEnumerables();
             this.Regions.Specific = null;
+            this.Persistent.Specific = null;
+            this.Temporary.Specific = null;
         }
         #endregion
 
@@ -3616,6 +4219,60 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Ownership?.ToString(fg);
                 }
+                if (printMask?.PathGrid?.Overall ?? true)
+                {
+                    PathGrid?.ToString(fg);
+                }
+                if (printMask?.Persistent?.Overall ?? true)
+                {
+                    fg.AppendLine("Persistent =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        if (Persistent.Overall != null)
+                        {
+                            fg.AppendLine(Persistent.Overall.ToString());
+                        }
+                        if (Persistent.Specific != null)
+                        {
+                            foreach (var subItem in Persistent.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (printMask?.Temporary?.Overall ?? true)
+                {
+                    fg.AppendLine("Temporary =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        if (Temporary.Overall != null)
+                        {
+                            fg.AppendLine(Temporary.Overall.ToString());
+                        }
+                        if (Temporary.Specific != null)
+                        {
+                            foreach (var subItem in Temporary.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             fg.AppendLine("]");
         }
@@ -3643,6 +4300,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception Climate;
         public Exception Water;
         public MaskItem<Exception, Ownership_ErrorMask> Ownership;
+        public MaskItem<Exception, PathGrid_ErrorMask> PathGrid;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>> Persistent;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>> Temporary;
         #endregion
 
         #region IErrorMask
@@ -3701,6 +4361,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Cell_FieldIndex.Ownership:
                     this.Ownership = new MaskItem<Exception, Ownership_ErrorMask>(ex, null);
+                    break;
+                case Cell_FieldIndex.PathGrid:
+                    this.PathGrid = new MaskItem<Exception, PathGrid_ErrorMask>(ex, null);
+                    break;
+                case Cell_FieldIndex.Persistent:
+                    this.Persistent = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>>(ex, null);
+                    break;
+                case Cell_FieldIndex.Temporary:
+                    this.Temporary = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>>(ex, null);
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -3764,6 +4433,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Ownership:
                     this.Ownership = (MaskItem<Exception, Ownership_ErrorMask>)obj;
                     break;
+                case Cell_FieldIndex.PathGrid:
+                    this.PathGrid = (MaskItem<Exception, PathGrid_ErrorMask>)obj;
+                    break;
+                case Cell_FieldIndex.Persistent:
+                    this.Persistent = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>>)obj;
+                    break;
+                case Cell_FieldIndex.Temporary:
+                    this.Temporary = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>>)obj;
+                    break;
                 default:
                     base.SetNthMask(index, obj);
                     break;
@@ -3790,6 +4468,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Climate != null) return true;
             if (Water != null) return true;
             if (Ownership != null) return true;
+            if (PathGrid != null) return true;
+            if (Persistent != null) return true;
+            if (Temporary != null) return true;
             return false;
         }
         #endregion
@@ -3863,6 +4544,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine($"Climate => {Climate}");
             fg.AppendLine($"Water => {Water}");
             Ownership?.ToString(fg);
+            PathGrid?.ToString(fg);
+            fg.AppendLine("Persistent =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (Persistent.Overall != null)
+                {
+                    fg.AppendLine(Persistent.Overall.ToString());
+                }
+                if (Persistent.Specific != null)
+                {
+                    foreach (var subItem in Persistent.Specific)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+            }
+            fg.AppendLine("]");
+            fg.AppendLine("Temporary =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (Temporary.Overall != null)
+                {
+                    fg.AppendLine(Temporary.Overall.ToString());
+                }
+                if (Temporary.Specific != null)
+                {
+                    foreach (var subItem in Temporary.Specific)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+            }
+            fg.AppendLine("]");
         }
         #endregion
 
@@ -3887,6 +4613,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Climate = this.Climate.Combine(rhs.Climate);
             ret.Water = this.Water.Combine(rhs.Water);
             ret.Ownership = new MaskItem<Exception, Ownership_ErrorMask>(this.Ownership.Overall.Combine(rhs.Ownership.Overall), ((IErrorMask<Ownership_ErrorMask>)this.Ownership.Specific).Combine(rhs.Ownership.Specific));
+            ret.PathGrid = new MaskItem<Exception, PathGrid_ErrorMask>(this.PathGrid.Overall.Combine(rhs.PathGrid.Overall), ((IErrorMask<PathGrid_ErrorMask>)this.PathGrid.Specific).Combine(rhs.PathGrid.Specific));
+            ret.Persistent = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>>(this.Persistent.Overall.Combine(rhs.Persistent.Overall), new List<MaskItem<Exception, Placed_ErrorMask>>(this.Persistent.Specific.And(rhs.Persistent.Specific)));
+            ret.Temporary = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>>(this.Temporary.Overall.Combine(rhs.Temporary.Overall), new List<MaskItem<Exception, Placed_ErrorMask>>(this.Temporary.Specific.And(rhs.Temporary.Specific)));
             return ret;
         }
         public static Cell_ErrorMask Combine(Cell_ErrorMask lhs, Cell_ErrorMask rhs)
@@ -3917,6 +4646,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Climate;
         public bool Water;
         public MaskItem<CopyOption, Ownership_CopyMask> Ownership;
+        public MaskItem<CopyOption, PathGrid_CopyMask> PathGrid;
+        public MaskItem<CopyOption, Placed_CopyMask> Persistent;
+        public MaskItem<CopyOption, Placed_CopyMask> Temporary;
         #endregion
 
     }

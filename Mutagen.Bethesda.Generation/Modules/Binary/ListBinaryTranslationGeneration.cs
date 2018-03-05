@@ -176,7 +176,11 @@ namespace Mutagen.Bethesda.Generation
                     throw new NotImplementedException();
                 }
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                if (!list.MaxValue.HasValue)
+                if (list.CustomData.TryGetValue("lengthLength", out object len))
+                {
+                    args.Add($"lengthLength: new ContentLength({len})");
+                }
+                else if (!list.MaxValue.HasValue)
                 {
                     if (list.SubTypeGeneration is LoquiType loqui)
                     {

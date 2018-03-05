@@ -1936,45 +1936,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Description = item.Description_Property.Equals(rhs.Description_Property, (l, r) => object.Equals(l, r));
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
-            if (item.PrimaryAttributes.HasBeenSet == rhs.PrimaryAttributes.HasBeenSet)
-            {
-                if (item.PrimaryAttributes.HasBeenSet)
-                {
-                    ret.PrimaryAttributes = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.PrimaryAttributes.Specific = item.PrimaryAttributes.SelectAgainst<ActorValue, bool>(rhs.PrimaryAttributes, ((l, r) => object.Equals(l, r)), out ret.PrimaryAttributes.Overall);
-                    ret.PrimaryAttributes.Overall = ret.PrimaryAttributes.Overall && ret.PrimaryAttributes.Specific.All((b) => b);
-                }
-                else
-                {
-                    ret.PrimaryAttributes = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.PrimaryAttributes.Overall = true;
-                }
-            }
-            else
-            {
-                ret.PrimaryAttributes = new MaskItem<bool, IEnumerable<bool>>();
-                ret.PrimaryAttributes.Overall = false;
-            }
+            ret.PrimaryAttributes = new MaskItem<bool, IEnumerable<bool>>();
+            ret.PrimaryAttributes.Specific = item.PrimaryAttributes.SelectAgainst<ActorValue, bool>(rhs.PrimaryAttributes, ((l, r) => object.Equals(l, r)), out ret.PrimaryAttributes.Overall);
+            ret.PrimaryAttributes.Overall = ret.PrimaryAttributes.Overall && ret.PrimaryAttributes.Specific.All((b) => b);
             ret.Specialization = item.Specialization == rhs.Specialization;
-            if (item.SecondaryAttributes.HasBeenSet == rhs.SecondaryAttributes.HasBeenSet)
-            {
-                if (item.SecondaryAttributes.HasBeenSet)
-                {
-                    ret.SecondaryAttributes = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.SecondaryAttributes.Specific = item.SecondaryAttributes.SelectAgainst<ActorValue, bool>(rhs.SecondaryAttributes, ((l, r) => object.Equals(l, r)), out ret.SecondaryAttributes.Overall);
-                    ret.SecondaryAttributes.Overall = ret.SecondaryAttributes.Overall && ret.SecondaryAttributes.Specific.All((b) => b);
-                }
-                else
-                {
-                    ret.SecondaryAttributes = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.SecondaryAttributes.Overall = true;
-                }
-            }
-            else
-            {
-                ret.SecondaryAttributes = new MaskItem<bool, IEnumerable<bool>>();
-                ret.SecondaryAttributes.Overall = false;
-            }
+            ret.SecondaryAttributes = new MaskItem<bool, IEnumerable<bool>>();
+            ret.SecondaryAttributes.Specific = item.SecondaryAttributes.SelectAgainst<ActorValue, bool>(rhs.SecondaryAttributes, ((l, r) => object.Equals(l, r)), out ret.SecondaryAttributes.Overall);
+            ret.SecondaryAttributes.Overall = ret.SecondaryAttributes.Overall && ret.SecondaryAttributes.Specific.All((b) => b);
             ret.Flags = item.Flags == rhs.Flags;
             ret.ClassServices = item.ClassServices == rhs.ClassServices;
             ret.Training = new MaskItem<bool, ClassTraining_Mask<bool>>();

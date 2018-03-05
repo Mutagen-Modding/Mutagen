@@ -1010,8 +1010,6 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
         public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
         public static readonly RecordType PGRD_HEADER = new RecordType("PGRD");
-        public static readonly RecordType ACRE_HEADER = new RecordType("ACRE");
-        public static readonly RecordType REFR_HEADER = new RecordType("REFR");
         public static readonly RecordType REGN_HEADER = new RecordType("REGN");
         public static readonly RecordType SCPT_HEADER = new RecordType("SCPT");
         public static readonly RecordType SKIL_HEADER = new RecordType("SKIL");
@@ -1053,6 +1051,8 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
         public static readonly RecordType LVLC_HEADER = new RecordType("LVLC");
+        public static readonly RecordType ACRE_HEADER = new RecordType("ACRE");
+        public static readonly RecordType REFR_HEADER = new RecordType("REFR");
         public static readonly RecordType EDID_HEADER = new RecordType("EDID");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
@@ -1073,8 +1073,6 @@ namespace Mutagen.Bethesda.Internals
                         LVLI_HEADER,
                         LIGH_HEADER,
                         PGRD_HEADER,
-                        ACRE_HEADER,
-                        REFR_HEADER,
                         REGN_HEADER,
                         SCPT_HEADER,
                         SKIL_HEADER,
@@ -1115,7 +1113,9 @@ namespace Mutagen.Bethesda.Internals
                         LVSP_HEADER,
                         SPEL_HEADER,
                         AMMO_HEADER,
-                        LVLC_HEADER
+                        LVLC_HEADER,
+                        ACRE_HEADER,
+                        REFR_HEADER
                     })
             );
         });

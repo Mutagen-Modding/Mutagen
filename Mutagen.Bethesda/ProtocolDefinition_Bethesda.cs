@@ -12,6 +12,7 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Bethesda.Internals.NamedMajorRecord_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Internals.MasterReference_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Internals.Group_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Internals.ListGroup_Registration.Instance);
         }
     }
 }
