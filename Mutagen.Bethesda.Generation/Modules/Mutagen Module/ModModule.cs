@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"if (t.Equals(typeof({subObj.Name})))");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine($"return (INotifyingKeyedCollection<FormID, T>){field.Name};");
+                        fg.AppendLine($"return (INotifyingKeyedCollection<FormID, T>){field.Name}.Items;");
                     }
                 }
                 fg.AppendLine("throw new ArgumentException($\"Unkown group type: {t}\");");

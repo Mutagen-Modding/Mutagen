@@ -1687,171 +1687,171 @@ namespace Mutagen.Bethesda.Oblivion
             var t = typeof(T);
             if (t.Equals(typeof(GameSetting)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)GameSettings;
+                return (INotifyingKeyedCollection<FormID, T>)GameSettings.Items;
             }
             if (t.Equals(typeof(Global)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Globals;
+                return (INotifyingKeyedCollection<FormID, T>)Globals.Items;
             }
             if (t.Equals(typeof(Class)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Classes;
+                return (INotifyingKeyedCollection<FormID, T>)Classes.Items;
             }
             if (t.Equals(typeof(Faction)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Factions;
+                return (INotifyingKeyedCollection<FormID, T>)Factions.Items;
             }
             if (t.Equals(typeof(Hair)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Hairs;
+                return (INotifyingKeyedCollection<FormID, T>)Hairs.Items;
             }
             if (t.Equals(typeof(Eye)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Eyes;
+                return (INotifyingKeyedCollection<FormID, T>)Eyes.Items;
             }
             if (t.Equals(typeof(Race)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Races;
+                return (INotifyingKeyedCollection<FormID, T>)Races.Items;
             }
             if (t.Equals(typeof(Sound)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Sounds;
+                return (INotifyingKeyedCollection<FormID, T>)Sounds.Items;
             }
             if (t.Equals(typeof(SkillRecord)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Skills;
+                return (INotifyingKeyedCollection<FormID, T>)Skills.Items;
             }
             if (t.Equals(typeof(MagicEffect)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)MagicEffects;
+                return (INotifyingKeyedCollection<FormID, T>)MagicEffects.Items;
             }
             if (t.Equals(typeof(Script)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Scripts;
+                return (INotifyingKeyedCollection<FormID, T>)Scripts.Items;
             }
             if (t.Equals(typeof(LandTexture)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)LandTextures;
+                return (INotifyingKeyedCollection<FormID, T>)LandTextures.Items;
             }
             if (t.Equals(typeof(Enchantment)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Enchantments;
+                return (INotifyingKeyedCollection<FormID, T>)Enchantments.Items;
             }
             if (t.Equals(typeof(SpellUnleveled)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Spells;
+                return (INotifyingKeyedCollection<FormID, T>)Spells.Items;
             }
             if (t.Equals(typeof(Birthsign)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Birthsigns;
+                return (INotifyingKeyedCollection<FormID, T>)Birthsigns.Items;
             }
             if (t.Equals(typeof(Activator)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Activators;
+                return (INotifyingKeyedCollection<FormID, T>)Activators.Items;
             }
             if (t.Equals(typeof(AlchemicalApparatus)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)AlchemicalApparatus;
+                return (INotifyingKeyedCollection<FormID, T>)AlchemicalApparatus.Items;
             }
             if (t.Equals(typeof(Armor)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Armors;
+                return (INotifyingKeyedCollection<FormID, T>)Armors.Items;
             }
             if (t.Equals(typeof(Book)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Books;
+                return (INotifyingKeyedCollection<FormID, T>)Books.Items;
             }
             if (t.Equals(typeof(Clothing)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Clothes;
+                return (INotifyingKeyedCollection<FormID, T>)Clothes.Items;
             }
             if (t.Equals(typeof(Container)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Containers;
+                return (INotifyingKeyedCollection<FormID, T>)Containers.Items;
             }
             if (t.Equals(typeof(Door)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Doors;
+                return (INotifyingKeyedCollection<FormID, T>)Doors.Items;
             }
             if (t.Equals(typeof(Ingredient)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Ingredients;
+                return (INotifyingKeyedCollection<FormID, T>)Ingredients.Items;
             }
             if (t.Equals(typeof(Light)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Lights;
+                return (INotifyingKeyedCollection<FormID, T>)Lights.Items;
             }
             if (t.Equals(typeof(Miscellaneous)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Miscellaneous;
+                return (INotifyingKeyedCollection<FormID, T>)Miscellaneous.Items;
             }
             if (t.Equals(typeof(Static)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Statics;
+                return (INotifyingKeyedCollection<FormID, T>)Statics.Items;
             }
             if (t.Equals(typeof(Grass)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Grasses;
+                return (INotifyingKeyedCollection<FormID, T>)Grasses.Items;
             }
             if (t.Equals(typeof(Tree)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Trees;
+                return (INotifyingKeyedCollection<FormID, T>)Trees.Items;
             }
             if (t.Equals(typeof(Flora)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Flora;
+                return (INotifyingKeyedCollection<FormID, T>)Flora.Items;
             }
             if (t.Equals(typeof(Furnature)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Furnature;
+                return (INotifyingKeyedCollection<FormID, T>)Furnature.Items;
             }
             if (t.Equals(typeof(Weapon)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Weapons;
+                return (INotifyingKeyedCollection<FormID, T>)Weapons.Items;
             }
             if (t.Equals(typeof(Ammo)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Ammo;
+                return (INotifyingKeyedCollection<FormID, T>)Ammo.Items;
             }
             if (t.Equals(typeof(NPC)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)NPCs;
+                return (INotifyingKeyedCollection<FormID, T>)NPCs.Items;
             }
             if (t.Equals(typeof(Creature)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Creatures;
+                return (INotifyingKeyedCollection<FormID, T>)Creatures.Items;
             }
             if (t.Equals(typeof(LeveledCreature)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)LeveledCreatures;
+                return (INotifyingKeyedCollection<FormID, T>)LeveledCreatures.Items;
             }
             if (t.Equals(typeof(SoulGem)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)SoulGems;
+                return (INotifyingKeyedCollection<FormID, T>)SoulGems.Items;
             }
             if (t.Equals(typeof(Key)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Keys;
+                return (INotifyingKeyedCollection<FormID, T>)Keys.Items;
             }
             if (t.Equals(typeof(Potion)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Potions;
+                return (INotifyingKeyedCollection<FormID, T>)Potions.Items;
             }
             if (t.Equals(typeof(Subspace)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Subspaces;
+                return (INotifyingKeyedCollection<FormID, T>)Subspaces.Items;
             }
             if (t.Equals(typeof(SigilStone)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)SigilStones;
+                return (INotifyingKeyedCollection<FormID, T>)SigilStones.Items;
             }
             if (t.Equals(typeof(LeveledItem)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)LeveledItems;
+                return (INotifyingKeyedCollection<FormID, T>)LeveledItems.Items;
             }
             if (t.Equals(typeof(Weather)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Weathers;
+                return (INotifyingKeyedCollection<FormID, T>)Weathers.Items;
             }
             throw new ArgumentException($"Unkown group type: {t}");
         }
@@ -2310,6 +2310,10 @@ namespace Mutagen.Bethesda.Oblivion
                             recordTypeConverter: recordTypeConverter);
                         if (parsed.Failed) break;
                     }
+                }
+                foreach (var link in ret.Links)
+                {
+                    link.Link(modList: null, sourceMod: ret);
                 }
             }
             catch (Exception ex)

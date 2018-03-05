@@ -778,9 +778,12 @@ namespace Mutagen.Bethesda.Oblivion
             }
             yield return Light_Property;
             yield return EffectShader_Property;
-            foreach (var item in SubData.Links)
+            if (SubData != null)
             {
-                yield return item;
+                foreach (var item in SubData.Links)
+                {
+                    yield return item;
+                }
             }
             yield break;
         }

@@ -57,5 +57,14 @@ namespace Mutagen.Bethesda
             this.EDID = new RecordType(item.Value);
             this.HasBeenSet = true;
         }
+
+        public override bool Link<M>(ModList<M> modList, M sourceMod, NotifyingFireParameters cmds = null)
+        {
+            if (this.UnlinkedForm.HasValue)
+            {
+                return base.Link(modList, sourceMod, cmds);
+            }
+            return EDIDLink<T>.TryLink(this, modList, sourceMod, cmds);
+        }
     }
 }

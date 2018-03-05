@@ -18,10 +18,5 @@ namespace Mutagen.Bethesda.Oblivion
                 new RecordType("WRLD"),
                 new RecordType("DIAL"),
             });
-
-        public bool TryGetRecord<T>(uint id, out T record)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

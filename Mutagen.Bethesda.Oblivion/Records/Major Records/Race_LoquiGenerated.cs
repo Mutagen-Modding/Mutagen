@@ -1107,13 +1107,19 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Voices.Links)
+            if (Voices != null)
             {
-                yield return item;
+                foreach (var item in Voices.Links)
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in DefaultHair.Links)
+            if (DefaultHair != null)
             {
-                yield return item;
+                foreach (var item in DefaultHair.Links)
+                {
+                    yield return item;
+                }
             }
             yield break;
         }

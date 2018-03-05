@@ -371,6 +371,7 @@ namespace Mutagen.Bethesda.Generation
                             }
                             GenerateDataStateSubscriptions(obj, fg);
                             GenerateStructStateSubscriptions(obj, fg);
+                            GenerateModLinking(obj, fg);
                         }
                         fg.AppendLine("catch (Exception ex)");
                         fg.AppendLine("when (errorMask != null)");
@@ -710,6 +711,17 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
             }
+        }
+
+        private void GenerateModLinking(ObjectGeneration obj, FileGeneration fg)
+        {
+            if (obj.GetObjectType() != ObjectType.Mod) return;
+            fg.AppendLine("foreach (var link in ret.Links)");
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine($"link.Link(modList: null, sourceMod: ret);");
+            }
+
         }
 
         private void GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator, string frameAccessor)

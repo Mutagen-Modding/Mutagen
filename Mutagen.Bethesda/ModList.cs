@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public class ModList<Mod>
+    public class ModList<Mod> : IEnumerable<Mod>
         where Mod : IMod
     {
         private readonly Dictionary<string, ModID> _modsByName = new Dictionary<string, ModID>();
@@ -32,6 +33,28 @@ namespace Mutagen.Bethesda
             }
             result = _modsByLoadOrder[index.ID];
             return true;
+        }
+
+        private void Link()
+        {
+            foreach (var mod in this._modsByLoadOrder)
+            {
+                foreach (var link in mod.Links)
+                {
+                    if (link.Linked) continue;
+                    link.Link(this, mod);
+                }
+            }
+        }
+
+        public IEnumerator<Mod> GetEnumerator()
+        {
+            return _modsByLoadOrder.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
     }
 }

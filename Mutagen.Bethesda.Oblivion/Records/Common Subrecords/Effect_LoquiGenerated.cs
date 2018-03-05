@@ -579,9 +579,12 @@ namespace Mutagen.Bethesda.Oblivion
         private IEnumerable<ILink> GetLinks()
         {
             yield return MagicEffect_Property;
-            foreach (var item in ScriptEffect.Links)
+            if (ScriptEffect != null)
             {
-                yield return item;
+                foreach (var item in ScriptEffect.Links)
+                {
+                    yield return item;
+                }
             }
             yield break;
         }

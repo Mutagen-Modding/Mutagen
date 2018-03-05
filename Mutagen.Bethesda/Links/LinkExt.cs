@@ -10,20 +10,6 @@ namespace Mutagen.Bethesda
 {
     public static class LinkExt
     {
-        public static void Link<T, Mod>(
-            this IFormIDLink<T> link,
-            ModList<Mod> modList,
-            INotifyingListGetter<MasterReference> masterList)
-            where T : MajorRecord
-            where Mod : IMod
-        {
-            if (!masterList.InRange(link.FormID.ModID.ID)) return;
-            var master = masterList[link.FormID.ModID.ID];
-            if (!modList.TryGetMod(link.UnlinkedForm.Value.ModID, out var result)) return;
-            if (!result.TryGetRecord<T>(link.UnlinkedForm.Value.ID, out var record)) return;
-            link.Item = record;
-        }
-
         public static void ToString<T>(
             this ILink<T> link,
             FileGeneration fg,

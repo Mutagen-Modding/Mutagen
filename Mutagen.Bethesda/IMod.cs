@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public interface IMod
+    public interface IMod : ILinkContainer
     {
         INotifyingListGetter<MasterReference> MasterReferences { get; }
-        bool TryGetRecord<T>(uint id, out T record);
         INotifyingDictionaryGetter<FormID, MajorRecord> MajorRecords { get; }
+        INotifyingKeyedCollection<FormID, T> GetGroup<T>() where T : IMajorRecord;
     }
 }

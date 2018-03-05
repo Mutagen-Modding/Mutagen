@@ -113,11 +113,20 @@ namespace Mutagen.Bethesda.Generation
                             subLinkCase = LinkCase.Maybe;
                         }
                         if (subLinkCase == LinkCase.No) continue;
+                        var doBrace = true;
                         if (subLinkCase == LinkCase.Maybe)
                         {
                             fg.AppendLine($"if ({field.Name} is {nameof(ILinkContainer)} linkCont)");
                         }
-                        using (new BraceWrapper(fg, doIt: subLinkCase == LinkCase.Maybe))
+                        else if (loqui.SingletonType == SingletonLevel.None)
+                        {
+                            fg.AppendLine($"if ({field.Name} != null)");
+                        }
+                        else
+                        {
+                            doBrace = false;
+                        }
+                        using (new BraceWrapper(fg, doIt: doBrace))
                         {
                             fg.AppendLine($"foreach (var item in {(subLinkCase == LinkCase.Maybe ? "linkCont" : field.Name)}.Links)");
                             using (new BraceWrapper(fg))
