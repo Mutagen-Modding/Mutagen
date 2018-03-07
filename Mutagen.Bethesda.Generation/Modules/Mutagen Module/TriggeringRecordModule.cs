@@ -43,17 +43,7 @@ namespace Mutagen.Bethesda.Generation
         {
             var data = obj.GetObjectData();
             var record = obj.Node.GetAttribute("recordType");
-            var isGRUP = obj.Name.Equals("Group");
-            if (record != null && !isGRUP)
-            {
-                data.RecordType = new RecordType(record);
-            }
             data.FailOnUnknown = obj.Node.GetAttribute<bool>("failOnUnknownType", defaultVal: false);
-
-            if (isGRUP)
-            {
-                data.RecordType = new RecordType("GRUP");
-            }
 
             var objType = obj.Node.GetAttribute("objType");
             if (!Enum.TryParse<ObjectType>(objType, out var objTypeEnum))
@@ -61,6 +51,15 @@ namespace Mutagen.Bethesda.Generation
                 throw new ArgumentException("Must specify object type.");
             }
             data.ObjectType = objTypeEnum;
+
+            if (record != null && objTypeEnum != ObjectType.Group)
+            {
+                data.RecordType = new RecordType(record);
+            }
+            if (objTypeEnum == ObjectType.Group)
+            {
+                data.RecordType = new RecordType("GRUP");
+            }
 
             if (obj.Node.TryGetAttribute("markerType", out var markerType))
             {
@@ -211,7 +210,8 @@ namespace Mutagen.Bethesda.Generation
                     && (loqui.TargetObjectGeneration.TryGetRecordType(out var recType)
                         || trigRecTypes != null))
                 {
-                    if (loqui.TargetObjectGeneration.Name.Equals("Group"))
+                    var targetObjectData = loqui.TargetObjectGeneration.GetObjectData();
+                    if (targetObjectData.ObjectType == ObjectType.Group)
                     {
                         var objName = loqui.GenericSpecification.Specifications["T"];
                         var nameKey = ObjectNamedKey.Factory(objName);
@@ -336,10 +336,9 @@ namespace Mutagen.Bethesda.Generation
         private async Task SetObjectTrigger(ObjectGeneration obj)
         {
             var data = obj.GetObjectData();
-            var isGRUP = obj.Name.Equals("Group");
-            await SetBasicTriggers(obj, data, isGRUP);
+            await SetBasicTriggers(obj, data, isGRUP: data.ObjectType == ObjectType.Group);
 
-            if (isGRUP)
+            if (data.ObjectType == ObjectType.Group)
             {
                 data.TriggeringRecordTypes.Add(new RecordType("GRUP"));
             }

@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>4a37b068d3ec2e62e19750bb89530b2c76fbdc85</Sha>
+         <Sha>889fb1d6440ab346cf6d35dceea737526a858abe</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>03-04-2018 23:05:14</CommitDate>
-         <Description>Merge remote-tracking branch 'origin/Laptop' into Dev</Description>
+         <CommitDate>03-06-2018 18:05:09</CommitDate>
+         <Description>NoNull notifying item types now ensure defaultVal is not null</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
