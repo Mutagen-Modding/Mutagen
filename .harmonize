@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>889fb1d6440ab346cf6d35dceea737526a858abe</Sha>
+         <Sha>bb99556a8490796beb48fab62e3ad75fcf99746e</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>03-06-2018 18:05:09</CommitDate>
-         <Description>NoNull notifying item types now ensure defaultVal is not null</Description>
+         <CommitDate>03-08-2018 16:40:45</CommitDate>
+         <Description>Merge remote-tracking branch 'origin/master' into Laptop</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>562497bb9788dd170e1360d8a340e2c55a17d283</Sha>
+         <Sha>4e2ecf6db8d74bb7c6095b28f7a915e476771223</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>03-04-2018 23:12:10</CommitDate>
-         <Description>Merge fix</Description>
+         <CommitDate>03-07-2018 18:27:17</CommitDate>
+         <Description>Added some timeout console warnings to generation, to help narrow task deadlocks</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

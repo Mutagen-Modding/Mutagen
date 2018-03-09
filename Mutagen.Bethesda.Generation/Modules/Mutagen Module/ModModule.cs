@@ -37,6 +37,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         if (!(field is LoquiType loqui)) continue;
                         if (loqui.TargetObjectGeneration?.GetObjectData().ObjectType != ObjectType.Group) continue;
+                        if (!loqui.TargetObjectGeneration.Name.Equals("Group")) continue;
                         if (!loqui.TryGetSpecificationAsObject("T", out var subObj))
                         {
                             throw new ArgumentException();
@@ -66,6 +67,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (!(field is LoquiType loqui)) continue;
                 if (loqui.TargetObjectGeneration?.GetObjectData().ObjectType != ObjectType.Group) continue;
+                if (!loqui.TargetObjectGeneration.Name.Equals("Group")) continue;
                 fg.AppendLine($"{field.ProtectedName}.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));");
             }
             return base.GenerateInCtor(obj, fg);

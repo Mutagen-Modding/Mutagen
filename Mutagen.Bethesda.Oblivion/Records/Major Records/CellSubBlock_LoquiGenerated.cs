@@ -754,9 +754,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new CellSubBlock();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseRecord(
-                    frame.Reader,
-                    CellSubBlock_Registration.GRUP_HEADER));
+                frame = frame.Spawn(HeaderTranslation.ParseGroup(frame.Reader));
                 using (frame)
                 {
                     Fill_Binary_Structs(
@@ -805,7 +803,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<CellSubBlock_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+            var nextRecordType = HeaderTranslation.GetNextRecordType(
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
@@ -830,7 +828,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<CellSubBlock_FieldIndex?>.Succeed(CellSubBlock_FieldIndex.Cells);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
-                    frame.Position += contentLength + Constants.SUBRECORD_LENGTH;
+                    frame.Position += contentLength + Constants.RECORD_LENGTH;
                     return TryGet<CellSubBlock_FieldIndex?>.Succeed(null);
             }
         }
@@ -1648,7 +1646,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 using (HeaderExport.ExportHeader(
                     writer: writer,
                     record: CellSubBlock_Registration.GRUP_HEADER,
-                    type: ObjectType.Record))
+                    type: ObjectType.Group))
                 {
                     Write_Binary_Embedded(
                         item: item,

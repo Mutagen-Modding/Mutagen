@@ -68,6 +68,9 @@
     <Compile Include="Records\Group_LoquiGenerated.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\ListGroup.cs">
+      <DependentUpon>Group.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecord.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>

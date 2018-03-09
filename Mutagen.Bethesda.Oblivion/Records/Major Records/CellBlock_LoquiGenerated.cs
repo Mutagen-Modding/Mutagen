@@ -754,9 +754,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new CellBlock();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseRecord(
-                    frame.Reader,
-                    CellBlock_Registration.GRUP_HEADER));
+                frame = frame.Spawn(HeaderTranslation.ParseGroup(frame.Reader));
                 using (frame)
                 {
                     Fill_Binary_Structs(
@@ -805,7 +803,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<CellBlock_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+            var nextRecordType = HeaderTranslation.GetNextRecordType(
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
@@ -830,7 +828,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<CellBlock_FieldIndex?>.Succeed(CellBlock_FieldIndex.SubBlocks);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
-                    frame.Position += contentLength + Constants.SUBRECORD_LENGTH;
+                    frame.Position += contentLength + Constants.RECORD_LENGTH;
                     return TryGet<CellBlock_FieldIndex?>.Succeed(null);
             }
         }
@@ -1228,6 +1226,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly RecordType CELL_HEADER = new RecordType("CELL");
         public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = GRUP_HEADER;
         public const int NumStructFields = 2;
@@ -1646,8 +1645,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 using (HeaderExport.ExportHeader(
                     writer: writer,
-                    record: CellBlock_Registration.GRUP_HEADER,
-                    type: ObjectType.Record))
+                    record: CellBlock_Registration.CELL_HEADER,
+                    type: ObjectType.Group))
                 {
                     Write_Binary_Embedded(
                         item: item,

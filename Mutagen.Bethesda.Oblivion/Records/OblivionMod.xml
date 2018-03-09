@@ -47,11 +47,11 @@
       <Group name="Weathers" refName="Weather" />
       <Group name="Climates" refName="Climate" />
       <Group name="Regions" refName="Region" />
-      <!--<Ref name="Cells" nullable="Singleton">
+      <Ref name="Cells" nullable="Singleton">
         <Direct refName="Bethesda.ListGroup" >
-          <GenericSpecification Definition="Oblivion.CellGroup" TypeToSpecify="T" />
+          <GenericSpecification Definition="Oblivion.CellBlock" TypeToSpecify="T" />
         </Direct>
-      </Ref>-->
+      </Ref>
     </Fields>
   </Object>
 </Loqui>

@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="CellGroup" recordType="CELL" objType="Record" GUID="923991b5-9e9d-4788-aae1-5bf8f147e7cb" ID="133">
-    <Fields>
-      <Zero byteLength="4" />
-      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
-      <ByteArray name="LastModified" length="4" nullable="NotNull" />
-      <RefList name="Blocks" refName="CellBlock" />
-    </Fields>
-  </Object>
-  <Object name="CellBlock" recordType="GRUP" objType="Record" GUID="da71d7e7-5ba9-4dce-afbe-7dc5aa63ef11" ID="131">
+  <Object name="CellBlock" recordType="CELL" objType="Group" GUID="da71d7e7-5ba9-4dce-afbe-7dc5aa63ef11" ID="131">
     <Fields>
       <Zero byteLength="4" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
@@ -16,7 +8,7 @@
       <RefList name="SubBlocks" refName="CellSubBlock" />
     </Fields>
   </Object>
-  <Object name="CellSubBlock" recordType="GRUP" objType="Record" GUID="7a5be323-09fa-4e8a-83fa-da407985da6c" ID="132">
+  <Object name="CellSubBlock" objType="Group" GUID="7a5be323-09fa-4e8a-83fa-da407985da6c" ID="132">
     <Fields>
       <Zero byteLength="4" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />

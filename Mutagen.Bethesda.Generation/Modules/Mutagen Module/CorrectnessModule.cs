@@ -12,7 +12,10 @@ namespace Mutagen.Bethesda.Generation
         public override async Task PostLoad(ObjectGeneration obj)
         {
             var objData = obj.GetObjectData();
-            await objData.WiringComplete.Task;
+            await objData.WiringComplete.Task
+                .TimeoutButContinue(
+                    TimeoutMS,
+                    () => System.Console.WriteLine($"{this.Name} {obj.Name} wiring taking a long time."));
             Dictionary<string, TypeGeneration> triggerMapping = new Dictionary<string, TypeGeneration>();
             Dictionary<RecordType, TypeGeneration> triggerRecMapping = new Dictionary<RecordType, TypeGeneration>();
             foreach (var field in obj.IterateFields())

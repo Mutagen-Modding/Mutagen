@@ -52,11 +52,11 @@ namespace Mutagen.Bethesda.Generation
             }
             data.ObjectType = objTypeEnum;
 
-            if (record != null && objTypeEnum != ObjectType.Group)
+            if (record != null)
             {
                 data.RecordType = new RecordType(record);
             }
-            if (objTypeEnum == ObjectType.Group)
+            else if (objTypeEnum == ObjectType.Group)
             {
                 data.RecordType = new RecordType("GRUP");
             }
@@ -72,12 +72,20 @@ namespace Mutagen.Bethesda.Generation
 
         public override async Task PostLoad(ObjectGeneration obj)
         {
-            await Task.WhenAll(
-                obj.IterateFields(expandSets: SetMarkerType.ExpandSets.TrueAndInclude, nonIntegrated: true)
-                    .Select((field) => SetRecordTrigger(obj, field, field.GetFieldData())));
-            await SetObjectTrigger(obj);
-            obj.GetObjectData().WiringComplete.Complete();
-            await base.PostLoad(obj);
+            try
+            {
+                await Task.WhenAll(
+                    obj.IterateFields(expandSets: SetMarkerType.ExpandSets.TrueAndInclude, nonIntegrated: true)
+                        .Select((field) => SetRecordTrigger(obj, field, field.GetFieldData())));
+                await SetObjectTrigger(obj);
+                obj.GetObjectData().WiringComplete.Complete();
+                await base.PostLoad(obj);
+            }
+            catch (Exception ex)
+            {
+                obj.GetObjectData().WiringComplete.SetException(ex);
+                throw;
+            }
         }
 
         public override async Task GenerateInRegistration(ObjectGeneration obj, FileGeneration fg)
@@ -211,9 +219,9 @@ namespace Mutagen.Bethesda.Generation
                         || trigRecTypes != null))
                 {
                     var targetObjectData = loqui.TargetObjectGeneration.GetObjectData();
-                    if (targetObjectData.ObjectType == ObjectType.Group)
+                    if (targetObjectData.ObjectType == ObjectType.Group
+                        && loqui.GenericSpecification.Specifications.TryGetValue("T", out var objName))
                     {
-                        var objName = loqui.GenericSpecification.Specifications["T"];
                         var nameKey = ObjectNamedKey.Factory(objName);
                         var grupObj = obj.ProtoGen.Gen.ObjectGenerationsByObjectNameKey[nameKey];
                         data.RecordType = grupObj.GetRecordType();
