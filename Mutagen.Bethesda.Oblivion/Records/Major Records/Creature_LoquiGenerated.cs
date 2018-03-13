@@ -5994,7 +5994,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Creature_Mask<bool?> checkMask)
         {
             if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_Property.HasBeenSet) return false;
-            if (checkMask.Model.Specific != null && (item.Model_Property.Item == null || !item.Model_Property.Item.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Items.Overall.HasValue && checkMask.Items.Overall.Value != item.Items.HasBeenSet) return false;
             if (checkMask.Spells.Overall.HasValue && checkMask.Spells.Overall.Value != item.Spells.HasBeenSet) return false;
             if (checkMask.Models.Overall.HasValue && checkMask.Models.Overall.Value != item.Models.HasBeenSet) return false;
@@ -6019,7 +6019,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Creature_Mask<bool> GetHasBeenSetMask(ICreatureGetter item)
         {
             var ret = new Creature_Mask<bool>();
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model_Property.Item));
+            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model));
             ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, ItemEntry_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.Select((i) => new MaskItem<bool, ItemEntry_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.Spells = new MaskItem<bool, IEnumerable<bool>>(item.Spells.HasBeenSet, null);
             ret.Models = new MaskItem<bool, IEnumerable<bool>>(item.Models.HasBeenSet, null);

@@ -2203,14 +2203,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Enchantment.HasValue && checkMask.Enchantment.Value != item.Enchantment_Property.HasBeenSet) return false;
             if (checkMask.EnchantmentPoints.HasValue && checkMask.EnchantmentPoints.Value != item.EnchantmentPoints_Property.HasBeenSet) return false;
             if (checkMask.MaleBipedModel.Overall.HasValue && checkMask.MaleBipedModel.Overall.Value != item.MaleBipedModel_Property.HasBeenSet) return false;
-            if (checkMask.MaleBipedModel.Specific != null && (item.MaleBipedModel_Property.Item == null || !item.MaleBipedModel_Property.Item.HasBeenSet(checkMask.MaleBipedModel.Specific))) return false;
+            if (checkMask.MaleBipedModel.Specific != null && (item.MaleBipedModel == null || !item.MaleBipedModel.HasBeenSet(checkMask.MaleBipedModel.Specific))) return false;
             if (checkMask.MaleWorldModel.Overall.HasValue && checkMask.MaleWorldModel.Overall.Value != item.MaleWorldModel_Property.HasBeenSet) return false;
-            if (checkMask.MaleWorldModel.Specific != null && (item.MaleWorldModel_Property.Item == null || !item.MaleWorldModel_Property.Item.HasBeenSet(checkMask.MaleWorldModel.Specific))) return false;
+            if (checkMask.MaleWorldModel.Specific != null && (item.MaleWorldModel == null || !item.MaleWorldModel.HasBeenSet(checkMask.MaleWorldModel.Specific))) return false;
             if (checkMask.MaleIcon.HasValue && checkMask.MaleIcon.Value != item.MaleIcon_Property.HasBeenSet) return false;
             if (checkMask.FemaleBipedModel.Overall.HasValue && checkMask.FemaleBipedModel.Overall.Value != item.FemaleBipedModel_Property.HasBeenSet) return false;
-            if (checkMask.FemaleBipedModel.Specific != null && (item.FemaleBipedModel_Property.Item == null || !item.FemaleBipedModel_Property.Item.HasBeenSet(checkMask.FemaleBipedModel.Specific))) return false;
+            if (checkMask.FemaleBipedModel.Specific != null && (item.FemaleBipedModel == null || !item.FemaleBipedModel.HasBeenSet(checkMask.FemaleBipedModel.Specific))) return false;
             if (checkMask.FemaleWorldModel.Overall.HasValue && checkMask.FemaleWorldModel.Overall.Value != item.FemaleWorldModel_Property.HasBeenSet) return false;
-            if (checkMask.FemaleWorldModel.Specific != null && (item.FemaleWorldModel_Property.Item == null || !item.FemaleWorldModel_Property.Item.HasBeenSet(checkMask.FemaleWorldModel.Specific))) return false;
+            if (checkMask.FemaleWorldModel.Specific != null && (item.FemaleWorldModel == null || !item.FemaleWorldModel.HasBeenSet(checkMask.FemaleWorldModel.Specific))) return false;
             if (checkMask.FemaleIcon.HasValue && checkMask.FemaleIcon.Value != item.FemaleIcon_Property.HasBeenSet) return false;
             return true;
         }
@@ -2223,11 +2223,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.EnchantmentPoints = item.EnchantmentPoints_Property.HasBeenSet;
             ret.BipedFlags = true;
             ret.Flags = true;
-            ret.MaleBipedModel = new MaskItem<bool, Model_Mask<bool>>(item.MaleBipedModel_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.MaleBipedModel_Property.Item));
-            ret.MaleWorldModel = new MaskItem<bool, Model_Mask<bool>>(item.MaleWorldModel_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.MaleWorldModel_Property.Item));
+            ret.MaleBipedModel = new MaskItem<bool, Model_Mask<bool>>(item.MaleBipedModel_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.MaleBipedModel));
+            ret.MaleWorldModel = new MaskItem<bool, Model_Mask<bool>>(item.MaleWorldModel_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.MaleWorldModel));
             ret.MaleIcon = item.MaleIcon_Property.HasBeenSet;
-            ret.FemaleBipedModel = new MaskItem<bool, Model_Mask<bool>>(item.FemaleBipedModel_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.FemaleBipedModel_Property.Item));
-            ret.FemaleWorldModel = new MaskItem<bool, Model_Mask<bool>>(item.FemaleWorldModel_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.FemaleWorldModel_Property.Item));
+            ret.FemaleBipedModel = new MaskItem<bool, Model_Mask<bool>>(item.FemaleBipedModel_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.FemaleBipedModel));
+            ret.FemaleWorldModel = new MaskItem<bool, Model_Mask<bool>>(item.FemaleWorldModel_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.FemaleWorldModel));
             ret.FemaleIcon = item.FemaleIcon_Property.HasBeenSet;
             return ret;
         }

@@ -6436,14 +6436,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMod_Mask<bool?> checkMask)
         {
             if (checkMask.TES4.Overall.HasValue && checkMask.TES4.Overall.Value != item.TES4_Property.HasBeenSet) return false;
-            if (checkMask.TES4.Specific != null && (item.TES4_Property.Item == null || !item.TES4_Property.Item.HasBeenSet(checkMask.TES4.Specific))) return false;
+            if (checkMask.TES4.Specific != null && (item.TES4 == null || !item.TES4.HasBeenSet(checkMask.TES4.Specific))) return false;
             return true;
         }
 
         public static OblivionMod_Mask<bool> GetHasBeenSetMask(IOblivionModGetter item)
         {
             var ret = new OblivionMod_Mask<bool>();
-            ret.TES4 = new MaskItem<bool, TES4_Mask<bool>>(item.TES4_Property.HasBeenSet, TES4Common.GetHasBeenSetMask(item.TES4_Property.Item));
+            ret.TES4 = new MaskItem<bool, TES4_Mask<bool>>(item.TES4_Property.HasBeenSet, TES4Common.GetHasBeenSetMask(item.TES4));
             ret.GameSettings = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.GameSettings));
             ret.Globals = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Globals));
             ret.Classes = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Classes));

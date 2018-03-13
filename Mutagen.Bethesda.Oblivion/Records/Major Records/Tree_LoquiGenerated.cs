@@ -2466,7 +2466,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Tree_Mask<bool?> checkMask)
         {
             if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_Property.HasBeenSet) return false;
-            if (checkMask.Model.Specific != null && (item.Model_Property.Item == null || !item.Model_Property.Item.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
             if (checkMask.SpeedTreeSeeds.Overall.HasValue && checkMask.SpeedTreeSeeds.Overall.Value != item.SpeedTreeSeeds.HasBeenSet) return false;
             return true;
@@ -2475,7 +2475,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Tree_Mask<bool> GetHasBeenSetMask(ITreeGetter item)
         {
             var ret = new Tree_Mask<bool>();
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model_Property.Item));
+            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model));
             ret.Icon = item.Icon_Property.HasBeenSet;
             ret.SpeedTreeSeeds = new MaskItem<bool, IEnumerable<bool>>(item.SpeedTreeSeeds.HasBeenSet, null);
             ret.LeafCurvature = true;

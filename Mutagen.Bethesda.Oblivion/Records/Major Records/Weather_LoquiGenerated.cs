@@ -4525,7 +4525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.TextureLowerLayer.HasValue && checkMask.TextureLowerLayer.Value != item.TextureLowerLayer_Property.HasBeenSet) return false;
             if (checkMask.TextureUpperLayer.HasValue && checkMask.TextureUpperLayer.Value != item.TextureUpperLayer_Property.HasBeenSet) return false;
             if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_Property.HasBeenSet) return false;
-            if (checkMask.Model.Specific != null && (item.Model_Property.Item == null || !item.Model_Property.Item.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.WeatherTypes.Overall.HasValue && checkMask.WeatherTypes.Overall.Value != item.WeatherTypes.HasBeenSet) return false;
             if (checkMask.Sounds.Overall.HasValue && checkMask.Sounds.Overall.Value != item.Sounds.HasBeenSet) return false;
             return true;
@@ -4536,7 +4536,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new Weather_Mask<bool>();
             ret.TextureLowerLayer = item.TextureLowerLayer_Property.HasBeenSet;
             ret.TextureUpperLayer = item.TextureUpperLayer_Property.HasBeenSet;
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model_Property.Item));
+            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model));
             ret.WeatherTypes = new MaskItem<bool, IEnumerable<MaskItem<bool, WeatherType_Mask<bool>>>>(item.WeatherTypes.HasBeenSet, item.WeatherTypes.Select((i) => new MaskItem<bool, WeatherType_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.FogDayNear = true;
             ret.FogDayFar = true;

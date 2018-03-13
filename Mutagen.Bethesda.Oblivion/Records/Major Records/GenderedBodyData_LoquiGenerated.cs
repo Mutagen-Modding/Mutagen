@@ -1499,17 +1499,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             GenderedBodyData_Mask<bool?> checkMask)
         {
             if (checkMask.Male.Overall.HasValue && checkMask.Male.Overall.Value != item.Male_Property.HasBeenSet) return false;
-            if (checkMask.Male.Specific != null && (item.Male_Property.Item == null || !item.Male_Property.Item.HasBeenSet(checkMask.Male.Specific))) return false;
+            if (checkMask.Male.Specific != null && (item.Male == null || !item.Male.HasBeenSet(checkMask.Male.Specific))) return false;
             if (checkMask.Female.Overall.HasValue && checkMask.Female.Overall.Value != item.Female_Property.HasBeenSet) return false;
-            if (checkMask.Female.Specific != null && (item.Female_Property.Item == null || !item.Female_Property.Item.HasBeenSet(checkMask.Female.Specific))) return false;
+            if (checkMask.Female.Specific != null && (item.Female == null || !item.Female.HasBeenSet(checkMask.Female.Specific))) return false;
             return true;
         }
 
         public static GenderedBodyData_Mask<bool> GetHasBeenSetMask(IGenderedBodyDataGetter item)
         {
             var ret = new GenderedBodyData_Mask<bool>();
-            ret.Male = new MaskItem<bool, BodyData_Mask<bool>>(item.Male_Property.HasBeenSet, BodyDataCommon.GetHasBeenSetMask(item.Male_Property.Item));
-            ret.Female = new MaskItem<bool, BodyData_Mask<bool>>(item.Female_Property.HasBeenSet, BodyDataCommon.GetHasBeenSetMask(item.Female_Property.Item));
+            ret.Male = new MaskItem<bool, BodyData_Mask<bool>>(item.Male_Property.HasBeenSet, BodyDataCommon.GetHasBeenSetMask(item.Male));
+            ret.Female = new MaskItem<bool, BodyData_Mask<bool>>(item.Female_Property.HasBeenSet, BodyDataCommon.GetHasBeenSetMask(item.Female));
             return ret;
         }
 

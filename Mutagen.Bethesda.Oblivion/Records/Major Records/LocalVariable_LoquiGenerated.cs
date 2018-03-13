@@ -1464,7 +1464,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LocalVariable_Mask<bool?> checkMask)
         {
             if (checkMask.Data.Overall.HasValue && checkMask.Data.Overall.Value != item.Data_Property.HasBeenSet) return false;
-            if (checkMask.Data.Specific != null && (item.Data_Property.Item == null || !item.Data_Property.Item.HasBeenSet(checkMask.Data.Specific))) return false;
+            if (checkMask.Data.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
             return true;
         }
@@ -1472,7 +1472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static LocalVariable_Mask<bool> GetHasBeenSetMask(ILocalVariableGetter item)
         {
             var ret = new LocalVariable_Mask<bool>();
-            ret.Data = new MaskItem<bool, LocalVariableData_Mask<bool>>(item.Data_Property.HasBeenSet, LocalVariableDataCommon.GetHasBeenSetMask(item.Data_Property.Item));
+            ret.Data = new MaskItem<bool, LocalVariableData_Mask<bool>>(item.Data_Property.HasBeenSet, LocalVariableDataCommon.GetHasBeenSetMask(item.Data));
             ret.Name = item.Name_Property.HasBeenSet;
             return ret;
         }

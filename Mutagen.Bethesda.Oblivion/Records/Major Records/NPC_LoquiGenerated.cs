@@ -7233,7 +7233,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NPC_Mask<bool?> checkMask)
         {
             if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_Property.HasBeenSet) return false;
-            if (checkMask.Model.Specific != null && (item.Model_Property.Item == null || !item.Model_Property.Item.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Factions.Overall.HasValue && checkMask.Factions.Overall.Value != item.Factions.HasBeenSet) return false;
             if (checkMask.DeathItem.HasValue && checkMask.DeathItem.Value != item.DeathItem_Property.HasBeenSet) return false;
             if (checkMask.Race.HasValue && checkMask.Race.Value != item.Race_Property.HasBeenSet) return false;
@@ -7258,7 +7258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static NPC_Mask<bool> GetHasBeenSetMask(INPCGetter item)
         {
             var ret = new NPC_Mask<bool>();
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model_Property.Item));
+            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model));
             ret.NPCFlags = true;
             ret.BaseSpellPoints = true;
             ret.Fatigue = true;

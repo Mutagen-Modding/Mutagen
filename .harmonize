@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>3b63f58de604b2548c711223043a248d8fde6571</Sha>
+         <Sha>ff9b0333b38ecc767c019c2ae9ea52414b941020</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>02-27-2018 17:01:50</CommitDate>
-         <Description>FunctionOverride systems refactored to be async and customizable</Description>
+         <CommitDate>03-13-2018 08:09:11</CommitDate>
+         <Description>More Accessor usage</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

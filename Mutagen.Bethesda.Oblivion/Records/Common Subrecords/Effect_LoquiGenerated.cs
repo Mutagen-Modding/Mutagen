@@ -1895,7 +1895,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Effect_Mask<bool?> checkMask)
         {
             if (checkMask.ScriptEffect.Overall.HasValue && checkMask.ScriptEffect.Overall.Value != item.ScriptEffect_Property.HasBeenSet) return false;
-            if (checkMask.ScriptEffect.Specific != null && (item.ScriptEffect_Property.Item == null || !item.ScriptEffect_Property.Item.HasBeenSet(checkMask.ScriptEffect.Specific))) return false;
+            if (checkMask.ScriptEffect.Specific != null && (item.ScriptEffect == null || !item.ScriptEffect.HasBeenSet(checkMask.ScriptEffect.Specific))) return false;
             return true;
         }
 
@@ -1908,7 +1908,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Duration = true;
             ret.Type = true;
             ret.ActorValue = true;
-            ret.ScriptEffect = new MaskItem<bool, ScriptEffect_Mask<bool>>(item.ScriptEffect_Property.HasBeenSet, ScriptEffectCommon.GetHasBeenSetMask(item.ScriptEffect_Property.Item));
+            ret.ScriptEffect = new MaskItem<bool, ScriptEffect_Mask<bool>>(item.ScriptEffect_Property.HasBeenSet, ScriptEffectCommon.GetHasBeenSetMask(item.ScriptEffect));
             return ret;
         }
 

@@ -2018,7 +2018,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TES4_Mask<bool?> checkMask)
         {
             if (checkMask.Header.Overall.HasValue && checkMask.Header.Overall.Value != item.Header_Property.HasBeenSet) return false;
-            if (checkMask.Header.Specific != null && (item.Header_Property.Item == null || !item.Header_Property.Item.HasBeenSet(checkMask.Header.Specific))) return false;
+            if (checkMask.Header.Specific != null && (item.Header == null || !item.Header.HasBeenSet(checkMask.Header.Specific))) return false;
             if (checkMask.TypeOffsets.HasValue && checkMask.TypeOffsets.Value != item.TypeOffsets_Property.HasBeenSet) return false;
             if (checkMask.Deleted.HasValue && checkMask.Deleted.Value != item.Deleted_Property.HasBeenSet) return false;
             if (checkMask.Author.HasValue && checkMask.Author.Value != item.Author_Property.HasBeenSet) return false;
@@ -2031,7 +2031,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new TES4_Mask<bool>();
             ret.Fluff = true;
-            ret.Header = new MaskItem<bool, Header_Mask<bool>>(item.Header_Property.HasBeenSet, HeaderCommon.GetHasBeenSetMask(item.Header_Property.Item));
+            ret.Header = new MaskItem<bool, Header_Mask<bool>>(item.Header_Property.HasBeenSet, HeaderCommon.GetHasBeenSetMask(item.Header));
             ret.TypeOffsets = item.TypeOffsets_Property.HasBeenSet;
             ret.Deleted = item.Deleted_Property.HasBeenSet;
             ret.Author = item.Author_Property.HasBeenSet;

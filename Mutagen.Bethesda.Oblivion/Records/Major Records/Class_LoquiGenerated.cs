@@ -2135,7 +2135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.SecondaryAttributes = new MaskItem<bool, IEnumerable<bool>>(item.SecondaryAttributes.HasBeenSet, null);
             ret.Flags = true;
             ret.ClassServices = true;
-            ret.Training = new MaskItem<bool, ClassTraining_Mask<bool>>(true, ClassTrainingCommon.GetHasBeenSetMask(item.Training_Property.Item));
+            ret.Training = new MaskItem<bool, ClassTraining_Mask<bool>>(true, ClassTrainingCommon.GetHasBeenSetMask(item.Training));
             return ret;
         }
 

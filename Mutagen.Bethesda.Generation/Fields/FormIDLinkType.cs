@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Generation
             return _rawFormID.SkipCheck(copyMaskAccessor);
         }
 
-        public override void GenerateForHasBeenSetMaskGetter(FileGeneration fg, string accessor, string retAccessor)
+        public override void GenerateForHasBeenSetMaskGetter(FileGeneration fg, Accessor accessor, string retAccessor)
         {
             _rawFormID.GenerateForHasBeenSetMaskGetter(
                 fg: fg,
@@ -90,7 +90,7 @@ namespace Mutagen.Bethesda.Generation
                 retAccessor: retAccessor);
         }
 
-        public override void GenerateForHasBeenSetCheck(FileGeneration fg, string accessor, string checkMaskAccessor)
+        public override void GenerateForHasBeenSetCheck(FileGeneration fg, Accessor accessor, string checkMaskAccessor)
         {
             _rawFormID.GenerateForHasBeenSetCheck(
                 fg: fg,

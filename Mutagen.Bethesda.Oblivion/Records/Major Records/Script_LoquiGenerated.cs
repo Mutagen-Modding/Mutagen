@@ -1925,7 +1925,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Script_Mask<bool?> checkMask)
         {
             if (checkMask.MetadataSummary.Overall.HasValue && checkMask.MetadataSummary.Overall.Value != item.MetadataSummary_Property.HasBeenSet) return false;
-            if (checkMask.MetadataSummary.Specific != null && (item.MetadataSummary_Property.Item == null || !item.MetadataSummary_Property.Item.HasBeenSet(checkMask.MetadataSummary.Specific))) return false;
+            if (checkMask.MetadataSummary.Specific != null && (item.MetadataSummary == null || !item.MetadataSummary.HasBeenSet(checkMask.MetadataSummary.Specific))) return false;
             if (checkMask.CompiledScript.HasValue && checkMask.CompiledScript.Value != item.CompiledScript_Property.HasBeenSet) return false;
             if (checkMask.SourceCode.HasValue && checkMask.SourceCode.Value != item.SourceCode_Property.HasBeenSet) return false;
             if (checkMask.LocalVariables.Overall.HasValue && checkMask.LocalVariables.Overall.Value != item.LocalVariables.HasBeenSet) return false;
@@ -1936,7 +1936,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Script_Mask<bool> GetHasBeenSetMask(IScriptGetter item)
         {
             var ret = new Script_Mask<bool>();
-            ret.MetadataSummary = new MaskItem<bool, ScriptMetaSummary_Mask<bool>>(item.MetadataSummary_Property.HasBeenSet, ScriptMetaSummaryCommon.GetHasBeenSetMask(item.MetadataSummary_Property.Item));
+            ret.MetadataSummary = new MaskItem<bool, ScriptMetaSummary_Mask<bool>>(item.MetadataSummary_Property.HasBeenSet, ScriptMetaSummaryCommon.GetHasBeenSetMask(item.MetadataSummary));
             ret.CompiledScript = item.CompiledScript_Property.HasBeenSet;
             ret.SourceCode = item.SourceCode_Property.HasBeenSet;
             ret.LocalVariables = new MaskItem<bool, IEnumerable<MaskItem<bool, LocalVariable_Mask<bool>>>>(item.LocalVariables.HasBeenSet, item.LocalVariables.Select((i) => new MaskItem<bool, LocalVariable_Mask<bool>>(true, i.GetHasBeenSetMask())));

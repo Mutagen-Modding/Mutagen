@@ -2636,7 +2636,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_Property.HasBeenSet) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
             if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_Property.HasBeenSet) return false;
-            if (checkMask.Model.Specific != null && (item.Model_Property.Item == null || !item.Model_Property.Item.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.CounterEffects.Overall.HasValue && checkMask.CounterEffects.Overall.Value != item.CounterEffects.HasBeenSet) return false;
             return true;
         }
@@ -2646,7 +2646,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new MagicEffect_Mask<bool>();
             ret.Description = item.Description_Property.HasBeenSet;
             ret.Icon = item.Icon_Property.HasBeenSet;
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model_Property.Item));
+            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model));
             ret.Flags = true;
             ret.BaseCost = true;
             ret.Unused = true;
@@ -2656,7 +2656,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Light = true;
             ret.ProjectileSpeed = true;
             ret.EffectShader = true;
-            ret.SubData = new MaskItem<bool, MagicEffectSubData_Mask<bool>>(true, MagicEffectSubDataCommon.GetHasBeenSetMask(item.SubData_Property.Item));
+            ret.SubData = new MaskItem<bool, MagicEffectSubData_Mask<bool>>(true, MagicEffectSubDataCommon.GetHasBeenSetMask(item.SubData));
             ret.CounterEffects = new MaskItem<bool, IEnumerable<bool>>(item.CounterEffects.HasBeenSet, null);
             return ret;
         }

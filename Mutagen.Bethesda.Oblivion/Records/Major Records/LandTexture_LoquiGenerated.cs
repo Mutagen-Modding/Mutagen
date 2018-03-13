@@ -1719,7 +1719,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
             if (checkMask.Havok.Overall.HasValue && checkMask.Havok.Overall.Value != item.Havok_Property.HasBeenSet) return false;
-            if (checkMask.Havok.Specific != null && (item.Havok_Property.Item == null || !item.Havok_Property.Item.HasBeenSet(checkMask.Havok.Specific))) return false;
+            if (checkMask.Havok.Specific != null && (item.Havok == null || !item.Havok.HasBeenSet(checkMask.Havok.Specific))) return false;
             if (checkMask.TextureSpecularExponent.HasValue && checkMask.TextureSpecularExponent.Value != item.TextureSpecularExponent_Property.HasBeenSet) return false;
             if (checkMask.PotentialGrass.Overall.HasValue && checkMask.PotentialGrass.Overall.Value != item.PotentialGrass.HasBeenSet) return false;
             return true;
@@ -1729,7 +1729,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new LandTexture_Mask<bool>();
             ret.Icon = item.Icon_Property.HasBeenSet;
-            ret.Havok = new MaskItem<bool, HavokData_Mask<bool>>(item.Havok_Property.HasBeenSet, HavokDataCommon.GetHasBeenSetMask(item.Havok_Property.Item));
+            ret.Havok = new MaskItem<bool, HavokData_Mask<bool>>(item.Havok_Property.HasBeenSet, HavokDataCommon.GetHasBeenSetMask(item.Havok));
             ret.TextureSpecularExponent = item.TextureSpecularExponent_Property.HasBeenSet;
             ret.PotentialGrass = new MaskItem<bool, IEnumerable<bool>>(item.PotentialGrass.HasBeenSet, null);
             return ret;

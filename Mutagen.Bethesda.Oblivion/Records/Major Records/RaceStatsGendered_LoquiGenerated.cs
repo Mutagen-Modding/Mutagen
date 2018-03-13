@@ -1436,8 +1436,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static RaceStatsGendered_Mask<bool> GetHasBeenSetMask(IRaceStatsGenderedGetter item)
         {
             var ret = new RaceStatsGendered_Mask<bool>();
-            ret.Male = new MaskItem<bool, RaceStats_Mask<bool>>(true, RaceStatsCommon.GetHasBeenSetMask(item.Male_Property.Item));
-            ret.Female = new MaskItem<bool, RaceStats_Mask<bool>>(true, RaceStatsCommon.GetHasBeenSetMask(item.Female_Property.Item));
+            ret.Male = new MaskItem<bool, RaceStats_Mask<bool>>(true, RaceStatsCommon.GetHasBeenSetMask(item.Male));
+            ret.Female = new MaskItem<bool, RaceStats_Mask<bool>>(true, RaceStatsCommon.GetHasBeenSetMask(item.Female));
             return ret;
         }
 

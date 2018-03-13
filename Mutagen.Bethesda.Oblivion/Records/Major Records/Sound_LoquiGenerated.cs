@@ -1481,7 +1481,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (checkMask.File.HasValue && checkMask.File.Value != item.File_Property.HasBeenSet) return false;
             if (checkMask.Data.Overall.HasValue && checkMask.Data.Overall.Value != item.Data_Property.HasBeenSet) return false;
-            if (checkMask.Data.Specific != null && (item.Data_Property.Item == null || !item.Data_Property.Item.HasBeenSet(checkMask.Data.Specific))) return false;
+            if (checkMask.Data.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             return true;
         }
 
@@ -1489,7 +1489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new Sound_Mask<bool>();
             ret.File = item.File_Property.HasBeenSet;
-            ret.Data = new MaskItem<bool, SoundData_Mask<bool>>(item.Data_Property.HasBeenSet, SoundDataCommon.GetHasBeenSetMask(item.Data_Property.Item));
+            ret.Data = new MaskItem<bool, SoundData_Mask<bool>>(item.Data_Property.HasBeenSet, SoundDataCommon.GetHasBeenSetMask(item.Data));
             return ret;
         }
 
