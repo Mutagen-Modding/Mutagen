@@ -1973,19 +1973,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.Script ?? true)
                 {
-                    fg.AppendLine($"Script => {item.Script}");
+                    fg.AppendLine($"Script => {item.Script_Property}");
                 }
                 if (printMask?.OpenSound ?? true)
                 {
-                    fg.AppendLine($"OpenSound => {item.OpenSound}");
+                    fg.AppendLine($"OpenSound => {item.OpenSound_Property}");
                 }
                 if (printMask?.CloseSound ?? true)
                 {
-                    fg.AppendLine($"CloseSound => {item.CloseSound}");
+                    fg.AppendLine($"CloseSound => {item.CloseSound_Property}");
                 }
                 if (printMask?.LoopSound ?? true)
                 {
-                    fg.AppendLine($"LoopSound => {item.LoopSound}");
+                    fg.AppendLine($"LoopSound => {item.LoopSound_Property}");
                 }
                 if (printMask?.Flags ?? true)
                 {

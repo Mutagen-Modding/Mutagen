@@ -6936,11 +6936,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.DeathItem ?? true)
                 {
-                    fg.AppendLine($"DeathItem => {item.DeathItem}");
+                    fg.AppendLine($"DeathItem => {item.DeathItem_Property}");
                 }
                 if (printMask?.Race ?? true)
                 {
-                    fg.AppendLine($"Race => {item.Race}");
+                    fg.AppendLine($"Race => {item.Race_Property}");
                 }
                 if (printMask?.Spells?.Overall ?? true)
                 {
@@ -6962,7 +6962,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.Script ?? true)
                 {
-                    fg.AppendLine($"Script => {item.Script}");
+                    fg.AppendLine($"Script => {item.Script_Property}");
                 }
                 if (printMask?.Items?.Overall ?? true)
                 {
@@ -7052,7 +7052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.Class ?? true)
                 {
-                    fg.AppendLine($"Class => {item.Class}");
+                    fg.AppendLine($"Class => {item.Class_Property}");
                 }
                 if (printMask?.Armorer ?? true)
                 {
@@ -7176,7 +7176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.Hair ?? true)
                 {
-                    fg.AppendLine($"Hair => {item.Hair}");
+                    fg.AppendLine($"Hair => {item.Hair_Property}");
                 }
                 if (printMask?.HairLength ?? true)
                 {
@@ -7206,7 +7206,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.CombatStyle ?? true)
                 {
-                    fg.AppendLine($"CombatStyle => {item.CombatStyle}");
+                    fg.AppendLine($"CombatStyle => {item.CombatStyle_Property}");
                 }
                 if (printMask?.FaceGenGeometrySymmetric ?? true)
                 {

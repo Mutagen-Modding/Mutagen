@@ -1666,7 +1666,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (printMask?.Script ?? true)
                 {
-                    fg.AppendLine($"Script => {item.Script}");
+                    fg.AppendLine($"Script => {item.Script_Property}");
                 }
                 if (printMask?.MagicSchool ?? true)
                 {
@@ -1674,7 +1674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.VisualEffect ?? true)
                 {
-                    fg.AppendLine($"VisualEffect => {item.VisualEffect}");
+                    fg.AppendLine($"VisualEffect => {item.VisualEffect_Property}");
                 }
                 if (printMask?.Flags ?? true)
                 {

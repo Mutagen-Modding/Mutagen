@@ -1371,7 +1371,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (printMask?.Item ?? true)
                 {
-                    fg.AppendLine($"Item => {item.Item}");
+                    fg.AppendLine($"Item => {item.Item_Property}");
                 }
                 if (printMask?.Count ?? true)
                 {

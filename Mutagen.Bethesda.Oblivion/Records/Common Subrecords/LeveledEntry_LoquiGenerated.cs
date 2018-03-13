@@ -1749,7 +1749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.Reference ?? true)
                 {
-                    fg.AppendLine($"Reference => {item.Reference}");
+                    fg.AppendLine($"Reference => {item.Reference_Property}");
                 }
                 if (printMask?.Count ?? true)
                 {

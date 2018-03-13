@@ -1345,7 +1345,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (printMask?.Faction ?? true)
                 {
-                    fg.AppendLine($"Faction => {item.Faction}");
+                    fg.AppendLine($"Faction => {item.Faction_Property}");
                 }
                 if (printMask?.Modifier ?? true)
                 {

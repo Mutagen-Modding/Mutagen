@@ -1411,7 +1411,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (printMask?.Sound ?? true)
                 {
-                    fg.AppendLine($"Sound => {item.Sound}");
+                    fg.AppendLine($"Sound => {item.Sound_Property}");
                 }
                 if (printMask?.Chance ?? true)
                 {

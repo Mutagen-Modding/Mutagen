@@ -2593,7 +2593,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.Light ?? true)
                 {
-                    fg.AppendLine($"Light => {item.Light}");
+                    fg.AppendLine($"Light => {item.Light_Property}");
                 }
                 if (printMask?.ProjectileSpeed ?? true)
                 {
@@ -2601,7 +2601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.EffectShader ?? true)
                 {
-                    fg.AppendLine($"EffectShader => {item.EffectShader}");
+                    fg.AppendLine($"EffectShader => {item.EffectShader_Property}");
                 }
                 if (printMask?.SubData?.Overall ?? true)
                 {

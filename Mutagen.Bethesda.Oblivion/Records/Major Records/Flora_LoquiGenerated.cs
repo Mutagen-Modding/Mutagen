@@ -1903,11 +1903,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.Script ?? true)
                 {
-                    fg.AppendLine($"Script => {item.Script}");
+                    fg.AppendLine($"Script => {item.Script_Property}");
                 }
                 if (printMask?.Ingredient ?? true)
                 {
-                    fg.AppendLine($"Ingredient => {item.Ingredient}");
+                    fg.AppendLine($"Ingredient => {item.Ingredient_Property}");
                 }
                 if (printMask?.Spring ?? true)
                 {

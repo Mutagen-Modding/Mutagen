@@ -2490,7 +2490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.Script ?? true)
                 {
-                    fg.AppendLine($"Script => {item.Script}");
+                    fg.AppendLine($"Script => {item.Script_Property}");
                 }
                 if (printMask?.Name ?? true)
                 {
@@ -2538,7 +2538,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.Sound ?? true)
                 {
-                    fg.AppendLine($"Sound => {item.Sound}");
+                    fg.AppendLine($"Sound => {item.Sound_Property}");
                 }
             }
             fg.AppendLine("]");

@@ -5805,11 +5805,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.DeathItem ?? true)
                 {
-                    fg.AppendLine($"DeathItem => {item.DeathItem}");
+                    fg.AppendLine($"DeathItem => {item.DeathItem_Property}");
                 }
                 if (printMask?.Script ?? true)
                 {
-                    fg.AppendLine($"Script => {item.Script}");
+                    fg.AppendLine($"Script => {item.Script_Property}");
                 }
                 if (printMask?.Aggression ?? true)
                 {
@@ -5941,7 +5941,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.CombatStyle ?? true)
                 {
-                    fg.AppendLine($"CombatStyle => {item.CombatStyle}");
+                    fg.AppendLine($"CombatStyle => {item.CombatStyle_Property}");
                 }
                 if (printMask?.TurningSpeed ?? true)
                 {
@@ -5965,7 +5965,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.InheritsSoundFrom ?? true)
                 {
-                    fg.AppendLine($"InheritsSoundFrom => {item.InheritsSoundFrom}");
+                    fg.AppendLine($"InheritsSoundFrom => {item.InheritsSoundFrom_Property}");
                 }
                 if (printMask?.Sounds?.Overall ?? true)
                 {

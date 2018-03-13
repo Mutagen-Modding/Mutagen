@@ -1812,11 +1812,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.Script ?? true)
                 {
-                    fg.AppendLine($"Script => {item.Script}");
+                    fg.AppendLine($"Script => {item.Script_Property}");
                 }
                 if (printMask?.Template ?? true)
                 {
-                    fg.AppendLine($"Template => {item.Template}");
+                    fg.AppendLine($"Template => {item.Template_Property}");
                 }
             }
             fg.AppendLine("]");

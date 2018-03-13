@@ -118,5 +118,11 @@ namespace Mutagen.Bethesda.Generation
                 cmdsAccessor: cmdsAccessor,
                 protectedMembers: protectedMembers);
         }
+
+        public override void GenerateToString(FileGeneration fg, string name, Accessor accessor, string fgAccessor)
+        {
+            if (!this.IntegrateField) return;
+            fg.AppendLine($"{fgAccessor}.AppendLine($\"{name} => {{{accessor.PropertyOrDirectAccess}}}\");");
+        }
     }
 }

@@ -1337,11 +1337,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (printMask?.Male ?? true)
                 {
-                    fg.AppendLine($"Male => {item.Male}");
+                    fg.AppendLine($"Male => {item.Male_Property}");
                 }
                 if (printMask?.Female ?? true)
                 {
-                    fg.AppendLine($"Female => {item.Female}");
+                    fg.AppendLine($"Female => {item.Female_Property}");
                 }
             }
             fg.AppendLine("]");

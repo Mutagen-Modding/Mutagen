@@ -1860,7 +1860,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (printMask?.MagicEffect ?? true)
                 {
-                    fg.AppendLine($"MagicEffect => {item.MagicEffect}");
+                    fg.AppendLine($"MagicEffect => {item.MagicEffect_Property}");
                 }
                 if (printMask?.Magnitude ?? true)
                 {

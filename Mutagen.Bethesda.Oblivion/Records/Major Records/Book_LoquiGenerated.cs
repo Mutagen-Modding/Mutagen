@@ -2192,11 +2192,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.Script ?? true)
                 {
-                    fg.AppendLine($"Script => {item.Script}");
+                    fg.AppendLine($"Script => {item.Script_Property}");
                 }
                 if (printMask?.Enchantment ?? true)
                 {
-                    fg.AppendLine($"Enchantment => {item.Enchantment}");
+                    fg.AppendLine($"Enchantment => {item.Enchantment_Property}");
                 }
                 if (printMask?.EnchantmentPoints ?? true)
                 {

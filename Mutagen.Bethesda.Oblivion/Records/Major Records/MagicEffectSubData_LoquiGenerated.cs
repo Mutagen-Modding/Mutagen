@@ -1703,23 +1703,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (printMask?.EnchantEffect ?? true)
                 {
-                    fg.AppendLine($"EnchantEffect => {item.EnchantEffect}");
+                    fg.AppendLine($"EnchantEffect => {item.EnchantEffect_Property}");
                 }
                 if (printMask?.CastingSound ?? true)
                 {
-                    fg.AppendLine($"CastingSound => {item.CastingSound}");
+                    fg.AppendLine($"CastingSound => {item.CastingSound_Property}");
                 }
                 if (printMask?.BoltSound ?? true)
                 {
-                    fg.AppendLine($"BoltSound => {item.BoltSound}");
+                    fg.AppendLine($"BoltSound => {item.BoltSound_Property}");
                 }
                 if (printMask?.HitSound ?? true)
                 {
-                    fg.AppendLine($"HitSound => {item.HitSound}");
+                    fg.AppendLine($"HitSound => {item.HitSound_Property}");
                 }
                 if (printMask?.AreaSound ?? true)
                 {
-                    fg.AppendLine($"AreaSound => {item.AreaSound}");
+                    fg.AppendLine($"AreaSound => {item.AreaSound_Property}");
                 }
                 if (printMask?.ConstantEffectEnchantmentFactor ?? true)
                 {
