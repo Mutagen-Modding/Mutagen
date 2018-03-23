@@ -67,15 +67,25 @@ namespace Mutagen.Bethesda.Generation
             this._typeGenerations[typeof(ZeroType)] = new ZeroBinaryTranslationGeneration();
             this.MainAPI = new TranslationModuleAPI(
                 writerAPI: new MethodAPI(
-                    majorAPI: new string[] { "MutagenWriter writer" },
-                    optionalAPI: null,
-                    customAPI: new CustomMethodAPI[] { CustomMethodAPI.Private($"{nameof(RecordTypeConverter)} recordTypeConverter", "null") }),
+                    majorAPI: new APILine[] { "MutagenWriter writer" },
+                    optionalAPI: new APILine[] { new APILine((obj) => TryGet<string>.Create(successful: obj.GetObjectType() == ObjectType.Mod, val: "GroupMask importMask = null")) },
+                    customAPI: new CustomMethodAPI[]
+                    {
+                        CustomMethodAPI.Private($"{nameof(RecordTypeConverter)} recordTypeConverter", "null")
+                    }),
                 readerAPI: new MethodAPI(
-                    majorAPI: new string[] { "MutagenFrame frame" },
-                    optionalAPI: null,
-                    customAPI: new CustomMethodAPI[] { CustomMethodAPI.Private($"{nameof(RecordTypeConverter)} recordTypeConverter", "null") }));
+                    majorAPI: new APILine[] { "MutagenFrame frame" },
+                    optionalAPI: new APILine[] { new APILine((obj) => TryGet<string>.Create(successful: obj.GetObjectType() == ObjectType.Mod, val: "GroupMask importMask = null")) },
+                    customAPI: new CustomMethodAPI[]
+                    {
+                        CustomMethodAPI.Private($"{nameof(RecordTypeConverter)} recordTypeConverter", "null")
+                    }));
             this.MinorAPIs.Add(
-                new TranslationModuleAPI(new MethodAPI("string path"))
+                new TranslationModuleAPI(
+                    new MethodAPI(
+                        majorAPI: new APILine[] { "string path" },
+                        customAPI: null,
+                        optionalAPI: new APILine[] { new APILine((obj) => TryGet<string>.Create(successful: obj.GetObjectType() == ObjectType.Mod, val: "GroupMask importMask = null")) }))
                 {
                     Funnel = new TranslationFunnel(
                         this.MainAPI,
@@ -83,7 +93,11 @@ namespace Mutagen.Bethesda.Generation
                         ConvertFromPathIn)
                 });
             this.MinorAPIs.Add(
-                new TranslationModuleAPI(new MethodAPI("Stream stream"))
+                new TranslationModuleAPI(
+                    new MethodAPI(
+                        majorAPI: new APILine[] { "Stream stream" },
+                        customAPI: null,
+                        optionalAPI: new APILine[] { new APILine((obj) => TryGet<string>.Create(successful: obj.GetObjectType() == ObjectType.Mod, val: "GroupMask importMask= null")) }))
                 {
                     Funnel = new TranslationFunnel(
                         this.MainAPI,
@@ -111,22 +125,22 @@ namespace Mutagen.Bethesda.Generation
             yield break;
         }
 
-        private void ConvertFromStreamOut(FileGeneration fg, InternalTranslation internalToDo)
+        private void ConvertFromStreamOut(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
             fg.AppendLine("using (var writer = new MutagenWriter(stream))");
             using (new BraceWrapper(fg))
             {
-                internalToDo("writer");
+                internalToDo(this.MainAPI.WriterMemberNames(obj));
             }
         }
 
-        private void ConvertFromStreamIn(FileGeneration fg, InternalTranslation internalToDo)
+        private void ConvertFromStreamIn(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
             fg.AppendLine("using (var reader = new MutagenReader(stream))");
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("var frame = new MutagenFrame(reader);");
-                internalToDo("frame");
+                internalToDo(this.MainAPI.ReaderMemberNames(obj));
             }
         }
 
@@ -254,6 +268,7 @@ namespace Mutagen.Bethesda.Generation
 
         private async Task GenerateCreateExtras(ObjectGeneration obj, FileGeneration fg)
         {
+            var data = obj.GetObjectData();
             bool typelessStruct = obj.GetObjectType() == ObjectType.Subrecord && !obj.HasRecordType();
             if (!obj.Abstract)
             {
@@ -265,6 +280,10 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add("MutagenFrame frame");
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
+                    if (obj.GetObjectType() == ObjectType.Mod)
+                    {
+                        args.Add($"GroupMask importMask");
+                    }
                     args.Add($"{nameof(RecordTypeConverter)} recordTypeConverter");
                 }
                 using (new BraceWrapper(fg))
@@ -358,6 +377,10 @@ namespace Mutagen.Bethesda.Generation
                                             {
                                                 args.Add("lastParsed: lastParsed");
                                             }
+                                            if (obj.GetObjectType() == ObjectType.Mod)
+                                            {
+                                                args.Add("importMask: importMask");
+                                            }
                                             args.Add("errorMask: errorMask");
                                             args.Add($"recordTypeConverter: recordTypeConverter");
                                         }
@@ -412,9 +435,9 @@ namespace Mutagen.Bethesda.Generation
                         expandSets: SetMarkerType.ExpandSets.False))
                     {
                         if (field is SetMarkerType) continue;
-                        if (field.TryGetFieldData(out var data)
-                            && data.HasTrigger) continue;
-                        if (field.Derivative && !data.CustomBinary) continue;
+                        if (field.TryGetFieldData(out var fieldData)
+                            && fieldData.HasTrigger) continue;
+                        if (field.Derivative && !fieldData.CustomBinary) continue;
                         if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
                         {
                             throw new ArgumentException("Unsupported type generator: " + field);
@@ -442,6 +465,10 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"{obj.FieldIndexName}? lastParsed");
                     }
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
+                    if (data.ObjectType == ObjectType.Mod)
+                    {
+                        args.Add($"GroupMask importMask");
+                    }
                     args.Add($"{nameof(RecordTypeConverter)} recordTypeConverter = null");
                 }
                 using (new BraceWrapper(fg))
@@ -477,10 +504,10 @@ namespace Mutagen.Bethesda.Generation
                             expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
                             nonIntegrated: true))
                         {
-                            if (!field.Field.TryGetFieldData(out var data)
-                                || !data.HasTrigger
-                                || data.TriggeringRecordTypes.Count == 0) continue;
-                            if (field.Field.Derivative && !data.CustomBinary) continue;
+                            if (!field.Field.TryGetFieldData(out var fieldData)
+                                || !fieldData.HasTrigger
+                                || fieldData.TriggeringRecordTypes.Count == 0) continue;
+                            if (field.Field.Derivative && !fieldData.CustomBinary) continue;
                             if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
                             {
                                 throw new ArgumentException("Unsupported type generator: " + field.Field);
@@ -488,19 +515,17 @@ namespace Mutagen.Bethesda.Generation
 
                             if (!generator.ShouldGenerateCopyIn(field.Field)) continue;
                             var dataSet = field.Field as DataType;
-                            foreach (var gen in data.GenerationTypes)
+                            foreach (var gen in fieldData.GenerationTypes)
                             {
-                                if (gen.Value is LoquiType loqui)
-                                {
-                                    if (loqui.TargetObjectGeneration?.Abstract ?? false) continue;
-                                }
+                                LoquiType loqui = gen.Value as LoquiType;
+                                if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
                                 foreach (var trigger in gen.Key)
                                 {
                                     fg.AppendLine($"case \"{trigger.Type}\":");
                                 }
                                 using (new DepthWrapper(fg))
                                 {
-                                    if (typelessStruct && data.IsTriggerForObject)
+                                    if (typelessStruct && fieldData.IsTriggerForObject)
                                     {
                                         if (dataSet != null)
                                         {
@@ -526,7 +551,23 @@ namespace Mutagen.Bethesda.Generation
                                         }
                                     }
 
-                                    GenerateFillSnippet(obj, fg, gen.Value, generator, "frame");
+                                    var groupMask = data.ObjectType == ObjectType.Mod && (loqui?.TargetObjectGeneration?.GetObjectType() == ObjectType.Group);
+                                    if (groupMask)
+                                    {
+                                        fg.AppendLine($"if (importMask?.{field.Field.Name} ?? true)");
+                                    }
+                                    using (new BraceWrapper(fg, doIt: groupMask))
+                                    {
+                                        GenerateFillSnippet(obj, fg, gen.Value, generator, "frame");
+                                    }
+                                    if (groupMask)
+                                    {
+                                        fg.AppendLine("else");
+                                        using (new BraceWrapper(fg))
+                                        {
+                                            fg.AppendLine("frame.Position += contentLength;");
+                                        }
+                                    }
                                     if (dataSet != null)
                                     {
                                         fg.AppendLine($"return TryGet<{obj.FieldIndexName}?>.Succeed({dataSet.SubFields.Last(f => f.IntegrateField).IndexEnumName});");
@@ -549,10 +590,10 @@ namespace Mutagen.Bethesda.Generation
                             // Generic options
                             foreach (var field in obj.IterateFieldIndices())
                             {
-                                if (!field.Field.TryGetFieldData(out var data)
-                                    || !data.HasTrigger
-                                    || data.TriggeringRecordTypes.Count > 0) continue;
-                                if (field.Field.Derivative && !data.CustomBinary) continue;
+                                if (!field.Field.TryGetFieldData(out var fieldData)
+                                    || !fieldData.HasTrigger
+                                    || fieldData.TriggeringRecordTypes.Count > 0) continue;
+                                if (field.Field.Derivative && !fieldData.CustomBinary) continue;
                                 if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
                                 {
                                     throw new ArgumentException("Unsupported type generator: " + field.Field);
@@ -562,7 +603,7 @@ namespace Mutagen.Bethesda.Generation
                                 {
                                     using (var args = new IfWrapper(fg, ANDs: true, first: first))
                                     {
-                                        foreach (var trigger in data.TriggeringRecordAccessors)
+                                        foreach (var trigger in fieldData.TriggeringRecordAccessors)
                                         {
                                             args.Checks.Add($"nextRecordType.Equals({trigger})");
                                         }
@@ -821,22 +862,22 @@ namespace Mutagen.Bethesda.Generation
                 maskAccessor: $"errorMask");
         }
 
-        private void ConvertFromPathOut(FileGeneration fg, InternalTranslation internalToDo)
+        private void ConvertFromPathOut(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
             fg.AppendLine("using (var writer = new MutagenWriter(path))");
             using (new BraceWrapper(fg))
             {
-                internalToDo("writer");
+                internalToDo(this.MainAPI.WriterMemberNames(obj));
             }
         }
 
-        private void ConvertFromPathIn(FileGeneration fg, InternalTranslation internalToDo)
+        private void ConvertFromPathIn(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
             fg.AppendLine("using (var reader = new MutagenReader(path))");
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("var frame = new MutagenFrame(reader);");
-                internalToDo("frame");
+                internalToDo(this.MainAPI.ReaderMemberNames(obj));
             }
         }
 
@@ -846,7 +887,7 @@ namespace Mutagen.Bethesda.Generation
                 $"LoquiBinaryTranslation<{obj.ObjectName}, {(usingErrorMask ? obj.Mask(MaskType.Error) : obj.Mask_GenericAssumed(MaskType.Error))}>.Instance.CopyIn"))
             using (new DepthWrapper(fg))
             {
-                foreach (var item in this.MainAPI.ReaderPassArgs)
+                foreach (var item in this.MainAPI.ReaderPassArgs(obj))
                 {
                     args.Add(item);
                 }
@@ -873,6 +914,10 @@ namespace Mutagen.Bethesda.Generation
                 $"var ret = Create_{ModuleNickname}_Internal"))
             {
                 args.Add("frame: frame");
+                if (obj.GetObjectType() == ObjectType.Mod)
+                {
+                    args.Add("importMask: importMask");
+                }
                 args.Add($"errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new {obj.Mask(MaskType.Error)}()) : default(Func<{obj.Mask(MaskType.Error)}>)");
                 args.Add($"recordTypeConverter: recordTypeConverter");
             }

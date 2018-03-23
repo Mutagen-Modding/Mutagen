@@ -553,80 +553,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region XML Copy In
-        public void CopyIn_XML(
-            XElement root,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiXmlTranslation<OblivionMod, OblivionMod_ErrorMask>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void CopyIn_XML(
-            XElement root,
-            out OblivionMod_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiXmlTranslation<OblivionMod, OblivionMod_ErrorMask>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            string path,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
-                root: root,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            string path,
-            out OblivionMod_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            Stream stream,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
-                root: root,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            Stream stream,
-            out OblivionMod_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out errorMask,
-                cmds: cmds);
-        }
-
-        #endregion
-
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
@@ -715,9 +641,10 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             OblivionModCommon.Write_XML(
-                writer: writer,
                 item: this,
                 doMasks: doMasks,
+                writer: writer,
+                name: name,
                 errorMask: out var errorMask);
             return errorMask;
         }
@@ -2034,10 +1961,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static OblivionMod Create_Binary(MutagenFrame frame)
+        public static OblivionMod Create_Binary(
+            MutagenFrame frame,
+            GroupMask importMask = null)
         {
             return Create_Binary(
                 frame: frame,
+                importMask: importMask,
                 doMasks: false,
                 errorMask: out var errorMask);
         }
@@ -2045,10 +1975,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static OblivionMod Create_Binary(
             MutagenFrame frame,
-            out OblivionMod_ErrorMask errorMask)
+            out OblivionMod_ErrorMask errorMask,
+            GroupMask importMask = null)
         {
             return Create_Binary(
                 frame: frame,
+                importMask: importMask,
                 doMasks: true,
                 errorMask: out errorMask);
         }
@@ -2057,10 +1989,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static OblivionMod Create_Binary(
             MutagenFrame frame,
             bool doMasks,
-            out OblivionMod_ErrorMask errorMask)
+            out OblivionMod_ErrorMask errorMask,
+            GroupMask importMask = null)
         {
             var ret = Create_Binary(
                 frame: frame,
+                importMask: importMask,
                 recordTypeConverter: null,
                 doMasks: doMasks);
             errorMask = ret.ErrorMask;
@@ -2071,143 +2005,71 @@ namespace Mutagen.Bethesda.Oblivion
         public static (OblivionMod Object, OblivionMod_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            bool doMasks,
+            GroupMask importMask = null)
         {
             OblivionMod_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
+                importMask: importMask,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new OblivionMod_ErrorMask()) : default(Func<OblivionMod_ErrorMask>),
                 recordTypeConverter: recordTypeConverter);
             return (ret, errMaskRet);
         }
 
-        public static OblivionMod Create_Binary(string path)
-        {
-            using (var reader = new MutagenReader(path))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
-            }
-        }
-
         public static OblivionMod Create_Binary(
             string path,
-            out OblivionMod_ErrorMask errorMask)
+            GroupMask importMask = null)
         {
             using (var reader = new MutagenReader(path))
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
-                    errorMask: out errorMask);
+                    importMask: importMask);
             }
         }
 
-        public static OblivionMod Create_Binary(Stream stream)
+        public static OblivionMod Create_Binary(
+            string path,
+            out OblivionMod_ErrorMask errorMask,
+            GroupMask importMask = null)
         {
-            using (var reader = new MutagenReader(stream))
+            using (var reader = new MutagenReader(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    importMask: importMask,
+                    errorMask: out errorMask);
             }
         }
 
         public static OblivionMod Create_Binary(
             Stream stream,
-            out OblivionMod_ErrorMask errorMask)
+            GroupMask importMask= null)
         {
             using (var reader = new MutagenReader(stream))
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    importMask: importMask);
+            }
+        }
+
+        public static OblivionMod Create_Binary(
+            Stream stream,
+            out OblivionMod_ErrorMask errorMask,
+            GroupMask importMask= null)
+        {
+            using (var reader = new MutagenReader(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    importMask: importMask,
                     errorMask: out errorMask);
-            }
-        }
-
-        #endregion
-
-        #region Binary Copy In
-        public void CopyIn_Binary(
-            MutagenFrame frame,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiBinaryTranslation<OblivionMod, OblivionMod_ErrorMask>.Instance.CopyIn(
-                frame: frame,
-                item: this,
-                skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void CopyIn_Binary(
-            MutagenFrame frame,
-            out OblivionMod_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiBinaryTranslation<OblivionMod, OblivionMod_ErrorMask>.Instance.CopyIn(
-                frame: frame,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_Binary(
-            string path,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(path))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary(
-            string path,
-            out OblivionMod_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(path))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    errorMask: out errorMask,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary(
-            Stream stream,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary(
-            Stream stream,
-            out OblivionMod_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    errorMask: out errorMask,
-                    cmds: cmds);
             }
         }
 
@@ -2216,71 +2078,90 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out OblivionMod_ErrorMask errorMask)
+            out OblivionMod_ErrorMask errorMask,
+            GroupMask importMask = null)
         {
             errorMask = (OblivionMod_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
+                importMask: importMask,
                 recordTypeConverter: null,
                 doMasks: true);
         }
 
         public virtual void Write_Binary(
             string path,
-            out OblivionMod_ErrorMask errorMask)
+            out OblivionMod_ErrorMask errorMask,
+            GroupMask importMask = null)
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
+                    importMask: importMask,
                     errorMask: out errorMask);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
-            out OblivionMod_ErrorMask errorMask)
+            out OblivionMod_ErrorMask errorMask,
+            GroupMask importMask= null)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
+                    importMask: importMask,
                     errorMask: out errorMask);
             }
         }
 
-        public void Write_Binary(MutagenWriter writer)
+        public void Write_Binary(
+            MutagenWriter writer,
+            GroupMask importMask = null)
         {
             this.Write_Binary_Internal(
                 writer: writer,
+                importMask: importMask,
                 recordTypeConverter: null,
                 doMasks: false);
         }
 
-        public void Write_Binary(string path)
+        public void Write_Binary(
+            string path,
+            GroupMask importMask = null)
         {
             using (var writer = new MutagenWriter(path))
             {
-                Write_Binary(writer: writer);
+                Write_Binary(
+                    writer: writer,
+                    importMask: importMask);
             }
         }
 
-        public void Write_Binary(Stream stream)
+        public void Write_Binary(
+            Stream stream,
+            GroupMask importMask= null)
         {
             using (var writer = new MutagenWriter(stream))
             {
-                Write_Binary(writer: writer);
+                Write_Binary(
+                    writer: writer,
+                    importMask: importMask);
             }
         }
 
         protected object Write_Binary_Internal(
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            bool doMasks,
+            GroupMask importMask = null)
         {
             OblivionModCommon.Write_Binary(
-                writer: writer,
                 item: this,
                 doMasks: doMasks,
+                writer: writer,
+                importMask: importMask,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: out var errorMask);
             return errorMask;
@@ -2290,6 +2171,7 @@ namespace Mutagen.Bethesda.Oblivion
         private static OblivionMod Create_Binary_Internal(
             MutagenFrame frame,
             Func<OblivionMod_ErrorMask> errorMask,
+            GroupMask importMask,
             RecordTypeConverter recordTypeConverter)
         {
             var ret = new OblivionMod();
@@ -2306,6 +2188,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
+                            importMask: importMask,
                             errorMask: errorMask,
                             recordTypeConverter: recordTypeConverter);
                         if (parsed.Failed) break;
@@ -2335,6 +2218,7 @@ namespace Mutagen.Bethesda.Oblivion
             OblivionMod item,
             MutagenFrame frame,
             Func<OblivionMod_ErrorMask> errorMask,
+            GroupMask importMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextType(
@@ -2363,802 +2247,1096 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: combinedTES4 == null ? null : new MaskItem<Exception, TES4_ErrorMask>(null, combinedTES4));
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.TES4);
                 case "GMST":
-                    var tmpGameSettings = Group<GameSetting>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<GameSetting_ErrorMask> GameSettingscreateMask);
-                    GroupCommon.CopyFieldsFrom<GameSetting, GameSetting_ErrorMask, GameSetting_CopyMask>(
-                        item: item._GameSettings_Object,
-                        rhs: tmpGameSettings,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<GameSetting_ErrorMask> GameSettingserrorMask);
-                    var combinedGameSettings = Group_ErrorMask<GameSetting_ErrorMask>.Combine(GameSettingscreateMask, GameSettingserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.GameSettings,
-                        errMaskObj: combinedGameSettings == null ? null : new MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>(null, combinedGameSettings));
+                    if (importMask?.GameSettings ?? true)
+                    {
+                        var tmpGameSettings = Group<GameSetting>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<GameSetting_ErrorMask> GameSettingscreateMask);
+                        GroupCommon.CopyFieldsFrom<GameSetting, GameSetting_ErrorMask, GameSetting_CopyMask>(
+                            item: item._GameSettings_Object,
+                            rhs: tmpGameSettings,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<GameSetting_ErrorMask> GameSettingserrorMask);
+                        var combinedGameSettings = Group_ErrorMask<GameSetting_ErrorMask>.Combine(GameSettingscreateMask, GameSettingserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.GameSettings,
+                            errMaskObj: combinedGameSettings == null ? null : new MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>(null, combinedGameSettings));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.GameSettings);
                 case "GLOB":
-                    var tmpGlobals = Group<Global>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Global_ErrorMask> GlobalscreateMask);
-                    GroupCommon.CopyFieldsFrom<Global, Global_ErrorMask, Global_CopyMask>(
-                        item: item._Globals_Object,
-                        rhs: tmpGlobals,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Global_ErrorMask> GlobalserrorMask);
-                    var combinedGlobals = Group_ErrorMask<Global_ErrorMask>.Combine(GlobalscreateMask, GlobalserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Globals,
-                        errMaskObj: combinedGlobals == null ? null : new MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>>(null, combinedGlobals));
+                    if (importMask?.Globals ?? true)
+                    {
+                        var tmpGlobals = Group<Global>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Global_ErrorMask> GlobalscreateMask);
+                        GroupCommon.CopyFieldsFrom<Global, Global_ErrorMask, Global_CopyMask>(
+                            item: item._Globals_Object,
+                            rhs: tmpGlobals,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Global_ErrorMask> GlobalserrorMask);
+                        var combinedGlobals = Group_ErrorMask<Global_ErrorMask>.Combine(GlobalscreateMask, GlobalserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Globals,
+                            errMaskObj: combinedGlobals == null ? null : new MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>>(null, combinedGlobals));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Globals);
                 case "CLAS":
-                    var tmpClasses = Group<Class>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Class_ErrorMask> ClassescreateMask);
-                    GroupCommon.CopyFieldsFrom<Class, Class_ErrorMask, Class_CopyMask>(
-                        item: item._Classes_Object,
-                        rhs: tmpClasses,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Class_ErrorMask> ClasseserrorMask);
-                    var combinedClasses = Group_ErrorMask<Class_ErrorMask>.Combine(ClassescreateMask, ClasseserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Classes,
-                        errMaskObj: combinedClasses == null ? null : new MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>>(null, combinedClasses));
+                    if (importMask?.Classes ?? true)
+                    {
+                        var tmpClasses = Group<Class>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Class_ErrorMask> ClassescreateMask);
+                        GroupCommon.CopyFieldsFrom<Class, Class_ErrorMask, Class_CopyMask>(
+                            item: item._Classes_Object,
+                            rhs: tmpClasses,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Class_ErrorMask> ClasseserrorMask);
+                        var combinedClasses = Group_ErrorMask<Class_ErrorMask>.Combine(ClassescreateMask, ClasseserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Classes,
+                            errMaskObj: combinedClasses == null ? null : new MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>>(null, combinedClasses));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Classes);
                 case "FACT":
-                    var tmpFactions = Group<Faction>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Faction_ErrorMask> FactionscreateMask);
-                    GroupCommon.CopyFieldsFrom<Faction, Faction_ErrorMask, Faction_CopyMask>(
-                        item: item._Factions_Object,
-                        rhs: tmpFactions,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Faction_ErrorMask> FactionserrorMask);
-                    var combinedFactions = Group_ErrorMask<Faction_ErrorMask>.Combine(FactionscreateMask, FactionserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Factions,
-                        errMaskObj: combinedFactions == null ? null : new MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>>(null, combinedFactions));
+                    if (importMask?.Factions ?? true)
+                    {
+                        var tmpFactions = Group<Faction>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Faction_ErrorMask> FactionscreateMask);
+                        GroupCommon.CopyFieldsFrom<Faction, Faction_ErrorMask, Faction_CopyMask>(
+                            item: item._Factions_Object,
+                            rhs: tmpFactions,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Faction_ErrorMask> FactionserrorMask);
+                        var combinedFactions = Group_ErrorMask<Faction_ErrorMask>.Combine(FactionscreateMask, FactionserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Factions,
+                            errMaskObj: combinedFactions == null ? null : new MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>>(null, combinedFactions));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Factions);
                 case "HAIR":
-                    var tmpHairs = Group<Hair>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Hair_ErrorMask> HairscreateMask);
-                    GroupCommon.CopyFieldsFrom<Hair, Hair_ErrorMask, Hair_CopyMask>(
-                        item: item._Hairs_Object,
-                        rhs: tmpHairs,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Hair_ErrorMask> HairserrorMask);
-                    var combinedHairs = Group_ErrorMask<Hair_ErrorMask>.Combine(HairscreateMask, HairserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Hairs,
-                        errMaskObj: combinedHairs == null ? null : new MaskItem<Exception, Group_ErrorMask<Hair_ErrorMask>>(null, combinedHairs));
+                    if (importMask?.Hairs ?? true)
+                    {
+                        var tmpHairs = Group<Hair>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Hair_ErrorMask> HairscreateMask);
+                        GroupCommon.CopyFieldsFrom<Hair, Hair_ErrorMask, Hair_CopyMask>(
+                            item: item._Hairs_Object,
+                            rhs: tmpHairs,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Hair_ErrorMask> HairserrorMask);
+                        var combinedHairs = Group_ErrorMask<Hair_ErrorMask>.Combine(HairscreateMask, HairserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Hairs,
+                            errMaskObj: combinedHairs == null ? null : new MaskItem<Exception, Group_ErrorMask<Hair_ErrorMask>>(null, combinedHairs));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Hairs);
                 case "EYES":
-                    var tmpEyes = Group<Eye>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Eye_ErrorMask> EyescreateMask);
-                    GroupCommon.CopyFieldsFrom<Eye, Eye_ErrorMask, Eye_CopyMask>(
-                        item: item._Eyes_Object,
-                        rhs: tmpEyes,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Eye_ErrorMask> EyeserrorMask);
-                    var combinedEyes = Group_ErrorMask<Eye_ErrorMask>.Combine(EyescreateMask, EyeserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Eyes,
-                        errMaskObj: combinedEyes == null ? null : new MaskItem<Exception, Group_ErrorMask<Eye_ErrorMask>>(null, combinedEyes));
+                    if (importMask?.Eyes ?? true)
+                    {
+                        var tmpEyes = Group<Eye>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Eye_ErrorMask> EyescreateMask);
+                        GroupCommon.CopyFieldsFrom<Eye, Eye_ErrorMask, Eye_CopyMask>(
+                            item: item._Eyes_Object,
+                            rhs: tmpEyes,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Eye_ErrorMask> EyeserrorMask);
+                        var combinedEyes = Group_ErrorMask<Eye_ErrorMask>.Combine(EyescreateMask, EyeserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Eyes,
+                            errMaskObj: combinedEyes == null ? null : new MaskItem<Exception, Group_ErrorMask<Eye_ErrorMask>>(null, combinedEyes));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Eyes);
                 case "RACE":
-                    var tmpRaces = Group<Race>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Race_ErrorMask> RacescreateMask);
-                    GroupCommon.CopyFieldsFrom<Race, Race_ErrorMask, Race_CopyMask>(
-                        item: item._Races_Object,
-                        rhs: tmpRaces,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Race_ErrorMask> RaceserrorMask);
-                    var combinedRaces = Group_ErrorMask<Race_ErrorMask>.Combine(RacescreateMask, RaceserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Races,
-                        errMaskObj: combinedRaces == null ? null : new MaskItem<Exception, Group_ErrorMask<Race_ErrorMask>>(null, combinedRaces));
+                    if (importMask?.Races ?? true)
+                    {
+                        var tmpRaces = Group<Race>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Race_ErrorMask> RacescreateMask);
+                        GroupCommon.CopyFieldsFrom<Race, Race_ErrorMask, Race_CopyMask>(
+                            item: item._Races_Object,
+                            rhs: tmpRaces,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Race_ErrorMask> RaceserrorMask);
+                        var combinedRaces = Group_ErrorMask<Race_ErrorMask>.Combine(RacescreateMask, RaceserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Races,
+                            errMaskObj: combinedRaces == null ? null : new MaskItem<Exception, Group_ErrorMask<Race_ErrorMask>>(null, combinedRaces));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Races);
                 case "SOUN":
-                    var tmpSounds = Group<Sound>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Sound_ErrorMask> SoundscreateMask);
-                    GroupCommon.CopyFieldsFrom<Sound, Sound_ErrorMask, Sound_CopyMask>(
-                        item: item._Sounds_Object,
-                        rhs: tmpSounds,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Sound_ErrorMask> SoundserrorMask);
-                    var combinedSounds = Group_ErrorMask<Sound_ErrorMask>.Combine(SoundscreateMask, SoundserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Sounds,
-                        errMaskObj: combinedSounds == null ? null : new MaskItem<Exception, Group_ErrorMask<Sound_ErrorMask>>(null, combinedSounds));
+                    if (importMask?.Sounds ?? true)
+                    {
+                        var tmpSounds = Group<Sound>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Sound_ErrorMask> SoundscreateMask);
+                        GroupCommon.CopyFieldsFrom<Sound, Sound_ErrorMask, Sound_CopyMask>(
+                            item: item._Sounds_Object,
+                            rhs: tmpSounds,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Sound_ErrorMask> SoundserrorMask);
+                        var combinedSounds = Group_ErrorMask<Sound_ErrorMask>.Combine(SoundscreateMask, SoundserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Sounds,
+                            errMaskObj: combinedSounds == null ? null : new MaskItem<Exception, Group_ErrorMask<Sound_ErrorMask>>(null, combinedSounds));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Sounds);
                 case "SKIL":
-                    var tmpSkills = Group<SkillRecord>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<SkillRecord_ErrorMask> SkillscreateMask);
-                    GroupCommon.CopyFieldsFrom<SkillRecord, SkillRecord_ErrorMask, SkillRecord_CopyMask>(
-                        item: item._Skills_Object,
-                        rhs: tmpSkills,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<SkillRecord_ErrorMask> SkillserrorMask);
-                    var combinedSkills = Group_ErrorMask<SkillRecord_ErrorMask>.Combine(SkillscreateMask, SkillserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Skills,
-                        errMaskObj: combinedSkills == null ? null : new MaskItem<Exception, Group_ErrorMask<SkillRecord_ErrorMask>>(null, combinedSkills));
+                    if (importMask?.Skills ?? true)
+                    {
+                        var tmpSkills = Group<SkillRecord>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<SkillRecord_ErrorMask> SkillscreateMask);
+                        GroupCommon.CopyFieldsFrom<SkillRecord, SkillRecord_ErrorMask, SkillRecord_CopyMask>(
+                            item: item._Skills_Object,
+                            rhs: tmpSkills,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<SkillRecord_ErrorMask> SkillserrorMask);
+                        var combinedSkills = Group_ErrorMask<SkillRecord_ErrorMask>.Combine(SkillscreateMask, SkillserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Skills,
+                            errMaskObj: combinedSkills == null ? null : new MaskItem<Exception, Group_ErrorMask<SkillRecord_ErrorMask>>(null, combinedSkills));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Skills);
                 case "MGEF":
-                    var tmpMagicEffects = Group<MagicEffect>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<MagicEffect_ErrorMask> MagicEffectscreateMask);
-                    GroupCommon.CopyFieldsFrom<MagicEffect, MagicEffect_ErrorMask, MagicEffect_CopyMask>(
-                        item: item._MagicEffects_Object,
-                        rhs: tmpMagicEffects,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<MagicEffect_ErrorMask> MagicEffectserrorMask);
-                    var combinedMagicEffects = Group_ErrorMask<MagicEffect_ErrorMask>.Combine(MagicEffectscreateMask, MagicEffectserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.MagicEffects,
-                        errMaskObj: combinedMagicEffects == null ? null : new MaskItem<Exception, Group_ErrorMask<MagicEffect_ErrorMask>>(null, combinedMagicEffects));
+                    if (importMask?.MagicEffects ?? true)
+                    {
+                        var tmpMagicEffects = Group<MagicEffect>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<MagicEffect_ErrorMask> MagicEffectscreateMask);
+                        GroupCommon.CopyFieldsFrom<MagicEffect, MagicEffect_ErrorMask, MagicEffect_CopyMask>(
+                            item: item._MagicEffects_Object,
+                            rhs: tmpMagicEffects,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<MagicEffect_ErrorMask> MagicEffectserrorMask);
+                        var combinedMagicEffects = Group_ErrorMask<MagicEffect_ErrorMask>.Combine(MagicEffectscreateMask, MagicEffectserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.MagicEffects,
+                            errMaskObj: combinedMagicEffects == null ? null : new MaskItem<Exception, Group_ErrorMask<MagicEffect_ErrorMask>>(null, combinedMagicEffects));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.MagicEffects);
                 case "SCPT":
-                    var tmpScripts = Group<Script>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Script_ErrorMask> ScriptscreateMask);
-                    GroupCommon.CopyFieldsFrom<Script, Script_ErrorMask, Script_CopyMask>(
-                        item: item._Scripts_Object,
-                        rhs: tmpScripts,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Script_ErrorMask> ScriptserrorMask);
-                    var combinedScripts = Group_ErrorMask<Script_ErrorMask>.Combine(ScriptscreateMask, ScriptserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Scripts,
-                        errMaskObj: combinedScripts == null ? null : new MaskItem<Exception, Group_ErrorMask<Script_ErrorMask>>(null, combinedScripts));
+                    if (importMask?.Scripts ?? true)
+                    {
+                        var tmpScripts = Group<Script>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Script_ErrorMask> ScriptscreateMask);
+                        GroupCommon.CopyFieldsFrom<Script, Script_ErrorMask, Script_CopyMask>(
+                            item: item._Scripts_Object,
+                            rhs: tmpScripts,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Script_ErrorMask> ScriptserrorMask);
+                        var combinedScripts = Group_ErrorMask<Script_ErrorMask>.Combine(ScriptscreateMask, ScriptserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Scripts,
+                            errMaskObj: combinedScripts == null ? null : new MaskItem<Exception, Group_ErrorMask<Script_ErrorMask>>(null, combinedScripts));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Scripts);
                 case "LTEX":
-                    var tmpLandTextures = Group<LandTexture>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<LandTexture_ErrorMask> LandTexturescreateMask);
-                    GroupCommon.CopyFieldsFrom<LandTexture, LandTexture_ErrorMask, LandTexture_CopyMask>(
-                        item: item._LandTextures_Object,
-                        rhs: tmpLandTextures,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<LandTexture_ErrorMask> LandTextureserrorMask);
-                    var combinedLandTextures = Group_ErrorMask<LandTexture_ErrorMask>.Combine(LandTexturescreateMask, LandTextureserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.LandTextures,
-                        errMaskObj: combinedLandTextures == null ? null : new MaskItem<Exception, Group_ErrorMask<LandTexture_ErrorMask>>(null, combinedLandTextures));
+                    if (importMask?.LandTextures ?? true)
+                    {
+                        var tmpLandTextures = Group<LandTexture>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<LandTexture_ErrorMask> LandTexturescreateMask);
+                        GroupCommon.CopyFieldsFrom<LandTexture, LandTexture_ErrorMask, LandTexture_CopyMask>(
+                            item: item._LandTextures_Object,
+                            rhs: tmpLandTextures,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<LandTexture_ErrorMask> LandTextureserrorMask);
+                        var combinedLandTextures = Group_ErrorMask<LandTexture_ErrorMask>.Combine(LandTexturescreateMask, LandTextureserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.LandTextures,
+                            errMaskObj: combinedLandTextures == null ? null : new MaskItem<Exception, Group_ErrorMask<LandTexture_ErrorMask>>(null, combinedLandTextures));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.LandTextures);
                 case "ENCH":
-                    var tmpEnchantments = Group<Enchantment>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Enchantment_ErrorMask> EnchantmentscreateMask);
-                    GroupCommon.CopyFieldsFrom<Enchantment, Enchantment_ErrorMask, Enchantment_CopyMask>(
-                        item: item._Enchantments_Object,
-                        rhs: tmpEnchantments,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Enchantment_ErrorMask> EnchantmentserrorMask);
-                    var combinedEnchantments = Group_ErrorMask<Enchantment_ErrorMask>.Combine(EnchantmentscreateMask, EnchantmentserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Enchantments,
-                        errMaskObj: combinedEnchantments == null ? null : new MaskItem<Exception, Group_ErrorMask<Enchantment_ErrorMask>>(null, combinedEnchantments));
+                    if (importMask?.Enchantments ?? true)
+                    {
+                        var tmpEnchantments = Group<Enchantment>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Enchantment_ErrorMask> EnchantmentscreateMask);
+                        GroupCommon.CopyFieldsFrom<Enchantment, Enchantment_ErrorMask, Enchantment_CopyMask>(
+                            item: item._Enchantments_Object,
+                            rhs: tmpEnchantments,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Enchantment_ErrorMask> EnchantmentserrorMask);
+                        var combinedEnchantments = Group_ErrorMask<Enchantment_ErrorMask>.Combine(EnchantmentscreateMask, EnchantmentserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Enchantments,
+                            errMaskObj: combinedEnchantments == null ? null : new MaskItem<Exception, Group_ErrorMask<Enchantment_ErrorMask>>(null, combinedEnchantments));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Enchantments);
                 case "SPEL":
-                    var tmpSpells = Group<SpellUnleveled>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<SpellUnleveled_ErrorMask> SpellscreateMask);
-                    GroupCommon.CopyFieldsFrom<SpellUnleveled, SpellUnleveled_ErrorMask, SpellUnleveled_CopyMask>(
-                        item: item._Spells_Object,
-                        rhs: tmpSpells,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<SpellUnleveled_ErrorMask> SpellserrorMask);
-                    var combinedSpells = Group_ErrorMask<SpellUnleveled_ErrorMask>.Combine(SpellscreateMask, SpellserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Spells,
-                        errMaskObj: combinedSpells == null ? null : new MaskItem<Exception, Group_ErrorMask<SpellUnleveled_ErrorMask>>(null, combinedSpells));
+                    if (importMask?.Spells ?? true)
+                    {
+                        var tmpSpells = Group<SpellUnleveled>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<SpellUnleveled_ErrorMask> SpellscreateMask);
+                        GroupCommon.CopyFieldsFrom<SpellUnleveled, SpellUnleveled_ErrorMask, SpellUnleveled_CopyMask>(
+                            item: item._Spells_Object,
+                            rhs: tmpSpells,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<SpellUnleveled_ErrorMask> SpellserrorMask);
+                        var combinedSpells = Group_ErrorMask<SpellUnleveled_ErrorMask>.Combine(SpellscreateMask, SpellserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Spells,
+                            errMaskObj: combinedSpells == null ? null : new MaskItem<Exception, Group_ErrorMask<SpellUnleveled_ErrorMask>>(null, combinedSpells));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Spells);
                 case "BSGN":
-                    var tmpBirthsigns = Group<Birthsign>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Birthsign_ErrorMask> BirthsignscreateMask);
-                    GroupCommon.CopyFieldsFrom<Birthsign, Birthsign_ErrorMask, Birthsign_CopyMask>(
-                        item: item._Birthsigns_Object,
-                        rhs: tmpBirthsigns,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Birthsign_ErrorMask> BirthsignserrorMask);
-                    var combinedBirthsigns = Group_ErrorMask<Birthsign_ErrorMask>.Combine(BirthsignscreateMask, BirthsignserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Birthsigns,
-                        errMaskObj: combinedBirthsigns == null ? null : new MaskItem<Exception, Group_ErrorMask<Birthsign_ErrorMask>>(null, combinedBirthsigns));
+                    if (importMask?.Birthsigns ?? true)
+                    {
+                        var tmpBirthsigns = Group<Birthsign>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Birthsign_ErrorMask> BirthsignscreateMask);
+                        GroupCommon.CopyFieldsFrom<Birthsign, Birthsign_ErrorMask, Birthsign_CopyMask>(
+                            item: item._Birthsigns_Object,
+                            rhs: tmpBirthsigns,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Birthsign_ErrorMask> BirthsignserrorMask);
+                        var combinedBirthsigns = Group_ErrorMask<Birthsign_ErrorMask>.Combine(BirthsignscreateMask, BirthsignserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Birthsigns,
+                            errMaskObj: combinedBirthsigns == null ? null : new MaskItem<Exception, Group_ErrorMask<Birthsign_ErrorMask>>(null, combinedBirthsigns));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Birthsigns);
                 case "ACTI":
-                    var tmpActivators = Group<Activator>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Activator_ErrorMask> ActivatorscreateMask);
-                    GroupCommon.CopyFieldsFrom<Activator, Activator_ErrorMask, Activator_CopyMask>(
-                        item: item._Activators_Object,
-                        rhs: tmpActivators,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Activator_ErrorMask> ActivatorserrorMask);
-                    var combinedActivators = Group_ErrorMask<Activator_ErrorMask>.Combine(ActivatorscreateMask, ActivatorserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Activators,
-                        errMaskObj: combinedActivators == null ? null : new MaskItem<Exception, Group_ErrorMask<Activator_ErrorMask>>(null, combinedActivators));
+                    if (importMask?.Activators ?? true)
+                    {
+                        var tmpActivators = Group<Activator>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Activator_ErrorMask> ActivatorscreateMask);
+                        GroupCommon.CopyFieldsFrom<Activator, Activator_ErrorMask, Activator_CopyMask>(
+                            item: item._Activators_Object,
+                            rhs: tmpActivators,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Activator_ErrorMask> ActivatorserrorMask);
+                        var combinedActivators = Group_ErrorMask<Activator_ErrorMask>.Combine(ActivatorscreateMask, ActivatorserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Activators,
+                            errMaskObj: combinedActivators == null ? null : new MaskItem<Exception, Group_ErrorMask<Activator_ErrorMask>>(null, combinedActivators));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Activators);
                 case "APPA":
-                    var tmpAlchemicalApparatus = Group<AlchemicalApparatus>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<AlchemicalApparatus_ErrorMask> AlchemicalApparatuscreateMask);
-                    GroupCommon.CopyFieldsFrom<AlchemicalApparatus, AlchemicalApparatus_ErrorMask, AlchemicalApparatus_CopyMask>(
-                        item: item._AlchemicalApparatus_Object,
-                        rhs: tmpAlchemicalApparatus,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<AlchemicalApparatus_ErrorMask> AlchemicalApparatuserrorMask);
-                    var combinedAlchemicalApparatus = Group_ErrorMask<AlchemicalApparatus_ErrorMask>.Combine(AlchemicalApparatuscreateMask, AlchemicalApparatuserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.AlchemicalApparatus,
-                        errMaskObj: combinedAlchemicalApparatus == null ? null : new MaskItem<Exception, Group_ErrorMask<AlchemicalApparatus_ErrorMask>>(null, combinedAlchemicalApparatus));
+                    if (importMask?.AlchemicalApparatus ?? true)
+                    {
+                        var tmpAlchemicalApparatus = Group<AlchemicalApparatus>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<AlchemicalApparatus_ErrorMask> AlchemicalApparatuscreateMask);
+                        GroupCommon.CopyFieldsFrom<AlchemicalApparatus, AlchemicalApparatus_ErrorMask, AlchemicalApparatus_CopyMask>(
+                            item: item._AlchemicalApparatus_Object,
+                            rhs: tmpAlchemicalApparatus,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<AlchemicalApparatus_ErrorMask> AlchemicalApparatuserrorMask);
+                        var combinedAlchemicalApparatus = Group_ErrorMask<AlchemicalApparatus_ErrorMask>.Combine(AlchemicalApparatuscreateMask, AlchemicalApparatuserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.AlchemicalApparatus,
+                            errMaskObj: combinedAlchemicalApparatus == null ? null : new MaskItem<Exception, Group_ErrorMask<AlchemicalApparatus_ErrorMask>>(null, combinedAlchemicalApparatus));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.AlchemicalApparatus);
                 case "ARMO":
-                    var tmpArmors = Group<Armor>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Armor_ErrorMask> ArmorscreateMask);
-                    GroupCommon.CopyFieldsFrom<Armor, Armor_ErrorMask, Armor_CopyMask>(
-                        item: item._Armors_Object,
-                        rhs: tmpArmors,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Armor_ErrorMask> ArmorserrorMask);
-                    var combinedArmors = Group_ErrorMask<Armor_ErrorMask>.Combine(ArmorscreateMask, ArmorserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Armors,
-                        errMaskObj: combinedArmors == null ? null : new MaskItem<Exception, Group_ErrorMask<Armor_ErrorMask>>(null, combinedArmors));
+                    if (importMask?.Armors ?? true)
+                    {
+                        var tmpArmors = Group<Armor>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Armor_ErrorMask> ArmorscreateMask);
+                        GroupCommon.CopyFieldsFrom<Armor, Armor_ErrorMask, Armor_CopyMask>(
+                            item: item._Armors_Object,
+                            rhs: tmpArmors,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Armor_ErrorMask> ArmorserrorMask);
+                        var combinedArmors = Group_ErrorMask<Armor_ErrorMask>.Combine(ArmorscreateMask, ArmorserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Armors,
+                            errMaskObj: combinedArmors == null ? null : new MaskItem<Exception, Group_ErrorMask<Armor_ErrorMask>>(null, combinedArmors));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Armors);
                 case "BOOK":
-                    var tmpBooks = Group<Book>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Book_ErrorMask> BookscreateMask);
-                    GroupCommon.CopyFieldsFrom<Book, Book_ErrorMask, Book_CopyMask>(
-                        item: item._Books_Object,
-                        rhs: tmpBooks,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Book_ErrorMask> BookserrorMask);
-                    var combinedBooks = Group_ErrorMask<Book_ErrorMask>.Combine(BookscreateMask, BookserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Books,
-                        errMaskObj: combinedBooks == null ? null : new MaskItem<Exception, Group_ErrorMask<Book_ErrorMask>>(null, combinedBooks));
+                    if (importMask?.Books ?? true)
+                    {
+                        var tmpBooks = Group<Book>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Book_ErrorMask> BookscreateMask);
+                        GroupCommon.CopyFieldsFrom<Book, Book_ErrorMask, Book_CopyMask>(
+                            item: item._Books_Object,
+                            rhs: tmpBooks,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Book_ErrorMask> BookserrorMask);
+                        var combinedBooks = Group_ErrorMask<Book_ErrorMask>.Combine(BookscreateMask, BookserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Books,
+                            errMaskObj: combinedBooks == null ? null : new MaskItem<Exception, Group_ErrorMask<Book_ErrorMask>>(null, combinedBooks));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Books);
                 case "CLOT":
-                    var tmpClothes = Group<Clothing>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Clothing_ErrorMask> ClothescreateMask);
-                    GroupCommon.CopyFieldsFrom<Clothing, Clothing_ErrorMask, Clothing_CopyMask>(
-                        item: item._Clothes_Object,
-                        rhs: tmpClothes,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Clothing_ErrorMask> ClotheserrorMask);
-                    var combinedClothes = Group_ErrorMask<Clothing_ErrorMask>.Combine(ClothescreateMask, ClotheserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Clothes,
-                        errMaskObj: combinedClothes == null ? null : new MaskItem<Exception, Group_ErrorMask<Clothing_ErrorMask>>(null, combinedClothes));
+                    if (importMask?.Clothes ?? true)
+                    {
+                        var tmpClothes = Group<Clothing>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Clothing_ErrorMask> ClothescreateMask);
+                        GroupCommon.CopyFieldsFrom<Clothing, Clothing_ErrorMask, Clothing_CopyMask>(
+                            item: item._Clothes_Object,
+                            rhs: tmpClothes,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Clothing_ErrorMask> ClotheserrorMask);
+                        var combinedClothes = Group_ErrorMask<Clothing_ErrorMask>.Combine(ClothescreateMask, ClotheserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Clothes,
+                            errMaskObj: combinedClothes == null ? null : new MaskItem<Exception, Group_ErrorMask<Clothing_ErrorMask>>(null, combinedClothes));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Clothes);
                 case "CONT":
-                    var tmpContainers = Group<Container>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Container_ErrorMask> ContainerscreateMask);
-                    GroupCommon.CopyFieldsFrom<Container, Container_ErrorMask, Container_CopyMask>(
-                        item: item._Containers_Object,
-                        rhs: tmpContainers,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Container_ErrorMask> ContainerserrorMask);
-                    var combinedContainers = Group_ErrorMask<Container_ErrorMask>.Combine(ContainerscreateMask, ContainerserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Containers,
-                        errMaskObj: combinedContainers == null ? null : new MaskItem<Exception, Group_ErrorMask<Container_ErrorMask>>(null, combinedContainers));
+                    if (importMask?.Containers ?? true)
+                    {
+                        var tmpContainers = Group<Container>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Container_ErrorMask> ContainerscreateMask);
+                        GroupCommon.CopyFieldsFrom<Container, Container_ErrorMask, Container_CopyMask>(
+                            item: item._Containers_Object,
+                            rhs: tmpContainers,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Container_ErrorMask> ContainerserrorMask);
+                        var combinedContainers = Group_ErrorMask<Container_ErrorMask>.Combine(ContainerscreateMask, ContainerserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Containers,
+                            errMaskObj: combinedContainers == null ? null : new MaskItem<Exception, Group_ErrorMask<Container_ErrorMask>>(null, combinedContainers));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Containers);
                 case "DOOR":
-                    var tmpDoors = Group<Door>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Door_ErrorMask> DoorscreateMask);
-                    GroupCommon.CopyFieldsFrom<Door, Door_ErrorMask, Door_CopyMask>(
-                        item: item._Doors_Object,
-                        rhs: tmpDoors,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Door_ErrorMask> DoorserrorMask);
-                    var combinedDoors = Group_ErrorMask<Door_ErrorMask>.Combine(DoorscreateMask, DoorserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Doors,
-                        errMaskObj: combinedDoors == null ? null : new MaskItem<Exception, Group_ErrorMask<Door_ErrorMask>>(null, combinedDoors));
+                    if (importMask?.Doors ?? true)
+                    {
+                        var tmpDoors = Group<Door>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Door_ErrorMask> DoorscreateMask);
+                        GroupCommon.CopyFieldsFrom<Door, Door_ErrorMask, Door_CopyMask>(
+                            item: item._Doors_Object,
+                            rhs: tmpDoors,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Door_ErrorMask> DoorserrorMask);
+                        var combinedDoors = Group_ErrorMask<Door_ErrorMask>.Combine(DoorscreateMask, DoorserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Doors,
+                            errMaskObj: combinedDoors == null ? null : new MaskItem<Exception, Group_ErrorMask<Door_ErrorMask>>(null, combinedDoors));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Doors);
                 case "INGR":
-                    var tmpIngredients = Group<Ingredient>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Ingredient_ErrorMask> IngredientscreateMask);
-                    GroupCommon.CopyFieldsFrom<Ingredient, Ingredient_ErrorMask, Ingredient_CopyMask>(
-                        item: item._Ingredients_Object,
-                        rhs: tmpIngredients,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Ingredient_ErrorMask> IngredientserrorMask);
-                    var combinedIngredients = Group_ErrorMask<Ingredient_ErrorMask>.Combine(IngredientscreateMask, IngredientserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Ingredients,
-                        errMaskObj: combinedIngredients == null ? null : new MaskItem<Exception, Group_ErrorMask<Ingredient_ErrorMask>>(null, combinedIngredients));
+                    if (importMask?.Ingredients ?? true)
+                    {
+                        var tmpIngredients = Group<Ingredient>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Ingredient_ErrorMask> IngredientscreateMask);
+                        GroupCommon.CopyFieldsFrom<Ingredient, Ingredient_ErrorMask, Ingredient_CopyMask>(
+                            item: item._Ingredients_Object,
+                            rhs: tmpIngredients,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Ingredient_ErrorMask> IngredientserrorMask);
+                        var combinedIngredients = Group_ErrorMask<Ingredient_ErrorMask>.Combine(IngredientscreateMask, IngredientserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Ingredients,
+                            errMaskObj: combinedIngredients == null ? null : new MaskItem<Exception, Group_ErrorMask<Ingredient_ErrorMask>>(null, combinedIngredients));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Ingredients);
                 case "LIGH":
-                    var tmpLights = Group<Light>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Light_ErrorMask> LightscreateMask);
-                    GroupCommon.CopyFieldsFrom<Light, Light_ErrorMask, Light_CopyMask>(
-                        item: item._Lights_Object,
-                        rhs: tmpLights,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Light_ErrorMask> LightserrorMask);
-                    var combinedLights = Group_ErrorMask<Light_ErrorMask>.Combine(LightscreateMask, LightserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Lights,
-                        errMaskObj: combinedLights == null ? null : new MaskItem<Exception, Group_ErrorMask<Light_ErrorMask>>(null, combinedLights));
+                    if (importMask?.Lights ?? true)
+                    {
+                        var tmpLights = Group<Light>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Light_ErrorMask> LightscreateMask);
+                        GroupCommon.CopyFieldsFrom<Light, Light_ErrorMask, Light_CopyMask>(
+                            item: item._Lights_Object,
+                            rhs: tmpLights,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Light_ErrorMask> LightserrorMask);
+                        var combinedLights = Group_ErrorMask<Light_ErrorMask>.Combine(LightscreateMask, LightserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Lights,
+                            errMaskObj: combinedLights == null ? null : new MaskItem<Exception, Group_ErrorMask<Light_ErrorMask>>(null, combinedLights));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Lights);
                 case "MISC":
-                    var tmpMiscellaneous = Group<Miscellaneous>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Miscellaneous_ErrorMask> MiscellaneouscreateMask);
-                    GroupCommon.CopyFieldsFrom<Miscellaneous, Miscellaneous_ErrorMask, Miscellaneous_CopyMask>(
-                        item: item._Miscellaneous_Object,
-                        rhs: tmpMiscellaneous,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Miscellaneous_ErrorMask> MiscellaneouserrorMask);
-                    var combinedMiscellaneous = Group_ErrorMask<Miscellaneous_ErrorMask>.Combine(MiscellaneouscreateMask, MiscellaneouserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Miscellaneous,
-                        errMaskObj: combinedMiscellaneous == null ? null : new MaskItem<Exception, Group_ErrorMask<Miscellaneous_ErrorMask>>(null, combinedMiscellaneous));
+                    if (importMask?.Miscellaneous ?? true)
+                    {
+                        var tmpMiscellaneous = Group<Miscellaneous>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Miscellaneous_ErrorMask> MiscellaneouscreateMask);
+                        GroupCommon.CopyFieldsFrom<Miscellaneous, Miscellaneous_ErrorMask, Miscellaneous_CopyMask>(
+                            item: item._Miscellaneous_Object,
+                            rhs: tmpMiscellaneous,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Miscellaneous_ErrorMask> MiscellaneouserrorMask);
+                        var combinedMiscellaneous = Group_ErrorMask<Miscellaneous_ErrorMask>.Combine(MiscellaneouscreateMask, MiscellaneouserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Miscellaneous,
+                            errMaskObj: combinedMiscellaneous == null ? null : new MaskItem<Exception, Group_ErrorMask<Miscellaneous_ErrorMask>>(null, combinedMiscellaneous));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Miscellaneous);
                 case "STAT":
-                    var tmpStatics = Group<Static>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Static_ErrorMask> StaticscreateMask);
-                    GroupCommon.CopyFieldsFrom<Static, Static_ErrorMask, Static_CopyMask>(
-                        item: item._Statics_Object,
-                        rhs: tmpStatics,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Static_ErrorMask> StaticserrorMask);
-                    var combinedStatics = Group_ErrorMask<Static_ErrorMask>.Combine(StaticscreateMask, StaticserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Statics,
-                        errMaskObj: combinedStatics == null ? null : new MaskItem<Exception, Group_ErrorMask<Static_ErrorMask>>(null, combinedStatics));
+                    if (importMask?.Statics ?? true)
+                    {
+                        var tmpStatics = Group<Static>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Static_ErrorMask> StaticscreateMask);
+                        GroupCommon.CopyFieldsFrom<Static, Static_ErrorMask, Static_CopyMask>(
+                            item: item._Statics_Object,
+                            rhs: tmpStatics,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Static_ErrorMask> StaticserrorMask);
+                        var combinedStatics = Group_ErrorMask<Static_ErrorMask>.Combine(StaticscreateMask, StaticserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Statics,
+                            errMaskObj: combinedStatics == null ? null : new MaskItem<Exception, Group_ErrorMask<Static_ErrorMask>>(null, combinedStatics));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Statics);
                 case "GRAS":
-                    var tmpGrasses = Group<Grass>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Grass_ErrorMask> GrassescreateMask);
-                    GroupCommon.CopyFieldsFrom<Grass, Grass_ErrorMask, Grass_CopyMask>(
-                        item: item._Grasses_Object,
-                        rhs: tmpGrasses,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Grass_ErrorMask> GrasseserrorMask);
-                    var combinedGrasses = Group_ErrorMask<Grass_ErrorMask>.Combine(GrassescreateMask, GrasseserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Grasses,
-                        errMaskObj: combinedGrasses == null ? null : new MaskItem<Exception, Group_ErrorMask<Grass_ErrorMask>>(null, combinedGrasses));
+                    if (importMask?.Grasses ?? true)
+                    {
+                        var tmpGrasses = Group<Grass>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Grass_ErrorMask> GrassescreateMask);
+                        GroupCommon.CopyFieldsFrom<Grass, Grass_ErrorMask, Grass_CopyMask>(
+                            item: item._Grasses_Object,
+                            rhs: tmpGrasses,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Grass_ErrorMask> GrasseserrorMask);
+                        var combinedGrasses = Group_ErrorMask<Grass_ErrorMask>.Combine(GrassescreateMask, GrasseserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Grasses,
+                            errMaskObj: combinedGrasses == null ? null : new MaskItem<Exception, Group_ErrorMask<Grass_ErrorMask>>(null, combinedGrasses));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Grasses);
                 case "TREE":
-                    var tmpTrees = Group<Tree>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Tree_ErrorMask> TreescreateMask);
-                    GroupCommon.CopyFieldsFrom<Tree, Tree_ErrorMask, Tree_CopyMask>(
-                        item: item._Trees_Object,
-                        rhs: tmpTrees,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Tree_ErrorMask> TreeserrorMask);
-                    var combinedTrees = Group_ErrorMask<Tree_ErrorMask>.Combine(TreescreateMask, TreeserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Trees,
-                        errMaskObj: combinedTrees == null ? null : new MaskItem<Exception, Group_ErrorMask<Tree_ErrorMask>>(null, combinedTrees));
+                    if (importMask?.Trees ?? true)
+                    {
+                        var tmpTrees = Group<Tree>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Tree_ErrorMask> TreescreateMask);
+                        GroupCommon.CopyFieldsFrom<Tree, Tree_ErrorMask, Tree_CopyMask>(
+                            item: item._Trees_Object,
+                            rhs: tmpTrees,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Tree_ErrorMask> TreeserrorMask);
+                        var combinedTrees = Group_ErrorMask<Tree_ErrorMask>.Combine(TreescreateMask, TreeserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Trees,
+                            errMaskObj: combinedTrees == null ? null : new MaskItem<Exception, Group_ErrorMask<Tree_ErrorMask>>(null, combinedTrees));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Trees);
                 case "FLOR":
-                    var tmpFlora = Group<Flora>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Flora_ErrorMask> FloracreateMask);
-                    GroupCommon.CopyFieldsFrom<Flora, Flora_ErrorMask, Flora_CopyMask>(
-                        item: item._Flora_Object,
-                        rhs: tmpFlora,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Flora_ErrorMask> FloraerrorMask);
-                    var combinedFlora = Group_ErrorMask<Flora_ErrorMask>.Combine(FloracreateMask, FloraerrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Flora,
-                        errMaskObj: combinedFlora == null ? null : new MaskItem<Exception, Group_ErrorMask<Flora_ErrorMask>>(null, combinedFlora));
+                    if (importMask?.Flora ?? true)
+                    {
+                        var tmpFlora = Group<Flora>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Flora_ErrorMask> FloracreateMask);
+                        GroupCommon.CopyFieldsFrom<Flora, Flora_ErrorMask, Flora_CopyMask>(
+                            item: item._Flora_Object,
+                            rhs: tmpFlora,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Flora_ErrorMask> FloraerrorMask);
+                        var combinedFlora = Group_ErrorMask<Flora_ErrorMask>.Combine(FloracreateMask, FloraerrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Flora,
+                            errMaskObj: combinedFlora == null ? null : new MaskItem<Exception, Group_ErrorMask<Flora_ErrorMask>>(null, combinedFlora));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Flora);
                 case "FURN":
-                    var tmpFurnature = Group<Furnature>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Furnature_ErrorMask> FurnaturecreateMask);
-                    GroupCommon.CopyFieldsFrom<Furnature, Furnature_ErrorMask, Furnature_CopyMask>(
-                        item: item._Furnature_Object,
-                        rhs: tmpFurnature,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Furnature_ErrorMask> FurnatureerrorMask);
-                    var combinedFurnature = Group_ErrorMask<Furnature_ErrorMask>.Combine(FurnaturecreateMask, FurnatureerrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Furnature,
-                        errMaskObj: combinedFurnature == null ? null : new MaskItem<Exception, Group_ErrorMask<Furnature_ErrorMask>>(null, combinedFurnature));
+                    if (importMask?.Furnature ?? true)
+                    {
+                        var tmpFurnature = Group<Furnature>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Furnature_ErrorMask> FurnaturecreateMask);
+                        GroupCommon.CopyFieldsFrom<Furnature, Furnature_ErrorMask, Furnature_CopyMask>(
+                            item: item._Furnature_Object,
+                            rhs: tmpFurnature,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Furnature_ErrorMask> FurnatureerrorMask);
+                        var combinedFurnature = Group_ErrorMask<Furnature_ErrorMask>.Combine(FurnaturecreateMask, FurnatureerrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Furnature,
+                            errMaskObj: combinedFurnature == null ? null : new MaskItem<Exception, Group_ErrorMask<Furnature_ErrorMask>>(null, combinedFurnature));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Furnature);
                 case "WEAP":
-                    var tmpWeapons = Group<Weapon>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Weapon_ErrorMask> WeaponscreateMask);
-                    GroupCommon.CopyFieldsFrom<Weapon, Weapon_ErrorMask, Weapon_CopyMask>(
-                        item: item._Weapons_Object,
-                        rhs: tmpWeapons,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Weapon_ErrorMask> WeaponserrorMask);
-                    var combinedWeapons = Group_ErrorMask<Weapon_ErrorMask>.Combine(WeaponscreateMask, WeaponserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Weapons,
-                        errMaskObj: combinedWeapons == null ? null : new MaskItem<Exception, Group_ErrorMask<Weapon_ErrorMask>>(null, combinedWeapons));
+                    if (importMask?.Weapons ?? true)
+                    {
+                        var tmpWeapons = Group<Weapon>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Weapon_ErrorMask> WeaponscreateMask);
+                        GroupCommon.CopyFieldsFrom<Weapon, Weapon_ErrorMask, Weapon_CopyMask>(
+                            item: item._Weapons_Object,
+                            rhs: tmpWeapons,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Weapon_ErrorMask> WeaponserrorMask);
+                        var combinedWeapons = Group_ErrorMask<Weapon_ErrorMask>.Combine(WeaponscreateMask, WeaponserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Weapons,
+                            errMaskObj: combinedWeapons == null ? null : new MaskItem<Exception, Group_ErrorMask<Weapon_ErrorMask>>(null, combinedWeapons));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Weapons);
                 case "AMMO":
-                    var tmpAmmo = Group<Ammo>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Ammo_ErrorMask> AmmocreateMask);
-                    GroupCommon.CopyFieldsFrom<Ammo, Ammo_ErrorMask, Ammo_CopyMask>(
-                        item: item._Ammo_Object,
-                        rhs: tmpAmmo,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Ammo_ErrorMask> AmmoerrorMask);
-                    var combinedAmmo = Group_ErrorMask<Ammo_ErrorMask>.Combine(AmmocreateMask, AmmoerrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Ammo,
-                        errMaskObj: combinedAmmo == null ? null : new MaskItem<Exception, Group_ErrorMask<Ammo_ErrorMask>>(null, combinedAmmo));
+                    if (importMask?.Ammo ?? true)
+                    {
+                        var tmpAmmo = Group<Ammo>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Ammo_ErrorMask> AmmocreateMask);
+                        GroupCommon.CopyFieldsFrom<Ammo, Ammo_ErrorMask, Ammo_CopyMask>(
+                            item: item._Ammo_Object,
+                            rhs: tmpAmmo,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Ammo_ErrorMask> AmmoerrorMask);
+                        var combinedAmmo = Group_ErrorMask<Ammo_ErrorMask>.Combine(AmmocreateMask, AmmoerrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Ammo,
+                            errMaskObj: combinedAmmo == null ? null : new MaskItem<Exception, Group_ErrorMask<Ammo_ErrorMask>>(null, combinedAmmo));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Ammo);
                 case "NPC_":
-                    var tmpNPCs = Group<NPC>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<NPC_ErrorMask> NPCscreateMask);
-                    GroupCommon.CopyFieldsFrom<NPC, NPC_ErrorMask, NPC_CopyMask>(
-                        item: item._NPCs_Object,
-                        rhs: tmpNPCs,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<NPC_ErrorMask> NPCserrorMask);
-                    var combinedNPCs = Group_ErrorMask<NPC_ErrorMask>.Combine(NPCscreateMask, NPCserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.NPCs,
-                        errMaskObj: combinedNPCs == null ? null : new MaskItem<Exception, Group_ErrorMask<NPC_ErrorMask>>(null, combinedNPCs));
+                    if (importMask?.NPCs ?? true)
+                    {
+                        var tmpNPCs = Group<NPC>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<NPC_ErrorMask> NPCscreateMask);
+                        GroupCommon.CopyFieldsFrom<NPC, NPC_ErrorMask, NPC_CopyMask>(
+                            item: item._NPCs_Object,
+                            rhs: tmpNPCs,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<NPC_ErrorMask> NPCserrorMask);
+                        var combinedNPCs = Group_ErrorMask<NPC_ErrorMask>.Combine(NPCscreateMask, NPCserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.NPCs,
+                            errMaskObj: combinedNPCs == null ? null : new MaskItem<Exception, Group_ErrorMask<NPC_ErrorMask>>(null, combinedNPCs));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.NPCs);
                 case "CREA":
-                    var tmpCreatures = Group<Creature>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Creature_ErrorMask> CreaturescreateMask);
-                    GroupCommon.CopyFieldsFrom<Creature, Creature_ErrorMask, Creature_CopyMask>(
-                        item: item._Creatures_Object,
-                        rhs: tmpCreatures,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Creature_ErrorMask> CreatureserrorMask);
-                    var combinedCreatures = Group_ErrorMask<Creature_ErrorMask>.Combine(CreaturescreateMask, CreatureserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Creatures,
-                        errMaskObj: combinedCreatures == null ? null : new MaskItem<Exception, Group_ErrorMask<Creature_ErrorMask>>(null, combinedCreatures));
+                    if (importMask?.Creatures ?? true)
+                    {
+                        var tmpCreatures = Group<Creature>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Creature_ErrorMask> CreaturescreateMask);
+                        GroupCommon.CopyFieldsFrom<Creature, Creature_ErrorMask, Creature_CopyMask>(
+                            item: item._Creatures_Object,
+                            rhs: tmpCreatures,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Creature_ErrorMask> CreatureserrorMask);
+                        var combinedCreatures = Group_ErrorMask<Creature_ErrorMask>.Combine(CreaturescreateMask, CreatureserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Creatures,
+                            errMaskObj: combinedCreatures == null ? null : new MaskItem<Exception, Group_ErrorMask<Creature_ErrorMask>>(null, combinedCreatures));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Creatures);
                 case "LVLC":
-                    var tmpLeveledCreatures = Group<LeveledCreature>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<LeveledCreature_ErrorMask> LeveledCreaturescreateMask);
-                    GroupCommon.CopyFieldsFrom<LeveledCreature, LeveledCreature_ErrorMask, LeveledCreature_CopyMask>(
-                        item: item._LeveledCreatures_Object,
-                        rhs: tmpLeveledCreatures,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<LeveledCreature_ErrorMask> LeveledCreatureserrorMask);
-                    var combinedLeveledCreatures = Group_ErrorMask<LeveledCreature_ErrorMask>.Combine(LeveledCreaturescreateMask, LeveledCreatureserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.LeveledCreatures,
-                        errMaskObj: combinedLeveledCreatures == null ? null : new MaskItem<Exception, Group_ErrorMask<LeveledCreature_ErrorMask>>(null, combinedLeveledCreatures));
+                    if (importMask?.LeveledCreatures ?? true)
+                    {
+                        var tmpLeveledCreatures = Group<LeveledCreature>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<LeveledCreature_ErrorMask> LeveledCreaturescreateMask);
+                        GroupCommon.CopyFieldsFrom<LeveledCreature, LeveledCreature_ErrorMask, LeveledCreature_CopyMask>(
+                            item: item._LeveledCreatures_Object,
+                            rhs: tmpLeveledCreatures,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<LeveledCreature_ErrorMask> LeveledCreatureserrorMask);
+                        var combinedLeveledCreatures = Group_ErrorMask<LeveledCreature_ErrorMask>.Combine(LeveledCreaturescreateMask, LeveledCreatureserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.LeveledCreatures,
+                            errMaskObj: combinedLeveledCreatures == null ? null : new MaskItem<Exception, Group_ErrorMask<LeveledCreature_ErrorMask>>(null, combinedLeveledCreatures));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.LeveledCreatures);
                 case "SLGM":
-                    var tmpSoulGems = Group<SoulGem>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<SoulGem_ErrorMask> SoulGemscreateMask);
-                    GroupCommon.CopyFieldsFrom<SoulGem, SoulGem_ErrorMask, SoulGem_CopyMask>(
-                        item: item._SoulGems_Object,
-                        rhs: tmpSoulGems,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<SoulGem_ErrorMask> SoulGemserrorMask);
-                    var combinedSoulGems = Group_ErrorMask<SoulGem_ErrorMask>.Combine(SoulGemscreateMask, SoulGemserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.SoulGems,
-                        errMaskObj: combinedSoulGems == null ? null : new MaskItem<Exception, Group_ErrorMask<SoulGem_ErrorMask>>(null, combinedSoulGems));
+                    if (importMask?.SoulGems ?? true)
+                    {
+                        var tmpSoulGems = Group<SoulGem>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<SoulGem_ErrorMask> SoulGemscreateMask);
+                        GroupCommon.CopyFieldsFrom<SoulGem, SoulGem_ErrorMask, SoulGem_CopyMask>(
+                            item: item._SoulGems_Object,
+                            rhs: tmpSoulGems,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<SoulGem_ErrorMask> SoulGemserrorMask);
+                        var combinedSoulGems = Group_ErrorMask<SoulGem_ErrorMask>.Combine(SoulGemscreateMask, SoulGemserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.SoulGems,
+                            errMaskObj: combinedSoulGems == null ? null : new MaskItem<Exception, Group_ErrorMask<SoulGem_ErrorMask>>(null, combinedSoulGems));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.SoulGems);
                 case "KEYM":
-                    var tmpKeys = Group<Key>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Key_ErrorMask> KeyscreateMask);
-                    GroupCommon.CopyFieldsFrom<Key, Key_ErrorMask, Key_CopyMask>(
-                        item: item._Keys_Object,
-                        rhs: tmpKeys,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Key_ErrorMask> KeyserrorMask);
-                    var combinedKeys = Group_ErrorMask<Key_ErrorMask>.Combine(KeyscreateMask, KeyserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Keys,
-                        errMaskObj: combinedKeys == null ? null : new MaskItem<Exception, Group_ErrorMask<Key_ErrorMask>>(null, combinedKeys));
+                    if (importMask?.Keys ?? true)
+                    {
+                        var tmpKeys = Group<Key>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Key_ErrorMask> KeyscreateMask);
+                        GroupCommon.CopyFieldsFrom<Key, Key_ErrorMask, Key_CopyMask>(
+                            item: item._Keys_Object,
+                            rhs: tmpKeys,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Key_ErrorMask> KeyserrorMask);
+                        var combinedKeys = Group_ErrorMask<Key_ErrorMask>.Combine(KeyscreateMask, KeyserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Keys,
+                            errMaskObj: combinedKeys == null ? null : new MaskItem<Exception, Group_ErrorMask<Key_ErrorMask>>(null, combinedKeys));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Keys);
                 case "ALCH":
-                    var tmpPotions = Group<Potion>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Potion_ErrorMask> PotionscreateMask);
-                    GroupCommon.CopyFieldsFrom<Potion, Potion_ErrorMask, Potion_CopyMask>(
-                        item: item._Potions_Object,
-                        rhs: tmpPotions,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Potion_ErrorMask> PotionserrorMask);
-                    var combinedPotions = Group_ErrorMask<Potion_ErrorMask>.Combine(PotionscreateMask, PotionserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Potions,
-                        errMaskObj: combinedPotions == null ? null : new MaskItem<Exception, Group_ErrorMask<Potion_ErrorMask>>(null, combinedPotions));
+                    if (importMask?.Potions ?? true)
+                    {
+                        var tmpPotions = Group<Potion>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Potion_ErrorMask> PotionscreateMask);
+                        GroupCommon.CopyFieldsFrom<Potion, Potion_ErrorMask, Potion_CopyMask>(
+                            item: item._Potions_Object,
+                            rhs: tmpPotions,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Potion_ErrorMask> PotionserrorMask);
+                        var combinedPotions = Group_ErrorMask<Potion_ErrorMask>.Combine(PotionscreateMask, PotionserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Potions,
+                            errMaskObj: combinedPotions == null ? null : new MaskItem<Exception, Group_ErrorMask<Potion_ErrorMask>>(null, combinedPotions));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Potions);
                 case "SBSP":
-                    var tmpSubspaces = Group<Subspace>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Subspace_ErrorMask> SubspacescreateMask);
-                    GroupCommon.CopyFieldsFrom<Subspace, Subspace_ErrorMask, Subspace_CopyMask>(
-                        item: item._Subspaces_Object,
-                        rhs: tmpSubspaces,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Subspace_ErrorMask> SubspaceserrorMask);
-                    var combinedSubspaces = Group_ErrorMask<Subspace_ErrorMask>.Combine(SubspacescreateMask, SubspaceserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Subspaces,
-                        errMaskObj: combinedSubspaces == null ? null : new MaskItem<Exception, Group_ErrorMask<Subspace_ErrorMask>>(null, combinedSubspaces));
+                    if (importMask?.Subspaces ?? true)
+                    {
+                        var tmpSubspaces = Group<Subspace>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Subspace_ErrorMask> SubspacescreateMask);
+                        GroupCommon.CopyFieldsFrom<Subspace, Subspace_ErrorMask, Subspace_CopyMask>(
+                            item: item._Subspaces_Object,
+                            rhs: tmpSubspaces,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Subspace_ErrorMask> SubspaceserrorMask);
+                        var combinedSubspaces = Group_ErrorMask<Subspace_ErrorMask>.Combine(SubspacescreateMask, SubspaceserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Subspaces,
+                            errMaskObj: combinedSubspaces == null ? null : new MaskItem<Exception, Group_ErrorMask<Subspace_ErrorMask>>(null, combinedSubspaces));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Subspaces);
                 case "SGST":
-                    var tmpSigilStones = Group<SigilStone>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<SigilStone_ErrorMask> SigilStonescreateMask);
-                    GroupCommon.CopyFieldsFrom<SigilStone, SigilStone_ErrorMask, SigilStone_CopyMask>(
-                        item: item._SigilStones_Object,
-                        rhs: tmpSigilStones,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<SigilStone_ErrorMask> SigilStoneserrorMask);
-                    var combinedSigilStones = Group_ErrorMask<SigilStone_ErrorMask>.Combine(SigilStonescreateMask, SigilStoneserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.SigilStones,
-                        errMaskObj: combinedSigilStones == null ? null : new MaskItem<Exception, Group_ErrorMask<SigilStone_ErrorMask>>(null, combinedSigilStones));
+                    if (importMask?.SigilStones ?? true)
+                    {
+                        var tmpSigilStones = Group<SigilStone>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<SigilStone_ErrorMask> SigilStonescreateMask);
+                        GroupCommon.CopyFieldsFrom<SigilStone, SigilStone_ErrorMask, SigilStone_CopyMask>(
+                            item: item._SigilStones_Object,
+                            rhs: tmpSigilStones,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<SigilStone_ErrorMask> SigilStoneserrorMask);
+                        var combinedSigilStones = Group_ErrorMask<SigilStone_ErrorMask>.Combine(SigilStonescreateMask, SigilStoneserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.SigilStones,
+                            errMaskObj: combinedSigilStones == null ? null : new MaskItem<Exception, Group_ErrorMask<SigilStone_ErrorMask>>(null, combinedSigilStones));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.SigilStones);
                 case "LVLI":
-                    var tmpLeveledItems = Group<LeveledItem>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<LeveledItem_ErrorMask> LeveledItemscreateMask);
-                    GroupCommon.CopyFieldsFrom<LeveledItem, LeveledItem_ErrorMask, LeveledItem_CopyMask>(
-                        item: item._LeveledItems_Object,
-                        rhs: tmpLeveledItems,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<LeveledItem_ErrorMask> LeveledItemserrorMask);
-                    var combinedLeveledItems = Group_ErrorMask<LeveledItem_ErrorMask>.Combine(LeveledItemscreateMask, LeveledItemserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.LeveledItems,
-                        errMaskObj: combinedLeveledItems == null ? null : new MaskItem<Exception, Group_ErrorMask<LeveledItem_ErrorMask>>(null, combinedLeveledItems));
+                    if (importMask?.LeveledItems ?? true)
+                    {
+                        var tmpLeveledItems = Group<LeveledItem>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<LeveledItem_ErrorMask> LeveledItemscreateMask);
+                        GroupCommon.CopyFieldsFrom<LeveledItem, LeveledItem_ErrorMask, LeveledItem_CopyMask>(
+                            item: item._LeveledItems_Object,
+                            rhs: tmpLeveledItems,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<LeveledItem_ErrorMask> LeveledItemserrorMask);
+                        var combinedLeveledItems = Group_ErrorMask<LeveledItem_ErrorMask>.Combine(LeveledItemscreateMask, LeveledItemserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.LeveledItems,
+                            errMaskObj: combinedLeveledItems == null ? null : new MaskItem<Exception, Group_ErrorMask<LeveledItem_ErrorMask>>(null, combinedLeveledItems));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.LeveledItems);
                 case "WTHR":
-                    var tmpWeathers = Group<Weather>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Weather_ErrorMask> WeatherscreateMask);
-                    GroupCommon.CopyFieldsFrom<Weather, Weather_ErrorMask, Weather_CopyMask>(
-                        item: item._Weathers_Object,
-                        rhs: tmpWeathers,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Weather_ErrorMask> WeatherserrorMask);
-                    var combinedWeathers = Group_ErrorMask<Weather_ErrorMask>.Combine(WeatherscreateMask, WeatherserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.Weathers,
-                        errMaskObj: combinedWeathers == null ? null : new MaskItem<Exception, Group_ErrorMask<Weather_ErrorMask>>(null, combinedWeathers));
+                    if (importMask?.Weathers ?? true)
+                    {
+                        var tmpWeathers = Group<Weather>.Create_Binary(
+                            frame: frame,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Weather_ErrorMask> WeatherscreateMask);
+                        GroupCommon.CopyFieldsFrom<Weather, Weather_ErrorMask, Weather_CopyMask>(
+                            item: item._Weathers_Object,
+                            rhs: tmpWeathers,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Weather_ErrorMask> WeatherserrorMask);
+                        var combinedWeathers = Group_ErrorMask<Weather_ErrorMask>.Combine(WeatherscreateMask, WeatherserrorMask);
+                        ErrorMask.HandleErrorMask(
+                            creator: errorMask,
+                            index: (int)OblivionMod_FieldIndex.Weathers,
+                            errMaskObj: combinedWeathers == null ? null : new MaskItem<Exception, Group_ErrorMask<Weather_ErrorMask>>(null, combinedWeathers));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Weathers);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
@@ -6801,11 +6979,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMod item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
-            out OblivionMod_ErrorMask errorMask)
+            out OblivionMod_ErrorMask errorMask,
+            GroupMask importMask = null)
         {
             OblivionMod_ErrorMask errMaskRet = null;
             Write_Binary_Internal(
                 writer: writer,
+                importMask: importMask,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new OblivionMod_ErrorMask()) : default(Func<OblivionMod_ErrorMask>));
@@ -6816,7 +6996,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             OblivionMod item,
             RecordTypeConverter recordTypeConverter,
-            Func<OblivionMod_ErrorMask> errorMask)
+            Func<OblivionMod_ErrorMask> errorMask,
+            GroupMask importMask = null)
         {
             try
             {
@@ -8798,6 +8979,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
+
+    #region Mutagen
+    public class GroupMask
+    {
+        public bool GameSettings;
+        public bool Globals;
+        public bool Classes;
+        public bool Factions;
+        public bool Hairs;
+        public bool Eyes;
+        public bool Races;
+        public bool Sounds;
+        public bool Skills;
+        public bool MagicEffects;
+        public bool Scripts;
+        public bool LandTextures;
+        public bool Enchantments;
+        public bool Spells;
+        public bool Birthsigns;
+        public bool Activators;
+        public bool AlchemicalApparatus;
+        public bool Armors;
+        public bool Books;
+        public bool Clothes;
+        public bool Containers;
+        public bool Doors;
+        public bool Ingredients;
+        public bool Lights;
+        public bool Miscellaneous;
+        public bool Statics;
+        public bool Grasses;
+        public bool Trees;
+        public bool Flora;
+        public bool Furnature;
+        public bool Weapons;
+        public bool Ammo;
+        public bool NPCs;
+        public bool Creatures;
+        public bool LeveledCreatures;
+        public bool SoulGems;
+        public bool Keys;
+        public bool Potions;
+        public bool Subspaces;
+        public bool SigilStones;
+        public bool LeveledItems;
+        public bool Weathers;
+    }
+    #endregion
 
 
 
