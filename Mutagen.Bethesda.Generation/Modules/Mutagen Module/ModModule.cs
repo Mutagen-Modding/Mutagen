@@ -37,11 +37,11 @@ namespace Mutagen.Bethesda.Generation
                     {
                         if (!(field is LoquiType loqui)) continue;
                         if (loqui.TargetObjectGeneration?.GetObjectData().ObjectType != ObjectType.Group) continue;
-                        if (!loqui.TargetObjectGeneration.Name.Equals("Group")) continue;
                         if (!loqui.TryGetSpecificationAsObject("T", out var subObj))
                         {
                             throw new ArgumentException();
                         }
+                        if (!subObj.BaseClassTrail().Any((b) => b.Name.Equals("MajorRecord"))) continue;
                         fg.AppendLine($"case {subObj.Name} {field.Name.ToLower()}:");
                         using (new DepthWrapper(fg))
                         {
@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine("default:");
                     using (new DepthWrapper(fg))
                     {
-                        fg.AppendLine($"throw new ArgumentException(\"Unknown Major Record type: {{record?.GetType()}}\");");
+                        fg.AppendLine($"throw new ArgumentException($\"Unknown settable MajorRecord type: {{record?.GetType()}}\");");
                     }
                 }
             }
@@ -67,8 +67,14 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (!(field is LoquiType loqui)) continue;
                 if (loqui.TargetObjectGeneration?.GetObjectData().ObjectType != ObjectType.Group) continue;
-                if (!loqui.TargetObjectGeneration.Name.Equals("Group")) continue;
-                fg.AppendLine($"{field.ProtectedName}.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));");
+                if (!loqui.TryGetSpecificationAsObject("T", out var subObj))
+                {
+                    throw new ArgumentException();
+                }
+                if (subObj.BaseClassTrail().Any((b) => b.Name.Equals("MajorRecord")))
+                {
+                    fg.AppendLine($"{field.ProtectedName}.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));");
+                }
             }
             return base.GenerateInCtor(obj, fg);
         }

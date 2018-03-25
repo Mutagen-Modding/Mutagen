@@ -845,11 +845,19 @@ namespace Mutagen.Bethesda.Oblivion
             int fieldIndex,
             Func<Armor_ErrorMask> errorMask)
         {
-            WriteBinary_ArmorValue_Custom(
-                writer: writer,
-                item: item,
-                fieldIndex: fieldIndex,
-                errorMask: errorMask);
+            try
+            {
+                WriteBinary_ArmorValue_Custom(
+                    writer: writer,
+                    item: item,
+                    fieldIndex: fieldIndex,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
         }
 
         private static Armor Create_Binary_Internal(
@@ -894,11 +902,19 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.Spawn(contentLength))
                     {
-                        FillBinary_ArmorValue_Custom(
-                            frame: dataFrame,
-                            item: item,
-                            fieldIndex: (int)Armor_FieldIndex.ArmorValue,
-                            errorMask: errorMask);
+                        try
+                        {
+                            FillBinary_ArmorValue_Custom(
+                                frame: dataFrame,
+                                item: item,
+                                fieldIndex: (int)Armor_FieldIndex.ArmorValue,
+                                errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask().Overall = ex;
+                        }
                         item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Armor_FieldIndex.Value,

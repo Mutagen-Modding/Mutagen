@@ -330,6 +330,24 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+        #region VisibleWhenDistant
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly INotifyingList<Placed> _VisibleWhenDistant = new NotifyingList<Placed>();
+        public INotifyingList<Placed> VisibleWhenDistant => _VisibleWhenDistant;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IEnumerable<Placed> VisibleWhenDistantEnumerable
+        {
+            get => _VisibleWhenDistant;
+            set => _VisibleWhenDistant.SetTo(value);
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingList<Placed> ICell.VisibleWhenDistant => _VisibleWhenDistant;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingListGetter<Placed> ICellGetter.VisibleWhenDistant => _VisibleWhenDistant;
+        #endregion
+
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -453,6 +471,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!Temporary.SequenceEqual(rhs.Temporary)) return false;
             }
+            if (VisibleWhenDistant.HasBeenSet != rhs.VisibleWhenDistant.HasBeenSet) return false;
+            if (VisibleWhenDistant.HasBeenSet)
+            {
+                if (!VisibleWhenDistant.SequenceEqual(rhs.VisibleWhenDistant)) return false;
+            }
             return true;
         }
 
@@ -511,6 +534,10 @@ namespace Mutagen.Bethesda.Oblivion
             if (Temporary.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Temporary).CombineHashCode(ret);
+            }
+            if (VisibleWhenDistant.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(VisibleWhenDistant).CombineHashCode(ret);
             }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -973,6 +1000,20 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         ));
                     break;
+                case "VisibleWhenDistant":
+                    item._VisibleWhenDistant.SetIfSucceeded(ListXmlTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistant,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
+                        {
+                            return LoquiXmlTranslation<Placed, Placed_ErrorMask>.Instance.Parse(
+                                root: r,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        ));
+                    break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
                         item: item,
@@ -1265,33 +1306,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        static partial void FillBinary_CellContents_Custom(
-            MutagenFrame frame,
-            Cell item,
-            Func<Cell_ErrorMask> errorMask);
-
-        static partial void WriteBinary_CellContents_Custom(
-            MutagenWriter writer,
-            Cell item,
-            Func<Cell_ErrorMask> errorMask);
-
-        public static void WriteBinary_CellContents(
-            MutagenWriter writer,
-            Cell item,
-            Func<Cell_ErrorMask> errorMask)
-        {
-            WriteBinary_CellContents_Custom(
-                writer: writer,
-                item: item,
-                errorMask: errorMask);
-        }
-
         private static Cell Create_Binary_Internal(
             MutagenFrame frame,
             Func<Cell_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Cell, Cell_ErrorMask, Cell_FieldIndex>(
+            var ret = UtilityTranslation.MajorRecordParse<Cell, Cell_ErrorMask, Cell_FieldIndex>(
                 record: new Cell(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1299,6 +1319,19 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: Fill_Binary_Structs,
                 fillTyped: Fill_Binary_RecordTypes);
+            try
+            {
+                CustomBinaryEnd(
+                    frame: frame,
+                    obj: ret,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
+            return ret;
         }
 
         protected static void Fill_Binary_Structs(
@@ -1309,10 +1342,6 @@ namespace Mutagen.Bethesda.Oblivion
             NamedMajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
-                errorMask: errorMask);
-            FillBinary_CellContents_Custom(
-                frame: frame,
-                item: item,
                 errorMask: errorMask);
         }
 
@@ -1448,6 +1477,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        static partial void CustomBinaryEnd(
+            MutagenFrame frame,
+            Cell obj,
+            Func<Cell_ErrorMask> errorMask);
         #endregion
 
         public Cell Copy(
@@ -1644,6 +1677,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case Cell_FieldIndex.Temporary:
                     this._Temporary.SetTo((IEnumerable<Placed>)obj, cmds);
                     break;
+                case Cell_FieldIndex.VisibleWhenDistant:
+                    this._VisibleWhenDistant.SetTo((IEnumerable<Placed>)obj, cmds);
+                    break;
                 default:
                     base.SetNthObject(index, obj, cmds);
                     break;
@@ -1769,6 +1805,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case Cell_FieldIndex.Temporary:
                     obj._Temporary.SetTo((IEnumerable<Placed>)pair.Value, null);
                     break;
+                case Cell_FieldIndex.VisibleWhenDistant:
+                    obj._VisibleWhenDistant.SetTo((IEnumerable<Placed>)pair.Value, null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -1834,6 +1873,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new INotifyingList<Placed> Persistent { get; }
         new INotifyingList<Placed> Temporary { get; }
+        new INotifyingList<Placed> VisibleWhenDistant { get; }
     }
 
     public partial interface ICellGetter : INamedMajorRecordGetter
@@ -1932,6 +1972,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Temporary
         INotifyingListGetter<Placed> Temporary { get; }
         #endregion
+        #region VisibleWhenDistant
+        INotifyingListGetter<Placed> VisibleWhenDistant { get; }
+        #endregion
 
     }
 
@@ -1970,6 +2013,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         PathGrid = 23,
         Persistent = 24,
         Temporary = 25,
+        VisibleWhenDistant = 26,
     }
     #endregion
 
@@ -1987,7 +2031,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "d54abb07-d896-4ddb-b857-9b9df945dd1e";
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 21;
 
         public static readonly Type MaskType = typeof(Cell_Mask<>);
 
@@ -2055,6 +2099,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Cell_FieldIndex.Persistent;
                 case "TEMPORARY":
                     return (ushort)Cell_FieldIndex.Temporary;
+                case "VISIBLEWHENDISTANT":
+                    return (ushort)Cell_FieldIndex.VisibleWhenDistant;
                 default:
                     return null;
             }
@@ -2068,6 +2114,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Regions:
                 case Cell_FieldIndex.Persistent:
                 case Cell_FieldIndex.Temporary:
+                case Cell_FieldIndex.VisibleWhenDistant:
                     return true;
                 case Cell_FieldIndex.Flags:
                 case Cell_FieldIndex.Grid:
@@ -2101,6 +2148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.PathGrid:
                 case Cell_FieldIndex.Persistent:
                 case Cell_FieldIndex.Temporary:
+                case Cell_FieldIndex.VisibleWhenDistant:
                     return true;
                 case Cell_FieldIndex.Flags:
                 case Cell_FieldIndex.Grid:
@@ -2149,6 +2197,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.PathGrid:
                 case Cell_FieldIndex.Persistent:
                 case Cell_FieldIndex.Temporary:
+                case Cell_FieldIndex.VisibleWhenDistant:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsSingleton(index);
@@ -2200,6 +2249,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Persistent";
                 case Cell_FieldIndex.Temporary:
                     return "Temporary";
+                case Cell_FieldIndex.VisibleWhenDistant:
+                    return "VisibleWhenDistant";
                 default:
                     return NamedMajorRecord_Registration.GetNthName(index);
             }
@@ -2230,6 +2281,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.PathGrid:
                 case Cell_FieldIndex.Persistent:
                 case Cell_FieldIndex.Temporary:
+                case Cell_FieldIndex.VisibleWhenDistant:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.IsNthDerivative(index);
@@ -2261,6 +2313,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.PathGrid:
                 case Cell_FieldIndex.Persistent:
                 case Cell_FieldIndex.Temporary:
+                case Cell_FieldIndex.VisibleWhenDistant:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.IsProtected(index);
@@ -2312,6 +2365,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(NotifyingList<Placed>);
                 case Cell_FieldIndex.Temporary:
                     return typeof(NotifyingList<Placed>);
+                case Cell_FieldIndex.VisibleWhenDistant:
+                    return typeof(NotifyingList<Placed>);
                 default:
                     return NamedMajorRecord_Registration.GetNthType(index);
             }
@@ -2331,10 +2386,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType XGLB_HEADER = new RecordType("XGLB");
         public static readonly RecordType PGRD_HEADER = new RecordType("PGRD");
         public static readonly RecordType ACRE_HEADER = new RecordType("ACRE");
+        public static readonly RecordType ACHR_HEADER = new RecordType("ACHR");
         public static readonly RecordType REFR_HEADER = new RecordType("REFR");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = CELL_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 11;
+        public const int NumTypedFields = 12;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2778,6 +2834,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)Cell_FieldIndex.Temporary, ex);
                 }
             }
+            if (copyMask?.VisibleWhenDistant.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.VisibleWhenDistant.SetToWithDefault(
+                        rhs: rhs.VisibleWhenDistant,
+                        def: def?.VisibleWhenDistant,
+                        cmds: cmds,
+                        converter: (r, d) =>
+                        {
+                            switch (copyMask?.VisibleWhenDistant.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Placed);
+                                    return Placed.Copy(
+                                        r,
+                                        copyMask?.VisibleWhenDistant?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.VisibleWhenDistant.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Cell_FieldIndex.VisibleWhenDistant, ex);
+                }
+            }
         }
 
         #endregion
@@ -2834,6 +2922,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Cell_FieldIndex.Temporary:
                     obj.Temporary.HasBeenSet = on;
+                    break;
+                case Cell_FieldIndex.VisibleWhenDistant:
+                    obj.VisibleWhenDistant.HasBeenSet = on;
                     break;
                 default:
                     NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
@@ -2909,6 +3000,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Temporary:
                     obj.Temporary.Unset(cmds);
                     break;
+                case Cell_FieldIndex.VisibleWhenDistant:
+                    obj.VisibleWhenDistant.Unset(cmds);
+                    break;
                 default:
                     NamedMajorRecordCommon.UnsetNthObject(index, obj);
                     break;
@@ -2954,6 +3048,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Persistent.HasBeenSet;
                 case Cell_FieldIndex.Temporary:
                     return obj.Temporary.HasBeenSet;
+                case Cell_FieldIndex.VisibleWhenDistant:
+                    return obj.VisibleWhenDistant.HasBeenSet;
                 default:
                     return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -3006,6 +3102,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Persistent;
                 case Cell_FieldIndex.Temporary:
                     return obj.Temporary;
+                case Cell_FieldIndex.VisibleWhenDistant:
+                    return obj.VisibleWhenDistant;
                 default:
                     return NamedMajorRecordCommon.GetNthObject(index, obj);
             }
@@ -3035,6 +3133,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.PathGrid_Property.Unset(cmds.ToUnsetParams());
             item.Persistent.Unset(cmds.ToUnsetParams());
             item.Temporary.Unset(cmds.ToUnsetParams());
+            item.VisibleWhenDistant.Unset(cmds.ToUnsetParams());
         }
 
         public static Cell_Mask<bool> GetEqualsMask(
@@ -3137,6 +3236,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret.Temporary = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>();
                 ret.Temporary.Overall = false;
+            }
+            if (item.VisibleWhenDistant.HasBeenSet == rhs.VisibleWhenDistant.HasBeenSet)
+            {
+                if (item.VisibleWhenDistant.HasBeenSet)
+                {
+                    ret.VisibleWhenDistant = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>();
+                    ret.VisibleWhenDistant.Specific = item.VisibleWhenDistant.SelectAgainst<Placed, MaskItem<bool, Placed_Mask<bool>>>(rhs.VisibleWhenDistant, ((l, r) =>
+                    {
+                        MaskItem<bool, Placed_Mask<bool>> itemRet;
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+                        return itemRet;
+                    }
+                    ), out ret.VisibleWhenDistant.Overall);
+                    ret.VisibleWhenDistant.Overall = ret.VisibleWhenDistant.Overall && ret.VisibleWhenDistant.Specific.All((b) => b.Overall);
+                }
+                else
+                {
+                    ret.VisibleWhenDistant = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>();
+                    ret.VisibleWhenDistant.Overall = true;
+                }
+            }
+            else
+            {
+                ret.VisibleWhenDistant = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>();
+                ret.VisibleWhenDistant.Overall = false;
             }
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
@@ -3290,6 +3414,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     fg.AppendLine("]");
                 }
+                if (printMask?.VisibleWhenDistant?.Overall ?? true)
+                {
+                    fg.AppendLine("VisibleWhenDistant =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        foreach (var subItem in item.VisibleWhenDistant)
+                        {
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                subItem?.ToString(fg, "Item");
+                            }
+                            fg.AppendLine("]");
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             fg.AppendLine("]");
         }
@@ -3311,6 +3453,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.PathGrid.Specific != null && (item.PathGrid_Property.Item == null || !item.PathGrid_Property.Item.HasBeenSet(checkMask.PathGrid.Specific))) return false;
             if (checkMask.Persistent.Overall.HasValue && checkMask.Persistent.Overall.Value != item.Persistent.HasBeenSet) return false;
             if (checkMask.Temporary.Overall.HasValue && checkMask.Temporary.Overall.Value != item.Temporary.HasBeenSet) return false;
+            if (checkMask.VisibleWhenDistant.Overall.HasValue && checkMask.VisibleWhenDistant.Overall.Value != item.VisibleWhenDistant.HasBeenSet) return false;
             return true;
         }
 
@@ -3337,6 +3480,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.PathGrid = new MaskItem<bool, PathGrid_Mask<bool>>(item.PathGrid_Property.HasBeenSet, PathGridCommon.GetHasBeenSetMask(item.PathGrid_Property.Item));
             ret.Persistent = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>(item.Persistent.HasBeenSet, item.Persistent.Select((i) => new MaskItem<bool, Placed_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.Temporary = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>(item.Temporary.HasBeenSet, item.Temporary.Select((i) => new MaskItem<bool, Placed_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.VisibleWhenDistant = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>(item.VisibleWhenDistant.HasBeenSet, item.VisibleWhenDistant.Select((i) => new MaskItem<bool, Placed_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -3607,6 +3751,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }
                             );
                     }
+                    if (item.VisibleWhenDistant.HasBeenSet)
+                    {
+                        ListXmlTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.VisibleWhenDistant),
+                            item: item.VisibleWhenDistant,
+                            fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistant,
+                            errorMask: errorMask,
+                            transl: (Placed subItem, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
+                            {
+                                LoquiXmlTranslation<Placed, Placed_ErrorMask>.Instance.Write(
+                                    writer: writer,
+                                    item: subItem,
+                                    name: "Item",
+                                    doMasks: errorMask != null,
+                                    errorMask: out listSubMask);
+                            }
+                            );
+                    }
                 }
             }
             catch (Exception ex)
@@ -3834,6 +3997,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.PathGrid = new MaskItem<T, PathGrid_Mask<T>>(initialValue, new PathGrid_Mask<T>(initialValue));
             this.Persistent = new MaskItem<T, IEnumerable<MaskItem<T, Placed_Mask<T>>>>(initialValue, null);
             this.Temporary = new MaskItem<T, IEnumerable<MaskItem<T, Placed_Mask<T>>>>(initialValue, null);
+            this.VisibleWhenDistant = new MaskItem<T, IEnumerable<MaskItem<T, Placed_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
@@ -3858,6 +4022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, PathGrid_Mask<T>> PathGrid { get; set; }
         public MaskItem<T, IEnumerable<MaskItem<T, Placed_Mask<T>>>> Persistent;
         public MaskItem<T, IEnumerable<MaskItem<T, Placed_Mask<T>>>> Temporary;
+        public MaskItem<T, IEnumerable<MaskItem<T, Placed_Mask<T>>>> VisibleWhenDistant;
         #endregion
 
         #region Equals
@@ -3891,6 +4056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.PathGrid, rhs.PathGrid)) return false;
             if (!object.Equals(this.Persistent, rhs.Persistent)) return false;
             if (!object.Equals(this.Temporary, rhs.Temporary)) return false;
+            if (!object.Equals(this.VisibleWhenDistant, rhs.VisibleWhenDistant)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -3916,6 +4082,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.PathGrid?.GetHashCode());
             ret = ret.CombineHashCode(this.Persistent?.GetHashCode());
             ret = ret.CombineHashCode(this.Temporary?.GetHashCode());
+            ret = ret.CombineHashCode(this.VisibleWhenDistant?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -3980,6 +4147,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 if (this.Temporary.Specific != null)
                 {
                     foreach (var item in this.Temporary.Specific)
+                    {
+                        if (!eval(item.Overall)) return false;
+                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                    }
+                }
+            }
+            if (this.VisibleWhenDistant != null)
+            {
+                if (!eval(this.VisibleWhenDistant.Overall)) return false;
+                if (this.VisibleWhenDistant.Specific != null)
+                {
+                    foreach (var item in this.VisibleWhenDistant.Specific)
                     {
                         if (!eval(item.Overall)) return false;
                         if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
@@ -4098,6 +4277,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
+            if (VisibleWhenDistant != null)
+            {
+                obj.VisibleWhenDistant = new MaskItem<R, IEnumerable<MaskItem<R, Placed_Mask<R>>>>();
+                obj.VisibleWhenDistant.Overall = eval(this.VisibleWhenDistant.Overall);
+                if (VisibleWhenDistant.Specific != null)
+                {
+                    List<MaskItem<R, Placed_Mask<R>>> l = new List<MaskItem<R, Placed_Mask<R>>>();
+                    obj.VisibleWhenDistant.Specific = l;
+                    foreach (var item in VisibleWhenDistant.Specific)
+                    {
+                        MaskItem<R, Placed_Mask<R>> mask = default(MaskItem<R, Placed_Mask<R>>);
+                        if (item != null)
+                        {
+                            mask = new MaskItem<R, Placed_Mask<R>>();
+                            mask.Overall = eval(item.Overall);
+                            if (item.Specific != null)
+                            {
+                                mask.Specific = item.Specific.Translate(eval);
+                            }
+                        }
+                        l.Add(mask);
+                    }
+                }
+            }
         }
         #endregion
 
@@ -4108,6 +4311,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Regions.Specific = null;
             this.Persistent.Specific = null;
             this.Temporary.Specific = null;
+            this.VisibleWhenDistant.Specific = null;
         }
         #endregion
 
@@ -4273,6 +4477,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     fg.AppendLine("]");
                 }
+                if (printMask?.VisibleWhenDistant?.Overall ?? true)
+                {
+                    fg.AppendLine("VisibleWhenDistant =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        if (VisibleWhenDistant.Overall != null)
+                        {
+                            fg.AppendLine(VisibleWhenDistant.Overall.ToString());
+                        }
+                        if (VisibleWhenDistant.Specific != null)
+                        {
+                            foreach (var subItem in VisibleWhenDistant.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             fg.AppendLine("]");
         }
@@ -4303,6 +4532,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, PathGrid_ErrorMask> PathGrid;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>> Persistent;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>> Temporary;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>> VisibleWhenDistant;
         #endregion
 
         #region IErrorMask
@@ -4370,6 +4600,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Cell_FieldIndex.Temporary:
                     this.Temporary = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>>(ex, null);
+                    break;
+                case Cell_FieldIndex.VisibleWhenDistant:
+                    this.VisibleWhenDistant = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>>(ex, null);
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -4442,6 +4675,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Temporary:
                     this.Temporary = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>>)obj;
                     break;
+                case Cell_FieldIndex.VisibleWhenDistant:
+                    this.VisibleWhenDistant = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>>)obj;
+                    break;
                 default:
                     base.SetNthMask(index, obj);
                     break;
@@ -4471,6 +4707,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (PathGrid != null) return true;
             if (Persistent != null) return true;
             if (Temporary != null) return true;
+            if (VisibleWhenDistant != null) return true;
             return false;
         }
         #endregion
@@ -4589,6 +4826,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
             fg.AppendLine("]");
+            fg.AppendLine("VisibleWhenDistant =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (VisibleWhenDistant.Overall != null)
+                {
+                    fg.AppendLine(VisibleWhenDistant.Overall.ToString());
+                }
+                if (VisibleWhenDistant.Specific != null)
+                {
+                    foreach (var subItem in VisibleWhenDistant.Specific)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+            }
+            fg.AppendLine("]");
         }
         #endregion
 
@@ -4616,6 +4875,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.PathGrid = new MaskItem<Exception, PathGrid_ErrorMask>(this.PathGrid.Overall.Combine(rhs.PathGrid.Overall), ((IErrorMask<PathGrid_ErrorMask>)this.PathGrid.Specific).Combine(rhs.PathGrid.Specific));
             ret.Persistent = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>>(this.Persistent.Overall.Combine(rhs.Persistent.Overall), new List<MaskItem<Exception, Placed_ErrorMask>>(this.Persistent.Specific.And(rhs.Persistent.Specific)));
             ret.Temporary = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>>(this.Temporary.Overall.Combine(rhs.Temporary.Overall), new List<MaskItem<Exception, Placed_ErrorMask>>(this.Temporary.Specific.And(rhs.Temporary.Specific)));
+            ret.VisibleWhenDistant = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>>(this.VisibleWhenDistant.Overall.Combine(rhs.VisibleWhenDistant.Overall), new List<MaskItem<Exception, Placed_ErrorMask>>(this.VisibleWhenDistant.Specific.And(rhs.VisibleWhenDistant.Specific)));
             return ret;
         }
         public static Cell_ErrorMask Combine(Cell_ErrorMask lhs, Cell_ErrorMask rhs)
@@ -4649,6 +4909,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, PathGrid_CopyMask> PathGrid;
         public MaskItem<CopyOption, Placed_CopyMask> Persistent;
         public MaskItem<CopyOption, Placed_CopyMask> Temporary;
+        public MaskItem<CopyOption, Placed_CopyMask> VisibleWhenDistant;
         #endregion
 
     }

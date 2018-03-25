@@ -144,6 +144,7 @@ namespace Mutagen.Bethesda.Generation
             await base.GenerateInClass(obj, fg);
             GenerateCustomPartials(obj, fg);
             await GenerateCreateExtras(obj, fg);
+            GenerateCustomBinaryEndPartial(obj, fg);
         }
 
         private void GenerateCustomPartials(ObjectGeneration obj, FileGeneration fg)
@@ -188,6 +189,7 @@ namespace Mutagen.Bethesda.Generation
 
         private async Task GenerateCreateExtras(ObjectGeneration obj, FileGeneration fg)
         {
+            var data = obj.GetObjectData();
             bool typelessStruct = obj.GetObjectType() == ObjectType.Subrecord && !obj.HasRecordType();
             if (!obj.Abstract)
             {
@@ -205,16 +207,54 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (obj.BaseClassTrail().Any((b) => b.Name == "MajorRecord"))
                     {
-                        using (var args = new ArgsWrapper(fg,
-                            $"return UtilityTranslation.MajorRecordParse<{obj.Name}, {obj.Mask(MaskType.Error)}, {obj.FieldIndexName}>"))
+                        if (data.CustomBinaryEnd)
                         {
-                            args.Add($"record: new {obj.Name}()");
-                            args.Add($"frame: frame");
-                            args.Add($"errorMask: errorMask");
-                            args.Add($"recType: {obj.GetTriggeringSource()}");
-                            args.Add($"recordTypeConverter: recordTypeConverter");
-                            args.Add($"fillStructs: Fill_Binary_Structs");
-                            args.Add($"fillTyped: {(HasRecordTypeFields(obj) ? "Fill_Binary_RecordTypes" : "null")}");
+                            using (var args = new ArgsWrapper(fg,
+                                $"var ret = UtilityTranslation.MajorRecordParse<{obj.Name}, {obj.Mask(MaskType.Error)}, {obj.FieldIndexName}>"))
+                            {
+                                args.Add($"record: new {obj.Name}()");
+                                args.Add($"frame: frame");
+                                args.Add($"errorMask: errorMask");
+                                args.Add($"recType: {obj.GetTriggeringSource()}");
+                                args.Add($"recordTypeConverter: recordTypeConverter");
+                                args.Add($"fillStructs: Fill_Binary_Structs");
+                                args.Add($"fillTyped: {(HasRecordTypeFields(obj) ? "Fill_Binary_RecordTypes" : "null")}");
+                            }
+                            fg.AppendLine("try");
+                            using (new BraceWrapper(fg))
+                            {
+                                if (data.CustomBinaryEnd)
+                                {
+                                    using (var args = new ArgsWrapper(fg,
+                                        "CustomBinaryEnd"))
+                                    {
+                                        args.Add("frame: frame");
+                                        args.Add("obj: ret");
+                                        args.Add("errorMask: errorMask");
+                                    }
+                                }
+                            }
+                            fg.AppendLine("catch (Exception ex)");
+                            fg.AppendLine("when (errorMask != null)");
+                            using (new BraceWrapper(fg))
+                            {
+                                fg.AppendLine("errorMask().Overall = ex;");
+                            }
+                            fg.AppendLine("return ret;");
+                        }
+                        else
+                        {
+                            using (var args = new ArgsWrapper(fg,
+                            $"return UtilityTranslation.MajorRecordParse<{obj.Name}, {obj.Mask(MaskType.Error)}, {obj.FieldIndexName}>"))
+                            {
+                                args.Add($"record: new {obj.Name}()");
+                                args.Add($"frame: frame");
+                                args.Add($"errorMask: errorMask");
+                                args.Add($"recType: {obj.GetTriggeringSource()}");
+                                args.Add($"recordTypeConverter: recordTypeConverter");
+                                args.Add($"fillStructs: Fill_Binary_Structs");
+                                args.Add($"fillTyped: {(HasRecordTypeFields(obj) ? "Fill_Binary_RecordTypes" : "null")}");
+                            }
                         }
                     }
                     else
@@ -305,6 +345,16 @@ namespace Mutagen.Bethesda.Generation
                             }
                             GenerateDataStateSubscriptions(obj, fg);
                             GenerateStructStateSubscriptions(obj, fg);
+                            if (data.CustomBinaryEnd)
+                            {
+                                using (var args = new ArgsWrapper(fg,
+                                    "CustomBinaryEnd"))
+                                {
+                                    args.Add("frame: frame");
+                                    args.Add("obj: ret");
+                                    args.Add("errorMask: errorMask");
+                                }
+                            }
                         }
                         fg.AppendLine("catch (Exception ex)");
                         fg.AppendLine("when (errorMask != null)");
@@ -345,9 +395,9 @@ namespace Mutagen.Bethesda.Generation
                         expandSets: SetMarkerType.ExpandSets.False))
                     {
                         if (field is SetMarkerType) continue;
-                        if (field.TryGetFieldData(out var data)
-                            && data.HasTrigger) continue;
-                        if (field.Derivative && !data.CustomBinary) continue;
+                        if (field.TryGetFieldData(out var fieldData)
+                            && fieldData.HasTrigger) continue;
+                        if (field.Derivative && !fieldData.CustomBinary) continue;
                         if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
                         {
                             throw new ArgumentException("Unsupported type generator: " + field);
@@ -410,11 +460,11 @@ namespace Mutagen.Bethesda.Generation
                             expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
                             nonIntegrated: true))
                         {
-                            if (!field.Field.TryGetFieldData(out var data)
-                                || !data.HasTrigger
-                                || data.TriggeringRecordTypes.Count == 0) continue;
-                            if (data.NoBinary) continue;
-                            if (field.Field.Derivative && !data.CustomBinary) continue;
+                            if (!field.Field.TryGetFieldData(out var fieldData)
+                                || !fieldData.HasTrigger
+                                || fieldData.TriggeringRecordTypes.Count == 0) continue;
+                            if (fieldData.NoBinary) continue;
+                            if (field.Field.Derivative && !fieldData.CustomBinary) continue;
                             if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
                             {
                                 throw new ArgumentException("Unsupported type generator: " + field.Field);
@@ -422,7 +472,7 @@ namespace Mutagen.Bethesda.Generation
 
                             if (!generator.ShouldGenerateCopyIn(field.Field)) continue;
                             var dataSet = field.Field as DataType;
-                            foreach (var gen in data.GenerationTypes)
+                            foreach (var gen in fieldData.GenerationTypes)
                             {
                                 if (gen.Value is LoquiType loqui)
                                 {
@@ -434,7 +484,7 @@ namespace Mutagen.Bethesda.Generation
                                 }
                                 using (new DepthWrapper(fg))
                                 {
-                                    if (typelessStruct && data.IsTriggerForObject)
+                                    if (typelessStruct && fieldData.IsTriggerForObject)
                                     {
                                         if (dataSet != null)
                                         {
@@ -484,10 +534,10 @@ namespace Mutagen.Bethesda.Generation
                             // Generic options
                             foreach (var field in obj.IterateFieldIndices())
                             {
-                                if (!field.Field.TryGetFieldData(out var data)
-                                    || !data.HasTrigger
-                                    || data.TriggeringRecordTypes.Count > 0) continue;
-                                if (field.Field.Derivative && !data.CustomBinary) continue;
+                                if (!field.Field.TryGetFieldData(out var fieldData)
+                                    || !fieldData.HasTrigger
+                                    || fieldData.TriggeringRecordTypes.Count > 0) continue;
+                                if (field.Field.Derivative && !fieldData.CustomBinary) continue;
                                 if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
                                 {
                                     throw new ArgumentException("Unsupported type generator: " + field.Field);
@@ -497,7 +547,7 @@ namespace Mutagen.Bethesda.Generation
                                 {
                                     using (var args = new IfWrapper(fg, ANDs: true, first: first))
                                     {
-                                        foreach (var trigger in data.TriggeringRecordAccessors)
+                                        foreach (var trigger in fieldData.TriggeringRecordAccessors)
                                         {
                                             args.Checks.Add($"nextRecordType.Equals({trigger})");
                                         }
@@ -561,6 +611,19 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
                 fg.AppendLine();
+            }
+        }
+
+        private void GenerateCustomBinaryEndPartial(ObjectGeneration obj, FileGeneration fg)
+        {
+            var data = obj.GetObjectData();
+            if (!data.CustomBinaryEnd) return;
+            using (var args = new ArgsWrapper(fg,
+                $"static partial void CustomBinaryEnd"))
+            {
+                args.Add("MutagenFrame frame");
+                args.Add($"{obj.ObjectName} obj");
+                args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
             }
         }
 

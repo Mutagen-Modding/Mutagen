@@ -501,11 +501,19 @@ namespace Mutagen.Bethesda.Oblivion
             int fieldIndex,
             Func<Global_ErrorMask> errorMask)
         {
-            WriteBinary_TypeChar_Custom(
-                writer: writer,
-                item: item,
-                fieldIndex: fieldIndex,
-                errorMask: errorMask);
+            try
+            {
+                WriteBinary_TypeChar_Custom(
+                    writer: writer,
+                    item: item,
+                    fieldIndex: fieldIndex,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
         }
 
         protected static TryGet<Global_FieldIndex?> Fill_Binary_RecordTypes(
@@ -521,13 +529,21 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "FNAM":
-                    using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
+                    try
                     {
-                        FillBinary_TypeChar_Custom(
-                            frame: subFrame,
-                            item: item,
-                            fieldIndex: (int)Global_FieldIndex.TypeChar,
-                            errorMask: errorMask);
+                        using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
+                        {
+                            FillBinary_TypeChar_Custom(
+                                frame: subFrame,
+                                item: item,
+                                fieldIndex: (int)Global_FieldIndex.TypeChar,
+                                errorMask: errorMask);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask().Overall = ex;
                     }
                     return TryGet<Global_FieldIndex?>.Succeed(Global_FieldIndex.TypeChar);
                 case "FLTV":

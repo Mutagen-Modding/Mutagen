@@ -966,10 +966,18 @@ namespace Mutagen.Bethesda.Oblivion
             Region item,
             Func<Region_ErrorMask> errorMask)
         {
-            WriteBinary_RegionAreaLogic_Custom(
-                writer: writer,
-                item: item,
-                errorMask: errorMask);
+            try
+            {
+                WriteBinary_RegionAreaLogic_Custom(
+                    writer: writer,
+                    item: item,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
         }
 
         private static Region Create_Binary_Internal(
@@ -1051,12 +1059,20 @@ namespace Mutagen.Bethesda.Oblivion
                     item._Areas.SetIfSucceeded(AreastryGet);
                     return TryGet<Region_FieldIndex?>.Succeed(Region_FieldIndex.Areas);
                 case "RDAT":
-                    using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
+                    try
                     {
-                        FillBinary_RegionAreaLogic_Custom(
-                            frame: subFrame,
-                            item: item,
-                            errorMask: errorMask);
+                        using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
+                        {
+                            FillBinary_RegionAreaLogic_Custom(
+                                frame: subFrame,
+                                item: item,
+                                errorMask: errorMask);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask().Overall = ex;
                     }
                     return TryGet<Region_FieldIndex?>.Succeed(null);
                 default:

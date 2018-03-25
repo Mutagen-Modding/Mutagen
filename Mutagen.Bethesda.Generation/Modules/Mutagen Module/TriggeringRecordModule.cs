@@ -44,6 +44,7 @@ namespace Mutagen.Bethesda.Generation
             var data = obj.GetObjectData();
             var record = obj.Node.GetAttribute("recordType");
             data.FailOnUnknown = obj.Node.GetAttribute<bool>("failOnUnknownType", defaultVal: false);
+            data.CustomBinaryEnd = obj.Node.GetAttribute<bool>("customBinaryEnd", defaultVal: false);
 
             var objType = obj.Node.GetAttribute("objType");
             if (!Enum.TryParse<ObjectType>(objType, out var objTypeEnum))

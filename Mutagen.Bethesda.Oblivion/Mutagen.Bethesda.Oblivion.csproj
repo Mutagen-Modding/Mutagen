@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -55,6 +55,9 @@
     <Compile Include="Records\Common Enums\Specialization.cs" />
     <Compile Include="Records\Common Subrecords\Effect.cs">
       <DependentUpon>Effect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\EnableParent.cs">
+      <DependentUpon>EnableParent.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\Model_LoquiGenerated.cs">
       <DependentUpon>Model.xml</DependentUpon>
@@ -121,9 +124,6 @@
     </Compile>
     <Compile Include="Records\Major Records\Door.cs">
       <DependentUpon>Door.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\EnableParent.cs">
-      <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Enchantment.cs">
       <DependentUpon>Enchantment.xml</DependentUpon>
@@ -548,12 +548,6 @@
     <Compile Include="Records\Major Records\LockInformation_LoquiGenerated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\EnableParent_LoquiGenerated.cs">
-      <DependentUpon>PlacedObject.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\DistantLODData_LoquiGenerated.cs">
-      <DependentUpon>PlacedObject.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\MapMarker_LoquiGenerated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
@@ -578,9 +572,30 @@
     <Compile Include="Records\Major Records\Placed_LoquiGenerated.cs">
       <DependentUpon>Placed.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\InterCellPoint_LoquiGenerated.cs">
+      <DependentUpon>PathGrid.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PointToReferenceMapping_LoquiGenerated.cs">
+      <DependentUpon>PathGrid.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\DistantLODData_LoquiGenerated.cs">
+      <DependentUpon>DistantLODData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\EnableParent_LoquiGenerated.cs">
+      <DependentUpon>EnableParent.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedNPC_LoquiGenerated.cs">
+      <DependentUpon>PlacedNPC.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Records\Common Subrecords\DistantLODData.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Records\Common Subrecords\Effect.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Common Subrecords\EnableParent.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Common Subrecords\LeveledEntry.xml">
@@ -720,6 +735,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Placed.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\PlacedNPC.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\PlacedCreature.xml">

@@ -769,11 +769,19 @@ namespace Mutagen.Bethesda.Oblivion
             int fieldIndex,
             Func<SoundData_ErrorMask> errorMask)
         {
-            WriteBinary_MinimumAttenuationDistance_Custom(
-                writer: writer,
-                item: item,
-                fieldIndex: fieldIndex,
-                errorMask: errorMask);
+            try
+            {
+                WriteBinary_MinimumAttenuationDistance_Custom(
+                    writer: writer,
+                    item: item,
+                    fieldIndex: fieldIndex,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
         }
 
         static partial void FillBinary_MaximumAttenuationDistance_Custom(
@@ -794,11 +802,19 @@ namespace Mutagen.Bethesda.Oblivion
             int fieldIndex,
             Func<SoundData_ErrorMask> errorMask)
         {
-            WriteBinary_MaximumAttenuationDistance_Custom(
-                writer: writer,
-                item: item,
-                fieldIndex: fieldIndex,
-                errorMask: errorMask);
+            try
+            {
+                WriteBinary_MaximumAttenuationDistance_Custom(
+                    writer: writer,
+                    item: item,
+                    fieldIndex: fieldIndex,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
         }
 
         private static SoundData Create_Binary_Internal(
@@ -833,16 +849,32 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<SoundData_ErrorMask> errorMask)
         {
-            FillBinary_MinimumAttenuationDistance_Custom(
-                frame: frame,
-                item: item,
-                fieldIndex: (int)SoundData_FieldIndex.MinimumAttenuationDistance,
-                errorMask: errorMask);
-            FillBinary_MaximumAttenuationDistance_Custom(
-                frame: frame,
-                item: item,
-                fieldIndex: (int)SoundData_FieldIndex.MaximumAttenuationDistance,
-                errorMask: errorMask);
+            try
+            {
+                FillBinary_MinimumAttenuationDistance_Custom(
+                    frame: frame,
+                    item: item,
+                    fieldIndex: (int)SoundData_FieldIndex.MinimumAttenuationDistance,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
+            try
+            {
+                FillBinary_MaximumAttenuationDistance_Custom(
+                    frame: frame,
+                    item: item,
+                    fieldIndex: (int)SoundData_FieldIndex.MaximumAttenuationDistance,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
             item._FrequencyAdjustment.SetIfSucceeded(Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)SoundData_FieldIndex.FrequencyAdjustment,

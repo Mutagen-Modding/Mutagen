@@ -20,9 +20,9 @@ namespace Mutagen.Bethesda.Binary
         public static readonly LoquiBinaryTranslation<T, M> Instance = new LoquiBinaryTranslation<T, M>();
         private static readonly ILoquiRegistration Registration = LoquiRegistration.GetRegister(typeof(T));
         public delegate T CREATE_FUNC(MutagenFrame reader, RecordTypeConverter recordTypeConverter, bool doMasks, out M errorMask);
-        private static readonly Lazy<CREATE_FUNC> CREATE = new Lazy<CREATE_FUNC>(GetCreateFunc);
+        public static readonly Lazy<CREATE_FUNC> CREATE = new Lazy<CREATE_FUNC>(GetCreateFunc);
         public delegate void WRITE_FUNC(MutagenWriter writer, T item, RecordTypeConverter recordTypeConverter, bool doMasks, out M errorMask);
-        private static readonly Lazy<WRITE_FUNC> WRITE = new Lazy<WRITE_FUNC>(GetWriteFunc);
+        public static readonly Lazy<WRITE_FUNC> WRITE = new Lazy<WRITE_FUNC>(GetWriteFunc);
 
         private IEnumerable<KeyValuePair<ushort, object>> EnumerateObjects(
             ILoquiRegistration registration,
@@ -328,5 +328,37 @@ namespace Mutagen.Bethesda.Binary
                 recordTypeConverter: recordTypeConverter);
         }
         #endregion
+    }
+
+    public static class LoquiBinaryTranslationExt
+    {
+        [DebuggerStepThrough]
+        public static TryGet<T> Parse<T, M, C>(
+            this LoquiBinaryTranslation<T, M> loqTrans,
+            MutagenFrame frame,
+            bool doMasks,
+            out MaskItem<Exception, C> errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+            where T : ILoquiObjectGetter
+            where C : class
+            where M : class, C, IErrorMask, new()
+        {
+            try
+            {
+                var ret = TryGet<T>.Succeed(LoquiBinaryTranslation<T, M>.CREATE.Value(
+                    reader: frame,
+                    doMasks: doMasks,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: out var subMask));
+                errorMask = subMask == null ? null : new MaskItem<Exception, C>(null, subMask);
+                return ret;
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                errorMask = new MaskItem<Exception, C>(ex, default(C));
+                return TryGet<T>.Failure;
+            }
+        }
     }
 }

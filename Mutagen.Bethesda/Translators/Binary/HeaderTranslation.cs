@@ -262,13 +262,14 @@ namespace Mutagen.Bethesda.Binary
         public static RecordType GetNextType(
             MutagenReader reader,
             out ContentLength contentLength,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter recordTypeConverter = null,
+            bool hopGroup = true)
         {
             reader.CheckUpcomingRead(Constants.HEADER_LENGTH + Constants.RECORD_LENGTHLENGTH);
             var ret = ReadNextRecordType(reader);
             ret = recordTypeConverter.ConvertToStandard(ret);
             contentLength = ReadContentLength(reader, Constants.RECORD_LENGTHLENGTH);
-            if (ret.Equals(GRUP_HEADER))
+            if (hopGroup && ret.Equals(GRUP_HEADER))
             {
                 ret = GetNextRecordType(reader);
             }

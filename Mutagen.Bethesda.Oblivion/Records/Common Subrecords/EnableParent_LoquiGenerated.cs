@@ -705,6 +705,9 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new EnableParent();
             try
             {
+                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                    frame.Reader,
+                    EnableParent_Registration.XESP_HEADER));
                 using (frame)
                 {
                     Fill_Binary_Structs(
@@ -1103,6 +1106,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly RecordType XESP_HEADER = new RecordType("XESP");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = XESP_HEADER;
         public const int NumStructFields = 2;
         public const int NumTypedFields = 0;
         #region Interface
@@ -1410,10 +1415,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             try
             {
-                Write_Binary_Embedded(
-                    item: item,
+                using (HeaderExport.ExportHeader(
                     writer: writer,
-                    errorMask: errorMask);
+                    record: EnableParent_Registration.XESP_HEADER,
+                    type: ObjectType.Subrecord))
+                {
+                    Write_Binary_Embedded(
+                        item: item,
+                        writer: writer,
+                        errorMask: errorMask);
+                }
             }
             catch (Exception ex)
             when (errorMask != null)

@@ -22,6 +22,7 @@ namespace Mutagen.Bethesda.Oblivion
         static partial void FillBinary_OpenByDefault_Custom(MutagenFrame frame, PlacedObject item, int fieldIndex, Func<PlacedObject_ErrorMask> errorMask)
         {
             item.OpenByDefault = true;
+            frame.Position += Constants.SUBRECORD_LENGTH;
         }
 
         static partial void WriteBinary_OpenByDefault_Custom(MutagenWriter writer, PlacedObject item, int fieldIndex, Func<PlacedObject_ErrorMask> errorMask)

@@ -774,11 +774,19 @@ namespace Mutagen.Bethesda.Oblivion
             int fieldIndex,
             Func<SoundDataExtended_ErrorMask> errorMask)
         {
-            WriteBinary_StaticAttenuation_Custom(
-                writer: writer,
-                item: item,
-                fieldIndex: fieldIndex,
-                errorMask: errorMask);
+            try
+            {
+                WriteBinary_StaticAttenuation_Custom(
+                    writer: writer,
+                    item: item,
+                    fieldIndex: fieldIndex,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
         }
 
         static partial void FillBinary_StopTime_Custom(
@@ -799,11 +807,19 @@ namespace Mutagen.Bethesda.Oblivion
             int fieldIndex,
             Func<SoundDataExtended_ErrorMask> errorMask)
         {
-            WriteBinary_StopTime_Custom(
-                writer: writer,
-                item: item,
-                fieldIndex: fieldIndex,
-                errorMask: errorMask);
+            try
+            {
+                WriteBinary_StopTime_Custom(
+                    writer: writer,
+                    item: item,
+                    fieldIndex: fieldIndex,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
         }
 
         static partial void FillBinary_StartTime_Custom(
@@ -824,11 +840,19 @@ namespace Mutagen.Bethesda.Oblivion
             int fieldIndex,
             Func<SoundDataExtended_ErrorMask> errorMask)
         {
-            WriteBinary_StartTime_Custom(
-                writer: writer,
-                item: item,
-                fieldIndex: fieldIndex,
-                errorMask: errorMask);
+            try
+            {
+                WriteBinary_StartTime_Custom(
+                    writer: writer,
+                    item: item,
+                    fieldIndex: fieldIndex,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
         }
 
         private static SoundDataExtended Create_Binary_Internal(
@@ -867,21 +891,45 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 frame: frame,
                 errorMask: errorMask);
-            FillBinary_StaticAttenuation_Custom(
-                frame: frame,
-                item: item,
-                fieldIndex: (int)SoundDataExtended_FieldIndex.StaticAttenuation,
-                errorMask: errorMask);
-            FillBinary_StopTime_Custom(
-                frame: frame,
-                item: item,
-                fieldIndex: (int)SoundDataExtended_FieldIndex.StopTime,
-                errorMask: errorMask);
-            FillBinary_StartTime_Custom(
-                frame: frame,
-                item: item,
-                fieldIndex: (int)SoundDataExtended_FieldIndex.StartTime,
-                errorMask: errorMask);
+            try
+            {
+                FillBinary_StaticAttenuation_Custom(
+                    frame: frame,
+                    item: item,
+                    fieldIndex: (int)SoundDataExtended_FieldIndex.StaticAttenuation,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
+            try
+            {
+                FillBinary_StopTime_Custom(
+                    frame: frame,
+                    item: item,
+                    fieldIndex: (int)SoundDataExtended_FieldIndex.StopTime,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
+            try
+            {
+                FillBinary_StartTime_Custom(
+                    frame: frame,
+                    item: item,
+                    fieldIndex: (int)SoundDataExtended_FieldIndex.StartTime,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
         }
 
         #endregion

@@ -965,11 +965,19 @@ namespace Mutagen.Bethesda.Oblivion
             int fieldIndex,
             Func<Grass_ErrorMask> errorMask)
         {
-            WriteBinary_MaxSlope_Custom(
-                writer: writer,
-                item: item,
-                fieldIndex: fieldIndex,
-                errorMask: errorMask);
+            try
+            {
+                WriteBinary_MaxSlope_Custom(
+                    writer: writer,
+                    item: item,
+                    fieldIndex: fieldIndex,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
         }
 
         static partial void FillBinary_UnitFromWaterAmount_Custom(
@@ -990,11 +998,19 @@ namespace Mutagen.Bethesda.Oblivion
             int fieldIndex,
             Func<Grass_ErrorMask> errorMask)
         {
-            WriteBinary_UnitFromWaterAmount_Custom(
-                writer: writer,
-                item: item,
-                fieldIndex: fieldIndex,
-                errorMask: errorMask);
+            try
+            {
+                WriteBinary_UnitFromWaterAmount_Custom(
+                    writer: writer,
+                    item: item,
+                    fieldIndex: fieldIndex,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
         }
 
         private static Grass Create_Binary_Internal(
@@ -1053,16 +1069,32 @@ namespace Mutagen.Bethesda.Oblivion
                             frame: dataFrame,
                             fieldIndex: (int)Grass_FieldIndex.MinSlope,
                             errorMask: errorMask));
-                        FillBinary_MaxSlope_Custom(
-                            frame: dataFrame,
-                            item: item,
-                            fieldIndex: (int)Grass_FieldIndex.MaxSlope,
-                            errorMask: errorMask);
-                        FillBinary_UnitFromWaterAmount_Custom(
-                            frame: dataFrame,
-                            item: item,
-                            fieldIndex: (int)Grass_FieldIndex.UnitFromWaterAmount,
-                            errorMask: errorMask);
+                        try
+                        {
+                            FillBinary_MaxSlope_Custom(
+                                frame: dataFrame,
+                                item: item,
+                                fieldIndex: (int)Grass_FieldIndex.MaxSlope,
+                                errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask().Overall = ex;
+                        }
+                        try
+                        {
+                            FillBinary_UnitFromWaterAmount_Custom(
+                                frame: dataFrame,
+                                item: item,
+                                fieldIndex: (int)Grass_FieldIndex.UnitFromWaterAmount,
+                                errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask().Overall = ex;
+                        }
                         item._UnitFromWaterMode.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(4)),
                             fieldIndex: (int)Grass_FieldIndex.UnitFromWaterMode,

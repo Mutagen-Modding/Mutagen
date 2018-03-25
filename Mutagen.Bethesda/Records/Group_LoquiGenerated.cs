@@ -701,11 +701,19 @@ namespace Mutagen.Bethesda
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
-            WriteBinary_ContainedRecordType_Custom(
-                writer: writer,
-                item: item,
-                fieldIndex: fieldIndex,
-                errorMask: errorMask);
+            try
+            {
+                WriteBinary_ContainedRecordType_Custom(
+                    writer: writer,
+                    item: item,
+                    fieldIndex: fieldIndex,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
         }
 
         private static Group<T> Create_Binary_Internal<T_ErrMask>(
@@ -749,11 +757,19 @@ namespace Mutagen.Bethesda
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
-            FillBinary_ContainedRecordType_Custom(
-                frame: frame,
-                item: item,
-                fieldIndex: (int)Group_FieldIndex.ContainedRecordType,
-                errorMask: errorMask);
+            try
+            {
+                FillBinary_ContainedRecordType_Custom(
+                    frame: frame,
+                    item: item,
+                    fieldIndex: (int)Group_FieldIndex.ContainedRecordType,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
             item._GroupType.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)Group_FieldIndex.GroupType,

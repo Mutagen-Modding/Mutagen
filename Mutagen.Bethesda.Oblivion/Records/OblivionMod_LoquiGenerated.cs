@@ -1716,7 +1716,7 @@ namespace Mutagen.Bethesda.Oblivion
                     _Regions_Object.Items.Set(regions);
                     break;
                 default:
-                    throw new ArgumentException("Unknown Major Record type: {record?.GetType()}");
+                    throw new ArgumentException($"Unknown settable MajorRecord type: {record?.GetType()}");
             }
         }
 

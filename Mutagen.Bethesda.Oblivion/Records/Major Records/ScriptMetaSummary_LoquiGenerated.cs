@@ -789,11 +789,19 @@ namespace Mutagen.Bethesda.Oblivion
             int fieldIndex,
             Func<ScriptMetaSummary_ErrorMask> errorMask)
         {
-            WriteBinary_CompiledSize_Custom(
-                writer: writer,
-                item: item,
-                fieldIndex: fieldIndex,
-                errorMask: errorMask);
+            try
+            {
+                WriteBinary_CompiledSize_Custom(
+                    writer: writer,
+                    item: item,
+                    fieldIndex: fieldIndex,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
         }
 
         private static ScriptMetaSummary Create_Binary_Internal(
@@ -837,11 +845,19 @@ namespace Mutagen.Bethesda.Oblivion
                 frame: frame,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.RefCount,
                 errorMask: errorMask));
-            FillBinary_CompiledSize_Custom(
-                frame: frame,
-                item: item,
-                fieldIndex: (int)ScriptMetaSummary_FieldIndex.CompiledSize,
-                errorMask: errorMask);
+            try
+            {
+                FillBinary_CompiledSize_Custom(
+                    frame: frame,
+                    item: item,
+                    fieldIndex: (int)ScriptMetaSummary_FieldIndex.CompiledSize,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
             item._VariableCount.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,

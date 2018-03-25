@@ -735,6 +735,9 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new DistantLODData();
             try
             {
+                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                    frame.Reader,
+                    DistantLODData_Registration.XLOD_HEADER));
                 using (frame)
                 {
                     Fill_Binary_Structs(
@@ -1169,6 +1172,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly RecordType XLOD_HEADER = new RecordType("XLOD");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = XLOD_HEADER;
         public const int NumStructFields = 3;
         public const int NumTypedFields = 0;
         #region Interface
@@ -1510,10 +1515,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             try
             {
-                Write_Binary_Embedded(
-                    item: item,
+                using (HeaderExport.ExportHeader(
                     writer: writer,
-                    errorMask: errorMask);
+                    record: DistantLODData_Registration.XLOD_HEADER,
+                    type: ObjectType.Subrecord))
+                {
+                    Write_Binary_Embedded(
+                        item: item,
+                        writer: writer,
+                        errorMask: errorMask);
+                }
             }
             catch (Exception ex)
             when (errorMask != null)

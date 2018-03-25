@@ -40,8 +40,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<MapMarker.Flag> _Flags = NotifyingItem.Factory<MapMarker.Flag>();
-        public INotifyingItem<MapMarker.Flag> Flags_Property => _Flags;
+        protected INotifyingSetItem<MapMarker.Flag> _Flags = NotifyingSetItem.Factory<MapMarker.Flag>(markAsSet: false);
+        public INotifyingSetItem<MapMarker.Flag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MapMarker.Flag Flags
         {
@@ -49,9 +49,9 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._Flags.Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<MapMarker.Flag> IMapMarker.Flags_Property => this.Flags_Property;
+        INotifyingSetItem<MapMarker.Flag> IMapMarker.Flags_Property => this.Flags_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<MapMarker.Flag> IMapMarkerGetter.Flags_Property => this.Flags_Property;
+        INotifyingSetItemGetter<MapMarker.Flag> IMapMarkerGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -67,6 +67,24 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItem<String> IMapMarker.Name_Property => this.Name_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<String> IMapMarkerGetter.Name_Property => this.Name_Property;
+        #endregion
+        #region Types
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly INotifyingList<MapMarker.Type> _Types = new NotifyingList<MapMarker.Type>();
+        public INotifyingList<MapMarker.Type> Types => _Types;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IEnumerable<MapMarker.Type> TypesEnumerable
+        {
+            get => _Types;
+            set => _Types.SetTo(value);
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingList<MapMarker.Type> IMapMarker.Types => _Types;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingListGetter<MapMarker.Type> IMapMarkerGetter.Types => _Types;
+        #endregion
+
         #endregion
 
         #region Loqui Getter Interface
@@ -130,11 +148,20 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(MapMarker rhs)
         {
             if (rhs == null) return false;
-            if (Flags != rhs.Flags) return false;
+            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
+            if (Flags_Property.HasBeenSet)
+            {
+                if (Flags != rhs.Flags) return false;
+            }
             if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
             if (Name_Property.HasBeenSet)
             {
                 if (!object.Equals(Name, rhs.Name)) return false;
+            }
+            if (Types.HasBeenSet != rhs.Types.HasBeenSet) return false;
+            if (Types.HasBeenSet)
+            {
+                if (!Types.SequenceEqual(rhs.Types)) return false;
             }
             return true;
         }
@@ -142,10 +169,17 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
+            if (Flags_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
+            }
             if (Name_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
+            }
+            if (Types.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Types).CombineHashCode(ret);
             }
             return ret;
         }
@@ -448,6 +482,20 @@ namespace Mutagen.Bethesda.Oblivion
                         root,
                         fieldIndex: (int)MapMarker_FieldIndex.Name,
                         errorMask: errorMask));
+                    break;
+                case "Types":
+                    item._Types.SetIfSucceeded(ListXmlTranslation<MapMarker.Type, Exception>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)MapMarker_FieldIndex.Types,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            return EnumXmlTranslation<MapMarker.Type>.Instance.ParseNonNull(
+                                r,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        ));
                     break;
                 default:
                     break;
@@ -753,10 +801,6 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<MapMarker_ErrorMask> errorMask)
         {
-            item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Flag>.Instance.Parse(
-                frame: frame.Spawn(new ContentLength(1)),
-                fieldIndex: (int)MapMarker_FieldIndex.Flags,
-                errorMask: errorMask));
         }
 
         protected static TryGet<MapMarker_FieldIndex?> Fill_Binary_RecordTypes(
@@ -772,7 +816,16 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
             switch (nextRecordType.Type)
             {
+                case "FNAM":
+                    if (lastParsed.HasValue && lastParsed.Value >= MapMarker_FieldIndex.Flags) return TryGet<MapMarker_FieldIndex?>.Failure;
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Flag>.Instance.Parse(
+                        frame.Spawn(contentLength),
+                        fieldIndex: (int)MapMarker_FieldIndex.Flags,
+                        errorMask: errorMask));
+                    return TryGet<MapMarker_FieldIndex?>.Succeed(MapMarker_FieldIndex.Flags);
                 case "FULL":
+                    if (lastParsed.HasValue && lastParsed.Value >= MapMarker_FieldIndex.Name) return TryGet<MapMarker_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var NametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
@@ -780,6 +833,24 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     item._Name.SetIfSucceeded(NametryGet);
                     return TryGet<MapMarker_FieldIndex?>.Succeed(MapMarker_FieldIndex.Name);
+                case "TNAM":
+                    if (lastParsed.HasValue && lastParsed.Value >= MapMarker_FieldIndex.Types) return TryGet<MapMarker_FieldIndex?>.Failure;
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    var TypestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<MapMarker.Type, Exception>.Instance.ParseRepeatedItem(
+                        frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)MapMarker_FieldIndex.Types,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            return Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Type>.Instance.Parse(
+                                frame: r.Spawn(new ContentLength(2)),
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                    item._Types.SetIfSucceeded(TypestryGet);
+                    return TryGet<MapMarker_FieldIndex?>.Succeed(MapMarker_FieldIndex.Types);
                 default:
                     return TryGet<MapMarker_FieldIndex?>.Failure;
             }
@@ -911,6 +982,9 @@ namespace Mutagen.Bethesda.Oblivion
                         (String)obj,
                         cmds);
                     break;
+                case MapMarker_FieldIndex.Types:
+                    this._Types.SetTo((IEnumerable<MapMarker.Type>)obj, cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -958,6 +1032,9 @@ namespace Mutagen.Bethesda.Oblivion
                         (String)pair.Value,
                         null);
                     break;
+                case MapMarker_FieldIndex.Types:
+                    obj._Types.SetTo((IEnumerable<MapMarker.Type>)pair.Value, null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -974,24 +1051,28 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IMapMarker : IMapMarkerGetter, ILoquiClass<IMapMarker, IMapMarkerGetter>, ILoquiClass<MapMarker, IMapMarkerGetter>
     {
         new MapMarker.Flag Flags { get; set; }
-        new INotifyingItem<MapMarker.Flag> Flags_Property { get; }
+        new INotifyingSetItem<MapMarker.Flag> Flags_Property { get; }
 
         new String Name { get; set; }
         new INotifyingSetItem<String> Name_Property { get; }
 
+        new INotifyingList<MapMarker.Type> Types { get; }
     }
 
     public partial interface IMapMarkerGetter : ILoquiObject
     {
         #region Flags
         MapMarker.Flag Flags { get; }
-        INotifyingItemGetter<MapMarker.Flag> Flags_Property { get; }
+        INotifyingSetItemGetter<MapMarker.Flag> Flags_Property { get; }
 
         #endregion
         #region Name
         String Name { get; }
         INotifyingSetItemGetter<String> Name_Property { get; }
 
+        #endregion
+        #region Types
+        INotifyingListGetter<MapMarker.Type> Types { get; }
         #endregion
 
     }
@@ -1007,6 +1088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         Flags = 0,
         Name = 1,
+        Types = 2,
     }
     #endregion
 
@@ -1024,7 +1106,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "96e2692c-898d-48c5-acd1-fbbee402a4f9";
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(MapMarker_Mask<>);
 
@@ -1056,6 +1138,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)MapMarker_FieldIndex.Flags;
                 case "NAME":
                     return (ushort)MapMarker_FieldIndex.Name;
+                case "TYPES":
+                    return (ushort)MapMarker_FieldIndex.Types;
                 default:
                     return null;
             }
@@ -1066,6 +1150,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MapMarker_FieldIndex enu = (MapMarker_FieldIndex)index;
             switch (enu)
             {
+                case MapMarker_FieldIndex.Types:
+                    return true;
                 case MapMarker_FieldIndex.Flags:
                 case MapMarker_FieldIndex.Name:
                     return false;
@@ -1081,6 +1167,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case MapMarker_FieldIndex.Flags:
                 case MapMarker_FieldIndex.Name:
+                case MapMarker_FieldIndex.Types:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1094,6 +1181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case MapMarker_FieldIndex.Flags:
                 case MapMarker_FieldIndex.Name:
+                case MapMarker_FieldIndex.Types:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1109,6 +1197,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Flags";
                 case MapMarker_FieldIndex.Name:
                     return "Name";
+                case MapMarker_FieldIndex.Types:
+                    return "Types";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1121,6 +1211,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case MapMarker_FieldIndex.Flags:
                 case MapMarker_FieldIndex.Name:
+                case MapMarker_FieldIndex.Types:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1134,6 +1225,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case MapMarker_FieldIndex.Flags:
                 case MapMarker_FieldIndex.Name:
+                case MapMarker_FieldIndex.Types:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1149,14 +1241,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(MapMarker.Flag);
                 case MapMarker_FieldIndex.Name:
                     return typeof(String);
+                case MapMarker_FieldIndex.Types:
+                    return typeof(NotifyingList<MapMarker.Type>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
+        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public const int NumStructFields = 1;
-        public const int NumTypedFields = 1;
+        public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
+        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        {
+            return new CollectionGetterWrapper<RecordType>(
+                new HashSet<RecordType>(
+                    new RecordType[]
+                    {
+                        FNAM_HEADER,
+                        FULL_HEADER,
+                        TNAM_HEADER
+                    })
+            );
+        });
+        public const int NumStructFields = 0;
+        public const int NumTypedFields = 3;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1203,8 +1312,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Flags_Property.Set(
-                        value: rhs.Flags,
+                    item.Flags_Property.SetToWithDefault(
+                        rhs: rhs.Flags_Property,
+                        def: def?.Flags_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1228,6 +1338,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)MapMarker_FieldIndex.Name, ex);
                 }
             }
+            if (copyMask?.Types != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Types.SetToWithDefault(
+                        rhs.Types,
+                        def?.Types,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)MapMarker_FieldIndex.Types, ex);
+                }
+            }
         }
 
         #endregion
@@ -1242,10 +1367,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case MapMarker_FieldIndex.Flags:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                    obj.Flags_Property.HasBeenSet = on;
+                    break;
                 case MapMarker_FieldIndex.Name:
                     obj.Name_Property.HasBeenSet = on;
+                    break;
+                case MapMarker_FieldIndex.Types:
+                    obj.Types.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1261,10 +1389,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case MapMarker_FieldIndex.Flags:
-                    obj.Flags = default(MapMarker.Flag);
+                    obj.Flags_Property.Unset(cmds);
                     break;
                 case MapMarker_FieldIndex.Name:
                     obj.Name_Property.Unset(cmds);
+                    break;
+                case MapMarker_FieldIndex.Types:
+                    obj.Types.Unset(cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1279,9 +1410,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case MapMarker_FieldIndex.Flags:
-                    return true;
+                    return obj.Flags_Property.HasBeenSet;
                 case MapMarker_FieldIndex.Name:
                     return obj.Name_Property.HasBeenSet;
+                case MapMarker_FieldIndex.Types:
+                    return obj.Types.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1298,6 +1431,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Flags;
                 case MapMarker_FieldIndex.Name:
                     return obj.Name;
+                case MapMarker_FieldIndex.Types:
+                    return obj.Types;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1307,8 +1442,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMapMarker item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Flags = default(MapMarker.Flag);
+            item.Flags_Property.Unset(cmds.ToUnsetParams());
             item.Name_Property.Unset(cmds.ToUnsetParams());
+            item.Types.Unset(cmds.ToUnsetParams());
         }
 
         public static MapMarker_Mask<bool> GetEqualsMask(
@@ -1326,8 +1462,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MapMarker_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
             ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
+            if (item.Types.HasBeenSet == rhs.Types.HasBeenSet)
+            {
+                if (item.Types.HasBeenSet)
+                {
+                    ret.Types = new MaskItem<bool, IEnumerable<bool>>();
+                    ret.Types.Specific = item.Types.SelectAgainst<MapMarker.Type, bool>(rhs.Types, ((l, r) => object.Equals(l, r)), out ret.Types.Overall);
+                    ret.Types.Overall = ret.Types.Overall && ret.Types.Specific.All((b) => b);
+                }
+                else
+                {
+                    ret.Types = new MaskItem<bool, IEnumerable<bool>>();
+                    ret.Types.Overall = true;
+                }
+            }
+            else
+            {
+                ret.Types = new MaskItem<bool, IEnumerable<bool>>();
+                ret.Types.Overall = false;
+            }
         }
 
         public static string ToString(
@@ -1365,6 +1520,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Name => {item.Name}");
                 }
+                if (printMask?.Types?.Overall ?? true)
+                {
+                    fg.AppendLine("Types =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        foreach (var subItem in item.Types)
+                        {
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                fg.AppendLine($"Item => {subItem}");
+                            }
+                            fg.AppendLine("]");
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1373,15 +1546,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IMapMarkerGetter item,
             MapMarker_Mask<bool?> checkMask)
         {
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
+            if (checkMask.Types.Overall.HasValue && checkMask.Types.Overall.Value != item.Types.HasBeenSet) return false;
             return true;
         }
 
         public static MapMarker_Mask<bool> GetHasBeenSetMask(IMapMarkerGetter item)
         {
             var ret = new MapMarker_Mask<bool>();
-            ret.Flags = true;
+            ret.Flags = item.Flags_Property.HasBeenSet;
             ret.Name = item.Name_Property.HasBeenSet;
+            ret.Types = new MaskItem<bool, IEnumerable<bool>>(item.Types.HasBeenSet, null);
             return ret;
         }
 
@@ -1417,12 +1593,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.MapMarker");
                     }
-                    EnumXmlTranslation<MapMarker.Flag>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Flags),
-                        item: item.Flags_Property,
-                        fieldIndex: (int)MapMarker_FieldIndex.Flags,
-                        errorMask: errorMask);
+                    if (item.Flags_Property.HasBeenSet)
+                    {
+                        EnumXmlTranslation<MapMarker.Flag>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Flags),
+                            item: item.Flags_Property,
+                            fieldIndex: (int)MapMarker_FieldIndex.Flags,
+                            errorMask: errorMask);
+                    }
                     if (item.Name_Property.HasBeenSet)
                     {
                         StringXmlTranslation.Instance.Write(
@@ -1431,6 +1610,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             item: item.Name_Property,
                             fieldIndex: (int)MapMarker_FieldIndex.Name,
                             errorMask: errorMask);
+                    }
+                    if (item.Types.HasBeenSet)
+                    {
+                        ListXmlTranslation<MapMarker.Type, Exception>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Types),
+                            item: item.Types,
+                            fieldIndex: (int)MapMarker_FieldIndex.Types,
+                            errorMask: errorMask,
+                            transl: (MapMarker.Type subItem, bool listDoMasks, out Exception listSubMask) =>
+                            {
+                                EnumXmlTranslation<MapMarker.Type>.Instance.Write(
+                                    writer: writer,
+                                    name: "Item",
+                                    item: subItem,
+                                    doMasks: errorMask != null,
+                                    errorMask: out listSubMask);
+                            }
+                            );
                     }
                 }
             }
@@ -1470,10 +1668,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             try
             {
-                Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask);
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
@@ -1488,9 +1682,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         #endregion
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Binary_RecordTypes(
             MapMarker item,
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             Func<MapMarker_ErrorMask> errorMask)
         {
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Flag>.Instance.Write(
@@ -1498,15 +1693,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Flags_Property,
                 length: new ContentLength(1),
                 fieldIndex: (int)MapMarker_FieldIndex.Flags,
-                errorMask: errorMask);
-        }
-
-        public static void Write_Binary_RecordTypes(
-            MapMarker item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
-            Func<MapMarker_ErrorMask> errorMask)
-        {
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(MapMarker_Registration.FNAM_HEADER),
+                nullable: false);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Name_Property,
@@ -1514,6 +1703,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(MapMarker_Registration.FULL_HEADER),
                 nullable: false);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<MapMarker.Type, Exception>.Instance.Write(
+                writer: writer,
+                item: item.Types,
+                fieldIndex: (int)MapMarker_FieldIndex.Types,
+                recordType: MapMarker_Registration.TNAM_HEADER,
+                errorMask: errorMask,
+                transl: (MapMarker.Type subItem, bool listDoMasks, out Exception listSubMask) =>
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Type>.Instance.Write(
+                        writer,
+                        subItem,
+                        length: new ContentLength(2),
+                        doMasks: listDoMasks,
+                        errorMask: out listSubMask);
+                }
+                );
         }
 
         #endregion
@@ -1535,12 +1740,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             this.Flags = initialValue;
             this.Name = initialValue;
+            this.Types = new MaskItem<T, IEnumerable<T>>(initialValue, null);
         }
         #endregion
 
         #region Members
         public T Flags;
         public T Name;
+        public MaskItem<T, IEnumerable<T>> Types;
         #endregion
 
         #region Equals
@@ -1555,6 +1762,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return false;
             if (!object.Equals(this.Flags, rhs.Flags)) return false;
             if (!object.Equals(this.Name, rhs.Name)) return false;
+            if (!object.Equals(this.Types, rhs.Types)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -1562,6 +1770,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int ret = 0;
             ret = ret.CombineHashCode(this.Flags?.GetHashCode());
             ret = ret.CombineHashCode(this.Name?.GetHashCode());
+            ret = ret.CombineHashCode(this.Types?.GetHashCode());
             return ret;
         }
 
@@ -1572,6 +1781,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (!eval(this.Flags)) return false;
             if (!eval(this.Name)) return false;
+            if (this.Types != null)
+            {
+                if (!eval(this.Types.Overall)) return false;
+                if (this.Types.Specific != null)
+                {
+                    foreach (var item in this.Types.Specific)
+                    {
+                        if (!eval(item)) return false;
+                    }
+                }
+            }
             return true;
         }
         #endregion
@@ -1588,12 +1808,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             obj.Flags = eval(this.Flags);
             obj.Name = eval(this.Name);
+            if (Types != null)
+            {
+                obj.Types = new MaskItem<R, IEnumerable<R>>();
+                obj.Types.Overall = eval(this.Types.Overall);
+                if (Types.Specific != null)
+                {
+                    List<R> l = new List<R>();
+                    obj.Types.Specific = l;
+                    foreach (var item in Types.Specific)
+                    {
+                        R mask = default(R);
+                        mask = eval(item);
+                        l.Add(mask);
+                    }
+                }
+            }
         }
         #endregion
 
         #region Clear Enumerables
         public void ClearEnumerables()
         {
+            this.Types.Specific = null;
         }
         #endregion
 
@@ -1624,6 +1861,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Name => {Name}");
                 }
+                if (printMask?.Types?.Overall ?? true)
+                {
+                    fg.AppendLine("Types =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        if (Types.Overall != null)
+                        {
+                            fg.AppendLine(Types.Overall.ToString());
+                        }
+                        if (Types.Specific != null)
+                        {
+                            foreach (var subItem in Types.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1649,6 +1911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         public Exception Flags;
         public Exception Name;
+        public MaskItem<Exception, IEnumerable<Exception>> Types;
         #endregion
 
         #region IErrorMask
@@ -1662,6 +1925,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case MapMarker_FieldIndex.Name:
                     this.Name = ex;
+                    break;
+                case MapMarker_FieldIndex.Types:
+                    this.Types = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1679,6 +1945,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MapMarker_FieldIndex.Name:
                     this.Name = (Exception)obj;
                     break;
+                case MapMarker_FieldIndex.Types:
+                    this.Types = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1689,6 +1958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Overall != null) return true;
             if (Flags != null) return true;
             if (Name != null) return true;
+            if (Types != null) return true;
             return false;
         }
         #endregion
@@ -1725,6 +1995,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             fg.AppendLine($"Flags => {Flags}");
             fg.AppendLine($"Name => {Name}");
+            fg.AppendLine("Types =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (Types.Overall != null)
+                {
+                    fg.AppendLine(Types.Overall.ToString());
+                }
+                if (Types.Specific != null)
+                {
+                    foreach (var subItem in Types.Specific)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($" => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+            }
+            fg.AppendLine("]");
         }
         #endregion
 
@@ -1734,6 +2026,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new MapMarker_ErrorMask();
             ret.Flags = this.Flags.Combine(rhs.Flags);
             ret.Name = this.Name.Combine(rhs.Name);
+            ret.Types = new MaskItem<Exception, IEnumerable<Exception>>(this.Types.Overall.Combine(rhs.Types.Overall), new List<Exception>(this.Types.Specific.And(rhs.Types.Specific)));
             return ret;
         }
         public static MapMarker_ErrorMask Combine(MapMarker_ErrorMask lhs, MapMarker_ErrorMask rhs)
@@ -1749,6 +2042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public bool Flags;
         public bool Name;
+        public CopyOption Types;
         #endregion
 
     }

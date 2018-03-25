@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda
         public static readonly ContentLength RECORD_HEADER_LENGTH = RECORD_META_LENGTH + HEADER_LENGTH;
         public static readonly ContentLength RECORD_META_OFFSET = new ContentLength(12);
         public static readonly ContentLength GRUP_LENGTHLENGTH = RECORD_LENGTHLENGTH;
-        public static readonly ContentLength GRUP_LENGTH = HEADER_LENGTH + GRUP_LENGTHLENGTH + HEADER_LENGTH;
+        public static readonly ContentLength GRUP_LENGTH = HEADER_LENGTH + RECORD_META_LENGTH;
         public static readonly ContentLength GRUP_HEADER_OFFSET = new ContentLength(-8);
         public const string TRIGGERING_RECORDTYPE_MEMBER = "TRIGGERING_RECORD_TYPE";
 

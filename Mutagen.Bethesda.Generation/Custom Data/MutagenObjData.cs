@@ -17,6 +17,7 @@ namespace Mutagen.Bethesda.Generation
         public RecordType? MarkerType;
         public HashSet<RecordType> TriggeringRecordTypes = new HashSet<RecordType>();
         public string TriggeringSource;
+        public bool CustomBinaryEnd;
         public Task<IEnumerable<KeyValuePair<IEnumerable<RecordType>, ObjectGeneration>>> GenerationTypes => GetGenerationTypes();
         public TaskCompletionSource WiringComplete = new TaskCompletionSource();
 

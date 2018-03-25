@@ -94,16 +94,26 @@ namespace Mutagen.Bethesda.Generation
             }
             using (new BraceWrapper(fg))
             {
-                using (var args = new ArgsWrapper(fg,
-                    $"WriteBinary_{field.Name}_Custom"))
+                fg.AppendLine("try");
+                using (new BraceWrapper(fg))
                 {
-                    args.Add("writer: writer");
-                    args.Add("item: item");
-                    if (field.HasIndex)
+                    using (var args = new ArgsWrapper(fg,
+                        $"WriteBinary_{field.Name}_Custom"))
                     {
-                        args.Add($"fieldIndex: fieldIndex");
+                        args.Add("writer: writer");
+                        args.Add("item: item");
+                        if (field.HasIndex)
+                        {
+                            args.Add($"fieldIndex: fieldIndex");
+                        }
+                        args.Add($"errorMask: errorMask");
                     }
-                    args.Add($"errorMask: errorMask");
+                }
+                fg.AppendLine("catch (Exception ex)");
+                fg.AppendLine("when (errorMask != null)");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine("errorMask().Overall = ex;");
                 }
             }
             fg.AppendLine();
@@ -134,23 +144,33 @@ namespace Mutagen.Bethesda.Generation
             string frameAccessor)
         {
             var data = field.GetFieldData();
-            if (data.HasTrigger)
+            fg.AppendLine("try");
+            using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"using (var subFrame = {frameAccessor}.Spawn(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))");
-            }
-            using (new BraceWrapper(fg, doIt: data.HasTrigger))
-            {
-                using (var args = new ArgsWrapper(fg,
-                    $"FillBinary_{field.Name}_Custom"))
+                if (data.HasTrigger)
                 {
-                    args.Add($"frame: {(data.HasTrigger ? "subFrame" : frameAccessor)}");
-                    args.Add("item: item");
-                    if (field.HasIndex)
-                    {
-                        args.Add($"fieldIndex: (int){field.IndexEnumName}");
-                    }
-                    args.Add($"errorMask: errorMask");
+                    fg.AppendLine($"using (var subFrame = {frameAccessor}.Spawn(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))");
                 }
+                using (new BraceWrapper(fg, doIt: data.HasTrigger))
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"FillBinary_{field.Name}_Custom"))
+                    {
+                        args.Add($"frame: {(data.HasTrigger ? "subFrame" : frameAccessor)}");
+                        args.Add("item: item");
+                        if (field.HasIndex)
+                        {
+                            args.Add($"fieldIndex: (int){field.IndexEnumName}");
+                        }
+                        args.Add($"errorMask: errorMask");
+                    }
+                }
+            }
+            fg.AppendLine("catch (Exception ex)");
+            fg.AppendLine("when (errorMask != null)");
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine("errorMask().Overall = ex;");
             }
         }
     }

@@ -688,7 +688,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly RecordType PGRD_HEADER = new RecordType("PGRD");
         public static readonly RecordType ACRE_HEADER = new RecordType("ACRE");
+        public static readonly RecordType ACHR_HEADER = new RecordType("ACHR");
         public static readonly RecordType REFR_HEADER = new RecordType("REFR");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
@@ -697,7 +699,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
+                        PGRD_HEADER,
                         ACRE_HEADER,
+                        ACHR_HEADER,
                         REFR_HEADER
                     })
             );

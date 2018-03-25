@@ -728,6 +728,9 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new LockInformation();
             try
             {
+                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                    frame.Reader,
+                    LockInformation_Registration.XLOC_HEADER));
                 using (frame)
                 {
                     Fill_Binary_Structs(
@@ -1161,6 +1164,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly RecordType XLOC_HEADER = new RecordType("XLOC");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = XLOC_HEADER;
         public const int NumStructFields = 3;
         public const int NumTypedFields = 0;
         #region Interface
@@ -1502,10 +1507,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             try
             {
-                Write_Binary_Embedded(
-                    item: item,
+                using (HeaderExport.ExportHeader(
                     writer: writer,
-                    errorMask: errorMask);
+                    record: LockInformation_Registration.XLOC_HEADER,
+                    type: ObjectType.Subrecord))
+                {
+                    Write_Binary_Embedded(
+                        item: item,
+                        writer: writer,
+                        errorMask: errorMask);
+                }
             }
             catch (Exception ex)
             when (errorMask != null)

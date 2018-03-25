@@ -24,67 +24,60 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class TeleportDestination : ITeleportDestination, ILoquiObject<TeleportDestination>, ILoquiObjectSetter, IEquatable<TeleportDestination>
+    public partial class InterCellPoint : IInterCellPoint, ILoquiObject<InterCellPoint>, ILoquiObjectSetter, IEquatable<InterCellPoint>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => TeleportDestination_Registration.Instance;
-        public static TeleportDestination_Registration Registration => TeleportDestination_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => InterCellPoint_Registration.Instance;
+        public static InterCellPoint_Registration Registration => InterCellPoint_Registration.Instance;
 
         #region Ctor
-        public TeleportDestination()
+        public InterCellPoint()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Door
-        public FormIDLink<Door> Door_Property { get; } = new FormIDLink<Door>();
+        #region PointID
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Door Door { get => Door_Property.Item; set => Door_Property.Item = value; }
+        protected INotifyingItem<Int16> _PointID = NotifyingItem.Factory<Int16>();
+        public INotifyingItem<Int16> PointID_Property => _PointID;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<Door> ITeleportDestinationGetter.Door_Property => this.Door_Property;
-        #endregion
-        #region Position
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<P3Float> _Position = NotifyingItem.Factory<P3Float>();
-        public INotifyingItem<P3Float> Position_Property => _Position;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public P3Float Position
+        public Int16 PointID
         {
-            get => this._Position.Item;
-            set => this._Position.Set(value);
+            get => this._PointID.Item;
+            set => this._PointID.Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<P3Float> ITeleportDestination.Position_Property => this.Position_Property;
+        INotifyingItem<Int16> IInterCellPoint.PointID_Property => this.PointID_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<P3Float> ITeleportDestinationGetter.Position_Property => this.Position_Property;
+        INotifyingItemGetter<Int16> IInterCellPointGetter.PointID_Property => this.PointID_Property;
         #endregion
-        #region Rotation
+        #region Point
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<P3Float> _Rotation = NotifyingItem.Factory<P3Float>();
-        public INotifyingItem<P3Float> Rotation_Property => _Rotation;
+        protected INotifyingItem<P3Float> _Point = NotifyingItem.Factory<P3Float>();
+        public INotifyingItem<P3Float> Point_Property => _Point;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public P3Float Rotation
+        public P3Float Point
         {
-            get => this._Rotation.Item;
-            set => this._Rotation.Set(value);
+            get => this._Point.Item;
+            set => this._Point.Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<P3Float> ITeleportDestination.Rotation_Property => this.Rotation_Property;
+        INotifyingItem<P3Float> IInterCellPoint.Point_Property => this.Point_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<P3Float> ITeleportDestinationGetter.Rotation_Property => this.Rotation_Property;
+        INotifyingItemGetter<P3Float> IInterCellPointGetter.Point_Property => this.Point_Property;
         #endregion
 
         #region Loqui Getter Interface
 
-        protected object GetNthObject(ushort index) => TeleportDestinationCommon.GetNthObject(index, this);
+        protected object GetNthObject(ushort index) => InterCellPointCommon.GetNthObject(index, this);
         object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
 
-        protected bool GetNthObjectHasBeenSet(ushort index) => TeleportDestinationCommon.GetNthObjectHasBeenSet(index, this);
+        protected bool GetNthObjectHasBeenSet(ushort index) => InterCellPointCommon.GetNthObjectHasBeenSet(index, this);
         bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
 
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => TeleportDestinationCommon.UnsetNthObject(index, this, cmds);
+        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => InterCellPointCommon.UnsetNthObject(index, this, cmds);
         void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
 
         #endregion
@@ -92,63 +85,61 @@ namespace Mutagen.Bethesda.Oblivion
         #region Loqui Interface
         protected void SetNthObjectHasBeenSet(ushort index, bool on)
         {
-            TeleportDestinationCommon.SetNthObjectHasBeenSet(index, on, this);
+            InterCellPointCommon.SetNthObjectHasBeenSet(index, on, this);
         }
         void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
 
         #endregion
 
-        IMask<bool> IEqualsMask<TeleportDestination>.GetEqualsMask(TeleportDestination rhs) => TeleportDestinationCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ITeleportDestinationGetter>.GetEqualsMask(ITeleportDestinationGetter rhs) => TeleportDestinationCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<InterCellPoint>.GetEqualsMask(InterCellPoint rhs) => InterCellPointCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IInterCellPointGetter>.GetEqualsMask(IInterCellPointGetter rhs) => InterCellPointCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
-            return TeleportDestinationCommon.ToString(this, printMask: null);
+            return InterCellPointCommon.ToString(this, printMask: null);
         }
 
         public string ToString(
             string name = null,
-            TeleportDestination_Mask<bool> printMask = null)
+            InterCellPoint_Mask<bool> printMask = null)
         {
-            return TeleportDestinationCommon.ToString(this, name: name, printMask: printMask);
+            return InterCellPointCommon.ToString(this, name: name, printMask: printMask);
         }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            TeleportDestinationCommon.ToString(this, fg, name: name, printMask: null);
+            InterCellPointCommon.ToString(this, fg, name: name, printMask: null);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public TeleportDestination_Mask<bool> GetHasBeenSetMask()
+        public InterCellPoint_Mask<bool> GetHasBeenSetMask()
         {
-            return TeleportDestinationCommon.GetHasBeenSetMask(this);
+            return InterCellPointCommon.GetHasBeenSetMask(this);
         }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is TeleportDestination rhs)) return false;
+            if (!(obj is InterCellPoint rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(TeleportDestination rhs)
+        public bool Equals(InterCellPoint rhs)
         {
             if (rhs == null) return false;
-            if (Door != rhs.Door) return false;
-            if (Position != rhs.Position) return false;
-            if (Rotation != rhs.Rotation) return false;
+            if (PointID != rhs.PointID) return false;
+            if (Point != rhs.Point) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(Door).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Position).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Rotation).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(PointID).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Point).CombineHashCode(ret);
             return ret;
         }
 
@@ -158,7 +149,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region XML Translation
         #region XML Create
         [DebuggerStepThrough]
-        public static TeleportDestination Create_XML(XElement root)
+        public static InterCellPoint Create_XML(XElement root)
         {
             return Create_XML(
                 root: root,
@@ -167,9 +158,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static TeleportDestination Create_XML(
+        public static InterCellPoint Create_XML(
             XElement root,
-            out TeleportDestination_ErrorMask errorMask)
+            out InterCellPoint_ErrorMask errorMask)
         {
             return Create_XML(
                 root: root,
@@ -178,10 +169,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static TeleportDestination Create_XML(
+        public static InterCellPoint Create_XML(
             XElement root,
             bool doMasks,
-            out TeleportDestination_ErrorMask errorMask)
+            out InterCellPoint_ErrorMask errorMask)
         {
             var ret = Create_XML(
                 root: root,
@@ -191,26 +182,26 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static (TeleportDestination Object, TeleportDestination_ErrorMask ErrorMask) Create_XML(
+        public static (InterCellPoint Object, InterCellPoint_ErrorMask ErrorMask) Create_XML(
             XElement root,
             bool doMasks)
         {
-            TeleportDestination_ErrorMask errMaskRet = null;
+            InterCellPoint_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new TeleportDestination_ErrorMask()) : default(Func<TeleportDestination_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new InterCellPoint_ErrorMask()) : default(Func<InterCellPoint_ErrorMask>));
             return (ret, errMaskRet);
         }
 
-        public static TeleportDestination Create_XML(string path)
+        public static InterCellPoint Create_XML(string path)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(root: root);
         }
 
-        public static TeleportDestination Create_XML(
+        public static InterCellPoint Create_XML(
             string path,
-            out TeleportDestination_ErrorMask errorMask)
+            out InterCellPoint_ErrorMask errorMask)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(
@@ -218,15 +209,15 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: out errorMask);
         }
 
-        public static TeleportDestination Create_XML(Stream stream)
+        public static InterCellPoint Create_XML(Stream stream)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(root: root);
         }
 
-        public static TeleportDestination Create_XML(
+        public static InterCellPoint Create_XML(
             Stream stream,
-            out TeleportDestination_ErrorMask errorMask)
+            out InterCellPoint_ErrorMask errorMask)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(
@@ -241,7 +232,7 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<TeleportDestination, TeleportDestination_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<InterCellPoint, InterCellPoint_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -252,10 +243,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void CopyIn_XML(
             XElement root,
-            out TeleportDestination_ErrorMask errorMask,
+            out InterCellPoint_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<TeleportDestination, TeleportDestination_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<InterCellPoint, InterCellPoint_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -276,7 +267,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             string path,
-            out TeleportDestination_ErrorMask errorMask,
+            out InterCellPoint_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
@@ -298,7 +289,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             Stream stream,
-            out TeleportDestination_ErrorMask errorMask,
+            out InterCellPoint_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
@@ -313,10 +304,10 @@ namespace Mutagen.Bethesda.Oblivion
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
-            out TeleportDestination_ErrorMask errorMask,
+            out InterCellPoint_ErrorMask errorMask,
             string name = null)
         {
-            errorMask = (TeleportDestination_ErrorMask)this.Write_XML_Internal(
+            errorMask = (InterCellPoint_ErrorMask)this.Write_XML_Internal(
                 writer: writer,
                 name: name,
                 doMasks: true);
@@ -324,7 +315,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_XML(
             string path,
-            out TeleportDestination_ErrorMask errorMask,
+            out InterCellPoint_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(path, Encoding.ASCII))
@@ -340,7 +331,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_XML(
             Stream stream,
-            out TeleportDestination_ErrorMask errorMask,
+            out InterCellPoint_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
@@ -397,7 +388,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks,
             string name = null)
         {
-            TeleportDestinationCommon.Write_XML(
+            InterCellPointCommon.Write_XML(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -406,11 +397,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static TeleportDestination Create_XML_Internal(
+        private static InterCellPoint Create_XML_Internal(
             XElement root,
-            Func<TeleportDestination_ErrorMask> errorMask)
+            Func<InterCellPoint_ErrorMask> errorMask)
         {
-            var ret = new TeleportDestination();
+            var ret = new InterCellPoint();
             try
             {
                 foreach (var elem in root.Elements())
@@ -431,29 +422,23 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static void Fill_XML_Internal(
-            TeleportDestination item,
+            InterCellPoint item,
             XElement root,
             string name,
-            Func<TeleportDestination_ErrorMask> errorMask)
+            Func<InterCellPoint_ErrorMask> errorMask)
         {
             switch (name)
             {
-                case "Door":
-                    item.Door_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                case "PointID":
+                    item._PointID.SetIfSucceeded(Int16XmlTranslation.Instance.ParseNonNull(
                         root,
-                        fieldIndex: (int)TeleportDestination_FieldIndex.Door,
+                        fieldIndex: (int)InterCellPoint_FieldIndex.PointID,
                         errorMask: errorMask));
                     break;
-                case "Position":
-                    item._Position.SetIfSucceeded(P3FloatXmlTranslation.Instance.ParseNonNull(
+                case "Point":
+                    item._Point.SetIfSucceeded(P3FloatXmlTranslation.Instance.ParseNonNull(
                         root,
-                        fieldIndex: (int)TeleportDestination_FieldIndex.Position,
-                        errorMask: errorMask));
-                    break;
-                case "Rotation":
-                    item._Rotation.SetIfSucceeded(P3FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)TeleportDestination_FieldIndex.Rotation,
+                        fieldIndex: (int)InterCellPoint_FieldIndex.Point,
                         errorMask: errorMask));
                     break;
                 default:
@@ -466,7 +451,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static TeleportDestination Create_Binary(MutagenFrame frame)
+        public static InterCellPoint Create_Binary(MutagenFrame frame)
         {
             return Create_Binary(
                 frame: frame,
@@ -475,9 +460,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static TeleportDestination Create_Binary(
+        public static InterCellPoint Create_Binary(
             MutagenFrame frame,
-            out TeleportDestination_ErrorMask errorMask)
+            out InterCellPoint_ErrorMask errorMask)
         {
             return Create_Binary(
                 frame: frame,
@@ -486,10 +471,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static TeleportDestination Create_Binary(
+        public static InterCellPoint Create_Binary(
             MutagenFrame frame,
             bool doMasks,
-            out TeleportDestination_ErrorMask errorMask)
+            out InterCellPoint_ErrorMask errorMask)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -500,20 +485,20 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static (TeleportDestination Object, TeleportDestination_ErrorMask ErrorMask) Create_Binary(
+        public static (InterCellPoint Object, InterCellPoint_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
-            TeleportDestination_ErrorMask errMaskRet = null;
+            InterCellPoint_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new TeleportDestination_ErrorMask()) : default(Func<TeleportDestination_ErrorMask>),
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new InterCellPoint_ErrorMask()) : default(Func<InterCellPoint_ErrorMask>),
                 recordTypeConverter: recordTypeConverter);
             return (ret, errMaskRet);
         }
 
-        public static TeleportDestination Create_Binary(string path)
+        public static InterCellPoint Create_Binary(string path)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -522,9 +507,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static TeleportDestination Create_Binary(
+        public static InterCellPoint Create_Binary(
             string path,
-            out TeleportDestination_ErrorMask errorMask)
+            out InterCellPoint_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -535,7 +520,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static TeleportDestination Create_Binary(Stream stream)
+        public static InterCellPoint Create_Binary(Stream stream)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -544,9 +529,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static TeleportDestination Create_Binary(
+        public static InterCellPoint Create_Binary(
             Stream stream,
-            out TeleportDestination_ErrorMask errorMask)
+            out InterCellPoint_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -564,7 +549,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             NotifyingFireParameters cmds = null)
         {
-            LoquiBinaryTranslation<TeleportDestination, TeleportDestination_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<InterCellPoint, InterCellPoint_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -575,10 +560,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void CopyIn_Binary(
             MutagenFrame frame,
-            out TeleportDestination_ErrorMask errorMask,
+            out InterCellPoint_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiBinaryTranslation<TeleportDestination, TeleportDestination_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<InterCellPoint, InterCellPoint_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -602,7 +587,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             string path,
-            out TeleportDestination_ErrorMask errorMask,
+            out InterCellPoint_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(path))
@@ -630,7 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             Stream stream,
-            out TeleportDestination_ErrorMask errorMask,
+            out InterCellPoint_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(stream))
@@ -648,9 +633,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out TeleportDestination_ErrorMask errorMask)
+            out InterCellPoint_ErrorMask errorMask)
         {
-            errorMask = (TeleportDestination_ErrorMask)this.Write_Binary_Internal(
+            errorMask = (InterCellPoint_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
                 doMasks: true);
@@ -658,7 +643,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
-            out TeleportDestination_ErrorMask errorMask)
+            out InterCellPoint_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(path))
             {
@@ -670,7 +655,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
-            out TeleportDestination_ErrorMask errorMask)
+            out InterCellPoint_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(stream))
             {
@@ -709,7 +694,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
-            TeleportDestinationCommon.Write_Binary(
+            InterCellPointCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -719,17 +704,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static TeleportDestination Create_Binary_Internal(
+        private static InterCellPoint Create_Binary_Internal(
             MutagenFrame frame,
-            Func<TeleportDestination_ErrorMask> errorMask,
+            Func<InterCellPoint_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            var ret = new TeleportDestination();
+            var ret = new InterCellPoint();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
-                    frame.Reader,
-                    TeleportDestination_Registration.XTEL_HEADER));
                 using (frame)
                 {
                     Fill_Binary_Structs(
@@ -747,49 +729,45 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static void Fill_Binary_Structs(
-            TeleportDestination item,
+            InterCellPoint item,
             MutagenFrame frame,
-            Func<TeleportDestination_ErrorMask> errorMask)
+            Func<InterCellPoint_ErrorMask> errorMask)
         {
-            item.Door_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item._PointID.SetIfSucceeded(Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
                 frame: frame,
-                fieldIndex: (int)TeleportDestination_FieldIndex.Door,
+                fieldIndex: (int)InterCellPoint_FieldIndex.PointID,
                 errorMask: errorMask));
-            item._Position.SetIfSucceeded(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+            item._Point.SetIfSucceeded(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
-                fieldIndex: (int)TeleportDestination_FieldIndex.Position,
-                errorMask: errorMask));
-            item._Rotation.SetIfSucceeded(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                fieldIndex: (int)TeleportDestination_FieldIndex.Rotation,
+                fieldIndex: (int)InterCellPoint_FieldIndex.Point,
                 errorMask: errorMask));
         }
 
         #endregion
 
-        public TeleportDestination Copy(
-            TeleportDestination_CopyMask copyMask = null,
-            ITeleportDestinationGetter def = null)
+        public InterCellPoint Copy(
+            InterCellPoint_CopyMask copyMask = null,
+            IInterCellPointGetter def = null)
         {
-            return TeleportDestination.Copy(
+            return InterCellPoint.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static TeleportDestination Copy(
-            ITeleportDestination item,
-            TeleportDestination_CopyMask copyMask = null,
-            ITeleportDestinationGetter def = null)
+        public static InterCellPoint Copy(
+            IInterCellPoint item,
+            InterCellPoint_CopyMask copyMask = null,
+            IInterCellPointGetter def = null)
         {
-            TeleportDestination ret;
-            if (item.GetType().Equals(typeof(TeleportDestination)))
+            InterCellPoint ret;
+            if (item.GetType().Equals(typeof(InterCellPoint)))
             {
-                ret = new TeleportDestination();
+                ret = new InterCellPoint();
             }
             else
             {
-                ret = (TeleportDestination)System.Activator.CreateInstance(item.GetType());
+                ret = (InterCellPoint)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -798,19 +776,19 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static TeleportDestination Copy_ToLoqui(
-            ITeleportDestinationGetter item,
-            TeleportDestination_CopyMask copyMask = null,
-            ITeleportDestinationGetter def = null)
+        public static InterCellPoint Copy_ToLoqui(
+            IInterCellPointGetter item,
+            InterCellPoint_CopyMask copyMask = null,
+            IInterCellPointGetter def = null)
         {
-            TeleportDestination ret;
-            if (item.GetType().Equals(typeof(TeleportDestination)))
+            InterCellPoint ret;
+            if (item.GetType().Equals(typeof(InterCellPoint)))
             {
-                ret = new TeleportDestination() as TeleportDestination;
+                ret = new InterCellPoint() as InterCellPoint;
             }
             else
             {
-                ret = (TeleportDestination)System.Activator.CreateInstance(item.GetType());
+                ret = (InterCellPoint)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -820,7 +798,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ITeleportDestinationGetter rhs,
+            IInterCellPointGetter rhs,
             NotifyingFireParameters cmds = null)
         {
             this.CopyFieldsFrom(
@@ -833,9 +811,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ITeleportDestinationGetter rhs,
-            TeleportDestination_CopyMask copyMask,
-            ITeleportDestinationGetter def = null,
+            IInterCellPointGetter rhs,
+            InterCellPoint_CopyMask copyMask,
+            IInterCellPointGetter def = null,
             NotifyingFireParameters cmds = null)
         {
             this.CopyFieldsFrom(
@@ -848,23 +826,23 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            ITeleportDestinationGetter rhs,
-            out TeleportDestination_ErrorMask errorMask,
-            TeleportDestination_CopyMask copyMask = null,
-            ITeleportDestinationGetter def = null,
+            IInterCellPointGetter rhs,
+            out InterCellPoint_ErrorMask errorMask,
+            InterCellPoint_CopyMask copyMask = null,
+            IInterCellPointGetter def = null,
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            TeleportDestination_ErrorMask retErrorMask = null;
+            InterCellPoint_ErrorMask retErrorMask = null;
             Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
             {
                 if (retErrorMask == null)
                 {
-                    retErrorMask = new TeleportDestination_ErrorMask();
+                    retErrorMask = new InterCellPoint_ErrorMask();
                 }
                 return retErrorMask;
             };
-            TeleportDestinationCommon.CopyFieldsFrom(
+            InterCellPointCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -878,21 +856,16 @@ namespace Mutagen.Bethesda.Oblivion
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
+            InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                    this.Door_Property.Set(
-                        (FormIDLink<Door>)obj,
+                case InterCellPoint_FieldIndex.PointID:
+                    this._PointID.Set(
+                        (Int16)obj,
                         cmds);
                     break;
-                case TeleportDestination_FieldIndex.Position:
-                    this._Position.Set(
-                        (P3Float)obj,
-                        cmds);
-                    break;
-                case TeleportDestination_FieldIndex.Rotation:
-                    this._Rotation.Set(
+                case InterCellPoint_FieldIndex.Point:
+                    this._Point.Set(
                         (P3Float)obj,
                         cmds);
                     break;
@@ -911,40 +884,35 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(NotifyingUnsetParameters cmds = null)
         {
             CallClearPartial_Internal(cmds);
-            TeleportDestinationCommon.Clear(this, cmds);
+            InterCellPointCommon.Clear(this, cmds);
         }
 
 
-        public static TeleportDestination Create(IEnumerable<KeyValuePair<ushort, object>> fields)
+        public static InterCellPoint Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
-            var ret = new TeleportDestination();
+            var ret = new InterCellPoint();
             foreach (var pair in fields)
             {
-                CopyInInternal_TeleportDestination(ret, pair);
+                CopyInInternal_InterCellPoint(ret, pair);
             }
             return ret;
         }
 
-        protected static void CopyInInternal_TeleportDestination(TeleportDestination obj, KeyValuePair<ushort, object> pair)
+        protected static void CopyInInternal_InterCellPoint(InterCellPoint obj, KeyValuePair<ushort, object> pair)
         {
-            if (!EnumExt.TryParse(pair.Key, out TeleportDestination_FieldIndex enu))
+            if (!EnumExt.TryParse(pair.Key, out InterCellPoint_FieldIndex enu))
             {
                 throw new ArgumentException($"Unknown index: {pair.Key}");
             }
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                    obj.Door_Property.Set(
-                        (FormIDLink<Door>)pair.Value,
+                case InterCellPoint_FieldIndex.PointID:
+                    obj._PointID.Set(
+                        (Int16)pair.Value,
                         null);
                     break;
-                case TeleportDestination_FieldIndex.Position:
-                    obj._Position.Set(
-                        (P3Float)pair.Value,
-                        null);
-                    break;
-                case TeleportDestination_FieldIndex.Rotation:
-                    obj._Rotation.Set(
+                case InterCellPoint_FieldIndex.Point:
+                    obj._Point.Set(
                         (P3Float)pair.Value,
                         null);
                     break;
@@ -952,7 +920,7 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, TeleportDestination obj)
+        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, InterCellPoint obj)
         {
             ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
         }
@@ -961,32 +929,26 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface ITeleportDestination : ITeleportDestinationGetter, ILoquiClass<ITeleportDestination, ITeleportDestinationGetter>, ILoquiClass<TeleportDestination, ITeleportDestinationGetter>
+    public partial interface IInterCellPoint : IInterCellPointGetter, ILoquiClass<IInterCellPoint, IInterCellPointGetter>, ILoquiClass<InterCellPoint, IInterCellPointGetter>
     {
-        new Door Door { get; set; }
-        new P3Float Position { get; set; }
-        new INotifyingItem<P3Float> Position_Property { get; }
+        new Int16 PointID { get; set; }
+        new INotifyingItem<Int16> PointID_Property { get; }
 
-        new P3Float Rotation { get; set; }
-        new INotifyingItem<P3Float> Rotation_Property { get; }
+        new P3Float Point { get; set; }
+        new INotifyingItem<P3Float> Point_Property { get; }
 
     }
 
-    public partial interface ITeleportDestinationGetter : ILoquiObject
+    public partial interface IInterCellPointGetter : ILoquiObject
     {
-        #region Door
-        Door Door { get; }
-        FormIDLink<Door> Door_Property { get; }
+        #region PointID
+        Int16 PointID { get; }
+        INotifyingItemGetter<Int16> PointID_Property { get; }
 
         #endregion
-        #region Position
-        P3Float Position { get; }
-        INotifyingItemGetter<P3Float> Position_Property { get; }
-
-        #endregion
-        #region Rotation
-        P3Float Rotation { get; }
-        INotifyingItemGetter<P3Float> Rotation_Property { get; }
+        #region Point
+        P3Float Point { get; }
+        INotifyingItemGetter<P3Float> Point_Property { get; }
 
         #endregion
 
@@ -999,45 +961,44 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     #region Field Index
-    public enum TeleportDestination_FieldIndex
+    public enum InterCellPoint_FieldIndex
     {
-        Door = 0,
-        Position = 1,
-        Rotation = 2,
+        PointID = 0,
+        Point = 1,
     }
     #endregion
 
     #region Registration
-    public class TeleportDestination_Registration : ILoquiRegistration
+    public class InterCellPoint_Registration : ILoquiRegistration
     {
-        public static readonly TeleportDestination_Registration Instance = new TeleportDestination_Registration();
+        public static readonly InterCellPoint_Registration Instance = new InterCellPoint_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 122,
+            msgID: 135,
             version: 0);
 
-        public const string GUID = "852c0c03-6606-4ae4-8733-4375d9cd1544";
+        public const string GUID = "550dc884-f88b-403d-832e-130d9a0ddfd1";
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(TeleportDestination_Mask<>);
+        public static readonly Type MaskType = typeof(InterCellPoint_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(TeleportDestination_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(InterCellPoint_ErrorMask);
 
-        public static readonly Type ClassType = typeof(TeleportDestination);
+        public static readonly Type ClassType = typeof(InterCellPoint);
 
-        public static readonly Type GetterType = typeof(ITeleportDestinationGetter);
+        public static readonly Type GetterType = typeof(IInterCellPointGetter);
 
-        public static readonly Type SetterType = typeof(ITeleportDestination);
+        public static readonly Type SetterType = typeof(IInterCellPoint);
 
-        public static readonly Type CommonType = typeof(TeleportDestinationCommon);
+        public static readonly Type CommonType = typeof(InterCellPointCommon);
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.TeleportDestination";
+        public const string FullName = "Mutagen.Bethesda.Oblivion.InterCellPoint";
 
-        public const string Name = "TeleportDestination";
+        public const string Name = "InterCellPoint";
 
         public const string Namespace = "Mutagen.Bethesda.Oblivion";
 
@@ -1049,12 +1010,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
-                case "DOOR":
-                    return (ushort)TeleportDestination_FieldIndex.Door;
-                case "POSITION":
-                    return (ushort)TeleportDestination_FieldIndex.Position;
-                case "ROTATION":
-                    return (ushort)TeleportDestination_FieldIndex.Rotation;
+                case "POINTID":
+                    return (ushort)InterCellPoint_FieldIndex.PointID;
+                case "POINT":
+                    return (ushort)InterCellPoint_FieldIndex.Point;
                 default:
                     return null;
             }
@@ -1062,12 +1021,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
+            InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                case TeleportDestination_FieldIndex.Position:
-                case TeleportDestination_FieldIndex.Rotation:
+                case InterCellPoint_FieldIndex.PointID:
+                case InterCellPoint_FieldIndex.Point:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1076,12 +1034,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
+            InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                case TeleportDestination_FieldIndex.Position:
-                case TeleportDestination_FieldIndex.Rotation:
+                case InterCellPoint_FieldIndex.PointID:
+                case InterCellPoint_FieldIndex.Point:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1090,12 +1047,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
+            InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                case TeleportDestination_FieldIndex.Position:
-                case TeleportDestination_FieldIndex.Rotation:
+                case InterCellPoint_FieldIndex.PointID:
+                case InterCellPoint_FieldIndex.Point:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1104,15 +1060,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static string GetNthName(ushort index)
         {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
+            InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                    return "Door";
-                case TeleportDestination_FieldIndex.Position:
-                    return "Position";
-                case TeleportDestination_FieldIndex.Rotation:
-                    return "Rotation";
+                case InterCellPoint_FieldIndex.PointID:
+                    return "PointID";
+                case InterCellPoint_FieldIndex.Point:
+                    return "Point";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1120,12 +1074,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
+            InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                case TeleportDestination_FieldIndex.Position:
-                case TeleportDestination_FieldIndex.Rotation:
+                case InterCellPoint_FieldIndex.PointID:
+                case InterCellPoint_FieldIndex.Point:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1134,12 +1087,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsProtected(ushort index)
         {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
+            InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                case TeleportDestination_FieldIndex.Position:
-                case TeleportDestination_FieldIndex.Rotation:
+                case InterCellPoint_FieldIndex.PointID:
+                case InterCellPoint_FieldIndex.Point:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1148,23 +1100,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Type GetNthType(ushort index)
         {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
+            InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                    return typeof(FormIDLink<Door>);
-                case TeleportDestination_FieldIndex.Position:
-                    return typeof(P3Float);
-                case TeleportDestination_FieldIndex.Rotation:
+                case InterCellPoint_FieldIndex.PointID:
+                    return typeof(Int16);
+                case InterCellPoint_FieldIndex.Point:
                     return typeof(P3Float);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly RecordType XTEL_HEADER = new RecordType("XTEL");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = XTEL_HEADER;
-        public const int NumStructFields = 3;
+        public const int NumStructFields = 2;
         public const int NumTypedFields = 0;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1196,58 +1144,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Extensions
-    public static partial class TeleportDestinationCommon
+    public static partial class InterCellPointCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            ITeleportDestination item,
-            ITeleportDestinationGetter rhs,
-            ITeleportDestinationGetter def,
+            IInterCellPoint item,
+            IInterCellPointGetter rhs,
+            IInterCellPointGetter def,
             bool doMasks,
             Func<IErrorMask> errorMask,
-            TeleportDestination_CopyMask copyMask,
+            InterCellPoint_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            if (copyMask?.Door ?? true)
+            if (copyMask?.PointID ?? true)
             {
                 try
                 {
-                    item.Door_Property.Set(
-                        value: rhs.Door,
+                    item.PointID_Property.Set(
+                        value: rhs.PointID,
                         cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)TeleportDestination_FieldIndex.Door, ex);
+                    errorMask().SetNthException((int)InterCellPoint_FieldIndex.PointID, ex);
                 }
             }
-            if (copyMask?.Position ?? true)
+            if (copyMask?.Point ?? true)
             {
                 try
                 {
-                    item.Position_Property.Set(
-                        value: rhs.Position,
+                    item.Point_Property.Set(
+                        value: rhs.Point,
                         cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)TeleportDestination_FieldIndex.Position, ex);
-                }
-            }
-            if (copyMask?.Rotation ?? true)
-            {
-                try
-                {
-                    item.Rotation_Property.Set(
-                        value: rhs.Rotation,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)TeleportDestination_FieldIndex.Rotation, ex);
+                    errorMask().SetNthException((int)InterCellPoint_FieldIndex.Point, ex);
                 }
             }
         }
@@ -1257,15 +1191,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void SetNthObjectHasBeenSet(
             ushort index,
             bool on,
-            ITeleportDestination obj,
+            IInterCellPoint obj,
             NotifyingFireParameters cmds = null)
         {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
+            InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                case TeleportDestination_FieldIndex.Position:
-                case TeleportDestination_FieldIndex.Rotation:
+                case InterCellPoint_FieldIndex.PointID:
+                case InterCellPoint_FieldIndex.Point:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
@@ -1275,20 +1208,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void UnsetNthObject(
             ushort index,
-            ITeleportDestination obj,
+            IInterCellPoint obj,
             NotifyingUnsetParameters cmds = null)
         {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
+            InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                    obj.Door = default(FormIDLink<Door>);
+                case InterCellPoint_FieldIndex.PointID:
+                    obj.PointID = default(Int16);
                     break;
-                case TeleportDestination_FieldIndex.Position:
-                    obj.Position = default(P3Float);
-                    break;
-                case TeleportDestination_FieldIndex.Rotation:
-                    obj.Rotation = default(P3Float);
+                case InterCellPoint_FieldIndex.Point:
+                    obj.Point = default(P3Float);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1297,14 +1227,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthObjectHasBeenSet(
             ushort index,
-            ITeleportDestination obj)
+            IInterCellPoint obj)
         {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
+            InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                case TeleportDestination_FieldIndex.Position:
-                case TeleportDestination_FieldIndex.Rotation:
+                case InterCellPoint_FieldIndex.PointID:
+                case InterCellPoint_FieldIndex.Point:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1313,55 +1242,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static object GetNthObject(
             ushort index,
-            ITeleportDestinationGetter obj)
+            IInterCellPointGetter obj)
         {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
+            InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                    return obj.Door;
-                case TeleportDestination_FieldIndex.Position:
-                    return obj.Position;
-                case TeleportDestination_FieldIndex.Rotation:
-                    return obj.Rotation;
+                case InterCellPoint_FieldIndex.PointID:
+                    return obj.PointID;
+                case InterCellPoint_FieldIndex.Point:
+                    return obj.Point;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
         public static void Clear(
-            ITeleportDestination item,
+            IInterCellPoint item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Door = default(FormIDLink<Door>);
-            item.Position = default(P3Float);
-            item.Rotation = default(P3Float);
+            item.PointID = default(Int16);
+            item.Point = default(P3Float);
         }
 
-        public static TeleportDestination_Mask<bool> GetEqualsMask(
-            this ITeleportDestinationGetter item,
-            ITeleportDestinationGetter rhs)
+        public static InterCellPoint_Mask<bool> GetEqualsMask(
+            this IInterCellPointGetter item,
+            IInterCellPointGetter rhs)
         {
-            var ret = new TeleportDestination_Mask<bool>();
+            var ret = new InterCellPoint_Mask<bool>();
             FillEqualsMask(item, rhs, ret);
             return ret;
         }
 
         public static void FillEqualsMask(
-            ITeleportDestinationGetter item,
-            ITeleportDestinationGetter rhs,
-            TeleportDestination_Mask<bool> ret)
+            IInterCellPointGetter item,
+            IInterCellPointGetter rhs,
+            InterCellPoint_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Door = item.Door == rhs.Door;
-            ret.Position = item.Position == rhs.Position;
-            ret.Rotation = item.Rotation == rhs.Rotation;
+            ret.PointID = item.PointID == rhs.PointID;
+            ret.Point = item.Point == rhs.Point;
         }
 
         public static string ToString(
-            this ITeleportDestinationGetter item,
+            this IInterCellPointGetter item,
             string name = null,
-            TeleportDestination_Mask<bool> printMask = null)
+            InterCellPoint_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -1369,51 +1294,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void ToString(
-            this ITeleportDestinationGetter item,
+            this IInterCellPointGetter item,
             FileGeneration fg,
             string name = null,
-            TeleportDestination_Mask<bool> printMask = null)
+            InterCellPoint_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(TeleportDestination)} =>");
+                fg.AppendLine($"{nameof(InterCellPoint)} =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(TeleportDestination)}) =>");
+                fg.AppendLine($"{name} ({nameof(InterCellPoint)}) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Door ?? true)
+                if (printMask?.PointID ?? true)
                 {
-                    fg.AppendLine($"Door => {item.Door}");
+                    fg.AppendLine($"PointID => {item.PointID}");
                 }
-                if (printMask?.Position ?? true)
+                if (printMask?.Point ?? true)
                 {
-                    fg.AppendLine($"Position => {item.Position}");
-                }
-                if (printMask?.Rotation ?? true)
-                {
-                    fg.AppendLine($"Rotation => {item.Rotation}");
+                    fg.AppendLine($"Point => {item.Point}");
                 }
             }
             fg.AppendLine("]");
         }
 
         public static bool HasBeenSet(
-            this ITeleportDestinationGetter item,
-            TeleportDestination_Mask<bool?> checkMask)
+            this IInterCellPointGetter item,
+            InterCellPoint_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static TeleportDestination_Mask<bool> GetHasBeenSetMask(ITeleportDestinationGetter item)
+        public static InterCellPoint_Mask<bool> GetHasBeenSetMask(IInterCellPointGetter item)
         {
-            var ret = new TeleportDestination_Mask<bool>();
-            ret.Door = true;
-            ret.Position = true;
-            ret.Rotation = true;
+            var ret = new InterCellPoint_Mask<bool>();
+            ret.PointID = true;
+            ret.Point = true;
             return ret;
         }
 
@@ -1421,51 +1341,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Write
         public static void Write_XML(
             XmlWriter writer,
-            ITeleportDestinationGetter item,
+            IInterCellPointGetter item,
             bool doMasks,
-            out TeleportDestination_ErrorMask errorMask,
+            out InterCellPoint_ErrorMask errorMask,
             string name = null)
         {
-            TeleportDestination_ErrorMask errMaskRet = null;
+            InterCellPoint_ErrorMask errMaskRet = null;
             Write_XML_Internal(
                 writer: writer,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new TeleportDestination_ErrorMask()) : default(Func<TeleportDestination_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new InterCellPoint_ErrorMask()) : default(Func<InterCellPoint_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_XML_Internal(
             XmlWriter writer,
-            ITeleportDestinationGetter item,
-            Func<TeleportDestination_ErrorMask> errorMask,
+            IInterCellPointGetter item,
+            Func<InterCellPoint_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.TeleportDestination"))
+                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.InterCellPoint"))
                 {
                     if (name != null)
                     {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.TeleportDestination");
+                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.InterCellPoint");
                     }
-                    FormIDXmlTranslation.Instance.Write(
+                    Int16XmlTranslation.Instance.Write(
                         writer: writer,
-                        name: nameof(item.Door),
-                        item: item.Door?.FormID,
-                        fieldIndex: (int)TeleportDestination_FieldIndex.Door,
+                        name: nameof(item.PointID),
+                        item: item.PointID_Property,
+                        fieldIndex: (int)InterCellPoint_FieldIndex.PointID,
                         errorMask: errorMask);
                     P3FloatXmlTranslation.Instance.Write(
                         writer: writer,
-                        name: nameof(item.Position),
-                        item: item.Position_Property,
-                        fieldIndex: (int)TeleportDestination_FieldIndex.Position,
-                        errorMask: errorMask);
-                    P3FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Rotation),
-                        item: item.Rotation_Property,
-                        fieldIndex: (int)TeleportDestination_FieldIndex.Rotation,
+                        name: nameof(item.Point),
+                        item: item.Point_Property,
+                        fieldIndex: (int)InterCellPoint_FieldIndex.Point,
                         errorMask: errorMask);
                 }
             }
@@ -1483,38 +1397,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            TeleportDestination item,
+            InterCellPoint item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
-            out TeleportDestination_ErrorMask errorMask)
+            out InterCellPoint_ErrorMask errorMask)
         {
-            TeleportDestination_ErrorMask errMaskRet = null;
+            InterCellPoint_ErrorMask errMaskRet = null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new TeleportDestination_ErrorMask()) : default(Func<TeleportDestination_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new InterCellPoint_ErrorMask()) : default(Func<InterCellPoint_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            TeleportDestination item,
+            InterCellPoint item,
             RecordTypeConverter recordTypeConverter,
-            Func<TeleportDestination_ErrorMask> errorMask)
+            Func<InterCellPoint_ErrorMask> errorMask)
         {
             try
             {
-                using (HeaderExport.ExportHeader(
+                Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: TeleportDestination_Registration.XTEL_HEADER,
-                    type: ObjectType.Subrecord))
-                {
-                    Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                }
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (errorMask != null)
@@ -1525,24 +1433,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void Write_Binary_Embedded(
-            TeleportDestination item,
+            InterCellPoint item,
             MutagenWriter writer,
-            Func<TeleportDestination_ErrorMask> errorMask)
+            Func<InterCellPoint_ErrorMask> errorMask)
         {
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Door_Property,
-                fieldIndex: (int)TeleportDestination_FieldIndex.Door,
+                item: item.PointID_Property,
+                fieldIndex: (int)InterCellPoint_FieldIndex.PointID,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Position_Property,
-                fieldIndex: (int)TeleportDestination_FieldIndex.Position,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Rotation_Property,
-                fieldIndex: (int)TeleportDestination_FieldIndex.Rotation,
+                item: item.Point_Property,
+                fieldIndex: (int)InterCellPoint_FieldIndex.Point,
                 errorMask: errorMask);
         }
 
@@ -1554,48 +1457,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Modules
 
     #region Mask
-    public class TeleportDestination_Mask<T> : IMask<T>, IEquatable<TeleportDestination_Mask<T>>
+    public class InterCellPoint_Mask<T> : IMask<T>, IEquatable<InterCellPoint_Mask<T>>
     {
         #region Ctors
-        public TeleportDestination_Mask()
+        public InterCellPoint_Mask()
         {
         }
 
-        public TeleportDestination_Mask(T initialValue)
+        public InterCellPoint_Mask(T initialValue)
         {
-            this.Door = initialValue;
-            this.Position = initialValue;
-            this.Rotation = initialValue;
+            this.PointID = initialValue;
+            this.Point = initialValue;
         }
         #endregion
 
         #region Members
-        public T Door;
-        public T Position;
-        public T Rotation;
+        public T PointID;
+        public T Point;
         #endregion
 
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is TeleportDestination_Mask<T> rhs)) return false;
+            if (!(obj is InterCellPoint_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(TeleportDestination_Mask<T> rhs)
+        public bool Equals(InterCellPoint_Mask<T> rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(this.Door, rhs.Door)) return false;
-            if (!object.Equals(this.Position, rhs.Position)) return false;
-            if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
+            if (!object.Equals(this.PointID, rhs.PointID)) return false;
+            if (!object.Equals(this.Point, rhs.Point)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = ret.CombineHashCode(this.Door?.GetHashCode());
-            ret = ret.CombineHashCode(this.Position?.GetHashCode());
-            ret = ret.CombineHashCode(this.Rotation?.GetHashCode());
+            ret = ret.CombineHashCode(this.PointID?.GetHashCode());
+            ret = ret.CombineHashCode(this.Point?.GetHashCode());
             return ret;
         }
 
@@ -1604,26 +1503,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region All Equal
         public bool AllEqual(Func<T, bool> eval)
         {
-            if (!eval(this.Door)) return false;
-            if (!eval(this.Position)) return false;
-            if (!eval(this.Rotation)) return false;
+            if (!eval(this.PointID)) return false;
+            if (!eval(this.Point)) return false;
             return true;
         }
         #endregion
 
         #region Translate
-        public TeleportDestination_Mask<R> Translate<R>(Func<T, R> eval)
+        public InterCellPoint_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new TeleportDestination_Mask<R>();
+            var ret = new InterCellPoint_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(TeleportDestination_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(InterCellPoint_Mask<R> obj, Func<T, R> eval)
         {
-            obj.Door = eval(this.Door);
-            obj.Position = eval(this.Position);
-            obj.Rotation = eval(this.Rotation);
+            obj.PointID = eval(this.PointID);
+            obj.Point = eval(this.Point);
         }
         #endregion
 
@@ -1639,30 +1536,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(TeleportDestination_Mask<bool> printMask = null)
+        public string ToString(InterCellPoint_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, TeleportDestination_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, InterCellPoint_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(TeleportDestination_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(InterCellPoint_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Door ?? true)
+                if (printMask?.PointID ?? true)
                 {
-                    fg.AppendLine($"Door => {Door}");
+                    fg.AppendLine($"PointID => {PointID}");
                 }
-                if (printMask?.Position ?? true)
+                if (printMask?.Point ?? true)
                 {
-                    fg.AppendLine($"Position => {Position}");
-                }
-                if (printMask?.Rotation ?? true)
-                {
-                    fg.AppendLine($"Rotation => {Rotation}");
+                    fg.AppendLine($"Point => {Point}");
                 }
             }
             fg.AppendLine("]");
@@ -1671,7 +1564,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class TeleportDestination_ErrorMask : IErrorMask, IErrorMask<TeleportDestination_ErrorMask>
+    public class InterCellPoint_ErrorMask : IErrorMask, IErrorMask<InterCellPoint_ErrorMask>
     {
         #region Members
         public Exception Overall { get; set; }
@@ -1687,25 +1580,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return _warnings;
             }
         }
-        public Exception Door;
-        public Exception Position;
-        public Exception Rotation;
+        public Exception PointID;
+        public Exception Point;
         #endregion
 
         #region IErrorMask
         public void SetNthException(int index, Exception ex)
         {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
+            InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                    this.Door = ex;
+                case InterCellPoint_FieldIndex.PointID:
+                    this.PointID = ex;
                     break;
-                case TeleportDestination_FieldIndex.Position:
-                    this.Position = ex;
-                    break;
-                case TeleportDestination_FieldIndex.Rotation:
-                    this.Rotation = ex;
+                case InterCellPoint_FieldIndex.Point:
+                    this.Point = ex;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1714,17 +1603,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void SetNthMask(int index, object obj)
         {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
+            InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                    this.Door = (Exception)obj;
+                case InterCellPoint_FieldIndex.PointID:
+                    this.PointID = (Exception)obj;
                     break;
-                case TeleportDestination_FieldIndex.Position:
-                    this.Position = (Exception)obj;
-                    break;
-                case TeleportDestination_FieldIndex.Rotation:
-                    this.Rotation = (Exception)obj;
+                case InterCellPoint_FieldIndex.Point:
+                    this.Point = (Exception)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1734,9 +1620,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool IsInError()
         {
             if (Overall != null) return true;
-            if (Door != null) return true;
-            if (Position != null) return true;
-            if (Rotation != null) return true;
+            if (PointID != null) return true;
+            if (Point != null) return true;
             return false;
         }
         #endregion
@@ -1751,7 +1636,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void ToString(FileGeneration fg)
         {
-            fg.AppendLine("TeleportDestination_ErrorMask =>");
+            fg.AppendLine("InterCellPoint_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -1771,22 +1656,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            fg.AppendLine($"Door => {Door}");
-            fg.AppendLine($"Position => {Position}");
-            fg.AppendLine($"Rotation => {Rotation}");
+            fg.AppendLine($"PointID => {PointID}");
+            fg.AppendLine($"Point => {Point}");
         }
         #endregion
 
         #region Combine
-        public TeleportDestination_ErrorMask Combine(TeleportDestination_ErrorMask rhs)
+        public InterCellPoint_ErrorMask Combine(InterCellPoint_ErrorMask rhs)
         {
-            var ret = new TeleportDestination_ErrorMask();
-            ret.Door = this.Door.Combine(rhs.Door);
-            ret.Position = this.Position.Combine(rhs.Position);
-            ret.Rotation = this.Rotation.Combine(rhs.Rotation);
+            var ret = new InterCellPoint_ErrorMask();
+            ret.PointID = this.PointID.Combine(rhs.PointID);
+            ret.Point = this.Point.Combine(rhs.Point);
             return ret;
         }
-        public static TeleportDestination_ErrorMask Combine(TeleportDestination_ErrorMask lhs, TeleportDestination_ErrorMask rhs)
+        public static InterCellPoint_ErrorMask Combine(InterCellPoint_ErrorMask lhs, InterCellPoint_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1794,12 +1677,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class TeleportDestination_CopyMask
+    public class InterCellPoint_CopyMask
     {
         #region Members
-        public bool Door;
-        public bool Position;
-        public bool Rotation;
+        public bool PointID;
+        public bool Point;
         #endregion
 
     }

@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Generation
                 expandSets: SetMarkerType.ExpandSets.False))
             {
                 if (field is SetMarkerType) continue;
-                if (field.Derivative || field.IntegrateField) continue;
+                if (field.Derivative || !field.IntegrateField) continue;
                 var hasTrigger = field.TryGetFieldData(out var fieldData)
                     && fieldData.HasTrigger;
                 if (field.GetFieldData()?.NoBinary ?? false) continue;

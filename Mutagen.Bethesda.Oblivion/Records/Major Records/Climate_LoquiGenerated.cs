@@ -993,11 +993,19 @@ namespace Mutagen.Bethesda.Oblivion
             int fieldIndex,
             Func<Climate_ErrorMask> errorMask)
         {
-            WriteBinary_SunriseBegin_Custom(
-                writer: writer,
-                item: item,
-                fieldIndex: fieldIndex,
-                errorMask: errorMask);
+            try
+            {
+                WriteBinary_SunriseBegin_Custom(
+                    writer: writer,
+                    item: item,
+                    fieldIndex: fieldIndex,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
         }
 
         static partial void FillBinary_SunriseEnd_Custom(
@@ -1018,11 +1026,19 @@ namespace Mutagen.Bethesda.Oblivion
             int fieldIndex,
             Func<Climate_ErrorMask> errorMask)
         {
-            WriteBinary_SunriseEnd_Custom(
-                writer: writer,
-                item: item,
-                fieldIndex: fieldIndex,
-                errorMask: errorMask);
+            try
+            {
+                WriteBinary_SunriseEnd_Custom(
+                    writer: writer,
+                    item: item,
+                    fieldIndex: fieldIndex,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
         }
 
         static partial void FillBinary_SunsetBegin_Custom(
@@ -1043,11 +1059,19 @@ namespace Mutagen.Bethesda.Oblivion
             int fieldIndex,
             Func<Climate_ErrorMask> errorMask)
         {
-            WriteBinary_SunsetBegin_Custom(
-                writer: writer,
-                item: item,
-                fieldIndex: fieldIndex,
-                errorMask: errorMask);
+            try
+            {
+                WriteBinary_SunsetBegin_Custom(
+                    writer: writer,
+                    item: item,
+                    fieldIndex: fieldIndex,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
         }
 
         static partial void FillBinary_SunsetEnd_Custom(
@@ -1068,11 +1092,19 @@ namespace Mutagen.Bethesda.Oblivion
             int fieldIndex,
             Func<Climate_ErrorMask> errorMask)
         {
-            WriteBinary_SunsetEnd_Custom(
-                writer: writer,
-                item: item,
-                fieldIndex: fieldIndex,
-                errorMask: errorMask);
+            try
+            {
+                WriteBinary_SunsetEnd_Custom(
+                    writer: writer,
+                    item: item,
+                    fieldIndex: fieldIndex,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
         }
 
         static partial void FillBinary_Phase_Custom(
@@ -1093,11 +1125,19 @@ namespace Mutagen.Bethesda.Oblivion
             int fieldIndex,
             Func<Climate_ErrorMask> errorMask)
         {
-            WriteBinary_Phase_Custom(
-                writer: writer,
-                item: item,
-                fieldIndex: fieldIndex,
-                errorMask: errorMask);
+            try
+            {
+                WriteBinary_Phase_Custom(
+                    writer: writer,
+                    item: item,
+                    fieldIndex: fieldIndex,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
         }
 
         static partial void FillBinary_PhaseLength_Custom(
@@ -1118,11 +1158,19 @@ namespace Mutagen.Bethesda.Oblivion
             int fieldIndex,
             Func<Climate_ErrorMask> errorMask)
         {
-            WriteBinary_PhaseLength_Custom(
-                writer: writer,
-                item: item,
-                fieldIndex: fieldIndex,
-                errorMask: errorMask);
+            try
+            {
+                WriteBinary_PhaseLength_Custom(
+                    writer: writer,
+                    item: item,
+                    fieldIndex: fieldIndex,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
         }
 
         private static Climate Create_Binary_Internal(
@@ -1204,40 +1252,88 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.Spawn(contentLength))
                     {
-                        FillBinary_SunriseBegin_Custom(
-                            frame: dataFrame,
-                            item: item,
-                            fieldIndex: (int)Climate_FieldIndex.SunriseBegin,
-                            errorMask: errorMask);
-                        FillBinary_SunriseEnd_Custom(
-                            frame: dataFrame,
-                            item: item,
-                            fieldIndex: (int)Climate_FieldIndex.SunriseEnd,
-                            errorMask: errorMask);
-                        FillBinary_SunsetBegin_Custom(
-                            frame: dataFrame,
-                            item: item,
-                            fieldIndex: (int)Climate_FieldIndex.SunsetBegin,
-                            errorMask: errorMask);
-                        FillBinary_SunsetEnd_Custom(
-                            frame: dataFrame,
-                            item: item,
-                            fieldIndex: (int)Climate_FieldIndex.SunsetEnd,
-                            errorMask: errorMask);
+                        try
+                        {
+                            FillBinary_SunriseBegin_Custom(
+                                frame: dataFrame,
+                                item: item,
+                                fieldIndex: (int)Climate_FieldIndex.SunriseBegin,
+                                errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask().Overall = ex;
+                        }
+                        try
+                        {
+                            FillBinary_SunriseEnd_Custom(
+                                frame: dataFrame,
+                                item: item,
+                                fieldIndex: (int)Climate_FieldIndex.SunriseEnd,
+                                errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask().Overall = ex;
+                        }
+                        try
+                        {
+                            FillBinary_SunsetBegin_Custom(
+                                frame: dataFrame,
+                                item: item,
+                                fieldIndex: (int)Climate_FieldIndex.SunsetBegin,
+                                errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask().Overall = ex;
+                        }
+                        try
+                        {
+                            FillBinary_SunsetEnd_Custom(
+                                frame: dataFrame,
+                                item: item,
+                                fieldIndex: (int)Climate_FieldIndex.SunsetEnd,
+                                errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask().Overall = ex;
+                        }
                         item._Volatility.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Climate_FieldIndex.Volatility,
                             errorMask: errorMask));
-                        FillBinary_Phase_Custom(
-                            frame: dataFrame,
-                            item: item,
-                            fieldIndex: (int)Climate_FieldIndex.Phase,
-                            errorMask: errorMask);
-                        FillBinary_PhaseLength_Custom(
-                            frame: dataFrame,
-                            item: item,
-                            fieldIndex: (int)Climate_FieldIndex.PhaseLength,
-                            errorMask: errorMask);
+                        try
+                        {
+                            FillBinary_Phase_Custom(
+                                frame: dataFrame,
+                                item: item,
+                                fieldIndex: (int)Climate_FieldIndex.Phase,
+                                errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask().Overall = ex;
+                        }
+                        try
+                        {
+                            FillBinary_PhaseLength_Custom(
+                                frame: dataFrame,
+                                item: item,
+                                fieldIndex: (int)Climate_FieldIndex.PhaseLength,
+                                errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask().Overall = ex;
+                        }
                     }
                     return TryGet<Climate_FieldIndex?>.Succeed(Climate_FieldIndex.PhaseLength);
                 default:

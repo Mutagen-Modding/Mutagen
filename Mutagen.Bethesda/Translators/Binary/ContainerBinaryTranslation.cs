@@ -73,10 +73,10 @@ namespace Mutagen.Bethesda.Binary
         public TryGet<IEnumerable<T>> ParseRepeatedItem(
             MutagenFrame frame,
             bool doMasks,
-            ICollectionGetter<RecordType> triggeringRecord,
             ContentLength lengthLength,
             out MaskItem<Exception, IEnumerable<M>> errorMask,
-            BinarySubParseRecordDelegate<T, M> transl)
+            BinarySubParseRecordDelegate<T, M> transl,
+            ICollectionGetter<RecordType> triggeringRecord = null)
         {
             var safeFrame = frame.Spawn(snapToFinalPosition: false);
             try
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Binary
                 while (!frame.Complete)
                 {
                     var nextRecord = HeaderTranslation.GetNextRecordType(frame.Reader);
-                    if (!triggeringRecord.Contains(nextRecord)) break;
+                    if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
                     var startingPos = frame.Position;
                     var get = transl(safeFrame, nextRecord, doMasks, out var subMaskObj);
                     if (get.Succeeded)
@@ -239,6 +239,27 @@ namespace Mutagen.Bethesda.Binary
             ContentLength lengthLength,
             Func<Mask> errorMask,
             BinarySubParseDelegate<T, M> transl)
+            where Mask : IErrorMask
+        {
+            var ret = this.ParseRepeatedItem(
+                frame: frame,
+                doMasks: errorMask != null,
+                lengthLength: lengthLength,
+                errorMask: out var err,
+                transl: transl);
+            ErrorMask.HandleErrorMask(
+                errorMask,
+                fieldIndex,
+                err);
+            return ret;
+        }
+
+        public TryGet<IEnumerable<T>> ParseRepeatedItem<Mask>(
+            MutagenFrame frame,
+            int fieldIndex,
+            ContentLength lengthLength,
+            Func<Mask> errorMask,
+            BinarySubParseRecordDelegate<T, M> transl)
             where Mask : IErrorMask
         {
             var ret = this.ParseRepeatedItem(

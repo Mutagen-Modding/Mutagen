@@ -30,6 +30,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="customBinaryEnd" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether to add custom logic after typical binary parsing.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>

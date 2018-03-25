@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="PlacedCreature" baseClass="Placed" objType="Record" recordType="ACRE" GUID="b0f41e71-09f4-46b3-8769-7252455d209f" ID="128">
     <Fields>
-      <FormIDLink name="Object" recordType="NAME" refName="Bethesda.MajorRecord" />
+      <FormIDLink name="Base" recordType="NAME" refName="Creature" />
       <RefDirect name="Ownership" refName="Ownership" />
       <RefDirect name="EnableParent" recordType="XESP" refName="EnableParent" />
       <ByteArray name="RagdollData" recordType="XRGD" />

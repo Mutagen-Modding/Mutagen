@@ -26,14 +26,14 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class PlacedCreature : Placed, IPlacedCreature, ILoquiObject<PlacedCreature>, ILoquiObjectSetter, IEquatable<PlacedCreature>
+    public partial class PlacedNPC : Placed, IPlacedNPC, ILoquiObject<PlacedNPC>, ILoquiObjectSetter, IEquatable<PlacedNPC>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PlacedCreature_Registration.Instance;
-        public new static PlacedCreature_Registration Registration => PlacedCreature_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PlacedNPC_Registration.Instance;
+        public new static PlacedNPC_Registration Registration => PlacedNPC_Registration.Instance;
 
         #region Ctor
-        public PlacedCreature()
+        public PlacedNPC()
         {
             CustomCtor();
         }
@@ -41,37 +41,51 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Base
-        public FormIDSetLink<Creature> Base_Property { get; } = new FormIDSetLink<Creature>();
+        public FormIDSetLink<NPC> Base_Property { get; } = new FormIDSetLink<NPC>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Creature Base { get => Base_Property.Item; set => Base_Property.Item = value; }
+        public NPC Base { get => Base_Property.Item; set => Base_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDSetLink<Creature> IPlacedCreatureGetter.Base_Property => this.Base_Property;
+        FormIDSetLink<NPC> IPlacedNPCGetter.Base_Property => this.Base_Property;
         #endregion
-        #region Ownership
+        #region DistantLODData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<Ownership> _Ownership = new NotifyingSetItem<Ownership>();
-        public INotifyingSetItem<Ownership> Ownership_Property => this._Ownership;
+        private readonly INotifyingSetItem<DistantLODData> _DistantLODData = new NotifyingSetItem<DistantLODData>();
+        public INotifyingSetItem<DistantLODData> DistantLODData_Property => this._DistantLODData;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Ownership IPlacedCreatureGetter.Ownership => this.Ownership;
+        DistantLODData IPlacedNPCGetter.DistantLODData => this.DistantLODData;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Ownership Ownership { get => _Ownership.Item; set => _Ownership.Item = value; }
+        public DistantLODData DistantLODData { get => _DistantLODData.Item; set => _DistantLODData.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Ownership> IPlacedCreature.Ownership_Property => this.Ownership_Property;
+        INotifyingSetItem<DistantLODData> IPlacedNPC.DistantLODData_Property => this.DistantLODData_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Ownership> IPlacedCreatureGetter.Ownership_Property => this.Ownership_Property;
+        INotifyingSetItemGetter<DistantLODData> IPlacedNPCGetter.DistantLODData_Property => this.DistantLODData_Property;
         #endregion
         #region EnableParent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<EnableParent> _EnableParent = new NotifyingSetItem<EnableParent>();
         public INotifyingSetItem<EnableParent> EnableParent_Property => this._EnableParent;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        EnableParent IPlacedCreatureGetter.EnableParent => this.EnableParent;
+        EnableParent IPlacedNPCGetter.EnableParent => this.EnableParent;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public EnableParent EnableParent { get => _EnableParent.Item; set => _EnableParent.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<EnableParent> IPlacedCreature.EnableParent_Property => this.EnableParent_Property;
+        INotifyingSetItem<EnableParent> IPlacedNPC.EnableParent_Property => this.EnableParent_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<EnableParent> IPlacedCreatureGetter.EnableParent_Property => this.EnableParent_Property;
+        INotifyingSetItemGetter<EnableParent> IPlacedNPCGetter.EnableParent_Property => this.EnableParent_Property;
+        #endregion
+        #region MerchantContainer
+        public FormIDSetLink<PlacedObject> MerchantContainer_Property { get; } = new FormIDSetLink<PlacedObject>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public PlacedObject MerchantContainer { get => MerchantContainer_Property.Item; set => MerchantContainer_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        FormIDSetLink<PlacedObject> IPlacedNPCGetter.MerchantContainer_Property => this.MerchantContainer_Property;
+        #endregion
+        #region Horse
+        public FormIDSetLink<PlacedCreature> Horse_Property { get; } = new FormIDSetLink<PlacedCreature>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public PlacedCreature Horse { get => Horse_Property.Item; set => Horse_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        FormIDSetLink<PlacedCreature> IPlacedNPCGetter.Horse_Property => this.Horse_Property;
         #endregion
         #region RagdollData
         protected INotifyingSetItem<Byte[]> _RagdollData = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
@@ -83,9 +97,9 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._RagdollData.Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Byte[]> IPlacedCreature.RagdollData_Property => this.RagdollData_Property;
+        INotifyingSetItem<Byte[]> IPlacedNPC.RagdollData_Property => this.RagdollData_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Byte[]> IPlacedCreatureGetter.RagdollData_Property => this.RagdollData_Property;
+        INotifyingSetItemGetter<Byte[]> IPlacedNPCGetter.RagdollData_Property => this.RagdollData_Property;
         #endregion
         #region Scale
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -98,9 +112,9 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._Scale.Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Single> IPlacedCreature.Scale_Property => this.Scale_Property;
+        INotifyingSetItem<Single> IPlacedNPC.Scale_Property => this.Scale_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Single> IPlacedCreatureGetter.Scale_Property => this.Scale_Property;
+        INotifyingSetItemGetter<Single> IPlacedNPCGetter.Scale_Property => this.Scale_Property;
         #endregion
         #region Position
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -113,9 +127,9 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._Position.Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<P3Float> IPlacedCreature.Position_Property => this.Position_Property;
+        INotifyingItem<P3Float> IPlacedNPC.Position_Property => this.Position_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<P3Float> IPlacedCreatureGetter.Position_Property => this.Position_Property;
+        INotifyingItemGetter<P3Float> IPlacedNPCGetter.Position_Property => this.Position_Property;
         #endregion
         #region Rotation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -128,66 +142,66 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._Rotation.Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<P3Float> IPlacedCreature.Rotation_Property => this.Rotation_Property;
+        INotifyingItem<P3Float> IPlacedNPC.Rotation_Property => this.Rotation_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<P3Float> IPlacedCreatureGetter.Rotation_Property => this.Rotation_Property;
+        INotifyingItemGetter<P3Float> IPlacedNPCGetter.Rotation_Property => this.Rotation_Property;
         #endregion
 
         #region Loqui Getter Interface
 
-        protected override object GetNthObject(ushort index) => PlacedCreatureCommon.GetNthObject(index, this);
+        protected override object GetNthObject(ushort index) => PlacedNPCCommon.GetNthObject(index, this);
 
-        protected override bool GetNthObjectHasBeenSet(ushort index) => PlacedCreatureCommon.GetNthObjectHasBeenSet(index, this);
+        protected override bool GetNthObjectHasBeenSet(ushort index) => PlacedNPCCommon.GetNthObjectHasBeenSet(index, this);
 
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => PlacedCreatureCommon.UnsetNthObject(index, this, cmds);
+        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => PlacedNPCCommon.UnsetNthObject(index, this, cmds);
 
         #endregion
 
         #region Loqui Interface
         protected override void SetNthObjectHasBeenSet(ushort index, bool on)
         {
-            PlacedCreatureCommon.SetNthObjectHasBeenSet(index, on, this);
+            PlacedNPCCommon.SetNthObjectHasBeenSet(index, on, this);
         }
 
         #endregion
 
-        IMask<bool> IEqualsMask<PlacedCreature>.GetEqualsMask(PlacedCreature rhs) => PlacedCreatureCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IPlacedCreatureGetter>.GetEqualsMask(IPlacedCreatureGetter rhs) => PlacedCreatureCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<PlacedNPC>.GetEqualsMask(PlacedNPC rhs) => PlacedNPCCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IPlacedNPCGetter>.GetEqualsMask(IPlacedNPCGetter rhs) => PlacedNPCCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
-            return PlacedCreatureCommon.ToString(this, printMask: null);
+            return PlacedNPCCommon.ToString(this, printMask: null);
         }
 
         public string ToString(
             string name = null,
-            PlacedCreature_Mask<bool> printMask = null)
+            PlacedNPC_Mask<bool> printMask = null)
         {
-            return PlacedCreatureCommon.ToString(this, name: name, printMask: printMask);
+            return PlacedNPCCommon.ToString(this, name: name, printMask: printMask);
         }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            PlacedCreatureCommon.ToString(this, fg, name: name, printMask: null);
+            PlacedNPCCommon.ToString(this, fg, name: name, printMask: null);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new PlacedCreature_Mask<bool> GetHasBeenSetMask()
+        public new PlacedNPC_Mask<bool> GetHasBeenSetMask()
         {
-            return PlacedCreatureCommon.GetHasBeenSetMask(this);
+            return PlacedNPCCommon.GetHasBeenSetMask(this);
         }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is PlacedCreature rhs)) return false;
+            if (!(obj is PlacedNPC rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(PlacedCreature rhs)
+        public bool Equals(PlacedNPC rhs)
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
@@ -196,15 +210,25 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (Base != rhs.Base) return false;
             }
-            if (Ownership_Property.HasBeenSet != rhs.Ownership_Property.HasBeenSet) return false;
-            if (Ownership_Property.HasBeenSet)
+            if (DistantLODData_Property.HasBeenSet != rhs.DistantLODData_Property.HasBeenSet) return false;
+            if (DistantLODData_Property.HasBeenSet)
             {
-                if (!object.Equals(Ownership, rhs.Ownership)) return false;
+                if (!object.Equals(DistantLODData, rhs.DistantLODData)) return false;
             }
             if (EnableParent_Property.HasBeenSet != rhs.EnableParent_Property.HasBeenSet) return false;
             if (EnableParent_Property.HasBeenSet)
             {
                 if (!object.Equals(EnableParent, rhs.EnableParent)) return false;
+            }
+            if (MerchantContainer_Property.HasBeenSet != rhs.MerchantContainer_Property.HasBeenSet) return false;
+            if (MerchantContainer_Property.HasBeenSet)
+            {
+                if (MerchantContainer != rhs.MerchantContainer) return false;
+            }
+            if (Horse_Property.HasBeenSet != rhs.Horse_Property.HasBeenSet) return false;
+            if (Horse_Property.HasBeenSet)
+            {
+                if (Horse != rhs.Horse) return false;
             }
             if (RagdollData_Property.HasBeenSet != rhs.RagdollData_Property.HasBeenSet) return false;
             if (RagdollData_Property.HasBeenSet)
@@ -228,13 +252,21 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Base).CombineHashCode(ret);
             }
-            if (Ownership_Property.HasBeenSet)
+            if (DistantLODData_Property.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(Ownership).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(DistantLODData).CombineHashCode(ret);
             }
             if (EnableParent_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(EnableParent).CombineHashCode(ret);
+            }
+            if (MerchantContainer_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(MerchantContainer).CombineHashCode(ret);
+            }
+            if (Horse_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Horse).CombineHashCode(ret);
             }
             if (RagdollData_Property.HasBeenSet)
             {
@@ -256,7 +288,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region XML Translation
         #region XML Create
         [DebuggerStepThrough]
-        public new static PlacedCreature Create_XML(XElement root)
+        public new static PlacedNPC Create_XML(XElement root)
         {
             return Create_XML(
                 root: root,
@@ -265,9 +297,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static PlacedCreature Create_XML(
+        public static PlacedNPC Create_XML(
             XElement root,
-            out PlacedCreature_ErrorMask errorMask)
+            out PlacedNPC_ErrorMask errorMask)
         {
             return Create_XML(
                 root: root,
@@ -276,10 +308,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static PlacedCreature Create_XML(
+        public static PlacedNPC Create_XML(
             XElement root,
             bool doMasks,
-            out PlacedCreature_ErrorMask errorMask)
+            out PlacedNPC_ErrorMask errorMask)
         {
             var ret = Create_XML(
                 root: root,
@@ -289,26 +321,26 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static (PlacedCreature Object, PlacedCreature_ErrorMask ErrorMask) Create_XML(
+        public static (PlacedNPC Object, PlacedNPC_ErrorMask ErrorMask) Create_XML(
             XElement root,
             bool doMasks)
         {
-            PlacedCreature_ErrorMask errMaskRet = null;
+            PlacedNPC_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PlacedCreature_ErrorMask()) : default(Func<PlacedCreature_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PlacedNPC_ErrorMask()) : default(Func<PlacedNPC_ErrorMask>));
             return (ret, errMaskRet);
         }
 
-        public static PlacedCreature Create_XML(string path)
+        public static PlacedNPC Create_XML(string path)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(root: root);
         }
 
-        public static PlacedCreature Create_XML(
+        public static PlacedNPC Create_XML(
             string path,
-            out PlacedCreature_ErrorMask errorMask)
+            out PlacedNPC_ErrorMask errorMask)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(
@@ -316,15 +348,15 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: out errorMask);
         }
 
-        public static PlacedCreature Create_XML(Stream stream)
+        public static PlacedNPC Create_XML(Stream stream)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(root: root);
         }
 
-        public static PlacedCreature Create_XML(
+        public static PlacedNPC Create_XML(
             Stream stream,
-            out PlacedCreature_ErrorMask errorMask)
+            out PlacedNPC_ErrorMask errorMask)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(
@@ -339,7 +371,7 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<PlacedCreature, PlacedCreature_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<PlacedNPC, PlacedNPC_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -350,10 +382,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void CopyIn_XML(
             XElement root,
-            out PlacedCreature_ErrorMask errorMask,
+            out PlacedNPC_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<PlacedCreature, PlacedCreature_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<PlacedNPC, PlacedNPC_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -374,7 +406,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             string path,
-            out PlacedCreature_ErrorMask errorMask,
+            out PlacedNPC_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
@@ -396,7 +428,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             Stream stream,
-            out PlacedCreature_ErrorMask errorMask,
+            out PlacedNPC_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
@@ -413,7 +445,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.CopyIn_XML(
                 root: root,
-                errorMask: out PlacedCreature_ErrorMask errMask,
+                errorMask: out PlacedNPC_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -425,7 +457,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.CopyIn_XML(
                 root: root,
-                errorMask: out PlacedCreature_ErrorMask errMask,
+                errorMask: out PlacedNPC_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -435,10 +467,10 @@ namespace Mutagen.Bethesda.Oblivion
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
-            out PlacedCreature_ErrorMask errorMask,
+            out PlacedNPC_ErrorMask errorMask,
             string name = null)
         {
-            errorMask = (PlacedCreature_ErrorMask)this.Write_XML_Internal(
+            errorMask = (PlacedNPC_ErrorMask)this.Write_XML_Internal(
                 writer: writer,
                 name: name,
                 doMasks: true);
@@ -446,7 +478,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_XML(
             string path,
-            out PlacedCreature_ErrorMask errorMask,
+            out PlacedNPC_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(path, Encoding.ASCII))
@@ -462,7 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_XML(
             Stream stream,
-            out PlacedCreature_ErrorMask errorMask,
+            out PlacedNPC_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
@@ -519,7 +551,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks,
             string name = null)
         {
-            PlacedCreatureCommon.Write_XML(
+            PlacedNPCCommon.Write_XML(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -528,11 +560,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static PlacedCreature Create_XML_Internal(
+        private static PlacedNPC Create_XML_Internal(
             XElement root,
-            Func<PlacedCreature_ErrorMask> errorMask)
+            Func<PlacedNPC_ErrorMask> errorMask)
         {
-            var ret = new PlacedCreature();
+            var ret = new PlacedNPC();
             try
             {
                 foreach (var elem in root.Elements())
@@ -553,53 +585,65 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static void Fill_XML_Internal(
-            PlacedCreature item,
+            PlacedNPC item,
             XElement root,
             string name,
-            Func<PlacedCreature_ErrorMask> errorMask)
+            Func<PlacedNPC_ErrorMask> errorMask)
         {
             switch (name)
             {
                 case "Base":
                     item.Base_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.Base,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.Base,
                         errorMask: errorMask));
                     break;
-                case "Ownership":
-                    item._Ownership.SetIfSucceeded(LoquiXmlTranslation<Ownership, Ownership_ErrorMask>.Instance.Parse(
+                case "DistantLODData":
+                    item._DistantLODData.SetIfSucceeded(LoquiXmlTranslation<DistantLODData, DistantLODData_ErrorMask>.Instance.Parse(
                         root: root,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.Ownership,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.DistantLODData,
                         errorMask: errorMask));
                     break;
                 case "EnableParent":
                     item._EnableParent.SetIfSucceeded(LoquiXmlTranslation<EnableParent, EnableParent_ErrorMask>.Instance.Parse(
                         root: root,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.EnableParent,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.EnableParent,
+                        errorMask: errorMask));
+                    break;
+                case "MerchantContainer":
+                    item.MerchantContainer_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.MerchantContainer,
+                        errorMask: errorMask));
+                    break;
+                case "Horse":
+                    item.Horse_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.Horse,
                         errorMask: errorMask));
                     break;
                 case "RagdollData":
                     item._RagdollData.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
                         root,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.RagdollData,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.RagdollData,
                         errorMask: errorMask));
                     break;
                 case "Scale":
                     item._Scale.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.Scale,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.Scale,
                         errorMask: errorMask));
                     break;
                 case "Position":
                     item._Position.SetIfSucceeded(P3FloatXmlTranslation.Instance.ParseNonNull(
                         root,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.Position,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.Position,
                         errorMask: errorMask));
                     break;
                 case "Rotation":
                     item._Rotation.SetIfSucceeded(P3FloatXmlTranslation.Instance.ParseNonNull(
                         root,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.Rotation,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.Rotation,
                         errorMask: errorMask));
                     break;
                 default:
@@ -617,7 +661,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public new static PlacedCreature Create_Binary(MutagenFrame frame)
+        public new static PlacedNPC Create_Binary(MutagenFrame frame)
         {
             return Create_Binary(
                 frame: frame,
@@ -626,9 +670,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static PlacedCreature Create_Binary(
+        public static PlacedNPC Create_Binary(
             MutagenFrame frame,
-            out PlacedCreature_ErrorMask errorMask)
+            out PlacedNPC_ErrorMask errorMask)
         {
             return Create_Binary(
                 frame: frame,
@@ -637,10 +681,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static PlacedCreature Create_Binary(
+        public static PlacedNPC Create_Binary(
             MutagenFrame frame,
             bool doMasks,
-            out PlacedCreature_ErrorMask errorMask)
+            out PlacedNPC_ErrorMask errorMask)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -651,20 +695,20 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static (PlacedCreature Object, PlacedCreature_ErrorMask ErrorMask) Create_Binary(
+        public static (PlacedNPC Object, PlacedNPC_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
-            PlacedCreature_ErrorMask errMaskRet = null;
+            PlacedNPC_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PlacedCreature_ErrorMask()) : default(Func<PlacedCreature_ErrorMask>),
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PlacedNPC_ErrorMask()) : default(Func<PlacedNPC_ErrorMask>),
                 recordTypeConverter: recordTypeConverter);
             return (ret, errMaskRet);
         }
 
-        public static PlacedCreature Create_Binary(string path)
+        public static PlacedNPC Create_Binary(string path)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -673,9 +717,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static PlacedCreature Create_Binary(
+        public static PlacedNPC Create_Binary(
             string path,
-            out PlacedCreature_ErrorMask errorMask)
+            out PlacedNPC_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -686,7 +730,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static PlacedCreature Create_Binary(Stream stream)
+        public static PlacedNPC Create_Binary(Stream stream)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -695,9 +739,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static PlacedCreature Create_Binary(
+        public static PlacedNPC Create_Binary(
             Stream stream,
-            out PlacedCreature_ErrorMask errorMask)
+            out PlacedNPC_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -715,7 +759,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             NotifyingFireParameters cmds = null)
         {
-            LoquiBinaryTranslation<PlacedCreature, PlacedCreature_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<PlacedNPC, PlacedNPC_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -726,10 +770,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void CopyIn_Binary(
             MutagenFrame frame,
-            out PlacedCreature_ErrorMask errorMask,
+            out PlacedNPC_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiBinaryTranslation<PlacedCreature, PlacedCreature_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<PlacedNPC, PlacedNPC_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -753,7 +797,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             string path,
-            out PlacedCreature_ErrorMask errorMask,
+            out PlacedNPC_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(path))
@@ -781,7 +825,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             Stream stream,
-            out PlacedCreature_ErrorMask errorMask,
+            out PlacedNPC_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(stream))
@@ -801,7 +845,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.CopyIn_Binary(
                 frame: frame,
-                errorMask: out PlacedCreature_ErrorMask errMask,
+                errorMask: out PlacedNPC_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -813,7 +857,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.CopyIn_Binary(
                 frame: frame,
-                errorMask: out PlacedCreature_ErrorMask errMask,
+                errorMask: out PlacedNPC_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -823,9 +867,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out PlacedCreature_ErrorMask errorMask)
+            out PlacedNPC_ErrorMask errorMask)
         {
-            errorMask = (PlacedCreature_ErrorMask)this.Write_Binary_Internal(
+            errorMask = (PlacedNPC_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
                 doMasks: true);
@@ -833,7 +877,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
-            out PlacedCreature_ErrorMask errorMask)
+            out PlacedNPC_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(path))
             {
@@ -845,7 +889,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
-            out PlacedCreature_ErrorMask errorMask)
+            out PlacedNPC_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(stream))
             {
@@ -884,7 +928,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
-            PlacedCreatureCommon.Write_Binary(
+            PlacedNPCCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -894,25 +938,25 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static PlacedCreature Create_Binary_Internal(
+        private static PlacedNPC Create_Binary_Internal(
             MutagenFrame frame,
-            Func<PlacedCreature_ErrorMask> errorMask,
+            Func<PlacedNPC_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<PlacedCreature, PlacedCreature_ErrorMask, PlacedCreature_FieldIndex>(
-                record: new PlacedCreature(),
+            return UtilityTranslation.MajorRecordParse<PlacedNPC, PlacedNPC_ErrorMask, PlacedNPC_FieldIndex>(
+                record: new PlacedNPC(),
                 frame: frame,
                 errorMask: errorMask,
-                recType: PlacedCreature_Registration.ACRE_HEADER,
+                recType: PlacedNPC_Registration.ACHR_HEADER,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: Fill_Binary_Structs,
                 fillTyped: Fill_Binary_RecordTypes);
         }
 
         protected static void Fill_Binary_Structs(
-            PlacedCreature item,
+            PlacedNPC item,
             MutagenFrame frame,
-            Func<PlacedCreature_ErrorMask> errorMask)
+            Func<PlacedNPC_ErrorMask> errorMask)
         {
             Placed.Fill_Binary_Structs(
                 item: item,
@@ -920,10 +964,10 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<PlacedCreature_FieldIndex?> Fill_Binary_RecordTypes(
-            PlacedCreature item,
+        protected static TryGet<PlacedNPC_FieldIndex?> Fill_Binary_RecordTypes(
+            PlacedNPC item,
             MutagenFrame frame,
-            Func<PlacedCreature_ErrorMask> errorMask,
+            Func<PlacedNPC_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -936,85 +980,97 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Base_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
-                        fieldIndex: (int)PlacedCreature_FieldIndex.Base,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.Base,
                         errorMask: errorMask));
-                    return TryGet<PlacedCreature_FieldIndex?>.Succeed(PlacedCreature_FieldIndex.Base);
-                case "XOWN":
-                case "XRNK":
-                case "XGLB":
-                    item._Ownership.SetIfSucceeded(LoquiBinaryTranslation<Ownership, Ownership_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)PlacedCreature_FieldIndex.Ownership,
+                    return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.Base);
+                case "XLOD":
+                    item._DistantLODData.SetIfSucceeded(LoquiBinaryTranslation<DistantLODData, DistantLODData_ErrorMask>.Instance.Parse(
+                        frame: frame,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.DistantLODData,
                         errorMask: errorMask));
-                    return TryGet<PlacedCreature_FieldIndex?>.Succeed(PlacedCreature_FieldIndex.Ownership);
+                    return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.DistantLODData);
                 case "XESP":
                     item._EnableParent.SetIfSucceeded(LoquiBinaryTranslation<EnableParent, EnableParent_ErrorMask>.Instance.Parse(
                         frame: frame,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.EnableParent,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.EnableParent,
                         errorMask: errorMask));
-                    return TryGet<PlacedCreature_FieldIndex?>.Succeed(PlacedCreature_FieldIndex.EnableParent);
+                    return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.EnableParent);
+                case "XMRC":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    item.MerchantContainer_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)PlacedNPC_FieldIndex.MerchantContainer,
+                        errorMask: errorMask));
+                    return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.MerchantContainer);
+                case "XHRS":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    item.Horse_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)PlacedNPC_FieldIndex.Horse,
+                        errorMask: errorMask));
+                    return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.Horse);
                 case "XRGD":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var RagdollDatatryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame.Spawn(contentLength),
-                        fieldIndex: (int)PlacedCreature_FieldIndex.RagdollData,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.RagdollData,
                         errorMask: errorMask);
                     item._RagdollData.SetIfSucceeded(RagdollDatatryGet);
-                    return TryGet<PlacedCreature_FieldIndex?>.Succeed(PlacedCreature_FieldIndex.RagdollData);
+                    return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.RagdollData);
                 case "XSCL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Scale.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
-                        fieldIndex: (int)PlacedCreature_FieldIndex.Scale,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.Scale,
                         errorMask: errorMask));
-                    return TryGet<PlacedCreature_FieldIndex?>.Succeed(PlacedCreature_FieldIndex.Scale);
+                    return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.Scale);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.Spawn(contentLength))
                     {
                         item._Position.SetIfSucceeded(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
-                            fieldIndex: (int)PlacedCreature_FieldIndex.Position,
+                            fieldIndex: (int)PlacedNPC_FieldIndex.Position,
                             errorMask: errorMask));
                         item._Rotation.SetIfSucceeded(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
-                            fieldIndex: (int)PlacedCreature_FieldIndex.Rotation,
+                            fieldIndex: (int)PlacedNPC_FieldIndex.Rotation,
                             errorMask: errorMask));
                     }
-                    return TryGet<PlacedCreature_FieldIndex?>.Succeed(PlacedCreature_FieldIndex.Rotation);
+                    return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.Rotation);
                 default:
                     return Placed.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        errorMask: errorMask).Bubble((i) => PlacedCreatureCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask).Bubble((i) => PlacedNPCCommon.ConvertFieldIndex(i));
             }
         }
 
         #endregion
 
-        public PlacedCreature Copy(
-            PlacedCreature_CopyMask copyMask = null,
-            IPlacedCreatureGetter def = null)
+        public PlacedNPC Copy(
+            PlacedNPC_CopyMask copyMask = null,
+            IPlacedNPCGetter def = null)
         {
-            return PlacedCreature.Copy(
+            return PlacedNPC.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static PlacedCreature Copy(
-            IPlacedCreature item,
-            PlacedCreature_CopyMask copyMask = null,
-            IPlacedCreatureGetter def = null)
+        public static PlacedNPC Copy(
+            IPlacedNPC item,
+            PlacedNPC_CopyMask copyMask = null,
+            IPlacedNPCGetter def = null)
         {
-            PlacedCreature ret;
-            if (item.GetType().Equals(typeof(PlacedCreature)))
+            PlacedNPC ret;
+            if (item.GetType().Equals(typeof(PlacedNPC)))
             {
-                ret = new PlacedCreature();
+                ret = new PlacedNPC();
             }
             else
             {
-                ret = (PlacedCreature)System.Activator.CreateInstance(item.GetType());
+                ret = (PlacedNPC)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -1023,19 +1079,19 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static PlacedCreature Copy_ToLoqui(
-            IPlacedCreatureGetter item,
-            PlacedCreature_CopyMask copyMask = null,
-            IPlacedCreatureGetter def = null)
+        public static PlacedNPC Copy_ToLoqui(
+            IPlacedNPCGetter item,
+            PlacedNPC_CopyMask copyMask = null,
+            IPlacedNPCGetter def = null)
         {
-            PlacedCreature ret;
-            if (item.GetType().Equals(typeof(PlacedCreature)))
+            PlacedNPC ret;
+            if (item.GetType().Equals(typeof(PlacedNPC)))
             {
-                ret = new PlacedCreature() as PlacedCreature;
+                ret = new PlacedNPC() as PlacedNPC;
             }
             else
             {
-                ret = (PlacedCreature)System.Activator.CreateInstance(item.GetType());
+                ret = (PlacedNPC)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -1045,9 +1101,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IPlacedCreatureGetter rhs,
-            PlacedCreature_CopyMask copyMask,
-            IPlacedCreatureGetter def = null,
+            IPlacedNPCGetter rhs,
+            PlacedNPC_CopyMask copyMask,
+            IPlacedNPCGetter def = null,
             NotifyingFireParameters cmds = null)
         {
             this.CopyFieldsFrom(
@@ -1060,23 +1116,23 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IPlacedCreatureGetter rhs,
-            out PlacedCreature_ErrorMask errorMask,
-            PlacedCreature_CopyMask copyMask = null,
-            IPlacedCreatureGetter def = null,
+            IPlacedNPCGetter rhs,
+            out PlacedNPC_ErrorMask errorMask,
+            PlacedNPC_CopyMask copyMask = null,
+            IPlacedNPCGetter def = null,
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            PlacedCreature_ErrorMask retErrorMask = null;
+            PlacedNPC_ErrorMask retErrorMask = null;
             Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
             {
                 if (retErrorMask == null)
                 {
-                    retErrorMask = new PlacedCreature_ErrorMask();
+                    retErrorMask = new PlacedNPC_ErrorMask();
                 }
                 return retErrorMask;
             };
-            PlacedCreatureCommon.CopyFieldsFrom(
+            PlacedNPCCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -1089,40 +1145,50 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
+            PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
             switch (enu)
             {
-                case PlacedCreature_FieldIndex.Base:
+                case PlacedNPC_FieldIndex.Base:
                     this.Base_Property.Set(
-                        (FormIDSetLink<Creature>)obj,
+                        (FormIDSetLink<NPC>)obj,
                         cmds);
                     break;
-                case PlacedCreature_FieldIndex.Ownership:
-                    this._Ownership.Set(
-                        (Ownership)obj,
+                case PlacedNPC_FieldIndex.DistantLODData:
+                    this._DistantLODData.Set(
+                        (DistantLODData)obj,
                         cmds);
                     break;
-                case PlacedCreature_FieldIndex.EnableParent:
+                case PlacedNPC_FieldIndex.EnableParent:
                     this._EnableParent.Set(
                         (EnableParent)obj,
                         cmds);
                     break;
-                case PlacedCreature_FieldIndex.RagdollData:
+                case PlacedNPC_FieldIndex.MerchantContainer:
+                    this.MerchantContainer_Property.Set(
+                        (FormIDSetLink<PlacedObject>)obj,
+                        cmds);
+                    break;
+                case PlacedNPC_FieldIndex.Horse:
+                    this.Horse_Property.Set(
+                        (FormIDSetLink<PlacedCreature>)obj,
+                        cmds);
+                    break;
+                case PlacedNPC_FieldIndex.RagdollData:
                     this._RagdollData.Set(
                         (Byte[])obj,
                         cmds);
                     break;
-                case PlacedCreature_FieldIndex.Scale:
+                case PlacedNPC_FieldIndex.Scale:
                     this._Scale.Set(
                         (Single)obj,
                         cmds);
                     break;
-                case PlacedCreature_FieldIndex.Position:
+                case PlacedNPC_FieldIndex.Position:
                     this._Position.Set(
                         (P3Float)obj,
                         cmds);
                     break;
-                case PlacedCreature_FieldIndex.Rotation:
+                case PlacedNPC_FieldIndex.Rotation:
                     this._Rotation.Set(
                         (P3Float)obj,
                         cmds);
@@ -1136,59 +1202,69 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Clear(NotifyingUnsetParameters cmds = null)
         {
             CallClearPartial_Internal(cmds);
-            PlacedCreatureCommon.Clear(this, cmds);
+            PlacedNPCCommon.Clear(this, cmds);
         }
 
 
-        public new static PlacedCreature Create(IEnumerable<KeyValuePair<ushort, object>> fields)
+        public new static PlacedNPC Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
-            var ret = new PlacedCreature();
+            var ret = new PlacedNPC();
             foreach (var pair in fields)
             {
-                CopyInInternal_PlacedCreature(ret, pair);
+                CopyInInternal_PlacedNPC(ret, pair);
             }
             return ret;
         }
 
-        protected new static void CopyInInternal_PlacedCreature(PlacedCreature obj, KeyValuePair<ushort, object> pair)
+        protected new static void CopyInInternal_PlacedNPC(PlacedNPC obj, KeyValuePair<ushort, object> pair)
         {
-            if (!EnumExt.TryParse(pair.Key, out PlacedCreature_FieldIndex enu))
+            if (!EnumExt.TryParse(pair.Key, out PlacedNPC_FieldIndex enu))
             {
                 CopyInInternal_Placed(obj, pair);
             }
             switch (enu)
             {
-                case PlacedCreature_FieldIndex.Base:
+                case PlacedNPC_FieldIndex.Base:
                     obj.Base_Property.Set(
-                        (FormIDSetLink<Creature>)pair.Value,
+                        (FormIDSetLink<NPC>)pair.Value,
                         null);
                     break;
-                case PlacedCreature_FieldIndex.Ownership:
-                    obj._Ownership.Set(
-                        (Ownership)pair.Value,
+                case PlacedNPC_FieldIndex.DistantLODData:
+                    obj._DistantLODData.Set(
+                        (DistantLODData)pair.Value,
                         null);
                     break;
-                case PlacedCreature_FieldIndex.EnableParent:
+                case PlacedNPC_FieldIndex.EnableParent:
                     obj._EnableParent.Set(
                         (EnableParent)pair.Value,
                         null);
                     break;
-                case PlacedCreature_FieldIndex.RagdollData:
+                case PlacedNPC_FieldIndex.MerchantContainer:
+                    obj.MerchantContainer_Property.Set(
+                        (FormIDSetLink<PlacedObject>)pair.Value,
+                        null);
+                    break;
+                case PlacedNPC_FieldIndex.Horse:
+                    obj.Horse_Property.Set(
+                        (FormIDSetLink<PlacedCreature>)pair.Value,
+                        null);
+                    break;
+                case PlacedNPC_FieldIndex.RagdollData:
                     obj._RagdollData.Set(
                         (Byte[])pair.Value,
                         null);
                     break;
-                case PlacedCreature_FieldIndex.Scale:
+                case PlacedNPC_FieldIndex.Scale:
                     obj._Scale.Set(
                         (Single)pair.Value,
                         null);
                     break;
-                case PlacedCreature_FieldIndex.Position:
+                case PlacedNPC_FieldIndex.Position:
                     obj._Position.Set(
                         (P3Float)pair.Value,
                         null);
                     break;
-                case PlacedCreature_FieldIndex.Rotation:
+                case PlacedNPC_FieldIndex.Rotation:
                     obj._Rotation.Set(
                         (P3Float)pair.Value,
                         null);
@@ -1197,7 +1273,7 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, PlacedCreature obj)
+        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, PlacedNPC obj)
         {
             ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
         }
@@ -1206,15 +1282,17 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IPlacedCreature : IPlacedCreatureGetter, IPlaced, ILoquiClass<IPlacedCreature, IPlacedCreatureGetter>, ILoquiClass<PlacedCreature, IPlacedCreatureGetter>
+    public partial interface IPlacedNPC : IPlacedNPCGetter, IPlaced, ILoquiClass<IPlacedNPC, IPlacedNPCGetter>, ILoquiClass<PlacedNPC, IPlacedNPCGetter>
     {
-        new Creature Base { get; set; }
-        new Ownership Ownership { get; set; }
-        new INotifyingSetItem<Ownership> Ownership_Property { get; }
+        new NPC Base { get; set; }
+        new DistantLODData DistantLODData { get; set; }
+        new INotifyingSetItem<DistantLODData> DistantLODData_Property { get; }
 
         new EnableParent EnableParent { get; set; }
         new INotifyingSetItem<EnableParent> EnableParent_Property { get; }
 
+        new PlacedObject MerchantContainer { get; set; }
+        new PlacedCreature Horse { get; set; }
         new Byte[] RagdollData { get; set; }
         new INotifyingSetItem<Byte[]> RagdollData_Property { get; }
 
@@ -1229,21 +1307,31 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IPlacedCreatureGetter : IPlacedGetter
+    public partial interface IPlacedNPCGetter : IPlacedGetter
     {
         #region Base
-        Creature Base { get; }
-        FormIDSetLink<Creature> Base_Property { get; }
+        NPC Base { get; }
+        FormIDSetLink<NPC> Base_Property { get; }
 
         #endregion
-        #region Ownership
-        Ownership Ownership { get; }
-        INotifyingSetItemGetter<Ownership> Ownership_Property { get; }
+        #region DistantLODData
+        DistantLODData DistantLODData { get; }
+        INotifyingSetItemGetter<DistantLODData> DistantLODData_Property { get; }
 
         #endregion
         #region EnableParent
         EnableParent EnableParent { get; }
         INotifyingSetItemGetter<EnableParent> EnableParent_Property { get; }
+
+        #endregion
+        #region MerchantContainer
+        PlacedObject MerchantContainer { get; }
+        FormIDSetLink<PlacedObject> MerchantContainer_Property { get; }
+
+        #endregion
+        #region Horse
+        PlacedCreature Horse { get; }
+        FormIDSetLink<PlacedCreature> Horse_Property { get; }
 
         #endregion
         #region RagdollData
@@ -1276,7 +1364,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     #region Field Index
-    public enum PlacedCreature_FieldIndex
+    public enum PlacedNPC_FieldIndex
     {
         MajorRecordFlags = 0,
         FormID = 1,
@@ -1284,46 +1372,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         EditorID = 3,
         RecordType = 4,
         Base = 5,
-        Ownership = 6,
+        DistantLODData = 6,
         EnableParent = 7,
-        RagdollData = 8,
-        Scale = 9,
-        Position = 10,
-        Rotation = 11,
+        MerchantContainer = 8,
+        Horse = 9,
+        RagdollData = 10,
+        Scale = 11,
+        Position = 12,
+        Rotation = 13,
     }
     #endregion
 
     #region Registration
-    public class PlacedCreature_Registration : ILoquiRegistration
+    public class PlacedNPC_Registration : ILoquiRegistration
     {
-        public static readonly PlacedCreature_Registration Instance = new PlacedCreature_Registration();
+        public static readonly PlacedNPC_Registration Instance = new PlacedNPC_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 128,
+            msgID: 137,
             version: 0);
 
-        public const string GUID = "b0f41e71-09f4-46b3-8769-7252455d209f";
+        public const string GUID = "1bd10cd8-4d9b-4cc0-9639-51f02a1b2e36";
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 9;
 
-        public static readonly Type MaskType = typeof(PlacedCreature_Mask<>);
+        public static readonly Type MaskType = typeof(PlacedNPC_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(PlacedCreature_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(PlacedNPC_ErrorMask);
 
-        public static readonly Type ClassType = typeof(PlacedCreature);
+        public static readonly Type ClassType = typeof(PlacedNPC);
 
-        public static readonly Type GetterType = typeof(IPlacedCreatureGetter);
+        public static readonly Type GetterType = typeof(IPlacedNPCGetter);
 
-        public static readonly Type SetterType = typeof(IPlacedCreature);
+        public static readonly Type SetterType = typeof(IPlacedNPC);
 
-        public static readonly Type CommonType = typeof(PlacedCreatureCommon);
+        public static readonly Type CommonType = typeof(PlacedNPCCommon);
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.PlacedCreature";
+        public const string FullName = "Mutagen.Bethesda.Oblivion.PlacedNPC";
 
-        public const string Name = "PlacedCreature";
+        public const string Name = "PlacedNPC";
 
         public const string Namespace = "Mutagen.Bethesda.Oblivion";
 
@@ -1336,19 +1426,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (str.Upper)
             {
                 case "BASE":
-                    return (ushort)PlacedCreature_FieldIndex.Base;
-                case "OWNERSHIP":
-                    return (ushort)PlacedCreature_FieldIndex.Ownership;
+                    return (ushort)PlacedNPC_FieldIndex.Base;
+                case "DISTANTLODDATA":
+                    return (ushort)PlacedNPC_FieldIndex.DistantLODData;
                 case "ENABLEPARENT":
-                    return (ushort)PlacedCreature_FieldIndex.EnableParent;
+                    return (ushort)PlacedNPC_FieldIndex.EnableParent;
+                case "MERCHANTCONTAINER":
+                    return (ushort)PlacedNPC_FieldIndex.MerchantContainer;
+                case "HORSE":
+                    return (ushort)PlacedNPC_FieldIndex.Horse;
                 case "RAGDOLLDATA":
-                    return (ushort)PlacedCreature_FieldIndex.RagdollData;
+                    return (ushort)PlacedNPC_FieldIndex.RagdollData;
                 case "SCALE":
-                    return (ushort)PlacedCreature_FieldIndex.Scale;
+                    return (ushort)PlacedNPC_FieldIndex.Scale;
                 case "POSITION":
-                    return (ushort)PlacedCreature_FieldIndex.Position;
+                    return (ushort)PlacedNPC_FieldIndex.Position;
                 case "ROTATION":
-                    return (ushort)PlacedCreature_FieldIndex.Rotation;
+                    return (ushort)PlacedNPC_FieldIndex.Rotation;
                 default:
                     return null;
             }
@@ -1356,16 +1450,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
+            PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
             switch (enu)
             {
-                case PlacedCreature_FieldIndex.Base:
-                case PlacedCreature_FieldIndex.Ownership:
-                case PlacedCreature_FieldIndex.EnableParent:
-                case PlacedCreature_FieldIndex.RagdollData:
-                case PlacedCreature_FieldIndex.Scale:
-                case PlacedCreature_FieldIndex.Position:
-                case PlacedCreature_FieldIndex.Rotation:
+                case PlacedNPC_FieldIndex.Base:
+                case PlacedNPC_FieldIndex.DistantLODData:
+                case PlacedNPC_FieldIndex.EnableParent:
+                case PlacedNPC_FieldIndex.MerchantContainer:
+                case PlacedNPC_FieldIndex.Horse:
+                case PlacedNPC_FieldIndex.RagdollData:
+                case PlacedNPC_FieldIndex.Scale:
+                case PlacedNPC_FieldIndex.Position:
+                case PlacedNPC_FieldIndex.Rotation:
                     return false;
                 default:
                     return Placed_Registration.GetNthIsEnumerable(index);
@@ -1374,17 +1470,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
+            PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
             switch (enu)
             {
-                case PlacedCreature_FieldIndex.Ownership:
-                case PlacedCreature_FieldIndex.EnableParent:
+                case PlacedNPC_FieldIndex.DistantLODData:
+                case PlacedNPC_FieldIndex.EnableParent:
                     return true;
-                case PlacedCreature_FieldIndex.Base:
-                case PlacedCreature_FieldIndex.RagdollData:
-                case PlacedCreature_FieldIndex.Scale:
-                case PlacedCreature_FieldIndex.Position:
-                case PlacedCreature_FieldIndex.Rotation:
+                case PlacedNPC_FieldIndex.Base:
+                case PlacedNPC_FieldIndex.MerchantContainer:
+                case PlacedNPC_FieldIndex.Horse:
+                case PlacedNPC_FieldIndex.RagdollData:
+                case PlacedNPC_FieldIndex.Scale:
+                case PlacedNPC_FieldIndex.Position:
+                case PlacedNPC_FieldIndex.Rotation:
                     return false;
                 default:
                     return Placed_Registration.GetNthIsLoqui(index);
@@ -1393,16 +1491,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
+            PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
             switch (enu)
             {
-                case PlacedCreature_FieldIndex.Base:
-                case PlacedCreature_FieldIndex.Ownership:
-                case PlacedCreature_FieldIndex.EnableParent:
-                case PlacedCreature_FieldIndex.RagdollData:
-                case PlacedCreature_FieldIndex.Scale:
-                case PlacedCreature_FieldIndex.Position:
-                case PlacedCreature_FieldIndex.Rotation:
+                case PlacedNPC_FieldIndex.Base:
+                case PlacedNPC_FieldIndex.DistantLODData:
+                case PlacedNPC_FieldIndex.EnableParent:
+                case PlacedNPC_FieldIndex.MerchantContainer:
+                case PlacedNPC_FieldIndex.Horse:
+                case PlacedNPC_FieldIndex.RagdollData:
+                case PlacedNPC_FieldIndex.Scale:
+                case PlacedNPC_FieldIndex.Position:
+                case PlacedNPC_FieldIndex.Rotation:
                     return false;
                 default:
                     return Placed_Registration.GetNthIsSingleton(index);
@@ -1411,22 +1511,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static string GetNthName(ushort index)
         {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
+            PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
             switch (enu)
             {
-                case PlacedCreature_FieldIndex.Base:
+                case PlacedNPC_FieldIndex.Base:
                     return "Base";
-                case PlacedCreature_FieldIndex.Ownership:
-                    return "Ownership";
-                case PlacedCreature_FieldIndex.EnableParent:
+                case PlacedNPC_FieldIndex.DistantLODData:
+                    return "DistantLODData";
+                case PlacedNPC_FieldIndex.EnableParent:
                     return "EnableParent";
-                case PlacedCreature_FieldIndex.RagdollData:
+                case PlacedNPC_FieldIndex.MerchantContainer:
+                    return "MerchantContainer";
+                case PlacedNPC_FieldIndex.Horse:
+                    return "Horse";
+                case PlacedNPC_FieldIndex.RagdollData:
                     return "RagdollData";
-                case PlacedCreature_FieldIndex.Scale:
+                case PlacedNPC_FieldIndex.Scale:
                     return "Scale";
-                case PlacedCreature_FieldIndex.Position:
+                case PlacedNPC_FieldIndex.Position:
                     return "Position";
-                case PlacedCreature_FieldIndex.Rotation:
+                case PlacedNPC_FieldIndex.Rotation:
                     return "Rotation";
                 default:
                     return Placed_Registration.GetNthName(index);
@@ -1435,16 +1539,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
+            PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
             switch (enu)
             {
-                case PlacedCreature_FieldIndex.Base:
-                case PlacedCreature_FieldIndex.Ownership:
-                case PlacedCreature_FieldIndex.EnableParent:
-                case PlacedCreature_FieldIndex.RagdollData:
-                case PlacedCreature_FieldIndex.Scale:
-                case PlacedCreature_FieldIndex.Position:
-                case PlacedCreature_FieldIndex.Rotation:
+                case PlacedNPC_FieldIndex.Base:
+                case PlacedNPC_FieldIndex.DistantLODData:
+                case PlacedNPC_FieldIndex.EnableParent:
+                case PlacedNPC_FieldIndex.MerchantContainer:
+                case PlacedNPC_FieldIndex.Horse:
+                case PlacedNPC_FieldIndex.RagdollData:
+                case PlacedNPC_FieldIndex.Scale:
+                case PlacedNPC_FieldIndex.Position:
+                case PlacedNPC_FieldIndex.Rotation:
                     return false;
                 default:
                     return Placed_Registration.IsNthDerivative(index);
@@ -1453,16 +1559,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsProtected(ushort index)
         {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
+            PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
             switch (enu)
             {
-                case PlacedCreature_FieldIndex.Base:
-                case PlacedCreature_FieldIndex.Ownership:
-                case PlacedCreature_FieldIndex.EnableParent:
-                case PlacedCreature_FieldIndex.RagdollData:
-                case PlacedCreature_FieldIndex.Scale:
-                case PlacedCreature_FieldIndex.Position:
-                case PlacedCreature_FieldIndex.Rotation:
+                case PlacedNPC_FieldIndex.Base:
+                case PlacedNPC_FieldIndex.DistantLODData:
+                case PlacedNPC_FieldIndex.EnableParent:
+                case PlacedNPC_FieldIndex.MerchantContainer:
+                case PlacedNPC_FieldIndex.Horse:
+                case PlacedNPC_FieldIndex.RagdollData:
+                case PlacedNPC_FieldIndex.Scale:
+                case PlacedNPC_FieldIndex.Position:
+                case PlacedNPC_FieldIndex.Rotation:
                     return false;
                 default:
                     return Placed_Registration.IsProtected(index);
@@ -1471,40 +1579,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Type GetNthType(ushort index)
         {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
+            PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
             switch (enu)
             {
-                case PlacedCreature_FieldIndex.Base:
-                    return typeof(FormIDSetLink<Creature>);
-                case PlacedCreature_FieldIndex.Ownership:
-                    return typeof(Ownership);
-                case PlacedCreature_FieldIndex.EnableParent:
+                case PlacedNPC_FieldIndex.Base:
+                    return typeof(FormIDSetLink<NPC>);
+                case PlacedNPC_FieldIndex.DistantLODData:
+                    return typeof(DistantLODData);
+                case PlacedNPC_FieldIndex.EnableParent:
                     return typeof(EnableParent);
-                case PlacedCreature_FieldIndex.RagdollData:
+                case PlacedNPC_FieldIndex.MerchantContainer:
+                    return typeof(FormIDSetLink<PlacedObject>);
+                case PlacedNPC_FieldIndex.Horse:
+                    return typeof(FormIDSetLink<PlacedCreature>);
+                case PlacedNPC_FieldIndex.RagdollData:
                     return typeof(Byte[]);
-                case PlacedCreature_FieldIndex.Scale:
+                case PlacedNPC_FieldIndex.Scale:
                     return typeof(Single);
-                case PlacedCreature_FieldIndex.Position:
+                case PlacedNPC_FieldIndex.Position:
                     return typeof(P3Float);
-                case PlacedCreature_FieldIndex.Rotation:
+                case PlacedNPC_FieldIndex.Rotation:
                     return typeof(P3Float);
                 default:
                     return Placed_Registration.GetNthType(index);
             }
         }
 
-        public static readonly RecordType ACRE_HEADER = new RecordType("ACRE");
+        public static readonly RecordType ACHR_HEADER = new RecordType("ACHR");
         public static readonly RecordType NAME_HEADER = new RecordType("NAME");
-        public static readonly RecordType XOWN_HEADER = new RecordType("XOWN");
-        public static readonly RecordType XRNK_HEADER = new RecordType("XRNK");
-        public static readonly RecordType XGLB_HEADER = new RecordType("XGLB");
+        public static readonly RecordType XLOD_HEADER = new RecordType("XLOD");
         public static readonly RecordType XESP_HEADER = new RecordType("XESP");
+        public static readonly RecordType XMRC_HEADER = new RecordType("XMRC");
+        public static readonly RecordType XHRS_HEADER = new RecordType("XHRS");
         public static readonly RecordType XRGD_HEADER = new RecordType("XRGD");
         public static readonly RecordType XSCL_HEADER = new RecordType("XSCL");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = ACRE_HEADER;
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = ACHR_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 5;
+        public const int NumTypedFields = 7;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1535,16 +1647,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Extensions
-    public static partial class PlacedCreatureCommon
+    public static partial class PlacedNPCCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IPlacedCreature item,
-            IPlacedCreatureGetter rhs,
-            IPlacedCreatureGetter def,
+            IPlacedNPC item,
+            IPlacedNPCGetter rhs,
+            IPlacedNPCGetter def,
             bool doMasks,
             Func<IErrorMask> errorMask,
-            PlacedCreature_CopyMask copyMask,
+            PlacedNPC_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             PlacedCommon.CopyFieldsFrom(
@@ -1567,48 +1679,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)PlacedCreature_FieldIndex.Base, ex);
+                    errorMask().SetNthException((int)PlacedNPC_FieldIndex.Base, ex);
                 }
             }
-            if (copyMask?.Ownership.Overall != CopyOption.Skip)
+            if (copyMask?.DistantLODData.Overall != CopyOption.Skip)
             {
                 try
                 {
-                    item.Ownership_Property.SetToWithDefault(
-                        rhs.Ownership_Property,
-                        def?.Ownership_Property,
+                    item.DistantLODData_Property.SetToWithDefault(
+                        rhs.DistantLODData_Property,
+                        def?.DistantLODData_Property,
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Ownership.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.DistantLODData.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.CopyIn:
-                                    OwnershipCommon.CopyFieldsFrom(
-                                        item: item.Ownership,
-                                        rhs: rhs.Ownership,
-                                        def: def?.Ownership,
+                                    DistantLODDataCommon.CopyFieldsFrom(
+                                        item: item.DistantLODData,
+                                        rhs: rhs.DistantLODData,
+                                        def: def?.DistantLODData,
                                         doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<Ownership_ErrorMask>(() =>
+                                        errorMask: (doMasks ? new Func<DistantLODData_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            var mask = new Ownership_ErrorMask();
-                                            baseMask.SetNthMask((int)PlacedCreature_FieldIndex.Ownership, mask);
+                                            var mask = new DistantLODData_ErrorMask();
+                                            baseMask.SetNthMask((int)PlacedNPC_FieldIndex.DistantLODData, mask);
                                             return mask;
                                         }
                                         ) : null),
-                                        copyMask: copyMask?.Ownership.Specific,
+                                        copyMask: copyMask?.DistantLODData.Specific,
                                         cmds: cmds);
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(Ownership);
-                                    return Ownership.Copy(
+                                    if (r == null) return default(DistantLODData);
+                                    return DistantLODData.Copy(
                                         r,
-                                        copyMask?.Ownership?.Specific,
+                                        copyMask?.DistantLODData?.Specific,
                                         def: d);
                                 default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Ownership?.Overall}. Cannot execute copy.");
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.DistantLODData?.Overall}. Cannot execute copy.");
                             }
                         }
                         );
@@ -1616,7 +1728,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)PlacedCreature_FieldIndex.Ownership, ex);
+                    errorMask().SetNthException((int)PlacedNPC_FieldIndex.DistantLODData, ex);
                 }
             }
             if (copyMask?.EnableParent.Overall != CopyOption.Skip)
@@ -1643,7 +1755,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         {
                                             var baseMask = errorMask();
                                             var mask = new EnableParent_ErrorMask();
-                                            baseMask.SetNthMask((int)PlacedCreature_FieldIndex.EnableParent, mask);
+                                            baseMask.SetNthMask((int)PlacedNPC_FieldIndex.EnableParent, mask);
                                             return mask;
                                         }
                                         ) : null),
@@ -1665,7 +1777,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)PlacedCreature_FieldIndex.EnableParent, ex);
+                    errorMask().SetNthException((int)PlacedNPC_FieldIndex.EnableParent, ex);
+                }
+            }
+            if (copyMask?.MerchantContainer ?? true)
+            {
+                try
+                {
+                    item.MerchantContainer_Property.SetToWithDefault(
+                        rhs: rhs.MerchantContainer_Property,
+                        def: def?.MerchantContainer_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)PlacedNPC_FieldIndex.MerchantContainer, ex);
+                }
+            }
+            if (copyMask?.Horse ?? true)
+            {
+                try
+                {
+                    item.Horse_Property.SetToWithDefault(
+                        rhs: rhs.Horse_Property,
+                        def: def?.Horse_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)PlacedNPC_FieldIndex.Horse, ex);
                 }
             }
             if (copyMask?.RagdollData ?? true)
@@ -1680,7 +1822,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)PlacedCreature_FieldIndex.RagdollData, ex);
+                    errorMask().SetNthException((int)PlacedNPC_FieldIndex.RagdollData, ex);
                 }
             }
             if (copyMask?.Scale ?? true)
@@ -1695,7 +1837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)PlacedCreature_FieldIndex.Scale, ex);
+                    errorMask().SetNthException((int)PlacedNPC_FieldIndex.Scale, ex);
                 }
             }
             if (copyMask?.Position ?? true)
@@ -1709,7 +1851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)PlacedCreature_FieldIndex.Position, ex);
+                    errorMask().SetNthException((int)PlacedNPC_FieldIndex.Position, ex);
                 }
             }
             if (copyMask?.Rotation ?? true)
@@ -1723,7 +1865,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)PlacedCreature_FieldIndex.Rotation, ex);
+                    errorMask().SetNthException((int)PlacedNPC_FieldIndex.Rotation, ex);
                 }
             }
         }
@@ -1733,29 +1875,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void SetNthObjectHasBeenSet(
             ushort index,
             bool on,
-            IPlacedCreature obj,
+            IPlacedNPC obj,
             NotifyingFireParameters cmds = null)
         {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
+            PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
             switch (enu)
             {
-                case PlacedCreature_FieldIndex.Position:
-                case PlacedCreature_FieldIndex.Rotation:
+                case PlacedNPC_FieldIndex.Position:
+                case PlacedNPC_FieldIndex.Rotation:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case PlacedCreature_FieldIndex.Base:
+                case PlacedNPC_FieldIndex.Base:
                     obj.Base_Property.HasBeenSet = on;
                     break;
-                case PlacedCreature_FieldIndex.Ownership:
-                    obj.Ownership_Property.HasBeenSet = on;
+                case PlacedNPC_FieldIndex.DistantLODData:
+                    obj.DistantLODData_Property.HasBeenSet = on;
                     break;
-                case PlacedCreature_FieldIndex.EnableParent:
+                case PlacedNPC_FieldIndex.EnableParent:
                     obj.EnableParent_Property.HasBeenSet = on;
                     break;
-                case PlacedCreature_FieldIndex.RagdollData:
+                case PlacedNPC_FieldIndex.MerchantContainer:
+                    obj.MerchantContainer_Property.HasBeenSet = on;
+                    break;
+                case PlacedNPC_FieldIndex.Horse:
+                    obj.Horse_Property.HasBeenSet = on;
+                    break;
+                case PlacedNPC_FieldIndex.RagdollData:
                     obj.RagdollData_Property.HasBeenSet = on;
                     break;
-                case PlacedCreature_FieldIndex.Scale:
+                case PlacedNPC_FieldIndex.Scale:
                     obj.Scale_Property.HasBeenSet = on;
                     break;
                 default:
@@ -1766,31 +1914,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void UnsetNthObject(
             ushort index,
-            IPlacedCreature obj,
+            IPlacedNPC obj,
             NotifyingUnsetParameters cmds = null)
         {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
+            PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
             switch (enu)
             {
-                case PlacedCreature_FieldIndex.Base:
+                case PlacedNPC_FieldIndex.Base:
                     obj.Base_Property.Unset(cmds);
                     break;
-                case PlacedCreature_FieldIndex.Ownership:
-                    obj.Ownership_Property.Unset(cmds);
+                case PlacedNPC_FieldIndex.DistantLODData:
+                    obj.DistantLODData_Property.Unset(cmds);
                     break;
-                case PlacedCreature_FieldIndex.EnableParent:
+                case PlacedNPC_FieldIndex.EnableParent:
                     obj.EnableParent_Property.Unset(cmds);
                     break;
-                case PlacedCreature_FieldIndex.RagdollData:
+                case PlacedNPC_FieldIndex.MerchantContainer:
+                    obj.MerchantContainer_Property.Unset(cmds);
+                    break;
+                case PlacedNPC_FieldIndex.Horse:
+                    obj.Horse_Property.Unset(cmds);
+                    break;
+                case PlacedNPC_FieldIndex.RagdollData:
                     obj.RagdollData_Property.Unset(cmds);
                     break;
-                case PlacedCreature_FieldIndex.Scale:
+                case PlacedNPC_FieldIndex.Scale:
                     obj.Scale_Property.Unset(cmds);
                     break;
-                case PlacedCreature_FieldIndex.Position:
+                case PlacedNPC_FieldIndex.Position:
                     obj.Position = default(P3Float);
                     break;
-                case PlacedCreature_FieldIndex.Rotation:
+                case PlacedNPC_FieldIndex.Rotation:
                     obj.Rotation = default(P3Float);
                     break;
                 default:
@@ -1801,23 +1955,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthObjectHasBeenSet(
             ushort index,
-            IPlacedCreature obj)
+            IPlacedNPC obj)
         {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
+            PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
             switch (enu)
             {
-                case PlacedCreature_FieldIndex.Position:
-                case PlacedCreature_FieldIndex.Rotation:
+                case PlacedNPC_FieldIndex.Position:
+                case PlacedNPC_FieldIndex.Rotation:
                     return true;
-                case PlacedCreature_FieldIndex.Base:
+                case PlacedNPC_FieldIndex.Base:
                     return obj.Base_Property.HasBeenSet;
-                case PlacedCreature_FieldIndex.Ownership:
-                    return obj.Ownership_Property.HasBeenSet;
-                case PlacedCreature_FieldIndex.EnableParent:
+                case PlacedNPC_FieldIndex.DistantLODData:
+                    return obj.DistantLODData_Property.HasBeenSet;
+                case PlacedNPC_FieldIndex.EnableParent:
                     return obj.EnableParent_Property.HasBeenSet;
-                case PlacedCreature_FieldIndex.RagdollData:
+                case PlacedNPC_FieldIndex.MerchantContainer:
+                    return obj.MerchantContainer_Property.HasBeenSet;
+                case PlacedNPC_FieldIndex.Horse:
+                    return obj.Horse_Property.HasBeenSet;
+                case PlacedNPC_FieldIndex.RagdollData:
                     return obj.RagdollData_Property.HasBeenSet;
-                case PlacedCreature_FieldIndex.Scale:
+                case PlacedNPC_FieldIndex.Scale:
                     return obj.Scale_Property.HasBeenSet;
                 default:
                     return PlacedCommon.GetNthObjectHasBeenSet(index, obj);
@@ -1826,24 +1984,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static object GetNthObject(
             ushort index,
-            IPlacedCreatureGetter obj)
+            IPlacedNPCGetter obj)
         {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
+            PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
             switch (enu)
             {
-                case PlacedCreature_FieldIndex.Base:
+                case PlacedNPC_FieldIndex.Base:
                     return obj.Base;
-                case PlacedCreature_FieldIndex.Ownership:
-                    return obj.Ownership;
-                case PlacedCreature_FieldIndex.EnableParent:
+                case PlacedNPC_FieldIndex.DistantLODData:
+                    return obj.DistantLODData;
+                case PlacedNPC_FieldIndex.EnableParent:
                     return obj.EnableParent;
-                case PlacedCreature_FieldIndex.RagdollData:
+                case PlacedNPC_FieldIndex.MerchantContainer:
+                    return obj.MerchantContainer;
+                case PlacedNPC_FieldIndex.Horse:
+                    return obj.Horse;
+                case PlacedNPC_FieldIndex.RagdollData:
                     return obj.RagdollData;
-                case PlacedCreature_FieldIndex.Scale:
+                case PlacedNPC_FieldIndex.Scale:
                     return obj.Scale;
-                case PlacedCreature_FieldIndex.Position:
+                case PlacedNPC_FieldIndex.Position:
                     return obj.Position;
-                case PlacedCreature_FieldIndex.Rotation:
+                case PlacedNPC_FieldIndex.Rotation:
                     return obj.Rotation;
                 default:
                     return PlacedCommon.GetNthObject(index, obj);
@@ -1851,36 +2013,40 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void Clear(
-            IPlacedCreature item,
+            IPlacedNPC item,
             NotifyingUnsetParameters cmds = null)
         {
             item.Base_Property.Unset(cmds.ToUnsetParams());
-            item.Ownership_Property.Unset(cmds.ToUnsetParams());
+            item.DistantLODData_Property.Unset(cmds.ToUnsetParams());
             item.EnableParent_Property.Unset(cmds.ToUnsetParams());
+            item.MerchantContainer_Property.Unset(cmds.ToUnsetParams());
+            item.Horse_Property.Unset(cmds.ToUnsetParams());
             item.RagdollData_Property.Unset(cmds.ToUnsetParams());
             item.Scale_Property.Unset(cmds.ToUnsetParams());
             item.Position = default(P3Float);
             item.Rotation = default(P3Float);
         }
 
-        public static PlacedCreature_Mask<bool> GetEqualsMask(
-            this IPlacedCreatureGetter item,
-            IPlacedCreatureGetter rhs)
+        public static PlacedNPC_Mask<bool> GetEqualsMask(
+            this IPlacedNPCGetter item,
+            IPlacedNPCGetter rhs)
         {
-            var ret = new PlacedCreature_Mask<bool>();
+            var ret = new PlacedNPC_Mask<bool>();
             FillEqualsMask(item, rhs, ret);
             return ret;
         }
 
         public static void FillEqualsMask(
-            IPlacedCreatureGetter item,
-            IPlacedCreatureGetter rhs,
-            PlacedCreature_Mask<bool> ret)
+            IPlacedNPCGetter item,
+            IPlacedNPCGetter rhs,
+            PlacedNPC_Mask<bool> ret)
         {
             if (rhs == null) return;
             ret.Base = item.Base_Property.Equals(rhs.Base_Property, (l, r) => l == r);
-            ret.Ownership = item.Ownership_Property.LoquiEqualsHelper(rhs.Ownership_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.DistantLODData = item.DistantLODData_Property.LoquiEqualsHelper(rhs.DistantLODData_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.EnableParent = item.EnableParent_Property.LoquiEqualsHelper(rhs.EnableParent_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.MerchantContainer = item.MerchantContainer_Property.Equals(rhs.MerchantContainer_Property, (l, r) => l == r);
+            ret.Horse = item.Horse_Property.Equals(rhs.Horse_Property, (l, r) => l == r);
             ret.RagdollData = item.RagdollData_Property.Equals(rhs.RagdollData_Property, (l, r) => l.EqualsFast(r));
             ret.Scale = item.Scale_Property.Equals(rhs.Scale_Property, (l, r) => l == r);
             ret.Position = item.Position == rhs.Position;
@@ -1889,9 +2055,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static string ToString(
-            this IPlacedCreatureGetter item,
+            this IPlacedNPCGetter item,
             string name = null,
-            PlacedCreature_Mask<bool> printMask = null)
+            PlacedNPC_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -1899,18 +2065,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void ToString(
-            this IPlacedCreatureGetter item,
+            this IPlacedNPCGetter item,
             FileGeneration fg,
             string name = null,
-            PlacedCreature_Mask<bool> printMask = null)
+            PlacedNPC_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(PlacedCreature)} =>");
+                fg.AppendLine($"{nameof(PlacedNPC)} =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(PlacedCreature)}) =>");
+                fg.AppendLine($"{name} ({nameof(PlacedNPC)}) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1919,13 +2085,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Base => {item.Base}");
                 }
-                if (printMask?.Ownership?.Overall ?? true)
+                if (printMask?.DistantLODData?.Overall ?? true)
                 {
-                    item.Ownership?.ToString(fg, "Ownership");
+                    item.DistantLODData?.ToString(fg, "DistantLODData");
                 }
                 if (printMask?.EnableParent?.Overall ?? true)
                 {
                     item.EnableParent?.ToString(fg, "EnableParent");
+                }
+                if (printMask?.MerchantContainer ?? true)
+                {
+                    fg.AppendLine($"MerchantContainer => {item.MerchantContainer}");
+                }
+                if (printMask?.Horse ?? true)
+                {
+                    fg.AppendLine($"Horse => {item.Horse}");
                 }
                 if (printMask?.RagdollData ?? true)
                 {
@@ -1948,25 +2122,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static bool HasBeenSet(
-            this IPlacedCreatureGetter item,
-            PlacedCreature_Mask<bool?> checkMask)
+            this IPlacedNPCGetter item,
+            PlacedNPC_Mask<bool?> checkMask)
         {
             if (checkMask.Base.HasValue && checkMask.Base.Value != item.Base_Property.HasBeenSet) return false;
-            if (checkMask.Ownership.Overall.HasValue && checkMask.Ownership.Overall.Value != item.Ownership_Property.HasBeenSet) return false;
-            if (checkMask.Ownership.Specific != null && (item.Ownership_Property.Item == null || !item.Ownership_Property.Item.HasBeenSet(checkMask.Ownership.Specific))) return false;
+            if (checkMask.DistantLODData.Overall.HasValue && checkMask.DistantLODData.Overall.Value != item.DistantLODData_Property.HasBeenSet) return false;
+            if (checkMask.DistantLODData.Specific != null && (item.DistantLODData_Property.Item == null || !item.DistantLODData_Property.Item.HasBeenSet(checkMask.DistantLODData.Specific))) return false;
             if (checkMask.EnableParent.Overall.HasValue && checkMask.EnableParent.Overall.Value != item.EnableParent_Property.HasBeenSet) return false;
             if (checkMask.EnableParent.Specific != null && (item.EnableParent_Property.Item == null || !item.EnableParent_Property.Item.HasBeenSet(checkMask.EnableParent.Specific))) return false;
+            if (checkMask.MerchantContainer.HasValue && checkMask.MerchantContainer.Value != item.MerchantContainer_Property.HasBeenSet) return false;
+            if (checkMask.Horse.HasValue && checkMask.Horse.Value != item.Horse_Property.HasBeenSet) return false;
             if (checkMask.RagdollData.HasValue && checkMask.RagdollData.Value != item.RagdollData_Property.HasBeenSet) return false;
             if (checkMask.Scale.HasValue && checkMask.Scale.Value != item.Scale_Property.HasBeenSet) return false;
             return true;
         }
 
-        public static PlacedCreature_Mask<bool> GetHasBeenSetMask(IPlacedCreatureGetter item)
+        public static PlacedNPC_Mask<bool> GetHasBeenSetMask(IPlacedNPCGetter item)
         {
-            var ret = new PlacedCreature_Mask<bool>();
+            var ret = new PlacedNPC_Mask<bool>();
             ret.Base = item.Base_Property.HasBeenSet;
-            ret.Ownership = new MaskItem<bool, Ownership_Mask<bool>>(item.Ownership_Property.HasBeenSet, OwnershipCommon.GetHasBeenSetMask(item.Ownership_Property.Item));
+            ret.DistantLODData = new MaskItem<bool, DistantLODData_Mask<bool>>(item.DistantLODData_Property.HasBeenSet, DistantLODDataCommon.GetHasBeenSetMask(item.DistantLODData_Property.Item));
             ret.EnableParent = new MaskItem<bool, EnableParent_Mask<bool>>(item.EnableParent_Property.HasBeenSet, EnableParentCommon.GetHasBeenSetMask(item.EnableParent_Property.Item));
+            ret.MerchantContainer = item.MerchantContainer_Property.HasBeenSet;
+            ret.Horse = item.Horse_Property.HasBeenSet;
             ret.RagdollData = item.RagdollData_Property.HasBeenSet;
             ret.Scale = item.Scale_Property.HasBeenSet;
             ret.Position = true;
@@ -1974,51 +2152,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static PlacedCreature_FieldIndex? ConvertFieldIndex(Placed_FieldIndex? index)
+        public static PlacedNPC_FieldIndex? ConvertFieldIndex(Placed_FieldIndex? index)
         {
             if (!index.HasValue) return null;
             return ConvertFieldIndex(index: index.Value);
         }
 
-        public static PlacedCreature_FieldIndex ConvertFieldIndex(Placed_FieldIndex index)
+        public static PlacedNPC_FieldIndex ConvertFieldIndex(Placed_FieldIndex index)
         {
             switch (index)
             {
                 case Placed_FieldIndex.MajorRecordFlags:
-                    return (PlacedCreature_FieldIndex)((int)index);
+                    return (PlacedNPC_FieldIndex)((int)index);
                 case Placed_FieldIndex.FormID:
-                    return (PlacedCreature_FieldIndex)((int)index);
+                    return (PlacedNPC_FieldIndex)((int)index);
                 case Placed_FieldIndex.Version:
-                    return (PlacedCreature_FieldIndex)((int)index);
+                    return (PlacedNPC_FieldIndex)((int)index);
                 case Placed_FieldIndex.EditorID:
-                    return (PlacedCreature_FieldIndex)((int)index);
+                    return (PlacedNPC_FieldIndex)((int)index);
                 case Placed_FieldIndex.RecordType:
-                    return (PlacedCreature_FieldIndex)((int)index);
+                    return (PlacedNPC_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
 
-        public static PlacedCreature_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        public static PlacedNPC_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
             return ConvertFieldIndex(index: index.Value);
         }
 
-        public static PlacedCreature_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static PlacedNPC_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (PlacedCreature_FieldIndex)((int)index);
+                    return (PlacedNPC_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormID:
-                    return (PlacedCreature_FieldIndex)((int)index);
+                    return (PlacedNPC_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
-                    return (PlacedCreature_FieldIndex)((int)index);
+                    return (PlacedNPC_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (PlacedCreature_FieldIndex)((int)index);
+                    return (PlacedNPC_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.RecordType:
-                    return (PlacedCreature_FieldIndex)((int)index);
+                    return (PlacedNPC_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -2028,33 +2206,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Write
         public static void Write_XML(
             XmlWriter writer,
-            IPlacedCreatureGetter item,
+            IPlacedNPCGetter item,
             bool doMasks,
-            out PlacedCreature_ErrorMask errorMask,
+            out PlacedNPC_ErrorMask errorMask,
             string name = null)
         {
-            PlacedCreature_ErrorMask errMaskRet = null;
+            PlacedNPC_ErrorMask errMaskRet = null;
             Write_XML_Internal(
                 writer: writer,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PlacedCreature_ErrorMask()) : default(Func<PlacedCreature_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PlacedNPC_ErrorMask()) : default(Func<PlacedNPC_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_XML_Internal(
             XmlWriter writer,
-            IPlacedCreatureGetter item,
-            Func<PlacedCreature_ErrorMask> errorMask,
+            IPlacedNPCGetter item,
+            Func<PlacedNPC_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.PlacedCreature"))
+                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.PlacedNPC"))
                 {
                     if (name != null)
                     {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.PlacedCreature");
+                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.PlacedNPC");
                     }
                     if (item.Base_Property.HasBeenSet)
                     {
@@ -2062,16 +2240,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             writer: writer,
                             name: nameof(item.Base),
                             item: item.Base?.FormID,
-                            fieldIndex: (int)PlacedCreature_FieldIndex.Base,
+                            fieldIndex: (int)PlacedNPC_FieldIndex.Base,
                             errorMask: errorMask);
                     }
-                    if (item.Ownership_Property.HasBeenSet)
+                    if (item.DistantLODData_Property.HasBeenSet)
                     {
-                        LoquiXmlTranslation<Ownership, Ownership_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<DistantLODData, DistantLODData_ErrorMask>.Instance.Write(
                             writer: writer,
-                            item: item.Ownership_Property,
-                            name: nameof(item.Ownership),
-                            fieldIndex: (int)PlacedCreature_FieldIndex.Ownership,
+                            item: item.DistantLODData_Property,
+                            name: nameof(item.DistantLODData),
+                            fieldIndex: (int)PlacedNPC_FieldIndex.DistantLODData,
                             errorMask: errorMask);
                     }
                     if (item.EnableParent_Property.HasBeenSet)
@@ -2080,7 +2258,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             writer: writer,
                             item: item.EnableParent_Property,
                             name: nameof(item.EnableParent),
-                            fieldIndex: (int)PlacedCreature_FieldIndex.EnableParent,
+                            fieldIndex: (int)PlacedNPC_FieldIndex.EnableParent,
+                            errorMask: errorMask);
+                    }
+                    if (item.MerchantContainer_Property.HasBeenSet)
+                    {
+                        FormIDXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.MerchantContainer),
+                            item: item.MerchantContainer?.FormID,
+                            fieldIndex: (int)PlacedNPC_FieldIndex.MerchantContainer,
+                            errorMask: errorMask);
+                    }
+                    if (item.Horse_Property.HasBeenSet)
+                    {
+                        FormIDXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Horse),
+                            item: item.Horse?.FormID,
+                            fieldIndex: (int)PlacedNPC_FieldIndex.Horse,
                             errorMask: errorMask);
                     }
                     if (item.RagdollData_Property.HasBeenSet)
@@ -2089,7 +2285,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             writer: writer,
                             name: nameof(item.RagdollData),
                             item: item.RagdollData_Property,
-                            fieldIndex: (int)PlacedCreature_FieldIndex.RagdollData,
+                            fieldIndex: (int)PlacedNPC_FieldIndex.RagdollData,
                             errorMask: errorMask);
                     }
                     if (item.Scale_Property.HasBeenSet)
@@ -2098,20 +2294,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             writer: writer,
                             name: nameof(item.Scale),
                             item: item.Scale_Property,
-                            fieldIndex: (int)PlacedCreature_FieldIndex.Scale,
+                            fieldIndex: (int)PlacedNPC_FieldIndex.Scale,
                             errorMask: errorMask);
                     }
                     P3FloatXmlTranslation.Instance.Write(
                         writer: writer,
                         name: nameof(item.Position),
                         item: item.Position_Property,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.Position,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.Position,
                         errorMask: errorMask);
                     P3FloatXmlTranslation.Instance.Write(
                         writer: writer,
                         name: nameof(item.Rotation),
                         item: item.Rotation_Property,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.Rotation,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.Rotation,
                         errorMask: errorMask);
                 }
             }
@@ -2129,31 +2325,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            PlacedCreature item,
+            PlacedNPC item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
-            out PlacedCreature_ErrorMask errorMask)
+            out PlacedNPC_ErrorMask errorMask)
         {
-            PlacedCreature_ErrorMask errMaskRet = null;
+            PlacedNPC_ErrorMask errMaskRet = null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PlacedCreature_ErrorMask()) : default(Func<PlacedCreature_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PlacedNPC_ErrorMask()) : default(Func<PlacedNPC_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            PlacedCreature item,
+            PlacedNPC item,
             RecordTypeConverter recordTypeConverter,
-            Func<PlacedCreature_ErrorMask> errorMask)
+            Func<PlacedNPC_ErrorMask> errorMask)
         {
             try
             {
                 using (HeaderExport.ExportHeader(
                     writer: writer,
-                    record: PlacedCreature_Registration.ACRE_HEADER,
+                    record: PlacedNPC_Registration.ACHR_HEADER,
                     type: ObjectType.Record))
                 {
                     MajorRecordCommon.Write_Binary_Embedded(
@@ -2176,10 +2372,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void Write_Binary_RecordTypes(
-            PlacedCreature item,
+            PlacedNPC item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<PlacedCreature_ErrorMask> errorMask)
+            Func<PlacedNPC_ErrorMask> errorMask)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
@@ -2189,45 +2385,59 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Base_Property,
-                fieldIndex: (int)PlacedCreature_FieldIndex.Base,
+                fieldIndex: (int)PlacedNPC_FieldIndex.Base,
                 errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedCreature_Registration.NAME_HEADER),
+                header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.NAME_HEADER),
                 nullable: false);
-            LoquiBinaryTranslation<Ownership, Ownership_ErrorMask>.Instance.Write(
+            LoquiBinaryTranslation<DistantLODData, DistantLODData_ErrorMask>.Instance.Write(
                 writer: writer,
-                item: item.Ownership_Property,
-                fieldIndex: (int)PlacedCreature_FieldIndex.Ownership,
+                item: item.DistantLODData_Property,
+                fieldIndex: (int)PlacedNPC_FieldIndex.DistantLODData,
                 errorMask: errorMask);
             LoquiBinaryTranslation<EnableParent, EnableParent_ErrorMask>.Instance.Write(
                 writer: writer,
                 item: item.EnableParent_Property,
-                fieldIndex: (int)PlacedCreature_FieldIndex.EnableParent,
+                fieldIndex: (int)PlacedNPC_FieldIndex.EnableParent,
                 errorMask: errorMask);
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.MerchantContainer_Property,
+                fieldIndex: (int)PlacedNPC_FieldIndex.MerchantContainer,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.XMRC_HEADER),
+                nullable: false);
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Horse_Property,
+                fieldIndex: (int)PlacedNPC_FieldIndex.Horse,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.XHRS_HEADER),
+                nullable: false);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RagdollData_Property,
-                fieldIndex: (int)PlacedCreature_FieldIndex.RagdollData,
+                fieldIndex: (int)PlacedNPC_FieldIndex.RagdollData,
                 errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedCreature_Registration.XRGD_HEADER),
+                header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.XRGD_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Scale_Property,
-                fieldIndex: (int)PlacedCreature_FieldIndex.Scale,
+                fieldIndex: (int)PlacedNPC_FieldIndex.Scale,
                 errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedCreature_Registration.XSCL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.XSCL_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, PlacedCreature_Registration.DATA_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, PlacedNPC_Registration.DATA_HEADER))
             {
                 Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Position_Property,
-                    fieldIndex: (int)PlacedCreature_FieldIndex.Position,
+                    fieldIndex: (int)PlacedNPC_FieldIndex.Position,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Rotation_Property,
-                    fieldIndex: (int)PlacedCreature_FieldIndex.Rotation,
+                    fieldIndex: (int)PlacedNPC_FieldIndex.Rotation,
                     errorMask: errorMask);
             }
         }
@@ -2240,18 +2450,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Modules
 
     #region Mask
-    public class PlacedCreature_Mask<T> : Placed_Mask<T>, IMask<T>, IEquatable<PlacedCreature_Mask<T>>
+    public class PlacedNPC_Mask<T> : Placed_Mask<T>, IMask<T>, IEquatable<PlacedNPC_Mask<T>>
     {
         #region Ctors
-        public PlacedCreature_Mask()
+        public PlacedNPC_Mask()
         {
         }
 
-        public PlacedCreature_Mask(T initialValue)
+        public PlacedNPC_Mask(T initialValue)
         {
             this.Base = initialValue;
-            this.Ownership = new MaskItem<T, Ownership_Mask<T>>(initialValue, new Ownership_Mask<T>(initialValue));
+            this.DistantLODData = new MaskItem<T, DistantLODData_Mask<T>>(initialValue, new DistantLODData_Mask<T>(initialValue));
             this.EnableParent = new MaskItem<T, EnableParent_Mask<T>>(initialValue, new EnableParent_Mask<T>(initialValue));
+            this.MerchantContainer = initialValue;
+            this.Horse = initialValue;
             this.RagdollData = initialValue;
             this.Scale = initialValue;
             this.Position = initialValue;
@@ -2261,8 +2473,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Members
         public T Base;
-        public MaskItem<T, Ownership_Mask<T>> Ownership { get; set; }
+        public MaskItem<T, DistantLODData_Mask<T>> DistantLODData { get; set; }
         public MaskItem<T, EnableParent_Mask<T>> EnableParent { get; set; }
+        public T MerchantContainer;
+        public T Horse;
         public T RagdollData;
         public T Scale;
         public T Position;
@@ -2272,17 +2486,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is PlacedCreature_Mask<T> rhs)) return false;
+            if (!(obj is PlacedNPC_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(PlacedCreature_Mask<T> rhs)
+        public bool Equals(PlacedNPC_Mask<T> rhs)
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
             if (!object.Equals(this.Base, rhs.Base)) return false;
-            if (!object.Equals(this.Ownership, rhs.Ownership)) return false;
+            if (!object.Equals(this.DistantLODData, rhs.DistantLODData)) return false;
             if (!object.Equals(this.EnableParent, rhs.EnableParent)) return false;
+            if (!object.Equals(this.MerchantContainer, rhs.MerchantContainer)) return false;
+            if (!object.Equals(this.Horse, rhs.Horse)) return false;
             if (!object.Equals(this.RagdollData, rhs.RagdollData)) return false;
             if (!object.Equals(this.Scale, rhs.Scale)) return false;
             if (!object.Equals(this.Position, rhs.Position)) return false;
@@ -2293,8 +2509,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             int ret = 0;
             ret = ret.CombineHashCode(this.Base?.GetHashCode());
-            ret = ret.CombineHashCode(this.Ownership?.GetHashCode());
+            ret = ret.CombineHashCode(this.DistantLODData?.GetHashCode());
             ret = ret.CombineHashCode(this.EnableParent?.GetHashCode());
+            ret = ret.CombineHashCode(this.MerchantContainer?.GetHashCode());
+            ret = ret.CombineHashCode(this.Horse?.GetHashCode());
             ret = ret.CombineHashCode(this.RagdollData?.GetHashCode());
             ret = ret.CombineHashCode(this.Scale?.GetHashCode());
             ret = ret.CombineHashCode(this.Position?.GetHashCode());
@@ -2310,16 +2528,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (!base.AllEqual(eval)) return false;
             if (!eval(this.Base)) return false;
-            if (Ownership != null)
+            if (DistantLODData != null)
             {
-                if (!eval(this.Ownership.Overall)) return false;
-                if (this.Ownership.Specific != null && !this.Ownership.Specific.AllEqual(eval)) return false;
+                if (!eval(this.DistantLODData.Overall)) return false;
+                if (this.DistantLODData.Specific != null && !this.DistantLODData.Specific.AllEqual(eval)) return false;
             }
             if (EnableParent != null)
             {
                 if (!eval(this.EnableParent.Overall)) return false;
                 if (this.EnableParent.Specific != null && !this.EnableParent.Specific.AllEqual(eval)) return false;
             }
+            if (!eval(this.MerchantContainer)) return false;
+            if (!eval(this.Horse)) return false;
             if (!eval(this.RagdollData)) return false;
             if (!eval(this.Scale)) return false;
             if (!eval(this.Position)) return false;
@@ -2329,24 +2549,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Translate
-        public new PlacedCreature_Mask<R> Translate<R>(Func<T, R> eval)
+        public new PlacedNPC_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new PlacedCreature_Mask<R>();
+            var ret = new PlacedNPC_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(PlacedCreature_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(PlacedNPC_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
             obj.Base = eval(this.Base);
-            if (this.Ownership != null)
+            if (this.DistantLODData != null)
             {
-                obj.Ownership = new MaskItem<R, Ownership_Mask<R>>();
-                obj.Ownership.Overall = eval(this.Ownership.Overall);
-                if (this.Ownership.Specific != null)
+                obj.DistantLODData = new MaskItem<R, DistantLODData_Mask<R>>();
+                obj.DistantLODData.Overall = eval(this.DistantLODData.Overall);
+                if (this.DistantLODData.Specific != null)
                 {
-                    obj.Ownership.Specific = this.Ownership.Specific.Translate(eval);
+                    obj.DistantLODData.Specific = this.DistantLODData.Specific.Translate(eval);
                 }
             }
             if (this.EnableParent != null)
@@ -2358,6 +2578,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.EnableParent.Specific = this.EnableParent.Specific.Translate(eval);
                 }
             }
+            obj.MerchantContainer = eval(this.MerchantContainer);
+            obj.Horse = eval(this.Horse);
             obj.RagdollData = eval(this.RagdollData);
             obj.Scale = eval(this.Scale);
             obj.Position = eval(this.Position);
@@ -2378,16 +2600,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(PlacedCreature_Mask<bool> printMask = null)
+        public string ToString(PlacedNPC_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, PlacedCreature_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, PlacedNPC_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(PlacedCreature_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(PlacedNPC_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -2395,13 +2617,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Base => {Base}");
                 }
-                if (printMask?.Ownership?.Overall ?? true)
+                if (printMask?.DistantLODData?.Overall ?? true)
                 {
-                    Ownership?.ToString(fg);
+                    DistantLODData?.ToString(fg);
                 }
                 if (printMask?.EnableParent?.Overall ?? true)
                 {
                     EnableParent?.ToString(fg);
+                }
+                if (printMask?.MerchantContainer ?? true)
+                {
+                    fg.AppendLine($"MerchantContainer => {MerchantContainer}");
+                }
+                if (printMask?.Horse ?? true)
+                {
+                    fg.AppendLine($"Horse => {Horse}");
                 }
                 if (printMask?.RagdollData ?? true)
                 {
@@ -2426,12 +2656,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class PlacedCreature_ErrorMask : Placed_ErrorMask, IErrorMask<PlacedCreature_ErrorMask>
+    public class PlacedNPC_ErrorMask : Placed_ErrorMask, IErrorMask<PlacedNPC_ErrorMask>
     {
         #region Members
         public Exception Base;
-        public MaskItem<Exception, Ownership_ErrorMask> Ownership;
+        public MaskItem<Exception, DistantLODData_ErrorMask> DistantLODData;
         public MaskItem<Exception, EnableParent_ErrorMask> EnableParent;
+        public Exception MerchantContainer;
+        public Exception Horse;
         public Exception RagdollData;
         public Exception Scale;
         public Exception Position;
@@ -2441,28 +2673,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region IErrorMask
         public override void SetNthException(int index, Exception ex)
         {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
+            PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
             switch (enu)
             {
-                case PlacedCreature_FieldIndex.Base:
+                case PlacedNPC_FieldIndex.Base:
                     this.Base = ex;
                     break;
-                case PlacedCreature_FieldIndex.Ownership:
-                    this.Ownership = new MaskItem<Exception, Ownership_ErrorMask>(ex, null);
+                case PlacedNPC_FieldIndex.DistantLODData:
+                    this.DistantLODData = new MaskItem<Exception, DistantLODData_ErrorMask>(ex, null);
                     break;
-                case PlacedCreature_FieldIndex.EnableParent:
+                case PlacedNPC_FieldIndex.EnableParent:
                     this.EnableParent = new MaskItem<Exception, EnableParent_ErrorMask>(ex, null);
                     break;
-                case PlacedCreature_FieldIndex.RagdollData:
+                case PlacedNPC_FieldIndex.MerchantContainer:
+                    this.MerchantContainer = ex;
+                    break;
+                case PlacedNPC_FieldIndex.Horse:
+                    this.Horse = ex;
+                    break;
+                case PlacedNPC_FieldIndex.RagdollData:
                     this.RagdollData = ex;
                     break;
-                case PlacedCreature_FieldIndex.Scale:
+                case PlacedNPC_FieldIndex.Scale:
                     this.Scale = ex;
                     break;
-                case PlacedCreature_FieldIndex.Position:
+                case PlacedNPC_FieldIndex.Position:
                     this.Position = ex;
                     break;
-                case PlacedCreature_FieldIndex.Rotation:
+                case PlacedNPC_FieldIndex.Rotation:
                     this.Rotation = ex;
                     break;
                 default:
@@ -2473,28 +2711,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void SetNthMask(int index, object obj)
         {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
+            PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
             switch (enu)
             {
-                case PlacedCreature_FieldIndex.Base:
+                case PlacedNPC_FieldIndex.Base:
                     this.Base = (Exception)obj;
                     break;
-                case PlacedCreature_FieldIndex.Ownership:
-                    this.Ownership = (MaskItem<Exception, Ownership_ErrorMask>)obj;
+                case PlacedNPC_FieldIndex.DistantLODData:
+                    this.DistantLODData = (MaskItem<Exception, DistantLODData_ErrorMask>)obj;
                     break;
-                case PlacedCreature_FieldIndex.EnableParent:
+                case PlacedNPC_FieldIndex.EnableParent:
                     this.EnableParent = (MaskItem<Exception, EnableParent_ErrorMask>)obj;
                     break;
-                case PlacedCreature_FieldIndex.RagdollData:
+                case PlacedNPC_FieldIndex.MerchantContainer:
+                    this.MerchantContainer = (Exception)obj;
+                    break;
+                case PlacedNPC_FieldIndex.Horse:
+                    this.Horse = (Exception)obj;
+                    break;
+                case PlacedNPC_FieldIndex.RagdollData:
                     this.RagdollData = (Exception)obj;
                     break;
-                case PlacedCreature_FieldIndex.Scale:
+                case PlacedNPC_FieldIndex.Scale:
                     this.Scale = (Exception)obj;
                     break;
-                case PlacedCreature_FieldIndex.Position:
+                case PlacedNPC_FieldIndex.Position:
                     this.Position = (Exception)obj;
                     break;
-                case PlacedCreature_FieldIndex.Rotation:
+                case PlacedNPC_FieldIndex.Rotation:
                     this.Rotation = (Exception)obj;
                     break;
                 default:
@@ -2507,8 +2751,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (Overall != null) return true;
             if (Base != null) return true;
-            if (Ownership != null) return true;
+            if (DistantLODData != null) return true;
             if (EnableParent != null) return true;
+            if (MerchantContainer != null) return true;
+            if (Horse != null) return true;
             if (RagdollData != null) return true;
             if (Scale != null) return true;
             if (Position != null) return true;
@@ -2527,7 +2773,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void ToString(FileGeneration fg)
         {
-            fg.AppendLine("PlacedCreature_ErrorMask =>");
+            fg.AppendLine("PlacedNPC_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -2549,8 +2795,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             base.ToString_FillInternal(fg);
             fg.AppendLine($"Base => {Base}");
-            Ownership?.ToString(fg);
+            DistantLODData?.ToString(fg);
             EnableParent?.ToString(fg);
+            fg.AppendLine($"MerchantContainer => {MerchantContainer}");
+            fg.AppendLine($"Horse => {Horse}");
             fg.AppendLine($"RagdollData => {RagdollData}");
             fg.AppendLine($"Scale => {Scale}");
             fg.AppendLine($"Position => {Position}");
@@ -2559,19 +2807,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public PlacedCreature_ErrorMask Combine(PlacedCreature_ErrorMask rhs)
+        public PlacedNPC_ErrorMask Combine(PlacedNPC_ErrorMask rhs)
         {
-            var ret = new PlacedCreature_ErrorMask();
+            var ret = new PlacedNPC_ErrorMask();
             ret.Base = this.Base.Combine(rhs.Base);
-            ret.Ownership = new MaskItem<Exception, Ownership_ErrorMask>(this.Ownership.Overall.Combine(rhs.Ownership.Overall), ((IErrorMask<Ownership_ErrorMask>)this.Ownership.Specific).Combine(rhs.Ownership.Specific));
+            ret.DistantLODData = new MaskItem<Exception, DistantLODData_ErrorMask>(this.DistantLODData.Overall.Combine(rhs.DistantLODData.Overall), ((IErrorMask<DistantLODData_ErrorMask>)this.DistantLODData.Specific).Combine(rhs.DistantLODData.Specific));
             ret.EnableParent = new MaskItem<Exception, EnableParent_ErrorMask>(this.EnableParent.Overall.Combine(rhs.EnableParent.Overall), ((IErrorMask<EnableParent_ErrorMask>)this.EnableParent.Specific).Combine(rhs.EnableParent.Specific));
+            ret.MerchantContainer = this.MerchantContainer.Combine(rhs.MerchantContainer);
+            ret.Horse = this.Horse.Combine(rhs.Horse);
             ret.RagdollData = this.RagdollData.Combine(rhs.RagdollData);
             ret.Scale = this.Scale.Combine(rhs.Scale);
             ret.Position = this.Position.Combine(rhs.Position);
             ret.Rotation = this.Rotation.Combine(rhs.Rotation);
             return ret;
         }
-        public static PlacedCreature_ErrorMask Combine(PlacedCreature_ErrorMask lhs, PlacedCreature_ErrorMask rhs)
+        public static PlacedNPC_ErrorMask Combine(PlacedNPC_ErrorMask lhs, PlacedNPC_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -2579,12 +2829,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class PlacedCreature_CopyMask : Placed_CopyMask
+    public class PlacedNPC_CopyMask : Placed_CopyMask
     {
         #region Members
         public bool Base;
-        public MaskItem<CopyOption, Ownership_CopyMask> Ownership;
+        public MaskItem<CopyOption, DistantLODData_CopyMask> DistantLODData;
         public MaskItem<CopyOption, EnableParent_CopyMask> EnableParent;
+        public bool MerchantContainer;
+        public bool Horse;
         public bool RagdollData;
         public bool Scale;
         public bool Position;
