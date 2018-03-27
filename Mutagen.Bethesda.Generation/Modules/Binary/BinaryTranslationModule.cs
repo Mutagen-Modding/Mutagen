@@ -972,6 +972,10 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"item: item");
                         args.Add($"writer: writer");
+                        if (obj.GetObjectType() == ObjectType.Mod)
+                        {
+                            args.Add($"importMask: importMask");
+                        }
                         args.Add($"recordTypeConverter: recordTypeConverter");
                         args.Add($"errorMask: errorMask");
                     }
@@ -1065,6 +1069,10 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"{obj.ObjectName} item");
                     args.Add("MutagenWriter writer");
+                    if (obj.GetObjectType() == ObjectType.Mod)
+                    {
+                        args.Add($"GroupMask importMask");
+                    }
                     args.Add("RecordTypeConverter recordTypeConverter");
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
                 }
@@ -1172,14 +1180,25 @@ namespace Mutagen.Bethesda.Generation
                         else
                         {
                             if (!generator.ShouldGenerateWrite(field)) continue;
-                            generator.GenerateWrite(
-                                fg: fg,
-                                objGen: obj,
-                                typeGen: field,
-                                writerAccessor: "writer",
-                                itemAccessor: new Accessor(field, "item."),
-                                doMaskAccessor: "errorMask != null",
-                                maskAccessor: $"errorMask");
+                            bool modGroup = false;
+                            if (field is LoquiType loqui
+                                && loqui.TargetObjectGeneration?.GetObjectType() == ObjectType.Group
+                                && obj.GetObjectType() == ObjectType.Mod)
+                            {
+                                modGroup = true;
+                                fg.AppendLine($"if (importMask.{field.Name})");
+                            }
+                            using (new BraceWrapper(fg, doIt: modGroup))
+                            {
+                                generator.GenerateWrite(
+                                    fg: fg,
+                                    objGen: obj,
+                                    typeGen: field,
+                                    writerAccessor: "writer",
+                                    itemAccessor: new Accessor(field, "item."),
+                                    doMaskAccessor: "errorMask != null",
+                                    maskAccessor: $"errorMask");
+                            }
                         }
                     }
                 }

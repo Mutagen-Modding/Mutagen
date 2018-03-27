@@ -351,6 +351,64 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
+        [Fact]
+        public async Task OblivionESM_GroupMask_Import()
+        {
+            var mod = OblivionMod.Create_Binary(
+                Properties.Settings.Default.OblivionESM,
+                out var inputErrMask,
+                importMask: new GroupMask()
+                {
+                    NPCs = true
+                });
+            Assert.False(inputErrMask?.IsInError() ?? false);
+
+            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary_GroupMask_Import"))))
+            {
+                var oblivionOutputPath = Path.Combine(tmp.Dir.FullName, Constants.OBLIVION_ESM);
+                mod.Write_Binary(
+                    oblivionOutputPath,
+                    out var outputErrMask);
+                Assert.False(outputErrMask?.IsInError() ?? false);
+                foreach (var rec in MajorRecordIterator.GetFileLocations(oblivionOutputPath))
+                {
+                    if (!rec.Type.Equals(NPC_Registration.NPC__HEADER))
+                    {
+                        throw new ArgumentException("Exported a non-NPC record.");
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        public async Task OblivionESM_GroupMask_Export()
+        {
+            var mod = OblivionMod.Create_Binary(
+                Properties.Settings.Default.OblivionESM,
+                out var inputErrMask);
+            Assert.False(inputErrMask?.IsInError() ?? false);
+
+            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary_GroupMask_Export"))))
+            {
+                var oblivionOutputPath = Path.Combine(tmp.Dir.FullName, Constants.OBLIVION_ESM);
+                mod.Write_Binary(
+                    oblivionOutputPath,
+                    out var outputErrMask,
+                    importMask: new GroupMask()
+                    {
+                        NPCs = true
+                    });
+                Assert.False(outputErrMask?.IsInError() ?? false);
+                foreach (var rec in MajorRecordIterator.GetFileLocations(oblivionOutputPath))
+                {
+                    if (!rec.Type.Equals(NPC_Registration.NPC__HEADER))
+                    {
+                        throw new ArgumentException("Exported a non-NPC record.");
+                    }
+                }
+            }
+        }
+
         private void CopyOverOffendingRecords(
             OblivionMod mod,
             IEnumerable<(FileSection Source, FileSection? Output)> sections,
