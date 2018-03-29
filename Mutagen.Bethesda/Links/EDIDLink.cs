@@ -85,9 +85,10 @@ namespace Mutagen.Bethesda
         {
             if (TryLinkToMod(link, sourceMod, cmds)) return true;
             if (modList == null) return false;
-            foreach (var mod in modList)
+            foreach (var listing in modList)
             {
-                if (TryLinkToMod(link, mod, cmds)) return true;
+                if (!listing.Loaded) return false;
+                if (TryLinkToMod(link, listing.Mod, cmds)) return true;
             }
             return false;
         }

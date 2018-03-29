@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Generation
                     new MethodAPI(
                         majorAPI: new APILine[] { "Stream stream" },
                         customAPI: null,
-                        optionalAPI: new APILine[] { new APILine((obj) => TryGet<string>.Create(successful: obj.GetObjectType() == ObjectType.Mod, val: "GroupMask importMask= null")) }))
+                        optionalAPI: new APILine[] { new APILine((obj) => TryGet<string>.Create(successful: obj.GetObjectType() == ObjectType.Mod, val: "GroupMask importMask = null")) }))
                 {
                     Funnel = new TranslationFunnel(
                         this.MainAPI,

@@ -53,12 +53,9 @@ namespace Mutagen.Bethesda
             M mod;
             if (modList != null && unlinkedForm.Value.ModID != new ModID(0))
             {
-                if (!sourceMod.MasterReferences.TryGet(unlinkedForm.Value.ModID.ID, out var masterRef))
-                {
-                    item = default(T);
-                    return false;
-                }
-                if (!modList.TryGetModByName(masterRef.Master, out var modListing))
+                if (!sourceMod.MasterReferences.TryGet(unlinkedForm.Value.ModID.ID, out var masterRef)
+                    || !ModKey.TryFactory(masterRef.Master, out var modKey)
+                    || !modList.TryGetMod(modKey, out var modListing))
                 {
                     item = default(T);
                     return false;

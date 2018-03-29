@@ -2047,7 +2047,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static OblivionMod Create_Binary(
             Stream stream,
-            GroupMask importMask= null)
+            GroupMask importMask = null)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -2061,7 +2061,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static OblivionMod Create_Binary(
             Stream stream,
             out OblivionMod_ErrorMask errorMask,
-            GroupMask importMask= null)
+            GroupMask importMask = null)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -2105,7 +2105,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void Write_Binary(
             Stream stream,
             out OblivionMod_ErrorMask errorMask,
-            GroupMask importMask= null)
+            GroupMask importMask = null)
         {
             using (var writer = new MutagenWriter(stream))
             {
@@ -2141,7 +2141,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Write_Binary(
             Stream stream,
-            GroupMask importMask= null)
+            GroupMask importMask = null)
         {
             using (var writer = new MutagenWriter(stream))
             {
