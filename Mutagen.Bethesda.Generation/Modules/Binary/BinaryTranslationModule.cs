@@ -76,15 +76,25 @@ namespace Mutagen.Bethesda.Generation
             this._typeGenerations[typeof(CustomLogic)] = new CustomLogicTranslationGeneration();
             this.MainAPI = new TranslationModuleAPI(
                 writerAPI: new MethodAPI(
-                    majorAPI: new string[] { "MutagenWriter writer" },
-                    optionalAPI: null,
-                    customAPI: new CustomMethodAPI[] { CustomMethodAPI.Private($"{nameof(RecordTypeConverter)} recordTypeConverter", "null") }),
+                    majorAPI: new APILine[] { "MutagenWriter writer" },
+                    optionalAPI: new APILine[] { new APILine((obj) => TryGet<string>.Create(successful: obj.GetObjectType() == ObjectType.Mod, val: "GroupMask importMask = null")) },
+                    customAPI: new CustomMethodAPI[]
+                    {
+                        CustomMethodAPI.Private($"{nameof(RecordTypeConverter)} recordTypeConverter", "null")
+                    }),
                 readerAPI: new MethodAPI(
-                    majorAPI: new string[] { "MutagenFrame frame" },
-                    optionalAPI: null,
-                    customAPI: new CustomMethodAPI[] { CustomMethodAPI.Private($"{nameof(RecordTypeConverter)} recordTypeConverter", "null") }));
+                    majorAPI: new APILine[] { "MutagenFrame frame" },
+                    optionalAPI: new APILine[] { new APILine((obj) => TryGet<string>.Create(successful: obj.GetObjectType() == ObjectType.Mod, val: "GroupMask importMask = null")) },
+                    customAPI: new CustomMethodAPI[]
+                    {
+                        CustomMethodAPI.Private($"{nameof(RecordTypeConverter)} recordTypeConverter", "null")
+                    }));
             this.MinorAPIs.Add(
-                new TranslationModuleAPI(new MethodAPI("string path"))
+                new TranslationModuleAPI(
+                    new MethodAPI(
+                        majorAPI: new APILine[] { "string path" },
+                        customAPI: null,
+                        optionalAPI: new APILine[] { new APILine((obj) => TryGet<string>.Create(successful: obj.GetObjectType() == ObjectType.Mod, val: "GroupMask importMask = null")) }))
                 {
                     Funnel = new TranslationFunnel(
                         this.MainAPI,
@@ -92,7 +102,11 @@ namespace Mutagen.Bethesda.Generation
                         ConvertFromPathIn)
                 });
             this.MinorAPIs.Add(
-                new TranslationModuleAPI(new MethodAPI("Stream stream"))
+                new TranslationModuleAPI(
+                    new MethodAPI(
+                        majorAPI: new APILine[] { "Stream stream" },
+                        customAPI: null,
+                        optionalAPI: new APILine[] { new APILine((obj) => TryGet<string>.Create(successful: obj.GetObjectType() == ObjectType.Mod, val: "GroupMask importMask = null")) }))
                 {
                     Funnel = new TranslationFunnel(
                         this.MainAPI,
@@ -120,22 +134,22 @@ namespace Mutagen.Bethesda.Generation
             yield break;
         }
 
-        private void ConvertFromStreamOut(FileGeneration fg, InternalTranslation internalToDo)
+        private void ConvertFromStreamOut(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
             fg.AppendLine("using (var writer = new MutagenWriter(stream))");
             using (new BraceWrapper(fg))
             {
-                internalToDo("writer");
+                internalToDo(this.MainAPI.WriterMemberNames(obj));
             }
         }
 
-        private void ConvertFromStreamIn(FileGeneration fg, InternalTranslation internalToDo)
+        private void ConvertFromStreamIn(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
             fg.AppendLine("using (var reader = new MutagenReader(stream))");
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("var frame = new MutagenFrame(reader);");
-                internalToDo("frame");
+                internalToDo(this.MainAPI.ReaderMemberNames(obj));
             }
         }
 
@@ -201,6 +215,10 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add("MutagenFrame frame");
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
+                    if (obj.GetObjectType() == ObjectType.Mod)
+                    {
+                        args.Add($"GroupMask importMask");
+                    }
                     args.Add($"{nameof(RecordTypeConverter)} recordTypeConverter");
                 }
                 using (new BraceWrapper(fg))
@@ -332,6 +350,10 @@ namespace Mutagen.Bethesda.Generation
                                             {
                                                 args.Add("lastParsed: lastParsed");
                                             }
+                                            if (obj.GetObjectType() == ObjectType.Mod)
+                                            {
+                                                args.Add("importMask: importMask");
+                                            }
                                             args.Add("errorMask: errorMask");
                                             args.Add($"recordTypeConverter: recordTypeConverter");
                                         }
@@ -345,6 +367,7 @@ namespace Mutagen.Bethesda.Generation
                             }
                             GenerateDataStateSubscriptions(obj, fg);
                             GenerateStructStateSubscriptions(obj, fg);
+                            GenerateModLinking(obj, fg);
                             if (data.CustomBinaryEnd)
                             {
                                 using (var args = new ArgsWrapper(fg,
@@ -425,6 +448,10 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"{obj.FieldIndexName}? lastParsed");
                     }
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
+                    if (data.ObjectType == ObjectType.Mod)
+                    {
+                        args.Add($"GroupMask importMask");
+                    }
                     args.Add($"{nameof(RecordTypeConverter)} recordTypeConverter = null");
                 }
                 using (new BraceWrapper(fg))
@@ -474,10 +501,8 @@ namespace Mutagen.Bethesda.Generation
                             var dataSet = field.Field as DataType;
                             foreach (var gen in fieldData.GenerationTypes)
                             {
-                                if (gen.Value is LoquiType loqui)
-                                {
-                                    if (loqui.TargetObjectGeneration?.Abstract ?? false) continue;
-                                }
+                                LoquiType loqui = gen.Value as LoquiType;
+                                if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
                                 foreach (var trigger in gen.Key)
                                 {
                                     fg.AppendLine($"case \"{trigger.Type}\":");
@@ -510,7 +535,23 @@ namespace Mutagen.Bethesda.Generation
                                         }
                                     }
 
-                                    GenerateFillSnippet(obj, fg, gen.Value, generator, "frame");
+                                    var groupMask = data.ObjectType == ObjectType.Mod && (loqui?.TargetObjectGeneration?.GetObjectType() == ObjectType.Group);
+                                    if (groupMask)
+                                    {
+                                        fg.AppendLine($"if (importMask?.{field.Field.Name} ?? true)");
+                                    }
+                                    using (new BraceWrapper(fg, doIt: groupMask))
+                                    {
+                                        GenerateFillSnippet(obj, fg, gen.Value, generator, "frame");
+                                    }
+                                    if (groupMask)
+                                    {
+                                        fg.AppendLine("else");
+                                        using (new BraceWrapper(fg))
+                                        {
+                                            fg.AppendLine("frame.Position += contentLength;");
+                                        }
+                                    }
                                     if (dataSet != null)
                                     {
                                         fg.AppendLine($"return TryGet<{obj.FieldIndexName}?>.Succeed({dataSet.SubFields.Last(f => f.IntegrateField).IndexEnumName});");
@@ -711,6 +752,17 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
+        private void GenerateModLinking(ObjectGeneration obj, FileGeneration fg)
+        {
+            if (obj.GetObjectType() != ObjectType.Mod) return;
+            fg.AppendLine("foreach (var link in ret.Links)");
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine($"link.Link(modList: null, sourceMod: ret);");
+            }
+
+        }
+
         private void GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator, string frameAccessor)
         {
             if (field is DataType set)
@@ -786,22 +838,22 @@ namespace Mutagen.Bethesda.Generation
                 maskAccessor: $"errorMask");
         }
 
-        private void ConvertFromPathOut(FileGeneration fg, InternalTranslation internalToDo)
+        private void ConvertFromPathOut(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
             fg.AppendLine("using (var writer = new MutagenWriter(path))");
             using (new BraceWrapper(fg))
             {
-                internalToDo("writer");
+                internalToDo(this.MainAPI.WriterMemberNames(obj));
             }
         }
 
-        private void ConvertFromPathIn(FileGeneration fg, InternalTranslation internalToDo)
+        private void ConvertFromPathIn(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
             fg.AppendLine("using (var reader = new MutagenReader(path))");
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("var frame = new MutagenFrame(reader);");
-                internalToDo("frame");
+                internalToDo(this.MainAPI.ReaderMemberNames(obj));
             }
         }
 
@@ -811,7 +863,7 @@ namespace Mutagen.Bethesda.Generation
                 $"LoquiBinaryTranslation<{obj.ObjectName}, {(usingErrorMask ? obj.Mask(MaskType.Error) : obj.Mask_GenericAssumed(MaskType.Error))}>.Instance.CopyIn"))
             using (new DepthWrapper(fg))
             {
-                foreach (var item in this.MainAPI.ReaderPassArgs)
+                foreach (var item in this.MainAPI.ReaderPassArgs(obj))
                 {
                     args.Add(item);
                 }
@@ -838,6 +890,10 @@ namespace Mutagen.Bethesda.Generation
                 $"var ret = Create_{ModuleNickname}_Internal"))
             {
                 args.Add("frame: frame");
+                if (obj.GetObjectType() == ObjectType.Mod)
+                {
+                    args.Add("importMask: importMask");
+                }
                 args.Add($"errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new {obj.Mask(MaskType.Error)}()) : default(Func<{obj.Mask(MaskType.Error)}>)");
                 args.Add($"recordTypeConverter: recordTypeConverter");
             }
@@ -892,6 +948,10 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"item: item");
                         args.Add($"writer: writer");
+                        if (obj.GetObjectType() == ObjectType.Mod)
+                        {
+                            args.Add($"importMask: importMask");
+                        }
                         args.Add($"recordTypeConverter: recordTypeConverter");
                         args.Add($"errorMask: errorMask");
                     }
@@ -982,6 +1042,10 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"{obj.ObjectName} item");
                     args.Add("MutagenWriter writer");
+                    if (obj.GetObjectType() == ObjectType.Mod)
+                    {
+                        args.Add($"GroupMask importMask");
+                    }
                     args.Add("RecordTypeConverter recordTypeConverter");
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
                 }
@@ -1087,14 +1151,25 @@ namespace Mutagen.Bethesda.Generation
                         {
                             if (!generator.ShouldGenerateWrite(field)) continue;
                             if (data.NoBinary) continue;
-                            generator.GenerateWrite(
-                                fg: fg,
-                                objGen: obj,
-                                typeGen: field,
-                                writerAccessor: "writer",
-                                itemAccessor: new Accessor(field, "item."),
-                                doMaskAccessor: "errorMask != null",
-                                maskAccessor: $"errorMask");
+                            bool modGroup = false;
+                            if (field is LoquiType loqui
+                                && loqui.TargetObjectGeneration?.GetObjectType() == ObjectType.Group
+                                && obj.GetObjectType() == ObjectType.Mod)
+                            {
+                                modGroup = true;
+                                fg.AppendLine($"if (importMask.{field.Name})");
+                            }
+                            using (new BraceWrapper(fg, doIt: modGroup))
+                            {
+                                generator.GenerateWrite(
+                                    fg: fg,
+                                    objGen: obj,
+                                    typeGen: field,
+                                    writerAccessor: "writer",
+                                    itemAccessor: new Accessor(field, "item."),
+                                    doMaskAccessor: "errorMask != null",
+                                    maskAccessor: $"errorMask");
+                            }
                         }
                     }
                 }

@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda
     }
 
     [DebuggerDisplay("{GetType().Name} {this.EditorID?.ToString()} {this.FormID.ToString()}")]
-    public partial class MajorRecord
+    public partial class MajorRecord : ILinkContainer
     {
         [Flags]
         public enum MajorRecordFlag
@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public string TitleString => $"{this.EditorID} - {this.FormID.IDString()}";
-        
+
         public static void Fill_Binary(
             MutagenFrame frame,
             MajorRecord record,

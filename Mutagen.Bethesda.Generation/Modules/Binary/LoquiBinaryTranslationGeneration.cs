@@ -32,25 +32,33 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER, ObjectType.Subrecord)) {{ }}");
             }
-            using (var args = new ArgsWrapper(fg,
-                $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.Mask(MaskType.Error)}>.Instance.Write"))
+            bool isGroup = loquiGen.TargetObjectGeneration.GetObjectData().ObjectType == ObjectType.Group;
+            if (isGroup)
             {
-                args.Add($"writer: {writerAccessor}");
-                args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
-                if (loquiGen.HasIndex)
+                fg.AppendLine($"if ({itemAccessor.PropertyOrDirectAccess}.Items.Count > 0)");
+            }
+            using (new BraceWrapper(fg, doIt: isGroup))
+            {
+                using (var args = new ArgsWrapper(fg,
+                $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.Mask(MaskType.Error)}>.Instance.Write"))
                 {
-                    args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                    args.Add($"errorMask: {maskAccessor}");
-                }
-                else
-                {
-                    args.Add($"doMasks: {doMaskAccessor}");
-                    args.Add($"errorMask: out {maskAccessor}");
-                }
-                if (data?.RecordTypeConverter != null
-                    && data.RecordTypeConverter.FromConversions.Count > 0)
-                {
-                    args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
+                    args.Add($"writer: {writerAccessor}");
+                    args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
+                    if (loquiGen.HasIndex)
+                    {
+                        args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
+                        args.Add($"errorMask: {maskAccessor}");
+                    }
+                    else
+                    {
+                        args.Add($"doMasks: {doMaskAccessor}");
+                        args.Add($"errorMask: out {maskAccessor}");
+                    }
+                    if (data?.RecordTypeConverter != null
+                        && data.RecordTypeConverter.FromConversions.Count > 0)
+                    {
+                        args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
+                    }
                 }
             }
         }

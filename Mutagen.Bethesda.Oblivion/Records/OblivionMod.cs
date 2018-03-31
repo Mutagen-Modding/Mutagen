@@ -9,7 +9,7 @@ using Noggog.Notifying;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class OblivionMod : IMod
+    public partial class OblivionMod : IMod, ILinkContainer
     {
         public INotifyingListGetter<MasterReference> MasterReferences => this.TES4.MasterReferences;
 
@@ -20,11 +20,6 @@ namespace Mutagen.Bethesda.Oblivion
                 new RecordType("WRLD"),
                 new RecordType("DIAL"),
             });
-
-        public bool TryGetRecord<T>(uint id, out T record)
-        {
-            throw new NotImplementedException();
-        }
 
         //static partial void FillBinary_Cells_Custom(MutagenFrame frame, OblivionMod item, int fieldIndex, Func<OblivionMod_ErrorMask> errorMask)
         //{

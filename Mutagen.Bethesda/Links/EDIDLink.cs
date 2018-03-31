@@ -56,5 +56,50 @@ namespace Mutagen.Bethesda
             if (!item.Succeeded) return;
             this.EDID = new RecordType(item.Value);
         }
+
+        private static bool TryLinkToMod<M>(
+            IEDIDLink<T> link,
+            M mod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod
+        {
+            if (string.IsNullOrWhiteSpace(link.EDID.Type)) return false;
+            var group = mod.GetGroup<T>();
+            foreach (var rec in group.Values)
+            {
+                if (link.EDID.Type.Equals(rec.EditorID))
+                {
+                    link.Set(rec, cmds);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static bool TryLink<M>(
+            IEDIDLink<T> link,
+            ModList<M> modList, 
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod
+        {
+            if (TryLinkToMod(link, sourceMod, cmds)) return true;
+            if (modList == null) return false;
+            foreach (var listing in modList)
+            {
+                if (!listing.Loaded) return false;
+                if (TryLinkToMod(link, listing.Mod, cmds)) return true;
+            }
+            return false;
+        }
+
+        public override bool Link<M>(ModList<M> modList, M sourceMod, NotifyingFireParameters cmds = null)
+        {
+            if (this.UnlinkedForm.HasValue)
+            {
+                return base.Link(modList, sourceMod, cmds);
+            }
+            return TryLink(this, modList, sourceMod, cmds);
+        }
     }
 }

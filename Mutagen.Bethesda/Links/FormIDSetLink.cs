@@ -46,6 +46,25 @@ namespace Mutagen.Bethesda
             this.HasBeenSet = true;
         }
 
+        public virtual bool Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod
+        {
+            if (!FormIDLink<T>.TryGetLink(
+                this.UnlinkedForm,
+                modList,
+                sourceMod,
+                out var item))
+            {
+                this.Unset(cmds.ToUnsetParams());
+                return false;
+            }
+            this.Set(item, cmds);
+            return true;
+        }
+
         public static bool operator ==(FormIDSetLink<T> lhs, IFormIDLink<T> rhs)
         {
             return lhs.FormID.Equals(rhs.FormID);

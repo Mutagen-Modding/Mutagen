@@ -339,104 +339,6 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region XML Translation
-        #region XML Copy In
-        public override void CopyIn_XML(
-            XElement root,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiXmlTranslation<ClothingAbstract, ClothingAbstract_ErrorMask>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void CopyIn_XML(
-            XElement root,
-            out ClothingAbstract_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiXmlTranslation<ClothingAbstract, ClothingAbstract_ErrorMask>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            string path,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
-                root: root,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            string path,
-            out ClothingAbstract_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            Stream stream,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
-                root: root,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            Stream stream,
-            out ClothingAbstract_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out errorMask,
-                cmds: cmds);
-        }
-
-        public override void CopyIn_XML(
-            XElement root,
-            out NamedMajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out ClothingAbstract_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        public override void CopyIn_XML(
-            XElement root,
-            out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out ClothingAbstract_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        #endregion
-
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
@@ -487,9 +389,10 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ClothingAbstractCommon.Write_XML(
-                writer: writer,
                 item: this,
                 doMasks: doMasks,
+                writer: writer,
+                name: name,
                 errorMask: out var errorMask);
             return errorMask;
         }
@@ -583,117 +486,21 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Copy In
-        public override void CopyIn_Binary(
-            MutagenFrame frame,
-            NotifyingFireParameters cmds = null)
+        #region Mutagen
+        public override IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
         {
-            LoquiBinaryTranslation<ClothingAbstract, ClothingAbstract_ErrorMask>.Instance.CopyIn(
-                frame: frame,
-                item: this,
-                skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void CopyIn_Binary(
-            MutagenFrame frame,
-            out ClothingAbstract_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiBinaryTranslation<ClothingAbstract, ClothingAbstract_ErrorMask>.Instance.CopyIn(
-                frame: frame,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_Binary(
-            string path,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(path))
+            foreach (var item in base.Links)
             {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    cmds: cmds);
+                yield return item;
             }
+            yield return Script_Property;
+            yield return Enchantment_Property;
+            yield break;
         }
-
-        public void CopyIn_Binary(
-            string path,
-            out ClothingAbstract_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(path))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    errorMask: out errorMask,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary(
-            Stream stream,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary(
-            Stream stream,
-            out ClothingAbstract_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    errorMask: out errorMask,
-                    cmds: cmds);
-            }
-        }
-
-        public override void CopyIn_Binary(
-            MutagenFrame frame,
-            out NamedMajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_Binary(
-                frame: frame,
-                errorMask: out ClothingAbstract_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        public override void CopyIn_Binary(
-            MutagenFrame frame,
-            out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_Binary(
-                frame: frame,
-                errorMask: out ClothingAbstract_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
         #endregion
 
+        #region Binary Translation
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
@@ -735,9 +542,9 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks)
         {
             ClothingAbstractCommon.Write_Binary(
-                writer: writer,
                 item: this,
                 doMasks: doMasks,
+                writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: out var errorMask);
             return errorMask;
@@ -2091,11 +1898,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (printMask?.Script ?? true)
                 {
-                    fg.AppendLine($"Script => {item.Script}");
+                    fg.AppendLine($"Script => {item.Script_Property}");
                 }
                 if (printMask?.Enchantment ?? true)
                 {
-                    fg.AppendLine($"Enchantment => {item.Enchantment}");
+                    fg.AppendLine($"Enchantment => {item.Enchantment_Property}");
                 }
                 if (printMask?.EnchantmentPoints ?? true)
                 {
@@ -2145,14 +1952,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Enchantment.HasValue && checkMask.Enchantment.Value != item.Enchantment_Property.HasBeenSet) return false;
             if (checkMask.EnchantmentPoints.HasValue && checkMask.EnchantmentPoints.Value != item.EnchantmentPoints_Property.HasBeenSet) return false;
             if (checkMask.MaleBipedModel.Overall.HasValue && checkMask.MaleBipedModel.Overall.Value != item.MaleBipedModel_Property.HasBeenSet) return false;
-            if (checkMask.MaleBipedModel.Specific != null && (item.MaleBipedModel_Property.Item == null || !item.MaleBipedModel_Property.Item.HasBeenSet(checkMask.MaleBipedModel.Specific))) return false;
+            if (checkMask.MaleBipedModel.Specific != null && (item.MaleBipedModel == null || !item.MaleBipedModel.HasBeenSet(checkMask.MaleBipedModel.Specific))) return false;
             if (checkMask.MaleWorldModel.Overall.HasValue && checkMask.MaleWorldModel.Overall.Value != item.MaleWorldModel_Property.HasBeenSet) return false;
-            if (checkMask.MaleWorldModel.Specific != null && (item.MaleWorldModel_Property.Item == null || !item.MaleWorldModel_Property.Item.HasBeenSet(checkMask.MaleWorldModel.Specific))) return false;
+            if (checkMask.MaleWorldModel.Specific != null && (item.MaleWorldModel == null || !item.MaleWorldModel.HasBeenSet(checkMask.MaleWorldModel.Specific))) return false;
             if (checkMask.MaleIcon.HasValue && checkMask.MaleIcon.Value != item.MaleIcon_Property.HasBeenSet) return false;
             if (checkMask.FemaleBipedModel.Overall.HasValue && checkMask.FemaleBipedModel.Overall.Value != item.FemaleBipedModel_Property.HasBeenSet) return false;
-            if (checkMask.FemaleBipedModel.Specific != null && (item.FemaleBipedModel_Property.Item == null || !item.FemaleBipedModel_Property.Item.HasBeenSet(checkMask.FemaleBipedModel.Specific))) return false;
+            if (checkMask.FemaleBipedModel.Specific != null && (item.FemaleBipedModel == null || !item.FemaleBipedModel.HasBeenSet(checkMask.FemaleBipedModel.Specific))) return false;
             if (checkMask.FemaleWorldModel.Overall.HasValue && checkMask.FemaleWorldModel.Overall.Value != item.FemaleWorldModel_Property.HasBeenSet) return false;
-            if (checkMask.FemaleWorldModel.Specific != null && (item.FemaleWorldModel_Property.Item == null || !item.FemaleWorldModel_Property.Item.HasBeenSet(checkMask.FemaleWorldModel.Specific))) return false;
+            if (checkMask.FemaleWorldModel.Specific != null && (item.FemaleWorldModel == null || !item.FemaleWorldModel.HasBeenSet(checkMask.FemaleWorldModel.Specific))) return false;
             if (checkMask.FemaleIcon.HasValue && checkMask.FemaleIcon.Value != item.FemaleIcon_Property.HasBeenSet) return false;
             return true;
         }
@@ -2165,11 +1972,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.EnchantmentPoints = item.EnchantmentPoints_Property.HasBeenSet;
             ret.BipedFlags = true;
             ret.Flags = true;
-            ret.MaleBipedModel = new MaskItem<bool, Model_Mask<bool>>(item.MaleBipedModel_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.MaleBipedModel_Property.Item));
-            ret.MaleWorldModel = new MaskItem<bool, Model_Mask<bool>>(item.MaleWorldModel_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.MaleWorldModel_Property.Item));
+            ret.MaleBipedModel = new MaskItem<bool, Model_Mask<bool>>(item.MaleBipedModel_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.MaleBipedModel));
+            ret.MaleWorldModel = new MaskItem<bool, Model_Mask<bool>>(item.MaleWorldModel_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.MaleWorldModel));
             ret.MaleIcon = item.MaleIcon_Property.HasBeenSet;
-            ret.FemaleBipedModel = new MaskItem<bool, Model_Mask<bool>>(item.FemaleBipedModel_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.FemaleBipedModel_Property.Item));
-            ret.FemaleWorldModel = new MaskItem<bool, Model_Mask<bool>>(item.FemaleWorldModel_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.FemaleWorldModel_Property.Item));
+            ret.FemaleBipedModel = new MaskItem<bool, Model_Mask<bool>>(item.FemaleBipedModel_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.FemaleBipedModel));
+            ret.FemaleWorldModel = new MaskItem<bool, Model_Mask<bool>>(item.FemaleWorldModel_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.FemaleWorldModel));
             ret.FemaleIcon = item.FemaleIcon_Property.HasBeenSet;
             return ret;
         }
