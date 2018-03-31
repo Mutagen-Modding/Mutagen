@@ -251,50 +251,6 @@ namespace Mutagen.Bethesda
 
         #endregion
 
-        #region XML Copy In
-        public virtual void CopyIn_XML<T_ErrMask>(
-            XElement root,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            NotifyingFireParameters cmds = null)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-        {
-            LoquiXmlTranslation<ListGroup<T>, ListGroup_ErrorMask<T_ErrMask>>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML<T_ErrMask>(
-            string path,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            NotifyingFireParameters cmds = null)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-        {
-            var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML<T_ErrMask>(
-            Stream stream,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            NotifyingFireParameters cmds = null)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-        {
-            var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out errorMask,
-                cmds: cmds);
-        }
-
-        #endregion
-
         #region XML Write
         public virtual void Write_XML<T_ErrMask>(
             XmlWriter writer,
@@ -390,9 +346,10 @@ namespace Mutagen.Bethesda
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
             ListGroupCommon.Write_XML<T, T_ErrMask>(
-                writer: writer,
                 item: this,
                 doMasks: doMasks,
+                writer: writer,
+                name: name,
                 errorMask: out var errorMask);
             return errorMask;
         }
@@ -475,6 +432,16 @@ namespace Mutagen.Bethesda
         #region Mutagen
         public static readonly RecordType GRUP_RECORD_TYPE = (RecordType)typeof(T).GetField(Mutagen.Bethesda.Constants.GRUP_RECORDTYPE_MEMBER).GetValue(null);
         public static readonly RecordType T_RecordType;
+        public IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in Items.SelectWhere((f) => TryGet<ILinkContainer>.Create(successful: f is ILinkContainer, val: f as ILinkContainer))
+                .SelectMany((f) => f.Links))
+            {
+                yield return item;
+            }
+            yield break;
+        }
         #endregion
 
         #region Binary Translation
@@ -546,56 +513,6 @@ namespace Mutagen.Bethesda
                 return Create_Binary(
                     frame: frame,
                     errorMask: out errorMask);
-            }
-        }
-
-        #endregion
-
-        #region Binary Copy In
-        public virtual void CopyIn_Binary<T_ErrMask>(
-            MutagenFrame frame,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            NotifyingFireParameters cmds = null)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-        {
-            LoquiBinaryTranslation<ListGroup<T>, ListGroup_ErrorMask<T_ErrMask>>.Instance.CopyIn(
-                frame: frame,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_Binary<T_ErrMask>(
-            string path,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            NotifyingFireParameters cmds = null)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-        {
-            using (var reader = new MutagenReader(path))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    errorMask: out errorMask,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary<T_ErrMask>(
-            Stream stream,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            NotifyingFireParameters cmds = null)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-        {
-            using (var reader = new MutagenReader(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    errorMask: out errorMask,
-                    cmds: cmds);
             }
         }
 
@@ -673,9 +590,9 @@ namespace Mutagen.Bethesda
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
             ListGroupCommon.Write_Binary<T, T_ErrMask>(
-                writer: writer,
                 item: this,
                 doMasks: doMasks,
+                writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: out var errorMask);
             return errorMask;

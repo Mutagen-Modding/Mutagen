@@ -680,104 +680,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region XML Copy In
-        public override void CopyIn_XML(
-            XElement root,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiXmlTranslation<Race, Race_ErrorMask>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void CopyIn_XML(
-            XElement root,
-            out Race_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiXmlTranslation<Race, Race_ErrorMask>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            string path,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
-                root: root,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            string path,
-            out Race_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            Stream stream,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
-                root: root,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            Stream stream,
-            out Race_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out errorMask,
-                cmds: cmds);
-        }
-
-        public override void CopyIn_XML(
-            XElement root,
-            out NamedMajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out Race_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        public override void CopyIn_XML(
-            XElement root,
-            out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out Race_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        #endregion
-
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
@@ -866,9 +768,10 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             RaceCommon.Write_XML(
-                writer: writer,
                 item: this,
                 doMasks: doMasks,
+                writer: writer,
+                name: name,
                 errorMask: out var errorMask);
             return errorMask;
         }
@@ -1104,6 +1007,33 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Race_Registration.TRIGGERING_RECORD_TYPE;
+        public override IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in base.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Relations.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            if (Voices != null)
+            {
+                foreach (var item in Voices.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (DefaultHair != null)
+            {
+                foreach (var item in DefaultHair.Links)
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
         #endregion
 
         #region Binary Translation
@@ -1202,116 +1132,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Binary Copy In
-        public override void CopyIn_Binary(
-            MutagenFrame frame,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiBinaryTranslation<Race, Race_ErrorMask>.Instance.CopyIn(
-                frame: frame,
-                item: this,
-                skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void CopyIn_Binary(
-            MutagenFrame frame,
-            out Race_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiBinaryTranslation<Race, Race_ErrorMask>.Instance.CopyIn(
-                frame: frame,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_Binary(
-            string path,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(path))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary(
-            string path,
-            out Race_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(path))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    errorMask: out errorMask,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary(
-            Stream stream,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary(
-            Stream stream,
-            out Race_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    errorMask: out errorMask,
-                    cmds: cmds);
-            }
-        }
-
-        public override void CopyIn_Binary(
-            MutagenFrame frame,
-            out NamedMajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_Binary(
-                frame: frame,
-                errorMask: out Race_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        public override void CopyIn_Binary(
-            MutagenFrame frame,
-            out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_Binary(
-                frame: frame,
-                errorMask: out Race_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        #endregion
-
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
@@ -1377,9 +1197,9 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks)
         {
             RaceCommon.Write_Binary(
-                writer: writer,
                 item: this,
                 doMasks: doMasks,
+                writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: out var errorMask);
             return errorMask;
@@ -3814,21 +3634,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Relations.Overall.HasValue && checkMask.Relations.Overall.Value != item.Relations.HasBeenSet) return false;
             if (checkMask.SkillBoosts.Overall.HasValue && checkMask.SkillBoosts.Overall.Value != item.SkillBoosts.HasBeenSet) return false;
             if (checkMask.Voices.Overall.HasValue && checkMask.Voices.Overall.Value != item.Voices_Property.HasBeenSet) return false;
-            if (checkMask.Voices.Specific != null && (item.Voices_Property.Item == null || !item.Voices_Property.Item.HasBeenSet(checkMask.Voices.Specific))) return false;
+            if (checkMask.Voices.Specific != null && (item.Voices == null || !item.Voices.HasBeenSet(checkMask.Voices.Specific))) return false;
             if (checkMask.DefaultHair.Overall.HasValue && checkMask.DefaultHair.Overall.Value != item.DefaultHair_Property.HasBeenSet) return false;
-            if (checkMask.DefaultHair.Specific != null && (item.DefaultHair_Property.Item == null || !item.DefaultHair_Property.Item.HasBeenSet(checkMask.DefaultHair.Specific))) return false;
+            if (checkMask.DefaultHair.Specific != null && (item.DefaultHair == null || !item.DefaultHair.HasBeenSet(checkMask.DefaultHair.Specific))) return false;
             if (checkMask.DefaultHairColor.HasValue && checkMask.DefaultHairColor.Value != item.DefaultHairColor_Property.HasBeenSet) return false;
             if (checkMask.FaceGenMainClamp.HasValue && checkMask.FaceGenMainClamp.Value != item.FaceGenMainClamp_Property.HasBeenSet) return false;
             if (checkMask.FaceGenFaceClamp.HasValue && checkMask.FaceGenFaceClamp.Value != item.FaceGenFaceClamp_Property.HasBeenSet) return false;
             if (checkMask.RaceStats.Overall.HasValue && checkMask.RaceStats.Overall.Value != item.RaceStats_Property.HasBeenSet) return false;
-            if (checkMask.RaceStats.Specific != null && (item.RaceStats_Property.Item == null || !item.RaceStats_Property.Item.HasBeenSet(checkMask.RaceStats.Specific))) return false;
+            if (checkMask.RaceStats.Specific != null && (item.RaceStats == null || !item.RaceStats.HasBeenSet(checkMask.RaceStats.Specific))) return false;
             if (checkMask.FaceData.Overall.HasValue && checkMask.FaceData.Overall.Value != item.FaceData.HasBeenSet) return false;
             if (checkMask.BodyData.Overall.HasValue && checkMask.BodyData.Overall.Value != item.BodyData_Property.HasBeenSet) return false;
-            if (checkMask.BodyData.Specific != null && (item.BodyData_Property.Item == null || !item.BodyData_Property.Item.HasBeenSet(checkMask.BodyData.Specific))) return false;
+            if (checkMask.BodyData.Specific != null && (item.BodyData == null || !item.BodyData.HasBeenSet(checkMask.BodyData.Specific))) return false;
             if (checkMask.Hairs.Overall.HasValue && checkMask.Hairs.Overall.Value != item.Hairs.HasBeenSet) return false;
             if (checkMask.Eyes.Overall.HasValue && checkMask.Eyes.Overall.Value != item.Eyes.HasBeenSet) return false;
             if (checkMask.FaceGenData.Overall.HasValue && checkMask.FaceGenData.Overall.Value != item.FaceGenData_Property.HasBeenSet) return false;
-            if (checkMask.FaceGenData.Specific != null && (item.FaceGenData_Property.Item == null || !item.FaceGenData_Property.Item.HasBeenSet(checkMask.FaceGenData.Specific))) return false;
+            if (checkMask.FaceGenData.Specific != null && (item.FaceGenData == null || !item.FaceGenData.HasBeenSet(checkMask.FaceGenData.Specific))) return false;
             if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != item.Unknown_Property.HasBeenSet) return false;
             return true;
         }
@@ -3846,17 +3666,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.MaleWeight = true;
             ret.FemaleWeight = true;
             ret.Flags = true;
-            ret.Voices = new MaskItem<bool, RaceVoices_Mask<bool>>(item.Voices_Property.HasBeenSet, RaceVoicesCommon.GetHasBeenSetMask(item.Voices_Property.Item));
-            ret.DefaultHair = new MaskItem<bool, RaceHair_Mask<bool>>(item.DefaultHair_Property.HasBeenSet, RaceHairCommon.GetHasBeenSetMask(item.DefaultHair_Property.Item));
+            ret.Voices = new MaskItem<bool, RaceVoices_Mask<bool>>(item.Voices_Property.HasBeenSet, RaceVoicesCommon.GetHasBeenSetMask(item.Voices));
+            ret.DefaultHair = new MaskItem<bool, RaceHair_Mask<bool>>(item.DefaultHair_Property.HasBeenSet, RaceHairCommon.GetHasBeenSetMask(item.DefaultHair));
             ret.DefaultHairColor = item.DefaultHairColor_Property.HasBeenSet;
             ret.FaceGenMainClamp = item.FaceGenMainClamp_Property.HasBeenSet;
             ret.FaceGenFaceClamp = item.FaceGenFaceClamp_Property.HasBeenSet;
-            ret.RaceStats = new MaskItem<bool, RaceStatsGendered_Mask<bool>>(item.RaceStats_Property.HasBeenSet, RaceStatsGenderedCommon.GetHasBeenSetMask(item.RaceStats_Property.Item));
+            ret.RaceStats = new MaskItem<bool, RaceStatsGendered_Mask<bool>>(item.RaceStats_Property.HasBeenSet, RaceStatsGenderedCommon.GetHasBeenSetMask(item.RaceStats));
             ret.FaceData = new MaskItem<bool, IEnumerable<MaskItem<bool, FacePart_Mask<bool>>>>(item.FaceData.HasBeenSet, item.FaceData.Select((i) => new MaskItem<bool, FacePart_Mask<bool>>(true, i.GetHasBeenSetMask())));
-            ret.BodyData = new MaskItem<bool, GenderedBodyData_Mask<bool>>(item.BodyData_Property.HasBeenSet, GenderedBodyDataCommon.GetHasBeenSetMask(item.BodyData_Property.Item));
+            ret.BodyData = new MaskItem<bool, GenderedBodyData_Mask<bool>>(item.BodyData_Property.HasBeenSet, GenderedBodyDataCommon.GetHasBeenSetMask(item.BodyData));
             ret.Hairs = new MaskItem<bool, IEnumerable<bool>>(item.Hairs.HasBeenSet, null);
             ret.Eyes = new MaskItem<bool, IEnumerable<bool>>(item.Eyes.HasBeenSet, null);
-            ret.FaceGenData = new MaskItem<bool, FaceGenData_Mask<bool>>(item.FaceGenData_Property.HasBeenSet, FaceGenDataCommon.GetHasBeenSetMask(item.FaceGenData_Property.Item));
+            ret.FaceGenData = new MaskItem<bool, FaceGenData_Mask<bool>>(item.FaceGenData_Property.HasBeenSet, FaceGenDataCommon.GetHasBeenSetMask(item.FaceGenData));
             ret.Unknown = item.Unknown_Property.HasBeenSet;
             return ret;
         }

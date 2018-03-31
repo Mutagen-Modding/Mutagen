@@ -12,7 +12,31 @@ namespace Mutagen.Bethesda.Generation
     {
         public enum LinkCase { No, Yes, Maybe }
 
-        public async Task<LinkCase> HasLinks(ObjectGeneration obj)
+        public async Task<LinkCase> HasLinks(LoquiType loqui, GenericSpecification specifications = null)
+        {
+            if (loqui.TargetObjectGeneration != null)
+            {
+                var subCase = await HasLinks(loqui.TargetObjectGeneration, loqui.GenericSpecification);
+                if (subCase == LinkCase.Yes) return LinkCase.Yes;
+                return subCase;
+            }
+            else if (specifications != null)
+            {
+                foreach (var target in specifications.Specifications.Values)
+                {
+                    if (!ObjectNamedKey.TryFactory(target, out var key)) continue;
+                    var specObj = loqui.ObjectGen.ProtoGen.Gen.ObjectGenerationsByObjectNameKey[key];
+                    return await HasLinks(specObj);
+                }
+                return LinkCase.Maybe;
+            }
+            else
+            {
+                return LinkCase.Maybe;
+            }
+        }
+
+        public async Task<LinkCase> HasLinks(ObjectGeneration obj, GenericSpecification specifications = null)
         {
             if (obj.Name == "MajorRecord") return LinkCase.Yes;
             if (obj.IterateFields().Any((f) => f is FormIDLinkType)) return LinkCase.Yes;
@@ -21,7 +45,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (field is LoquiType loqui)
                 {
-                    var subCase = await AnalyzeLoqui(loqui);
+                    var subCase = await HasLinks(loqui, specifications);
                     if (subCase > bestCase)
                     {
                         bestCase = subCase;
@@ -30,7 +54,7 @@ namespace Mutagen.Bethesda.Generation
                 else if (field is ContainerType cont
                     && cont.SubTypeGeneration is LoquiType contLoqui)
                 {
-                    var subCase = await AnalyzeLoqui(contLoqui);
+                    var subCase = await HasLinks(contLoqui, specifications);
                     if (subCase > bestCase)
                     {
                         bestCase = subCase;
@@ -40,7 +64,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (dict.ValueTypeGen is LoquiType valLoqui)
                     {
-                        var subCase = await AnalyzeLoqui(valLoqui);
+                        var subCase = await HasLinks(valLoqui, specifications);
                         if (subCase > bestCase)
                         {
                             bestCase = subCase;
@@ -48,7 +72,7 @@ namespace Mutagen.Bethesda.Generation
                     }
                     if (dict.KeyTypeGen is LoquiType keyLoqui)
                     {
-                        var subCase = await AnalyzeLoqui(keyLoqui);
+                        var subCase = await HasLinks(keyLoqui, specifications);
                         if (subCase > bestCase)
                         {
                             bestCase = subCase;
@@ -57,20 +81,6 @@ namespace Mutagen.Bethesda.Generation
                 }
             }
             return bestCase;
-        }
-
-        private async Task<LinkCase> AnalyzeLoqui(LoquiType loqui)
-        {
-            if (loqui.TargetObjectGeneration != null)
-            {
-                var subCase = await HasLinks(loqui.TargetObjectGeneration);
-                if (subCase == LinkCase.Yes) return LinkCase.Yes;
-                return subCase;
-            }
-            else
-            {
-                return LinkCase.Maybe;
-            }
         }
 
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
@@ -106,7 +116,7 @@ namespace Mutagen.Bethesda.Generation
                         LinkCase subLinkCase;
                         if (loqui.TargetObjectGeneration != null)
                         {
-                            subLinkCase = await HasLinks(loqui.TargetObjectGeneration);
+                            subLinkCase = await HasLinks(loqui);
                         }
                         else
                         {
@@ -116,7 +126,7 @@ namespace Mutagen.Bethesda.Generation
                         var doBrace = true;
                         if (subLinkCase == LinkCase.Maybe)
                         {
-                            fg.AppendLine($"if ({field.Name} is {nameof(ILinkContainer)} linkCont)");
+                            fg.AppendLine($"if ({field.Name} is {nameof(ILinkContainer)} {field.Name}linkCont)");
                         }
                         else if (loqui.SingletonType == SingletonLevel.None)
                         {
@@ -128,7 +138,7 @@ namespace Mutagen.Bethesda.Generation
                         }
                         using (new BraceWrapper(fg, doIt: doBrace))
                         {
-                            fg.AppendLine($"foreach (var item in {(subLinkCase == LinkCase.Maybe ? "linkCont" : field.Name)}.Links)");
+                            fg.AppendLine($"foreach (var item in {(subLinkCase == LinkCase.Maybe ? $"{field.Name}linkCont" : field.Name)}.Links)");
                             using (new BraceWrapper(fg))
                             {
                                 fg.AppendLine($"yield return item;");
@@ -137,9 +147,24 @@ namespace Mutagen.Bethesda.Generation
                     }
                     else if (field is ContainerType cont
                         && cont.SubTypeGeneration is LoquiType contLoqui
-                        && await AnalyzeLoqui(contLoqui) != LinkCase.No)
+                        && await HasLinks(contLoqui) != LinkCase.No)
                     {
-                        fg.AppendLine($"foreach (var item in {field.Name}.SelectMany(f => f.Links))");
+                        var linktype = await HasLinks(contLoqui);
+                        switch (linktype)
+                        {
+                            case LinkCase.Yes:
+                                fg.AppendLine($"foreach (var item in {field.Name}.SelectMany(f => f.Links))");
+                                break;
+                            case LinkCase.Maybe:
+                                fg.AppendLine($"foreach (var item in Items.SelectWhere((f) => TryGet<ILinkContainer>.Create(successful: f is ILinkContainer, val: f as ILinkContainer))");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine(".SelectMany((f) => f.Links))");
+                                }
+                                break;
+                            default:
+                                break;
+                        }
                         using (new BraceWrapper(fg))
                         {
                             fg.AppendLine($"yield return item;");
@@ -148,9 +173,24 @@ namespace Mutagen.Bethesda.Generation
                     else if (field is DictType dict
                         && dict.Mode == DictMode.KeyedValue
                         && dict.ValueTypeGen is LoquiType dictLoqui
-                        && await AnalyzeLoqui(dictLoqui) != LinkCase.No)
+                        && await HasLinks(dictLoqui) != LinkCase.No)
                     {
-                        fg.AppendLine($"foreach (var item in {field.Name}.Values.SelectMany(f => f.Links))");
+                        var linktype = await HasLinks(dictLoqui);
+                        switch (linktype)
+                        {
+                            case LinkCase.Yes:
+                                fg.AppendLine($"foreach (var item in {field.Name}.SelectMany(f => f.Links))");
+                                break;
+                            case LinkCase.Maybe:
+                                fg.AppendLine($"foreach (var item in Items.SelectWhere((f) => TryGet<ILinkContainer>.Create(successful: f is ILinkContainer, val: f as ILinkContainer))");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine(".SelectMany((f) => f.Links))");
+                                }
+                                break;
+                            default:
+                                break;
+                        }
                         using (new BraceWrapper(fg))
                         {
                             fg.AppendLine($"yield return item;");

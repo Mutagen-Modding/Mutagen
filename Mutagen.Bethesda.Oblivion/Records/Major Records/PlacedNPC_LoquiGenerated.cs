@@ -366,104 +366,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region XML Copy In
-        public override void CopyIn_XML(
-            XElement root,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiXmlTranslation<PlacedNPC, PlacedNPC_ErrorMask>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void CopyIn_XML(
-            XElement root,
-            out PlacedNPC_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiXmlTranslation<PlacedNPC, PlacedNPC_ErrorMask>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            string path,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
-                root: root,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            string path,
-            out PlacedNPC_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            Stream stream,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
-                root: root,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            Stream stream,
-            out PlacedNPC_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out errorMask,
-                cmds: cmds);
-        }
-
-        public override void CopyIn_XML(
-            XElement root,
-            out Placed_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out PlacedNPC_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        public override void CopyIn_XML(
-            XElement root,
-            out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out PlacedNPC_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        #endregion
-
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
@@ -552,9 +454,10 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             PlacedNPCCommon.Write_XML(
-                writer: writer,
                 item: this,
                 doMasks: doMasks,
+                writer: writer,
+                name: name,
                 errorMask: out var errorMask);
             return errorMask;
         }
@@ -660,6 +563,25 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = PlacedNPC_Registration.TRIGGERING_RECORD_TYPE;
+        public override IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in base.Links)
+            {
+                yield return item;
+            }
+            yield return Base_Property;
+            if (EnableParent != null)
+            {
+                foreach (var item in EnableParent.Links)
+                {
+                    yield return item;
+                }
+            }
+            yield return MerchantContainer_Property;
+            yield return Horse_Property;
+            yield break;
+        }
         #endregion
 
         #region Binary Translation
@@ -758,116 +680,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Binary Copy In
-        public override void CopyIn_Binary(
-            MutagenFrame frame,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiBinaryTranslation<PlacedNPC, PlacedNPC_ErrorMask>.Instance.CopyIn(
-                frame: frame,
-                item: this,
-                skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void CopyIn_Binary(
-            MutagenFrame frame,
-            out PlacedNPC_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiBinaryTranslation<PlacedNPC, PlacedNPC_ErrorMask>.Instance.CopyIn(
-                frame: frame,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_Binary(
-            string path,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(path))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary(
-            string path,
-            out PlacedNPC_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(path))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    errorMask: out errorMask,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary(
-            Stream stream,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary(
-            Stream stream,
-            out PlacedNPC_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    errorMask: out errorMask,
-                    cmds: cmds);
-            }
-        }
-
-        public override void CopyIn_Binary(
-            MutagenFrame frame,
-            out Placed_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_Binary(
-                frame: frame,
-                errorMask: out PlacedNPC_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        public override void CopyIn_Binary(
-            MutagenFrame frame,
-            out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_Binary(
-                frame: frame,
-                errorMask: out PlacedNPC_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        #endregion
-
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
@@ -933,9 +745,9 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks)
         {
             PlacedNPCCommon.Write_Binary(
-                writer: writer,
                 item: this,
                 doMasks: doMasks,
+                writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: out var errorMask);
             return errorMask;
@@ -2087,7 +1899,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (printMask?.Base ?? true)
                 {
-                    fg.AppendLine($"Base => {item.Base}");
+                    fg.AppendLine($"Base => {item.Base_Property}");
                 }
                 if (printMask?.DistantLODData?.Overall ?? true)
                 {
@@ -2099,11 +1911,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.MerchantContainer ?? true)
                 {
-                    fg.AppendLine($"MerchantContainer => {item.MerchantContainer}");
+                    fg.AppendLine($"MerchantContainer => {item.MerchantContainer_Property}");
                 }
                 if (printMask?.Horse ?? true)
                 {
-                    fg.AppendLine($"Horse => {item.Horse}");
+                    fg.AppendLine($"Horse => {item.Horse_Property}");
                 }
                 if (printMask?.RagdollData ?? true)
                 {
@@ -2131,9 +1943,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (checkMask.Base.HasValue && checkMask.Base.Value != item.Base_Property.HasBeenSet) return false;
             if (checkMask.DistantLODData.Overall.HasValue && checkMask.DistantLODData.Overall.Value != item.DistantLODData_Property.HasBeenSet) return false;
-            if (checkMask.DistantLODData.Specific != null && (item.DistantLODData_Property.Item == null || !item.DistantLODData_Property.Item.HasBeenSet(checkMask.DistantLODData.Specific))) return false;
+            if (checkMask.DistantLODData.Specific != null && (item.DistantLODData == null || !item.DistantLODData.HasBeenSet(checkMask.DistantLODData.Specific))) return false;
             if (checkMask.EnableParent.Overall.HasValue && checkMask.EnableParent.Overall.Value != item.EnableParent_Property.HasBeenSet) return false;
-            if (checkMask.EnableParent.Specific != null && (item.EnableParent_Property.Item == null || !item.EnableParent_Property.Item.HasBeenSet(checkMask.EnableParent.Specific))) return false;
+            if (checkMask.EnableParent.Specific != null && (item.EnableParent == null || !item.EnableParent.HasBeenSet(checkMask.EnableParent.Specific))) return false;
             if (checkMask.MerchantContainer.HasValue && checkMask.MerchantContainer.Value != item.MerchantContainer_Property.HasBeenSet) return false;
             if (checkMask.Horse.HasValue && checkMask.Horse.Value != item.Horse_Property.HasBeenSet) return false;
             if (checkMask.RagdollData.HasValue && checkMask.RagdollData.Value != item.RagdollData_Property.HasBeenSet) return false;
@@ -2145,8 +1957,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new PlacedNPC_Mask<bool>();
             ret.Base = item.Base_Property.HasBeenSet;
-            ret.DistantLODData = new MaskItem<bool, DistantLODData_Mask<bool>>(item.DistantLODData_Property.HasBeenSet, DistantLODDataCommon.GetHasBeenSetMask(item.DistantLODData_Property.Item));
-            ret.EnableParent = new MaskItem<bool, EnableParent_Mask<bool>>(item.EnableParent_Property.HasBeenSet, EnableParentCommon.GetHasBeenSetMask(item.EnableParent_Property.Item));
+            ret.DistantLODData = new MaskItem<bool, DistantLODData_Mask<bool>>(item.DistantLODData_Property.HasBeenSet, DistantLODDataCommon.GetHasBeenSetMask(item.DistantLODData));
+            ret.EnableParent = new MaskItem<bool, EnableParent_Mask<bool>>(item.EnableParent_Property.HasBeenSet, EnableParentCommon.GetHasBeenSetMask(item.EnableParent));
             ret.MerchantContainer = item.MerchantContainer_Property.HasBeenSet;
             ret.Horse = item.Horse_Property.HasBeenSet;
             ret.RagdollData = item.RagdollData_Property.HasBeenSet;

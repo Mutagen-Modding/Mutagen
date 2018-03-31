@@ -254,80 +254,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region XML Copy In
-        public void CopyIn_XML(
-            XElement root,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiXmlTranslation<CellSubBlock, CellSubBlock_ErrorMask>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void CopyIn_XML(
-            XElement root,
-            out CellSubBlock_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiXmlTranslation<CellSubBlock, CellSubBlock_ErrorMask>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            string path,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
-                root: root,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            string path,
-            out CellSubBlock_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            Stream stream,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
-                root: root,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            Stream stream,
-            out CellSubBlock_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out errorMask,
-                cmds: cmds);
-        }
-
-        #endregion
-
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
@@ -416,9 +342,10 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             CellSubBlockCommon.Write_XML(
-                writer: writer,
                 item: this,
                 doMasks: doMasks,
+                writer: writer,
+                name: name,
                 errorMask: out var errorMask);
             return errorMask;
         }
@@ -492,6 +419,15 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GRUP_RECORD_TYPE = (RecordType)Cell.GRUP_RECORD_TYPE;
+        public IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in Items.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            yield break;
+        }
         #endregion
 
         #region Binary Translation
@@ -590,92 +526,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Binary Copy In
-        public void CopyIn_Binary(
-            MutagenFrame frame,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiBinaryTranslation<CellSubBlock, CellSubBlock_ErrorMask>.Instance.CopyIn(
-                frame: frame,
-                item: this,
-                skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void CopyIn_Binary(
-            MutagenFrame frame,
-            out CellSubBlock_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiBinaryTranslation<CellSubBlock, CellSubBlock_ErrorMask>.Instance.CopyIn(
-                frame: frame,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_Binary(
-            string path,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(path))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary(
-            string path,
-            out CellSubBlock_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(path))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    errorMask: out errorMask,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary(
-            Stream stream,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary(
-            Stream stream,
-            out CellSubBlock_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    errorMask: out errorMask,
-                    cmds: cmds);
-            }
-        }
-
-        #endregion
-
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
@@ -741,9 +591,9 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks)
         {
             CellSubBlockCommon.Write_Binary(
-                writer: writer,
                 item: this,
                 doMasks: doMasks,
+                writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: out var errorMask);
             return errorMask;

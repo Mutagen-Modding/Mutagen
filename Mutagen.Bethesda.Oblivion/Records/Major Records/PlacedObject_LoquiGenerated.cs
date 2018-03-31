@@ -631,104 +631,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region XML Copy In
-        public override void CopyIn_XML(
-            XElement root,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiXmlTranslation<PlacedObject, PlacedObject_ErrorMask>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void CopyIn_XML(
-            XElement root,
-            out PlacedObject_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiXmlTranslation<PlacedObject, PlacedObject_ErrorMask>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            string path,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
-                root: root,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            string path,
-            out PlacedObject_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            Stream stream,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
-                root: root,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            Stream stream,
-            out PlacedObject_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out errorMask,
-                cmds: cmds);
-        }
-
-        public override void CopyIn_XML(
-            XElement root,
-            out Placed_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out PlacedObject_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        public override void CopyIn_XML(
-            XElement root,
-            out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out PlacedObject_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        #endregion
-
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
@@ -817,9 +719,10 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             PlacedObjectCommon.Write_XML(
-                writer: writer,
                 item: this,
                 doMasks: doMasks,
+                writer: writer,
+                name: name,
                 errorMask: out var errorMask);
             return errorMask;
         }
@@ -998,6 +901,47 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = PlacedObject_Registration.TRIGGERING_RECORD_TYPE;
+        public override IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in base.Links)
+            {
+                yield return item;
+            }
+            yield return Base_Property;
+            if (TeleportDestination != null)
+            {
+                foreach (var item in TeleportDestination.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (Lock != null)
+            {
+                foreach (var item in Lock.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (Ownership != null)
+            {
+                foreach (var item in Ownership.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (EnableParent != null)
+            {
+                foreach (var item in EnableParent.Links)
+                {
+                    yield return item;
+                }
+            }
+            yield return Target_Property;
+            yield return Unknown_Property;
+            yield return ContainedSoul_Property;
+            yield break;
+        }
         #endregion
 
         #region Binary Translation
@@ -1096,116 +1040,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Binary Copy In
-        public override void CopyIn_Binary(
-            MutagenFrame frame,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiBinaryTranslation<PlacedObject, PlacedObject_ErrorMask>.Instance.CopyIn(
-                frame: frame,
-                item: this,
-                skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void CopyIn_Binary(
-            MutagenFrame frame,
-            out PlacedObject_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiBinaryTranslation<PlacedObject, PlacedObject_ErrorMask>.Instance.CopyIn(
-                frame: frame,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_Binary(
-            string path,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(path))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary(
-            string path,
-            out PlacedObject_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(path))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    errorMask: out errorMask,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary(
-            Stream stream,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary(
-            Stream stream,
-            out PlacedObject_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    errorMask: out errorMask,
-                    cmds: cmds);
-            }
-        }
-
-        public override void CopyIn_Binary(
-            MutagenFrame frame,
-            out Placed_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_Binary(
-                frame: frame,
-                errorMask: out PlacedObject_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        public override void CopyIn_Binary(
-            MutagenFrame frame,
-            out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_Binary(
-                frame: frame,
-                errorMask: out PlacedObject_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        #endregion
-
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
@@ -1271,9 +1105,9 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks)
         {
             PlacedObjectCommon.Write_Binary(
-                writer: writer,
                 item: this,
                 doMasks: doMasks,
+                writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: out var errorMask);
             return errorMask;
@@ -3380,7 +3214,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (printMask?.Base ?? true)
                 {
-                    fg.AppendLine($"Base => {item.Base}");
+                    fg.AppendLine($"Base => {item.Base_Property}");
                 }
                 if (printMask?.TeleportDestination?.Overall ?? true)
                 {
@@ -3400,7 +3234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.Target ?? true)
                 {
-                    fg.AppendLine($"Target => {item.Target}");
+                    fg.AppendLine($"Target => {item.Target_Property}");
                 }
                 if (printMask?.SpeedTreeSeed ?? true)
                 {
@@ -3424,7 +3258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.Unknown ?? true)
                 {
-                    fg.AppendLine($"Unknown => {item.Unknown}");
+                    fg.AppendLine($"Unknown => {item.Unknown_Property}");
                 }
                 if (printMask?.ActionFlags ?? true)
                 {
@@ -3452,7 +3286,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.ContainedSoul ?? true)
                 {
-                    fg.AppendLine($"ContainedSoul => {item.ContainedSoul}");
+                    fg.AppendLine($"ContainedSoul => {item.ContainedSoul_Property}");
                 }
                 if (printMask?.Position ?? true)
                 {
@@ -3472,17 +3306,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (checkMask.Base.HasValue && checkMask.Base.Value != item.Base_Property.HasBeenSet) return false;
             if (checkMask.TeleportDestination.Overall.HasValue && checkMask.TeleportDestination.Overall.Value != item.TeleportDestination_Property.HasBeenSet) return false;
-            if (checkMask.TeleportDestination.Specific != null && (item.TeleportDestination_Property.Item == null || !item.TeleportDestination_Property.Item.HasBeenSet(checkMask.TeleportDestination.Specific))) return false;
+            if (checkMask.TeleportDestination.Specific != null && (item.TeleportDestination == null || !item.TeleportDestination.HasBeenSet(checkMask.TeleportDestination.Specific))) return false;
             if (checkMask.Lock.Overall.HasValue && checkMask.Lock.Overall.Value != item.Lock_Property.HasBeenSet) return false;
-            if (checkMask.Lock.Specific != null && (item.Lock_Property.Item == null || !item.Lock_Property.Item.HasBeenSet(checkMask.Lock.Specific))) return false;
+            if (checkMask.Lock.Specific != null && (item.Lock == null || !item.Lock.HasBeenSet(checkMask.Lock.Specific))) return false;
             if (checkMask.Ownership.Overall.HasValue && checkMask.Ownership.Overall.Value != item.Ownership_Property.HasBeenSet) return false;
-            if (checkMask.Ownership.Specific != null && (item.Ownership_Property.Item == null || !item.Ownership_Property.Item.HasBeenSet(checkMask.Ownership.Specific))) return false;
+            if (checkMask.Ownership.Specific != null && (item.Ownership == null || !item.Ownership.HasBeenSet(checkMask.Ownership.Specific))) return false;
             if (checkMask.EnableParent.Overall.HasValue && checkMask.EnableParent.Overall.Value != item.EnableParent_Property.HasBeenSet) return false;
-            if (checkMask.EnableParent.Specific != null && (item.EnableParent_Property.Item == null || !item.EnableParent_Property.Item.HasBeenSet(checkMask.EnableParent.Specific))) return false;
+            if (checkMask.EnableParent.Specific != null && (item.EnableParent == null || !item.EnableParent.HasBeenSet(checkMask.EnableParent.Specific))) return false;
             if (checkMask.Target.HasValue && checkMask.Target.Value != item.Target_Property.HasBeenSet) return false;
             if (checkMask.SpeedTreeSeed.HasValue && checkMask.SpeedTreeSeed.Value != item.SpeedTreeSeed_Property.HasBeenSet) return false;
             if (checkMask.DistantLODData.Overall.HasValue && checkMask.DistantLODData.Overall.Value != item.DistantLODData_Property.HasBeenSet) return false;
-            if (checkMask.DistantLODData.Specific != null && (item.DistantLODData_Property.Item == null || !item.DistantLODData_Property.Item.HasBeenSet(checkMask.DistantLODData.Specific))) return false;
+            if (checkMask.DistantLODData.Specific != null && (item.DistantLODData == null || !item.DistantLODData.HasBeenSet(checkMask.DistantLODData.Specific))) return false;
             if (checkMask.Charge.HasValue && checkMask.Charge.Value != item.Charge_Property.HasBeenSet) return false;
             if (checkMask.Health.HasValue && checkMask.Health.Value != item.Health_Property.HasBeenSet) return false;
             if (checkMask.LevelModifier.HasValue && checkMask.LevelModifier.Value != item.LevelModifier_Property.HasBeenSet) return false;
@@ -3490,7 +3324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.ActionFlags.HasValue && checkMask.ActionFlags.Value != item.ActionFlags_Property.HasBeenSet) return false;
             if (checkMask.Count.HasValue && checkMask.Count.Value != item.Count_Property.HasBeenSet) return false;
             if (checkMask.MapMarker.Overall.HasValue && checkMask.MapMarker.Overall.Value != item.MapMarker_Property.HasBeenSet) return false;
-            if (checkMask.MapMarker.Specific != null && (item.MapMarker_Property.Item == null || !item.MapMarker_Property.Item.HasBeenSet(checkMask.MapMarker.Specific))) return false;
+            if (checkMask.MapMarker.Specific != null && (item.MapMarker == null || !item.MapMarker.HasBeenSet(checkMask.MapMarker.Specific))) return false;
             if (checkMask.RagdollData.HasValue && checkMask.RagdollData.Value != item.RagdollData_Property.HasBeenSet) return false;
             if (checkMask.Scale.HasValue && checkMask.Scale.Value != item.Scale_Property.HasBeenSet) return false;
             if (checkMask.ContainedSoul.HasValue && checkMask.ContainedSoul.Value != item.ContainedSoul_Property.HasBeenSet) return false;
@@ -3501,20 +3335,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new PlacedObject_Mask<bool>();
             ret.Base = item.Base_Property.HasBeenSet;
-            ret.TeleportDestination = new MaskItem<bool, TeleportDestination_Mask<bool>>(item.TeleportDestination_Property.HasBeenSet, TeleportDestinationCommon.GetHasBeenSetMask(item.TeleportDestination_Property.Item));
-            ret.Lock = new MaskItem<bool, LockInformation_Mask<bool>>(item.Lock_Property.HasBeenSet, LockInformationCommon.GetHasBeenSetMask(item.Lock_Property.Item));
-            ret.Ownership = new MaskItem<bool, Ownership_Mask<bool>>(item.Ownership_Property.HasBeenSet, OwnershipCommon.GetHasBeenSetMask(item.Ownership_Property.Item));
-            ret.EnableParent = new MaskItem<bool, EnableParent_Mask<bool>>(item.EnableParent_Property.HasBeenSet, EnableParentCommon.GetHasBeenSetMask(item.EnableParent_Property.Item));
+            ret.TeleportDestination = new MaskItem<bool, TeleportDestination_Mask<bool>>(item.TeleportDestination_Property.HasBeenSet, TeleportDestinationCommon.GetHasBeenSetMask(item.TeleportDestination));
+            ret.Lock = new MaskItem<bool, LockInformation_Mask<bool>>(item.Lock_Property.HasBeenSet, LockInformationCommon.GetHasBeenSetMask(item.Lock));
+            ret.Ownership = new MaskItem<bool, Ownership_Mask<bool>>(item.Ownership_Property.HasBeenSet, OwnershipCommon.GetHasBeenSetMask(item.Ownership));
+            ret.EnableParent = new MaskItem<bool, EnableParent_Mask<bool>>(item.EnableParent_Property.HasBeenSet, EnableParentCommon.GetHasBeenSetMask(item.EnableParent));
             ret.Target = item.Target_Property.HasBeenSet;
             ret.SpeedTreeSeed = item.SpeedTreeSeed_Property.HasBeenSet;
-            ret.DistantLODData = new MaskItem<bool, DistantLODData_Mask<bool>>(item.DistantLODData_Property.HasBeenSet, DistantLODDataCommon.GetHasBeenSetMask(item.DistantLODData_Property.Item));
+            ret.DistantLODData = new MaskItem<bool, DistantLODData_Mask<bool>>(item.DistantLODData_Property.HasBeenSet, DistantLODDataCommon.GetHasBeenSetMask(item.DistantLODData));
             ret.Charge = item.Charge_Property.HasBeenSet;
             ret.Health = item.Health_Property.HasBeenSet;
             ret.LevelModifier = item.LevelModifier_Property.HasBeenSet;
             ret.Unknown = item.Unknown_Property.HasBeenSet;
             ret.ActionFlags = item.ActionFlags_Property.HasBeenSet;
             ret.Count = item.Count_Property.HasBeenSet;
-            ret.MapMarker = new MaskItem<bool, MapMarker_Mask<bool>>(item.MapMarker_Property.HasBeenSet, MapMarkerCommon.GetHasBeenSetMask(item.MapMarker_Property.Item));
+            ret.MapMarker = new MaskItem<bool, MapMarker_Mask<bool>>(item.MapMarker_Property.HasBeenSet, MapMarkerCommon.GetHasBeenSetMask(item.MapMarker));
             ret.OpenByDefault = true;
             ret.RagdollData = item.RagdollData_Property.HasBeenSet;
             ret.Scale = item.Scale_Property.HasBeenSet;

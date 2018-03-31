@@ -32,7 +32,8 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER, ObjectType.Subrecord)) {{ }}");
             }
-            bool isGroup = loquiGen.TargetObjectGeneration.GetObjectData().ObjectType == ObjectType.Group;
+            bool isGroup = objGen.GetObjectType() == ObjectType.Mod
+                && loquiGen.TargetObjectGeneration.GetObjectData().ObjectType == ObjectType.Group;
             if (isGroup)
             {
                 fg.AppendLine($"if ({itemAccessor.PropertyOrDirectAccess}.Items.Count > 0)");

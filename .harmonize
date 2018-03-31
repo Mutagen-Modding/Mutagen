@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>b0ed08f7f9d0e247b8127a044c892442846b841a</Sha>
+         <Sha>51c5647873cff1edc14eb303448abea208f16b1a</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>03-31-2018 17:23:10</CommitDate>
-         <Description>Merge remote-tracking branch 'origin/Laptop' into HarmonizeGit</Description>
+         <CommitDate>03-31-2018 17:31:45</CommitDate>
+         <Description>Merge fixes</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

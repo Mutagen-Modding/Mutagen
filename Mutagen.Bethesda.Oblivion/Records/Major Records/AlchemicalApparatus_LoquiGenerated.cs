@@ -320,104 +320,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region XML Copy In
-        public override void CopyIn_XML(
-            XElement root,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiXmlTranslation<AlchemicalApparatus, AlchemicalApparatus_ErrorMask>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void CopyIn_XML(
-            XElement root,
-            out AlchemicalApparatus_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiXmlTranslation<AlchemicalApparatus, AlchemicalApparatus_ErrorMask>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            string path,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
-                root: root,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            string path,
-            out AlchemicalApparatus_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            Stream stream,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
-                root: root,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            Stream stream,
-            out AlchemicalApparatus_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out errorMask,
-                cmds: cmds);
-        }
-
-        public override void CopyIn_XML(
-            XElement root,
-            out NamedMajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out AlchemicalApparatus_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        public override void CopyIn_XML(
-            XElement root,
-            out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out AlchemicalApparatus_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        #endregion
-
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
@@ -506,9 +408,10 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             AlchemicalApparatusCommon.Write_XML(
-                writer: writer,
                 item: this,
                 doMasks: doMasks,
+                writer: writer,
+                name: name,
                 errorMask: out var errorMask);
             return errorMask;
         }
@@ -603,6 +506,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = AlchemicalApparatus_Registration.TRIGGERING_RECORD_TYPE;
+        public override IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in base.Links)
+            {
+                yield return item;
+            }
+            yield return Script_Property;
+            yield break;
+        }
         #endregion
 
         #region Binary Translation
@@ -701,116 +614,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Binary Copy In
-        public override void CopyIn_Binary(
-            MutagenFrame frame,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiBinaryTranslation<AlchemicalApparatus, AlchemicalApparatus_ErrorMask>.Instance.CopyIn(
-                frame: frame,
-                item: this,
-                skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void CopyIn_Binary(
-            MutagenFrame frame,
-            out AlchemicalApparatus_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiBinaryTranslation<AlchemicalApparatus, AlchemicalApparatus_ErrorMask>.Instance.CopyIn(
-                frame: frame,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_Binary(
-            string path,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(path))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary(
-            string path,
-            out AlchemicalApparatus_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(path))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    errorMask: out errorMask,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary(
-            Stream stream,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary(
-            Stream stream,
-            out AlchemicalApparatus_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    errorMask: out errorMask,
-                    cmds: cmds);
-            }
-        }
-
-        public override void CopyIn_Binary(
-            MutagenFrame frame,
-            out NamedMajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_Binary(
-                frame: frame,
-                errorMask: out AlchemicalApparatus_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        public override void CopyIn_Binary(
-            MutagenFrame frame,
-            out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_Binary(
-                frame: frame,
-                errorMask: out AlchemicalApparatus_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        #endregion
-
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
@@ -876,9 +679,9 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks)
         {
             AlchemicalApparatusCommon.Write_Binary(
-                writer: writer,
                 item: this,
                 doMasks: doMasks,
+                writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: out var errorMask);
             return errorMask;
@@ -1863,7 +1666,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.Script ?? true)
                 {
-                    fg.AppendLine($"Script => {item.Script}");
+                    fg.AppendLine($"Script => {item.Script_Property}");
                 }
                 if (printMask?.Type ?? true)
                 {
@@ -1890,7 +1693,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AlchemicalApparatus_Mask<bool?> checkMask)
         {
             if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_Property.HasBeenSet) return false;
-            if (checkMask.Model.Specific != null && (item.Model_Property.Item == null || !item.Model_Property.Item.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
             if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
             return true;
@@ -1899,7 +1702,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static AlchemicalApparatus_Mask<bool> GetHasBeenSetMask(IAlchemicalApparatusGetter item)
         {
             var ret = new AlchemicalApparatus_Mask<bool>();
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model_Property.Item));
+            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model));
             ret.Icon = item.Icon_Property.HasBeenSet;
             ret.Script = item.Script_Property.HasBeenSet;
             ret.Type = true;

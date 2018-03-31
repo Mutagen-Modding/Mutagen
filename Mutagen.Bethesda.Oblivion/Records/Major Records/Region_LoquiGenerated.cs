@@ -395,92 +395,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region XML Copy In
-        public override void CopyIn_XML(
-            XElement root,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiXmlTranslation<Region, Region_ErrorMask>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void CopyIn_XML(
-            XElement root,
-            out Region_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiXmlTranslation<Region, Region_ErrorMask>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            string path,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
-                root: root,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            string path,
-            out Region_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            Stream stream,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
-                root: root,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            Stream stream,
-            out Region_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out errorMask,
-                cmds: cmds);
-        }
-
-        public override void CopyIn_XML(
-            XElement root,
-            out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out Region_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        #endregion
-
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
@@ -569,9 +483,10 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             RegionCommon.Write_XML(
-                writer: writer,
                 item: this,
                 doMasks: doMasks,
+                writer: writer,
+                name: name,
                 errorMask: out var errorMask);
             return errorMask;
         }
@@ -685,6 +600,37 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Region_Registration.TRIGGERING_RECORD_TYPE;
+        public override IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in base.Links)
+            {
+                yield return item;
+            }
+            yield return Worldspace_Property;
+            if (Objects != null)
+            {
+                foreach (var item in Objects.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (Weather != null)
+            {
+                foreach (var item in Weather.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (Sounds != null)
+            {
+                foreach (var item in Sounds.Links)
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
         #endregion
 
         #region Binary Translation
@@ -783,104 +729,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Binary Copy In
-        public override void CopyIn_Binary(
-            MutagenFrame frame,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiBinaryTranslation<Region, Region_ErrorMask>.Instance.CopyIn(
-                frame: frame,
-                item: this,
-                skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void CopyIn_Binary(
-            MutagenFrame frame,
-            out Region_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            LoquiBinaryTranslation<Region, Region_ErrorMask>.Instance.CopyIn(
-                frame: frame,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_Binary(
-            string path,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(path))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary(
-            string path,
-            out Region_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(path))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    errorMask: out errorMask,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary(
-            Stream stream,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    cmds: cmds);
-            }
-        }
-
-        public void CopyIn_Binary(
-            Stream stream,
-            out Region_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            using (var reader = new MutagenReader(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                this.CopyIn_Binary(
-                    frame: frame,
-                    errorMask: out errorMask,
-                    cmds: cmds);
-            }
-        }
-
-        public override void CopyIn_Binary(
-            MutagenFrame frame,
-            out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_Binary(
-                frame: frame,
-                errorMask: out Region_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        #endregion
-
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
@@ -946,9 +794,9 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks)
         {
             RegionCommon.Write_Binary(
-                writer: writer,
                 item: this,
                 doMasks: doMasks,
+                writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: out var errorMask);
             return errorMask;
@@ -2275,7 +2123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (printMask?.Worldspace ?? true)
                 {
-                    fg.AppendLine($"Worldspace => {item.Worldspace}");
+                    fg.AppendLine($"Worldspace => {item.Worldspace_Property}");
                 }
                 if (printMask?.Areas?.Overall ?? true)
                 {
@@ -2328,15 +2176,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Worldspace.HasValue && checkMask.Worldspace.Value != item.Worldspace_Property.HasBeenSet) return false;
             if (checkMask.Areas.Overall.HasValue && checkMask.Areas.Overall.Value != item.Areas.HasBeenSet) return false;
             if (checkMask.Objects.Overall.HasValue && checkMask.Objects.Overall.Value != item.Objects_Property.HasBeenSet) return false;
-            if (checkMask.Objects.Specific != null && (item.Objects_Property.Item == null || !item.Objects_Property.Item.HasBeenSet(checkMask.Objects.Specific))) return false;
+            if (checkMask.Objects.Specific != null && (item.Objects == null || !item.Objects.HasBeenSet(checkMask.Objects.Specific))) return false;
             if (checkMask.Weather.Overall.HasValue && checkMask.Weather.Overall.Value != item.Weather_Property.HasBeenSet) return false;
-            if (checkMask.Weather.Specific != null && (item.Weather_Property.Item == null || !item.Weather_Property.Item.HasBeenSet(checkMask.Weather.Specific))) return false;
+            if (checkMask.Weather.Specific != null && (item.Weather == null || !item.Weather.HasBeenSet(checkMask.Weather.Specific))) return false;
             if (checkMask.MapName.Overall.HasValue && checkMask.MapName.Overall.Value != item.MapName_Property.HasBeenSet) return false;
-            if (checkMask.MapName.Specific != null && (item.MapName_Property.Item == null || !item.MapName_Property.Item.HasBeenSet(checkMask.MapName.Specific))) return false;
+            if (checkMask.MapName.Specific != null && (item.MapName == null || !item.MapName.HasBeenSet(checkMask.MapName.Specific))) return false;
             if (checkMask.Grasses.Overall.HasValue && checkMask.Grasses.Overall.Value != item.Grasses_Property.HasBeenSet) return false;
-            if (checkMask.Grasses.Specific != null && (item.Grasses_Property.Item == null || !item.Grasses_Property.Item.HasBeenSet(checkMask.Grasses.Specific))) return false;
+            if (checkMask.Grasses.Specific != null && (item.Grasses == null || !item.Grasses.HasBeenSet(checkMask.Grasses.Specific))) return false;
             if (checkMask.Sounds.Overall.HasValue && checkMask.Sounds.Overall.Value != item.Sounds_Property.HasBeenSet) return false;
-            if (checkMask.Sounds.Specific != null && (item.Sounds_Property.Item == null || !item.Sounds_Property.Item.HasBeenSet(checkMask.Sounds.Specific))) return false;
+            if (checkMask.Sounds.Specific != null && (item.Sounds == null || !item.Sounds.HasBeenSet(checkMask.Sounds.Specific))) return false;
             return true;
         }
 
@@ -2347,11 +2195,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.MapColor = item.MapColor_Property.HasBeenSet;
             ret.Worldspace = item.Worldspace_Property.HasBeenSet;
             ret.Areas = new MaskItem<bool, IEnumerable<MaskItem<bool, RegionArea_Mask<bool>>>>(item.Areas.HasBeenSet, item.Areas.Select((i) => new MaskItem<bool, RegionArea_Mask<bool>>(true, i.GetHasBeenSetMask())));
-            ret.Objects = new MaskItem<bool, RegionDataObjects_Mask<bool>>(item.Objects_Property.HasBeenSet, RegionDataObjectsCommon.GetHasBeenSetMask(item.Objects_Property.Item));
-            ret.Weather = new MaskItem<bool, RegionDataWeather_Mask<bool>>(item.Weather_Property.HasBeenSet, RegionDataWeatherCommon.GetHasBeenSetMask(item.Weather_Property.Item));
-            ret.MapName = new MaskItem<bool, RegionDataMapName_Mask<bool>>(item.MapName_Property.HasBeenSet, RegionDataMapNameCommon.GetHasBeenSetMask(item.MapName_Property.Item));
-            ret.Grasses = new MaskItem<bool, RegionDataGrasses_Mask<bool>>(item.Grasses_Property.HasBeenSet, RegionDataGrassesCommon.GetHasBeenSetMask(item.Grasses_Property.Item));
-            ret.Sounds = new MaskItem<bool, RegionDataSounds_Mask<bool>>(item.Sounds_Property.HasBeenSet, RegionDataSoundsCommon.GetHasBeenSetMask(item.Sounds_Property.Item));
+            ret.Objects = new MaskItem<bool, RegionDataObjects_Mask<bool>>(item.Objects_Property.HasBeenSet, RegionDataObjectsCommon.GetHasBeenSetMask(item.Objects));
+            ret.Weather = new MaskItem<bool, RegionDataWeather_Mask<bool>>(item.Weather_Property.HasBeenSet, RegionDataWeatherCommon.GetHasBeenSetMask(item.Weather));
+            ret.MapName = new MaskItem<bool, RegionDataMapName_Mask<bool>>(item.MapName_Property.HasBeenSet, RegionDataMapNameCommon.GetHasBeenSetMask(item.MapName));
+            ret.Grasses = new MaskItem<bool, RegionDataGrasses_Mask<bool>>(item.Grasses_Property.HasBeenSet, RegionDataGrassesCommon.GetHasBeenSetMask(item.Grasses));
+            ret.Sounds = new MaskItem<bool, RegionDataSounds_Mask<bool>>(item.Sounds_Property.HasBeenSet, RegionDataSoundsCommon.GetHasBeenSetMask(item.Sounds));
             return ret;
         }
 
