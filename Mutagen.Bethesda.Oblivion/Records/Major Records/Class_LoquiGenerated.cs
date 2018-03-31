@@ -650,6 +650,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
+        public new static readonly RecordType GRUP_RECORD_TYPE = Class_Registration.TRIGGERING_RECORD_TYPE;
         public DATADataType DATADataTypeState;
         [Flags]
         public enum DATADataType

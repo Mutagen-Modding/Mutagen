@@ -339,6 +339,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region Mutagen
+        public new static readonly RecordType GRUP_RECORD_TYPE = RegionData_Registration.TRIGGERING_RECORD_TYPE;
+        #endregion
+
         #region Binary Translation
         #region Binary Copy In
         public virtual void CopyIn_Binary(

@@ -40,8 +40,7 @@ namespace Mutagen.Bethesda
 
         static Group()
         {
-            var register = LoquiRegistration.GetRegister(typeof(T));
-            T_RecordType = (RecordType)register.GetType().GetField("TRIGGERING_RECORD_TYPE").GetValue(null);
+            T_RecordType = (RecordType)LoquiRegistration.GetRegister(typeof(T)).GetType().GetField(Mutagen.Bethesda.Constants.TRIGGERING_RECORDTYPE_MEMBER).GetValue(null);
             
         }
 
@@ -472,6 +471,7 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region Mutagen
+        public static readonly RecordType GRUP_RECORD_TYPE = (RecordType)typeof(T).GetField(Mutagen.Bethesda.Constants.GRUP_RECORDTYPE_MEMBER).GetValue(null);
         public static readonly RecordType T_RecordType;
         #endregion
 

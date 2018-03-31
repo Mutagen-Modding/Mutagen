@@ -59,8 +59,7 @@ namespace Mutagen.Bethesda.Generation
         {
             foreach (var genName in GetGenerics(obj, fg))
             {
-                fg.AppendLine($"var register = LoquiRegistration.GetRegister(typeof(T));");
-                fg.AppendLine($"{genName}_RecordType = (RecordType)register.GetType().GetField(\"{Mutagen.Bethesda.Constants.TRIGGERING_RECORDTYPE_MEMBER}\").GetValue(null);");
+                fg.AppendLine($"{genName}_RecordType = (RecordType)LoquiRegistration.GetRegister(typeof(T)).GetType().GetField(Mutagen.Bethesda.Constants.{nameof(Mutagen.Bethesda.Constants.TRIGGERING_RECORDTYPE_MEMBER)}).GetValue(null);");
             }
             await base.GenerateInStaticCtor(obj, fg);
         }

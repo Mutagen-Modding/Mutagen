@@ -564,6 +564,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
+        public new static readonly RecordType GRUP_RECORD_TYPE = Effect_Registration.TRIGGERING_RECORD_TYPE;
         static partial void SpecialParse_EffectInitial(
             Effect item,
             MutagenFrame frame,

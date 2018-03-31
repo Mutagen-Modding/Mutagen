@@ -522,6 +522,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
+        public new static readonly RecordType GRUP_RECORD_TYPE = LeveledItem_Registration.TRIGGERING_RECORD_TYPE;
         static partial void SpecialParse_Vestigial(
             LeveledItem item,
             MutagenFrame frame,

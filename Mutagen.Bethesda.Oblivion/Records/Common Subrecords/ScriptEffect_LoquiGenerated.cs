@@ -511,6 +511,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
+        public new static readonly RecordType GRUP_RECORD_TYPE = ScriptEffect_Registration.TRIGGERING_RECORD_TYPE;
         public SCITDataType SCITDataTypeState;
         [Flags]
         public enum SCITDataType

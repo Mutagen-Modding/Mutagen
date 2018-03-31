@@ -996,8 +996,6 @@ namespace Mutagen.Bethesda.Internals
             }
         }
 
-        public const int NumStructFields = 4;
-        public const int NumTypedFields = 1;
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType PACK_HEADER = new RecordType("PACK");
         public static readonly RecordType CLMT_HEADER = new RecordType("CLMT");
@@ -1121,6 +1119,8 @@ namespace Mutagen.Bethesda.Internals
                     })
             );
         });
+        public const int NumStructFields = 4;
+        public const int NumTypedFields = 1;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;

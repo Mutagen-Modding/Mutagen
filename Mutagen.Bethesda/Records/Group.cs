@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda
         {
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer,
-                T_RecordType.Type,
+                GRUP_RECORD_TYPE.Type,
                 doMasks: errorMask != null,
                 nullTerminate: false,
                 errorMask: out var err);

@@ -355,11 +355,16 @@ namespace Mutagen.Bethesda.Tests
         }
 
         [Fact]
-        public async Task OblivionESM_Binary()
+        public Task OblivionESM_Binary()
+        {
+            return OblivionESM_Binary_Internal(deleteAfter: true);
+        }
+
+        public async Task OblivionESM_Binary_Internal(bool deleteAfter)
         {
             var mod = OblivionMod.Create_Binary(
-                Properties.Settings.Default.OblivionESM,
-                out var inputErrMask);
+            Properties.Settings.Default.OblivionESM,
+            out var inputErrMask);
             Assert.False(inputErrMask?.IsInError() ?? false);
 
             var instructions = GetOblivionInstructions();
@@ -371,8 +376,8 @@ namespace Mutagen.Bethesda.Tests
                     filePath: Properties.Settings.Default.OblivionESM,
                     uninterestingTypes: OblivionMod.NonTypeGroups);
             });
-            var compressionTest = Task.Run(() => OblivionESM_Compression(mod, instructions, fileLocations));
-            var test = Task.Run(() => OblivionESM_Typical(mod, instructions, inputErrMask: inputErrMask, fileLocationsTask: fileLocations));
+            var compressionTest = Task.Run(() => OblivionESM_Compression(mod, instructions, fileLocations, deleteAfter: deleteAfter));
+            var test = Task.Run(() => OblivionESM_Typical(mod, instructions, inputErrMask: inputErrMask, fileLocationsTask: fileLocations, deleteAfter: deleteAfter));
             await compressionTest;
             await test;
         }
@@ -380,7 +385,9 @@ namespace Mutagen.Bethesda.Tests
         private async Task OblivionESM_Typical(
             OblivionMod mod,
             BinaryProcessorInstructions instructions,
-            OblivionMod_ErrorMask inputErrMask, Task<MajorRecordLocator.FileLocations> fileLocationsTask)
+            OblivionMod_ErrorMask inputErrMask,
+            Task<MajorRecordLocator.FileLocations> fileLocationsTask,
+            bool deleteAfter)
         {
             MajorRecordLocator.FileLocations fileLocs = await fileLocationsTask;
 
@@ -395,7 +402,7 @@ namespace Mutagen.Bethesda.Tests
                     compressed: false);
             }
 
-            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary"))))
+            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary")), deleteAfter: deleteAfter))
             {
                 var oblivionOutputPath = Path.Combine(tmp.Dir.FullName, Constants.OBLIVION_ESM);
                 var processedPath = Path.Combine(tmp.Dir.FullName, $"{Constants.OBLIVION_ESM}_Processed");
@@ -421,17 +428,29 @@ namespace Mutagen.Bethesda.Tests
                         sourceSkips: new RangeCollection(instructions.Instruction.SkipSourceSections),
                         targetSkips: new RangeCollection(instructions.Instruction.SkipOutputSections));
                     Assert.False(outputErrMask?.IsInError() ?? false);
-                    CopyOverOffendingRecords(
-                        mod: mod,
-                        sections: ret.Sections,
-                        tmpFolder: tmp.Dir.FullName,
-                        origPath: Properties.Settings.Default.OblivionESM,
-                        processedPath: processedPath,
-                        outputPath: oblivionOutputPath,
-                        originalFileLocs: fileLocs);
+                    Exception copyOverEx = null;
+                    try
+                    {
+                        CopyOverOffendingRecords(
+                            mod: mod,
+                            sections: ret.Sections,
+                            tmpFolder: tmp.Dir.FullName,
+                            origPath: Properties.Settings.Default.OblivionESM,
+                            processedPath: processedPath,
+                            outputPath: oblivionOutputPath,
+                            originalFileLocs: fileLocs);
+                    }
+                    catch (Exception ex)
+                    {
+                        copyOverEx = ex;
+                    }
                     if (ret.Exception != null)
                     {
                         throw ret.Exception;
+                    }
+                    if (copyOverEx != null)
+                    {
+                        throw copyOverEx;
                     }
                 }
             }
@@ -500,11 +519,15 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        private async Task OblivionESM_Compression(OblivionMod mod, BinaryProcessorInstructions instructions, Task<MajorRecordLocator.FileLocations> fileLocationsTasks)
+        private async Task OblivionESM_Compression(
+            OblivionMod mod,
+            BinaryProcessorInstructions instructions,
+            Task<MajorRecordLocator.FileLocations> fileLocationsTasks,
+            bool deleteAfter)
         {
             MajorRecordLocator.FileLocations fileLocs = await fileLocationsTasks;
 
-            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary_CompressionTests"))))
+            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary_CompressionTests")), deleteAfter: deleteAfter))
             {
                 List<Task> tasks = new List<Task>();
                 int i = 0;

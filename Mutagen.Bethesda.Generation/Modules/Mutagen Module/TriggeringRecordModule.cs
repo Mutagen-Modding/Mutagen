@@ -97,8 +97,8 @@ namespace Mutagen.Bethesda.Generation
             {
                 recordTypes.Add(recType);
             }
-            var trigRecType = await obj.GetObjectData().GenerationTypes;
-            trigRecordTypes.Add(trigRecType.SelectMany((kv) => kv.Key));
+            var trigRecTypes = await obj.GetObjectData().GenerationTypes;
+            trigRecordTypes.Add(trigRecTypes.SelectMany((kv) => kv.Key));
             recordTypes.Add(trigRecordTypes);
             foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
             {
@@ -225,7 +225,14 @@ namespace Mutagen.Bethesda.Generation
                     {
                         var nameKey = ObjectNamedKey.Factory(objName);
                         var grupObj = obj.ProtoGen.Gen.ObjectGenerationsByObjectNameKey[nameKey];
-                        data.RecordType = grupObj.GetRecordType();
+                        if (grupObj.GetObjectType() == ObjectType.Group)
+                        {
+                            data.RecordType = grupObj.GetGroupLoquiTypeLowest().TargetObjectGeneration.GetRecordType();
+                        }
+                        else
+                        {
+                            data.RecordType = grupObj.GetRecordType();
+                        }
                         data.TriggeringRecordAccessors.Add(grupObj.RecordTypeHeaderName(data.RecordType.Value));
                         data.TriggeringRecordTypes.Add(data.RecordType.Value);
                     }
@@ -413,6 +420,28 @@ namespace Mutagen.Bethesda.Generation
                     data.TriggeringRecordSetAccessor = data.TriggeringRecordAccessors.First();
                 }
             }
+        }
+
+        public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
+        {
+            if (obj.GetObjectType() == ObjectType.Group)
+            {
+                var grupLoqui = obj.GetGroupLoquiType();
+                if (grupLoqui.GenericDef == null)
+                {
+                    fg.AppendLine($"public static readonly {nameof(RecordType)} {Mutagen.Bethesda.Constants.GRUP_RECORDTYPE_MEMBER} = (RecordType){grupLoqui.TargetObjectGeneration.Name}.{Mutagen.Bethesda.Constants.GRUP_RECORDTYPE_MEMBER};");
+                }
+                else
+                {
+                    fg.AppendLine($"public static readonly {nameof(RecordType)} {Mutagen.Bethesda.Constants.GRUP_RECORDTYPE_MEMBER} = (RecordType)typeof(T).GetField(Mutagen.Bethesda.Constants.{nameof(Mutagen.Bethesda.Constants.GRUP_RECORDTYPE_MEMBER)}).GetValue(null);");
+                }
+            }
+            else if (await obj.IsSingleTriggerSource())
+            {
+                await obj.IsSingleTriggerSource();
+                fg.AppendLine($"public new static readonly {nameof(RecordType)} {Mutagen.Bethesda.Constants.GRUP_RECORDTYPE_MEMBER} = {obj.RegistrationName}.{Mutagen.Bethesda.Constants.TRIGGERING_RECORDTYPE_MEMBER};");
+            }
+            await base.GenerateInClass(obj, fg);
         }
     }
 }

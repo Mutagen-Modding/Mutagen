@@ -100,6 +100,13 @@ namespace Mutagen.Bethesda.Generation
             return objGen.GetObjectData().TriggeringSource;
         }
 
+        public static async Task<bool> IsSingleTriggerSource(this ObjectGeneration objGen)
+        {
+            var enumer = await objGen.GetObjectData().GenerationTypes;
+            if (!enumer.SelectMany((e) => e.Key).Distinct().Any()) return false;
+            return !enumer.SelectMany((e) => e.Key).Distinct().CountGreaterThan(1);
+        }
+
         public static string RecordTypeHeaderName(this ObjectGeneration objGen, RecordType recType)
         {
             return $"{objGen.RegistrationName}.{recType.Type}_HEADER";
@@ -113,6 +120,46 @@ namespace Mutagen.Bethesda.Generation
                 var data = f.GetFieldData();
                 return !data.HasTrigger;
             });
+        }
+
+        public static LoquiType GetGroupLoquiType(this ObjectGeneration objGen)
+        {
+            if (objGen.GetObjectType() != ObjectType.Group)
+            {
+                throw new ArgumentException();
+            }
+            foreach (var field in objGen.IterateFields())
+            {
+                if (field.Name != "Items") continue;
+                if (field is ContainerType cont)
+                {
+                    return cont.SingleTypeGen as LoquiType;
+                }
+                else if (field is DictType dictType)
+                {
+                    return dictType.ValueTypeGen as LoquiType;
+                }
+                else
+                {
+                    throw new ArgumentException();
+                }
+            }
+            throw new ArgumentException();
+        }
+        
+        public static LoquiType GetGroupLoquiTypeLowest(this ObjectGeneration objGen)
+        {
+            if (objGen.GetObjectType() != ObjectType.Group)
+            {
+                throw new ArgumentException();
+            }
+
+            var loquiType = GetGroupLoquiType(objGen);
+            while (loquiType.TargetObjectGeneration.GetObjectType() == ObjectType.Group)
+            {
+                loquiType = GetGroupLoquiType(loquiType.TargetObjectGeneration);
+            }
+            return loquiType;
         }
     }
 }

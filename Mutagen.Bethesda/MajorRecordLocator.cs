@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda
                             var recLength = new ContentLength(reader.ReadUInt32());
                             if (!grupRec.Equals(targetRec))
                             {
-                                throw new ArgumentException($"Target Record {targetRec} did not match its containing GRUP: {grupRec}");
+                                throw new ArgumentException($"Target Record {targetRec} at {frame.Position} did not match its containing GRUP: {grupRec}");
                             }
                             reader.Position += new ContentLength(4); // Skip flags
                             var formID = FormID.Factory(reader.ReadBytes(4));

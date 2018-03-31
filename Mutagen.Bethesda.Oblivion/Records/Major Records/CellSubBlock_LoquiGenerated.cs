@@ -68,21 +68,21 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte[]> ICellSubBlockGetter.LastModified_Property => this.LastModified_Property;
         #endregion
-        #region Cells
+        #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<Cell> _Cells = new NotifyingList<Cell>();
-        public INotifyingList<Cell> Cells => _Cells;
+        private readonly INotifyingList<Cell> _Items = new NotifyingList<Cell>();
+        public INotifyingList<Cell> Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<Cell> CellsEnumerable
+        public IEnumerable<Cell> ItemsEnumerable
         {
-            get => _Cells;
-            set => _Cells.SetTo(value);
+            get => _Items;
+            set => _Items.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<Cell> ICellSubBlock.Cells => _Cells;
+        INotifyingList<Cell> ICellSubBlock.Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<Cell> ICellSubBlockGetter.Cells => _Cells;
+        INotifyingListGetter<Cell> ICellSubBlockGetter.Items => _Items;
         #endregion
 
         #endregion
@@ -150,10 +150,10 @@ namespace Mutagen.Bethesda.Oblivion
             if (rhs == null) return false;
             if (GroupType != rhs.GroupType) return false;
             if (!LastModified.EqualsFast(rhs.LastModified)) return false;
-            if (Cells.HasBeenSet != rhs.Cells.HasBeenSet) return false;
-            if (Cells.HasBeenSet)
+            if (Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
+            if (Items.HasBeenSet)
             {
-                if (!Cells.SequenceEqual(rhs.Cells)) return false;
+                if (!Items.SequenceEqual(rhs.Items)) return false;
             }
             return true;
         }
@@ -163,9 +163,9 @@ namespace Mutagen.Bethesda.Oblivion
             int ret = 0;
             ret = HashHelper.GetHashCode(GroupType).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(LastModified).CombineHashCode(ret);
-            if (Cells.HasBeenSet)
+            if (Items.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(Cells).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Items).CombineHashCode(ret);
             }
             return ret;
         }
@@ -469,10 +469,10 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)CellSubBlock_FieldIndex.LastModified,
                         errorMask: errorMask));
                     break;
-                case "Cells":
-                    item._Cells.SetIfSucceeded(ListXmlTranslation<Cell, MaskItem<Exception, Cell_ErrorMask>>.Instance.Parse(
+                case "Items":
+                    item._Items.SetIfSucceeded(ListXmlTranslation<Cell, MaskItem<Exception, Cell_ErrorMask>>.Instance.Parse(
                         root: root,
-                        fieldIndex: (int)CellSubBlock_FieldIndex.Cells,
+                        fieldIndex: (int)CellSubBlock_FieldIndex.Items,
                         errorMask: errorMask,
                         transl: (XElement r, bool listDoMasks, out MaskItem<Exception, Cell_ErrorMask> listSubMask) =>
                         {
@@ -488,6 +488,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        #endregion
+
+        #region Mutagen
+        public static readonly RecordType GRUP_RECORD_TYPE = (RecordType)Cell.GRUP_RECORD_TYPE;
         #endregion
 
         #region Binary Translation
@@ -810,10 +814,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "CELL":
-                    var CellstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Cell, MaskItem<Exception, Cell_ErrorMask>>.Instance.ParseRepeatedItem(
+                    var ItemstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Cell, MaskItem<Exception, Cell_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: CellSubBlock_Registration.CELL_HEADER,
-                        fieldIndex: (int)CellSubBlock_FieldIndex.Cells,
+                        fieldIndex: (int)CellSubBlock_FieldIndex.Items,
                         lengthLength: Mutagen.Bethesda.Constants.RECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, Cell_ErrorMask> listSubMask) =>
@@ -824,8 +828,8 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         );
-                    item._Cells.SetIfSucceeded(CellstryGet);
-                    return TryGet<CellSubBlock_FieldIndex?>.Succeed(CellSubBlock_FieldIndex.Cells);
+                    item._Items.SetIfSucceeded(ItemstryGet);
+                    return TryGet<CellSubBlock_FieldIndex?>.Succeed(CellSubBlock_FieldIndex.Items);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + Constants.RECORD_LENGTH;
@@ -959,8 +963,8 @@ namespace Mutagen.Bethesda.Oblivion
                         (Byte[])obj,
                         cmds);
                     break;
-                case CellSubBlock_FieldIndex.Cells:
-                    this._Cells.SetTo((IEnumerable<Cell>)obj, cmds);
+                case CellSubBlock_FieldIndex.Items:
+                    this._Items.SetTo((IEnumerable<Cell>)obj, cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1009,8 +1013,8 @@ namespace Mutagen.Bethesda.Oblivion
                         (Byte[])pair.Value,
                         null);
                     break;
-                case CellSubBlock_FieldIndex.Cells:
-                    obj._Cells.SetTo((IEnumerable<Cell>)pair.Value, null);
+                case CellSubBlock_FieldIndex.Items:
+                    obj._Items.SetTo((IEnumerable<Cell>)pair.Value, null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1033,7 +1037,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte[] LastModified { get; set; }
         new INotifyingItem<Byte[]> LastModified_Property { get; }
 
-        new INotifyingList<Cell> Cells { get; }
+        new INotifyingList<Cell> Items { get; }
     }
 
     public partial interface ICellSubBlockGetter : ILoquiObject
@@ -1048,8 +1052,8 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte[]> LastModified_Property { get; }
 
         #endregion
-        #region Cells
-        INotifyingListGetter<Cell> Cells { get; }
+        #region Items
+        INotifyingListGetter<Cell> Items { get; }
         #endregion
 
     }
@@ -1065,7 +1069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         GroupType = 0,
         LastModified = 1,
-        Cells = 2,
+        Items = 2,
     }
     #endregion
 
@@ -1115,8 +1119,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)CellSubBlock_FieldIndex.GroupType;
                 case "LASTMODIFIED":
                     return (ushort)CellSubBlock_FieldIndex.LastModified;
-                case "CELLS":
-                    return (ushort)CellSubBlock_FieldIndex.Cells;
+                case "ITEMS":
+                    return (ushort)CellSubBlock_FieldIndex.Items;
                 default:
                     return null;
             }
@@ -1127,7 +1131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CellSubBlock_FieldIndex enu = (CellSubBlock_FieldIndex)index;
             switch (enu)
             {
-                case CellSubBlock_FieldIndex.Cells:
+                case CellSubBlock_FieldIndex.Items:
                     return true;
                 case CellSubBlock_FieldIndex.GroupType:
                 case CellSubBlock_FieldIndex.LastModified:
@@ -1142,7 +1146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CellSubBlock_FieldIndex enu = (CellSubBlock_FieldIndex)index;
             switch (enu)
             {
-                case CellSubBlock_FieldIndex.Cells:
+                case CellSubBlock_FieldIndex.Items:
                     return true;
                 case CellSubBlock_FieldIndex.GroupType:
                 case CellSubBlock_FieldIndex.LastModified:
@@ -1159,7 +1163,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case CellSubBlock_FieldIndex.GroupType:
                 case CellSubBlock_FieldIndex.LastModified:
-                case CellSubBlock_FieldIndex.Cells:
+                case CellSubBlock_FieldIndex.Items:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1175,8 +1179,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "GroupType";
                 case CellSubBlock_FieldIndex.LastModified:
                     return "LastModified";
-                case CellSubBlock_FieldIndex.Cells:
-                    return "Cells";
+                case CellSubBlock_FieldIndex.Items:
+                    return "Items";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1189,7 +1193,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case CellSubBlock_FieldIndex.GroupType:
                 case CellSubBlock_FieldIndex.LastModified:
-                case CellSubBlock_FieldIndex.Cells:
+                case CellSubBlock_FieldIndex.Items:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1203,7 +1207,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case CellSubBlock_FieldIndex.GroupType:
                 case CellSubBlock_FieldIndex.LastModified:
-                case CellSubBlock_FieldIndex.Cells:
+                case CellSubBlock_FieldIndex.Items:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1219,7 +1223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(GroupTypeEnum);
                 case CellSubBlock_FieldIndex.LastModified:
                     return typeof(Byte[]);
-                case CellSubBlock_FieldIndex.Cells:
+                case CellSubBlock_FieldIndex.Items:
                     return typeof(NotifyingList<Cell>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1301,17 +1305,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)CellSubBlock_FieldIndex.LastModified, ex);
                 }
             }
-            if (copyMask?.Cells.Overall != CopyOption.Skip)
+            if (copyMask?.Items.Overall != CopyOption.Skip)
             {
                 try
                 {
-                    item.Cells.SetToWithDefault(
-                        rhs: rhs.Cells,
-                        def: def?.Cells,
+                    item.Items.SetToWithDefault(
+                        rhs: rhs.Items,
+                        def: def?.Items,
                         cmds: cmds,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Cells.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Items.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -1319,10 +1323,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     if (r == null) return default(Cell);
                                     return Cell.Copy(
                                         r,
-                                        copyMask?.Cells?.Specific,
+                                        copyMask?.Items?.Specific,
                                         def: d);
                                 default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Cells.Overall}. Cannot execute copy.");
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Items.Overall}. Cannot execute copy.");
                             }
                         }
                         );
@@ -1330,7 +1334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)CellSubBlock_FieldIndex.Cells, ex);
+                    errorMask().SetNthException((int)CellSubBlock_FieldIndex.Items, ex);
                 }
             }
         }
@@ -1350,8 +1354,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case CellSubBlock_FieldIndex.LastModified:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case CellSubBlock_FieldIndex.Cells:
-                    obj.Cells.HasBeenSet = on;
+                case CellSubBlock_FieldIndex.Items:
+                    obj.Items.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1372,8 +1376,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case CellSubBlock_FieldIndex.LastModified:
                     obj.LastModified = default(Byte[]);
                     break;
-                case CellSubBlock_FieldIndex.Cells:
-                    obj.Cells.Unset(cmds);
+                case CellSubBlock_FieldIndex.Items:
+                    obj.Items.Unset(cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1390,8 +1394,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case CellSubBlock_FieldIndex.GroupType:
                 case CellSubBlock_FieldIndex.LastModified:
                     return true;
-                case CellSubBlock_FieldIndex.Cells:
-                    return obj.Cells.HasBeenSet;
+                case CellSubBlock_FieldIndex.Items:
+                    return obj.Items.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1408,8 +1412,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.GroupType;
                 case CellSubBlock_FieldIndex.LastModified:
                     return obj.LastModified;
-                case CellSubBlock_FieldIndex.Cells:
-                    return obj.Cells;
+                case CellSubBlock_FieldIndex.Items:
+                    return obj.Items;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1421,7 +1425,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.GroupType = default(GroupTypeEnum);
             item.LastModified = default(Byte[]);
-            item.Cells.Unset(cmds.ToUnsetParams());
+            item.Items.Unset(cmds.ToUnsetParams());
         }
 
         public static CellSubBlock_Mask<bool> GetEqualsMask(
@@ -1441,30 +1445,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.GroupType = item.GroupType == rhs.GroupType;
             ret.LastModified = item.LastModified.EqualsFast(rhs.LastModified);
-            if (item.Cells.HasBeenSet == rhs.Cells.HasBeenSet)
+            if (item.Items.HasBeenSet == rhs.Items.HasBeenSet)
             {
-                if (item.Cells.HasBeenSet)
+                if (item.Items.HasBeenSet)
                 {
-                    ret.Cells = new MaskItem<bool, IEnumerable<MaskItem<bool, Cell_Mask<bool>>>>();
-                    ret.Cells.Specific = item.Cells.SelectAgainst<Cell, MaskItem<bool, Cell_Mask<bool>>>(rhs.Cells, ((l, r) =>
+                    ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, Cell_Mask<bool>>>>();
+                    ret.Items.Specific = item.Items.SelectAgainst<Cell, MaskItem<bool, Cell_Mask<bool>>>(rhs.Items, ((l, r) =>
                     {
                         MaskItem<bool, Cell_Mask<bool>> itemRet;
                         itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
-                    ), out ret.Cells.Overall);
-                    ret.Cells.Overall = ret.Cells.Overall && ret.Cells.Specific.All((b) => b.Overall);
+                    ), out ret.Items.Overall);
+                    ret.Items.Overall = ret.Items.Overall && ret.Items.Specific.All((b) => b.Overall);
                 }
                 else
                 {
-                    ret.Cells = new MaskItem<bool, IEnumerable<MaskItem<bool, Cell_Mask<bool>>>>();
-                    ret.Cells.Overall = true;
+                    ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, Cell_Mask<bool>>>>();
+                    ret.Items.Overall = true;
                 }
             }
             else
             {
-                ret.Cells = new MaskItem<bool, IEnumerable<MaskItem<bool, Cell_Mask<bool>>>>();
-                ret.Cells.Overall = false;
+                ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, Cell_Mask<bool>>>>();
+                ret.Items.Overall = false;
             }
         }
 
@@ -1503,13 +1507,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"LastModified => {item.LastModified}");
                 }
-                if (printMask?.Cells?.Overall ?? true)
+                if (printMask?.Items?.Overall ?? true)
                 {
-                    fg.AppendLine("Cells =>");
+                    fg.AppendLine("Items =>");
                     fg.AppendLine("[");
                     using (new DepthWrapper(fg))
                     {
-                        foreach (var subItem in item.Cells)
+                        foreach (var subItem in item.Items)
                         {
                             fg.AppendLine("[");
                             using (new DepthWrapper(fg))
@@ -1529,7 +1533,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this ICellSubBlockGetter item,
             CellSubBlock_Mask<bool?> checkMask)
         {
-            if (checkMask.Cells.Overall.HasValue && checkMask.Cells.Overall.Value != item.Cells.HasBeenSet) return false;
+            if (checkMask.Items.Overall.HasValue && checkMask.Items.Overall.Value != item.Items.HasBeenSet) return false;
             return true;
         }
 
@@ -1538,7 +1542,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new CellSubBlock_Mask<bool>();
             ret.GroupType = true;
             ret.LastModified = true;
-            ret.Cells = new MaskItem<bool, IEnumerable<MaskItem<bool, Cell_Mask<bool>>>>(item.Cells.HasBeenSet, item.Cells.Select((i) => new MaskItem<bool, Cell_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, Cell_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.Select((i) => new MaskItem<bool, Cell_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -1586,13 +1590,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.LastModified_Property,
                         fieldIndex: (int)CellSubBlock_FieldIndex.LastModified,
                         errorMask: errorMask);
-                    if (item.Cells.HasBeenSet)
+                    if (item.Items.HasBeenSet)
                     {
                         ListXmlTranslation<Cell, MaskItem<Exception, Cell_ErrorMask>>.Instance.Write(
                             writer: writer,
-                            name: nameof(item.Cells),
-                            item: item.Cells,
-                            fieldIndex: (int)CellSubBlock_FieldIndex.Cells,
+                            name: nameof(item.Items),
+                            item: item.Items,
+                            fieldIndex: (int)CellSubBlock_FieldIndex.Items,
                             errorMask: errorMask,
                             transl: (Cell subItem, bool listDoMasks, out MaskItem<Exception, Cell_ErrorMask> listSubMask) =>
                             {
@@ -1694,8 +1698,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.ListBinaryTranslation<Cell, MaskItem<Exception, Cell_ErrorMask>>.Instance.Write(
                 writer: writer,
-                item: item.Cells,
-                fieldIndex: (int)CellSubBlock_FieldIndex.Cells,
+                item: item.Items,
+                fieldIndex: (int)CellSubBlock_FieldIndex.Items,
                 errorMask: errorMask,
                 transl: (Cell subItem, bool listDoMasks, out MaskItem<Exception, Cell_ErrorMask> listSubMask) =>
                 {
@@ -1727,14 +1731,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             this.GroupType = initialValue;
             this.LastModified = initialValue;
-            this.Cells = new MaskItem<T, IEnumerable<MaskItem<T, Cell_Mask<T>>>>(initialValue, null);
+            this.Items = new MaskItem<T, IEnumerable<MaskItem<T, Cell_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
         #region Members
         public T GroupType;
         public T LastModified;
-        public MaskItem<T, IEnumerable<MaskItem<T, Cell_Mask<T>>>> Cells;
+        public MaskItem<T, IEnumerable<MaskItem<T, Cell_Mask<T>>>> Items;
         #endregion
 
         #region Equals
@@ -1749,7 +1753,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return false;
             if (!object.Equals(this.GroupType, rhs.GroupType)) return false;
             if (!object.Equals(this.LastModified, rhs.LastModified)) return false;
-            if (!object.Equals(this.Cells, rhs.Cells)) return false;
+            if (!object.Equals(this.Items, rhs.Items)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -1757,7 +1761,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int ret = 0;
             ret = ret.CombineHashCode(this.GroupType?.GetHashCode());
             ret = ret.CombineHashCode(this.LastModified?.GetHashCode());
-            ret = ret.CombineHashCode(this.Cells?.GetHashCode());
+            ret = ret.CombineHashCode(this.Items?.GetHashCode());
             return ret;
         }
 
@@ -1768,12 +1772,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (!eval(this.GroupType)) return false;
             if (!eval(this.LastModified)) return false;
-            if (this.Cells != null)
+            if (this.Items != null)
             {
-                if (!eval(this.Cells.Overall)) return false;
-                if (this.Cells.Specific != null)
+                if (!eval(this.Items.Overall)) return false;
+                if (this.Items.Specific != null)
                 {
-                    foreach (var item in this.Cells.Specific)
+                    foreach (var item in this.Items.Specific)
                     {
                         if (!eval(item.Overall)) return false;
                         if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
@@ -1796,15 +1800,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             obj.GroupType = eval(this.GroupType);
             obj.LastModified = eval(this.LastModified);
-            if (Cells != null)
+            if (Items != null)
             {
-                obj.Cells = new MaskItem<R, IEnumerable<MaskItem<R, Cell_Mask<R>>>>();
-                obj.Cells.Overall = eval(this.Cells.Overall);
-                if (Cells.Specific != null)
+                obj.Items = new MaskItem<R, IEnumerable<MaskItem<R, Cell_Mask<R>>>>();
+                obj.Items.Overall = eval(this.Items.Overall);
+                if (Items.Specific != null)
                 {
                     List<MaskItem<R, Cell_Mask<R>>> l = new List<MaskItem<R, Cell_Mask<R>>>();
-                    obj.Cells.Specific = l;
-                    foreach (var item in Cells.Specific)
+                    obj.Items.Specific = l;
+                    foreach (var item in Items.Specific)
                     {
                         MaskItem<R, Cell_Mask<R>> mask = default(MaskItem<R, Cell_Mask<R>>);
                         if (item != null)
@@ -1826,7 +1830,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Clear Enumerables
         public void ClearEnumerables()
         {
-            this.Cells.Specific = null;
+            this.Items.Specific = null;
         }
         #endregion
 
@@ -1857,19 +1861,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"LastModified => {LastModified}");
                 }
-                if (printMask?.Cells?.Overall ?? true)
+                if (printMask?.Items?.Overall ?? true)
                 {
-                    fg.AppendLine("Cells =>");
+                    fg.AppendLine("Items =>");
                     fg.AppendLine("[");
                     using (new DepthWrapper(fg))
                     {
-                        if (Cells.Overall != null)
+                        if (Items.Overall != null)
                         {
-                            fg.AppendLine(Cells.Overall.ToString());
+                            fg.AppendLine(Items.Overall.ToString());
                         }
-                        if (Cells.Specific != null)
+                        if (Items.Specific != null)
                         {
-                            foreach (var subItem in Cells.Specific)
+                            foreach (var subItem in Items.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -1907,7 +1911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         public Exception GroupType;
         public Exception LastModified;
-        public MaskItem<Exception, IEnumerable<MaskItem<Exception, Cell_ErrorMask>>> Cells;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, Cell_ErrorMask>>> Items;
         #endregion
 
         #region IErrorMask
@@ -1922,8 +1926,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case CellSubBlock_FieldIndex.LastModified:
                     this.LastModified = ex;
                     break;
-                case CellSubBlock_FieldIndex.Cells:
-                    this.Cells = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Cell_ErrorMask>>>(ex, null);
+                case CellSubBlock_FieldIndex.Items:
+                    this.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Cell_ErrorMask>>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1941,8 +1945,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case CellSubBlock_FieldIndex.LastModified:
                     this.LastModified = (Exception)obj;
                     break;
-                case CellSubBlock_FieldIndex.Cells:
-                    this.Cells = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Cell_ErrorMask>>>)obj;
+                case CellSubBlock_FieldIndex.Items:
+                    this.Items = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Cell_ErrorMask>>>)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1954,7 +1958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Overall != null) return true;
             if (GroupType != null) return true;
             if (LastModified != null) return true;
-            if (Cells != null) return true;
+            if (Items != null) return true;
             return false;
         }
         #endregion
@@ -1991,17 +1995,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             fg.AppendLine($"GroupType => {GroupType}");
             fg.AppendLine($"LastModified => {LastModified}");
-            fg.AppendLine("Cells =>");
+            fg.AppendLine("Items =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (Cells.Overall != null)
+                if (Items.Overall != null)
                 {
-                    fg.AppendLine(Cells.Overall.ToString());
+                    fg.AppendLine(Items.Overall.ToString());
                 }
-                if (Cells.Specific != null)
+                if (Items.Specific != null)
                 {
-                    foreach (var subItem in Cells.Specific)
+                    foreach (var subItem in Items.Specific)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -2022,7 +2026,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new CellSubBlock_ErrorMask();
             ret.GroupType = this.GroupType.Combine(rhs.GroupType);
             ret.LastModified = this.LastModified.Combine(rhs.LastModified);
-            ret.Cells = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Cell_ErrorMask>>>(this.Cells.Overall.Combine(rhs.Cells.Overall), new List<MaskItem<Exception, Cell_ErrorMask>>(this.Cells.Specific.And(rhs.Cells.Specific)));
+            ret.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Cell_ErrorMask>>>(this.Items.Overall.Combine(rhs.Items.Overall), new List<MaskItem<Exception, Cell_ErrorMask>>(this.Items.Specific.And(rhs.Items.Specific)));
             return ret;
         }
         public static CellSubBlock_ErrorMask Combine(CellSubBlock_ErrorMask lhs, CellSubBlock_ErrorMask rhs)
@@ -2038,7 +2042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public bool GroupType;
         public bool LastModified;
-        public MaskItem<CopyOption, Cell_CopyMask> Cells;
+        public MaskItem<CopyOption, Cell_CopyMask> Items;
         #endregion
 
     }

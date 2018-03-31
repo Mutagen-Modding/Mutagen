@@ -448,6 +448,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
+        public new static readonly RecordType GRUP_RECORD_TYPE = ItemEntry_Registration.TRIGGERING_RECORD_TYPE;
         public bool StructCustom;
         #endregion
 

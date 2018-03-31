@@ -22,6 +22,7 @@ namespace Mutagen.Bethesda
         public static readonly ContentLength GRUP_LENGTH = HEADER_LENGTH + RECORD_META_LENGTH;
         public static readonly ContentLength GRUP_HEADER_OFFSET = new ContentLength(-8);
         public const string TRIGGERING_RECORDTYPE_MEMBER = "TRIGGERING_RECORD_TYPE";
+        public const string GRUP_RECORDTYPE_MEMBER = "GRUP_RECORD_TYPE";
 
         public const string OBLIVION_ESM = "Oblivion.esm";
         public const string KNIGHTS_ESP = "Knights.esp";

@@ -512,6 +512,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region Mutagen
+        public new static readonly RecordType GRUP_RECORD_TYPE = Furnature_Registration.TRIGGERING_RECORD_TYPE;
+        #endregion
+
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
