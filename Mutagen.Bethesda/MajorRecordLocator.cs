@@ -70,11 +70,22 @@ namespace Mutagen.Bethesda
                     key: section.Min,
                     higher: false,
                     result: out var start);
+                var gotEndStart = _fromStart.TryGetInDirectionIndex(
+                    key: section.Max,
+                    higher: true,
+                    result: out var endStart);
                 var gotEnd = _fromEnd.TryGetInDirectionIndex(
                     key: section.Max,
                     higher: true,
                     result: out var end);
-                if (!gotStart || !gotEnd)
+                if (!gotStart || !gotEnd || !gotEndStart)
+                {
+                    ids = null;
+                    return false;
+                }
+                var endLocation = _fromEnd.Keys[end];
+                var endStartLocation = _fromStart.Keys[endStart];
+                if (endLocation > endStartLocation)
                 {
                     ids = null;
                     return false;
