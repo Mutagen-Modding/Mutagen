@@ -111,9 +111,12 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            using (HeaderExport.ExportSubRecordHeader(writer, PathGrid_Registration.PGAG_HEADER))
+            if (item.Unknown_Property.HasBeenSet)
             {
-                writer.Write(item.Unknown);
+                using (HeaderExport.ExportSubRecordHeader(writer, PathGrid_Registration.PGAG_HEADER))
+                {
+                    writer.Write(item.Unknown);
+                }
             }
 
             using (HeaderExport.ExportSubRecordHeader(writer, PGRR))

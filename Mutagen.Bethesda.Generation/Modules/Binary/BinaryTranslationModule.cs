@@ -226,7 +226,7 @@ namespace Mutagen.Bethesda.Generation
                                 if (data.CustomBinaryEnd)
                                 {
                                     using (var args = new ArgsWrapper(fg,
-                                        "CustomBinaryEnd"))
+                                        "CustomBinaryEnd_Import"))
                                     {
                                         args.Add("frame: frame");
                                         args.Add("obj: ret");
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Generation
                             if (data.CustomBinaryEnd)
                             {
                                 using (var args = new ArgsWrapper(fg,
-                                    "CustomBinaryEnd"))
+                                    "CustomBinaryEnd_Import"))
                                 {
                                     args.Add("frame: frame");
                                     args.Add("obj: ret");
@@ -619,11 +619,35 @@ namespace Mutagen.Bethesda.Generation
             var data = obj.GetObjectData();
             if (!data.CustomBinaryEnd) return;
             using (var args = new ArgsWrapper(fg,
-                $"static partial void CustomBinaryEnd"))
+                $"static partial void CustomBinaryEnd_Import"))
             {
                 args.Add("MutagenFrame frame");
                 args.Add($"{obj.ObjectName} obj");
                 args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
+            }
+            using (var args = new ArgsWrapper(fg,
+                $"static partial void CustomBinaryEnd_Export"))
+            {
+                args.Add("MutagenWriter writer");
+                args.Add($"{obj.ObjectName} obj");
+                args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
+            }
+            using (var args = new FunctionWrapper(fg,
+                $"public static void CustomBinaryEnd_ExportInternal"))
+            {
+                args.Add("MutagenWriter writer");
+                args.Add($"{obj.ObjectName} obj");
+                args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
+            }
+            using (new BraceWrapper(fg))
+            {
+                using (var args = new ArgsWrapper(fg,
+                    $"CustomBinaryEnd_Export"))
+                {
+                    args.Add($"writer: writer");
+                    args.Add($"obj: obj");
+                    args.Add($"errorMask: errorMask");
+                }
             }
         }
 
@@ -846,6 +870,7 @@ namespace Mutagen.Bethesda.Generation
 
         protected override void GenerateWriteSnippet(ObjectGeneration obj, FileGeneration fg)
         {
+            var data = obj.GetObjectData();
             var hasRecType = obj.TryGetRecordType(out var recType);
             if (hasRecType)
             {
@@ -911,11 +936,22 @@ namespace Mutagen.Bethesda.Generation
                         }
                     }
                 }
+                if (data.CustomBinaryEnd)
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"{obj.Name}.CustomBinaryEnd_ExportInternal"))
+                    {
+                        args.Add("writer: writer");
+                        args.Add("obj: item");
+                        args.Add("errorMask: errorMask");
+                    }
+                }
             }
         }
 
         private void GenerateWriteExtras(ObjectGeneration obj, FileGeneration fg)
         {
+            var data = obj.GetObjectData();
             if (HasEmbeddedFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
@@ -944,11 +980,11 @@ namespace Mutagen.Bethesda.Generation
                     }
                     foreach (var field in obj.IterateFields(nonIntegrated: true, expandSets: SetMarkerType.ExpandSets.False))
                     {
-                        if (field.TryGetFieldData(out var data)
-                            && data.HasTrigger) continue;
-                        if (field.Derivative && !data.CustomBinary) continue;
+                        if (field.TryGetFieldData(out var fieldData)
+                            && fieldData.HasTrigger) continue;
+                        if (field.Derivative && !fieldData.CustomBinary) continue;
                         var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
-                        if (data.CustomBinary)
+                        if (fieldData.CustomBinary)
                         {
                             CustomLogicTranslationGeneration.GenerateWrite(
                                 fg: fg,
@@ -1004,10 +1040,10 @@ namespace Mutagen.Bethesda.Generation
                     }
                     foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
                     {
-                        if (!field.TryGetFieldData(out var data)
-                            || !data.HasTrigger) continue;
-                        if (field.Derivative && !data.CustomBinary) continue;
-                        if (data.CustomBinary)
+                        if (!field.TryGetFieldData(out var fieldData)
+                            || !fieldData.HasTrigger) continue;
+                        if (field.Derivative && !fieldData.CustomBinary) continue;
+                        if (fieldData.CustomBinary)
                         {
                             CustomLogicTranslationGeneration.GenerateWrite(
                                 fg: fg,
@@ -1023,7 +1059,7 @@ namespace Mutagen.Bethesda.Generation
 
                         if (field is DataType dataType)
                         {
-                            fg.AppendLine($"using (HeaderExport.ExportSubRecordHeader(writer, {obj.RecordTypeHeaderName(data.RecordType.Value)}))");
+                            fg.AppendLine($"using (HeaderExport.ExportSubRecordHeader(writer, {obj.RecordTypeHeaderName(fieldData.RecordType.Value)}))");
                             using (new BraceWrapper(fg))
                             {
                                 bool isInRange = false;
@@ -1086,7 +1122,7 @@ namespace Mutagen.Bethesda.Generation
                         else
                         {
                             if (!generator.ShouldGenerateWrite(field)) continue;
-                            if (data.NoBinary) continue;
+                            if (fieldData.NoBinary) continue;
                             generator.GenerateWrite(
                                 fg: fg,
                                 objGen: obj,

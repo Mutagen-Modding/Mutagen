@@ -1325,7 +1325,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fillTyped: Fill_Binary_RecordTypes);
             try
             {
-                CustomBinaryEnd(
+                CustomBinaryEnd_Import(
                     frame: frame,
                     obj: ret,
                     errorMask: errorMask);
@@ -1481,10 +1481,24 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        static partial void CustomBinaryEnd(
+        static partial void CustomBinaryEnd_Import(
             MutagenFrame frame,
             Cell obj,
             Func<Cell_ErrorMask> errorMask);
+        static partial void CustomBinaryEnd_Export(
+            MutagenWriter writer,
+            Cell obj,
+            Func<Cell_ErrorMask> errorMask);
+        public static void CustomBinaryEnd_ExportInternal(
+            MutagenWriter writer,
+            Cell obj,
+            Func<Cell_ErrorMask> errorMask)
+        {
+            CustomBinaryEnd_Export(
+                writer: writer,
+                obj: obj,
+                errorMask: errorMask);
+        }
         #endregion
 
         public Cell Copy(
@@ -3825,6 +3839,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter,
+                        errorMask: errorMask);
+                    Cell.CustomBinaryEnd_ExportInternal(
+                        writer: writer,
+                        obj: item,
                         errorMask: errorMask);
                 }
             }

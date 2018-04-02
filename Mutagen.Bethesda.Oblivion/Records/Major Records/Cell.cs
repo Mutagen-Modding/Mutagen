@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Loqui;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;
 
@@ -24,7 +25,7 @@ namespace Mutagen.Bethesda.Oblivion
             BehaveLikeExteriod = 0x0080,
         }
 
-        static partial void CustomBinaryEnd(MutagenFrame frame, Cell obj, Func<Cell_ErrorMask> errorMask)
+        static partial void CustomBinaryEnd_Import(MutagenFrame frame, Cell obj, Func<Cell_ErrorMask> errorMask)
         {
             if (frame.Reader.Complete) return;
             var next = HeaderTranslation.GetNextType(frame.Reader, out var len, hopGroup: false);
@@ -154,6 +155,95 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 );
             obj.Temporary.SetIfSucceeded(persistentTryGet);
+        }
+
+        static partial void CustomBinaryEnd_Export(MutagenWriter writer, Cell obj, Func<Cell_ErrorMask> errorMask)
+        {
+            if (obj.Persistent.Count == 0
+                && obj.Temporary.Count == 0
+                && obj.VisibleWhenDistant.Count == 0
+                && !obj.PathGrid_Property.HasBeenSet) return;
+            using (HeaderExport.ExportRecordHeader(writer, Group_Registration.GRUP_HEADER))
+            {
+                writer.WriteZeros(4);
+                writer.Write((int)GroupTypeEnum.CellChildren);
+                writer.WriteZeros(4);
+                if (obj.Persistent.Count > 0)
+                {
+                    using (HeaderExport.ExportRecordHeader(writer, Group_Registration.GRUP_HEADER))
+                    {
+                        writer.WriteZeros(4);
+                        writer.Write((int)GroupTypeEnum.CellPersistentChildren);
+                        writer.WriteZeros(4);
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: obj.Persistent,
+                            fieldIndex: (int)Cell_FieldIndex.Persistent,
+                            errorMask: errorMask,
+                            transl: (Placed subItem, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
+                            {
+                                LoquiBinaryTranslation<Placed, Placed_ErrorMask>.Instance.Write(
+                                    writer: writer,
+                                    item: subItem,
+                                    doMasks: listDoMasks,
+                                    errorMask: out listSubMask);
+                            });
+                    }
+                }
+                if (obj.Temporary.Count > 0
+                    || obj.PathGrid_Property.HasBeenSet)
+                {
+                    using (HeaderExport.ExportRecordHeader(writer, Group_Registration.GRUP_HEADER))
+                    {
+                        writer.WriteZeros(4);
+                        writer.Write((int)GroupTypeEnum.CellTemporaryChildren);
+                        writer.WriteZeros(4);
+                        if (obj.PathGrid_Property.HasBeenSet)
+                        {
+                            LoquiBinaryTranslation<PathGrid, PathGrid_ErrorMask>.Instance.Write(
+                                writer,
+                                obj.PathGrid,
+                                (int)Cell_FieldIndex.PathGrid,
+                                errorMask);
+                        }
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: obj.Temporary,
+                            fieldIndex: (int)Cell_FieldIndex.Temporary,
+                            errorMask: errorMask,
+                            transl: (Placed subItem, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
+                            {
+                                LoquiBinaryTranslation<Placed, Placed_ErrorMask>.Instance.Write(
+                                    writer: writer,
+                                    item: subItem,
+                                    doMasks: listDoMasks,
+                                    errorMask: out listSubMask);
+                            });
+                    }
+                }
+                if (obj.Persistent.Count > 0)
+                {
+                    using (HeaderExport.ExportRecordHeader(writer, Group_Registration.GRUP_HEADER))
+                    {
+                        writer.WriteZeros(4);
+                        writer.Write((int)GroupTypeEnum.CellVisibleDistantChildren);
+                        writer.WriteZeros(4);
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: obj.VisibleWhenDistant,
+                            fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistant,
+                            errorMask: errorMask,
+                            transl: (Placed subItem, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
+                            {
+                                LoquiBinaryTranslation<Placed, Placed_ErrorMask>.Instance.Write(
+                                    writer: writer,
+                                    item: subItem,
+                                    doMasks: listDoMasks,
+                                    errorMask: out listSubMask);
+                            });
+                    }
+                }
+            }
         }
     }
 }
