@@ -3948,7 +3948,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XCNT_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportHeader(writer, PlacedObject_Registration.XMRK_HEADER, ObjectType.Subrecord)) { }
+            if (item.MapMarker_Property.HasBeenSet)
+            {
+                using (HeaderExport.ExportHeader(writer, PlacedObject_Registration.XMRK_HEADER, ObjectType.Subrecord)) { }
+            }
             LoquiBinaryTranslation<MapMarker, MapMarker_ErrorMask>.Instance.Write(
                 writer: writer,
                 item: item.MapMarker_Property,

@@ -13,6 +13,13 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class Cell
     {
+        private byte[] _persistentTimeStamp;
+        private byte[] _persistentLabel;
+        private byte[] _temporaryTimeStamp;
+        private byte[] _temporaryLabel;
+        private byte[] _visibleWhenDistantTimeStamp;
+        private byte[] _visibleWhenDistantLabel;
+
         [Flags]
         public enum Flag
         {
@@ -58,13 +65,13 @@ namespace Mutagen.Bethesda.Oblivion
                         switch (type)
                         {
                             case GroupTypeEnum.CellPersistentChildren:
-                                obj.Persistent.SetIfSucceeded(ParsePersistent(itemFrame, obj, errorMask));
+                                obj.Persistent.SetIfSucceeded(ParseTypical(itemFrame, obj, errorMask, persistentParse: true));
                                 break;
                             case GroupTypeEnum.CellTemporaryChildren:
                                 ParseTemporary(itemFrame, obj, errorMask);
                                 break;
                             case GroupTypeEnum.CellVisibleDistantChildren:
-                                obj.VisibleWhenDistant.SetIfSucceeded(ParsePersistent(itemFrame, obj, errorMask));
+                                obj.VisibleWhenDistant.SetIfSucceeded(ParseTypical(itemFrame, obj, errorMask, persistentParse: false));
                                 break;
                             default:
                                 throw new NotImplementedException();
@@ -74,9 +81,30 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        static TryGet<IEnumerable<Placed>> ParsePersistent(MutagenFrame frame, Cell obj, Func<Cell_ErrorMask> errorMask)
+        static TryGet<IEnumerable<Placed>> ParseTypical(
+            MutagenFrame frame,
+            Cell obj, 
+            Func<Cell_ErrorMask> errorMask,
+            bool persistentParse)
         {
-            frame.Reader.Position += Constants.GRUP_LENGTH;
+            frame.Reader.Position += 8;
+            if (persistentParse)
+            {
+                obj._persistentLabel = frame.Reader.ReadBytes(4);
+            }
+            else
+            {
+                obj._visibleWhenDistantLabel = frame.Reader.ReadBytes(4);
+            }
+            frame.Reader.Position += 4;
+            if (persistentParse)
+            {
+                obj._persistentTimeStamp = frame.Reader.ReadBytes(4);
+            }
+            else
+            {
+                obj._visibleWhenDistantTimeStamp = frame.Reader.ReadBytes(4);
+            }
             return Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.ParseRepeatedItem(
                 frame: frame,
                 fieldIndex: (int)Cell_FieldIndex.Persistent,
@@ -110,7 +138,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         static void ParseTemporary(MutagenFrame frame, Cell obj, Func<Cell_ErrorMask> errorMask)
         {
-            frame.Reader.Position += Constants.GRUP_LENGTH;
+            frame.Reader.Position += 8;
+            obj._temporaryLabel = frame.Reader.ReadBytes(4);
+            frame.Reader.Position += 4;
+            obj._temporaryTimeStamp = frame.Reader.ReadBytes(4);
             var pathGridHeader = HeaderTranslation.GetNextRecordType(frame.Reader, out var pathLen);
             if (pathGridHeader.Equals(PathGrid_Registration.PGRD_HEADER))
             {
@@ -172,9 +203,23 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     using (HeaderExport.ExportRecordHeader(writer, Group_Registration.GRUP_HEADER))
                     {
-                        writer.WriteZeros(4);
+                        if (obj._persistentLabel != null)
+                        {
+                            writer.Write(obj._persistentLabel);
+                        }
+                        else
+                        {
+                            writer.WriteZeros(4);
+                        }
                         writer.Write((int)GroupTypeEnum.CellPersistentChildren);
-                        writer.WriteZeros(4);
+                        if (obj._persistentTimeStamp != null)
+                        {
+                            writer.Write(obj._persistentTimeStamp);
+                        }
+                        else
+                        {
+                            writer.WriteZeros(4);
+                        }
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.Write(
                             writer: writer,
                             item: obj.Persistent,
@@ -195,9 +240,23 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     using (HeaderExport.ExportRecordHeader(writer, Group_Registration.GRUP_HEADER))
                     {
-                        writer.WriteZeros(4);
+                        if (obj._temporaryLabel != null)
+                        {
+                            writer.Write(obj._temporaryLabel);
+                        }
+                        else
+                        {
+                            writer.WriteZeros(4);
+                        }
                         writer.Write((int)GroupTypeEnum.CellTemporaryChildren);
-                        writer.WriteZeros(4);
+                        if (obj._temporaryTimeStamp != null)
+                        {
+                            writer.Write(obj._temporaryTimeStamp);
+                        }
+                        else
+                        {
+                            writer.WriteZeros(4);
+                        }
                         if (obj.PathGrid_Property.HasBeenSet)
                         {
                             LoquiBinaryTranslation<PathGrid, PathGrid_ErrorMask>.Instance.Write(
@@ -221,13 +280,27 @@ namespace Mutagen.Bethesda.Oblivion
                             });
                     }
                 }
-                if (obj.Persistent.Count > 0)
+                if (obj.VisibleWhenDistant.Count > 0)
                 {
                     using (HeaderExport.ExportRecordHeader(writer, Group_Registration.GRUP_HEADER))
                     {
-                        writer.WriteZeros(4);
+                        if (obj._visibleWhenDistantLabel != null)
+                        {
+                            writer.Write(obj._visibleWhenDistantLabel);
+                        }
+                        else
+                        {
+                            writer.WriteZeros(4);
+                        }
                         writer.Write((int)GroupTypeEnum.CellVisibleDistantChildren);
-                        writer.WriteZeros(4);
+                        if (obj._visibleWhenDistantTimeStamp != null)
+                        {
+                            writer.Write(obj._visibleWhenDistantTimeStamp);
+                        }
+                        else
+                        {
+                            writer.WriteZeros(4);
+                        }
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.Write(
                             writer: writer,
                             item: obj.VisibleWhenDistant,

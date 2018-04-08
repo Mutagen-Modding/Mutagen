@@ -58,14 +58,15 @@ namespace Mutagen.Bethesda.Tests
             string path2,
             RangeCollection ignoreList = null,
             RangeCollection sourceSkips = null,
-            RangeCollection targetSkips = null)
+            RangeCollection targetSkips = null,
+            ushort amountToReport = 5)
         {
             List<RangeInt32> errorRanges = new List<RangeInt32>();
             using (var reader2 = new FileStream(path2, FileMode.Open, FileAccess.Read))
             {
                 var errs = ConstructRanges(
                         GetDifferences(stream, reader2, ignoreList, sourceSkips, targetSkips),
-                        b => !b).First(5).ToArray();
+                        b => !b).First(amountToReport).ToArray();
                 if (errs.Length > 0)
                 {
                     var posStr = string.Join(" ", errs.Select((r) =>

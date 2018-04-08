@@ -4391,7 +4391,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: out listSubMask);
                 }
                 );
-            using (HeaderExport.ExportHeader(writer, Race_Registration.NAM1_HEADER, ObjectType.Subrecord)) { }
+            if (item.BodyData_Property.HasBeenSet)
+            {
+                using (HeaderExport.ExportHeader(writer, Race_Registration.NAM1_HEADER, ObjectType.Subrecord)) { }
+            }
             LoquiBinaryTranslation<GenderedBodyData, GenderedBodyData_ErrorMask>.Instance.Write(
                 writer: writer,
                 item: item.BodyData_Property,

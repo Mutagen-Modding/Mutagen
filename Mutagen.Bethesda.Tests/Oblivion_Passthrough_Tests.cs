@@ -22,10 +22,17 @@ namespace Mutagen.Bethesda.Tests
             var instructions = new BinaryProcessorInstructions();
             instructions.Instruction.SkipSourceSections.Add(new RangeInt64(0x93A648, 0xB44656));
             instructions.Instruction.SkipOutputSections.Add(new RangeInt64(0x93A648, 0xB8BA09));
-            instructions.Instruction.IgnoreDifferenceSections.Add(new RangeInt64(0xBFF2E2, 0xBFF2E5));
-            instructions.Instruction.IgnoreDifferenceSections.Add(new RangeInt64(0xC61493, 0xC61496));
-            instructions.Instruction.IgnoreDifferenceSections.Add(new RangeInt64(0xCA3A6F, 0xCA3A72));
             return instructions;
+        }
+
+        private void AddProcessedInstructions(
+            BinaryProcessorInstructions instructions,
+            MajorRecordLocator.FileLocations fileLocs)
+        { 
+            foreach (var loc in fileLocs.GrupLocations)
+            {
+                instructions.Instruction.IgnoreDifferenceSections.Add(new RangeInt64(loc.Offset + 4, loc.Offset + 7));
+            }
         }
 
         /*
@@ -363,8 +370,8 @@ namespace Mutagen.Bethesda.Tests
         public async Task OblivionESM_Binary_Internal(bool deleteAfter)
         {
             var mod = OblivionMod.Create_Binary(
-            Properties.Settings.Default.OblivionESM,
-            out var inputErrMask);
+                Properties.Settings.Default.OblivionESM,
+                out var inputErrMask);
             Assert.False(inputErrMask?.IsInError() ?? false);
 
             var instructions = GetOblivionInstructions();
@@ -390,6 +397,10 @@ namespace Mutagen.Bethesda.Tests
             bool deleteAfter)
         {
             MajorRecordLocator.FileLocations fileLocs = await fileLocationsTask;
+
+            AddProcessedInstructions(
+                instructions,
+                fileLocs);
 
             foreach (var rec in mod.MajorRecords.Values)
             {
@@ -426,7 +437,8 @@ namespace Mutagen.Bethesda.Tests
                         oblivionOutputPath,
                         ignoreList: new RangeCollection(instructions.Instruction.IgnoreDifferenceSections),
                         sourceSkips: new RangeCollection(instructions.Instruction.SkipSourceSections),
-                        targetSkips: new RangeCollection(instructions.Instruction.SkipOutputSections));
+                        targetSkips: new RangeCollection(instructions.Instruction.SkipOutputSections),
+                        amountToReport: 10);
                     Assert.False(outputErrMask?.IsInError() ?? false);
                     Exception copyOverEx = null;
                     try
@@ -467,7 +479,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!sections.Any()) return;
 
-            var outputFileLocs = MajorRecordLocator.GetFileLocations(outputPath, uninterestingTypes: OblivionMod.NonTypeGroups);
+            var outputFileLocs = MajorRecordLocator.GetFileLocations(outputPath);
 
             HashSet<FormID> ids = new HashSet<FormID>();
             foreach (var (Source, Output) in sections)

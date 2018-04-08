@@ -19,6 +19,7 @@ namespace Mutagen.Bethesda
             private Dictionary<FormID, FileSection> _fromFormIDs = new Dictionary<FormID, FileSection>();
             private SortedList<FileLocation, FormID> _fromStart = new SortedList<FileLocation, FormID>();
             private SortedList<FileLocation, FormID> _fromEnd = new SortedList<FileLocation, FormID>();
+            public SortedSet<FileLocation> GrupLocations = new SortedSet<FileLocation>();
 
             public FileSection this[FormID id]
             {
@@ -167,48 +168,194 @@ namespace Mutagen.Bethesda
                 while (!reader.Complete
                     && (interestingSet?.Count ?? 1) > 0)
                 {
-                    var grup = HeaderTranslation.ReadNextRecordType(reader);
-                    if (!grup.Equals(GRUP))
-                    {
-                        throw new ArgumentException();
-                    }
-                    var grupLength = new ContentLength(reader.ReadUInt32());
-                    var grupRec = HeaderTranslation.ReadNextRecordType(reader);
-                    var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(new MutagenFrame(reader, new ContentLength(4)));
-
-                    if ((!interestingSet?.Contains(grupRec) ?? false)
-                        || (uninterestingSet?.Contains(grupRec) ?? false))
-                    { // Skip
-                        reader.Position -= new ContentLength(16);
-                        reader.Position += grupLength;
-                        continue;
-                    }
-
-                    interestingSet?.Remove(grupRec);
-
-                    reader.Position += new ContentLength(4);
-
-                    using (var frame = new MutagenFrame(reader, new FileLocation(reader.Position + grupLength - 20)))
-                    {
-                        while (!frame.Complete)
-                        {
-                            var recordLocation = reader.Position;
-                            var targetRec = HeaderTranslation.ReadNextRecordType(reader);
-                            var recLength = new ContentLength(reader.ReadUInt32());
-                            if (!grupRec.Equals(targetRec))
-                            {
-                                throw new ArgumentException($"Target Record {targetRec} at {frame.Position} did not match its containing GRUP: {grupRec}");
-                            }
-                            reader.Position += new ContentLength(4); // Skip flags
-                            var formID = FormID.Factory(reader.ReadBytes(4));
-                            ret.Add(formID, new FileSection(recordLocation, recordLocation + recLength + Constants.RECORD_LENGTH + Constants.RECORD_META_OFFSET - 1));
-                            reader.Position += new ContentLength(4);
-                            reader.Position += recLength;
-                        }
-                    }
+                    ParseTopLevelGRUP(
+                        reader: reader,
+                        fileLocs: ret,
+                        interestingSet: interestingSet,
+                        uninterestingSet: uninterestingSet);
                 }
             }
             return ret;
+        }
+
+        private static void ParseTopLevelGRUP(
+            MutagenReader reader,
+            FileLocations fileLocs,
+            HashSet<RecordType> interestingSet,
+            HashSet<RecordType> uninterestingSet,
+            RecordType? grupRecOverride = null,
+            bool checkGrupType = true)
+        {
+            var grup = HeaderTranslation.ReadNextRecordType(reader);
+            if (!grup.Equals(GRUP))
+            {
+                throw new ArgumentException();
+            }
+            fileLocs.GrupLocations.Add(reader.Position - 4);
+            var grupLength = new ContentLength(reader.ReadUInt32());
+            var grupRec = HeaderTranslation.ReadNextRecordType(reader);
+            if (grupRecOverride != null)
+            {
+                grupRec = grupRecOverride.Value;
+            }
+            var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(new MutagenFrame(reader, new ContentLength(4)));
+
+            if ((!interestingSet?.Contains(grupRec) ?? false)
+                || (uninterestingSet?.Contains(grupRec) ?? false))
+            { // Skip
+                reader.Position -= new ContentLength(16);
+                reader.Position += grupLength;
+                return;
+            }
+
+            interestingSet?.Remove(grupRec);
+
+            reader.Position += new ContentLength(4);
+
+            using (var frame = new MutagenFrame(reader, new FileLocation(reader.Position + grupLength - 20)))
+            {
+                while (!frame.Complete)
+                {
+                    var recordLocation = reader.Position;
+                    var targetRec = HeaderTranslation.ReadNextRecordType(reader);
+                    if (checkGrupType 
+                        && !grupRec.Equals(targetRec))
+                    {
+                        if (targetRec.Type.Equals("GRUP"))
+                        {
+                            reader.Position -= 4;
+                            HandleSubLevelGRUP(
+                                frame: frame,
+                                fileLocs: fileLocs,
+                                recordType: grupRec,
+                                interestingSet: interestingSet,
+                                uninterestingSet: uninterestingSet);
+                        }
+                        else
+                        {
+                            throw new ArgumentException($"Target Record {targetRec} at {frame.Position} did not match its containing GRUP: {grupRec}");
+                        }
+                    }
+                    var recLength = new ContentLength(reader.ReadUInt32());
+                    reader.Position += new ContentLength(4); // Skip flags
+                    var formID = FormID.Factory(reader.ReadBytes(4));
+                    fileLocs.Add(formID, new FileSection(recordLocation, recordLocation + recLength + Constants.RECORD_LENGTH + Constants.RECORD_META_OFFSET - 1));
+                    reader.Position += new ContentLength(4);
+                    reader.Position += recLength;
+                }
+            }
+        }
+
+        private static void HandleSubLevelGRUP(
+            MutagenFrame frame,
+            FileLocations fileLocs,
+            RecordType recordType,
+            HashSet<RecordType> interestingSet,
+            HashSet<RecordType> uninterestingSet)
+        {
+            var targetRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
+            if (!targetRec.Type.Equals("GRUP"))
+            {
+                throw new ArgumentException();
+            }
+            fileLocs.GrupLocations.Add(frame.Reader.Position - 4);
+            var recLength = new ContentLength(frame.Reader.ReadUInt32());
+            var grupRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
+            var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(new MutagenFrame(frame.Reader, new ContentLength(4)));
+            frame.Reader.Position -= 16;
+            switch (grupType)
+            {
+                case GroupTypeEnum.InteriorCellBlock:
+                case GroupTypeEnum.ExteriorCellBlock:
+                    HandleCells(
+                        frame: frame.Spawn(recLength),
+                        fileLocs: fileLocs,
+                        interestingSet: interestingSet,
+                        uninterestingSet: uninterestingSet);
+                    break;
+                case GroupTypeEnum.CellChildren:
+                    HandleCellSubchildren(
+                        frame: frame.Spawn(recLength),
+                        fileLocs: fileLocs,
+                        interestingSet: interestingSet,
+                        uninterestingSet: uninterestingSet);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        private static void HandleCells(
+            MutagenFrame frame,
+            FileLocations fileLocs,
+            HashSet<RecordType> interestingSet,
+            HashSet<RecordType> uninterestingSet)
+        {
+            frame.Reader.Position += Constants.GRUP_LENGTH;
+            while (!frame.Complete)
+            {
+                var targetRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
+                if (!targetRec.Type.Equals("GRUP"))
+                {
+                    throw new ArgumentException();
+                }
+                fileLocs.GrupLocations.Add(frame.Reader.Position - 4);
+                var recLength = new ContentLength(frame.Reader.ReadUInt32());
+                var grupRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
+                var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(new MutagenFrame(frame.Reader, new ContentLength(4)));
+                frame.Reader.Position -= 16;
+                switch (grupType)
+                {
+                    case GroupTypeEnum.InteriorCellSubBlock:
+                    case GroupTypeEnum.ExteriorCellSubBlock:
+                        ParseTopLevelGRUP(
+                            reader: frame.Reader,
+                            fileLocs: fileLocs,
+                            interestingSet: interestingSet,
+                            uninterestingSet: uninterestingSet,
+                            grupRecOverride: new RecordType("CELL"));
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+        }
+
+        private static void HandleCellSubchildren(
+            MutagenFrame frame,
+            FileLocations fileLocs,
+            HashSet<RecordType> interestingSet,
+            HashSet<RecordType> uninterestingSet)
+        {
+            frame.Reader.Position += Constants.GRUP_LENGTH;
+            while (!frame.Complete)
+            {
+                var targetRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
+                if (!targetRec.Type.Equals("GRUP"))
+                {
+                    throw new ArgumentException();
+                }
+                fileLocs.GrupLocations.Add(frame.Reader.Position - 4);
+                var recLength = new ContentLength(frame.Reader.ReadUInt32());
+                var grupRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
+                var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(new MutagenFrame(frame.Reader, new ContentLength(4)));
+                frame.Reader.Position -= 16;
+                switch (grupType)
+                {
+                    case GroupTypeEnum.CellPersistentChildren:
+                    case GroupTypeEnum.CellTemporaryChildren:
+                    case GroupTypeEnum.CellVisibleDistantChildren:
+                        ParseTopLevelGRUP(
+                            reader: frame.Reader,
+                            fileLocs: fileLocs,
+                            interestingSet: interestingSet,
+                            uninterestingSet: uninterestingSet,
+                            checkGrupType: false);
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
         }
     }
 }
