@@ -22,6 +22,7 @@ namespace Mutagen.Bethesda.Generation
             : base(gen)
         {
             this.ExportWithIGetter = false;
+            this.ShouldGenerateCopyIn = false;
             this._typeGenerations[typeof(LoquiType)] = new LoquiBinaryTranslationGeneration(ModuleNickname);
             this._typeGenerations[typeof(BoolNullType)] = new PrimitiveBinaryTranslationGeneration<bool?>();
             this._typeGenerations[typeof(BoolType)] = new PrimitiveBinaryTranslationGeneration<bool>();

@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>bb99556a8490796beb48fab62e3ad75fcf99746e</Sha>
+         <Sha>cb1f510373f227d57fab5c95051961ca6fa0ca2f</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>03-08-2018 16:40:45</CommitDate>
-         <Description>Merge remote-tracking branch 'origin/master' into Laptop</Description>
+         <CommitDate>04-06-2018 16:39:33</CommitDate>
+         <Description>Removed redundant UInt8Ext</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>cb7c26003020e75b50a70d3109d6bb01c29b3ea1</Sha>
+         <Sha>922e7df76552da8acdbbaf2f3caa5048fe23d326</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>03-23-2018 08:20:29</CommitDate>
-         <Description>TranslationModule work to allow addition of logic snippets to filter APIs</Description>
+         <CommitDate>04-09-2018 16:44:01</CommitDate>
+         <Description>TranslationModule refactors.  NonGeneric version.  ShouldGenerateCopyIn option</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>
