@@ -266,6 +266,83 @@ namespace Mutagen.Bethesda
 
         #endregion
 
+        #region XML Copy In
+        public void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<Group<T>, Group_ErrorMask<MajorRecord_ErrorMask>>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML<T_ErrMask>(
+            XElement root,
+            out Group_ErrorMask<T_ErrMask> errorMask,
+            NotifyingFireParameters cmds = null)
+            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+        {
+            LoquiXmlTranslation<Group<T>, Group_ErrorMask<T_ErrMask>>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML<T_ErrMask>(
+            string path,
+            out Group_ErrorMask<T_ErrMask> errorMask,
+            NotifyingFireParameters cmds = null)
+            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML<T_ErrMask>(
+            Stream stream,
+            out Group_ErrorMask<T_ErrMask> errorMask,
+            NotifyingFireParameters cmds = null)
+            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML<T_ErrMask>(
             XmlWriter writer,

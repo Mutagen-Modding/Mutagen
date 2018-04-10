@@ -284,6 +284,104 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region XML Copy In
+        public override void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<Miscellaneous, Miscellaneous_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out Miscellaneous_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<Miscellaneous, Miscellaneous_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out Miscellaneous_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out Miscellaneous_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
+            out NamedMajorRecord_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out Miscellaneous_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
+            out MajorRecord_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out Miscellaneous_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
