@@ -936,15 +936,15 @@ namespace Mutagen.Bethesda.Generation
                         }
                     }
                 }
-                if (data.CustomBinaryEnd)
+            }
+            if (data.CustomBinaryEnd)
+            {
+                using (var args = new ArgsWrapper(fg,
+                    $"{obj.Name}.CustomBinaryEnd_ExportInternal"))
                 {
-                    using (var args = new ArgsWrapper(fg,
-                        $"{obj.Name}.CustomBinaryEnd_ExportInternal"))
-                    {
-                        args.Add("writer: writer");
-                        args.Add("obj: item");
-                        args.Add("errorMask: errorMask");
-                    }
+                    args.Add("writer: writer");
+                    args.Add("obj: item");
+                    args.Add("errorMask: errorMask");
                 }
             }
         }

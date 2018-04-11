@@ -3840,11 +3840,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         recordTypeConverter: recordTypeConverter,
                         errorMask: errorMask);
-                    Cell.CustomBinaryEnd_ExportInternal(
-                        writer: writer,
-                        obj: item,
-                        errorMask: errorMask);
                 }
+                Cell.CustomBinaryEnd_ExportInternal(
+                    writer: writer,
+                    obj: item,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (errorMask != null)
