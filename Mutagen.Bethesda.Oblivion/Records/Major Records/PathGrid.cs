@@ -78,6 +78,7 @@ namespace Mutagen.Bethesda.Oblivion
                                             connectionReader.ReadInt16(),
                                             cmds: null);
                                     }
+                                    item.PointToPointConnections.Add(pt);
                                 }
                                 if (!connectionReader.Complete)
                                 {
