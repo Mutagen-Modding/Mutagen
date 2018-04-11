@@ -187,19 +187,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Furnature Create_XML(
             XElement root,
-            out Furnature_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static Furnature Create_XML(
-            XElement root,
-            bool doMasks,
-            out Furnature_ErrorMask errorMask)
+            out Furnature_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_XML(
                 root: root,
@@ -356,17 +345,19 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void Write_XML(
             XmlWriter writer,
             out Furnature_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (Furnature_ErrorMask)this.Write_XML_Internal(
+            errorMask = this.Write_XML_Internal(
                 writer: writer,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as Furnature_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out Furnature_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
             using (var writer = new XmlTextWriter(path, Encoding.ASCII))
@@ -376,13 +367,15 @@ namespace Mutagen.Bethesda.Oblivion
                 Write_XML(
                     writer: writer,
                     name: name,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_XML(
             Stream stream,
             out Furnature_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
             using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
@@ -392,7 +385,8 @@ namespace Mutagen.Bethesda.Oblivion
                 Write_XML(
                     writer: writer,
                     name: name,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -538,19 +532,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Furnature Create_Binary(
             MutagenFrame frame,
-            out Furnature_ErrorMask errorMask)
-        {
-            return Create_Binary(
-                frame: frame,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static Furnature Create_Binary(
-            MutagenFrame frame,
-            bool doMasks,
-            out Furnature_ErrorMask errorMask)
+            out Furnature_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -623,35 +606,40 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out Furnature_ErrorMask errorMask)
+            out Furnature_ErrorMask errorMask,
+            bool doMasks = true)
         {
-            errorMask = (Furnature_ErrorMask)this.Write_Binary_Internal(
+            errorMask = this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as Furnature_ErrorMask;
         }
 
         public virtual void Write_Binary(
             string path,
-            out Furnature_ErrorMask errorMask)
+            out Furnature_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
-            out Furnature_ErrorMask errorMask)
+            out Furnature_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 

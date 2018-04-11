@@ -212,17 +212,19 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void Write_XML(
             XmlWriter writer,
             out NPCAbstract_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (NPCAbstract_ErrorMask)this.Write_XML_Internal(
+            errorMask = this.Write_XML_Internal(
                 writer: writer,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as NPCAbstract_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out NPCAbstract_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
             using (var writer = new XmlTextWriter(path, Encoding.ASCII))
@@ -232,13 +234,15 @@ namespace Mutagen.Bethesda.Oblivion
                 Write_XML(
                     writer: writer,
                     name: name,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_XML(
             Stream stream,
             out NPCAbstract_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
             using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
@@ -248,7 +252,8 @@ namespace Mutagen.Bethesda.Oblivion
                 Write_XML(
                     writer: writer,
                     name: name,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -291,35 +296,40 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out NPCAbstract_ErrorMask errorMask)
+            out NPCAbstract_ErrorMask errorMask,
+            bool doMasks = true)
         {
-            errorMask = (NPCAbstract_ErrorMask)this.Write_Binary_Internal(
+            errorMask = this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as NPCAbstract_ErrorMask;
         }
 
         public virtual void Write_Binary(
             string path,
-            out NPCAbstract_ErrorMask errorMask)
+            out NPCAbstract_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
-            out NPCAbstract_ErrorMask errorMask)
+            out NPCAbstract_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 

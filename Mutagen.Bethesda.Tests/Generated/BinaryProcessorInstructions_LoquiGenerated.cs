@@ -144,19 +144,8 @@ namespace Mutagen.Bethesda.Tests
         [DebuggerStepThrough]
         public static BinaryProcessorInstructions Create_XML(
             XElement root,
-            out BinaryProcessorInstructions_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static BinaryProcessorInstructions Create_XML(
-            XElement root,
-            bool doMasks,
-            out BinaryProcessorInstructions_ErrorMask errorMask)
+            out BinaryProcessorInstructions_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_XML(
                 root: root,
@@ -289,17 +278,19 @@ namespace Mutagen.Bethesda.Tests
         public virtual void Write_XML(
             XmlWriter writer,
             out BinaryProcessorInstructions_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (BinaryProcessorInstructions_ErrorMask)this.Write_XML_Internal(
+            errorMask = this.Write_XML_Internal(
                 writer: writer,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as BinaryProcessorInstructions_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out BinaryProcessorInstructions_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
             using (var writer = new XmlTextWriter(path, Encoding.ASCII))
@@ -309,13 +300,15 @@ namespace Mutagen.Bethesda.Tests
                 Write_XML(
                     writer: writer,
                     name: name,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_XML(
             Stream stream,
             out BinaryProcessorInstructions_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
             using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
@@ -325,7 +318,8 @@ namespace Mutagen.Bethesda.Tests
                 Write_XML(
                     writer: writer,
                     name: name,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 

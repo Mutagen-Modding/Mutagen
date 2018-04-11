@@ -486,19 +486,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static OblivionMod Create_XML(
             XElement root,
-            out OblivionMod_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static OblivionMod Create_XML(
-            XElement root,
-            bool doMasks,
-            out OblivionMod_ErrorMask errorMask)
+            out OblivionMod_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_XML(
                 root: root,
@@ -631,17 +620,19 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void Write_XML(
             XmlWriter writer,
             out OblivionMod_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (OblivionMod_ErrorMask)this.Write_XML_Internal(
+            errorMask = this.Write_XML_Internal(
                 writer: writer,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as OblivionMod_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out OblivionMod_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
             using (var writer = new XmlTextWriter(path, Encoding.ASCII))
@@ -651,13 +642,15 @@ namespace Mutagen.Bethesda.Oblivion
                 Write_XML(
                     writer: writer,
                     name: name,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_XML(
             Stream stream,
             out OblivionMod_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
             using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
@@ -667,7 +660,8 @@ namespace Mutagen.Bethesda.Oblivion
                 Write_XML(
                     writer: writer,
                     name: name,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -2050,20 +2044,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static OblivionMod Create_Binary(
             MutagenFrame frame,
             out OblivionMod_ErrorMask errorMask,
-            GroupMask importMask = null)
-        {
-            return Create_Binary(
-                frame: frame,
-                importMask: importMask,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static OblivionMod Create_Binary(
-            MutagenFrame frame,
-            bool doMasks,
-            out OblivionMod_ErrorMask errorMask,
+            bool doMasks = true,
             GroupMask importMask = null)
         {
             var ret = Create_Binary(
@@ -2153,18 +2134,20 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void Write_Binary(
             MutagenWriter writer,
             out OblivionMod_ErrorMask errorMask,
+            bool doMasks = true,
             GroupMask importMask = null)
         {
-            errorMask = (OblivionMod_ErrorMask)this.Write_Binary_Internal(
+            errorMask = this.Write_Binary_Internal(
                 writer: writer,
                 importMask: importMask,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as OblivionMod_ErrorMask;
         }
 
         public virtual void Write_Binary(
             string path,
             out OblivionMod_ErrorMask errorMask,
+            bool doMasks = true,
             GroupMask importMask = null)
         {
             using (var writer = new MutagenWriter(path))
@@ -2172,13 +2155,15 @@ namespace Mutagen.Bethesda.Oblivion
                 Write_Binary(
                     writer: writer,
                     importMask: importMask,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
             out OblivionMod_ErrorMask errorMask,
+            bool doMasks = true,
             GroupMask importMask = null)
         {
             using (var writer = new MutagenWriter(stream))
@@ -2186,7 +2171,8 @@ namespace Mutagen.Bethesda.Oblivion
                 Write_Binary(
                     writer: writer,
                     importMask: importMask,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 

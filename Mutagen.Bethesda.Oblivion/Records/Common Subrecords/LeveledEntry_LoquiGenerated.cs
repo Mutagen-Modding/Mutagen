@@ -213,20 +213,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static LeveledEntry<T> Create_XML<T_ErrMask>(
             XElement root,
-            out LeveledEntry_ErrorMask<T_ErrMask> errorMask)
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static LeveledEntry<T> Create_XML<T_ErrMask>(
-            XElement root,
-            bool doMasks,
-            out LeveledEntry_ErrorMask<T_ErrMask> errorMask)
+            out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
+            bool doMasks = true)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             var ret = Create_XML<T_ErrMask>(
@@ -366,18 +354,20 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void Write_XML<T_ErrMask>(
             XmlWriter writer,
             out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
+            bool doMasks = true,
             string name = null)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
-            errorMask = (LeveledEntry_ErrorMask<T_ErrMask>)this.Write_XML_Internal<T_ErrMask>(
+            errorMask = this.Write_XML_Internal<T_ErrMask>(
                 writer: writer,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as LeveledEntry_ErrorMask<T_ErrMask>;
         }
 
         public virtual void Write_XML<T_ErrMask>(
             string path,
             out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
+            bool doMasks = true,
             string name = null)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
@@ -388,13 +378,15 @@ namespace Mutagen.Bethesda.Oblivion
                 Write_XML(
                     writer: writer,
                     name: name,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_XML<T_ErrMask>(
             Stream stream,
             out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
+            bool doMasks = true,
             string name = null)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
@@ -405,7 +397,8 @@ namespace Mutagen.Bethesda.Oblivion
                 Write_XML(
                     writer: writer,
                     name: name,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -588,20 +581,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static LeveledEntry<T> Create_Binary<T_ErrMask>(
             MutagenFrame frame,
-            out LeveledEntry_ErrorMask<T_ErrMask> errorMask)
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-        {
-            return Create_Binary(
-                frame: frame,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static LeveledEntry<T> Create_Binary<T_ErrMask>(
-            MutagenFrame frame,
-            bool doMasks,
-            out LeveledEntry_ErrorMask<T_ErrMask> errorMask)
+            out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
+            bool doMasks = true)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             var ret = Create_Binary<T_ErrMask>(
@@ -678,38 +659,43 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary<T_ErrMask>(
             MutagenWriter writer,
-            out LeveledEntry_ErrorMask<T_ErrMask> errorMask)
+            out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
+            bool doMasks = true)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
-            errorMask = (LeveledEntry_ErrorMask<T_ErrMask>)this.Write_Binary_Internal<T_ErrMask>(
+            errorMask = this.Write_Binary_Internal<T_ErrMask>(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as LeveledEntry_ErrorMask<T_ErrMask>;
         }
 
         public virtual void Write_Binary<T_ErrMask>(
             string path,
-            out LeveledEntry_ErrorMask<T_ErrMask> errorMask)
+            out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
+            bool doMasks = true)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary<T_ErrMask>(
             Stream stream,
-            out LeveledEntry_ErrorMask<T_ErrMask> errorMask)
+            out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
+            bool doMasks = true)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
