@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Noggog;
 using Noggog.Notifying;
 
 namespace Mutagen.Bethesda.Oblivion
@@ -25,54 +26,70 @@ namespace Mutagen.Bethesda.Oblivion
             throw new NotImplementedException();
         }
 
-        //static partial void FillBinary_Cells_Custom(MutagenFrame frame, OblivionMod item, int fieldIndex, Func<OblivionMod_ErrorMask> errorMask)
-        //{
-        //    frame.Position += 16;
-        //    item.Cells.LastModified = frame.Reader.ReadBytes(4);
-        //    while (!frame.Complete)
-        //    {
-        //        var cellBlockRec = HeaderTranslation.ReadNextRecordType(frame.Reader, out var blockLen);
-        //        if (!cellBlockRec.Equals("GRUP"))
-        //        {
-        //            throw new ArgumentException();
-        //        }
-        //        frame.Position -= 8;
-        //        using (var cellBlockFrame = frame.Spawn(blockLen))
-        //        {
-        //            CellBlock block = new CellBlock();
-        //            item.Cells.Blocks.Add(block);
-        //            frame.Position += 12;
-        //            block.GroupType = (GroupTypeEnum)cellBlockFrame.Reader.ReadInt32();
-        //            block.LastModified = cellBlockFrame.Reader.ReadBytes(4);
-        //            while (!cellBlockFrame.Complete)
-        //            {
-        //                var cellSubBlockRec = HeaderTranslation.ReadNextRecordType(cellBlockFrame.Reader, out var subBlockLen);
-        //                if (!cellBlockRec.Equals("GRUP"))
-        //                {
-        //                    throw new ArgumentException();
-        //                }
-        //                frame.Position -= 8;
-        //                using (var cellSubBlockFrame = cellBlockFrame.Spawn(subBlockLen))
-        //                {
-        //                    CellSubBlock subBlock = new CellSubBlock();
-        //                    block.SubBlocks.Add(subBlock);
-        //                    frame.Position += 12;
-        //                    block.GroupType = (GroupTypeEnum)cellBlockFrame.Reader.ReadInt32();
-        //                    block.LastModified = cellBlockFrame.Reader.ReadBytes(4);
-        //                    while (!cellSubBlockFrame.Complete)
-        //                    {
-        //                        subBlock.Cells.Add(
-        //                            Cell.Create_Binary(cellSubBlockFrame));
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
+        partial void CustomCtor()
+        {
+            this.SubscribeToCells();
+        }
 
-        //static partial void WriteBinary_Cells_Custom(MutagenWriter writer, OblivionMod item, int fieldIndex, Func<OblivionMod_ErrorMask> errorMask)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        protected void SubscribeToCells()
+        {
+            _Cells_Object.Items.Subscribe_Enumerable_Single((change) =>
+            {
+                switch (change.AddRem)
+                {
+                    case AddRemove.Add:
+                        SubscribeToCellBlock(change.Item);
+                        break;
+                    case AddRemove.Remove:
+                        UnsubscribeFromCellBlock(change.Item);
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+            });
+        }
+
+        protected void SubscribeToCellBlock(CellBlock block)
+        {
+            block.Items.Subscribe_Enumerable_Single(this, (change) =>
+            {
+                switch (change.AddRem)
+                {
+                    case AddRemove.Add:
+                        SubscribeToCellSubBlock(change.Item);
+                        break;
+                    case AddRemove.Remove:
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+            });
+        }
+
+        protected void SubscribeToCellSubBlock(CellSubBlock subBlock)
+        {
+            subBlock.Items.Subscribe_Enumerable_Single(this, (change) =>
+            {
+                if (change.AddRem == AddRemove.Add
+                    && _majorRecords.ContainsKey(change.Item.FormID))
+                {
+                    throw new ArgumentException("Cannot add a cell that exists elsewhere in the same mod.");
+                }
+                _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem);
+            });
+        }
+
+        protected void UnsubscribeFromCellBlock(CellBlock block)
+        {
+            block.Items.Unsubscribe(this);
+            foreach (var subBlock in block.Items)
+            {
+                subBlock.Items.Unsubscribe(this);
+                foreach (var cell in subBlock.Items)
+                {
+                    _majorRecords.Remove(cell.FormID);
+                }
+            }
+        }
     }
 }
