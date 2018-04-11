@@ -221,15 +221,16 @@ namespace Mutagen.Bethesda
                     if (checkGrupType 
                         && !grupRec.Equals(targetRec))
                     {
-                        if (targetRec.Type.Equals("GRUP"))
+                        reader.Position -= 4;
+                        if (IsSubLevelGRUP(reader))
                         {
-                            reader.Position -= 4;
                             HandleSubLevelGRUP(
                                 frame: frame,
                                 fileLocs: fileLocs,
                                 recordType: grupRec,
                                 interestingSet: interestingSet,
                                 uninterestingSet: uninterestingSet);
+                            continue;
                         }
                         else
                         {
@@ -243,6 +244,29 @@ namespace Mutagen.Bethesda
                     reader.Position += new ContentLength(4);
                     reader.Position += recLength;
                 }
+            }
+        }
+
+        private static bool IsSubLevelGRUP(
+            MutagenReader reader)
+        {
+            var targetRec = HeaderTranslation.ReadNextRecordType(reader);
+            if (!targetRec.Type.Equals("GRUP"))
+            {
+                reader.Position -= 4;
+                return false;
+            }
+            reader.Position += 8;
+            var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(new MutagenFrame(reader, new ContentLength(4)));
+            reader.Position -= 16;
+            switch (grupType)
+            {
+                case GroupTypeEnum.InteriorCellBlock:
+                case GroupTypeEnum.ExteriorCellBlock:
+                case GroupTypeEnum.CellChildren:
+                    return true;
+                default:
+                    return false;
             }
         }
 
