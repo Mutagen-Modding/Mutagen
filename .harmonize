@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>cb1f510373f227d57fab5c95051961ca6fa0ca2f</Sha>
+         <Sha>fb6806614be50c60ecf455166045107de599810d</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>04-06-2018 16:39:33</CommitDate>
-         <Description>Removed redundant UInt8Ext</Description>
+         <CommitDate>04-13-2018 16:38:43</CommitDate>
+         <Description>TempFolder swapped to use DirectoryPath</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
