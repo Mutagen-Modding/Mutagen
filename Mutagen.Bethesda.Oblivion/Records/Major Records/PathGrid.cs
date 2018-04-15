@@ -78,6 +78,7 @@ namespace Mutagen.Bethesda.Oblivion
                                             connectionReader.ReadInt16(),
                                             cmds: null);
                                     }
+                                    item.PointToPointConnections.Add(pt);
                                 }
                                 if (!connectionReader.Complete)
                                 {
@@ -111,9 +112,12 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            using (HeaderExport.ExportSubRecordHeader(writer, PathGrid_Registration.PGAG_HEADER))
+            if (item.Unknown_Property.HasBeenSet)
             {
-                writer.Write(item.Unknown);
+                using (HeaderExport.ExportSubRecordHeader(writer, PathGrid_Registration.PGAG_HEADER))
+                {
+                    writer.Write(item.Unknown);
+                }
             }
 
             using (HeaderExport.ExportSubRecordHeader(writer, PGRR))

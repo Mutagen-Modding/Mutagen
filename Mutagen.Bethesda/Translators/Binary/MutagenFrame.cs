@@ -40,34 +40,24 @@ namespace Mutagen.Bethesda.Binary
         [DebuggerStepThrough]
         public MutagenFrame(
             MutagenReader reader,
-            FileLocation finalPosition)
+            FileLocation finalPosition,
+            bool snapToFinalPosition = true)
         {
             this.Reader = reader;
             this.InitialPosition = reader.Position;
             this.FinalLocation = finalPosition;
-            this.SnapToFinalPosition = true;
+            this.SnapToFinalPosition = snapToFinalPosition;
         }
 
         [DebuggerStepThrough]
         public MutagenFrame(
             MutagenReader reader,
-            ContentLength length)
+            ContentLength length,
+            bool snapToFinalPosition = true)
         {
             this.Reader = reader;
             this.InitialPosition = reader.Position;
             this.FinalLocation = reader.Position + length;
-            this.SnapToFinalPosition = true;
-        }
-
-        [DebuggerStepThrough]
-        public MutagenFrame(
-            MutagenReader reader,
-            FileLocation finalPosition,
-            bool snapToFinalPosition)
-        {
-            this.Reader = reader;
-            this.InitialPosition = reader.Position;
-            this.FinalLocation = finalPosition;
             this.SnapToFinalPosition = snapToFinalPosition;
         }
 

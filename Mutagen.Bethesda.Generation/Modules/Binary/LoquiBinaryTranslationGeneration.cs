@@ -30,7 +30,11 @@ namespace Mutagen.Bethesda.Generation
             if (loquiGen.TryGetFieldData(out var data)
                 && data.MarkerType.HasValue)
             {
-                fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER, ObjectType.Subrecord)) {{ }}");
+                fg.AppendLine($"if ({itemAccessor.PropertyAccess}.HasBeenSet)");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER, ObjectType.Subrecord)) {{ }}");
+                }
             }
             bool isGroup = objGen.GetObjectType() == ObjectType.Mod
                 && loquiGen.TargetObjectGeneration.GetObjectData().ObjectType == ObjectType.Group;

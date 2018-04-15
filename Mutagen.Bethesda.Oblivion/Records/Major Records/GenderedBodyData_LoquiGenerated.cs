@@ -1426,13 +1426,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             Func<GenderedBodyData_ErrorMask> errorMask)
         {
-            using (HeaderExport.ExportHeader(writer, GenderedBodyData_Registration.MNAM_HEADER, ObjectType.Subrecord)) { }
+            if (item.Male_Property.HasBeenSet)
+            {
+                using (HeaderExport.ExportHeader(writer, GenderedBodyData_Registration.MNAM_HEADER, ObjectType.Subrecord)) { }
+            }
             LoquiBinaryTranslation<BodyData, BodyData_ErrorMask>.Instance.Write(
                 writer: writer,
                 item: item.Male_Property,
                 fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
                 errorMask: errorMask);
-            using (HeaderExport.ExportHeader(writer, GenderedBodyData_Registration.FNAM_HEADER, ObjectType.Subrecord)) { }
+            if (item.Female_Property.HasBeenSet)
+            {
+                using (HeaderExport.ExportHeader(writer, GenderedBodyData_Registration.FNAM_HEADER, ObjectType.Subrecord)) { }
+            }
             LoquiBinaryTranslation<BodyData, BodyData_ErrorMask>.Instance.Write(
                 writer: writer,
                 item: item.Female_Property,
