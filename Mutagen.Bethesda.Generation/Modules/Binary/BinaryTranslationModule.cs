@@ -1193,7 +1193,7 @@ namespace Mutagen.Bethesda.Generation
                                 && obj.GetObjectType() == ObjectType.Mod)
                             {
                                 modGroup = true;
-                                fg.AppendLine($"if (importMask.{field.Name})");
+                                fg.AppendLine($"if (importMask?.{field.Name} ?? true)");
                             }
                             using (new BraceWrapper(fg, doIt: modGroup))
                             {

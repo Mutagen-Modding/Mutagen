@@ -7146,7 +7146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.TES4_Property,
                 fieldIndex: (int)OblivionMod_FieldIndex.TES4,
                 errorMask: errorMask);
-            if (importMask.GameSettings)
+            if (importMask?.GameSettings ?? true)
             {
                 if (item.GameSettings.Items.Count > 0)
                 {
@@ -7157,7 +7157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Globals)
+            if (importMask?.Globals ?? true)
             {
                 if (item.Globals.Items.Count > 0)
                 {
@@ -7168,7 +7168,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Classes)
+            if (importMask?.Classes ?? true)
             {
                 if (item.Classes.Items.Count > 0)
                 {
@@ -7179,7 +7179,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Factions)
+            if (importMask?.Factions ?? true)
             {
                 if (item.Factions.Items.Count > 0)
                 {
@@ -7190,7 +7190,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Hairs)
+            if (importMask?.Hairs ?? true)
             {
                 if (item.Hairs.Items.Count > 0)
                 {
@@ -7201,7 +7201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Eyes)
+            if (importMask?.Eyes ?? true)
             {
                 if (item.Eyes.Items.Count > 0)
                 {
@@ -7212,7 +7212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Races)
+            if (importMask?.Races ?? true)
             {
                 if (item.Races.Items.Count > 0)
                 {
@@ -7223,7 +7223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Sounds)
+            if (importMask?.Sounds ?? true)
             {
                 if (item.Sounds.Items.Count > 0)
                 {
@@ -7234,7 +7234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Skills)
+            if (importMask?.Skills ?? true)
             {
                 if (item.Skills.Items.Count > 0)
                 {
@@ -7245,7 +7245,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.MagicEffects)
+            if (importMask?.MagicEffects ?? true)
             {
                 if (item.MagicEffects.Items.Count > 0)
                 {
@@ -7256,7 +7256,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Scripts)
+            if (importMask?.Scripts ?? true)
             {
                 if (item.Scripts.Items.Count > 0)
                 {
@@ -7267,7 +7267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.LandTextures)
+            if (importMask?.LandTextures ?? true)
             {
                 if (item.LandTextures.Items.Count > 0)
                 {
@@ -7278,7 +7278,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Enchantments)
+            if (importMask?.Enchantments ?? true)
             {
                 if (item.Enchantments.Items.Count > 0)
                 {
@@ -7289,7 +7289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Spells)
+            if (importMask?.Spells ?? true)
             {
                 if (item.Spells.Items.Count > 0)
                 {
@@ -7300,7 +7300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Birthsigns)
+            if (importMask?.Birthsigns ?? true)
             {
                 if (item.Birthsigns.Items.Count > 0)
                 {
@@ -7311,7 +7311,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Activators)
+            if (importMask?.Activators ?? true)
             {
                 if (item.Activators.Items.Count > 0)
                 {
@@ -7322,7 +7322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.AlchemicalApparatus)
+            if (importMask?.AlchemicalApparatus ?? true)
             {
                 if (item.AlchemicalApparatus.Items.Count > 0)
                 {
@@ -7333,7 +7333,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Armors)
+            if (importMask?.Armors ?? true)
             {
                 if (item.Armors.Items.Count > 0)
                 {
@@ -7344,7 +7344,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Books)
+            if (importMask?.Books ?? true)
             {
                 if (item.Books.Items.Count > 0)
                 {
@@ -7355,7 +7355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Clothes)
+            if (importMask?.Clothes ?? true)
             {
                 if (item.Clothes.Items.Count > 0)
                 {
@@ -7366,7 +7366,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Containers)
+            if (importMask?.Containers ?? true)
             {
                 if (item.Containers.Items.Count > 0)
                 {
@@ -7377,7 +7377,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Doors)
+            if (importMask?.Doors ?? true)
             {
                 if (item.Doors.Items.Count > 0)
                 {
@@ -7388,7 +7388,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Ingredients)
+            if (importMask?.Ingredients ?? true)
             {
                 if (item.Ingredients.Items.Count > 0)
                 {
@@ -7399,7 +7399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Lights)
+            if (importMask?.Lights ?? true)
             {
                 if (item.Lights.Items.Count > 0)
                 {
@@ -7410,7 +7410,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Miscellaneous)
+            if (importMask?.Miscellaneous ?? true)
             {
                 if (item.Miscellaneous.Items.Count > 0)
                 {
@@ -7421,7 +7421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Statics)
+            if (importMask?.Statics ?? true)
             {
                 if (item.Statics.Items.Count > 0)
                 {
@@ -7432,7 +7432,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Grasses)
+            if (importMask?.Grasses ?? true)
             {
                 if (item.Grasses.Items.Count > 0)
                 {
@@ -7443,7 +7443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Trees)
+            if (importMask?.Trees ?? true)
             {
                 if (item.Trees.Items.Count > 0)
                 {
@@ -7454,7 +7454,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Flora)
+            if (importMask?.Flora ?? true)
             {
                 if (item.Flora.Items.Count > 0)
                 {
@@ -7465,7 +7465,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Furnature)
+            if (importMask?.Furnature ?? true)
             {
                 if (item.Furnature.Items.Count > 0)
                 {
@@ -7476,7 +7476,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Weapons)
+            if (importMask?.Weapons ?? true)
             {
                 if (item.Weapons.Items.Count > 0)
                 {
@@ -7487,7 +7487,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Ammo)
+            if (importMask?.Ammo ?? true)
             {
                 if (item.Ammo.Items.Count > 0)
                 {
@@ -7498,7 +7498,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.NPCs)
+            if (importMask?.NPCs ?? true)
             {
                 if (item.NPCs.Items.Count > 0)
                 {
@@ -7509,7 +7509,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Creatures)
+            if (importMask?.Creatures ?? true)
             {
                 if (item.Creatures.Items.Count > 0)
                 {
@@ -7520,7 +7520,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.LeveledCreatures)
+            if (importMask?.LeveledCreatures ?? true)
             {
                 if (item.LeveledCreatures.Items.Count > 0)
                 {
@@ -7531,7 +7531,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.SoulGems)
+            if (importMask?.SoulGems ?? true)
             {
                 if (item.SoulGems.Items.Count > 0)
                 {
@@ -7542,7 +7542,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Keys)
+            if (importMask?.Keys ?? true)
             {
                 if (item.Keys.Items.Count > 0)
                 {
@@ -7553,7 +7553,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Potions)
+            if (importMask?.Potions ?? true)
             {
                 if (item.Potions.Items.Count > 0)
                 {
@@ -7564,7 +7564,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Subspaces)
+            if (importMask?.Subspaces ?? true)
             {
                 if (item.Subspaces.Items.Count > 0)
                 {
@@ -7575,7 +7575,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.SigilStones)
+            if (importMask?.SigilStones ?? true)
             {
                 if (item.SigilStones.Items.Count > 0)
                 {
@@ -7586,7 +7586,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.LeveledItems)
+            if (importMask?.LeveledItems ?? true)
             {
                 if (item.LeveledItems.Items.Count > 0)
                 {
@@ -7597,7 +7597,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Weathers)
+            if (importMask?.Weathers ?? true)
             {
                 if (item.Weathers.Items.Count > 0)
                 {
@@ -7608,7 +7608,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Climates)
+            if (importMask?.Climates ?? true)
             {
                 if (item.Climates.Items.Count > 0)
                 {
@@ -7619,7 +7619,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Regions)
+            if (importMask?.Regions ?? true)
             {
                 if (item.Regions.Items.Count > 0)
                 {
@@ -7630,7 +7630,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask.Cells)
+            if (importMask?.Cells ?? true)
             {
                 if (item.Cells.Items.Count > 0)
                 {
