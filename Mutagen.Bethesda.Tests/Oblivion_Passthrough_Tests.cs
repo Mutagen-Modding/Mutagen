@@ -432,29 +432,9 @@ namespace Mutagen.Bethesda.Tests
                         targetSkips: new RangeCollection(instructions.Instruction.SkipOutputSections),
                         amountToReport: 10);
                     Assert.False(outputErrMask?.IsInError() ?? false);
-                    Exception copyOverEx = null;
-                    try
-                    {
-                        CopyOverOffendingRecords(
-                            mod: mod,
-                            sections: ret.Sections,
-                            tmpFolder: tmp.Dir.FullName,
-                            origPath: Properties.Settings.Default.OblivionESM,
-                            processedPath: processedPath,
-                            outputPath: oblivionOutputPath,
-                            originalFileLocs: uncompressedFileLocs);
-                    }
-                    catch (Exception ex)
-                    {
-                        copyOverEx = ex;
-                    }
                     if (ret.Exception != null)
                     {
                         throw ret.Exception;
-                    }
-                    if (copyOverEx != null)
-                    {
-                        throw copyOverEx;
                     }
                 }
             }

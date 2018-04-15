@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
                                         ptByteReader.ReadFloat(),
                                         ptByteReader.ReadFloat());
                                     var numConn = ptByteReader.ReadByte();
-                                    ptByteReader.Position += 3;
+                                    pt.NumConnectionsFluffBytes = ptByteReader.ReadBytes(3);
                                     for (int j = 0; j < numConn; j++)
                                     {
                                         pt.Connections.Add(
@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (HeaderExport.ExportSubRecordHeader(writer, PathGrid_Registration.DATA_HEADER))
             {
-                writer.Write(item.PointToPointConnections.Count);
+                writer.Write((ushort)item.PointToPointConnections.Count);
             }
 
             using (HeaderExport.ExportSubRecordHeader(writer, PGRP))
@@ -109,6 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
                     writer.Write(pt.Point.Y);
                     writer.Write(pt.Point.Z);
                     writer.Write((byte)(pt.Connections.Count));
+                    writer.Write(pt.NumConnectionsFluffBytes);
                 }
             }
 

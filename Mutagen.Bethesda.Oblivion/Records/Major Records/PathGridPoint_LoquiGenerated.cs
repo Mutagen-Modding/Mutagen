@@ -53,6 +53,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<P3Float> IPathGridPointGetter.Point_Property => this.Point_Property;
         #endregion
+        #region NumConnectionsFluffBytes
+        protected INotifyingItem<Byte[]> _NumConnectionsFluffBytes = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[3]);
+        public INotifyingItem<Byte[]> NumConnectionsFluffBytes_Property => _NumConnectionsFluffBytes;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public Byte[] NumConnectionsFluffBytes
+        {
+            get => this._NumConnectionsFluffBytes.Item;
+            set => this._NumConnectionsFluffBytes.Set(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingItem<Byte[]> IPathGridPoint.NumConnectionsFluffBytes_Property => this.NumConnectionsFluffBytes_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingItemGetter<Byte[]> IPathGridPointGetter.NumConnectionsFluffBytes_Property => this.NumConnectionsFluffBytes_Property;
+        #endregion
         #region Connections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<Int16> _Connections = new NotifyingList<Int16>();
@@ -134,6 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (Point != rhs.Point) return false;
+            if (!NumConnectionsFluffBytes.EqualsFast(rhs.NumConnectionsFluffBytes)) return false;
             if (!Connections.SequenceEqual(rhs.Connections)) return false;
             return true;
         }
@@ -142,6 +157,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             int ret = 0;
             ret = HashHelper.GetHashCode(Point).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(NumConnectionsFluffBytes).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Connections).CombineHashCode(ret);
             return ret;
         }
@@ -363,6 +379,12 @@ namespace Mutagen.Bethesda.Oblivion
                     item._Point.SetIfSucceeded(P3FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PathGridPoint_FieldIndex.Point,
+                        errorMask: errorMask));
+                    break;
+                case "NumConnectionsFluffBytes":
+                    item._NumConnectionsFluffBytes.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes,
                         errorMask: errorMask));
                     break;
                 case "Connections":
@@ -590,6 +612,11 @@ namespace Mutagen.Bethesda.Oblivion
                 frame: frame,
                 fieldIndex: (int)PathGridPoint_FieldIndex.Point,
                 errorMask: errorMask));
+            var NumConnectionsFluffBytestryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.Spawn(new ContentLength(3)),
+                fieldIndex: (int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes,
+                errorMask: errorMask);
+            item._NumConnectionsFluffBytes.SetIfSucceeded(NumConnectionsFluffBytestryGet);
             var ConnectionstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16, Exception>.Instance.ParseRepeatedItem(
                 frame: frame,
                 fieldIndex: (int)PathGridPoint_FieldIndex.Connections,
@@ -727,6 +754,11 @@ namespace Mutagen.Bethesda.Oblivion
                         (P3Float)obj,
                         cmds);
                     break;
+                case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
+                    this._NumConnectionsFluffBytes.Set(
+                        (Byte[])obj,
+                        cmds);
+                    break;
                 case PathGridPoint_FieldIndex.Connections:
                     this._Connections.SetTo((IEnumerable<Int16>)obj, cmds);
                     break;
@@ -772,6 +804,11 @@ namespace Mutagen.Bethesda.Oblivion
                         (P3Float)pair.Value,
                         null);
                     break;
+                case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
+                    obj._NumConnectionsFluffBytes.Set(
+                        (Byte[])pair.Value,
+                        null);
+                    break;
                 case PathGridPoint_FieldIndex.Connections:
                     obj._Connections.SetTo((IEnumerable<Int16>)pair.Value, null);
                     break;
@@ -793,6 +830,9 @@ namespace Mutagen.Bethesda.Oblivion
         new P3Float Point { get; set; }
         new INotifyingItem<P3Float> Point_Property { get; }
 
+        new Byte[] NumConnectionsFluffBytes { get; set; }
+        new INotifyingItem<Byte[]> NumConnectionsFluffBytes_Property { get; }
+
         new INotifyingList<Int16> Connections { get; }
     }
 
@@ -801,6 +841,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Point
         P3Float Point { get; }
         INotifyingItemGetter<P3Float> Point_Property { get; }
+
+        #endregion
+        #region NumConnectionsFluffBytes
+        Byte[] NumConnectionsFluffBytes { get; }
+        INotifyingItemGetter<Byte[]> NumConnectionsFluffBytes_Property { get; }
 
         #endregion
         #region Connections
@@ -819,7 +864,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public enum PathGridPoint_FieldIndex
     {
         Point = 0,
-        Connections = 1,
+        NumConnectionsFluffBytes = 1,
+        Connections = 2,
     }
     #endregion
 
@@ -837,7 +883,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "6091ea9f-d0f5-4697-b89d-90083da7fde3";
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(PathGridPoint_Mask<>);
 
@@ -867,6 +913,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case "POINT":
                     return (ushort)PathGridPoint_FieldIndex.Point;
+                case "NUMCONNECTIONSFLUFFBYTES":
+                    return (ushort)PathGridPoint_FieldIndex.NumConnectionsFluffBytes;
                 case "CONNECTIONS":
                     return (ushort)PathGridPoint_FieldIndex.Connections;
                 default:
@@ -882,6 +930,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PathGridPoint_FieldIndex.Connections:
                     return true;
                 case PathGridPoint_FieldIndex.Point:
+                case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -894,6 +943,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PathGridPoint_FieldIndex.Point:
+                case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
                 case PathGridPoint_FieldIndex.Connections:
                     return false;
                 default:
@@ -907,6 +957,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PathGridPoint_FieldIndex.Point:
+                case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
                 case PathGridPoint_FieldIndex.Connections:
                     return false;
                 default:
@@ -921,6 +972,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case PathGridPoint_FieldIndex.Point:
                     return "Point";
+                case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
+                    return "NumConnectionsFluffBytes";
                 case PathGridPoint_FieldIndex.Connections:
                     return "Connections";
                 default:
@@ -934,6 +987,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PathGridPoint_FieldIndex.Point:
+                case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
                 case PathGridPoint_FieldIndex.Connections:
                     return false;
                 default:
@@ -947,6 +1001,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PathGridPoint_FieldIndex.Point:
+                case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
                 case PathGridPoint_FieldIndex.Connections:
                     return false;
                 default:
@@ -961,6 +1016,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case PathGridPoint_FieldIndex.Point:
                     return typeof(P3Float);
+                case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
+                    return typeof(Byte[]);
                 case PathGridPoint_FieldIndex.Connections:
                     return typeof(NotifyingList<Int16>);
                 default:
@@ -968,7 +1025,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public const int NumStructFields = 2;
+        public const int NumStructFields = 3;
         public const int NumTypedFields = 0;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1026,6 +1083,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)PathGridPoint_FieldIndex.Point, ex);
                 }
             }
+            if (copyMask?.NumConnectionsFluffBytes ?? true)
+            {
+                try
+                {
+                    item.NumConnectionsFluffBytes_Property.Set(
+                        value: rhs.NumConnectionsFluffBytes,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes, ex);
+                }
+            }
             if (copyMask?.Connections != CopyOption.Skip)
             {
                 try
@@ -1055,6 +1126,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PathGridPoint_FieldIndex.Point:
+                case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
                 case PathGridPoint_FieldIndex.Connections:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
@@ -1074,6 +1146,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PathGridPoint_FieldIndex.Point:
                     obj.Point = default(P3Float);
                     break;
+                case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
+                    obj.NumConnectionsFluffBytes = default(Byte[]);
+                    break;
                 case PathGridPoint_FieldIndex.Connections:
                     obj.Connections.Unset(cmds);
                     break;
@@ -1090,6 +1165,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PathGridPoint_FieldIndex.Point:
+                case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
                 case PathGridPoint_FieldIndex.Connections:
                     return true;
                 default:
@@ -1106,6 +1182,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case PathGridPoint_FieldIndex.Point:
                     return obj.Point;
+                case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
+                    return obj.NumConnectionsFluffBytes;
                 case PathGridPoint_FieldIndex.Connections:
                     return obj.Connections;
                 default:
@@ -1118,6 +1196,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Point = default(P3Float);
+            item.NumConnectionsFluffBytes = default(Byte[]);
             item.Connections.Unset(cmds.ToUnsetParams());
         }
 
@@ -1137,6 +1216,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Point = item.Point == rhs.Point;
+            ret.NumConnectionsFluffBytes = item.NumConnectionsFluffBytes.EqualsFast(rhs.NumConnectionsFluffBytes);
             ret.Connections = new MaskItem<bool, IEnumerable<bool>>();
             ret.Connections.Specific = item.Connections.SelectAgainst<Int16, bool>(rhs.Connections, ((l, r) => object.Equals(l, r)), out ret.Connections.Overall);
             ret.Connections.Overall = ret.Connections.Overall && ret.Connections.Specific.All((b) => b);
@@ -1173,6 +1253,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Point => {item.Point}");
                 }
+                if (printMask?.NumConnectionsFluffBytes ?? true)
+                {
+                    fg.AppendLine($"NumConnectionsFluffBytes => {item.NumConnectionsFluffBytes}");
+                }
                 if (printMask?.Connections?.Overall ?? true)
                 {
                     fg.AppendLine("Connections =>");
@@ -1207,6 +1291,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new PathGridPoint_Mask<bool>();
             ret.Point = true;
+            ret.NumConnectionsFluffBytes = true;
             ret.Connections = new MaskItem<bool, IEnumerable<bool>>(item.Connections.HasBeenSet, null);
             return ret;
         }
@@ -1248,6 +1333,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         name: nameof(item.Point),
                         item: item.Point_Property,
                         fieldIndex: (int)PathGridPoint_FieldIndex.Point,
+                        errorMask: errorMask);
+                    ByteArrayXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.NumConnectionsFluffBytes),
+                        item: item.NumConnectionsFluffBytes_Property,
+                        fieldIndex: (int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes,
                         errorMask: errorMask);
                     ListXmlTranslation<Int16, Exception>.Instance.Write(
                         writer: writer,
@@ -1326,6 +1417,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Point_Property,
                 fieldIndex: (int)PathGridPoint_FieldIndex.Point,
                 errorMask: errorMask);
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.NumConnectionsFluffBytes_Property,
+                fieldIndex: (int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes,
+                errorMask: errorMask);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16, Exception>.Instance.Write(
                 writer: writer,
                 item: item.Connections,
@@ -1360,12 +1456,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public PathGridPoint_Mask(T initialValue)
         {
             this.Point = initialValue;
+            this.NumConnectionsFluffBytes = initialValue;
             this.Connections = new MaskItem<T, IEnumerable<T>>(initialValue, null);
         }
         #endregion
 
         #region Members
         public T Point;
+        public T NumConnectionsFluffBytes;
         public MaskItem<T, IEnumerable<T>> Connections;
         #endregion
 
@@ -1380,6 +1478,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return false;
             if (!object.Equals(this.Point, rhs.Point)) return false;
+            if (!object.Equals(this.NumConnectionsFluffBytes, rhs.NumConnectionsFluffBytes)) return false;
             if (!object.Equals(this.Connections, rhs.Connections)) return false;
             return true;
         }
@@ -1387,6 +1486,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             int ret = 0;
             ret = ret.CombineHashCode(this.Point?.GetHashCode());
+            ret = ret.CombineHashCode(this.NumConnectionsFluffBytes?.GetHashCode());
             ret = ret.CombineHashCode(this.Connections?.GetHashCode());
             return ret;
         }
@@ -1397,6 +1497,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool AllEqual(Func<T, bool> eval)
         {
             if (!eval(this.Point)) return false;
+            if (!eval(this.NumConnectionsFluffBytes)) return false;
             if (this.Connections != null)
             {
                 if (!eval(this.Connections.Overall)) return false;
@@ -1423,6 +1524,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected void Translate_InternalFill<R>(PathGridPoint_Mask<R> obj, Func<T, R> eval)
         {
             obj.Point = eval(this.Point);
+            obj.NumConnectionsFluffBytes = eval(this.NumConnectionsFluffBytes);
             if (Connections != null)
             {
                 obj.Connections = new MaskItem<R, IEnumerable<R>>();
@@ -1471,6 +1573,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 if (printMask?.Point ?? true)
                 {
                     fg.AppendLine($"Point => {Point}");
+                }
+                if (printMask?.NumConnectionsFluffBytes ?? true)
+                {
+                    fg.AppendLine($"NumConnectionsFluffBytes => {NumConnectionsFluffBytes}");
                 }
                 if (printMask?.Connections?.Overall ?? true)
                 {
@@ -1521,6 +1627,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         public Exception Point;
+        public Exception NumConnectionsFluffBytes;
         public MaskItem<Exception, IEnumerable<Exception>> Connections;
         #endregion
 
@@ -1532,6 +1639,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case PathGridPoint_FieldIndex.Point:
                     this.Point = ex;
+                    break;
+                case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
+                    this.NumConnectionsFluffBytes = ex;
                     break;
                 case PathGridPoint_FieldIndex.Connections:
                     this.Connections = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
@@ -1549,6 +1659,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PathGridPoint_FieldIndex.Point:
                     this.Point = (Exception)obj;
                     break;
+                case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
+                    this.NumConnectionsFluffBytes = (Exception)obj;
+                    break;
                 case PathGridPoint_FieldIndex.Connections:
                     this.Connections = (MaskItem<Exception, IEnumerable<Exception>>)obj;
                     break;
@@ -1561,6 +1674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (Overall != null) return true;
             if (Point != null) return true;
+            if (NumConnectionsFluffBytes != null) return true;
             if (Connections != null) return true;
             return false;
         }
@@ -1597,6 +1711,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected void ToString_FillInternal(FileGeneration fg)
         {
             fg.AppendLine($"Point => {Point}");
+            fg.AppendLine($"NumConnectionsFluffBytes => {NumConnectionsFluffBytes}");
             fg.AppendLine("Connections =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1627,6 +1742,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new PathGridPoint_ErrorMask();
             ret.Point = this.Point.Combine(rhs.Point);
+            ret.NumConnectionsFluffBytes = this.NumConnectionsFluffBytes.Combine(rhs.NumConnectionsFluffBytes);
             ret.Connections = new MaskItem<Exception, IEnumerable<Exception>>(this.Connections.Overall.Combine(rhs.Connections.Overall), new List<Exception>(this.Connections.Specific.And(rhs.Connections.Specific)));
             return ret;
         }
@@ -1642,6 +1758,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Members
         public bool Point;
+        public bool NumConnectionsFluffBytes;
         public CopyOption Connections;
         #endregion
 

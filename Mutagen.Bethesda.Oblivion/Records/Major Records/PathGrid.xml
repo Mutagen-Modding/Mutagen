@@ -11,6 +11,7 @@
   <Object name="PathGridPoint" objType="Subrecord" GUID="6091ea9f-d0f5-4697-b89d-90083da7fde3" ID="130">
     <Fields>
       <P3Float name="Point" />
+      <ByteArray name="NumConnectionsFluffBytes" length="3" nullable="NotNull" />
       <List name="Connections">
         <Int16 />
       </List>
