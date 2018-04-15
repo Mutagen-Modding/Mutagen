@@ -20,19 +20,10 @@ namespace Mutagen.Bethesda.Tests
         private BinaryProcessorInstructions GetOblivionInstructions()
         {
             var instructions = new BinaryProcessorInstructions();
-            instructions.Instruction.SkipSourceSections.Add(new RangeInt64(0x93A648, 0xB44656));
-            instructions.Instruction.SkipOutputSections.Add(new RangeInt64(0x93A648, 0xB8BA09));
+            instructions.Instruction.IgnoreDifferenceSections.Add(new RangeInt64(0xC46695, 0xC46695));
+            instructions.Instruction.IgnoreDifferenceSections.Add(new RangeInt64(0xCA8846, 0xCA8846));
+            instructions.Instruction.IgnoreDifferenceSections.Add(new RangeInt64(0xCEAE22, 0xCEAE22));
             return instructions;
-        }
-
-        private void AddProcessedInstructions(
-            BinaryProcessorInstructions instructions,
-            MajorRecordLocator.FileLocations fileLocs)
-        { 
-            foreach (var loc in fileLocs.GrupLocations)
-            {
-                instructions.Instruction.IgnoreDifferenceSections.Add(new RangeInt64(loc.Offset + 4, loc.Offset + 7));
-            }
         }
 
         /*
@@ -374,53 +365,54 @@ namespace Mutagen.Bethesda.Tests
                 out var inputErrMask);
             Assert.False(inputErrMask?.IsInError() ?? false);
 
+            foreach (var record in mod.MajorRecords.Values)
+            {
+                if (record.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
+                {
+                    record.MajorRecordFlags &= ~MajorRecord.MajorRecordFlag.Compressed;
+                }
+            }
+
             var instructions = GetOblivionInstructions();
 
-            // Test compressions separately
-            var fileLocations = Task.Run(() =>
-            {
-                return MajorRecordLocator.GetFileLocations(
-                    filePath: Properties.Settings.Default.OblivionESM,
-                    uninterestingTypes: OblivionMod.NonTypeGroups);
-            });
-            var compressionTest = Task.Run(() => OblivionESM_Compression(mod, instructions, fileLocations, deleteAfter: deleteAfter));
-            var test = Task.Run(() => OblivionESM_Typical(mod, instructions, inputErrMask: inputErrMask, fileLocationsTask: fileLocations, deleteAfter: deleteAfter));
-            await compressionTest;
-            await test;
+            await OblivionESM_Typical(mod, instructions, inputErrMask: inputErrMask, deleteAfter: deleteAfter);
         }
 
         private async Task OblivionESM_Typical(
             OblivionMod mod,
             BinaryProcessorInstructions instructions,
             OblivionMod_ErrorMask inputErrMask,
-            Task<MajorRecordLocator.FileLocations> fileLocationsTask,
             bool deleteAfter)
         {
-            MajorRecordLocator.FileLocations fileLocs = await fileLocationsTask;
-
-            AddProcessedInstructions(
-                instructions,
-                fileLocs);
-
-            foreach (var rec in mod.MajorRecords.Values)
-            {
-                if (rec.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed)) continue;
-                AddDynamicProcessorInstructions(
-                    rec,
-                    instructions.Instruction,
-                    Properties.Settings.Default.OblivionESM,
-                    fileLocs[rec.FormID],
-                    compressed: false);
-            }
-
             using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary")), deleteAfter: deleteAfter))
             {
                 var oblivionOutputPath = Path.Combine(tmp.Dir.FullName, Constants.OBLIVION_ESM);
+                var uncompressedPath = Path.Combine(tmp.Dir.FullName, $"{Constants.OBLIVION_ESM}_Uncompressed");
                 var processedPath = Path.Combine(tmp.Dir.FullName, $"{Constants.OBLIVION_ESM}_Processed");
+
+                ModDecompressor.Decompress(
+                    inputPath: Properties.Settings.Default.OblivionESM,
+                    outputPath: uncompressedPath,
+                    interest: new RecordInterest(
+                        uninterestingTypes: OblivionMod.NonTypeGroups));
+                var uncompressedFileLocs = MajorRecordLocator.GetFileLocations(
+                    uncompressedPath,
+                    interest: new RecordInterest(
+                        uninterestingTypes: OblivionMod.NonTypeGroups));
+                
+                foreach (var rec in mod.MajorRecords.Values)
+                {
+                    AddDynamicProcessorInstructions(
+                        rec,
+                        instructions.Instruction,
+                        uncompressedPath,
+                        uncompressedFileLocs[rec.FormID],
+                        compressed: false);
+                }
 
                 var binConfig = instructions.Instruction.ToProcessorConfig();
                 using (var processor = new BinaryFileProcessor(
-                    new FileStream(Properties.Settings.Default.OblivionESM, FileMode.Open, FileAccess.Read),
+                    new FileStream(uncompressedPath, FileMode.Open, FileAccess.Read),
                     binConfig))
                 {
                     using (var outStream = new FileStream(processedPath, FileMode.Create, FileAccess.Write))

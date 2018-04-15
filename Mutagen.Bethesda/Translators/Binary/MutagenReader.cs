@@ -22,20 +22,24 @@ namespace Mutagen.Bethesda.Binary
         public bool Complete => this.Position >= this.Length;
         public FileLocation FinalLocation => new FileLocation(this.reader.BaseStream.Length);
         public ContentLength RemainingLength => this.FinalLocation - this.Position;
+        public bool ShouldDispose;
 
         public MutagenReader(string path)
         {
             this.reader = new BinaryReader(new FileStream(path, FileMode.Open, FileAccess.Read));
+            this.ShouldDispose = true;
         }
 
-        public MutagenReader(Stream stream)
+        public MutagenReader(Stream stream, bool dispose = true)
         {
             this.reader = new BinaryReader(stream);
+            this.ShouldDispose = dispose;
         }
 
-        public MutagenReader(System.IO.BinaryReader reader)
+        public MutagenReader(System.IO.BinaryReader reader, bool dispose = true)
         {
             this.reader = reader;
+            this.ShouldDispose = dispose;
         }
 
         public MutagenReader(byte[] bytes)
@@ -187,7 +191,10 @@ namespace Mutagen.Bethesda.Binary
 
         public void Dispose()
         {
-            this.reader.Dispose();
+            if (this.ShouldDispose)
+            {
+                this.reader.Dispose();
+            }
         }
     }
 }

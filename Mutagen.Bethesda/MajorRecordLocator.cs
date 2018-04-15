@@ -19,18 +19,23 @@ namespace Mutagen.Bethesda
             private Dictionary<FormID, FileSection> _fromFormIDs = new Dictionary<FormID, FileSection>();
             private SortedList<FileLocation, FormID> _fromStart = new SortedList<FileLocation, FormID>();
             private SortedList<FileLocation, FormID> _fromEnd = new SortedList<FileLocation, FormID>();
+            private Dictionary<FormID, IEnumerable<FileLocation>> _parentGroupMapper = new Dictionary<FormID, IEnumerable<FileLocation>>();
             public SortedSet<FileLocation> GrupLocations = new SortedSet<FileLocation>();
-
+            public SortedList<FileLocation, FormID> ListedRecords => _fromStart;
             public FileSection this[FormID id]
             {
                 get => _fromFormIDs[id];
             }
 
-            public void Add(FormID id, FileSection section)
+            public void Add(
+                FormID id, 
+                IEnumerable<FileLocation> parentGrupLocations,
+                FileSection section)
             {
                 this._fromFormIDs[id] = section;
                 this._fromStart[section.Min] = id;
                 this._fromEnd[section.Max] = id;
+                this._parentGroupMapper[id] = parentGrupLocations;
             }
 
             public bool TryGetSection(FormID id, out FileSection section)
@@ -99,65 +104,29 @@ namespace Mutagen.Bethesda
                 ids = ret;
                 return true;
             }
-        }
 
+            public IEnumerable<FileLocation> GetContainingGroupLocations(FormID id)
+            {
+                return _parentGroupMapper[id];
+            }
+        }
+        
         public static FileLocations GetFileLocations(
             string filePath,
-            params RecordType[] interestingTypes)
+            RecordInterest interest = null)
         {
             using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
-                return GetFileLocations(stream, (IEnumerable<RecordType>)interestingTypes);
+                return GetFileLocations(stream, interest);
             }
         }
-
-        public static FileLocations GetFileLocations(
-            string filePath,
-            IEnumerable<RecordType> interestingTypes = null,
-            IEnumerable<RecordType> uninterestingTypes = null)
-        {
-            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            {
-                return GetFileLocations(stream, interestingTypes, uninterestingTypes);
-            }
-        }
-
+        
         public static FileLocations GetFileLocations(
             Stream stream,
-            params RecordType[] interestingTypes)
+            RecordInterest interest = null)
         {
-            return GetFileLocations(stream, (IEnumerable<RecordType>)interestingTypes);
-        }
-
-        public static FileLocations GetFileLocations(
-            Stream stream,
-            IEnumerable<RecordType> interestingTypes = null,
-            IEnumerable<RecordType> uninterestingTypes = null)
-        {
-            HashSet<RecordType> interestingSet;
-            if (interestingTypes != null
-                && interestingTypes.Any())
-            {
-                interestingSet = new HashSet<RecordType>(interestingTypes);
-            }
-            else
-            {
-                interestingSet = null;
-            }
-
-            HashSet<RecordType> uninterestingSet;
-            if (uninterestingTypes != null
-                && uninterestingTypes.Any())
-            {
-                uninterestingSet = new HashSet<RecordType>(uninterestingTypes);
-            }
-            else
-            {
-                uninterestingSet = null;
-            }
-
             FileLocations ret = new FileLocations();
-            using (var reader = new MutagenReader(stream))
+            using (var reader = new MutagenReader(stream, dispose: false))
             {
                 // Skip header
                 reader.Position += new ContentLength(4);
@@ -165,27 +134,33 @@ namespace Mutagen.Bethesda
                 reader.Position += new ContentLength(12);
                 reader.Position += headerLen;
 
+                HashSet<RecordType> remainingTypes = (interest?.InterestingTypes?.Count <= 0) ? null : new HashSet<RecordType>(interest.InterestingTypes);
+
                 while (!reader.Complete
-                    && (interestingSet?.Count ?? 1) > 0)
+                    && (remainingTypes?.Count ?? 1) > 0)
                 {
-                    ParseTopLevelGRUP(
+                    var parsed = ParseTopLevelGRUP(
                         reader: reader,
                         fileLocs: ret,
-                        interestingSet: interestingSet,
-                        uninterestingSet: uninterestingSet);
+                        interest: interest);
+                    if (parsed.HasValue)
+                    {
+                        remainingTypes?.Remove(parsed.Value);
+                    }
                 }
             }
             return ret;
         }
 
-        private static void ParseTopLevelGRUP(
+        private static RecordType? ParseTopLevelGRUP(
             MutagenReader reader,
             FileLocations fileLocs,
-            HashSet<RecordType> interestingSet,
-            HashSet<RecordType> uninterestingSet,
+            RecordInterest interest,
             RecordType? grupRecOverride = null,
-            bool checkGrupType = true)
+            bool checkGrupType = true,
+            IEnumerable<FileLocation> parentGroupLocations = null)
         {
+            var grupLoc = reader.Position;
             var grup = HeaderTranslation.ReadNextRecordType(reader);
             if (!grup.Equals(GRUP))
             {
@@ -200,15 +175,12 @@ namespace Mutagen.Bethesda
             }
             var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(new MutagenFrame(reader, new ContentLength(4)));
 
-            if ((!interestingSet?.Contains(grupRec) ?? false)
-                || (uninterestingSet?.Contains(grupRec) ?? false))
+            if (!interest?.IsInterested(grupRec) ?? true)
             { // Skip
                 reader.Position -= new ContentLength(16);
                 reader.Position += grupLength;
-                return;
+                return null;
             }
-
-            interestingSet?.Remove(grupRec);
 
             reader.Position += new ContentLength(4);
 
@@ -228,8 +200,8 @@ namespace Mutagen.Bethesda
                                 frame: frame,
                                 fileLocs: fileLocs,
                                 recordType: grupRec,
-                                interestingSet: interestingSet,
-                                uninterestingSet: uninterestingSet);
+                                parentGroupLocations: grupLoc.And(parentGroupLocations),
+                                interest: interest);
                             continue;
                         }
                         else
@@ -240,11 +212,16 @@ namespace Mutagen.Bethesda
                     var recLength = new ContentLength(reader.ReadUInt32());
                     reader.Position += new ContentLength(4); // Skip flags
                     var formID = FormID.Factory(reader.ReadBytes(4));
-                    fileLocs.Add(formID, new FileSection(recordLocation, recordLocation + recLength + Constants.RECORD_LENGTH + Constants.RECORD_META_OFFSET - 1));
+                    fileLocs.Add(
+                        id: formID,
+                        parentGrupLocations: grupLoc.And(parentGroupLocations),
+                        section: new FileSection(recordLocation, recordLocation + recLength + Constants.RECORD_LENGTH + Constants.RECORD_META_OFFSET - 1));
                     reader.Position += new ContentLength(4);
                     reader.Position += recLength;
                 }
             }
+
+            return grupRec;
         }
 
         private static bool IsSubLevelGRUP(
@@ -274,10 +251,11 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             FileLocations fileLocs,
             RecordType recordType,
-            HashSet<RecordType> interestingSet,
-            HashSet<RecordType> uninterestingSet)
+            RecordInterest interest,
+            IEnumerable<FileLocation> parentGroupLocations)
         {
             var targetRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
+            var grupLoc = frame.Position;
             if (!targetRec.Type.Equals("GRUP"))
             {
                 throw new ArgumentException();
@@ -294,15 +272,15 @@ namespace Mutagen.Bethesda
                     HandleCells(
                         frame: frame.Spawn(recLength),
                         fileLocs: fileLocs,
-                        interestingSet: interestingSet,
-                        uninterestingSet: uninterestingSet);
+                            parentGroupLocations: grupLoc.And(parentGroupLocations),
+                        interest: interest);
                     break;
                 case GroupTypeEnum.CellChildren:
                     HandleCellSubchildren(
                         frame: frame.Spawn(recLength),
                         fileLocs: fileLocs,
-                        interestingSet: interestingSet,
-                        uninterestingSet: uninterestingSet);
+                            parentGroupLocations: grupLoc.And(parentGroupLocations),
+                        interest: interest);
                     break;
                 default:
                     throw new NotImplementedException();
@@ -312,12 +290,13 @@ namespace Mutagen.Bethesda
         private static void HandleCells(
             MutagenFrame frame,
             FileLocations fileLocs,
-            HashSet<RecordType> interestingSet,
-            HashSet<RecordType> uninterestingSet)
+            RecordInterest interest,
+            IEnumerable<FileLocation> parentGroupLocations)
         {
             frame.Reader.Position += Constants.GRUP_LENGTH;
             while (!frame.Complete)
             {
+                var grupLoc = frame.Position;
                 var targetRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
                 if (!targetRec.Type.Equals("GRUP"))
                 {
@@ -335,8 +314,8 @@ namespace Mutagen.Bethesda
                         ParseTopLevelGRUP(
                             reader: frame.Reader,
                             fileLocs: fileLocs,
-                            interestingSet: interestingSet,
-                            uninterestingSet: uninterestingSet,
+                            interest: interest,
+                            parentGroupLocations: grupLoc.And(parentGroupLocations),
                             grupRecOverride: new RecordType("CELL"));
                         break;
                     default:
@@ -348,12 +327,13 @@ namespace Mutagen.Bethesda
         private static void HandleCellSubchildren(
             MutagenFrame frame,
             FileLocations fileLocs,
-            HashSet<RecordType> interestingSet,
-            HashSet<RecordType> uninterestingSet)
+            RecordInterest interest,
+            IEnumerable<FileLocation> parentGroupLocations)
         {
             frame.Reader.Position += Constants.GRUP_LENGTH;
             while (!frame.Complete)
             {
+                var grupLoc = frame.Position;
                 var targetRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
                 if (!targetRec.Type.Equals("GRUP"))
                 {
@@ -372,8 +352,8 @@ namespace Mutagen.Bethesda
                         ParseTopLevelGRUP(
                             reader: frame.Reader,
                             fileLocs: fileLocs,
-                            interestingSet: interestingSet,
-                            uninterestingSet: uninterestingSet,
+                            interest: interest,
+                            parentGroupLocations: grupLoc.And(parentGroupLocations),
                             checkGrupType: false);
                         break;
                     default:
