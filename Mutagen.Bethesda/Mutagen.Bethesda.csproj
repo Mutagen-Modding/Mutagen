@@ -58,7 +58,6 @@
     <Compile Include="FormID.cs" />
     <Compile Include="Links\FormIDLink.cs" />
     <Compile Include="IMod.cs" />
-    <Compile Include="MajorRecordIterator.cs" />
     <Compile Include="MajorRecordLocator.cs" />
     <Compile Include="ModID.cs" />
     <Compile Include="ModKey.cs" />

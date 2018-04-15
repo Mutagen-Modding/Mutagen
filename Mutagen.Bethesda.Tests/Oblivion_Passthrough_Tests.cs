@@ -442,7 +442,7 @@ namespace Mutagen.Bethesda.Tests
                             origPath: Properties.Settings.Default.OblivionESM,
                             processedPath: processedPath,
                             outputPath: oblivionOutputPath,
-                            originalFileLocs: fileLocs);
+                            originalFileLocs: uncompressedFileLocs);
                     }
                     catch (Exception ex)
                     {
@@ -479,11 +479,17 @@ namespace Mutagen.Bethesda.Tests
                     oblivionOutputPath,
                     out var outputErrMask);
                 Assert.False(outputErrMask?.IsInError() ?? false);
-                foreach (var rec in MajorRecordIterator.GetFileLocations(oblivionOutputPath))
+                var fileLocs = MajorRecordLocator.GetFileLocations(oblivionOutputPath);
+                using (var reader = new MutagenReader(oblivionOutputPath))
                 {
-                    if (!rec.Type.Equals(NPC_Registration.NPC__HEADER))
+                    foreach (var rec in fileLocs.ListedRecords.Keys)
                     {
-                        throw new ArgumentException("Exported a non-NPC record.");
+                        reader.Position = rec;
+                        var t = HeaderTranslation.ReadNextRecordType(reader);
+                        if (!t.Equals(NPC_Registration.NPC__HEADER))
+                        {
+                            throw new ArgumentException("Exported a non-NPC record.");
+                        }
                     }
                 }
             }
@@ -508,11 +514,17 @@ namespace Mutagen.Bethesda.Tests
                         NPCs = true
                     });
                 Assert.False(outputErrMask?.IsInError() ?? false);
-                foreach (var rec in MajorRecordIterator.GetFileLocations(oblivionOutputPath))
+                var fileLocs = MajorRecordLocator.GetFileLocations(oblivionOutputPath);
+                using (var reader = new MutagenReader(oblivionOutputPath))
                 {
-                    if (!rec.Type.Equals(NPC_Registration.NPC__HEADER))
+                    foreach (var rec in fileLocs.ListedRecords.Keys)
                     {
-                        throw new ArgumentException("Exported a non-NPC record.");
+                        reader.Position = rec;
+                        var t = HeaderTranslation.ReadNextRecordType(reader);
+                        if (!t.Equals(NPC_Registration.NPC__HEADER))
+                        {
+                            throw new ArgumentException("Exported a non-NPC record.");
+                        }
                     }
                 }
             }
