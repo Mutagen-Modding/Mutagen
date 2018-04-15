@@ -22,10 +22,7 @@ namespace Mutagen.Bethesda
             private Dictionary<FormID, IEnumerable<FileLocation>> _parentGroupMapper = new Dictionary<FormID, IEnumerable<FileLocation>>();
             public SortedSet<FileLocation> GrupLocations = new SortedSet<FileLocation>();
             public SortedList<FileLocation, FormID> ListedRecords => _fromStart;
-            public FileSection this[FormID id]
-            {
-                get => _fromFormIDs[id];
-            }
+            public FileSection this[FormID id] => _fromFormIDs[id];
 
             public void Add(
                 FormID id, 
@@ -35,7 +32,7 @@ namespace Mutagen.Bethesda
                 this._fromFormIDs[id] = section;
                 this._fromStart[section.Min] = id;
                 this._fromEnd[section.Max] = id;
-                this._parentGroupMapper[id] = parentGrupLocations;
+                this._parentGroupMapper[id] = new HashSet<FileLocation>(parentGrupLocations);
             }
 
             public bool TryGetSection(FormID id, out FileSection section)
@@ -166,7 +163,7 @@ namespace Mutagen.Bethesda
             {
                 throw new ArgumentException();
             }
-            fileLocs.GrupLocations.Add(reader.Position - 4);
+            fileLocs.GrupLocations.Add(grupLoc);
             var grupLength = new ContentLength(reader.ReadUInt32());
             var grupRec = HeaderTranslation.ReadNextRecordType(reader);
             if (grupRecOverride != null)
@@ -254,13 +251,13 @@ namespace Mutagen.Bethesda
             RecordInterest interest,
             IEnumerable<FileLocation> parentGroupLocations)
         {
-            var targetRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
             var grupLoc = frame.Position;
+            var targetRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
             if (!targetRec.Type.Equals("GRUP"))
             {
                 throw new ArgumentException();
             }
-            fileLocs.GrupLocations.Add(frame.Reader.Position - 4);
+            fileLocs.GrupLocations.Add(grupLoc);
             var recLength = new ContentLength(frame.Reader.ReadUInt32());
             var grupRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
             var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(new MutagenFrame(frame.Reader, new ContentLength(4)));
@@ -302,7 +299,7 @@ namespace Mutagen.Bethesda
                 {
                     throw new ArgumentException();
                 }
-                fileLocs.GrupLocations.Add(frame.Reader.Position - 4);
+                fileLocs.GrupLocations.Add(grupLoc);
                 var recLength = new ContentLength(frame.Reader.ReadUInt32());
                 var grupRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
                 var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(new MutagenFrame(frame.Reader, new ContentLength(4)));
@@ -339,7 +336,7 @@ namespace Mutagen.Bethesda
                 {
                     throw new ArgumentException();
                 }
-                fileLocs.GrupLocations.Add(frame.Reader.Position - 4);
+                fileLocs.GrupLocations.Add(grupLoc);
                 var recLength = new ContentLength(frame.Reader.ReadUInt32());
                 var grupRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
                 var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(new MutagenFrame(frame.Reader, new ContentLength(4)));

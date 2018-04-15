@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda
 
                             // If no difference in lengths, move on
                             var lengthDiff = decompressedLen - len;
-                            if (lengthDiff <= 0) continue;
+                            if (lengthDiff == 0) continue;
                             
                             // Modify record length
                             writer.BaseStream.Position = recLengthLocation;
