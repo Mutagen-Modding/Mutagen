@@ -178,13 +178,6 @@ namespace Mutagen.Bethesda
         private void DoMoves(int prevExtraRead, FileSection targetSection)
         {
             if (config._moves == null) return;
-
-            if (targetSection.Range.IsInRange(0xC5CF50))
-            {
-                int wer = 23;
-                wer++;
-            }
-
             int moveDeletions = 0;
 
             FileLocation[] moveFromKeys = null;

@@ -65,10 +65,41 @@ namespace Mutagen.Bethesda.Oblivion
         {
             subBlock.Items.Subscribe_Enumerable_Single(this, (change) =>
             {
-                if (change.AddRem == AddRemove.Add
-                    && _majorRecords.ContainsKey(change.Item.FormID))
+                switch (change.AddRem)
                 {
-                    throw new ArgumentException("Cannot add a cell that exists elsewhere in the same mod.");
+                    case AddRemove.Add:
+                        var ct = _majorRecords.Count;
+                        if (change.AddRem == AddRemove.Add
+                            && _majorRecords.ContainsKey(change.Item.FormID))
+                        {
+                            throw new ArgumentException("Cannot add a cell that exists elsewhere in the same mod.");
+                        }
+                        change.Item.Persistent.Subscribe_Enumerable_Single(this, (r) => _majorRecords.Modify(r.Item.FormID, r.Item, r.AddRem));
+                        change.Item.Temporary.Subscribe_Enumerable_Single(this, (r) => _majorRecords.Modify(r.Item.FormID, r.Item, r.AddRem));
+                        change.Item.VisibleWhenDistant.Subscribe_Enumerable_Single(this, (r) => _majorRecords.Modify(r.Item.FormID, r.Item, r.AddRem));
+                        change.Item.PathGrid_Property.Subscribe(this, (r) =>
+                        {
+                            if (r.Old != null)
+                            {
+                                _majorRecords.Remove(r.Old.FormID);
+                            }
+                            if (r.New != null)
+                            {
+                                if (_majorRecords.ContainsKey(r.New.FormID))
+                                {
+                                    throw new ArgumentException("Cannot add a pathgrid that exists elsewhere in the same mod.");
+                                }
+                                _majorRecords[r.New.FormID] = r.New;
+                            }
+                        });
+                        break;
+                    case AddRemove.Remove:
+                        change.Item.Persistent.Unsubscribe(this);
+                        change.Item.Temporary.Unsubscribe(this);
+                        change.Item.VisibleWhenDistant.Unsubscribe(this);
+                        break;
+                    default:
+                        break;
                 }
                 _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem);
             });

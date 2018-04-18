@@ -53,6 +53,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> ILockInformationGetter.LockLevel_Property => this.LockLevel_Property;
         #endregion
+        #region Fluff
+        protected INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[3]);
+        public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public Byte[] Fluff
+        {
+            get => this._Fluff.Item;
+            set => this._Fluff.Set(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingItem<Byte[]> ILockInformation.Fluff_Property => this.Fluff_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingItemGetter<Byte[]> ILockInformationGetter.Fluff_Property => this.Fluff_Property;
+        #endregion
         #region Key
         public FormIDLink<Key> Key_Property { get; } = new FormIDLink<Key>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -138,6 +152,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (LockLevel != rhs.LockLevel) return false;
+            if (!Fluff.EqualsFast(rhs.Fluff)) return false;
             if (Key != rhs.Key) return false;
             if (Flags != rhs.Flags) return false;
             return true;
@@ -147,6 +162,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             int ret = 0;
             ret = HashHelper.GetHashCode(LockLevel).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Key).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
             return ret;
@@ -369,6 +385,12 @@ namespace Mutagen.Bethesda.Oblivion
                     item._LockLevel.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)LockInformation_FieldIndex.LockLevel,
+                        errorMask: errorMask));
+                    break;
+                case "Fluff":
+                    item._Fluff.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)LockInformation_FieldIndex.Fluff,
                         errorMask: errorMask));
                     break;
                 case "Key":
@@ -607,7 +629,11 @@ namespace Mutagen.Bethesda.Oblivion
                 frame: frame,
                 fieldIndex: (int)LockInformation_FieldIndex.LockLevel,
                 errorMask: errorMask));
-            frame.SetPosition(frame.Position + 3);
+            var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.Spawn(new ContentLength(3)),
+                fieldIndex: (int)LockInformation_FieldIndex.Fluff,
+                errorMask: errorMask);
+            item._Fluff.SetIfSucceeded(FlufftryGet);
             item.Key_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)LockInformation_FieldIndex.Key,
@@ -739,6 +765,11 @@ namespace Mutagen.Bethesda.Oblivion
                         (Byte)obj,
                         cmds);
                     break;
+                case LockInformation_FieldIndex.Fluff:
+                    this._Fluff.Set(
+                        (Byte[])obj,
+                        cmds);
+                    break;
                 case LockInformation_FieldIndex.Key:
                     this.Key_Property.Set(
                         (FormIDLink<Key>)obj,
@@ -791,6 +822,11 @@ namespace Mutagen.Bethesda.Oblivion
                         (Byte)pair.Value,
                         null);
                     break;
+                case LockInformation_FieldIndex.Fluff:
+                    obj._Fluff.Set(
+                        (Byte[])pair.Value,
+                        null);
+                    break;
                 case LockInformation_FieldIndex.Key:
                     obj.Key_Property.Set(
                         (FormIDLink<Key>)pair.Value,
@@ -819,6 +855,9 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte LockLevel { get; set; }
         new INotifyingItem<Byte> LockLevel_Property { get; }
 
+        new Byte[] Fluff { get; set; }
+        new INotifyingItem<Byte[]> Fluff_Property { get; }
+
         new Key Key { get; set; }
         new LockInformation.Flag Flags { get; set; }
         new INotifyingItem<LockInformation.Flag> Flags_Property { get; }
@@ -830,6 +869,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region LockLevel
         Byte LockLevel { get; }
         INotifyingItemGetter<Byte> LockLevel_Property { get; }
+
+        #endregion
+        #region Fluff
+        Byte[] Fluff { get; }
+        INotifyingItemGetter<Byte[]> Fluff_Property { get; }
 
         #endregion
         #region Key
@@ -855,8 +899,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public enum LockInformation_FieldIndex
     {
         LockLevel = 0,
-        Key = 1,
-        Flags = 2,
+        Fluff = 1,
+        Key = 2,
+        Flags = 3,
     }
     #endregion
 
@@ -874,7 +919,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "46a1b7ce-4f49-4017-8beb-bef9481e5fd2";
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(LockInformation_Mask<>);
 
@@ -904,6 +949,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case "LOCKLEVEL":
                     return (ushort)LockInformation_FieldIndex.LockLevel;
+                case "FLUFF":
+                    return (ushort)LockInformation_FieldIndex.Fluff;
                 case "KEY":
                     return (ushort)LockInformation_FieldIndex.Key;
                 case "FLAGS":
@@ -919,6 +966,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LockInformation_FieldIndex.LockLevel:
+                case LockInformation_FieldIndex.Fluff:
                 case LockInformation_FieldIndex.Key:
                 case LockInformation_FieldIndex.Flags:
                     return false;
@@ -933,6 +981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LockInformation_FieldIndex.LockLevel:
+                case LockInformation_FieldIndex.Fluff:
                 case LockInformation_FieldIndex.Key:
                 case LockInformation_FieldIndex.Flags:
                     return false;
@@ -947,6 +996,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LockInformation_FieldIndex.LockLevel:
+                case LockInformation_FieldIndex.Fluff:
                 case LockInformation_FieldIndex.Key:
                 case LockInformation_FieldIndex.Flags:
                     return false;
@@ -962,6 +1012,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case LockInformation_FieldIndex.LockLevel:
                     return "LockLevel";
+                case LockInformation_FieldIndex.Fluff:
+                    return "Fluff";
                 case LockInformation_FieldIndex.Key:
                     return "Key";
                 case LockInformation_FieldIndex.Flags:
@@ -977,6 +1029,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LockInformation_FieldIndex.LockLevel:
+                case LockInformation_FieldIndex.Fluff:
                 case LockInformation_FieldIndex.Key:
                 case LockInformation_FieldIndex.Flags:
                     return false;
@@ -991,6 +1044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LockInformation_FieldIndex.LockLevel:
+                case LockInformation_FieldIndex.Fluff:
                 case LockInformation_FieldIndex.Key:
                 case LockInformation_FieldIndex.Flags:
                     return false;
@@ -1006,6 +1060,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case LockInformation_FieldIndex.LockLevel:
                     return typeof(Byte);
+                case LockInformation_FieldIndex.Fluff:
+                    return typeof(Byte[]);
                 case LockInformation_FieldIndex.Key:
                     return typeof(FormIDLink<Key>);
                 case LockInformation_FieldIndex.Flags:
@@ -1017,7 +1073,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly RecordType XLOC_HEADER = new RecordType("XLOC");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = XLOC_HEADER;
-        public const int NumStructFields = 3;
+        public const int NumStructFields = 4;
         public const int NumTypedFields = 0;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1075,6 +1131,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)LockInformation_FieldIndex.LockLevel, ex);
                 }
             }
+            if (copyMask?.Fluff ?? true)
+            {
+                try
+                {
+                    item.Fluff_Property.Set(
+                        value: rhs.Fluff,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)LockInformation_FieldIndex.Fluff, ex);
+                }
+            }
             if (copyMask?.Key ?? true)
             {
                 try
@@ -1117,6 +1187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LockInformation_FieldIndex.LockLevel:
+                case LockInformation_FieldIndex.Fluff:
                 case LockInformation_FieldIndex.Key:
                 case LockInformation_FieldIndex.Flags:
                     if (on) break;
@@ -1137,6 +1208,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LockInformation_FieldIndex.LockLevel:
                     obj.LockLevel = default(Byte);
                     break;
+                case LockInformation_FieldIndex.Fluff:
+                    obj.Fluff = default(Byte[]);
+                    break;
                 case LockInformation_FieldIndex.Key:
                     obj.Key = default(FormIDLink<Key>);
                     break;
@@ -1156,6 +1230,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LockInformation_FieldIndex.LockLevel:
+                case LockInformation_FieldIndex.Fluff:
                 case LockInformation_FieldIndex.Key:
                 case LockInformation_FieldIndex.Flags:
                     return true;
@@ -1173,6 +1248,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case LockInformation_FieldIndex.LockLevel:
                     return obj.LockLevel;
+                case LockInformation_FieldIndex.Fluff:
+                    return obj.Fluff;
                 case LockInformation_FieldIndex.Key:
                     return obj.Key;
                 case LockInformation_FieldIndex.Flags:
@@ -1187,6 +1264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.LockLevel = default(Byte);
+            item.Fluff = default(Byte[]);
             item.Key = default(FormIDLink<Key>);
             item.Flags = default(LockInformation.Flag);
         }
@@ -1207,6 +1285,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.LockLevel = item.LockLevel == rhs.LockLevel;
+            ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
             ret.Key = item.Key == rhs.Key;
             ret.Flags = item.Flags == rhs.Flags;
         }
@@ -1242,6 +1321,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"LockLevel => {item.LockLevel}");
                 }
+                if (printMask?.Fluff ?? true)
+                {
+                    fg.AppendLine($"Fluff => {item.Fluff}");
+                }
                 if (printMask?.Key ?? true)
                 {
                     fg.AppendLine($"Key => {item.Key_Property}");
@@ -1265,6 +1348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new LockInformation_Mask<bool>();
             ret.LockLevel = true;
+            ret.Fluff = true;
             ret.Key = true;
             ret.Flags = true;
             return ret;
@@ -1307,6 +1391,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         name: nameof(item.LockLevel),
                         item: item.LockLevel_Property,
                         fieldIndex: (int)LockInformation_FieldIndex.LockLevel,
+                        errorMask: errorMask);
+                    ByteArrayXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Fluff),
+                        item: item.Fluff_Property,
+                        fieldIndex: (int)LockInformation_FieldIndex.Fluff,
                         errorMask: errorMask);
                     FormIDXmlTranslation.Instance.Write(
                         writer: writer,
@@ -1387,7 +1477,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.LockLevel_Property,
                 fieldIndex: (int)LockInformation_FieldIndex.LockLevel,
                 errorMask: errorMask);
-            writer.WriteZeros(3);
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Fluff_Property,
+                fieldIndex: (int)LockInformation_FieldIndex.Fluff,
+                errorMask: errorMask);
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Key_Property,
@@ -1419,6 +1513,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public LockInformation_Mask(T initialValue)
         {
             this.LockLevel = initialValue;
+            this.Fluff = initialValue;
             this.Key = initialValue;
             this.Flags = initialValue;
         }
@@ -1426,6 +1521,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Members
         public T LockLevel;
+        public T Fluff;
         public T Key;
         public T Flags;
         #endregion
@@ -1441,6 +1537,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return false;
             if (!object.Equals(this.LockLevel, rhs.LockLevel)) return false;
+            if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
             if (!object.Equals(this.Key, rhs.Key)) return false;
             if (!object.Equals(this.Flags, rhs.Flags)) return false;
             return true;
@@ -1449,6 +1546,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             int ret = 0;
             ret = ret.CombineHashCode(this.LockLevel?.GetHashCode());
+            ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
             ret = ret.CombineHashCode(this.Key?.GetHashCode());
             ret = ret.CombineHashCode(this.Flags?.GetHashCode());
             return ret;
@@ -1460,6 +1558,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool AllEqual(Func<T, bool> eval)
         {
             if (!eval(this.LockLevel)) return false;
+            if (!eval(this.Fluff)) return false;
             if (!eval(this.Key)) return false;
             if (!eval(this.Flags)) return false;
             return true;
@@ -1477,6 +1576,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected void Translate_InternalFill<R>(LockInformation_Mask<R> obj, Func<T, R> eval)
         {
             obj.LockLevel = eval(this.LockLevel);
+            obj.Fluff = eval(this.Fluff);
             obj.Key = eval(this.Key);
             obj.Flags = eval(this.Flags);
         }
@@ -1511,6 +1611,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"LockLevel => {LockLevel}");
                 }
+                if (printMask?.Fluff ?? true)
+                {
+                    fg.AppendLine($"Fluff => {Fluff}");
+                }
                 if (printMask?.Key ?? true)
                 {
                     fg.AppendLine($"Key => {Key}");
@@ -1543,6 +1647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         public Exception LockLevel;
+        public Exception Fluff;
         public Exception Key;
         public Exception Flags;
         #endregion
@@ -1555,6 +1660,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case LockInformation_FieldIndex.LockLevel:
                     this.LockLevel = ex;
+                    break;
+                case LockInformation_FieldIndex.Fluff:
+                    this.Fluff = ex;
                     break;
                 case LockInformation_FieldIndex.Key:
                     this.Key = ex;
@@ -1575,6 +1683,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LockInformation_FieldIndex.LockLevel:
                     this.LockLevel = (Exception)obj;
                     break;
+                case LockInformation_FieldIndex.Fluff:
+                    this.Fluff = (Exception)obj;
+                    break;
                 case LockInformation_FieldIndex.Key:
                     this.Key = (Exception)obj;
                     break;
@@ -1590,6 +1701,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (Overall != null) return true;
             if (LockLevel != null) return true;
+            if (Fluff != null) return true;
             if (Key != null) return true;
             if (Flags != null) return true;
             return false;
@@ -1627,6 +1739,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected void ToString_FillInternal(FileGeneration fg)
         {
             fg.AppendLine($"LockLevel => {LockLevel}");
+            fg.AppendLine($"Fluff => {Fluff}");
             fg.AppendLine($"Key => {Key}");
             fg.AppendLine($"Flags => {Flags}");
         }
@@ -1637,6 +1750,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new LockInformation_ErrorMask();
             ret.LockLevel = this.LockLevel.Combine(rhs.LockLevel);
+            ret.Fluff = this.Fluff.Combine(rhs.Fluff);
             ret.Key = this.Key.Combine(rhs.Key);
             ret.Flags = this.Flags.Combine(rhs.Flags);
             return ret;
@@ -1653,6 +1767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Members
         public bool LockLevel;
+        public bool Fluff;
         public bool Key;
         public bool Flags;
         #endregion

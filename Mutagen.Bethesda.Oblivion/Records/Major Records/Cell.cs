@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Oblivion
                 && obj.Temporary.Count == 0
                 && obj.VisibleWhenDistant.Count == 0
                 && !obj.PathGrid_Property.HasBeenSet) return;
-            using (HeaderExport.ExportRecordHeader(writer, Group_Registration.GRUP_HEADER))
+            using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
             {
                 writer.Write(obj.FormID.ID);
                 writer.Write((int)GroupTypeEnum.CellChildren);
@@ -212,7 +212,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (obj.Persistent.Count > 0)
                 {
-                    using (HeaderExport.ExportRecordHeader(writer, Group_Registration.GRUP_HEADER))
+                    using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                     {
                         writer.Write(obj.FormID.ID);
                         writer.Write((int)GroupTypeEnum.CellPersistentChildren);
@@ -242,7 +242,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (obj.Temporary.Count > 0
                     || obj.PathGrid_Property.HasBeenSet)
                 {
-                    using (HeaderExport.ExportRecordHeader(writer, Group_Registration.GRUP_HEADER))
+                    using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                     {
                         writer.Write(obj.FormID.ID);
                         writer.Write((int)GroupTypeEnum.CellTemporaryChildren);
@@ -279,7 +279,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (obj.VisibleWhenDistant.Count > 0)
                 {
-                    using (HeaderExport.ExportRecordHeader(writer, Group_Registration.GRUP_HEADER))
+                    using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                     {
                         writer.Write(obj.FormID.ID);
                         writer.Write((int)GroupTypeEnum.CellVisibleDistantChildren);

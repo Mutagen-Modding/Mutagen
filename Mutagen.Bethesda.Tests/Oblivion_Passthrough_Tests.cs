@@ -20,9 +20,21 @@ namespace Mutagen.Bethesda.Tests
         private BinaryProcessorInstructions GetOblivionInstructions()
         {
             var instructions = new BinaryProcessorInstructions();
-            instructions.Instruction.IgnoreDifferenceSections.Add(new RangeInt64(0xC46695, 0xC46695));
-            instructions.Instruction.IgnoreDifferenceSections.Add(new RangeInt64(0xCA8846, 0xCA8846));
-            instructions.Instruction.IgnoreDifferenceSections.Add(new RangeInt64(0xCEAE22, 0xCEAE22));
+            instructions.Instruction.Substitutions.Add(new DataTarget()
+            {
+                Location = 0xC46695,
+                Data = new byte[] { 0x66, 0xDC, 0x05, 0x00 }
+            });
+            instructions.Instruction.Substitutions.Add(new DataTarget()
+            {
+                Location = 0xCA88D9,
+                Data = new byte[] { 0xDB, 0xBC, 0x04, 0x00 }
+            });
+            instructions.Instruction.Substitutions.Add(new DataTarget()
+            {
+                Location = 0xCEAEB5,
+                Data = new byte[] { 0x76, 0x0A, 0x00, 0x00 }
+            });
             return instructions;
         }
 
@@ -34,12 +46,17 @@ namespace Mutagen.Bethesda.Tests
             Instruction instr,
             string filePath,
             FileSection loc,
-            bool compressed)
+            MajorRecordLocator.FileLocations fileLocs,
+            Dictionary<FileLocation, uint> lengthTracker,
+            bool compressed,
+            bool processing)
         {
-            ProcessNPC_Mismatch(rec, instr, filePath, loc, compressed);
-            ProcessCreature_Mismatch(rec, instr, filePath, loc, compressed);
-            ProcessLeveledItemDataFields(rec, instr, filePath, loc);
-            ProcessRegions(rec, instr, filePath, loc);
+            ProcessNPC_Mismatch(rec, instr, filePath, loc, compressed, processing);
+            ProcessCreature_Mismatch(rec, instr, filePath, loc, compressed, processing);
+            ProcessLeveledItemDataFields(rec, instr, filePath, loc, processing);
+            ProcessRegions(rec, instr, filePath, loc, processing);
+            ProcessPlacedObject_Mismatch(rec, instr, filePath, loc, fileLocs, lengthTracker, processing);
+            ProcessCell_Mismatch(rec, instr, filePath, loc, compressed, processing);
         }
 
         private void ProcessNPC_Mismatch(
@@ -47,8 +64,10 @@ namespace Mutagen.Bethesda.Tests
             Instruction instr,
             string filePath,
             FileSection loc,
-            bool compressed)
+            bool compressed,
+            bool processing)
         {
+            if (!processing) return;
             if (!(rec is NPC)) return;
             if (compressed != rec.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed)) return;
             this.DynamicMove(
@@ -71,13 +90,43 @@ namespace Mutagen.Bethesda.Tests
                 });
         }
 
+        private void ProcessCell_Mismatch(
+            MajorRecord rec,
+            Instruction instr,
+            string filePath,
+            FileSection loc,
+            bool compressed,
+            bool processing)
+        {
+            if (!processing) return;
+            if (!(rec is Cell)) return;
+            this.DynamicMove(
+                instr,
+                filePath,
+                loc,
+                offendingIndices: new RecordType[]
+                {
+                    new RecordType("XOWN"),
+                },
+                offendingLimits: new RecordType[]
+                {
+                    new RecordType("XCMT")
+                },
+                locationsToMove: new RecordType[]
+                {
+                    new RecordType("GRUP")
+                });
+        }
+
         private void ProcessCreature_Mismatch(
             MajorRecord rec,
             Instruction instr,
             string filePath,
             FileSection loc,
-            bool compressed)
+            bool compressed,
+            bool processing)
         {
+            if (!processing) return;
             if (!(rec is Creature)) return;
             if (compressed != rec.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed)) return;
             this.AlignRecords(
@@ -116,8 +165,10 @@ namespace Mutagen.Bethesda.Tests
             MajorRecord rec,
             Instruction instr,
             string filePath,
-            FileSection loc)
+            FileSection loc,
+            bool processing)
         {
+            if (!processing) return;
             if (!(rec is LeveledItem)) return;
             using (var stream = new MutagenReader(filePath))
             {
@@ -179,8 +230,10 @@ namespace Mutagen.Bethesda.Tests
             MajorRecord rec,
             Instruction instr,
             string filePath,
-            FileSection loc)
+            FileSection loc,
+            bool processing)
         {
+            if (!processing) return;
             if (!(rec is Region)) return;
             using (var stream = new MutagenReader(filePath))
             {
@@ -258,6 +311,118 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
+        private static byte[] ZeroFloat = new byte[] { 0, 0, 0, 0x80 };
+        private void ProcessPlacedObject_Mismatch(
+            MajorRecord rec,
+            Instruction instr,
+            string filePath,
+            FileSection loc,
+            MajorRecordLocator.FileLocations fileLocs,
+            Dictionary<FileLocation, uint> lengthTracker,
+            bool processing)
+        {
+            if (!(rec is PlacedObject)) return;
+            if (processing)
+            {
+                this.DynamicMove(
+                    instr,
+                    filePath,
+                    loc,
+                    offendingIndices: new RecordType[]
+                    {
+                        new RecordType("XSCL"),
+                    },
+                    offendingLimits: new RecordType[]
+                    {
+                        new RecordType("XESP")
+                    },
+                    locationsToMove: new RecordType[]
+                    {
+                        new RecordType("DATA")
+                    });
+                this.DynamicMove(
+                    instr,
+                    filePath,
+                    loc,
+                    offendingIndices: new RecordType[]
+                    {
+                        new RecordType("XOWN"),
+                    },
+                    offendingLimits: new RecordType[]
+                    {
+                        new RecordType("XLOC")
+                    },
+                    locationsToMove: new RecordType[]
+                    {
+                        new RecordType("DATA")
+                    });
+                using (var stream = new MutagenReader(filePath))
+                {
+                    stream.Position = loc.Min;
+                    var str = stream.ReadString((int)loc.Range.Width + Constants.RECORD_HEADER_LENGTH);
+                    var datIndex = str.IndexOf("XLOC");
+                    if (datIndex == -1) return;
+                    stream.Position = loc.Min + datIndex;
+                    stream.Position += 4;
+                    var len = stream.ReadUInt16();
+                    if (len == 16)
+                    {
+                        lengthTracker[loc.Min] = lengthTracker[loc.Min] - 4;
+                        var removeStart = loc.Min + datIndex + 6 + 12;
+                        instr.Substitutions.Add(
+                            new DataTarget()
+                            {
+                                Location = loc.Min + datIndex + 4,
+                                Data = new byte[] { 12, 0 }
+                            });
+                        instr.Moves.Add(
+                            new Move()
+                            {
+                                SectionToMove = new RangeInt64(
+                                     removeStart,
+                                     removeStart + 3),
+                                LocationToMove = long.MaxValue,
+                            });
+                        foreach (var k in fileLocs.GetContainingGroupLocations(rec.FormID))
+                        {
+                            lengthTracker[k] = lengthTracker[k] - 4;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                using (var stream = new MutagenReader(filePath))
+                {
+                    stream.Position = loc.Min;
+                    var str = stream.ReadString((int)loc.Range.Width + Constants.RECORD_HEADER_LENGTH);
+                    var datIndex = str.IndexOf("DATA");
+                    if (datIndex != -1)
+                    {
+                        stream.Position = loc.Min + datIndex;
+                        stream.Position += 6;
+                        for (int i = 0; i < 6; i++)
+                        {
+                            var bytes = stream.ReadBytes(4);
+                            if (bytes.SequenceEqual(ZeroFloat))
+                            {
+                                instr.IgnoreDifferenceSections.Add(new RangeInt64(stream.Position - 4, stream.Position - 1));
+                            }
+                        }
+                    }
+
+                    datIndex = str.IndexOf("XLOC");
+                    if (datIndex != -1)
+                    {
+                        instr.IgnoreDifferenceSections.Add(
+                            new RangeInt64(
+                                loc.Min + datIndex + 7,
+                                loc.Min + datIndex + 9));
+                    }
+                }
+            }
+        }
+
         private bool DynamicMove(
             Instruction instr,
             string filePath,
@@ -270,9 +435,24 @@ namespace Mutagen.Bethesda.Tests
             {
                 stream.Position = loc.Min;
                 var str = stream.ReadString((int)loc.Range.Width + Constants.RECORD_HEADER_LENGTH);
-                var offender = LocateFirstOf(str, loc.Min, offendingIndices);
-                var limit = LocateFirstOf(str, loc.Min, offendingLimits);
-                var locToMove = LocateFirstOf(str, loc.Min, locationsToMove);
+                if (!LocateFirstOf(
+                    str,
+                    loc.Min,
+                    offendingIndices,
+                    out var offender)) return false;
+                if (!LocateFirstOf(
+                    str,
+                    loc.Min,
+                    offendingLimits,
+                    out var limit)) return false;
+                if (!LocateFirstOf(
+                    str,
+                    loc.Min,
+                    locationsToMove,
+                    out var locToMove))
+                {
+                    locToMove = new FileLocation(loc.Min + str.Length);
+                }
                 if (limit == locToMove) return false;
                 if (offender < limit)
                 {
@@ -346,10 +526,20 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        private FileLocation LocateFirstOf(string str, FileLocation offset, IEnumerable<RecordType> types)
+        private bool LocateFirstOf(
+            string str,
+            FileLocation offset,
+            IEnumerable<RecordType> types,
+            out FileLocation loc)
         {
-            List<int> indices = new List<int>(types.Select((r) => str.IndexOf(r.Type)));
-            return new FileLocation(MathExt.Min(indices.Where((i) => i != -1)) + offset.Offset);
+            List<int> indices = new List<int>(types.Select((r) => str.IndexOf(r.Type)).Where((i) => i != -1));
+            if (indices.Count == 0)
+            {
+                loc = default(FileLocation);
+                return false;
+            }
+            loc = new FileLocation(MathExt.Min(indices) + offset.Offset);
+            return true;
         }
 
         [Fact]
@@ -399,15 +589,44 @@ namespace Mutagen.Bethesda.Tests
                     uncompressedPath,
                     interest: new RecordInterest(
                         uninterestingTypes: OblivionMod.NonTypeGroups));
-                
+
+                Dictionary<FileLocation, uint> lengthTracker = new Dictionary<FileLocation, uint>();
+
+                using (var reader = new MutagenReader(uncompressedPath))
+                {
+                    foreach (var grup in uncompressedFileLocs.GrupLocations.And(uncompressedFileLocs.ListedRecords.Keys))
+                    {
+                        reader.Position = grup + 4;
+                        lengthTracker[grup] = reader.ReadUInt32();
+                    }
+                }
+
                 foreach (var rec in mod.MajorRecords.Values)
                 {
                     AddDynamicProcessorInstructions(
-                        rec,
-                        instructions.Instruction,
-                        uncompressedPath,
-                        uncompressedFileLocs[rec.FormID],
-                        compressed: false);
+                        rec: rec,
+                        instr: instructions.Instruction,
+                        loc: uncompressedFileLocs[rec.FormID],
+                        filePath: uncompressedPath,
+                        fileLocs: uncompressedFileLocs,
+                        lengthTracker: lengthTracker,
+                        compressed: false,
+                        processing: true);
+                }
+
+                using (var reader = new MutagenReader(uncompressedPath))
+                {
+                    foreach (var grup in lengthTracker)
+                    {
+                        reader.Position = grup.Key + 4;
+                        if (grup.Value == reader.ReadUInt32()) continue;
+                        instructions.Instruction.Substitutions.Add(
+                            new DataTarget()
+                            {
+                                Location = grup.Key + 4,
+                                Data = BitConverter.GetBytes(grup.Value)
+                            });
+                    }
                 }
 
                 var binConfig = instructions.Instruction.ToProcessorConfig();
@@ -421,6 +640,23 @@ namespace Mutagen.Bethesda.Tests
                     }
                 }
 
+                var processedFileLocs = MajorRecordLocator.GetFileLocations(
+                    processedPath,
+                    interest: new RecordInterest(
+                        uninterestingTypes: OblivionMod.NonTypeGroups));
+                foreach (var rec in mod.MajorRecords.Values)
+                {
+                    AddDynamicProcessorInstructions(
+                        rec: rec,
+                        instr: instructions.Instruction,
+                        loc: processedFileLocs[rec.FormID],
+                        filePath: processedPath,
+                        fileLocs: processedFileLocs,
+                        lengthTracker: null,
+                        compressed: false,
+                        processing: false);
+                }
+
                 mod.Write_Binary(oblivionOutputPath, out var outputErrMask);
                 using (var stream = new FileStream(processedPath, FileMode.Open, FileAccess.Read))
                 {
@@ -430,7 +666,7 @@ namespace Mutagen.Bethesda.Tests
                         ignoreList: new RangeCollection(instructions.Instruction.IgnoreDifferenceSections),
                         sourceSkips: new RangeCollection(instructions.Instruction.SkipSourceSections),
                         targetSkips: new RangeCollection(instructions.Instruction.SkipOutputSections),
-                        amountToReport: 10);
+                        amountToReport: 15);
                     Assert.False(outputErrMask?.IsInError() ?? false);
                     if (ret.Exception != null)
                     {
@@ -642,7 +878,15 @@ namespace Mutagen.Bethesda.Tests
                                 }
                                 memStream.Position = 0;
 
-                                AddDynamicProcessorInstructions(majorRec, processorConfig, origPath, loc: new FileSection(0, memStream.Length), compressed: true);
+                                AddDynamicProcessorInstructions(
+                                    rec: majorRec,
+                                    instr: processorConfig,
+                                    filePath: origPath,
+                                    lengthTracker: null,
+                                    fileLocs: null,
+                                    loc: new FileSection(0, memStream.Length),
+                                    compressed: true,
+                                    processing: true);
                                 var binaryConfig = processorConfig.ToProcessorConfig();
 
                                 string sourcePath;

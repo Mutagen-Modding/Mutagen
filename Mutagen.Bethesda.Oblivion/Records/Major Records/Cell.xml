@@ -37,7 +37,7 @@
         <FormIDLink refName="Region" />
       </List>
       <Enum name="MusicType" enumName="MusicType" byteLength="1" recordType="XCMT" />
-      <Float name="WaterHeight" recordType="XCLW" />w
+      <Float name="WaterHeight" recordType="XCLW" />
       <FormIDLink name="Climate" recordType="XCCM" refName="Climate" />
       <FormIDLink name="Water" recordType="XCWT" refName="Water" />
       <RefDirect name="Ownership" refName="Ownership" />

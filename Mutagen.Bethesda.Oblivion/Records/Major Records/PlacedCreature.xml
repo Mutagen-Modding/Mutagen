@@ -4,7 +4,7 @@
     <Fields>
       <FormIDLink name="Base" recordType="NAME" refName="Creature" />
       <RefDirect name="Ownership" refName="Ownership" />
-      <RefDirect name="EnableParent" recordType="XESP" refName="EnableParent" />
+      <RefDirect name="EnableParent" refName="EnableParent" />
       <ByteArray name="RagdollData" recordType="XRGD" />
       <Float name="Scale" recordType="XSCL" />
       <Data>
