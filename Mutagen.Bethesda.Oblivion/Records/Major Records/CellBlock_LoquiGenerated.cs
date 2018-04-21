@@ -39,6 +39,20 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
+        #region BlockNumber
+        protected INotifyingItem<Byte[]> _BlockNumber = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[4]);
+        public INotifyingItem<Byte[]> BlockNumber_Property => _BlockNumber;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public Byte[] BlockNumber
+        {
+            get => this._BlockNumber.Item;
+            set => this._BlockNumber.Set(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingItem<Byte[]> ICellBlock.BlockNumber_Property => this.BlockNumber_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingItemGetter<Byte[]> ICellBlockGetter.BlockNumber_Property => this.BlockNumber_Property;
+        #endregion
         #region GroupType
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected INotifyingItem<GroupTypeEnum> _GroupType = NotifyingItem.Factory<GroupTypeEnum>();
@@ -148,6 +162,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(CellBlock rhs)
         {
             if (rhs == null) return false;
+            if (!BlockNumber.EqualsFast(rhs.BlockNumber)) return false;
             if (GroupType != rhs.GroupType) return false;
             if (!LastModified.EqualsFast(rhs.LastModified)) return false;
             if (Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
@@ -161,6 +176,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = HashHelper.GetHashCode(BlockNumber).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(GroupType).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(LastModified).CombineHashCode(ret);
             if (Items.HasBeenSet)
@@ -383,6 +399,12 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "BlockNumber":
+                    item._BlockNumber.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)CellBlock_FieldIndex.BlockNumber,
+                        errorMask: errorMask));
+                    break;
                 case "GroupType":
                     item._GroupType.SetIfSucceeded(EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
                         root,
@@ -639,7 +661,11 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<CellBlock_ErrorMask> errorMask)
         {
-            frame.SetPosition(frame.Position + 4);
+            var BlockNumbertryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.Spawn(new ContentLength(4)),
+                fieldIndex: (int)CellBlock_FieldIndex.BlockNumber,
+                errorMask: errorMask);
+            item._BlockNumber.SetIfSucceeded(BlockNumbertryGet);
             item._GroupType.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)CellBlock_FieldIndex.GroupType,
@@ -803,6 +829,11 @@ namespace Mutagen.Bethesda.Oblivion
             CellBlock_FieldIndex enu = (CellBlock_FieldIndex)index;
             switch (enu)
             {
+                case CellBlock_FieldIndex.BlockNumber:
+                    this._BlockNumber.Set(
+                        (Byte[])obj,
+                        cmds);
+                    break;
                 case CellBlock_FieldIndex.GroupType:
                     this._GroupType.Set(
                         (GroupTypeEnum)obj,
@@ -853,6 +884,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             switch (enu)
             {
+                case CellBlock_FieldIndex.BlockNumber:
+                    obj._BlockNumber.Set(
+                        (Byte[])pair.Value,
+                        null);
+                    break;
                 case CellBlock_FieldIndex.GroupType:
                     obj._GroupType.Set(
                         (GroupTypeEnum)pair.Value,
@@ -881,6 +917,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ICellBlock : ICellBlockGetter, ILoquiClass<ICellBlock, ICellBlockGetter>, ILoquiClass<CellBlock, ICellBlockGetter>
     {
+        new Byte[] BlockNumber { get; set; }
+        new INotifyingItem<Byte[]> BlockNumber_Property { get; }
+
         new GroupTypeEnum GroupType { get; set; }
         new INotifyingItem<GroupTypeEnum> GroupType_Property { get; }
 
@@ -892,6 +931,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ICellBlockGetter : ILoquiObject
     {
+        #region BlockNumber
+        Byte[] BlockNumber { get; }
+        INotifyingItemGetter<Byte[]> BlockNumber_Property { get; }
+
+        #endregion
         #region GroupType
         GroupTypeEnum GroupType { get; }
         INotifyingItemGetter<GroupTypeEnum> GroupType_Property { get; }
@@ -917,9 +961,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum CellBlock_FieldIndex
     {
-        GroupType = 0,
-        LastModified = 1,
-        Items = 2,
+        BlockNumber = 0,
+        GroupType = 1,
+        LastModified = 2,
+        Items = 3,
     }
     #endregion
 
@@ -937,7 +982,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "da71d7e7-5ba9-4dce-afbe-7dc5aa63ef11";
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(CellBlock_Mask<>);
 
@@ -965,6 +1010,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
+                case "BLOCKNUMBER":
+                    return (ushort)CellBlock_FieldIndex.BlockNumber;
                 case "GROUPTYPE":
                     return (ushort)CellBlock_FieldIndex.GroupType;
                 case "LASTMODIFIED":
@@ -983,6 +1030,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case CellBlock_FieldIndex.Items:
                     return true;
+                case CellBlock_FieldIndex.BlockNumber:
                 case CellBlock_FieldIndex.GroupType:
                 case CellBlock_FieldIndex.LastModified:
                     return false;
@@ -998,6 +1046,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case CellBlock_FieldIndex.Items:
                     return true;
+                case CellBlock_FieldIndex.BlockNumber:
                 case CellBlock_FieldIndex.GroupType:
                 case CellBlock_FieldIndex.LastModified:
                     return false;
@@ -1011,6 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CellBlock_FieldIndex enu = (CellBlock_FieldIndex)index;
             switch (enu)
             {
+                case CellBlock_FieldIndex.BlockNumber:
                 case CellBlock_FieldIndex.GroupType:
                 case CellBlock_FieldIndex.LastModified:
                 case CellBlock_FieldIndex.Items:
@@ -1025,6 +1075,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CellBlock_FieldIndex enu = (CellBlock_FieldIndex)index;
             switch (enu)
             {
+                case CellBlock_FieldIndex.BlockNumber:
+                    return "BlockNumber";
                 case CellBlock_FieldIndex.GroupType:
                     return "GroupType";
                 case CellBlock_FieldIndex.LastModified:
@@ -1041,6 +1093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CellBlock_FieldIndex enu = (CellBlock_FieldIndex)index;
             switch (enu)
             {
+                case CellBlock_FieldIndex.BlockNumber:
                 case CellBlock_FieldIndex.GroupType:
                 case CellBlock_FieldIndex.LastModified:
                 case CellBlock_FieldIndex.Items:
@@ -1055,6 +1108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CellBlock_FieldIndex enu = (CellBlock_FieldIndex)index;
             switch (enu)
             {
+                case CellBlock_FieldIndex.BlockNumber:
                 case CellBlock_FieldIndex.GroupType:
                 case CellBlock_FieldIndex.LastModified:
                 case CellBlock_FieldIndex.Items:
@@ -1069,6 +1123,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CellBlock_FieldIndex enu = (CellBlock_FieldIndex)index;
             switch (enu)
             {
+                case CellBlock_FieldIndex.BlockNumber:
+                    return typeof(Byte[]);
                 case CellBlock_FieldIndex.GroupType:
                     return typeof(GroupTypeEnum);
                 case CellBlock_FieldIndex.LastModified:
@@ -1082,7 +1138,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = GRUP_HEADER;
-        public const int NumStructFields = 2;
+        public const int NumStructFields = 3;
         public const int NumTypedFields = 1;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1126,6 +1182,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CellBlock_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
+            if (copyMask?.BlockNumber ?? true)
+            {
+                try
+                {
+                    item.BlockNumber_Property.Set(
+                        value: rhs.BlockNumber,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)CellBlock_FieldIndex.BlockNumber, ex);
+                }
+            }
             if (copyMask?.GroupType ?? true)
             {
                 try
@@ -1199,6 +1269,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CellBlock_FieldIndex enu = (CellBlock_FieldIndex)index;
             switch (enu)
             {
+                case CellBlock_FieldIndex.BlockNumber:
                 case CellBlock_FieldIndex.GroupType:
                 case CellBlock_FieldIndex.LastModified:
                     if (on) break;
@@ -1219,6 +1290,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CellBlock_FieldIndex enu = (CellBlock_FieldIndex)index;
             switch (enu)
             {
+                case CellBlock_FieldIndex.BlockNumber:
+                    obj.BlockNumber = default(Byte[]);
+                    break;
                 case CellBlock_FieldIndex.GroupType:
                     obj.GroupType = default(GroupTypeEnum);
                     break;
@@ -1240,6 +1314,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CellBlock_FieldIndex enu = (CellBlock_FieldIndex)index;
             switch (enu)
             {
+                case CellBlock_FieldIndex.BlockNumber:
                 case CellBlock_FieldIndex.GroupType:
                 case CellBlock_FieldIndex.LastModified:
                     return true;
@@ -1257,6 +1332,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CellBlock_FieldIndex enu = (CellBlock_FieldIndex)index;
             switch (enu)
             {
+                case CellBlock_FieldIndex.BlockNumber:
+                    return obj.BlockNumber;
                 case CellBlock_FieldIndex.GroupType:
                     return obj.GroupType;
                 case CellBlock_FieldIndex.LastModified:
@@ -1272,6 +1349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICellBlock item,
             NotifyingUnsetParameters cmds = null)
         {
+            item.BlockNumber = default(Byte[]);
             item.GroupType = default(GroupTypeEnum);
             item.LastModified = default(Byte[]);
             item.Items.Unset(cmds.ToUnsetParams());
@@ -1292,6 +1370,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CellBlock_Mask<bool> ret)
         {
             if (rhs == null) return;
+            ret.BlockNumber = item.BlockNumber.EqualsFast(rhs.BlockNumber);
             ret.GroupType = item.GroupType == rhs.GroupType;
             ret.LastModified = item.LastModified.EqualsFast(rhs.LastModified);
             if (item.Items.HasBeenSet == rhs.Items.HasBeenSet)
@@ -1348,6 +1427,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.BlockNumber ?? true)
+                {
+                    fg.AppendLine($"BlockNumber => {item.BlockNumber}");
+                }
                 if (printMask?.GroupType ?? true)
                 {
                     fg.AppendLine($"GroupType => {item.GroupType}");
@@ -1389,6 +1472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static CellBlock_Mask<bool> GetHasBeenSetMask(ICellBlockGetter item)
         {
             var ret = new CellBlock_Mask<bool>();
+            ret.BlockNumber = true;
             ret.GroupType = true;
             ret.LastModified = true;
             ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, CellSubBlock_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.Select((i) => new MaskItem<bool, CellSubBlock_Mask<bool>>(true, i.GetHasBeenSetMask())));
@@ -1427,6 +1511,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.CellBlock");
                     }
+                    ByteArrayXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.BlockNumber),
+                        item: item.BlockNumber_Property,
+                        fieldIndex: (int)CellBlock_FieldIndex.BlockNumber,
+                        errorMask: errorMask);
                     EnumXmlTranslation<GroupTypeEnum>.Instance.Write(
                         writer: writer,
                         name: nameof(item.GroupType),
@@ -1525,7 +1615,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             Func<CellBlock_ErrorMask> errorMask)
         {
-            writer.WriteZeros(4);
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.BlockNumber_Property,
+                fieldIndex: (int)CellBlock_FieldIndex.BlockNumber,
+                errorMask: errorMask);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
                 writer,
                 item.GroupType_Property,
@@ -1578,6 +1672,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public CellBlock_Mask(T initialValue)
         {
+            this.BlockNumber = initialValue;
             this.GroupType = initialValue;
             this.LastModified = initialValue;
             this.Items = new MaskItem<T, IEnumerable<MaskItem<T, CellSubBlock_Mask<T>>>>(initialValue, null);
@@ -1585,6 +1680,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Members
+        public T BlockNumber;
         public T GroupType;
         public T LastModified;
         public MaskItem<T, IEnumerable<MaskItem<T, CellSubBlock_Mask<T>>>> Items;
@@ -1600,6 +1696,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Equals(CellBlock_Mask<T> rhs)
         {
             if (rhs == null) return false;
+            if (!object.Equals(this.BlockNumber, rhs.BlockNumber)) return false;
             if (!object.Equals(this.GroupType, rhs.GroupType)) return false;
             if (!object.Equals(this.LastModified, rhs.LastModified)) return false;
             if (!object.Equals(this.Items, rhs.Items)) return false;
@@ -1608,6 +1705,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = ret.CombineHashCode(this.BlockNumber?.GetHashCode());
             ret = ret.CombineHashCode(this.GroupType?.GetHashCode());
             ret = ret.CombineHashCode(this.LastModified?.GetHashCode());
             ret = ret.CombineHashCode(this.Items?.GetHashCode());
@@ -1619,6 +1717,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region All Equal
         public bool AllEqual(Func<T, bool> eval)
         {
+            if (!eval(this.BlockNumber)) return false;
             if (!eval(this.GroupType)) return false;
             if (!eval(this.LastModified)) return false;
             if (this.Items != null)
@@ -1647,6 +1746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         protected void Translate_InternalFill<R>(CellBlock_Mask<R> obj, Func<T, R> eval)
         {
+            obj.BlockNumber = eval(this.BlockNumber);
             obj.GroupType = eval(this.GroupType);
             obj.LastModified = eval(this.LastModified);
             if (Items != null)
@@ -1702,6 +1802,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.BlockNumber ?? true)
+                {
+                    fg.AppendLine($"BlockNumber => {BlockNumber}");
+                }
                 if (printMask?.GroupType ?? true)
                 {
                     fg.AppendLine($"GroupType => {GroupType}");
@@ -1758,6 +1862,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return _warnings;
             }
         }
+        public Exception BlockNumber;
         public Exception GroupType;
         public Exception LastModified;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, CellSubBlock_ErrorMask>>> Items;
@@ -1769,6 +1874,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CellBlock_FieldIndex enu = (CellBlock_FieldIndex)index;
             switch (enu)
             {
+                case CellBlock_FieldIndex.BlockNumber:
+                    this.BlockNumber = ex;
+                    break;
                 case CellBlock_FieldIndex.GroupType:
                     this.GroupType = ex;
                     break;
@@ -1788,6 +1896,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CellBlock_FieldIndex enu = (CellBlock_FieldIndex)index;
             switch (enu)
             {
+                case CellBlock_FieldIndex.BlockNumber:
+                    this.BlockNumber = (Exception)obj;
+                    break;
                 case CellBlock_FieldIndex.GroupType:
                     this.GroupType = (Exception)obj;
                     break;
@@ -1805,6 +1916,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool IsInError()
         {
             if (Overall != null) return true;
+            if (BlockNumber != null) return true;
             if (GroupType != null) return true;
             if (LastModified != null) return true;
             if (Items != null) return true;
@@ -1842,6 +1954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
+            fg.AppendLine($"BlockNumber => {BlockNumber}");
             fg.AppendLine($"GroupType => {GroupType}");
             fg.AppendLine($"LastModified => {LastModified}");
             fg.AppendLine("Items =>");
@@ -1873,6 +1986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public CellBlock_ErrorMask Combine(CellBlock_ErrorMask rhs)
         {
             var ret = new CellBlock_ErrorMask();
+            ret.BlockNumber = this.BlockNumber.Combine(rhs.BlockNumber);
             ret.GroupType = this.GroupType.Combine(rhs.GroupType);
             ret.LastModified = this.LastModified.Combine(rhs.LastModified);
             ret.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, CellSubBlock_ErrorMask>>>(this.Items.Overall.Combine(rhs.Items.Overall), new List<MaskItem<Exception, CellSubBlock_ErrorMask>>(this.Items.Specific.And(rhs.Items.Specific)));
@@ -1889,6 +2003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class CellBlock_CopyMask
     {
         #region Members
+        public bool BlockNumber;
         public bool GroupType;
         public bool LastModified;
         public MaskItem<CopyOption, CellSubBlock_CopyMask> Items;
