@@ -361,6 +361,20 @@ namespace Mutagen.Bethesda.Tests
                                 loc.Min + datIndex + 7,
                                 loc.Min + datIndex + 9));
                     }
+
+                    datIndex = str.IndexOf("XTEL");
+                    if (datIndex != -1)
+                    {
+                        stream.Position = loc.Min + datIndex + 10;
+                        for (int i = 0; i < 6; i++)
+                        {
+                            var bytes = stream.ReadBytes(4);
+                            if (bytes.SequenceEqual(ZeroFloat))
+                            {
+                                instr.IgnoreDifferenceSections.Add(new RangeInt64(stream.Position - 4, stream.Position - 1));
+                            }
+                        }
+                    }
                 }
             }
         }
