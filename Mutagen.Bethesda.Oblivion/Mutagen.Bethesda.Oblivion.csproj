@@ -587,6 +587,9 @@
     <Compile Include="Records\Major Records\PlacedNPC_LoquiGenerated.cs">
       <DependentUpon>PlacedNPC.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\CellLighting_LoquiGenerated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\DistantLODData.xml">

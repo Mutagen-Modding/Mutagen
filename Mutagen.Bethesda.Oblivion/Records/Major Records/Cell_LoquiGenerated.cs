@@ -12,7 +12,6 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
-using System.Windows.Media;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -71,140 +70,18 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<P2Int> ICellGetter.Grid_Property => this.Grid_Property;
         #endregion
-        #region AmbientColor
+        #region Lighting
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Color> _AmbientColor = NotifyingItem.Factory<Color>();
-        public INotifyingItem<Color> AmbientColor_Property => _AmbientColor;
+        private readonly INotifyingSetItem<CellLighting> _Lighting = new NotifyingSetItem<CellLighting>();
+        public INotifyingSetItem<CellLighting> Lighting_Property => this._Lighting;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Color AmbientColor
-        {
-            get => this._AmbientColor.Item;
-            set => this._AmbientColor.Set(value);
-        }
+        CellLighting ICellGetter.Lighting => this.Lighting;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Color> ICell.AmbientColor_Property => this.AmbientColor_Property;
+        public CellLighting Lighting { get => _Lighting.Item; set => _Lighting.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Color> ICellGetter.AmbientColor_Property => this.AmbientColor_Property;
-        #endregion
-        #region DirectionalColor
+        INotifyingSetItem<CellLighting> ICell.Lighting_Property => this.Lighting_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Color> _DirectionalColor = NotifyingItem.Factory<Color>();
-        public INotifyingItem<Color> DirectionalColor_Property => _DirectionalColor;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Color DirectionalColor
-        {
-            get => this._DirectionalColor.Item;
-            set => this._DirectionalColor.Set(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Color> ICell.DirectionalColor_Property => this.DirectionalColor_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Color> ICellGetter.DirectionalColor_Property => this.DirectionalColor_Property;
-        #endregion
-        #region FogColor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Color> _FogColor = NotifyingItem.Factory<Color>();
-        public INotifyingItem<Color> FogColor_Property => _FogColor;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Color FogColor
-        {
-            get => this._FogColor.Item;
-            set => this._FogColor.Set(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Color> ICell.FogColor_Property => this.FogColor_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Color> ICellGetter.FogColor_Property => this.FogColor_Property;
-        #endregion
-        #region FogNear
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _FogNear = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> FogNear_Property => _FogNear;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Single FogNear
-        {
-            get => this._FogNear.Item;
-            set => this._FogNear.Set(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICell.FogNear_Property => this.FogNear_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICellGetter.FogNear_Property => this.FogNear_Property;
-        #endregion
-        #region FogFar
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _FogFar = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> FogFar_Property => _FogFar;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Single FogFar
-        {
-            get => this._FogFar.Item;
-            set => this._FogFar.Set(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICell.FogFar_Property => this.FogFar_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICellGetter.FogFar_Property => this.FogFar_Property;
-        #endregion
-        #region DirectionalRotationXY
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Int32> _DirectionalRotationXY = NotifyingItem.Factory<Int32>();
-        public INotifyingItem<Int32> DirectionalRotationXY_Property => _DirectionalRotationXY;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Int32 DirectionalRotationXY
-        {
-            get => this._DirectionalRotationXY.Item;
-            set => this._DirectionalRotationXY.Set(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Int32> ICell.DirectionalRotationXY_Property => this.DirectionalRotationXY_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Int32> ICellGetter.DirectionalRotationXY_Property => this.DirectionalRotationXY_Property;
-        #endregion
-        #region DirectionalRotationZ
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Int32> _DirectionalRotationZ = NotifyingItem.Factory<Int32>();
-        public INotifyingItem<Int32> DirectionalRotationZ_Property => _DirectionalRotationZ;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Int32 DirectionalRotationZ
-        {
-            get => this._DirectionalRotationZ.Item;
-            set => this._DirectionalRotationZ.Set(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Int32> ICell.DirectionalRotationZ_Property => this.DirectionalRotationZ_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Int32> ICellGetter.DirectionalRotationZ_Property => this.DirectionalRotationZ_Property;
-        #endregion
-        #region DirectionalFade
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _DirectionalFade = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> DirectionalFade_Property => _DirectionalFade;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Single DirectionalFade
-        {
-            get => this._DirectionalFade.Item;
-            set => this._DirectionalFade.Set(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICell.DirectionalFade_Property => this.DirectionalFade_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICellGetter.DirectionalFade_Property => this.DirectionalFade_Property;
-        #endregion
-        #region FogClipDistance
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _FogClipDistance = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> FogClipDistance_Property => _FogClipDistance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Single FogClipDistance
-        {
-            get => this._FogClipDistance.Item;
-            set => this._FogClipDistance.Set(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICell.FogClipDistance_Property => this.FogClipDistance_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICellGetter.FogClipDistance_Property => this.FogClipDistance_Property;
+        INotifyingSetItemGetter<CellLighting> ICellGetter.Lighting_Property => this.Lighting_Property;
         #endregion
         #region Regions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -417,15 +294,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (Grid != rhs.Grid) return false;
             }
-            if (AmbientColor != rhs.AmbientColor) return false;
-            if (DirectionalColor != rhs.DirectionalColor) return false;
-            if (FogColor != rhs.FogColor) return false;
-            if (FogNear != rhs.FogNear) return false;
-            if (FogFar != rhs.FogFar) return false;
-            if (DirectionalRotationXY != rhs.DirectionalRotationXY) return false;
-            if (DirectionalRotationZ != rhs.DirectionalRotationZ) return false;
-            if (DirectionalFade != rhs.DirectionalFade) return false;
-            if (FogClipDistance != rhs.FogClipDistance) return false;
+            if (Lighting_Property.HasBeenSet != rhs.Lighting_Property.HasBeenSet) return false;
+            if (Lighting_Property.HasBeenSet)
+            {
+                if (!object.Equals(Lighting, rhs.Lighting)) return false;
+            }
             if (Regions.HasBeenSet != rhs.Regions.HasBeenSet) return false;
             if (Regions.HasBeenSet)
             {
@@ -490,15 +363,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Grid).CombineHashCode(ret);
             }
-            ret = HashHelper.GetHashCode(AmbientColor).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DirectionalColor).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(FogColor).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(FogNear).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(FogFar).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DirectionalRotationXY).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DirectionalRotationZ).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(DirectionalFade).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(FogClipDistance).CombineHashCode(ret);
+            if (Lighting_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Lighting).CombineHashCode(ret);
+            }
             if (Regions.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Regions).CombineHashCode(ret);
@@ -769,58 +637,10 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Cell_FieldIndex.Grid,
                         errorMask: errorMask));
                     break;
-                case "AmbientColor":
-                    item._AmbientColor.SetIfSucceeded(ColorXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Cell_FieldIndex.AmbientColor,
-                        errorMask: errorMask));
-                    break;
-                case "DirectionalColor":
-                    item._DirectionalColor.SetIfSucceeded(ColorXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Cell_FieldIndex.DirectionalColor,
-                        errorMask: errorMask));
-                    break;
-                case "FogColor":
-                    item._FogColor.SetIfSucceeded(ColorXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Cell_FieldIndex.FogColor,
-                        errorMask: errorMask));
-                    break;
-                case "FogNear":
-                    item._FogNear.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Cell_FieldIndex.FogNear,
-                        errorMask: errorMask));
-                    break;
-                case "FogFar":
-                    item._FogFar.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Cell_FieldIndex.FogFar,
-                        errorMask: errorMask));
-                    break;
-                case "DirectionalRotationXY":
-                    item._DirectionalRotationXY.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Cell_FieldIndex.DirectionalRotationXY,
-                        errorMask: errorMask));
-                    break;
-                case "DirectionalRotationZ":
-                    item._DirectionalRotationZ.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Cell_FieldIndex.DirectionalRotationZ,
-                        errorMask: errorMask));
-                    break;
-                case "DirectionalFade":
-                    item._DirectionalFade.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Cell_FieldIndex.DirectionalFade,
-                        errorMask: errorMask));
-                    break;
-                case "FogClipDistance":
-                    item._FogClipDistance.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Cell_FieldIndex.FogClipDistance,
+                case "Lighting":
+                    item._Lighting.SetIfSucceeded(LoquiXmlTranslation<CellLighting, CellLighting_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Cell_FieldIndex.Lighting,
                         errorMask: errorMask));
                     break;
                 case "Regions":
@@ -1194,50 +1014,11 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     return TryGet<Cell_FieldIndex?>.Succeed(Cell_FieldIndex.Grid);
                 case "XCLL":
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
-                    {
-                        item._AmbientColor.SetIfSucceeded(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            fieldIndex: (int)Cell_FieldIndex.AmbientColor,
-                            errorMask: errorMask,
-                            extraByte: true));
-                        item._DirectionalColor.SetIfSucceeded(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            fieldIndex: (int)Cell_FieldIndex.DirectionalColor,
-                            errorMask: errorMask,
-                            extraByte: true));
-                        item._FogColor.SetIfSucceeded(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            fieldIndex: (int)Cell_FieldIndex.FogColor,
-                            errorMask: errorMask,
-                            extraByte: true));
-                        item._FogNear.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            fieldIndex: (int)Cell_FieldIndex.FogNear,
-                            errorMask: errorMask));
-                        item._FogFar.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            fieldIndex: (int)Cell_FieldIndex.FogFar,
-                            errorMask: errorMask));
-                        item._DirectionalRotationXY.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            fieldIndex: (int)Cell_FieldIndex.DirectionalRotationXY,
-                            errorMask: errorMask));
-                        item._DirectionalRotationZ.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            fieldIndex: (int)Cell_FieldIndex.DirectionalRotationZ,
-                            errorMask: errorMask));
-                        item._DirectionalFade.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            fieldIndex: (int)Cell_FieldIndex.DirectionalFade,
-                            errorMask: errorMask));
-                        item._FogClipDistance.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            fieldIndex: (int)Cell_FieldIndex.FogClipDistance,
-                            errorMask: errorMask));
-                    }
-                    return TryGet<Cell_FieldIndex?>.Succeed(Cell_FieldIndex.FogClipDistance);
+                    item._Lighting.SetIfSucceeded(LoquiBinaryTranslation<CellLighting, CellLighting_ErrorMask>.Instance.Parse(
+                        frame: frame,
+                        fieldIndex: (int)Cell_FieldIndex.Lighting,
+                        errorMask: errorMask));
+                    return TryGet<Cell_FieldIndex?>.Succeed(Cell_FieldIndex.Lighting);
                 case "XCLR":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var RegionstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Region>, Exception>.Instance.ParseRepeatedItem(
@@ -1429,49 +1210,9 @@ namespace Mutagen.Bethesda.Oblivion
                         (P2Int)obj,
                         cmds);
                     break;
-                case Cell_FieldIndex.AmbientColor:
-                    this._AmbientColor.Set(
-                        (Color)obj,
-                        cmds);
-                    break;
-                case Cell_FieldIndex.DirectionalColor:
-                    this._DirectionalColor.Set(
-                        (Color)obj,
-                        cmds);
-                    break;
-                case Cell_FieldIndex.FogColor:
-                    this._FogColor.Set(
-                        (Color)obj,
-                        cmds);
-                    break;
-                case Cell_FieldIndex.FogNear:
-                    this._FogNear.Set(
-                        (Single)obj,
-                        cmds);
-                    break;
-                case Cell_FieldIndex.FogFar:
-                    this._FogFar.Set(
-                        (Single)obj,
-                        cmds);
-                    break;
-                case Cell_FieldIndex.DirectionalRotationXY:
-                    this._DirectionalRotationXY.Set(
-                        (Int32)obj,
-                        cmds);
-                    break;
-                case Cell_FieldIndex.DirectionalRotationZ:
-                    this._DirectionalRotationZ.Set(
-                        (Int32)obj,
-                        cmds);
-                    break;
-                case Cell_FieldIndex.DirectionalFade:
-                    this._DirectionalFade.Set(
-                        (Single)obj,
-                        cmds);
-                    break;
-                case Cell_FieldIndex.FogClipDistance:
-                    this._FogClipDistance.Set(
-                        (Single)obj,
+                case Cell_FieldIndex.Lighting:
+                    this._Lighting.Set(
+                        (CellLighting)obj,
                         cmds);
                     break;
                 case Cell_FieldIndex.Regions:
@@ -1557,49 +1298,9 @@ namespace Mutagen.Bethesda.Oblivion
                         (P2Int)pair.Value,
                         null);
                     break;
-                case Cell_FieldIndex.AmbientColor:
-                    obj._AmbientColor.Set(
-                        (Color)pair.Value,
-                        null);
-                    break;
-                case Cell_FieldIndex.DirectionalColor:
-                    obj._DirectionalColor.Set(
-                        (Color)pair.Value,
-                        null);
-                    break;
-                case Cell_FieldIndex.FogColor:
-                    obj._FogColor.Set(
-                        (Color)pair.Value,
-                        null);
-                    break;
-                case Cell_FieldIndex.FogNear:
-                    obj._FogNear.Set(
-                        (Single)pair.Value,
-                        null);
-                    break;
-                case Cell_FieldIndex.FogFar:
-                    obj._FogFar.Set(
-                        (Single)pair.Value,
-                        null);
-                    break;
-                case Cell_FieldIndex.DirectionalRotationXY:
-                    obj._DirectionalRotationXY.Set(
-                        (Int32)pair.Value,
-                        null);
-                    break;
-                case Cell_FieldIndex.DirectionalRotationZ:
-                    obj._DirectionalRotationZ.Set(
-                        (Int32)pair.Value,
-                        null);
-                    break;
-                case Cell_FieldIndex.DirectionalFade:
-                    obj._DirectionalFade.Set(
-                        (Single)pair.Value,
-                        null);
-                    break;
-                case Cell_FieldIndex.FogClipDistance:
-                    obj._FogClipDistance.Set(
-                        (Single)pair.Value,
+                case Cell_FieldIndex.Lighting:
+                    obj._Lighting.Set(
+                        (CellLighting)pair.Value,
                         null);
                     break;
                 case Cell_FieldIndex.Regions:
@@ -1665,32 +1366,8 @@ namespace Mutagen.Bethesda.Oblivion
         new P2Int Grid { get; set; }
         new INotifyingSetItem<P2Int> Grid_Property { get; }
 
-        new Color AmbientColor { get; set; }
-        new INotifyingItem<Color> AmbientColor_Property { get; }
-
-        new Color DirectionalColor { get; set; }
-        new INotifyingItem<Color> DirectionalColor_Property { get; }
-
-        new Color FogColor { get; set; }
-        new INotifyingItem<Color> FogColor_Property { get; }
-
-        new Single FogNear { get; set; }
-        new INotifyingItem<Single> FogNear_Property { get; }
-
-        new Single FogFar { get; set; }
-        new INotifyingItem<Single> FogFar_Property { get; }
-
-        new Int32 DirectionalRotationXY { get; set; }
-        new INotifyingItem<Int32> DirectionalRotationXY_Property { get; }
-
-        new Int32 DirectionalRotationZ { get; set; }
-        new INotifyingItem<Int32> DirectionalRotationZ_Property { get; }
-
-        new Single DirectionalFade { get; set; }
-        new INotifyingItem<Single> DirectionalFade_Property { get; }
-
-        new Single FogClipDistance { get; set; }
-        new INotifyingItem<Single> FogClipDistance_Property { get; }
+        new CellLighting Lighting { get; set; }
+        new INotifyingSetItem<CellLighting> Lighting_Property { get; }
 
         new INotifyingList<FormIDLink<Region>> Regions { get; }
         new MusicType MusicType { get; set; }
@@ -1724,49 +1401,9 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<P2Int> Grid_Property { get; }
 
         #endregion
-        #region AmbientColor
-        Color AmbientColor { get; }
-        INotifyingItemGetter<Color> AmbientColor_Property { get; }
-
-        #endregion
-        #region DirectionalColor
-        Color DirectionalColor { get; }
-        INotifyingItemGetter<Color> DirectionalColor_Property { get; }
-
-        #endregion
-        #region FogColor
-        Color FogColor { get; }
-        INotifyingItemGetter<Color> FogColor_Property { get; }
-
-        #endregion
-        #region FogNear
-        Single FogNear { get; }
-        INotifyingItemGetter<Single> FogNear_Property { get; }
-
-        #endregion
-        #region FogFar
-        Single FogFar { get; }
-        INotifyingItemGetter<Single> FogFar_Property { get; }
-
-        #endregion
-        #region DirectionalRotationXY
-        Int32 DirectionalRotationXY { get; }
-        INotifyingItemGetter<Int32> DirectionalRotationXY_Property { get; }
-
-        #endregion
-        #region DirectionalRotationZ
-        Int32 DirectionalRotationZ { get; }
-        INotifyingItemGetter<Int32> DirectionalRotationZ_Property { get; }
-
-        #endregion
-        #region DirectionalFade
-        Single DirectionalFade { get; }
-        INotifyingItemGetter<Single> DirectionalFade_Property { get; }
-
-        #endregion
-        #region FogClipDistance
-        Single FogClipDistance { get; }
-        INotifyingItemGetter<Single> FogClipDistance_Property { get; }
+        #region Lighting
+        CellLighting Lighting { get; }
+        INotifyingSetItemGetter<CellLighting> Lighting_Property { get; }
 
         #endregion
         #region Regions
@@ -1831,25 +1468,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Name = 5,
         Flags = 6,
         Grid = 7,
-        AmbientColor = 8,
-        DirectionalColor = 9,
-        FogColor = 10,
-        FogNear = 11,
-        FogFar = 12,
-        DirectionalRotationXY = 13,
-        DirectionalRotationZ = 14,
-        DirectionalFade = 15,
-        FogClipDistance = 16,
-        Regions = 17,
-        MusicType = 18,
-        WaterHeight = 19,
-        Climate = 20,
-        Water = 21,
-        Ownership = 22,
-        PathGrid = 23,
-        Persistent = 24,
-        Temporary = 25,
-        VisibleWhenDistant = 26,
+        Lighting = 8,
+        Regions = 9,
+        MusicType = 10,
+        WaterHeight = 11,
+        Climate = 12,
+        Water = 13,
+        Ownership = 14,
+        PathGrid = 15,
+        Persistent = 16,
+        Temporary = 17,
+        VisibleWhenDistant = 18,
     }
     #endregion
 
@@ -1867,7 +1496,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "d54abb07-d896-4ddb-b857-9b9df945dd1e";
 
-        public const ushort FieldCount = 21;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(Cell_Mask<>);
 
@@ -1899,24 +1528,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Cell_FieldIndex.Flags;
                 case "GRID":
                     return (ushort)Cell_FieldIndex.Grid;
-                case "AMBIENTCOLOR":
-                    return (ushort)Cell_FieldIndex.AmbientColor;
-                case "DIRECTIONALCOLOR":
-                    return (ushort)Cell_FieldIndex.DirectionalColor;
-                case "FOGCOLOR":
-                    return (ushort)Cell_FieldIndex.FogColor;
-                case "FOGNEAR":
-                    return (ushort)Cell_FieldIndex.FogNear;
-                case "FOGFAR":
-                    return (ushort)Cell_FieldIndex.FogFar;
-                case "DIRECTIONALROTATIONXY":
-                    return (ushort)Cell_FieldIndex.DirectionalRotationXY;
-                case "DIRECTIONALROTATIONZ":
-                    return (ushort)Cell_FieldIndex.DirectionalRotationZ;
-                case "DIRECTIONALFADE":
-                    return (ushort)Cell_FieldIndex.DirectionalFade;
-                case "FOGCLIPDISTANCE":
-                    return (ushort)Cell_FieldIndex.FogClipDistance;
+                case "LIGHTING":
+                    return (ushort)Cell_FieldIndex.Lighting;
                 case "REGIONS":
                     return (ushort)Cell_FieldIndex.Regions;
                 case "MUSICTYPE":
@@ -1954,15 +1567,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return true;
                 case Cell_FieldIndex.Flags:
                 case Cell_FieldIndex.Grid:
-                case Cell_FieldIndex.AmbientColor:
-                case Cell_FieldIndex.DirectionalColor:
-                case Cell_FieldIndex.FogColor:
-                case Cell_FieldIndex.FogNear:
-                case Cell_FieldIndex.FogFar:
-                case Cell_FieldIndex.DirectionalRotationXY:
-                case Cell_FieldIndex.DirectionalRotationZ:
-                case Cell_FieldIndex.DirectionalFade:
-                case Cell_FieldIndex.FogClipDistance:
+                case Cell_FieldIndex.Lighting:
                 case Cell_FieldIndex.MusicType:
                 case Cell_FieldIndex.WaterHeight:
                 case Cell_FieldIndex.Climate:
@@ -1980,6 +1585,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Cell_FieldIndex enu = (Cell_FieldIndex)index;
             switch (enu)
             {
+                case Cell_FieldIndex.Lighting:
                 case Cell_FieldIndex.Ownership:
                 case Cell_FieldIndex.PathGrid:
                 case Cell_FieldIndex.Persistent:
@@ -1988,15 +1594,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return true;
                 case Cell_FieldIndex.Flags:
                 case Cell_FieldIndex.Grid:
-                case Cell_FieldIndex.AmbientColor:
-                case Cell_FieldIndex.DirectionalColor:
-                case Cell_FieldIndex.FogColor:
-                case Cell_FieldIndex.FogNear:
-                case Cell_FieldIndex.FogFar:
-                case Cell_FieldIndex.DirectionalRotationXY:
-                case Cell_FieldIndex.DirectionalRotationZ:
-                case Cell_FieldIndex.DirectionalFade:
-                case Cell_FieldIndex.FogClipDistance:
                 case Cell_FieldIndex.Regions:
                 case Cell_FieldIndex.MusicType:
                 case Cell_FieldIndex.WaterHeight:
@@ -2015,15 +1612,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Cell_FieldIndex.Flags:
                 case Cell_FieldIndex.Grid:
-                case Cell_FieldIndex.AmbientColor:
-                case Cell_FieldIndex.DirectionalColor:
-                case Cell_FieldIndex.FogColor:
-                case Cell_FieldIndex.FogNear:
-                case Cell_FieldIndex.FogFar:
-                case Cell_FieldIndex.DirectionalRotationXY:
-                case Cell_FieldIndex.DirectionalRotationZ:
-                case Cell_FieldIndex.DirectionalFade:
-                case Cell_FieldIndex.FogClipDistance:
+                case Cell_FieldIndex.Lighting:
                 case Cell_FieldIndex.Regions:
                 case Cell_FieldIndex.MusicType:
                 case Cell_FieldIndex.WaterHeight:
@@ -2049,24 +1638,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Flags";
                 case Cell_FieldIndex.Grid:
                     return "Grid";
-                case Cell_FieldIndex.AmbientColor:
-                    return "AmbientColor";
-                case Cell_FieldIndex.DirectionalColor:
-                    return "DirectionalColor";
-                case Cell_FieldIndex.FogColor:
-                    return "FogColor";
-                case Cell_FieldIndex.FogNear:
-                    return "FogNear";
-                case Cell_FieldIndex.FogFar:
-                    return "FogFar";
-                case Cell_FieldIndex.DirectionalRotationXY:
-                    return "DirectionalRotationXY";
-                case Cell_FieldIndex.DirectionalRotationZ:
-                    return "DirectionalRotationZ";
-                case Cell_FieldIndex.DirectionalFade:
-                    return "DirectionalFade";
-                case Cell_FieldIndex.FogClipDistance:
-                    return "FogClipDistance";
+                case Cell_FieldIndex.Lighting:
+                    return "Lighting";
                 case Cell_FieldIndex.Regions:
                     return "Regions";
                 case Cell_FieldIndex.MusicType:
@@ -2099,15 +1672,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Cell_FieldIndex.Flags:
                 case Cell_FieldIndex.Grid:
-                case Cell_FieldIndex.AmbientColor:
-                case Cell_FieldIndex.DirectionalColor:
-                case Cell_FieldIndex.FogColor:
-                case Cell_FieldIndex.FogNear:
-                case Cell_FieldIndex.FogFar:
-                case Cell_FieldIndex.DirectionalRotationXY:
-                case Cell_FieldIndex.DirectionalRotationZ:
-                case Cell_FieldIndex.DirectionalFade:
-                case Cell_FieldIndex.FogClipDistance:
+                case Cell_FieldIndex.Lighting:
                 case Cell_FieldIndex.Regions:
                 case Cell_FieldIndex.MusicType:
                 case Cell_FieldIndex.WaterHeight:
@@ -2131,15 +1696,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Cell_FieldIndex.Flags:
                 case Cell_FieldIndex.Grid:
-                case Cell_FieldIndex.AmbientColor:
-                case Cell_FieldIndex.DirectionalColor:
-                case Cell_FieldIndex.FogColor:
-                case Cell_FieldIndex.FogNear:
-                case Cell_FieldIndex.FogFar:
-                case Cell_FieldIndex.DirectionalRotationXY:
-                case Cell_FieldIndex.DirectionalRotationZ:
-                case Cell_FieldIndex.DirectionalFade:
-                case Cell_FieldIndex.FogClipDistance:
+                case Cell_FieldIndex.Lighting:
                 case Cell_FieldIndex.Regions:
                 case Cell_FieldIndex.MusicType:
                 case Cell_FieldIndex.WaterHeight:
@@ -2165,24 +1722,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Cell.Flag);
                 case Cell_FieldIndex.Grid:
                     return typeof(P2Int);
-                case Cell_FieldIndex.AmbientColor:
-                    return typeof(Color);
-                case Cell_FieldIndex.DirectionalColor:
-                    return typeof(Color);
-                case Cell_FieldIndex.FogColor:
-                    return typeof(Color);
-                case Cell_FieldIndex.FogNear:
-                    return typeof(Single);
-                case Cell_FieldIndex.FogFar:
-                    return typeof(Single);
-                case Cell_FieldIndex.DirectionalRotationXY:
-                    return typeof(Int32);
-                case Cell_FieldIndex.DirectionalRotationZ:
-                    return typeof(Int32);
-                case Cell_FieldIndex.DirectionalFade:
-                    return typeof(Single);
-                case Cell_FieldIndex.FogClipDistance:
-                    return typeof(Single);
+                case Cell_FieldIndex.Lighting:
+                    return typeof(CellLighting);
                 case Cell_FieldIndex.Regions:
                     return typeof(NotifyingList<FormIDLink<Region>>);
                 case Cell_FieldIndex.MusicType:
@@ -2226,7 +1767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType REFR_HEADER = new RecordType("REFR");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = CELL_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 12;
+        public const int NumTypedFields = 13;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2307,130 +1848,53 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)Cell_FieldIndex.Grid, ex);
                 }
             }
-            if (copyMask?.AmbientColor ?? true)
+            if (copyMask?.Lighting.Overall != CopyOption.Skip)
             {
                 try
                 {
-                    item.AmbientColor_Property.Set(
-                        value: rhs.AmbientColor,
-                        cmds: cmds);
+                    item.Lighting_Property.SetToWithDefault(
+                        rhs.Lighting_Property,
+                        def?.Lighting_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Lighting.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    CellLightingCommon.CopyFieldsFrom(
+                                        item: item.Lighting,
+                                        rhs: rhs.Lighting,
+                                        def: def?.Lighting,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<CellLighting_ErrorMask>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            var mask = new CellLighting_ErrorMask();
+                                            baseMask.SetNthMask((int)Cell_FieldIndex.Lighting, mask);
+                                            return mask;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Lighting.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(CellLighting);
+                                    return CellLighting.Copy(
+                                        r,
+                                        copyMask?.Lighting?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Lighting?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)Cell_FieldIndex.AmbientColor, ex);
-                }
-            }
-            if (copyMask?.DirectionalColor ?? true)
-            {
-                try
-                {
-                    item.DirectionalColor_Property.Set(
-                        value: rhs.DirectionalColor,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)Cell_FieldIndex.DirectionalColor, ex);
-                }
-            }
-            if (copyMask?.FogColor ?? true)
-            {
-                try
-                {
-                    item.FogColor_Property.Set(
-                        value: rhs.FogColor,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)Cell_FieldIndex.FogColor, ex);
-                }
-            }
-            if (copyMask?.FogNear ?? true)
-            {
-                try
-                {
-                    item.FogNear_Property.Set(
-                        value: rhs.FogNear,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)Cell_FieldIndex.FogNear, ex);
-                }
-            }
-            if (copyMask?.FogFar ?? true)
-            {
-                try
-                {
-                    item.FogFar_Property.Set(
-                        value: rhs.FogFar,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)Cell_FieldIndex.FogFar, ex);
-                }
-            }
-            if (copyMask?.DirectionalRotationXY ?? true)
-            {
-                try
-                {
-                    item.DirectionalRotationXY_Property.Set(
-                        value: rhs.DirectionalRotationXY,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)Cell_FieldIndex.DirectionalRotationXY, ex);
-                }
-            }
-            if (copyMask?.DirectionalRotationZ ?? true)
-            {
-                try
-                {
-                    item.DirectionalRotationZ_Property.Set(
-                        value: rhs.DirectionalRotationZ,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)Cell_FieldIndex.DirectionalRotationZ, ex);
-                }
-            }
-            if (copyMask?.DirectionalFade ?? true)
-            {
-                try
-                {
-                    item.DirectionalFade_Property.Set(
-                        value: rhs.DirectionalFade,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)Cell_FieldIndex.DirectionalFade, ex);
-                }
-            }
-            if (copyMask?.FogClipDistance ?? true)
-            {
-                try
-                {
-                    item.FogClipDistance_Property.Set(
-                        value: rhs.FogClipDistance,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)Cell_FieldIndex.FogClipDistance, ex);
+                    errorMask().SetNthException((int)Cell_FieldIndex.Lighting, ex);
                 }
             }
             if (copyMask?.Regions != CopyOption.Skip)
@@ -2715,22 +2179,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Cell_FieldIndex enu = (Cell_FieldIndex)index;
             switch (enu)
             {
-                case Cell_FieldIndex.AmbientColor:
-                case Cell_FieldIndex.DirectionalColor:
-                case Cell_FieldIndex.FogColor:
-                case Cell_FieldIndex.FogNear:
-                case Cell_FieldIndex.FogFar:
-                case Cell_FieldIndex.DirectionalRotationXY:
-                case Cell_FieldIndex.DirectionalRotationZ:
-                case Cell_FieldIndex.DirectionalFade:
-                case Cell_FieldIndex.FogClipDistance:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case Cell_FieldIndex.Flags:
                     obj.Flags_Property.HasBeenSet = on;
                     break;
                 case Cell_FieldIndex.Grid:
                     obj.Grid_Property.HasBeenSet = on;
+                    break;
+                case Cell_FieldIndex.Lighting:
+                    obj.Lighting_Property.HasBeenSet = on;
                     break;
                 case Cell_FieldIndex.Regions:
                     obj.Regions.HasBeenSet = on;
@@ -2782,32 +2238,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Grid:
                     obj.Grid_Property.Unset(cmds);
                     break;
-                case Cell_FieldIndex.AmbientColor:
-                    obj.AmbientColor = default(Color);
-                    break;
-                case Cell_FieldIndex.DirectionalColor:
-                    obj.DirectionalColor = default(Color);
-                    break;
-                case Cell_FieldIndex.FogColor:
-                    obj.FogColor = default(Color);
-                    break;
-                case Cell_FieldIndex.FogNear:
-                    obj.FogNear = default(Single);
-                    break;
-                case Cell_FieldIndex.FogFar:
-                    obj.FogFar = default(Single);
-                    break;
-                case Cell_FieldIndex.DirectionalRotationXY:
-                    obj.DirectionalRotationXY = default(Int32);
-                    break;
-                case Cell_FieldIndex.DirectionalRotationZ:
-                    obj.DirectionalRotationZ = default(Int32);
-                    break;
-                case Cell_FieldIndex.DirectionalFade:
-                    obj.DirectionalFade = default(Single);
-                    break;
-                case Cell_FieldIndex.FogClipDistance:
-                    obj.FogClipDistance = default(Single);
+                case Cell_FieldIndex.Lighting:
+                    obj.Lighting_Property.Unset(cmds);
                     break;
                 case Cell_FieldIndex.Regions:
                     obj.Regions.Unset(cmds);
@@ -2852,20 +2284,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Cell_FieldIndex enu = (Cell_FieldIndex)index;
             switch (enu)
             {
-                case Cell_FieldIndex.AmbientColor:
-                case Cell_FieldIndex.DirectionalColor:
-                case Cell_FieldIndex.FogColor:
-                case Cell_FieldIndex.FogNear:
-                case Cell_FieldIndex.FogFar:
-                case Cell_FieldIndex.DirectionalRotationXY:
-                case Cell_FieldIndex.DirectionalRotationZ:
-                case Cell_FieldIndex.DirectionalFade:
-                case Cell_FieldIndex.FogClipDistance:
-                    return true;
                 case Cell_FieldIndex.Flags:
                     return obj.Flags_Property.HasBeenSet;
                 case Cell_FieldIndex.Grid:
                     return obj.Grid_Property.HasBeenSet;
+                case Cell_FieldIndex.Lighting:
+                    return obj.Lighting_Property.HasBeenSet;
                 case Cell_FieldIndex.Regions:
                     return obj.Regions.HasBeenSet;
                 case Cell_FieldIndex.MusicType:
@@ -2902,24 +2326,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Flags;
                 case Cell_FieldIndex.Grid:
                     return obj.Grid;
-                case Cell_FieldIndex.AmbientColor:
-                    return obj.AmbientColor;
-                case Cell_FieldIndex.DirectionalColor:
-                    return obj.DirectionalColor;
-                case Cell_FieldIndex.FogColor:
-                    return obj.FogColor;
-                case Cell_FieldIndex.FogNear:
-                    return obj.FogNear;
-                case Cell_FieldIndex.FogFar:
-                    return obj.FogFar;
-                case Cell_FieldIndex.DirectionalRotationXY:
-                    return obj.DirectionalRotationXY;
-                case Cell_FieldIndex.DirectionalRotationZ:
-                    return obj.DirectionalRotationZ;
-                case Cell_FieldIndex.DirectionalFade:
-                    return obj.DirectionalFade;
-                case Cell_FieldIndex.FogClipDistance:
-                    return obj.FogClipDistance;
+                case Cell_FieldIndex.Lighting:
+                    return obj.Lighting;
                 case Cell_FieldIndex.Regions:
                     return obj.Regions;
                 case Cell_FieldIndex.MusicType:
@@ -2951,15 +2359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Flags_Property.Unset(cmds.ToUnsetParams());
             item.Grid_Property.Unset(cmds.ToUnsetParams());
-            item.AmbientColor = default(Color);
-            item.DirectionalColor = default(Color);
-            item.FogColor = default(Color);
-            item.FogNear = default(Single);
-            item.FogFar = default(Single);
-            item.DirectionalRotationXY = default(Int32);
-            item.DirectionalRotationZ = default(Int32);
-            item.DirectionalFade = default(Single);
-            item.FogClipDistance = default(Single);
+            item.Lighting_Property.Unset(cmds.ToUnsetParams());
             item.Regions.Unset(cmds.ToUnsetParams());
             item.MusicType_Property.Unset(cmds.ToUnsetParams());
             item.WaterHeight_Property.Unset(cmds.ToUnsetParams());
@@ -2989,15 +2389,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
             ret.Grid = item.Grid_Property.Equals(rhs.Grid_Property, (l, r) => l == r);
-            ret.AmbientColor = item.AmbientColor == rhs.AmbientColor;
-            ret.DirectionalColor = item.DirectionalColor == rhs.DirectionalColor;
-            ret.FogColor = item.FogColor == rhs.FogColor;
-            ret.FogNear = item.FogNear == rhs.FogNear;
-            ret.FogFar = item.FogFar == rhs.FogFar;
-            ret.DirectionalRotationXY = item.DirectionalRotationXY == rhs.DirectionalRotationXY;
-            ret.DirectionalRotationZ = item.DirectionalRotationZ == rhs.DirectionalRotationZ;
-            ret.DirectionalFade = item.DirectionalFade == rhs.DirectionalFade;
-            ret.FogClipDistance = item.FogClipDistance == rhs.FogClipDistance;
+            ret.Lighting = item.Lighting_Property.LoquiEqualsHelper(rhs.Lighting_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             if (item.Regions.HasBeenSet == rhs.Regions.HasBeenSet)
             {
                 if (item.Regions.HasBeenSet)
@@ -3136,41 +2528,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Grid => {item.Grid}");
                 }
-                if (printMask?.AmbientColor ?? true)
+                if (printMask?.Lighting?.Overall ?? true)
                 {
-                    fg.AppendLine($"AmbientColor => {item.AmbientColor}");
-                }
-                if (printMask?.DirectionalColor ?? true)
-                {
-                    fg.AppendLine($"DirectionalColor => {item.DirectionalColor}");
-                }
-                if (printMask?.FogColor ?? true)
-                {
-                    fg.AppendLine($"FogColor => {item.FogColor}");
-                }
-                if (printMask?.FogNear ?? true)
-                {
-                    fg.AppendLine($"FogNear => {item.FogNear}");
-                }
-                if (printMask?.FogFar ?? true)
-                {
-                    fg.AppendLine($"FogFar => {item.FogFar}");
-                }
-                if (printMask?.DirectionalRotationXY ?? true)
-                {
-                    fg.AppendLine($"DirectionalRotationXY => {item.DirectionalRotationXY}");
-                }
-                if (printMask?.DirectionalRotationZ ?? true)
-                {
-                    fg.AppendLine($"DirectionalRotationZ => {item.DirectionalRotationZ}");
-                }
-                if (printMask?.DirectionalFade ?? true)
-                {
-                    fg.AppendLine($"DirectionalFade => {item.DirectionalFade}");
-                }
-                if (printMask?.FogClipDistance ?? true)
-                {
-                    fg.AppendLine($"FogClipDistance => {item.FogClipDistance}");
+                    item.Lighting?.ToString(fg, "Lighting");
                 }
                 if (printMask?.Regions?.Overall ?? true)
                 {
@@ -3278,6 +2638,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
             if (checkMask.Grid.HasValue && checkMask.Grid.Value != item.Grid_Property.HasBeenSet) return false;
+            if (checkMask.Lighting.Overall.HasValue && checkMask.Lighting.Overall.Value != item.Lighting_Property.HasBeenSet) return false;
+            if (checkMask.Lighting.Specific != null && (item.Lighting == null || !item.Lighting.HasBeenSet(checkMask.Lighting.Specific))) return false;
             if (checkMask.Regions.Overall.HasValue && checkMask.Regions.Overall.Value != item.Regions.HasBeenSet) return false;
             if (checkMask.MusicType.HasValue && checkMask.MusicType.Value != item.MusicType_Property.HasBeenSet) return false;
             if (checkMask.WaterHeight.HasValue && checkMask.WaterHeight.Value != item.WaterHeight_Property.HasBeenSet) return false;
@@ -3298,15 +2660,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new Cell_Mask<bool>();
             ret.Flags = item.Flags_Property.HasBeenSet;
             ret.Grid = item.Grid_Property.HasBeenSet;
-            ret.AmbientColor = true;
-            ret.DirectionalColor = true;
-            ret.FogColor = true;
-            ret.FogNear = true;
-            ret.FogFar = true;
-            ret.DirectionalRotationXY = true;
-            ret.DirectionalRotationZ = true;
-            ret.DirectionalFade = true;
-            ret.FogClipDistance = true;
+            ret.Lighting = new MaskItem<bool, CellLighting_Mask<bool>>(item.Lighting_Property.HasBeenSet, CellLightingCommon.GetHasBeenSetMask(item.Lighting));
             ret.Regions = new MaskItem<bool, IEnumerable<bool>>(item.Regions.HasBeenSet, null);
             ret.MusicType = item.MusicType_Property.HasBeenSet;
             ret.WaterHeight = item.WaterHeight_Property.HasBeenSet;
@@ -3422,60 +2776,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)Cell_FieldIndex.Grid,
                             errorMask: errorMask);
                     }
-                    ColorXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.AmbientColor),
-                        item: item.AmbientColor_Property,
-                        fieldIndex: (int)Cell_FieldIndex.AmbientColor,
-                        errorMask: errorMask);
-                    ColorXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.DirectionalColor),
-                        item: item.DirectionalColor_Property,
-                        fieldIndex: (int)Cell_FieldIndex.DirectionalColor,
-                        errorMask: errorMask);
-                    ColorXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.FogColor),
-                        item: item.FogColor_Property,
-                        fieldIndex: (int)Cell_FieldIndex.FogColor,
-                        errorMask: errorMask);
-                    FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.FogNear),
-                        item: item.FogNear_Property,
-                        fieldIndex: (int)Cell_FieldIndex.FogNear,
-                        errorMask: errorMask);
-                    FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.FogFar),
-                        item: item.FogFar_Property,
-                        fieldIndex: (int)Cell_FieldIndex.FogFar,
-                        errorMask: errorMask);
-                    Int32XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.DirectionalRotationXY),
-                        item: item.DirectionalRotationXY_Property,
-                        fieldIndex: (int)Cell_FieldIndex.DirectionalRotationXY,
-                        errorMask: errorMask);
-                    Int32XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.DirectionalRotationZ),
-                        item: item.DirectionalRotationZ_Property,
-                        fieldIndex: (int)Cell_FieldIndex.DirectionalRotationZ,
-                        errorMask: errorMask);
-                    FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.DirectionalFade),
-                        item: item.DirectionalFade_Property,
-                        fieldIndex: (int)Cell_FieldIndex.DirectionalFade,
-                        errorMask: errorMask);
-                    FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.FogClipDistance),
-                        item: item.FogClipDistance_Property,
-                        fieldIndex: (int)Cell_FieldIndex.FogClipDistance,
-                        errorMask: errorMask);
+                    if (item.Lighting_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<CellLighting, CellLighting_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: item.Lighting_Property,
+                            name: nameof(item.Lighting),
+                            fieldIndex: (int)Cell_FieldIndex.Lighting,
+                            errorMask: errorMask);
+                    }
                     if (item.Regions.HasBeenSet)
                     {
                         ListXmlTranslation<FormIDLink<Region>, Exception>.Instance.Write(
@@ -3698,57 +3007,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Cell_Registration.XCLC_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, Cell_Registration.XCLL_HEADER))
-            {
-                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.AmbientColor_Property,
-                    fieldIndex: (int)Cell_FieldIndex.AmbientColor,
-                    errorMask: errorMask,
-                    extraByte: true);
-                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.DirectionalColor_Property,
-                    fieldIndex: (int)Cell_FieldIndex.DirectionalColor,
-                    errorMask: errorMask,
-                    extraByte: true);
-                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FogColor_Property,
-                    fieldIndex: (int)Cell_FieldIndex.FogColor,
-                    errorMask: errorMask,
-                    extraByte: true);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FogNear_Property,
-                    fieldIndex: (int)Cell_FieldIndex.FogNear,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FogFar_Property,
-                    fieldIndex: (int)Cell_FieldIndex.FogFar,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.DirectionalRotationXY_Property,
-                    fieldIndex: (int)Cell_FieldIndex.DirectionalRotationXY,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.DirectionalRotationZ_Property,
-                    fieldIndex: (int)Cell_FieldIndex.DirectionalRotationZ,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.DirectionalFade_Property,
-                    fieldIndex: (int)Cell_FieldIndex.DirectionalFade,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FogClipDistance_Property,
-                    fieldIndex: (int)Cell_FieldIndex.FogClipDistance,
-                    errorMask: errorMask);
-            }
+            LoquiBinaryTranslation<CellLighting, CellLighting_ErrorMask>.Instance.Write(
+                writer: writer,
+                item: item.Lighting_Property,
+                fieldIndex: (int)Cell_FieldIndex.Lighting,
+                errorMask: errorMask);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Region>, Exception>.Instance.Write(
                 writer: writer,
                 item: item.Regions,
@@ -3819,15 +3082,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             this.Flags = initialValue;
             this.Grid = initialValue;
-            this.AmbientColor = initialValue;
-            this.DirectionalColor = initialValue;
-            this.FogColor = initialValue;
-            this.FogNear = initialValue;
-            this.FogFar = initialValue;
-            this.DirectionalRotationXY = initialValue;
-            this.DirectionalRotationZ = initialValue;
-            this.DirectionalFade = initialValue;
-            this.FogClipDistance = initialValue;
+            this.Lighting = new MaskItem<T, CellLighting_Mask<T>>(initialValue, new CellLighting_Mask<T>(initialValue));
             this.Regions = new MaskItem<T, IEnumerable<T>>(initialValue, null);
             this.MusicType = initialValue;
             this.WaterHeight = initialValue;
@@ -3844,15 +3099,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public T Flags;
         public T Grid;
-        public T AmbientColor;
-        public T DirectionalColor;
-        public T FogColor;
-        public T FogNear;
-        public T FogFar;
-        public T DirectionalRotationXY;
-        public T DirectionalRotationZ;
-        public T DirectionalFade;
-        public T FogClipDistance;
+        public MaskItem<T, CellLighting_Mask<T>> Lighting { get; set; }
         public MaskItem<T, IEnumerable<T>> Regions;
         public T MusicType;
         public T WaterHeight;
@@ -3878,15 +3125,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!base.Equals(rhs)) return false;
             if (!object.Equals(this.Flags, rhs.Flags)) return false;
             if (!object.Equals(this.Grid, rhs.Grid)) return false;
-            if (!object.Equals(this.AmbientColor, rhs.AmbientColor)) return false;
-            if (!object.Equals(this.DirectionalColor, rhs.DirectionalColor)) return false;
-            if (!object.Equals(this.FogColor, rhs.FogColor)) return false;
-            if (!object.Equals(this.FogNear, rhs.FogNear)) return false;
-            if (!object.Equals(this.FogFar, rhs.FogFar)) return false;
-            if (!object.Equals(this.DirectionalRotationXY, rhs.DirectionalRotationXY)) return false;
-            if (!object.Equals(this.DirectionalRotationZ, rhs.DirectionalRotationZ)) return false;
-            if (!object.Equals(this.DirectionalFade, rhs.DirectionalFade)) return false;
-            if (!object.Equals(this.FogClipDistance, rhs.FogClipDistance)) return false;
+            if (!object.Equals(this.Lighting, rhs.Lighting)) return false;
             if (!object.Equals(this.Regions, rhs.Regions)) return false;
             if (!object.Equals(this.MusicType, rhs.MusicType)) return false;
             if (!object.Equals(this.WaterHeight, rhs.WaterHeight)) return false;
@@ -3904,15 +3143,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int ret = 0;
             ret = ret.CombineHashCode(this.Flags?.GetHashCode());
             ret = ret.CombineHashCode(this.Grid?.GetHashCode());
-            ret = ret.CombineHashCode(this.AmbientColor?.GetHashCode());
-            ret = ret.CombineHashCode(this.DirectionalColor?.GetHashCode());
-            ret = ret.CombineHashCode(this.FogColor?.GetHashCode());
-            ret = ret.CombineHashCode(this.FogNear?.GetHashCode());
-            ret = ret.CombineHashCode(this.FogFar?.GetHashCode());
-            ret = ret.CombineHashCode(this.DirectionalRotationXY?.GetHashCode());
-            ret = ret.CombineHashCode(this.DirectionalRotationZ?.GetHashCode());
-            ret = ret.CombineHashCode(this.DirectionalFade?.GetHashCode());
-            ret = ret.CombineHashCode(this.FogClipDistance?.GetHashCode());
+            ret = ret.CombineHashCode(this.Lighting?.GetHashCode());
             ret = ret.CombineHashCode(this.Regions?.GetHashCode());
             ret = ret.CombineHashCode(this.MusicType?.GetHashCode());
             ret = ret.CombineHashCode(this.WaterHeight?.GetHashCode());
@@ -3935,15 +3166,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!base.AllEqual(eval)) return false;
             if (!eval(this.Flags)) return false;
             if (!eval(this.Grid)) return false;
-            if (!eval(this.AmbientColor)) return false;
-            if (!eval(this.DirectionalColor)) return false;
-            if (!eval(this.FogColor)) return false;
-            if (!eval(this.FogNear)) return false;
-            if (!eval(this.FogFar)) return false;
-            if (!eval(this.DirectionalRotationXY)) return false;
-            if (!eval(this.DirectionalRotationZ)) return false;
-            if (!eval(this.DirectionalFade)) return false;
-            if (!eval(this.FogClipDistance)) return false;
+            if (Lighting != null)
+            {
+                if (!eval(this.Lighting.Overall)) return false;
+                if (this.Lighting.Specific != null && !this.Lighting.Specific.AllEqual(eval)) return false;
+            }
             if (this.Regions != null)
             {
                 if (!eval(this.Regions.Overall)) return false;
@@ -4022,15 +3249,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Translate_InternalFill(obj, eval);
             obj.Flags = eval(this.Flags);
             obj.Grid = eval(this.Grid);
-            obj.AmbientColor = eval(this.AmbientColor);
-            obj.DirectionalColor = eval(this.DirectionalColor);
-            obj.FogColor = eval(this.FogColor);
-            obj.FogNear = eval(this.FogNear);
-            obj.FogFar = eval(this.FogFar);
-            obj.DirectionalRotationXY = eval(this.DirectionalRotationXY);
-            obj.DirectionalRotationZ = eval(this.DirectionalRotationZ);
-            obj.DirectionalFade = eval(this.DirectionalFade);
-            obj.FogClipDistance = eval(this.FogClipDistance);
+            if (this.Lighting != null)
+            {
+                obj.Lighting = new MaskItem<R, CellLighting_Mask<R>>();
+                obj.Lighting.Overall = eval(this.Lighting.Overall);
+                if (this.Lighting.Specific != null)
+                {
+                    obj.Lighting.Specific = this.Lighting.Specific.Translate(eval);
+                }
+            }
             if (Regions != null)
             {
                 obj.Regions = new MaskItem<R, IEnumerable<R>>();
@@ -4182,41 +3409,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Grid => {Grid}");
                 }
-                if (printMask?.AmbientColor ?? true)
+                if (printMask?.Lighting?.Overall ?? true)
                 {
-                    fg.AppendLine($"AmbientColor => {AmbientColor}");
-                }
-                if (printMask?.DirectionalColor ?? true)
-                {
-                    fg.AppendLine($"DirectionalColor => {DirectionalColor}");
-                }
-                if (printMask?.FogColor ?? true)
-                {
-                    fg.AppendLine($"FogColor => {FogColor}");
-                }
-                if (printMask?.FogNear ?? true)
-                {
-                    fg.AppendLine($"FogNear => {FogNear}");
-                }
-                if (printMask?.FogFar ?? true)
-                {
-                    fg.AppendLine($"FogFar => {FogFar}");
-                }
-                if (printMask?.DirectionalRotationXY ?? true)
-                {
-                    fg.AppendLine($"DirectionalRotationXY => {DirectionalRotationXY}");
-                }
-                if (printMask?.DirectionalRotationZ ?? true)
-                {
-                    fg.AppendLine($"DirectionalRotationZ => {DirectionalRotationZ}");
-                }
-                if (printMask?.DirectionalFade ?? true)
-                {
-                    fg.AppendLine($"DirectionalFade => {DirectionalFade}");
-                }
-                if (printMask?.FogClipDistance ?? true)
-                {
-                    fg.AppendLine($"FogClipDistance => {FogClipDistance}");
+                    Lighting?.ToString(fg);
                 }
                 if (printMask?.Regions?.Overall ?? true)
                 {
@@ -4354,15 +3549,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public Exception Flags;
         public Exception Grid;
-        public Exception AmbientColor;
-        public Exception DirectionalColor;
-        public Exception FogColor;
-        public Exception FogNear;
-        public Exception FogFar;
-        public Exception DirectionalRotationXY;
-        public Exception DirectionalRotationZ;
-        public Exception DirectionalFade;
-        public Exception FogClipDistance;
+        public MaskItem<Exception, CellLighting_ErrorMask> Lighting;
         public MaskItem<Exception, IEnumerable<Exception>> Regions;
         public Exception MusicType;
         public Exception WaterHeight;
@@ -4387,32 +3574,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Grid:
                     this.Grid = ex;
                     break;
-                case Cell_FieldIndex.AmbientColor:
-                    this.AmbientColor = ex;
-                    break;
-                case Cell_FieldIndex.DirectionalColor:
-                    this.DirectionalColor = ex;
-                    break;
-                case Cell_FieldIndex.FogColor:
-                    this.FogColor = ex;
-                    break;
-                case Cell_FieldIndex.FogNear:
-                    this.FogNear = ex;
-                    break;
-                case Cell_FieldIndex.FogFar:
-                    this.FogFar = ex;
-                    break;
-                case Cell_FieldIndex.DirectionalRotationXY:
-                    this.DirectionalRotationXY = ex;
-                    break;
-                case Cell_FieldIndex.DirectionalRotationZ:
-                    this.DirectionalRotationZ = ex;
-                    break;
-                case Cell_FieldIndex.DirectionalFade:
-                    this.DirectionalFade = ex;
-                    break;
-                case Cell_FieldIndex.FogClipDistance:
-                    this.FogClipDistance = ex;
+                case Cell_FieldIndex.Lighting:
+                    this.Lighting = new MaskItem<Exception, CellLighting_ErrorMask>(ex, null);
                     break;
                 case Cell_FieldIndex.Regions:
                     this.Regions = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
@@ -4461,32 +3624,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Grid:
                     this.Grid = (Exception)obj;
                     break;
-                case Cell_FieldIndex.AmbientColor:
-                    this.AmbientColor = (Exception)obj;
-                    break;
-                case Cell_FieldIndex.DirectionalColor:
-                    this.DirectionalColor = (Exception)obj;
-                    break;
-                case Cell_FieldIndex.FogColor:
-                    this.FogColor = (Exception)obj;
-                    break;
-                case Cell_FieldIndex.FogNear:
-                    this.FogNear = (Exception)obj;
-                    break;
-                case Cell_FieldIndex.FogFar:
-                    this.FogFar = (Exception)obj;
-                    break;
-                case Cell_FieldIndex.DirectionalRotationXY:
-                    this.DirectionalRotationXY = (Exception)obj;
-                    break;
-                case Cell_FieldIndex.DirectionalRotationZ:
-                    this.DirectionalRotationZ = (Exception)obj;
-                    break;
-                case Cell_FieldIndex.DirectionalFade:
-                    this.DirectionalFade = (Exception)obj;
-                    break;
-                case Cell_FieldIndex.FogClipDistance:
-                    this.FogClipDistance = (Exception)obj;
+                case Cell_FieldIndex.Lighting:
+                    this.Lighting = (MaskItem<Exception, CellLighting_ErrorMask>)obj;
                     break;
                 case Cell_FieldIndex.Regions:
                     this.Regions = (MaskItem<Exception, IEnumerable<Exception>>)obj;
@@ -4529,15 +3668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Overall != null) return true;
             if (Flags != null) return true;
             if (Grid != null) return true;
-            if (AmbientColor != null) return true;
-            if (DirectionalColor != null) return true;
-            if (FogColor != null) return true;
-            if (FogNear != null) return true;
-            if (FogFar != null) return true;
-            if (DirectionalRotationXY != null) return true;
-            if (DirectionalRotationZ != null) return true;
-            if (DirectionalFade != null) return true;
-            if (FogClipDistance != null) return true;
+            if (Lighting != null) return true;
             if (Regions != null) return true;
             if (MusicType != null) return true;
             if (WaterHeight != null) return true;
@@ -4585,15 +3716,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.ToString_FillInternal(fg);
             fg.AppendLine($"Flags => {Flags}");
             fg.AppendLine($"Grid => {Grid}");
-            fg.AppendLine($"AmbientColor => {AmbientColor}");
-            fg.AppendLine($"DirectionalColor => {DirectionalColor}");
-            fg.AppendLine($"FogColor => {FogColor}");
-            fg.AppendLine($"FogNear => {FogNear}");
-            fg.AppendLine($"FogFar => {FogFar}");
-            fg.AppendLine($"DirectionalRotationXY => {DirectionalRotationXY}");
-            fg.AppendLine($"DirectionalRotationZ => {DirectionalRotationZ}");
-            fg.AppendLine($"DirectionalFade => {DirectionalFade}");
-            fg.AppendLine($"FogClipDistance => {FogClipDistance}");
+            Lighting?.ToString(fg);
             fg.AppendLine("Regions =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -4697,15 +3820,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new Cell_ErrorMask();
             ret.Flags = this.Flags.Combine(rhs.Flags);
             ret.Grid = this.Grid.Combine(rhs.Grid);
-            ret.AmbientColor = this.AmbientColor.Combine(rhs.AmbientColor);
-            ret.DirectionalColor = this.DirectionalColor.Combine(rhs.DirectionalColor);
-            ret.FogColor = this.FogColor.Combine(rhs.FogColor);
-            ret.FogNear = this.FogNear.Combine(rhs.FogNear);
-            ret.FogFar = this.FogFar.Combine(rhs.FogFar);
-            ret.DirectionalRotationXY = this.DirectionalRotationXY.Combine(rhs.DirectionalRotationXY);
-            ret.DirectionalRotationZ = this.DirectionalRotationZ.Combine(rhs.DirectionalRotationZ);
-            ret.DirectionalFade = this.DirectionalFade.Combine(rhs.DirectionalFade);
-            ret.FogClipDistance = this.FogClipDistance.Combine(rhs.FogClipDistance);
+            ret.Lighting = new MaskItem<Exception, CellLighting_ErrorMask>(this.Lighting.Overall.Combine(rhs.Lighting.Overall), ((IErrorMask<CellLighting_ErrorMask>)this.Lighting.Specific).Combine(rhs.Lighting.Specific));
             ret.Regions = new MaskItem<Exception, IEnumerable<Exception>>(this.Regions.Overall.Combine(rhs.Regions.Overall), new List<Exception>(this.Regions.Specific.And(rhs.Regions.Specific)));
             ret.MusicType = this.MusicType.Combine(rhs.MusicType);
             ret.WaterHeight = this.WaterHeight.Combine(rhs.WaterHeight);
@@ -4731,15 +3846,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public bool Flags;
         public bool Grid;
-        public bool AmbientColor;
-        public bool DirectionalColor;
-        public bool FogColor;
-        public bool FogNear;
-        public bool FogFar;
-        public bool DirectionalRotationXY;
-        public bool DirectionalRotationZ;
-        public bool DirectionalFade;
-        public bool FogClipDistance;
+        public MaskItem<CopyOption, CellLighting_CopyMask> Lighting;
         public CopyOption Regions;
         public bool MusicType;
         public bool WaterHeight;

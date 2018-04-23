@@ -20,19 +20,7 @@
     <Fields>
       <Enum name="Flags" enumName="Cell.Flag" byteLength="1" recordType="DATA" />
       <P2Int name="Grid" recordType="XCLC" />
-      <Data recordType="XCLL">
-        <Fields>
-          <Color name="AmbientColor" />
-          <Color name="DirectionalColor" />
-          <Color name="FogColor" />
-          <Float name="FogNear" />
-          <Float name="FogFar" />
-          <Int32 name="DirectionalRotationXY" />
-          <Int32 name="DirectionalRotationZ" />
-          <Float name="DirectionalFade" />
-          <Float name="FogClipDistance" />
-        </Fields>
-      </Data>
+      <RefDirect name="Lighting" refName="CellLighting" />
       <List name="Regions" recordType="XCLR">
         <FormIDLink refName="Region" />
       </List>
@@ -45,6 +33,19 @@
       <RefList name="Persistent" noBinary="true" refName="Placed" />
       <RefList name="Temporary" noBinary="true" refName="Placed" />
       <RefList name="VisibleWhenDistant" noBinary="true" refName="Placed" />
+    </Fields>
+  </Object>
+  <Object name="CellLighting" recordType="XCLL" objType="Subrecord" GUID="31acbf65-e6be-4373-9fb4-d0f1ab97c089" ID="138">
+    <Fields>
+      <Color name="AmbientColor" hasBeenSet="False" />
+      <Color name="DirectionalColor" hasBeenSet="False" />
+      <Color name="FogColor" hasBeenSet="False" />
+      <Float name="FogNear" hasBeenSet="False" />
+      <Float name="FogFar" hasBeenSet="False" />
+      <Int32 name="DirectionalRotationXY" hasBeenSet="False" />
+      <Int32 name="DirectionalRotationZ" hasBeenSet="False" />
+      <Float name="DirectionalFade" hasBeenSet="False" />
+      <Float name="FogClipDistance" hasBeenSet="False" />
     </Fields>
   </Object>
 </Loqui>

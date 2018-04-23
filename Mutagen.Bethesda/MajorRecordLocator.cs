@@ -154,7 +154,7 @@ namespace Mutagen.Bethesda
             FileLocations fileLocs,
             RecordInterest interest,
             RecordType? grupRecOverride = null,
-            bool checkGrupType = true,
+            bool checkOverallGrupType = true,
             IEnumerable<FileLocation> parentGroupLocations = null)
         {
             var grupLoc = reader.Position;
@@ -172,7 +172,8 @@ namespace Mutagen.Bethesda
             }
             var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(new MutagenFrame(reader, new ContentLength(4)));
 
-            if (!interest?.IsInterested(grupRec) ?? true)
+            if (checkOverallGrupType
+                && (!interest?.IsInterested(grupRec) ?? false))
             { // Skip
                 reader.Position -= new ContentLength(16);
                 reader.Position += grupLength;
@@ -187,7 +188,7 @@ namespace Mutagen.Bethesda
                 {
                     var recordLocation = reader.Position;
                     var targetRec = HeaderTranslation.ReadNextRecordType(reader);
-                    if (checkGrupType 
+                    if (checkOverallGrupType
                         && !grupRec.Equals(targetRec))
                     {
                         reader.Position -= 4;
@@ -209,10 +210,13 @@ namespace Mutagen.Bethesda
                     var recLength = new ContentLength(reader.ReadUInt32());
                     reader.Position += new ContentLength(4); // Skip flags
                     var formID = FormID.Factory(reader.ReadBytes(4));
-                    fileLocs.Add(
-                        id: formID,
-                        parentGrupLocations: grupLoc.And(parentGroupLocations),
-                        section: new FileSection(recordLocation, recordLocation + recLength + Constants.RECORD_LENGTH + Constants.RECORD_META_OFFSET - 1));
+                    if (interest?.IsInterested(targetRec) ?? true)
+                    {
+                        fileLocs.Add(
+                            id: formID,
+                            parentGrupLocations: grupLoc.And(parentGroupLocations),
+                            section: new FileSection(recordLocation, recordLocation + recLength + Constants.RECORD_LENGTH + Constants.RECORD_META_OFFSET - 1));
+                    }
                     reader.Position += new ContentLength(4);
                     reader.Position += recLength;
                 }
@@ -351,7 +355,7 @@ namespace Mutagen.Bethesda
                             fileLocs: fileLocs,
                             interest: interest,
                             parentGroupLocations: grupLoc.And(parentGroupLocations),
-                            checkGrupType: false);
+                            checkOverallGrupType: false);
                         break;
                     default:
                         throw new NotImplementedException();

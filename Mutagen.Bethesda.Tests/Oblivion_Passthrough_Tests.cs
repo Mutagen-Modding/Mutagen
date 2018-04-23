@@ -56,7 +56,6 @@ namespace Mutagen.Bethesda.Tests
             ProcessLeveledItemDataFields(rec, instr, filePath, loc, processing);
             ProcessRegions(rec, instr, filePath, loc, processing);
             ProcessPlacedObject_Mismatch(rec, instr, filePath, loc, fileLocs, lengthTracker, processing);
-            ProcessCell_Mismatch(rec, instr, filePath, loc, compressed, processing);
         }
 
         private void ProcessNPC_Mismatch(
@@ -87,34 +86,6 @@ namespace Mutagen.Bethesda.Tests
                 locationsToMove: new RecordType[]
                 {
                     new RecordType("CNAM")
-                });
-        }
-
-        private void ProcessCell_Mismatch(
-            MajorRecord rec,
-            Instruction instr,
-            string filePath,
-            FileSection loc,
-            bool compressed,
-            bool processing)
-        {
-            if (!processing) return;
-            if (!(rec is Cell)) return;
-            this.DynamicMove(
-                instr,
-                filePath,
-                loc,
-                offendingIndices: new RecordType[]
-                {
-                    new RecordType("XOWN"),
-                },
-                offendingLimits: new RecordType[]
-                {
-                    new RecordType("XCMT")
-                },
-                locationsToMove: new RecordType[]
-                {
-                    new RecordType("GRUP")
                 });
         }
 
@@ -324,38 +295,6 @@ namespace Mutagen.Bethesda.Tests
             if (!(rec is PlacedObject)) return;
             if (processing)
             {
-                this.DynamicMove(
-                    instr,
-                    filePath,
-                    loc,
-                    offendingIndices: new RecordType[]
-                    {
-                        new RecordType("XSCL"),
-                    },
-                    offendingLimits: new RecordType[]
-                    {
-                        new RecordType("XESP")
-                    },
-                    locationsToMove: new RecordType[]
-                    {
-                        new RecordType("DATA")
-                    });
-                this.DynamicMove(
-                    instr,
-                    filePath,
-                    loc,
-                    offendingIndices: new RecordType[]
-                    {
-                        new RecordType("XOWN"),
-                    },
-                    offendingLimits: new RecordType[]
-                    {
-                        new RecordType("XLOC")
-                    },
-                    locationsToMove: new RecordType[]
-                    {
-                        new RecordType("DATA")
-                    });
                 using (var stream = new MutagenReader(filePath))
                 {
                     stream.Position = loc.Min;
@@ -456,6 +395,10 @@ namespace Mutagen.Bethesda.Tests
                 if (limit == locToMove) return false;
                 if (offender < limit)
                 {
+                    if (locToMove < offender)
+                    {
+                        throw new ArgumentException();
+                    }
                     instr.Moves.Add(
                         new Move()
                         {
@@ -568,6 +511,81 @@ namespace Mutagen.Bethesda.Tests
             await OblivionESM_Typical(mod, instructions, inputErrMask: inputErrMask, deleteAfter: deleteAfter);
         }
 
+        public ModAligner.AlignmentRules GetAlignmentRules()
+        {
+            var ret = new ModAligner.AlignmentRules();
+            ret.Alignments[Cell_Registration.CELL_HEADER] = new List<RecordType>()
+            {
+                new RecordType("EDID"),
+                new RecordType("FULL"),
+                new RecordType("DATA"),
+                new RecordType("XCLC"),
+                new RecordType("XCLL"),
+                new RecordType("XCLR"),
+                new RecordType("XCMT"),
+                new RecordType("XCLW"),
+                new RecordType("XCCM"),
+                new RecordType("XCWT"),
+                new RecordType("XOWN"),
+                new RecordType("XRNK"),
+                new RecordType("XGLB"),
+            };
+            ret.Alignments[PlacedObject_Registration.REFR_HEADER] = new List<RecordType>()
+            {
+                new RecordType("EDID"),
+                new RecordType("NAME"),
+                new RecordType("XTEL"),
+                new RecordType("XLOC"),
+                new RecordType("XOWN"),
+                new RecordType("XRNK"),
+                new RecordType("XGLB"),
+                new RecordType("XESP"),
+                new RecordType("XTRG"),
+                new RecordType("XSED"),
+                new RecordType("XLOD"),
+                new RecordType("XCHG"),
+                new RecordType("XHLT"),
+                new RecordType("XLCM"),
+                new RecordType("XRTM"),
+                new RecordType("XACT"),
+                new RecordType("XCNT"),
+                new RecordType("XMRK"),
+                new RecordType("FNAM"),
+                new RecordType("FULL"),
+                new RecordType("TNAM"),
+                new RecordType("ONAM"),
+                new RecordType("XRGD"),
+                new RecordType("XSCL"),
+                new RecordType("XSOL"),
+                new RecordType("DATA"),
+            };
+            ret.Alignments[PlacedCreature_Registration.ACRE_HEADER] = new List<RecordType>()
+            {
+                new RecordType("EDID"),
+                new RecordType("NAME"),
+                new RecordType("XOWN"),
+                new RecordType("XRNK"),
+                new RecordType("XGLB"),
+                new RecordType("XESP"),
+                new RecordType("XRGD"),
+                new RecordType("XSCL"),
+                new RecordType("DATA"),
+            };
+            ret.Alignments[PlacedNPC_Registration.ACHR_HEADER] = new List<RecordType>()
+            {
+                new RecordType("EDID"),
+                new RecordType("NAME"),
+                new RecordType("XLOD"),
+                new RecordType("XESP"),
+                new RecordType("XMRC"),
+                new RecordType("XHRS"),
+                new RecordType("XRGD"),
+                new RecordType("XSCL"),
+                new RecordType("DATA"),
+            };
+            return ret;
+        }
+
         private async Task OblivionESM_Typical(
             OblivionMod mod,
             BinaryProcessorInstructions instructions,
@@ -578,6 +596,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 var oblivionOutputPath = Path.Combine(tmp.Dir.FullName, Constants.OBLIVION_ESM);
                 var uncompressedPath = Path.Combine(tmp.Dir.FullName, $"{Constants.OBLIVION_ESM}_Uncompressed");
+                var alignedPath = Path.Combine(tmp.Dir.FullName, $"{Constants.OBLIVION_ESM}_Aligned");
                 var processedPath = Path.Combine(tmp.Dir.FullName, $"{Constants.OBLIVION_ESM}_Processed");
 
                 ModDecompressor.Decompress(
@@ -585,16 +604,21 @@ namespace Mutagen.Bethesda.Tests
                     outputPath: uncompressedPath,
                     interest: new RecordInterest(
                         uninterestingTypes: OblivionMod.NonTypeGroups));
-                var uncompressedFileLocs = MajorRecordLocator.GetFileLocations(
-                    uncompressedPath,
+                ModAligner.Align(
+                    inputPath: uncompressedPath,
+                    outputPath: alignedPath,
+                    alignmentRules: GetAlignmentRules());
+
+                var alignedFileLocs = MajorRecordLocator.GetFileLocations(
+                    alignedPath,
                     interest: new RecordInterest(
                         uninterestingTypes: OblivionMod.NonTypeGroups));
 
                 Dictionary<FileLocation, uint> lengthTracker = new Dictionary<FileLocation, uint>();
 
-                using (var reader = new MutagenReader(uncompressedPath))
+                using (var reader = new MutagenReader(alignedPath))
                 {
-                    foreach (var grup in uncompressedFileLocs.GrupLocations.And(uncompressedFileLocs.ListedRecords.Keys))
+                    foreach (var grup in alignedFileLocs.GrupLocations.And(alignedFileLocs.ListedRecords.Keys))
                     {
                         reader.Position = grup + 4;
                         lengthTracker[grup] = reader.ReadUInt32();
@@ -606,15 +630,15 @@ namespace Mutagen.Bethesda.Tests
                     AddDynamicProcessorInstructions(
                         rec: rec,
                         instr: instructions.Instruction,
-                        loc: uncompressedFileLocs[rec.FormID],
-                        filePath: uncompressedPath,
-                        fileLocs: uncompressedFileLocs,
+                        loc: alignedFileLocs[rec.FormID],
+                        filePath: alignedPath,
+                        fileLocs: alignedFileLocs,
                         lengthTracker: lengthTracker,
                         compressed: false,
                         processing: true);
                 }
 
-                using (var reader = new MutagenReader(uncompressedPath))
+                using (var reader = new MutagenReader(alignedPath))
                 {
                     foreach (var grup in lengthTracker)
                     {
@@ -631,7 +655,7 @@ namespace Mutagen.Bethesda.Tests
 
                 var binConfig = instructions.Instruction.ToProcessorConfig();
                 using (var processor = new BinaryFileProcessor(
-                    new FileStream(uncompressedPath, FileMode.Open, FileAccess.Read),
+                    new FileStream(alignedPath, FileMode.Open, FileAccess.Read),
                     binConfig))
                 {
                     using (var outStream = new FileStream(processedPath, FileMode.Create, FileAccess.Write))
