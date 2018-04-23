@@ -203,6 +203,10 @@ namespace Mutagen.Bethesda.Binary
                 var f = DelegateBuilder.BuildDelegate<Func<T, MutagenWriter, RecordTypeConverter, bool, object>>(method);
                 return (MutagenWriter writer, T item, RecordTypeConverter recordTypeConverter, bool doMasks, out M errorMask) =>
                 {
+                    if (item == null)
+                    {
+                        throw new NullReferenceException("Cannot write for a null item.");
+                    }
                     errorMask = (M)f(item, writer, recordTypeConverter, doMasks);
                 };
             }
@@ -211,6 +215,10 @@ namespace Mutagen.Bethesda.Binary
                 var f = DelegateBuilder.BuildGenericDelegate<Func<T, MutagenWriter, RecordTypeConverter, bool, object>>(typeof(T), new Type[] { typeof(M).GenericTypeArguments[0] }, method);
                 return (MutagenWriter writer, T item, RecordTypeConverter recordTypeConverter, bool doMasks, out M errorMask) =>
                 {
+                    if (item == null)
+                    {
+                        throw new NullReferenceException("Cannot write for a null item.");
+                    }
                     errorMask = (M)f(item, writer, recordTypeConverter, doMasks);
                 };
             }
