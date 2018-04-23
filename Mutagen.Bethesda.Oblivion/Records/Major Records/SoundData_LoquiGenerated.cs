@@ -1809,6 +1809,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public virtual object GetNthMask(int index)
+        {
+            SoundData_FieldIndex enu = (SoundData_FieldIndex)index;
+            switch (enu)
+            {
+                case SoundData_FieldIndex.MinimumAttenuationDistance:
+                    return MinimumAttenuationDistance;
+                case SoundData_FieldIndex.MaximumAttenuationDistance:
+                    return MaximumAttenuationDistance;
+                case SoundData_FieldIndex.FrequencyAdjustment:
+                    return FrequencyAdjustment;
+                case SoundData_FieldIndex.Flags:
+                    return Flags;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public virtual void SetNthException(int index, Exception ex)
         {
             SoundData_FieldIndex enu = (SoundData_FieldIndex)index;

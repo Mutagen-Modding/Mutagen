@@ -1848,6 +1848,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Hair_FieldIndex enu = (Hair_FieldIndex)index;
+            switch (enu)
+            {
+                case Hair_FieldIndex.Model:
+                    return Model;
+                case Hair_FieldIndex.Icon:
+                    return Icon;
+                case Hair_FieldIndex.Flags:
+                    return Flags;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Hair_FieldIndex enu = (Hair_FieldIndex)index;

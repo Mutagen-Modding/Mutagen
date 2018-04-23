@@ -2287,6 +2287,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
+            switch (enu)
+            {
+                case AlchemicalApparatus_FieldIndex.Model:
+                    return Model;
+                case AlchemicalApparatus_FieldIndex.Icon:
+                    return Icon;
+                case AlchemicalApparatus_FieldIndex.Script:
+                    return Script;
+                case AlchemicalApparatus_FieldIndex.Type:
+                    return Type;
+                case AlchemicalApparatus_FieldIndex.Value:
+                    return Value;
+                case AlchemicalApparatus_FieldIndex.Weight:
+                    return Weight;
+                case AlchemicalApparatus_FieldIndex.Quality:
+                    return Quality;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;

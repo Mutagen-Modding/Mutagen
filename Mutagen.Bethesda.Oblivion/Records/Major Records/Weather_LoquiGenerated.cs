@@ -5686,6 +5686,88 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Weather_FieldIndex enu = (Weather_FieldIndex)index;
+            switch (enu)
+            {
+                case Weather_FieldIndex.TextureLowerLayer:
+                    return TextureLowerLayer;
+                case Weather_FieldIndex.TextureUpperLayer:
+                    return TextureUpperLayer;
+                case Weather_FieldIndex.Model:
+                    return Model;
+                case Weather_FieldIndex.WeatherTypes:
+                    return WeatherTypes;
+                case Weather_FieldIndex.FogDayNear:
+                    return FogDayNear;
+                case Weather_FieldIndex.FogDayFar:
+                    return FogDayFar;
+                case Weather_FieldIndex.FogNightNear:
+                    return FogNightNear;
+                case Weather_FieldIndex.FogNightFar:
+                    return FogNightFar;
+                case Weather_FieldIndex.HdrEyeAdaptSpeed:
+                    return HdrEyeAdaptSpeed;
+                case Weather_FieldIndex.HdrBlurRadius:
+                    return HdrBlurRadius;
+                case Weather_FieldIndex.HdrBlurPasses:
+                    return HdrBlurPasses;
+                case Weather_FieldIndex.HdrEmissiveMult:
+                    return HdrEmissiveMult;
+                case Weather_FieldIndex.HdrTargetLum:
+                    return HdrTargetLum;
+                case Weather_FieldIndex.HdrUpperLumClamp:
+                    return HdrUpperLumClamp;
+                case Weather_FieldIndex.HdrBrightScale:
+                    return HdrBrightScale;
+                case Weather_FieldIndex.HdrBrightClamp:
+                    return HdrBrightClamp;
+                case Weather_FieldIndex.HdrLumRampNoTex:
+                    return HdrLumRampNoTex;
+                case Weather_FieldIndex.HdrLumRampMin:
+                    return HdrLumRampMin;
+                case Weather_FieldIndex.HdrLumRampMax:
+                    return HdrLumRampMax;
+                case Weather_FieldIndex.HdrSunlightDimmer:
+                    return HdrSunlightDimmer;
+                case Weather_FieldIndex.HdrGrassDimmer:
+                    return HdrGrassDimmer;
+                case Weather_FieldIndex.HdrTreeDimmer:
+                    return HdrTreeDimmer;
+                case Weather_FieldIndex.WindSpeed:
+                    return WindSpeed;
+                case Weather_FieldIndex.CloudSpeedLower:
+                    return CloudSpeedLower;
+                case Weather_FieldIndex.CloudSpeedUpper:
+                    return CloudSpeedUpper;
+                case Weather_FieldIndex.TransDelta:
+                    return TransDelta;
+                case Weather_FieldIndex.SunGlare:
+                    return SunGlare;
+                case Weather_FieldIndex.SunDamage:
+                    return SunDamage;
+                case Weather_FieldIndex.PrecipitationBeginFadeIn:
+                    return PrecipitationBeginFadeIn;
+                case Weather_FieldIndex.PrecipitationEndFadeOut:
+                    return PrecipitationEndFadeOut;
+                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
+                    return ThunderLightningBeginFadeIn;
+                case Weather_FieldIndex.ThunderLightningEndFadeOut:
+                    return ThunderLightningEndFadeOut;
+                case Weather_FieldIndex.ThunderLightningFrequency:
+                    return ThunderLightningFrequency;
+                case Weather_FieldIndex.Classification:
+                    return Classification;
+                case Weather_FieldIndex.LightningColor:
+                    return LightningColor;
+                case Weather_FieldIndex.Sounds:
+                    return Sounds;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Weather_FieldIndex enu = (Weather_FieldIndex)index;

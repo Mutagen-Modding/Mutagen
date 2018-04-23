@@ -1737,6 +1737,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            WeatherType_FieldIndex enu = (WeatherType_FieldIndex)index;
+            switch (enu)
+            {
+                case WeatherType_FieldIndex.Sunrise:
+                    return Sunrise;
+                case WeatherType_FieldIndex.Day:
+                    return Day;
+                case WeatherType_FieldIndex.Sunset:
+                    return Sunset;
+                case WeatherType_FieldIndex.Night:
+                    return Night;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             WeatherType_FieldIndex enu = (WeatherType_FieldIndex)index;

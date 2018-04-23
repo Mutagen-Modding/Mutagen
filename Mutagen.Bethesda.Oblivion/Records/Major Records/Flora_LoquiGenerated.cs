@@ -2279,6 +2279,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Flora_FieldIndex enu = (Flora_FieldIndex)index;
+            switch (enu)
+            {
+                case Flora_FieldIndex.Model:
+                    return Model;
+                case Flora_FieldIndex.Script:
+                    return Script;
+                case Flora_FieldIndex.Ingredient:
+                    return Ingredient;
+                case Flora_FieldIndex.Spring:
+                    return Spring;
+                case Flora_FieldIndex.Summer:
+                    return Summer;
+                case Flora_FieldIndex.Fall:
+                    return Fall;
+                case Flora_FieldIndex.Winter:
+                    return Winter;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Flora_FieldIndex enu = (Flora_FieldIndex)index;

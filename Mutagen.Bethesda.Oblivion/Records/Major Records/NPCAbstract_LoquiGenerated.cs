@@ -1064,6 +1064,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class NPCAbstract_ErrorMask : NPCSpawn_ErrorMask, IErrorMask<NPCAbstract_ErrorMask>
     {
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            NPCAbstract_FieldIndex enu = (NPCAbstract_FieldIndex)index;
+            switch (enu)
+            {
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             NPCAbstract_FieldIndex enu = (NPCAbstract_FieldIndex)index;

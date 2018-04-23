@@ -2152,6 +2152,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            RaceStats_FieldIndex enu = (RaceStats_FieldIndex)index;
+            switch (enu)
+            {
+                case RaceStats_FieldIndex.Strength:
+                    return Strength;
+                case RaceStats_FieldIndex.Intelligence:
+                    return Intelligence;
+                case RaceStats_FieldIndex.Willpower:
+                    return Willpower;
+                case RaceStats_FieldIndex.Agility:
+                    return Agility;
+                case RaceStats_FieldIndex.Speed:
+                    return Speed;
+                case RaceStats_FieldIndex.Endurance:
+                    return Endurance;
+                case RaceStats_FieldIndex.Personality:
+                    return Personality;
+                case RaceStats_FieldIndex.Luck:
+                    return Luck;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             RaceStats_FieldIndex enu = (RaceStats_FieldIndex)index;

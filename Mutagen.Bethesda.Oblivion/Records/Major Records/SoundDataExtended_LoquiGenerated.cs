@@ -1774,6 +1774,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            SoundDataExtended_FieldIndex enu = (SoundDataExtended_FieldIndex)index;
+            switch (enu)
+            {
+                case SoundDataExtended_FieldIndex.StaticAttenuation:
+                    return StaticAttenuation;
+                case SoundDataExtended_FieldIndex.StopTime:
+                    return StopTime;
+                case SoundDataExtended_FieldIndex.StartTime:
+                    return StartTime;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             SoundDataExtended_FieldIndex enu = (SoundDataExtended_FieldIndex)index;

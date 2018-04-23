@@ -1028,6 +1028,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class ItemAbstract_ErrorMask : MajorRecord_ErrorMask, IErrorMask<ItemAbstract_ErrorMask>
     {
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            ItemAbstract_FieldIndex enu = (ItemAbstract_FieldIndex)index;
+            switch (enu)
+            {
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             ItemAbstract_FieldIndex enu = (ItemAbstract_FieldIndex)index;

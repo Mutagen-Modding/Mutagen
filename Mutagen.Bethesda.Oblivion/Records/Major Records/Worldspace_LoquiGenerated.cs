@@ -1373,6 +1373,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class Worldspace_ErrorMask : NamedMajorRecord_ErrorMask, IErrorMask<Worldspace_ErrorMask>
     {
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
+            switch (enu)
+            {
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;

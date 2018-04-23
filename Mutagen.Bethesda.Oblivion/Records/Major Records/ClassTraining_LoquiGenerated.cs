@@ -1623,6 +1623,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            ClassTraining_FieldIndex enu = (ClassTraining_FieldIndex)index;
+            switch (enu)
+            {
+                case ClassTraining_FieldIndex.TrainedSkill:
+                    return TrainedSkill;
+                case ClassTraining_FieldIndex.MaximumTrainingLevel:
+                    return MaximumTrainingLevel;
+                case ClassTraining_FieldIndex.Fluff:
+                    return Fluff;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             ClassTraining_FieldIndex enu = (ClassTraining_FieldIndex)index;

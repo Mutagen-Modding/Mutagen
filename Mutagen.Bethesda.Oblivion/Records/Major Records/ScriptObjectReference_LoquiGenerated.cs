@@ -1477,6 +1477,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
+            switch (enu)
+            {
+                case ScriptObjectReference_FieldIndex.Reference:
+                    return Reference;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;

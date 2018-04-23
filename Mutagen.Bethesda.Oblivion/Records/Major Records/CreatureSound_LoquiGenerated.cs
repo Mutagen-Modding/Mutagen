@@ -1763,6 +1763,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            CreatureSound_FieldIndex enu = (CreatureSound_FieldIndex)index;
+            switch (enu)
+            {
+                case CreatureSound_FieldIndex.SoundType:
+                    return SoundType;
+                case CreatureSound_FieldIndex.Sounds:
+                    return Sounds;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             CreatureSound_FieldIndex enu = (CreatureSound_FieldIndex)index;

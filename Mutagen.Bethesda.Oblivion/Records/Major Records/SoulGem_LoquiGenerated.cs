@@ -2333,6 +2333,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
+            switch (enu)
+            {
+                case SoulGem_FieldIndex.Model:
+                    return Model;
+                case SoulGem_FieldIndex.Icon:
+                    return Icon;
+                case SoulGem_FieldIndex.Script:
+                    return Script;
+                case SoulGem_FieldIndex.Value:
+                    return Value;
+                case SoulGem_FieldIndex.Weight:
+                    return Weight;
+                case SoulGem_FieldIndex.ContainedSoul:
+                    return ContainedSoul;
+                case SoulGem_FieldIndex.MaximumCapacity:
+                    return MaximumCapacity;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;

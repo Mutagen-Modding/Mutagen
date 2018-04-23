@@ -2433,6 +2433,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            TES4_FieldIndex enu = (TES4_FieldIndex)index;
+            switch (enu)
+            {
+                case TES4_FieldIndex.Fluff:
+                    return Fluff;
+                case TES4_FieldIndex.Header:
+                    return Header;
+                case TES4_FieldIndex.TypeOffsets:
+                    return TypeOffsets;
+                case TES4_FieldIndex.Deleted:
+                    return Deleted;
+                case TES4_FieldIndex.Author:
+                    return Author;
+                case TES4_FieldIndex.Description:
+                    return Description;
+                case TES4_FieldIndex.MasterReferences:
+                    return MasterReferences;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             TES4_FieldIndex enu = (TES4_FieldIndex)index;

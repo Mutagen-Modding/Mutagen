@@ -1635,6 +1635,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            HavokData_FieldIndex enu = (HavokData_FieldIndex)index;
+            switch (enu)
+            {
+                case HavokData_FieldIndex.Material:
+                    return Material;
+                case HavokData_FieldIndex.Friction:
+                    return Friction;
+                case HavokData_FieldIndex.Restitution:
+                    return Restitution;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             HavokData_FieldIndex enu = (HavokData_FieldIndex)index;

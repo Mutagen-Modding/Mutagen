@@ -1200,6 +1200,20 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            DataTarget_FieldIndex enu = (DataTarget_FieldIndex)index;
+            switch (enu)
+            {
+                case DataTarget_FieldIndex.Location:
+                    return Location;
+                case DataTarget_FieldIndex.Data:
+                    return Data;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             DataTarget_FieldIndex enu = (DataTarget_FieldIndex)index;

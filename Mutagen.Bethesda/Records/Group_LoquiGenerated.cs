@@ -2061,6 +2061,24 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            Group_FieldIndex enu = (Group_FieldIndex)index;
+            switch (enu)
+            {
+                case Group_FieldIndex.ContainedRecordType:
+                    return ContainedRecordType;
+                case Group_FieldIndex.GroupType:
+                    return GroupType;
+                case Group_FieldIndex.LastModified:
+                    return LastModified;
+                case Group_FieldIndex.Items:
+                    return Items;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             Group_FieldIndex enu = (Group_FieldIndex)index;

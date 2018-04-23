@@ -1274,6 +1274,18 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            switch (enu)
+            {
+                case NamedMajorRecord_FieldIndex.Name:
+                    return Name;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;

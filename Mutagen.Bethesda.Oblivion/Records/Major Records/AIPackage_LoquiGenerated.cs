@@ -1333,6 +1333,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class AIPackage_ErrorMask : MajorRecord_ErrorMask, IErrorMask<AIPackage_ErrorMask>
     {
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            AIPackage_FieldIndex enu = (AIPackage_FieldIndex)index;
+            switch (enu)
+            {
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             AIPackage_FieldIndex enu = (AIPackage_FieldIndex)index;

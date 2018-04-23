@@ -1953,6 +1953,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Armor_FieldIndex enu = (Armor_FieldIndex)index;
+            switch (enu)
+            {
+                case Armor_FieldIndex.ArmorValue:
+                    return ArmorValue;
+                case Armor_FieldIndex.Value:
+                    return Value;
+                case Armor_FieldIndex.Health:
+                    return Health;
+                case Armor_FieldIndex.Weight:
+                    return Weight;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Armor_FieldIndex enu = (Armor_FieldIndex)index;

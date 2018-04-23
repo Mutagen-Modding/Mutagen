@@ -1333,6 +1333,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class EffectShader_ErrorMask : MajorRecord_ErrorMask, IErrorMask<EffectShader_ErrorMask>
     {
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
+            switch (enu)
+            {
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;

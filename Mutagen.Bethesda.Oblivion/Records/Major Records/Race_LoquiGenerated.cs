@@ -5128,6 +5128,60 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Race_FieldIndex enu = (Race_FieldIndex)index;
+            switch (enu)
+            {
+                case Race_FieldIndex.Description:
+                    return Description;
+                case Race_FieldIndex.Spells:
+                    return Spells;
+                case Race_FieldIndex.Relations:
+                    return Relations;
+                case Race_FieldIndex.SkillBoosts:
+                    return SkillBoosts;
+                case Race_FieldIndex.Fluff:
+                    return Fluff;
+                case Race_FieldIndex.MaleHeight:
+                    return MaleHeight;
+                case Race_FieldIndex.FemaleHeight:
+                    return FemaleHeight;
+                case Race_FieldIndex.MaleWeight:
+                    return MaleWeight;
+                case Race_FieldIndex.FemaleWeight:
+                    return FemaleWeight;
+                case Race_FieldIndex.Flags:
+                    return Flags;
+                case Race_FieldIndex.Voices:
+                    return Voices;
+                case Race_FieldIndex.DefaultHair:
+                    return DefaultHair;
+                case Race_FieldIndex.DefaultHairColor:
+                    return DefaultHairColor;
+                case Race_FieldIndex.FaceGenMainClamp:
+                    return FaceGenMainClamp;
+                case Race_FieldIndex.FaceGenFaceClamp:
+                    return FaceGenFaceClamp;
+                case Race_FieldIndex.RaceStats:
+                    return RaceStats;
+                case Race_FieldIndex.FaceData:
+                    return FaceData;
+                case Race_FieldIndex.BodyData:
+                    return BodyData;
+                case Race_FieldIndex.Hairs:
+                    return Hairs;
+                case Race_FieldIndex.Eyes:
+                    return Eyes;
+                case Race_FieldIndex.FaceGenData:
+                    return FaceGenData;
+                case Race_FieldIndex.Unknown:
+                    return Unknown;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Race_FieldIndex enu = (Race_FieldIndex)index;

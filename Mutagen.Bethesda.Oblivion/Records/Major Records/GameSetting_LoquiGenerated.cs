@@ -1034,6 +1034,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class GameSetting_ErrorMask : MajorRecord_ErrorMask, IErrorMask<GameSetting_ErrorMask>
     {
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
+            switch (enu)
+            {
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;

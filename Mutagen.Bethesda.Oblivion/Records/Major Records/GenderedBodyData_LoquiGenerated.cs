@@ -1698,6 +1698,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            GenderedBodyData_FieldIndex enu = (GenderedBodyData_FieldIndex)index;
+            switch (enu)
+            {
+                case GenderedBodyData_FieldIndex.Male:
+                    return Male;
+                case GenderedBodyData_FieldIndex.Female:
+                    return Female;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             GenderedBodyData_FieldIndex enu = (GenderedBodyData_FieldIndex)index;

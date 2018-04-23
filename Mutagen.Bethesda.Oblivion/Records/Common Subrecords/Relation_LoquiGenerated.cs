@@ -1527,6 +1527,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            Relation_FieldIndex enu = (Relation_FieldIndex)index;
+            switch (enu)
+            {
+                case Relation_FieldIndex.Faction:
+                    return Faction;
+                case Relation_FieldIndex.Modifier:
+                    return Modifier;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             Relation_FieldIndex enu = (Relation_FieldIndex)index;

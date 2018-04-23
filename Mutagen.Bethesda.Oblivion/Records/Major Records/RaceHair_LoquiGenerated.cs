@@ -1519,6 +1519,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            RaceHair_FieldIndex enu = (RaceHair_FieldIndex)index;
+            switch (enu)
+            {
+                case RaceHair_FieldIndex.Male:
+                    return Male;
+                case RaceHair_FieldIndex.Female:
+                    return Female;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             RaceHair_FieldIndex enu = (RaceHair_FieldIndex)index;

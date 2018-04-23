@@ -1686,6 +1686,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Sound_FieldIndex enu = (Sound_FieldIndex)index;
+            switch (enu)
+            {
+                case Sound_FieldIndex.File:
+                    return File;
+                case Sound_FieldIndex.Data:
+                    return Data;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Sound_FieldIndex enu = (Sound_FieldIndex)index;

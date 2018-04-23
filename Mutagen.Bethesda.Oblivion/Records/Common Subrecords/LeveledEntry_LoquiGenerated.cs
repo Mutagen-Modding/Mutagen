@@ -2020,6 +2020,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            LeveledEntry_FieldIndex enu = (LeveledEntry_FieldIndex)index;
+            switch (enu)
+            {
+                case LeveledEntry_FieldIndex.Level:
+                    return Level;
+                case LeveledEntry_FieldIndex.Fluff:
+                    return Fluff;
+                case LeveledEntry_FieldIndex.Reference:
+                    return Reference;
+                case LeveledEntry_FieldIndex.Count:
+                    return Count;
+                case LeveledEntry_FieldIndex.Fluff2:
+                    return Fluff2;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             LeveledEntry_FieldIndex enu = (LeveledEntry_FieldIndex)index;

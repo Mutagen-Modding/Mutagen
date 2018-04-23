@@ -1518,6 +1518,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            SkillBoost_FieldIndex enu = (SkillBoost_FieldIndex)index;
+            switch (enu)
+            {
+                case SkillBoost_FieldIndex.Skill:
+                    return Skill;
+                case SkillBoost_FieldIndex.Boost:
+                    return Boost;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             SkillBoost_FieldIndex enu = (SkillBoost_FieldIndex)index;

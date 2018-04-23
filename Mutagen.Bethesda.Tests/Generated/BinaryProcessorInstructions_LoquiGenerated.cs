@@ -1401,6 +1401,20 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            BinaryProcessorInstructions_FieldIndex enu = (BinaryProcessorInstructions_FieldIndex)index;
+            switch (enu)
+            {
+                case BinaryProcessorInstructions_FieldIndex.CompressionInstructions:
+                    return CompressionInstructions;
+                case BinaryProcessorInstructions_FieldIndex.Instruction:
+                    return Instruction;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             BinaryProcessorInstructions_FieldIndex enu = (BinaryProcessorInstructions_FieldIndex)index;

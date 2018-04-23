@@ -2822,6 +2822,40 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            SkillRecord_FieldIndex enu = (SkillRecord_FieldIndex)index;
+            switch (enu)
+            {
+                case SkillRecord_FieldIndex.Skill:
+                    return Skill;
+                case SkillRecord_FieldIndex.Description:
+                    return Description;
+                case SkillRecord_FieldIndex.Icon:
+                    return Icon;
+                case SkillRecord_FieldIndex.Action:
+                    return Action;
+                case SkillRecord_FieldIndex.Attribute:
+                    return Attribute;
+                case SkillRecord_FieldIndex.Specialization:
+                    return Specialization;
+                case SkillRecord_FieldIndex.UseValueFirst:
+                    return UseValueFirst;
+                case SkillRecord_FieldIndex.UseValueSecond:
+                    return UseValueSecond;
+                case SkillRecord_FieldIndex.ApprenticeText:
+                    return ApprenticeText;
+                case SkillRecord_FieldIndex.JourneymanText:
+                    return JourneymanText;
+                case SkillRecord_FieldIndex.ExpertText:
+                    return ExpertText;
+                case SkillRecord_FieldIndex.MasterText:
+                    return MasterText;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             SkillRecord_FieldIndex enu = (SkillRecord_FieldIndex)index;

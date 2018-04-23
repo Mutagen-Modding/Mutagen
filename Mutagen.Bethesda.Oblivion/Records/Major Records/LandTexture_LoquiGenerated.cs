@@ -2048,6 +2048,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;
+            switch (enu)
+            {
+                case LandTexture_FieldIndex.Icon:
+                    return Icon;
+                case LandTexture_FieldIndex.Havok:
+                    return Havok;
+                case LandTexture_FieldIndex.TextureSpecularExponent:
+                    return TextureSpecularExponent;
+                case LandTexture_FieldIndex.PotentialGrass:
+                    return PotentialGrass;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;

@@ -1673,6 +1673,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Eye_FieldIndex enu = (Eye_FieldIndex)index;
+            switch (enu)
+            {
+                case Eye_FieldIndex.Icon:
+                    return Icon;
+                case Eye_FieldIndex.Flags:
+                    return Flags;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Eye_FieldIndex enu = (Eye_FieldIndex)index;

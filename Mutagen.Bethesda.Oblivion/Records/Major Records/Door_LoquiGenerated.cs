@@ -2451,6 +2451,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Door_FieldIndex enu = (Door_FieldIndex)index;
+            switch (enu)
+            {
+                case Door_FieldIndex.Model:
+                    return Model;
+                case Door_FieldIndex.Script:
+                    return Script;
+                case Door_FieldIndex.OpenSound:
+                    return OpenSound;
+                case Door_FieldIndex.CloseSound:
+                    return CloseSound;
+                case Door_FieldIndex.LoopSound:
+                    return LoopSound;
+                case Door_FieldIndex.Flags:
+                    return Flags;
+                case Door_FieldIndex.RandomTeleportDestinations:
+                    return RandomTeleportDestinations;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Door_FieldIndex enu = (Door_FieldIndex)index;

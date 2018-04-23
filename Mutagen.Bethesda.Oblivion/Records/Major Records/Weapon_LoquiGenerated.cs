@@ -2961,6 +2961,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
+            switch (enu)
+            {
+                case Weapon_FieldIndex.Model:
+                    return Model;
+                case Weapon_FieldIndex.Icon:
+                    return Icon;
+                case Weapon_FieldIndex.Script:
+                    return Script;
+                case Weapon_FieldIndex.Enchantment:
+                    return Enchantment;
+                case Weapon_FieldIndex.EnchantmentPoints:
+                    return EnchantmentPoints;
+                case Weapon_FieldIndex.Type:
+                    return Type;
+                case Weapon_FieldIndex.Speed:
+                    return Speed;
+                case Weapon_FieldIndex.Reach:
+                    return Reach;
+                case Weapon_FieldIndex.Flags:
+                    return Flags;
+                case Weapon_FieldIndex.Value:
+                    return Value;
+                case Weapon_FieldIndex.Health:
+                    return Health;
+                case Weapon_FieldIndex.Weight:
+                    return Weight;
+                case Weapon_FieldIndex.Damage:
+                    return Damage;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Weapon_FieldIndex enu = (Weapon_FieldIndex)index;

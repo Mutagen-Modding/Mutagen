@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>080e3ae302b849c8768d378c01e95d2318cc49a0</Sha>
+         <Sha>99f2be72c72bd29c55cabe222849951f34b1f932</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>04-23-2018 16:24:38</CommitDate>
-         <Description>Better LoquiXmlTranslation warnings when trying to translate null items</Description>
+         <CommitDate>04-23-2018 16:34:40</CommitDate>
+         <Description>IErrorMask.GetNthMask and generation</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

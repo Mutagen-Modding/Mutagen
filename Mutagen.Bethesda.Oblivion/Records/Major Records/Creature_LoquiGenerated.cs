@@ -7871,6 +7871,112 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Creature_FieldIndex enu = (Creature_FieldIndex)index;
+            switch (enu)
+            {
+                case Creature_FieldIndex.Model:
+                    return Model;
+                case Creature_FieldIndex.Items:
+                    return Items;
+                case Creature_FieldIndex.Spells:
+                    return Spells;
+                case Creature_FieldIndex.Models:
+                    return Models;
+                case Creature_FieldIndex.NIFT:
+                    return NIFT;
+                case Creature_FieldIndex.Flags:
+                    return Flags;
+                case Creature_FieldIndex.BaseSpellPoints:
+                    return BaseSpellPoints;
+                case Creature_FieldIndex.Fatigue:
+                    return Fatigue;
+                case Creature_FieldIndex.BarterGold:
+                    return BarterGold;
+                case Creature_FieldIndex.LevelOffset:
+                    return LevelOffset;
+                case Creature_FieldIndex.CalcMin:
+                    return CalcMin;
+                case Creature_FieldIndex.CalcMax:
+                    return CalcMax;
+                case Creature_FieldIndex.Factions:
+                    return Factions;
+                case Creature_FieldIndex.DeathItem:
+                    return DeathItem;
+                case Creature_FieldIndex.Script:
+                    return Script;
+                case Creature_FieldIndex.Aggression:
+                    return Aggression;
+                case Creature_FieldIndex.Confidence:
+                    return Confidence;
+                case Creature_FieldIndex.EnergyLevel:
+                    return EnergyLevel;
+                case Creature_FieldIndex.Responsibility:
+                    return Responsibility;
+                case Creature_FieldIndex.BuySellServices:
+                    return BuySellServices;
+                case Creature_FieldIndex.Teaches:
+                    return Teaches;
+                case Creature_FieldIndex.MaximumTrainingLevel:
+                    return MaximumTrainingLevel;
+                case Creature_FieldIndex.AIPackages:
+                    return AIPackages;
+                case Creature_FieldIndex.Animations:
+                    return Animations;
+                case Creature_FieldIndex.CreatureType:
+                    return CreatureType;
+                case Creature_FieldIndex.CombatSKill:
+                    return CombatSKill;
+                case Creature_FieldIndex.MagicSKill:
+                    return MagicSKill;
+                case Creature_FieldIndex.StealthSKill:
+                    return StealthSKill;
+                case Creature_FieldIndex.SoulLevel:
+                    return SoulLevel;
+                case Creature_FieldIndex.Health:
+                    return Health;
+                case Creature_FieldIndex.AttackDamage:
+                    return AttackDamage;
+                case Creature_FieldIndex.Strength:
+                    return Strength;
+                case Creature_FieldIndex.Intelligence:
+                    return Intelligence;
+                case Creature_FieldIndex.Willpower:
+                    return Willpower;
+                case Creature_FieldIndex.Agility:
+                    return Agility;
+                case Creature_FieldIndex.Speed:
+                    return Speed;
+                case Creature_FieldIndex.Endurance:
+                    return Endurance;
+                case Creature_FieldIndex.Personality:
+                    return Personality;
+                case Creature_FieldIndex.Luck:
+                    return Luck;
+                case Creature_FieldIndex.AttackReach:
+                    return AttackReach;
+                case Creature_FieldIndex.CombatStyle:
+                    return CombatStyle;
+                case Creature_FieldIndex.TurningSpeed:
+                    return TurningSpeed;
+                case Creature_FieldIndex.BaseScale:
+                    return BaseScale;
+                case Creature_FieldIndex.FootWeight:
+                    return FootWeight;
+                case Creature_FieldIndex.BloodSpray:
+                    return BloodSpray;
+                case Creature_FieldIndex.BloodDecal:
+                    return BloodDecal;
+                case Creature_FieldIndex.InheritsSoundFrom:
+                    return InheritsSoundFrom;
+                case Creature_FieldIndex.Sounds:
+                    return Sounds;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Creature_FieldIndex enu = (Creature_FieldIndex)index;

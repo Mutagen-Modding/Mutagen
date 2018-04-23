@@ -1463,6 +1463,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            GlobalShort_FieldIndex enu = (GlobalShort_FieldIndex)index;
+            switch (enu)
+            {
+                case GlobalShort_FieldIndex.Data:
+                    return Data;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             GlobalShort_FieldIndex enu = (GlobalShort_FieldIndex)index;

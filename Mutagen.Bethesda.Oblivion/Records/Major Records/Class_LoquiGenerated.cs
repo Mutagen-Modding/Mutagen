@@ -147,7 +147,17 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<ClassService> IClassGetter.ClassServices_Property => this.ClassServices_Property;
         #endregion
         #region Training
-        private readonly INotifyingItem<ClassTraining> _Training = new NotifyingItem<ClassTraining>();
+        private readonly INotifyingItem<ClassTraining> _Training = new NotifyingItemConvertWrapper<ClassTraining>(
+            defaultVal: new ClassTraining(),
+            incomingConverter: (change) =>
+            {
+                if (change.New == null)
+                {
+                    return TryGet<ClassTraining>.Succeed(new ClassTraining());
+                }
+                return TryGet<ClassTraining>.Succeed(change.New);
+            }
+        );
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingItem<ClassTraining> Training_Property => this._Training;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2624,6 +2634,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Class_FieldIndex enu = (Class_FieldIndex)index;
+            switch (enu)
+            {
+                case Class_FieldIndex.Description:
+                    return Description;
+                case Class_FieldIndex.Icon:
+                    return Icon;
+                case Class_FieldIndex.PrimaryAttributes:
+                    return PrimaryAttributes;
+                case Class_FieldIndex.Specialization:
+                    return Specialization;
+                case Class_FieldIndex.SecondaryAttributes:
+                    return SecondaryAttributes;
+                case Class_FieldIndex.Flags:
+                    return Flags;
+                case Class_FieldIndex.ClassServices:
+                    return ClassServices;
+                case Class_FieldIndex.Training:
+                    return Training;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Class_FieldIndex enu = (Class_FieldIndex)index;

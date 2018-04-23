@@ -2014,6 +2014,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            MagicEffectSubData_FieldIndex enu = (MagicEffectSubData_FieldIndex)index;
+            switch (enu)
+            {
+                case MagicEffectSubData_FieldIndex.EnchantEffect:
+                    return EnchantEffect;
+                case MagicEffectSubData_FieldIndex.CastingSound:
+                    return CastingSound;
+                case MagicEffectSubData_FieldIndex.BoltSound:
+                    return BoltSound;
+                case MagicEffectSubData_FieldIndex.HitSound:
+                    return HitSound;
+                case MagicEffectSubData_FieldIndex.AreaSound:
+                    return AreaSound;
+                case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
+                    return ConstantEffectEnchantmentFactor;
+                case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
+                    return ConstantEffectBarterFactor;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             MagicEffectSubData_FieldIndex enu = (MagicEffectSubData_FieldIndex)index;

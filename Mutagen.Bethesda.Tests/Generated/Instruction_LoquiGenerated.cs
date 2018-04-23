@@ -2236,6 +2236,28 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
 
         #region IErrorMask
+        public virtual object GetNthMask(int index)
+        {
+            Instruction_FieldIndex enu = (Instruction_FieldIndex)index;
+            switch (enu)
+            {
+                case Instruction_FieldIndex.Moves:
+                    return Moves;
+                case Instruction_FieldIndex.Substitutions:
+                    return Substitutions;
+                case Instruction_FieldIndex.Additions:
+                    return Additions;
+                case Instruction_FieldIndex.SkipSourceSections:
+                    return SkipSourceSections;
+                case Instruction_FieldIndex.SkipOutputSections:
+                    return SkipOutputSections;
+                case Instruction_FieldIndex.IgnoreDifferenceSections:
+                    return IgnoreDifferenceSections;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public virtual void SetNthException(int index, Exception ex)
         {
             Instruction_FieldIndex enu = (Instruction_FieldIndex)index;

@@ -1529,6 +1529,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            WeatherSound_FieldIndex enu = (WeatherSound_FieldIndex)index;
+            switch (enu)
+            {
+                case WeatherSound_FieldIndex.Sound:
+                    return Sound;
+                case WeatherSound_FieldIndex.Type:
+                    return Type;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             WeatherSound_FieldIndex enu = (WeatherSound_FieldIndex)index;

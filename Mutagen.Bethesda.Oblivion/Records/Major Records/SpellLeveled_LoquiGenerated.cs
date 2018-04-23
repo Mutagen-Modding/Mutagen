@@ -1413,6 +1413,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class SpellLeveled_ErrorMask : Spell_ErrorMask, IErrorMask<SpellLeveled_ErrorMask>
     {
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            SpellLeveled_FieldIndex enu = (SpellLeveled_FieldIndex)index;
+            switch (enu)
+            {
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             SpellLeveled_FieldIndex enu = (SpellLeveled_FieldIndex)index;

@@ -1942,6 +1942,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
+            switch (enu)
+            {
+                case ScriptEffect_FieldIndex.Script:
+                    return Script;
+                case ScriptEffect_FieldIndex.MagicSchool:
+                    return MagicSchool;
+                case ScriptEffect_FieldIndex.VisualEffect:
+                    return VisualEffect;
+                case ScriptEffect_FieldIndex.Flags:
+                    return Flags;
+                case ScriptEffect_FieldIndex.Name:
+                    return Name;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;

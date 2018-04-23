@@ -1842,6 +1842,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Activator_FieldIndex enu = (Activator_FieldIndex)index;
+            switch (enu)
+            {
+                case Activator_FieldIndex.Model:
+                    return Model;
+                case Activator_FieldIndex.Script:
+                    return Script;
+                case Activator_FieldIndex.Sound:
+                    return Sound;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Activator_FieldIndex enu = (Activator_FieldIndex)index;

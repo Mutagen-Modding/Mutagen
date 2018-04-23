@@ -2187,6 +2187,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            SpellUnleveled_FieldIndex enu = (SpellUnleveled_FieldIndex)index;
+            switch (enu)
+            {
+                case SpellUnleveled_FieldIndex.Type:
+                    return Type;
+                case SpellUnleveled_FieldIndex.Cost:
+                    return Cost;
+                case SpellUnleveled_FieldIndex.Level:
+                    return Level;
+                case SpellUnleveled_FieldIndex.Flag:
+                    return Flag;
+                case SpellUnleveled_FieldIndex.Effects:
+                    return Effects;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             SpellUnleveled_FieldIndex enu = (SpellUnleveled_FieldIndex)index;

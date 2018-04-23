@@ -1853,6 +1853,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Furnature_FieldIndex enu = (Furnature_FieldIndex)index;
+            switch (enu)
+            {
+                case Furnature_FieldIndex.Model:
+                    return Model;
+                case Furnature_FieldIndex.Script:
+                    return Script;
+                case Furnature_FieldIndex.MarkerFlags:
+                    return MarkerFlags;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Furnature_FieldIndex enu = (Furnature_FieldIndex)index;

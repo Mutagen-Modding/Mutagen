@@ -2455,6 +2455,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            SigilStone_FieldIndex enu = (SigilStone_FieldIndex)index;
+            switch (enu)
+            {
+                case SigilStone_FieldIndex.Model:
+                    return Model;
+                case SigilStone_FieldIndex.Icon:
+                    return Icon;
+                case SigilStone_FieldIndex.Script:
+                    return Script;
+                case SigilStone_FieldIndex.Effects:
+                    return Effects;
+                case SigilStone_FieldIndex.Uses:
+                    return Uses;
+                case SigilStone_FieldIndex.Value:
+                    return Value;
+                case SigilStone_FieldIndex.Weight:
+                    return Weight;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             SigilStone_FieldIndex enu = (SigilStone_FieldIndex)index;

@@ -1006,6 +1006,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public virtual object GetNthMask(int index)
+        {
+            ScriptReference_FieldIndex enu = (ScriptReference_FieldIndex)index;
+            switch (enu)
+            {
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public virtual void SetNthException(int index, Exception ex)
         {
             ScriptReference_FieldIndex enu = (ScriptReference_FieldIndex)index;

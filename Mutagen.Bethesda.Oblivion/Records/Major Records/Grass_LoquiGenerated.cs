@@ -2681,6 +2681,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Grass_FieldIndex enu = (Grass_FieldIndex)index;
+            switch (enu)
+            {
+                case Grass_FieldIndex.Model:
+                    return Model;
+                case Grass_FieldIndex.Density:
+                    return Density;
+                case Grass_FieldIndex.MinSlope:
+                    return MinSlope;
+                case Grass_FieldIndex.MaxSlope:
+                    return MaxSlope;
+                case Grass_FieldIndex.UnitFromWaterAmount:
+                    return UnitFromWaterAmount;
+                case Grass_FieldIndex.UnitFromWaterMode:
+                    return UnitFromWaterMode;
+                case Grass_FieldIndex.PositionRange:
+                    return PositionRange;
+                case Grass_FieldIndex.HeightRange:
+                    return HeightRange;
+                case Grass_FieldIndex.ColorRange:
+                    return ColorRange;
+                case Grass_FieldIndex.WavePeriod:
+                    return WavePeriod;
+                case Grass_FieldIndex.Flags:
+                    return Flags;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Grass_FieldIndex enu = (Grass_FieldIndex)index;

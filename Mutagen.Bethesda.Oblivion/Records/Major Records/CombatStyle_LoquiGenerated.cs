@@ -1333,6 +1333,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class CombatStyle_ErrorMask : MajorRecord_ErrorMask, IErrorMask<CombatStyle_ErrorMask>
     {
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
+            switch (enu)
+            {
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;

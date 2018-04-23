@@ -2665,6 +2665,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Book_FieldIndex enu = (Book_FieldIndex)index;
+            switch (enu)
+            {
+                case Book_FieldIndex.Model:
+                    return Model;
+                case Book_FieldIndex.Icon:
+                    return Icon;
+                case Book_FieldIndex.Script:
+                    return Script;
+                case Book_FieldIndex.Enchantment:
+                    return Enchantment;
+                case Book_FieldIndex.EnchantmentPoints:
+                    return EnchantmentPoints;
+                case Book_FieldIndex.Description:
+                    return Description;
+                case Book_FieldIndex.Flags:
+                    return Flags;
+                case Book_FieldIndex.Teaches:
+                    return Teaches;
+                case Book_FieldIndex.Value:
+                    return Value;
+                case Book_FieldIndex.Weight:
+                    return Weight;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Book_FieldIndex enu = (Book_FieldIndex)index;

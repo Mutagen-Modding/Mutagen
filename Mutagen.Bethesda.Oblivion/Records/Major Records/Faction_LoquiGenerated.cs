@@ -2236,6 +2236,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Faction_FieldIndex enu = (Faction_FieldIndex)index;
+            switch (enu)
+            {
+                case Faction_FieldIndex.Relations:
+                    return Relations;
+                case Faction_FieldIndex.Flags:
+                    return Flags;
+                case Faction_FieldIndex.CrimeGoldMultiplier:
+                    return CrimeGoldMultiplier;
+                case Faction_FieldIndex.Ranks:
+                    return Ranks;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Faction_FieldIndex enu = (Faction_FieldIndex)index;

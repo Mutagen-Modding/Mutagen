@@ -9403,6 +9403,144 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            NPC_FieldIndex enu = (NPC_FieldIndex)index;
+            switch (enu)
+            {
+                case NPC_FieldIndex.Model:
+                    return Model;
+                case NPC_FieldIndex.NPCFlags:
+                    return NPCFlags;
+                case NPC_FieldIndex.BaseSpellPoints:
+                    return BaseSpellPoints;
+                case NPC_FieldIndex.Fatigue:
+                    return Fatigue;
+                case NPC_FieldIndex.BarterGold:
+                    return BarterGold;
+                case NPC_FieldIndex.LevelOffset:
+                    return LevelOffset;
+                case NPC_FieldIndex.CalcMin:
+                    return CalcMin;
+                case NPC_FieldIndex.CalcMax:
+                    return CalcMax;
+                case NPC_FieldIndex.Factions:
+                    return Factions;
+                case NPC_FieldIndex.DeathItem:
+                    return DeathItem;
+                case NPC_FieldIndex.Race:
+                    return Race;
+                case NPC_FieldIndex.Spells:
+                    return Spells;
+                case NPC_FieldIndex.Script:
+                    return Script;
+                case NPC_FieldIndex.Items:
+                    return Items;
+                case NPC_FieldIndex.Aggression:
+                    return Aggression;
+                case NPC_FieldIndex.Confidence:
+                    return Confidence;
+                case NPC_FieldIndex.EnergyLevel:
+                    return EnergyLevel;
+                case NPC_FieldIndex.Responsibility:
+                    return Responsibility;
+                case NPC_FieldIndex.BuySellServices:
+                    return BuySellServices;
+                case NPC_FieldIndex.Teaches:
+                    return Teaches;
+                case NPC_FieldIndex.MaximumTrainingLevel:
+                    return MaximumTrainingLevel;
+                case NPC_FieldIndex.Fluff:
+                    return Fluff;
+                case NPC_FieldIndex.AIPackages:
+                    return AIPackages;
+                case NPC_FieldIndex.Animations:
+                    return Animations;
+                case NPC_FieldIndex.Class:
+                    return Class;
+                case NPC_FieldIndex.Armorer:
+                    return Armorer;
+                case NPC_FieldIndex.Athletics:
+                    return Athletics;
+                case NPC_FieldIndex.Blade:
+                    return Blade;
+                case NPC_FieldIndex.Block:
+                    return Block;
+                case NPC_FieldIndex.Blunt:
+                    return Blunt;
+                case NPC_FieldIndex.HandToHand:
+                    return HandToHand;
+                case NPC_FieldIndex.HeavyArmor:
+                    return HeavyArmor;
+                case NPC_FieldIndex.Alchemy:
+                    return Alchemy;
+                case NPC_FieldIndex.Alteration:
+                    return Alteration;
+                case NPC_FieldIndex.Conjuration:
+                    return Conjuration;
+                case NPC_FieldIndex.Destruction:
+                    return Destruction;
+                case NPC_FieldIndex.Illusion:
+                    return Illusion;
+                case NPC_FieldIndex.Mysticism:
+                    return Mysticism;
+                case NPC_FieldIndex.Restoration:
+                    return Restoration;
+                case NPC_FieldIndex.Acrobatics:
+                    return Acrobatics;
+                case NPC_FieldIndex.LightArmor:
+                    return LightArmor;
+                case NPC_FieldIndex.Marksman:
+                    return Marksman;
+                case NPC_FieldIndex.Mercantile:
+                    return Mercantile;
+                case NPC_FieldIndex.Security:
+                    return Security;
+                case NPC_FieldIndex.Sneak:
+                    return Sneak;
+                case NPC_FieldIndex.Speechcraft:
+                    return Speechcraft;
+                case NPC_FieldIndex.Health:
+                    return Health;
+                case NPC_FieldIndex.Strength:
+                    return Strength;
+                case NPC_FieldIndex.Intelligence:
+                    return Intelligence;
+                case NPC_FieldIndex.Willpower:
+                    return Willpower;
+                case NPC_FieldIndex.Agility:
+                    return Agility;
+                case NPC_FieldIndex.Speed:
+                    return Speed;
+                case NPC_FieldIndex.Endurance:
+                    return Endurance;
+                case NPC_FieldIndex.Personality:
+                    return Personality;
+                case NPC_FieldIndex.Luck:
+                    return Luck;
+                case NPC_FieldIndex.Hair:
+                    return Hair;
+                case NPC_FieldIndex.HairLength:
+                    return HairLength;
+                case NPC_FieldIndex.Eyes:
+                    return Eyes;
+                case NPC_FieldIndex.HairColor:
+                    return HairColor;
+                case NPC_FieldIndex.CombatStyle:
+                    return CombatStyle;
+                case NPC_FieldIndex.FaceGenGeometrySymmetric:
+                    return FaceGenGeometrySymmetric;
+                case NPC_FieldIndex.FaceGenGeometryAsymmetric:
+                    return FaceGenGeometryAsymmetric;
+                case NPC_FieldIndex.FaceGenTextureSymmetric:
+                    return FaceGenTextureSymmetric;
+                case NPC_FieldIndex.Unknown:
+                    return Unknown;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             NPC_FieldIndex enu = (NPC_FieldIndex)index;

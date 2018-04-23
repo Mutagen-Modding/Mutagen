@@ -1601,6 +1601,20 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            switch (enu)
+            {
+                case MasterReference_FieldIndex.Master:
+                    return Master;
+                case MasterReference_FieldIndex.FileSize:
+                    return FileSize;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;

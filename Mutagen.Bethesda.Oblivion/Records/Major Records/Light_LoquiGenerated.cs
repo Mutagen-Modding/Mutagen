@@ -3063,6 +3063,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Light_FieldIndex enu = (Light_FieldIndex)index;
+            switch (enu)
+            {
+                case Light_FieldIndex.Model:
+                    return Model;
+                case Light_FieldIndex.Script:
+                    return Script;
+                case Light_FieldIndex.Name:
+                    return Name;
+                case Light_FieldIndex.Icon:
+                    return Icon;
+                case Light_FieldIndex.Time:
+                    return Time;
+                case Light_FieldIndex.Radius:
+                    return Radius;
+                case Light_FieldIndex.Color:
+                    return Color;
+                case Light_FieldIndex.Flags:
+                    return Flags;
+                case Light_FieldIndex.FalloffExponent:
+                    return FalloffExponent;
+                case Light_FieldIndex.FOV:
+                    return FOV;
+                case Light_FieldIndex.Value:
+                    return Value;
+                case Light_FieldIndex.Weight:
+                    return Weight;
+                case Light_FieldIndex.Fade:
+                    return Fade;
+                case Light_FieldIndex.Sound:
+                    return Sound;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Light_FieldIndex enu = (Light_FieldIndex)index;

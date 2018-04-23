@@ -1551,6 +1551,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Static_FieldIndex enu = (Static_FieldIndex)index;
+            switch (enu)
+            {
+                case Static_FieldIndex.Model:
+                    return Model;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Static_FieldIndex enu = (Static_FieldIndex)index;

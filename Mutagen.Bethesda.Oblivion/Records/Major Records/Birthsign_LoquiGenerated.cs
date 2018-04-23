@@ -1914,6 +1914,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
+            switch (enu)
+            {
+                case Birthsign_FieldIndex.Icon:
+                    return Icon;
+                case Birthsign_FieldIndex.Description:
+                    return Description;
+                case Birthsign_FieldIndex.Spells:
+                    return Spells;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;

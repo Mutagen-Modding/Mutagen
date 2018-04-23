@@ -3002,6 +3002,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Tree_FieldIndex enu = (Tree_FieldIndex)index;
+            switch (enu)
+            {
+                case Tree_FieldIndex.Model:
+                    return Model;
+                case Tree_FieldIndex.Icon:
+                    return Icon;
+                case Tree_FieldIndex.SpeedTreeSeeds:
+                    return SpeedTreeSeeds;
+                case Tree_FieldIndex.LeafCurvature:
+                    return LeafCurvature;
+                case Tree_FieldIndex.MinimumLeafAngle:
+                    return MinimumLeafAngle;
+                case Tree_FieldIndex.MaximumLeafAngle:
+                    return MaximumLeafAngle;
+                case Tree_FieldIndex.BranchDimmingValue:
+                    return BranchDimmingValue;
+                case Tree_FieldIndex.LeafDimmingValue:
+                    return LeafDimmingValue;
+                case Tree_FieldIndex.ShadowRadius:
+                    return ShadowRadius;
+                case Tree_FieldIndex.RockingSpeed:
+                    return RockingSpeed;
+                case Tree_FieldIndex.RustleSpeed:
+                    return RustleSpeed;
+                case Tree_FieldIndex.BillboardWidth:
+                    return BillboardWidth;
+                case Tree_FieldIndex.BillboardHeight:
+                    return BillboardHeight;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Tree_FieldIndex enu = (Tree_FieldIndex)index;

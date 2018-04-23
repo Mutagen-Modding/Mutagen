@@ -1950,6 +1950,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
+            switch (enu)
+            {
+                case LeveledItem_FieldIndex.ChanceNone:
+                    return ChanceNone;
+                case LeveledItem_FieldIndex.Flags:
+                    return Flags;
+                case LeveledItem_FieldIndex.Entries:
+                    return Entries;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;

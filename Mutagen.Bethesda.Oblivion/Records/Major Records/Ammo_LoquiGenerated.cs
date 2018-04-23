@@ -2647,6 +2647,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Ammo_FieldIndex enu = (Ammo_FieldIndex)index;
+            switch (enu)
+            {
+                case Ammo_FieldIndex.Name:
+                    return Name;
+                case Ammo_FieldIndex.Model:
+                    return Model;
+                case Ammo_FieldIndex.Icon:
+                    return Icon;
+                case Ammo_FieldIndex.Enchantment:
+                    return Enchantment;
+                case Ammo_FieldIndex.EnchantmentPoints:
+                    return EnchantmentPoints;
+                case Ammo_FieldIndex.Speed:
+                    return Speed;
+                case Ammo_FieldIndex.Flags:
+                    return Flags;
+                case Ammo_FieldIndex.Value:
+                    return Value;
+                case Ammo_FieldIndex.Weight:
+                    return Weight;
+                case Ammo_FieldIndex.Damage:
+                    return Damage;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Ammo_FieldIndex enu = (Ammo_FieldIndex)index;

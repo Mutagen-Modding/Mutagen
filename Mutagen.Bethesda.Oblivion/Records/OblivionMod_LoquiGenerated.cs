@@ -8655,6 +8655,102 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;
+            switch (enu)
+            {
+                case OblivionMod_FieldIndex.TES4:
+                    return TES4;
+                case OblivionMod_FieldIndex.GameSettings:
+                    return GameSettings;
+                case OblivionMod_FieldIndex.Globals:
+                    return Globals;
+                case OblivionMod_FieldIndex.Classes:
+                    return Classes;
+                case OblivionMod_FieldIndex.Factions:
+                    return Factions;
+                case OblivionMod_FieldIndex.Hairs:
+                    return Hairs;
+                case OblivionMod_FieldIndex.Eyes:
+                    return Eyes;
+                case OblivionMod_FieldIndex.Races:
+                    return Races;
+                case OblivionMod_FieldIndex.Sounds:
+                    return Sounds;
+                case OblivionMod_FieldIndex.Skills:
+                    return Skills;
+                case OblivionMod_FieldIndex.MagicEffects:
+                    return MagicEffects;
+                case OblivionMod_FieldIndex.Scripts:
+                    return Scripts;
+                case OblivionMod_FieldIndex.LandTextures:
+                    return LandTextures;
+                case OblivionMod_FieldIndex.Enchantments:
+                    return Enchantments;
+                case OblivionMod_FieldIndex.Spells:
+                    return Spells;
+                case OblivionMod_FieldIndex.Birthsigns:
+                    return Birthsigns;
+                case OblivionMod_FieldIndex.Activators:
+                    return Activators;
+                case OblivionMod_FieldIndex.AlchemicalApparatus:
+                    return AlchemicalApparatus;
+                case OblivionMod_FieldIndex.Armors:
+                    return Armors;
+                case OblivionMod_FieldIndex.Books:
+                    return Books;
+                case OblivionMod_FieldIndex.Clothes:
+                    return Clothes;
+                case OblivionMod_FieldIndex.Containers:
+                    return Containers;
+                case OblivionMod_FieldIndex.Doors:
+                    return Doors;
+                case OblivionMod_FieldIndex.Ingredients:
+                    return Ingredients;
+                case OblivionMod_FieldIndex.Lights:
+                    return Lights;
+                case OblivionMod_FieldIndex.Miscellaneous:
+                    return Miscellaneous;
+                case OblivionMod_FieldIndex.Statics:
+                    return Statics;
+                case OblivionMod_FieldIndex.Grasses:
+                    return Grasses;
+                case OblivionMod_FieldIndex.Trees:
+                    return Trees;
+                case OblivionMod_FieldIndex.Flora:
+                    return Flora;
+                case OblivionMod_FieldIndex.Furnature:
+                    return Furnature;
+                case OblivionMod_FieldIndex.Weapons:
+                    return Weapons;
+                case OblivionMod_FieldIndex.Ammo:
+                    return Ammo;
+                case OblivionMod_FieldIndex.NPCs:
+                    return NPCs;
+                case OblivionMod_FieldIndex.Creatures:
+                    return Creatures;
+                case OblivionMod_FieldIndex.LeveledCreatures:
+                    return LeveledCreatures;
+                case OblivionMod_FieldIndex.SoulGems:
+                    return SoulGems;
+                case OblivionMod_FieldIndex.Keys:
+                    return Keys;
+                case OblivionMod_FieldIndex.Potions:
+                    return Potions;
+                case OblivionMod_FieldIndex.Subspaces:
+                    return Subspaces;
+                case OblivionMod_FieldIndex.SigilStones:
+                    return SigilStones;
+                case OblivionMod_FieldIndex.LeveledItems:
+                    return LeveledItems;
+                case OblivionMod_FieldIndex.Weathers:
+                    return Weathers;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;

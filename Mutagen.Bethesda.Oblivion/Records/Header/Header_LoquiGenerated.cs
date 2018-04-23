@@ -1633,6 +1633,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            Header_FieldIndex enu = (Header_FieldIndex)index;
+            switch (enu)
+            {
+                case Header_FieldIndex.Version:
+                    return Version;
+                case Header_FieldIndex.NumRecords:
+                    return NumRecords;
+                case Header_FieldIndex.NextObjectID:
+                    return NextObjectID;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             Header_FieldIndex enu = (Header_FieldIndex)index;

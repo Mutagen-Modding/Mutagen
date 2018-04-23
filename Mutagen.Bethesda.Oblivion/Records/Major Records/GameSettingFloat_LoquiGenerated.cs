@@ -1542,6 +1542,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            GameSettingFloat_FieldIndex enu = (GameSettingFloat_FieldIndex)index;
+            switch (enu)
+            {
+                case GameSettingFloat_FieldIndex.Data:
+                    return Data;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             GameSettingFloat_FieldIndex enu = (GameSettingFloat_FieldIndex)index;

@@ -195,7 +195,17 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<EffectShader> IMagicEffectGetter.EffectShader_Property => this.EffectShader_Property;
         #endregion
         #region SubData
-        private readonly INotifyingItem<MagicEffectSubData> _SubData = new NotifyingItem<MagicEffectSubData>();
+        private readonly INotifyingItem<MagicEffectSubData> _SubData = new NotifyingItemConvertWrapper<MagicEffectSubData>(
+            defaultVal: new MagicEffectSubData(),
+            incomingConverter: (change) =>
+            {
+                if (change.New == null)
+                {
+                    return TryGet<MagicEffectSubData>.Succeed(new MagicEffectSubData());
+                }
+                return TryGet<MagicEffectSubData>.Succeed(change.New);
+            }
+        );
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingItem<MagicEffectSubData> SubData_Property => this._SubData;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -773,12 +783,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
             yield return Light_Property;
             yield return EffectShader_Property;
-            if (SubData != null)
+            foreach (var item in SubData.Links)
             {
-                foreach (var item in SubData.Links)
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }
@@ -3229,6 +3236,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
+            switch (enu)
+            {
+                case MagicEffect_FieldIndex.Description:
+                    return Description;
+                case MagicEffect_FieldIndex.Icon:
+                    return Icon;
+                case MagicEffect_FieldIndex.Model:
+                    return Model;
+                case MagicEffect_FieldIndex.Flags:
+                    return Flags;
+                case MagicEffect_FieldIndex.BaseCost:
+                    return BaseCost;
+                case MagicEffect_FieldIndex.Unused:
+                    return Unused;
+                case MagicEffect_FieldIndex.MagicSchool:
+                    return MagicSchool;
+                case MagicEffect_FieldIndex.Resistance:
+                    return Resistance;
+                case MagicEffect_FieldIndex.CounterEffectCount:
+                    return CounterEffectCount;
+                case MagicEffect_FieldIndex.Light:
+                    return Light;
+                case MagicEffect_FieldIndex.ProjectileSpeed:
+                    return ProjectileSpeed;
+                case MagicEffect_FieldIndex.EffectShader:
+                    return EffectShader;
+                case MagicEffect_FieldIndex.SubData:
+                    return SubData;
+                case MagicEffect_FieldIndex.CounterEffects:
+                    return CounterEffects;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
