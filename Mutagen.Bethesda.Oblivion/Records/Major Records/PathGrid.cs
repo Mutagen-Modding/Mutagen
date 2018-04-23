@@ -42,6 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
                 throw new ArgumentException($"Unexpected point byte length, when compared to expected point count. {pointBytes.Length} bytes: {bytePointsNum} != {ptCount} points.");
             }
 
+            bool readPGRR = false;
             for (int recAttempt = 0; recAttempt < 2; recAttempt++)
             {
                 nextRec = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out len);
@@ -65,13 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
                             {
                                 for (int i = 0; i < pointBytes.Length; i = i + POINT_LEN)
                                 {
-                                    var pt = new PathGridPoint();
-                                    pt.Point = new Noggog.P3Float(
-                                        ptByteReader.ReadFloat(),
-                                        ptByteReader.ReadFloat(),
-                                        ptByteReader.ReadFloat());
-                                    var numConn = ptByteReader.ReadByte();
-                                    pt.NumConnectionsFluffBytes = ptByteReader.ReadBytes(3);
+                                    var pt = ReadPathGridPoint(ptByteReader, out var numConn);
                                     for (int j = 0; j < numConn; j++)
                                     {
                                         pt.Connections.Add(
@@ -86,12 +81,37 @@ namespace Mutagen.Bethesda.Oblivion
                                 }
                             }
                         }
+                        readPGRR = true;
                         break;
                     default:
                         frame.Reader.Position -= Constants.SUBRECORD_LENGTH;
-                        return;
+                        break;
                 }
             }
+
+            if (!readPGRR)
+            {
+                using (var ptByteReader = new MutagenReader(pointBytes))
+                {
+                    while (!ptByteReader.Complete)
+                    {
+                        item.PointToPointConnections.Add(
+                            ReadPathGridPoint(ptByteReader, out var numConn));
+                    }
+                }
+            }
+        }
+
+        private static PathGridPoint ReadPathGridPoint(MutagenReader reader, out byte numConn)
+        {
+            var pt = new PathGridPoint();
+            pt.Point = new Noggog.P3Float(
+                reader.ReadFloat(),
+                reader.ReadFloat(),
+                reader.ReadFloat());
+            numConn = reader.ReadByte();
+            pt.NumConnectionsFluffBytes = reader.ReadBytes(3);
+            return pt;
         }
 
         static partial void WriteBinary_PointToPointConnections_Custom(MutagenWriter writer, PathGrid item, int fieldIndex, Func<PathGrid_ErrorMask> errorMask)
@@ -101,6 +121,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer.Write((ushort)item.PointToPointConnections.Count);
             }
 
+            bool anyConnections = false;
             using (HeaderExport.ExportSubRecordHeader(writer, PGRP))
             {
                 foreach (var pt in item.PointToPointConnections)
@@ -110,6 +131,10 @@ namespace Mutagen.Bethesda.Oblivion
                     writer.Write(pt.Point.Z);
                     writer.Write((byte)(pt.Connections.Count));
                     writer.Write(pt.NumConnectionsFluffBytes);
+                    if (pt.Connections.Count > 0)
+                    {
+                        anyConnections = true;
+                    }
                 }
             }
 
@@ -121,6 +146,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
+            if (!anyConnections) return;
             using (HeaderExport.ExportSubRecordHeader(writer, PGRR))
             {
                 foreach (var pt in item.PointToPointConnections)

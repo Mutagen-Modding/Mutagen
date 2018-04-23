@@ -17,7 +17,9 @@ namespace Mutagen.Bethesda.Tests
 {
     public class Oblivion_Passthrough_Tests
     {
-        private BinaryProcessorInstructions GetOblivionInstructions()
+        private BinaryProcessorInstructions GetOblivionInstructions(
+            Dictionary<FileLocation, uint> lengthTracker,
+            MajorRecordLocator.FileLocations fileLocs)
         {
             var instructions = new BinaryProcessorInstructions();
             instructions.Instruction.Substitutions.Add(new DataTarget()
@@ -56,6 +58,7 @@ namespace Mutagen.Bethesda.Tests
             ProcessLeveledItemDataFields(rec, instr, filePath, loc, processing);
             ProcessRegions(rec, instr, filePath, loc, processing);
             ProcessPlacedObject_Mismatch(rec, instr, filePath, loc, fileLocs, lengthTracker, processing);
+            ProcessCells(rec, instr, filePath, loc, fileLocs, lengthTracker, processing);
         }
 
         private void ProcessNPC_Mismatch(
@@ -362,6 +365,88 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
+        private void ProcessCells(
+            MajorRecord rec,
+            Instruction instr,
+            string filePath,
+            FileSection loc,
+            MajorRecordLocator.FileLocations fileLocs,
+            Dictionary<FileLocation, uint> lengthTracker,
+            bool processing)
+        {
+            if (!processing) return;
+            if (!(rec is Cell cell)) return;
+
+            // Clean empty child groups
+            List<RangeInt64> moves = new List<RangeInt64>();
+            FileLocation grupPos;
+            using (var stream = new MutagenReader(filePath))
+            {
+                stream.Position = loc.Min + 4;
+                var len = stream.ReadUInt32();
+                stream.Position += len + 12;
+                grupPos = stream.Position;
+                var grup = stream.ReadString(4);
+                if (!grup.Equals("GRUP")) return;
+                var grupLen = stream.ReadUInt32();
+                if (grupLen == 0x14)
+                {
+                    moves.Add(new RangeInt64(grupPos, grupPos + 0x14));
+                }
+                else
+                {
+                    stream.Position += 4;
+                    var grupType = (GroupTypeEnum)stream.ReadUInt32();
+                    if (grupType != GroupTypeEnum.CellChildren) return;
+                    stream.Position += 4;
+                    for (int i = 0; i < 3; i++)
+                    {
+                        var startPos = stream.Position;
+                        var subGrup = stream.ReadString(4);
+                        if (!subGrup.Equals("GRUP")) break;
+                        var subGrupLen = stream.ReadUInt32();
+                        stream.Position = startPos + subGrupLen;
+                        if (subGrupLen == 0x14)
+                        { // Empty group
+                            lengthTracker[grupPos] = lengthTracker[grupPos] - 0x14;
+                            moves.Add(new RangeInt64(stream.Position - 0x14, stream.Position - 1));
+                        }
+                    }
+                }
+            }
+
+            if (moves.Count == 0) return;
+            var parentGrups = fileLocs.GetContainingGroupLocations(rec.FormID);
+            foreach (var move in moves)
+            {
+                instr.Moves.Add(
+                    new Move()
+                    {
+                        LocationToMove = long.MaxValue,
+                        SectionToMove = move
+                    });
+                foreach (var parentGroup in parentGrups)
+                {
+                    lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] - move.Width);
+                }
+            }
+
+            if (lengthTracker[grupPos] == 0x14)
+            {
+                var move = new RangeInt64(grupPos, grupPos + 0x13);
+                instr.Moves.Add(
+                    new Move()
+                    {
+                        LocationToMove = long.MaxValue,
+                        SectionToMove = move
+                    });
+                foreach (var parentGroup in parentGrups)
+                {
+                    lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] - move.Width);
+                }
+            }
+        }
+
         private bool DynamicMove(
             Instruction instr,
             string filePath,
@@ -506,9 +591,7 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
 
-            var instructions = GetOblivionInstructions();
-
-            await OblivionESM_Typical(mod, instructions, inputErrMask: inputErrMask, deleteAfter: deleteAfter);
+            await OblivionESM_Typical(mod, inputErrMask: inputErrMask, deleteAfter: deleteAfter);
         }
 
         public ModAligner.AlignmentRules GetAlignmentRules()
@@ -588,7 +671,6 @@ namespace Mutagen.Bethesda.Tests
 
         private async Task OblivionESM_Typical(
             OblivionMod mod,
-            BinaryProcessorInstructions instructions,
             OblivionMod_ErrorMask inputErrMask,
             bool deleteAfter)
         {
@@ -624,6 +706,10 @@ namespace Mutagen.Bethesda.Tests
                         lengthTracker[grup] = reader.ReadUInt32();
                     }
                 }
+
+                var instructions = GetOblivionInstructions(
+                    lengthTracker,
+                    alignedFileLocs);
 
                 foreach (var rec in mod.MajorRecords.Values)
                 {
