@@ -21,7 +21,8 @@ namespace Mutagen.Bethesda.Oblivion
             EitherAtMostAbove = 6,
             EitherAtMostBelow = 7,
         }
-
+        
+        [Flags]
         public enum GrassFlag
         {
             VertexLighting = 0x01,

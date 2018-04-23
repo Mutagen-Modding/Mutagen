@@ -15,8 +15,7 @@ namespace Mutagen.Bethesda.Binary
         {
             try
             {
-                var parse = ParseValue(frame);
-                errorMask = null;
+                var parse = ParseValue(frame, out errorMask);
                 return TryGet<E>.Succeed(parse);
             }
             catch (Exception ex)
@@ -305,6 +304,16 @@ namespace Mutagen.Bethesda.Binary
 
         public E ParseValue(MutagenFrame reader)
         {
+            var ret = ParseValue(reader, out var ex);
+            if (ex != null)
+            {
+                throw ex;
+            }
+            return ret;
+        }
+
+        public E ParseValue(MutagenFrame reader, out Exception ex)
+        {
             int i;
             switch (reader.RemainingLength.Value)
             {
@@ -320,7 +329,21 @@ namespace Mutagen.Bethesda.Binary
                 default:
                     throw new NotImplementedException();
             }
-            return (E)Enum.ToObject(typeof(E), i);
+            if (EnumExt<E>.IsFlagsEnum())
+            {
+                ex = null;
+                return (E)Enum.ToObject(typeof(E), i);
+            }
+            else
+            {
+                if (!EnumExt.TryParse<E>(i, out var e))
+                {
+                    ex = new ArgumentException($"Undefined {typeof(E).Name} enum value: {i}");
+                    return (E)Enum.ToObject(typeof(E), i);
+                }
+                ex = null;
+                return e;
+            }
         }
 
         protected void WriteValue(MutagenWriter writer, E item, ContentLength length)

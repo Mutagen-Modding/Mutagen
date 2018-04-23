@@ -14,7 +14,9 @@ namespace Mutagen.Bethesda.Oblivion
             Pleasent = 1,
             Cloudy = 2,
             Unknown3 = 3,
-            Rainy = 4
+            Rainy = 4,
+            Snow = 8,
+            Pleasent2 = 0xC1,
         }
     }
 }

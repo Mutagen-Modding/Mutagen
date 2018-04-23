@@ -103,18 +103,18 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Effect.EffectType> IEffectGetter.Type_Property => this.Type_Property;
         #endregion
         #region ActorValue
-        protected readonly INotifyingItem<ActorValue> _ActorValue = NotifyingItem.Factory<ActorValue>();
-        public INotifyingItem<ActorValue> ActorValue_Property => _ActorValue;
+        protected readonly INotifyingItem<ActorValueExtended> _ActorValue = NotifyingItem.Factory<ActorValueExtended>();
+        public INotifyingItem<ActorValueExtended> ActorValue_Property => _ActorValue;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public ActorValue ActorValue
+        public ActorValueExtended ActorValue
         {
             get => this._ActorValue.Item;
             set => this._ActorValue.Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<ActorValue> IEffect.ActorValue_Property => this.ActorValue_Property;
+        INotifyingItem<ActorValueExtended> IEffect.ActorValue_Property => this.ActorValue_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<ActorValue> IEffectGetter.ActorValue_Property => this.ActorValue_Property;
+        INotifyingItemGetter<ActorValueExtended> IEffectGetter.ActorValue_Property => this.ActorValue_Property;
         #endregion
         #region ScriptEffect
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "ActorValue":
-                    item._ActorValue.SetIfSucceeded(EnumXmlTranslation<ActorValue>.Instance.Parse(
+                    item._ActorValue.SetIfSucceeded(EnumXmlTranslation<ActorValueExtended>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Effect_FieldIndex.ActorValue,
@@ -836,7 +836,7 @@ namespace Mutagen.Bethesda.Oblivion
                             frame: dataFrame.Spawn(new ContentLength(4)),
                             fieldIndex: (int)Effect_FieldIndex.Type,
                             errorMask: errorMask));
-                        item._ActorValue.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                        item._ActorValue.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(4)),
                             fieldIndex: (int)Effect_FieldIndex.ActorValue,
                             errorMask: errorMask));
@@ -965,7 +965,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case Effect_FieldIndex.ActorValue:
                     this._ActorValue.Set(
-                        (ActorValue)obj,
+                        (ActorValueExtended)obj,
                         cmds);
                     break;
                 case Effect_FieldIndex.ScriptEffect:
@@ -1037,7 +1037,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case Effect_FieldIndex.ActorValue:
                     obj._ActorValue.Set(
-                        (ActorValue)pair.Value,
+                        (ActorValueExtended)pair.Value,
                         null);
                     break;
                 case Effect_FieldIndex.ScriptEffect:
@@ -1073,8 +1073,8 @@ namespace Mutagen.Bethesda.Oblivion
         new Effect.EffectType Type { get; set; }
         new INotifyingItem<Effect.EffectType> Type_Property { get; }
 
-        new ActorValue ActorValue { get; set; }
-        new INotifyingItem<ActorValue> ActorValue_Property { get; }
+        new ActorValueExtended ActorValue { get; set; }
+        new INotifyingItem<ActorValueExtended> ActorValue_Property { get; }
 
         new ScriptEffect ScriptEffect { get; set; }
         new INotifyingSetItem<ScriptEffect> ScriptEffect_Property { get; }
@@ -1109,8 +1109,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region ActorValue
-        ActorValue ActorValue { get; }
-        INotifyingItemGetter<ActorValue> ActorValue_Property { get; }
+        ActorValueExtended ActorValue { get; }
+        INotifyingItemGetter<ActorValueExtended> ActorValue_Property { get; }
 
         #endregion
         #region ScriptEffect
@@ -1332,7 +1332,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Effect_FieldIndex.Type:
                     return typeof(Effect.EffectType);
                 case Effect_FieldIndex.ActorValue:
-                    return typeof(ActorValue);
+                    return typeof(ActorValueExtended);
                 case Effect_FieldIndex.ScriptEffect:
                     return typeof(ScriptEffect);
                 default:
@@ -1640,7 +1640,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Type = default(Effect.EffectType);
                     break;
                 case Effect_FieldIndex.ActorValue:
-                    obj.ActorValue = default(ActorValue);
+                    obj.ActorValue = default(ActorValueExtended);
                     break;
                 case Effect_FieldIndex.ScriptEffect:
                     obj.ScriptEffect_Property.Unset(cmds);
@@ -1706,7 +1706,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Area = default(UInt32);
             item.Duration = default(UInt32);
             item.Type = default(Effect.EffectType);
-            item.ActorValue = default(ActorValue);
+            item.ActorValue = default(ActorValueExtended);
             item.ScriptEffect_Property.Unset(cmds.ToUnsetParams());
         }
 
@@ -1877,7 +1877,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.Type_Property,
                         fieldIndex: (int)Effect_FieldIndex.Type,
                         errorMask: errorMask);
-                    EnumXmlTranslation<ActorValue>.Instance.Write(
+                    EnumXmlTranslation<ActorValueExtended>.Instance.Write(
                         writer: writer,
                         name: nameof(item.ActorValue),
                         item: item.ActorValue_Property,
@@ -1982,7 +1982,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     length: new ContentLength(4),
                     fieldIndex: (int)Effect_FieldIndex.Type,
                     errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Write(
                     writer,
                     item.ActorValue_Property,
                     length: new ContentLength(4),

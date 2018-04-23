@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
+    [Flags]
     public enum BipedFlag
     {
         Head = 0x0001,

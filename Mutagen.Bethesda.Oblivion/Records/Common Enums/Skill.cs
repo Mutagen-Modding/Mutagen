@@ -8,7 +8,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public enum Skill
     {
-        None = -1,
         Armorer = 0,
         Athletics = 1,
         Blade = 2,
@@ -29,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
         Mercantile = 17,
         Security = 18,
         Sneak = 19,
-        Speechraft = 20
+        Speechraft = 20,
+        None = 255,
     }
 }

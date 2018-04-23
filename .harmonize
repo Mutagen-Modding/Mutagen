@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>fb6806614be50c60ecf455166045107de599810d</Sha>
+         <Sha>eb5eead7a38cc3a0213536175c821637ed3e66aa</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>04-13-2018 16:38:43</CommitDate>
-         <Description>TempFolder swapped to use DirectoryPath</Description>
+         <CommitDate>04-23-2018 16:26:39</CommitDate>
+         <Description>EnumExt.IsFlagsEnum</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>82c5e7887eaacb39e00b0e15aecd700b5dbc561c</Sha>
+         <Sha>080e3ae302b849c8768d378c01e95d2318cc49a0</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>04-11-2018 08:16:54</CommitDate>
-         <Description>doMasks now exposed as an optional parameter on translator API that has a mask out parameter</Description>
+         <CommitDate>04-23-2018 16:24:38</CommitDate>
+         <Description>Better LoquiXmlTranslation warnings when trying to translate null items</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

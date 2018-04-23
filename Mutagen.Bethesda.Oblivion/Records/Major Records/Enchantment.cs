@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Oblivion
             Scroll = 0,
             Staff = 1,
             Weapon = 2,
-            Apparel = 4
+            Apparel = 3
         }
 
         [Flags]

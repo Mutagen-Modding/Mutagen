@@ -10,7 +10,7 @@
           <UInt32 name="Area" />
           <UInt32 name="Duration" />
           <Enum name="Type" enumName="Effect.EffectType" byteLength="4" />
-          <Enum name="ActorValue" enumName="ActorValue" byteLength="4" />
+          <Enum name="ActorValue" enumName="ActorValueExtended" byteLength="4" />
         </Fields>
       </Data>
       <RefDirect name="ScriptEffect" refName="ScriptEffect" />
