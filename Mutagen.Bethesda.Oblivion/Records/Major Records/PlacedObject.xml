@@ -5,7 +5,9 @@
       <FormIDLink name="Base" recordType="NAME" refName="Bethesda.MajorRecord" />
       <RefDirect name="TeleportDestination" refName="TeleportDestination" />
       <RefDirect name="Lock" refName="LockInformation" />
-      <RefDirect name="Ownership" refName="Ownership" />
+      <FormIDLink name="Owner" recordType="XOWN" refName="Faction" />
+      <Int32 name="FactionRank" recordType="XRNK" />
+      <FormIDLink name="GlobalVariable" recordType="XGLB" refName="Global" />
       <RefDirect name="EnableParent" refName="EnableParent" />
       <FormIDLink name="Target" recordType="XTRG" refName="PlacedObject" />
       <UInt8 name="SpeedTreeSeed" recordType="XSED" />

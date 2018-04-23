@@ -28,7 +28,9 @@
       <Float name="WaterHeight" recordType="XCLW" />
       <FormIDLink name="Climate" recordType="XCCM" refName="Climate" />
       <FormIDLink name="Water" recordType="XCWT" refName="Water" />
-      <RefDirect name="Ownership" refName="Ownership" />
+      <FormIDLink name="Owner" recordType="XOWN" refName="Faction" />
+      <Int32 name="FactionRank" recordType="XRNK" />
+      <FormIDLink name="GlobalVariable" recordType="XGLB" refName="Global" />
       <RefDirect name="PathGrid" noBinary="true" refName="PathGrid" />
       <RefList name="Persistent" noBinary="true" refName="Placed" />
       <RefList name="Temporary" noBinary="true" refName="Placed" />

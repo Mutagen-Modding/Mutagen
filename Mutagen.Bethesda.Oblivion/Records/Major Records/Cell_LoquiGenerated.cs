@@ -145,18 +145,34 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Water> ICellGetter.Water_Property => this.Water_Property;
         #endregion
-        #region Ownership
+        #region Owner
+        public FormIDSetLink<Faction> Owner_Property { get; } = new FormIDSetLink<Faction>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<Ownership> _Ownership = new NotifyingSetItem<Ownership>();
-        public INotifyingSetItem<Ownership> Ownership_Property => this._Ownership;
+        public Faction Owner { get => Owner_Property.Item; set => Owner_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Ownership ICellGetter.Ownership => this.Ownership;
+        FormIDSetLink<Faction> ICellGetter.Owner_Property => this.Owner_Property;
+        #endregion
+        #region FactionRank
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Ownership Ownership { get => _Ownership.Item; set => _Ownership.Item = value; }
+        protected INotifyingSetItem<Int32> _FactionRank = NotifyingSetItem.Factory<Int32>(markAsSet: false);
+        public INotifyingSetItem<Int32> FactionRank_Property => _FactionRank;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Ownership> ICell.Ownership_Property => this.Ownership_Property;
+        public Int32 FactionRank
+        {
+            get => this._FactionRank.Item;
+            set => this._FactionRank.Set(value);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Ownership> ICellGetter.Ownership_Property => this.Ownership_Property;
+        INotifyingSetItem<Int32> ICell.FactionRank_Property => this.FactionRank_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<Int32> ICellGetter.FactionRank_Property => this.FactionRank_Property;
+        #endregion
+        #region GlobalVariable
+        public FormIDSetLink<Global> GlobalVariable_Property { get; } = new FormIDSetLink<Global>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public Global GlobalVariable { get => GlobalVariable_Property.Item; set => GlobalVariable_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        FormIDSetLink<Global> ICellGetter.GlobalVariable_Property => this.GlobalVariable_Property;
         #endregion
         #region PathGrid
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -324,10 +340,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (Water != rhs.Water) return false;
             }
-            if (Ownership_Property.HasBeenSet != rhs.Ownership_Property.HasBeenSet) return false;
-            if (Ownership_Property.HasBeenSet)
+            if (Owner_Property.HasBeenSet != rhs.Owner_Property.HasBeenSet) return false;
+            if (Owner_Property.HasBeenSet)
             {
-                if (!object.Equals(Ownership, rhs.Ownership)) return false;
+                if (Owner != rhs.Owner) return false;
+            }
+            if (FactionRank_Property.HasBeenSet != rhs.FactionRank_Property.HasBeenSet) return false;
+            if (FactionRank_Property.HasBeenSet)
+            {
+                if (FactionRank != rhs.FactionRank) return false;
+            }
+            if (GlobalVariable_Property.HasBeenSet != rhs.GlobalVariable_Property.HasBeenSet) return false;
+            if (GlobalVariable_Property.HasBeenSet)
+            {
+                if (GlobalVariable != rhs.GlobalVariable) return false;
             }
             if (PathGrid_Property.HasBeenSet != rhs.PathGrid_Property.HasBeenSet) return false;
             if (PathGrid_Property.HasBeenSet)
@@ -387,9 +413,17 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Water).CombineHashCode(ret);
             }
-            if (Ownership_Property.HasBeenSet)
+            if (Owner_Property.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(Ownership).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Owner).CombineHashCode(ret);
+            }
+            if (FactionRank_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(FactionRank).CombineHashCode(ret);
+            }
+            if (GlobalVariable_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(GlobalVariable).CombineHashCode(ret);
             }
             if (PathGrid_Property.HasBeenSet)
             {
@@ -683,10 +717,22 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Cell_FieldIndex.Water,
                         errorMask: errorMask));
                     break;
-                case "Ownership":
-                    item._Ownership.SetIfSucceeded(LoquiXmlTranslation<Ownership, Ownership_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)Cell_FieldIndex.Ownership,
+                case "Owner":
+                    item.Owner_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Cell_FieldIndex.Owner,
+                        errorMask: errorMask));
+                    break;
+                case "FactionRank":
+                    item._FactionRank.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Cell_FieldIndex.FactionRank,
+                        errorMask: errorMask));
+                    break;
+                case "GlobalVariable":
+                    item.GlobalVariable_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Cell_FieldIndex.GlobalVariable,
                         errorMask: errorMask));
                     break;
                 case "PathGrid":
@@ -760,13 +806,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
             yield return Climate_Property;
             yield return Water_Property;
-            if (Ownership != null)
-            {
-                foreach (var item in Ownership.Links)
-                {
-                    yield return item;
-                }
-            }
+            yield return Owner_Property;
+            yield return GlobalVariable_Property;
             if (PathGrid != null)
             {
                 foreach (var item in PathGrid.Links)
@@ -1065,13 +1106,26 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     return TryGet<Cell_FieldIndex?>.Succeed(Cell_FieldIndex.Water);
                 case "XOWN":
-                case "XRNK":
-                case "XGLB":
-                    item._Ownership.SetIfSucceeded(LoquiBinaryTranslation<Ownership, Ownership_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)Cell_FieldIndex.Ownership,
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    item.Owner_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)Cell_FieldIndex.Owner,
                         errorMask: errorMask));
-                    return TryGet<Cell_FieldIndex?>.Succeed(Cell_FieldIndex.Ownership);
+                    return TryGet<Cell_FieldIndex?>.Succeed(Cell_FieldIndex.Owner);
+                case "XRNK":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    item._FactionRank.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)Cell_FieldIndex.FactionRank,
+                        errorMask: errorMask));
+                    return TryGet<Cell_FieldIndex?>.Succeed(Cell_FieldIndex.FactionRank);
+                case "XGLB":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    item.GlobalVariable_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)Cell_FieldIndex.GlobalVariable,
+                        errorMask: errorMask));
+                    return TryGet<Cell_FieldIndex?>.Succeed(Cell_FieldIndex.GlobalVariable);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
@@ -1238,9 +1292,19 @@ namespace Mutagen.Bethesda.Oblivion
                         (FormIDSetLink<Water>)obj,
                         cmds);
                     break;
-                case Cell_FieldIndex.Ownership:
-                    this._Ownership.Set(
-                        (Ownership)obj,
+                case Cell_FieldIndex.Owner:
+                    this.Owner_Property.Set(
+                        (FormIDSetLink<Faction>)obj,
+                        cmds);
+                    break;
+                case Cell_FieldIndex.FactionRank:
+                    this._FactionRank.Set(
+                        (Int32)obj,
+                        cmds);
+                    break;
+                case Cell_FieldIndex.GlobalVariable:
+                    this.GlobalVariable_Property.Set(
+                        (FormIDSetLink<Global>)obj,
                         cmds);
                     break;
                 case Cell_FieldIndex.PathGrid:
@@ -1326,9 +1390,19 @@ namespace Mutagen.Bethesda.Oblivion
                         (FormIDSetLink<Water>)pair.Value,
                         null);
                     break;
-                case Cell_FieldIndex.Ownership:
-                    obj._Ownership.Set(
-                        (Ownership)pair.Value,
+                case Cell_FieldIndex.Owner:
+                    obj.Owner_Property.Set(
+                        (FormIDSetLink<Faction>)pair.Value,
+                        null);
+                    break;
+                case Cell_FieldIndex.FactionRank:
+                    obj._FactionRank.Set(
+                        (Int32)pair.Value,
+                        null);
+                    break;
+                case Cell_FieldIndex.GlobalVariable:
+                    obj.GlobalVariable_Property.Set(
+                        (FormIDSetLink<Global>)pair.Value,
                         null);
                     break;
                 case Cell_FieldIndex.PathGrid:
@@ -1378,9 +1452,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Climate Climate { get; set; }
         new Water Water { get; set; }
-        new Ownership Ownership { get; set; }
-        new INotifyingSetItem<Ownership> Ownership_Property { get; }
+        new Faction Owner { get; set; }
+        new Int32 FactionRank { get; set; }
+        new INotifyingSetItem<Int32> FactionRank_Property { get; }
 
+        new Global GlobalVariable { get; set; }
         new PathGrid PathGrid { get; set; }
         new INotifyingSetItem<PathGrid> PathGrid_Property { get; }
 
@@ -1429,9 +1505,19 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Water> Water_Property { get; }
 
         #endregion
-        #region Ownership
-        Ownership Ownership { get; }
-        INotifyingSetItemGetter<Ownership> Ownership_Property { get; }
+        #region Owner
+        Faction Owner { get; }
+        FormIDSetLink<Faction> Owner_Property { get; }
+
+        #endregion
+        #region FactionRank
+        Int32 FactionRank { get; }
+        INotifyingSetItemGetter<Int32> FactionRank_Property { get; }
+
+        #endregion
+        #region GlobalVariable
+        Global GlobalVariable { get; }
+        FormIDSetLink<Global> GlobalVariable_Property { get; }
 
         #endregion
         #region PathGrid
@@ -1474,11 +1560,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         WaterHeight = 11,
         Climate = 12,
         Water = 13,
-        Ownership = 14,
-        PathGrid = 15,
-        Persistent = 16,
-        Temporary = 17,
-        VisibleWhenDistant = 18,
+        Owner = 14,
+        FactionRank = 15,
+        GlobalVariable = 16,
+        PathGrid = 17,
+        Persistent = 18,
+        Temporary = 19,
+        VisibleWhenDistant = 20,
     }
     #endregion
 
@@ -1496,7 +1584,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "d54abb07-d896-4ddb-b857-9b9df945dd1e";
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(Cell_Mask<>);
 
@@ -1540,8 +1628,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Cell_FieldIndex.Climate;
                 case "WATER":
                     return (ushort)Cell_FieldIndex.Water;
-                case "OWNERSHIP":
-                    return (ushort)Cell_FieldIndex.Ownership;
+                case "OWNER":
+                    return (ushort)Cell_FieldIndex.Owner;
+                case "FACTIONRANK":
+                    return (ushort)Cell_FieldIndex.FactionRank;
+                case "GLOBALVARIABLE":
+                    return (ushort)Cell_FieldIndex.GlobalVariable;
                 case "PATHGRID":
                     return (ushort)Cell_FieldIndex.PathGrid;
                 case "PERSISTENT":
@@ -1572,7 +1664,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.WaterHeight:
                 case Cell_FieldIndex.Climate:
                 case Cell_FieldIndex.Water:
-                case Cell_FieldIndex.Ownership:
+                case Cell_FieldIndex.Owner:
+                case Cell_FieldIndex.FactionRank:
+                case Cell_FieldIndex.GlobalVariable:
                 case Cell_FieldIndex.PathGrid:
                     return false;
                 default:
@@ -1586,7 +1680,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Cell_FieldIndex.Lighting:
-                case Cell_FieldIndex.Ownership:
                 case Cell_FieldIndex.PathGrid:
                 case Cell_FieldIndex.Persistent:
                 case Cell_FieldIndex.Temporary:
@@ -1599,6 +1692,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.WaterHeight:
                 case Cell_FieldIndex.Climate:
                 case Cell_FieldIndex.Water:
+                case Cell_FieldIndex.Owner:
+                case Cell_FieldIndex.FactionRank:
+                case Cell_FieldIndex.GlobalVariable:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1618,7 +1714,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.WaterHeight:
                 case Cell_FieldIndex.Climate:
                 case Cell_FieldIndex.Water:
-                case Cell_FieldIndex.Ownership:
+                case Cell_FieldIndex.Owner:
+                case Cell_FieldIndex.FactionRank:
+                case Cell_FieldIndex.GlobalVariable:
                 case Cell_FieldIndex.PathGrid:
                 case Cell_FieldIndex.Persistent:
                 case Cell_FieldIndex.Temporary:
@@ -1650,8 +1748,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Climate";
                 case Cell_FieldIndex.Water:
                     return "Water";
-                case Cell_FieldIndex.Ownership:
-                    return "Ownership";
+                case Cell_FieldIndex.Owner:
+                    return "Owner";
+                case Cell_FieldIndex.FactionRank:
+                    return "FactionRank";
+                case Cell_FieldIndex.GlobalVariable:
+                    return "GlobalVariable";
                 case Cell_FieldIndex.PathGrid:
                     return "PathGrid";
                 case Cell_FieldIndex.Persistent:
@@ -1678,7 +1780,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.WaterHeight:
                 case Cell_FieldIndex.Climate:
                 case Cell_FieldIndex.Water:
-                case Cell_FieldIndex.Ownership:
+                case Cell_FieldIndex.Owner:
+                case Cell_FieldIndex.FactionRank:
+                case Cell_FieldIndex.GlobalVariable:
                 case Cell_FieldIndex.PathGrid:
                 case Cell_FieldIndex.Persistent:
                 case Cell_FieldIndex.Temporary:
@@ -1702,7 +1806,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.WaterHeight:
                 case Cell_FieldIndex.Climate:
                 case Cell_FieldIndex.Water:
-                case Cell_FieldIndex.Ownership:
+                case Cell_FieldIndex.Owner:
+                case Cell_FieldIndex.FactionRank:
+                case Cell_FieldIndex.GlobalVariable:
                 case Cell_FieldIndex.PathGrid:
                 case Cell_FieldIndex.Persistent:
                 case Cell_FieldIndex.Temporary:
@@ -1734,8 +1840,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(FormIDSetLink<Climate>);
                 case Cell_FieldIndex.Water:
                     return typeof(FormIDSetLink<Water>);
-                case Cell_FieldIndex.Ownership:
-                    return typeof(Ownership);
+                case Cell_FieldIndex.Owner:
+                    return typeof(FormIDSetLink<Faction>);
+                case Cell_FieldIndex.FactionRank:
+                    return typeof(Int32);
+                case Cell_FieldIndex.GlobalVariable:
+                    return typeof(FormIDSetLink<Global>);
                 case Cell_FieldIndex.PathGrid:
                     return typeof(PathGrid);
                 case Cell_FieldIndex.Persistent:
@@ -1767,7 +1877,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType REFR_HEADER = new RecordType("REFR");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = CELL_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 13;
+        public const int NumTypedFields = 15;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1972,53 +2082,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)Cell_FieldIndex.Water, ex);
                 }
             }
-            if (copyMask?.Ownership.Overall != CopyOption.Skip)
+            if (copyMask?.Owner ?? true)
             {
                 try
                 {
-                    item.Ownership_Property.SetToWithDefault(
-                        rhs.Ownership_Property,
-                        def?.Ownership_Property,
-                        cmds,
-                        (r, d) =>
-                        {
-                            switch (copyMask?.Ownership.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    OwnershipCommon.CopyFieldsFrom(
-                                        item: item.Ownership,
-                                        rhs: rhs.Ownership,
-                                        def: def?.Ownership,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<Ownership_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new Ownership_ErrorMask();
-                                            baseMask.SetNthMask((int)Cell_FieldIndex.Ownership, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
-                                        copyMask: copyMask?.Ownership.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(Ownership);
-                                    return Ownership.Copy(
-                                        r,
-                                        copyMask?.Ownership?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Ownership?.Overall}. Cannot execute copy.");
-                            }
-                        }
-                        );
+                    item.Owner_Property.SetToWithDefault(
+                        rhs: rhs.Owner_Property,
+                        def: def?.Owner_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)Cell_FieldIndex.Ownership, ex);
+                    errorMask().SetNthException((int)Cell_FieldIndex.Owner, ex);
+                }
+            }
+            if (copyMask?.FactionRank ?? true)
+            {
+                try
+                {
+                    item.FactionRank_Property.SetToWithDefault(
+                        rhs: rhs.FactionRank_Property,
+                        def: def?.FactionRank_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Cell_FieldIndex.FactionRank, ex);
+                }
+            }
+            if (copyMask?.GlobalVariable ?? true)
+            {
+                try
+                {
+                    item.GlobalVariable_Property.SetToWithDefault(
+                        rhs: rhs.GlobalVariable_Property,
+                        def: def?.GlobalVariable_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Cell_FieldIndex.GlobalVariable, ex);
                 }
             }
             if (copyMask?.PathGrid.Overall != CopyOption.Skip)
@@ -2203,8 +2309,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Water:
                     obj.Water_Property.HasBeenSet = on;
                     break;
-                case Cell_FieldIndex.Ownership:
-                    obj.Ownership_Property.HasBeenSet = on;
+                case Cell_FieldIndex.Owner:
+                    obj.Owner_Property.HasBeenSet = on;
+                    break;
+                case Cell_FieldIndex.FactionRank:
+                    obj.FactionRank_Property.HasBeenSet = on;
+                    break;
+                case Cell_FieldIndex.GlobalVariable:
+                    obj.GlobalVariable_Property.HasBeenSet = on;
                     break;
                 case Cell_FieldIndex.PathGrid:
                     obj.PathGrid_Property.HasBeenSet = on;
@@ -2256,8 +2368,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Water:
                     obj.Water_Property.Unset(cmds);
                     break;
-                case Cell_FieldIndex.Ownership:
-                    obj.Ownership_Property.Unset(cmds);
+                case Cell_FieldIndex.Owner:
+                    obj.Owner_Property.Unset(cmds);
+                    break;
+                case Cell_FieldIndex.FactionRank:
+                    obj.FactionRank_Property.Unset(cmds);
+                    break;
+                case Cell_FieldIndex.GlobalVariable:
+                    obj.GlobalVariable_Property.Unset(cmds);
                     break;
                 case Cell_FieldIndex.PathGrid:
                     obj.PathGrid_Property.Unset(cmds);
@@ -2300,8 +2418,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Climate_Property.HasBeenSet;
                 case Cell_FieldIndex.Water:
                     return obj.Water_Property.HasBeenSet;
-                case Cell_FieldIndex.Ownership:
-                    return obj.Ownership_Property.HasBeenSet;
+                case Cell_FieldIndex.Owner:
+                    return obj.Owner_Property.HasBeenSet;
+                case Cell_FieldIndex.FactionRank:
+                    return obj.FactionRank_Property.HasBeenSet;
+                case Cell_FieldIndex.GlobalVariable:
+                    return obj.GlobalVariable_Property.HasBeenSet;
                 case Cell_FieldIndex.PathGrid:
                     return obj.PathGrid_Property.HasBeenSet;
                 case Cell_FieldIndex.Persistent:
@@ -2338,8 +2460,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Climate;
                 case Cell_FieldIndex.Water:
                     return obj.Water;
-                case Cell_FieldIndex.Ownership:
-                    return obj.Ownership;
+                case Cell_FieldIndex.Owner:
+                    return obj.Owner;
+                case Cell_FieldIndex.FactionRank:
+                    return obj.FactionRank;
+                case Cell_FieldIndex.GlobalVariable:
+                    return obj.GlobalVariable;
                 case Cell_FieldIndex.PathGrid:
                     return obj.PathGrid;
                 case Cell_FieldIndex.Persistent:
@@ -2365,7 +2491,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.WaterHeight_Property.Unset(cmds.ToUnsetParams());
             item.Climate_Property.Unset(cmds.ToUnsetParams());
             item.Water_Property.Unset(cmds.ToUnsetParams());
-            item.Ownership_Property.Unset(cmds.ToUnsetParams());
+            item.Owner_Property.Unset(cmds.ToUnsetParams());
+            item.FactionRank_Property.Unset(cmds.ToUnsetParams());
+            item.GlobalVariable_Property.Unset(cmds.ToUnsetParams());
             item.PathGrid_Property.Unset(cmds.ToUnsetParams());
             item.Persistent.Unset(cmds.ToUnsetParams());
             item.Temporary.Unset(cmds.ToUnsetParams());
@@ -2413,7 +2541,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.WaterHeight = item.WaterHeight_Property.Equals(rhs.WaterHeight_Property, (l, r) => l == r);
             ret.Climate = item.Climate_Property.Equals(rhs.Climate_Property, (l, r) => l == r);
             ret.Water = item.Water_Property.Equals(rhs.Water_Property, (l, r) => l == r);
-            ret.Ownership = item.Ownership_Property.LoquiEqualsHelper(rhs.Ownership_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Owner = item.Owner_Property.Equals(rhs.Owner_Property, (l, r) => l == r);
+            ret.FactionRank = item.FactionRank_Property.Equals(rhs.FactionRank_Property, (l, r) => l == r);
+            ret.GlobalVariable = item.GlobalVariable_Property.Equals(rhs.GlobalVariable_Property, (l, r) => l == r);
             ret.PathGrid = item.PathGrid_Property.LoquiEqualsHelper(rhs.PathGrid_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             if (item.Persistent.HasBeenSet == rhs.Persistent.HasBeenSet)
             {
@@ -2566,9 +2696,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Water => {item.Water_Property}");
                 }
-                if (printMask?.Ownership?.Overall ?? true)
+                if (printMask?.Owner ?? true)
                 {
-                    item.Ownership?.ToString(fg, "Ownership");
+                    fg.AppendLine($"Owner => {item.Owner_Property}");
+                }
+                if (printMask?.FactionRank ?? true)
+                {
+                    fg.AppendLine($"FactionRank => {item.FactionRank}");
+                }
+                if (printMask?.GlobalVariable ?? true)
+                {
+                    fg.AppendLine($"GlobalVariable => {item.GlobalVariable_Property}");
                 }
                 if (printMask?.PathGrid?.Overall ?? true)
                 {
@@ -2645,8 +2783,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.WaterHeight.HasValue && checkMask.WaterHeight.Value != item.WaterHeight_Property.HasBeenSet) return false;
             if (checkMask.Climate.HasValue && checkMask.Climate.Value != item.Climate_Property.HasBeenSet) return false;
             if (checkMask.Water.HasValue && checkMask.Water.Value != item.Water_Property.HasBeenSet) return false;
-            if (checkMask.Ownership.Overall.HasValue && checkMask.Ownership.Overall.Value != item.Ownership_Property.HasBeenSet) return false;
-            if (checkMask.Ownership.Specific != null && (item.Ownership == null || !item.Ownership.HasBeenSet(checkMask.Ownership.Specific))) return false;
+            if (checkMask.Owner.HasValue && checkMask.Owner.Value != item.Owner_Property.HasBeenSet) return false;
+            if (checkMask.FactionRank.HasValue && checkMask.FactionRank.Value != item.FactionRank_Property.HasBeenSet) return false;
+            if (checkMask.GlobalVariable.HasValue && checkMask.GlobalVariable.Value != item.GlobalVariable_Property.HasBeenSet) return false;
             if (checkMask.PathGrid.Overall.HasValue && checkMask.PathGrid.Overall.Value != item.PathGrid_Property.HasBeenSet) return false;
             if (checkMask.PathGrid.Specific != null && (item.PathGrid == null || !item.PathGrid.HasBeenSet(checkMask.PathGrid.Specific))) return false;
             if (checkMask.Persistent.Overall.HasValue && checkMask.Persistent.Overall.Value != item.Persistent.HasBeenSet) return false;
@@ -2666,7 +2805,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.WaterHeight = item.WaterHeight_Property.HasBeenSet;
             ret.Climate = item.Climate_Property.HasBeenSet;
             ret.Water = item.Water_Property.HasBeenSet;
-            ret.Ownership = new MaskItem<bool, Ownership_Mask<bool>>(item.Ownership_Property.HasBeenSet, OwnershipCommon.GetHasBeenSetMask(item.Ownership));
+            ret.Owner = item.Owner_Property.HasBeenSet;
+            ret.FactionRank = item.FactionRank_Property.HasBeenSet;
+            ret.GlobalVariable = item.GlobalVariable_Property.HasBeenSet;
             ret.PathGrid = new MaskItem<bool, PathGrid_Mask<bool>>(item.PathGrid_Property.HasBeenSet, PathGridCommon.GetHasBeenSetMask(item.PathGrid));
             ret.Persistent = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>(item.Persistent.HasBeenSet, item.Persistent.Select((i) => new MaskItem<bool, Placed_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.Temporary = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>(item.Temporary.HasBeenSet, item.Temporary.Select((i) => new MaskItem<bool, Placed_Mask<bool>>(true, i.GetHasBeenSetMask())));
@@ -2840,13 +2981,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)Cell_FieldIndex.Water,
                             errorMask: errorMask);
                     }
-                    if (item.Ownership_Property.HasBeenSet)
+                    if (item.Owner_Property.HasBeenSet)
                     {
-                        LoquiXmlTranslation<Ownership, Ownership_ErrorMask>.Instance.Write(
+                        FormIDXmlTranslation.Instance.Write(
                             writer: writer,
-                            item: item.Ownership_Property,
-                            name: nameof(item.Ownership),
-                            fieldIndex: (int)Cell_FieldIndex.Ownership,
+                            name: nameof(item.Owner),
+                            item: item.Owner?.FormID,
+                            fieldIndex: (int)Cell_FieldIndex.Owner,
+                            errorMask: errorMask);
+                    }
+                    if (item.FactionRank_Property.HasBeenSet)
+                    {
+                        Int32XmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.FactionRank),
+                            item: item.FactionRank_Property,
+                            fieldIndex: (int)Cell_FieldIndex.FactionRank,
+                            errorMask: errorMask);
+                    }
+                    if (item.GlobalVariable_Property.HasBeenSet)
+                    {
+                        FormIDXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.GlobalVariable),
+                            item: item.GlobalVariable?.FormID,
+                            fieldIndex: (int)Cell_FieldIndex.GlobalVariable,
                             errorMask: errorMask);
                     }
                     if (item.PathGrid_Property.HasBeenSet)
@@ -3056,11 +3215,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Cell_Registration.XCWT_HEADER),
                 nullable: false);
-            LoquiBinaryTranslation<Ownership, Ownership_ErrorMask>.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Ownership_Property,
-                fieldIndex: (int)Cell_FieldIndex.Ownership,
-                errorMask: errorMask);
+                item: item.Owner_Property,
+                fieldIndex: (int)Cell_FieldIndex.Owner,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Cell_Registration.XOWN_HEADER),
+                nullable: false);
+            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.FactionRank_Property,
+                fieldIndex: (int)Cell_FieldIndex.FactionRank,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Cell_Registration.XRNK_HEADER),
+                nullable: false);
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.GlobalVariable_Property,
+                fieldIndex: (int)Cell_FieldIndex.GlobalVariable,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Cell_Registration.XGLB_HEADER),
+                nullable: false);
         }
 
         #endregion
@@ -3088,7 +3263,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.WaterHeight = initialValue;
             this.Climate = initialValue;
             this.Water = initialValue;
-            this.Ownership = new MaskItem<T, Ownership_Mask<T>>(initialValue, new Ownership_Mask<T>(initialValue));
+            this.Owner = initialValue;
+            this.FactionRank = initialValue;
+            this.GlobalVariable = initialValue;
             this.PathGrid = new MaskItem<T, PathGrid_Mask<T>>(initialValue, new PathGrid_Mask<T>(initialValue));
             this.Persistent = new MaskItem<T, IEnumerable<MaskItem<T, Placed_Mask<T>>>>(initialValue, null);
             this.Temporary = new MaskItem<T, IEnumerable<MaskItem<T, Placed_Mask<T>>>>(initialValue, null);
@@ -3105,7 +3282,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T WaterHeight;
         public T Climate;
         public T Water;
-        public MaskItem<T, Ownership_Mask<T>> Ownership { get; set; }
+        public T Owner;
+        public T FactionRank;
+        public T GlobalVariable;
         public MaskItem<T, PathGrid_Mask<T>> PathGrid { get; set; }
         public MaskItem<T, IEnumerable<MaskItem<T, Placed_Mask<T>>>> Persistent;
         public MaskItem<T, IEnumerable<MaskItem<T, Placed_Mask<T>>>> Temporary;
@@ -3131,7 +3310,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.WaterHeight, rhs.WaterHeight)) return false;
             if (!object.Equals(this.Climate, rhs.Climate)) return false;
             if (!object.Equals(this.Water, rhs.Water)) return false;
-            if (!object.Equals(this.Ownership, rhs.Ownership)) return false;
+            if (!object.Equals(this.Owner, rhs.Owner)) return false;
+            if (!object.Equals(this.FactionRank, rhs.FactionRank)) return false;
+            if (!object.Equals(this.GlobalVariable, rhs.GlobalVariable)) return false;
             if (!object.Equals(this.PathGrid, rhs.PathGrid)) return false;
             if (!object.Equals(this.Persistent, rhs.Persistent)) return false;
             if (!object.Equals(this.Temporary, rhs.Temporary)) return false;
@@ -3149,7 +3330,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.WaterHeight?.GetHashCode());
             ret = ret.CombineHashCode(this.Climate?.GetHashCode());
             ret = ret.CombineHashCode(this.Water?.GetHashCode());
-            ret = ret.CombineHashCode(this.Ownership?.GetHashCode());
+            ret = ret.CombineHashCode(this.Owner?.GetHashCode());
+            ret = ret.CombineHashCode(this.FactionRank?.GetHashCode());
+            ret = ret.CombineHashCode(this.GlobalVariable?.GetHashCode());
             ret = ret.CombineHashCode(this.PathGrid?.GetHashCode());
             ret = ret.CombineHashCode(this.Persistent?.GetHashCode());
             ret = ret.CombineHashCode(this.Temporary?.GetHashCode());
@@ -3186,11 +3369,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!eval(this.WaterHeight)) return false;
             if (!eval(this.Climate)) return false;
             if (!eval(this.Water)) return false;
-            if (Ownership != null)
-            {
-                if (!eval(this.Ownership.Overall)) return false;
-                if (this.Ownership.Specific != null && !this.Ownership.Specific.AllEqual(eval)) return false;
-            }
+            if (!eval(this.Owner)) return false;
+            if (!eval(this.FactionRank)) return false;
+            if (!eval(this.GlobalVariable)) return false;
             if (PathGrid != null)
             {
                 if (!eval(this.PathGrid.Overall)) return false;
@@ -3278,15 +3459,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.WaterHeight = eval(this.WaterHeight);
             obj.Climate = eval(this.Climate);
             obj.Water = eval(this.Water);
-            if (this.Ownership != null)
-            {
-                obj.Ownership = new MaskItem<R, Ownership_Mask<R>>();
-                obj.Ownership.Overall = eval(this.Ownership.Overall);
-                if (this.Ownership.Specific != null)
-                {
-                    obj.Ownership.Specific = this.Ownership.Specific.Translate(eval);
-                }
-            }
+            obj.Owner = eval(this.Owner);
+            obj.FactionRank = eval(this.FactionRank);
+            obj.GlobalVariable = eval(this.GlobalVariable);
             if (this.PathGrid != null)
             {
                 obj.PathGrid = new MaskItem<R, PathGrid_Mask<R>>();
@@ -3454,9 +3629,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Water => {Water}");
                 }
-                if (printMask?.Ownership?.Overall ?? true)
+                if (printMask?.Owner ?? true)
                 {
-                    Ownership?.ToString(fg);
+                    fg.AppendLine($"Owner => {Owner}");
+                }
+                if (printMask?.FactionRank ?? true)
+                {
+                    fg.AppendLine($"FactionRank => {FactionRank}");
+                }
+                if (printMask?.GlobalVariable ?? true)
+                {
+                    fg.AppendLine($"GlobalVariable => {GlobalVariable}");
                 }
                 if (printMask?.PathGrid?.Overall ?? true)
                 {
@@ -3555,7 +3738,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception WaterHeight;
         public Exception Climate;
         public Exception Water;
-        public MaskItem<Exception, Ownership_ErrorMask> Ownership;
+        public Exception Owner;
+        public Exception FactionRank;
+        public Exception GlobalVariable;
         public MaskItem<Exception, PathGrid_ErrorMask> PathGrid;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>> Persistent;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>> Temporary;
@@ -3592,8 +3777,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Water:
                     this.Water = ex;
                     break;
-                case Cell_FieldIndex.Ownership:
-                    this.Ownership = new MaskItem<Exception, Ownership_ErrorMask>(ex, null);
+                case Cell_FieldIndex.Owner:
+                    this.Owner = ex;
+                    break;
+                case Cell_FieldIndex.FactionRank:
+                    this.FactionRank = ex;
+                    break;
+                case Cell_FieldIndex.GlobalVariable:
+                    this.GlobalVariable = ex;
                     break;
                 case Cell_FieldIndex.PathGrid:
                     this.PathGrid = new MaskItem<Exception, PathGrid_ErrorMask>(ex, null);
@@ -3642,8 +3833,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Water:
                     this.Water = (Exception)obj;
                     break;
-                case Cell_FieldIndex.Ownership:
-                    this.Ownership = (MaskItem<Exception, Ownership_ErrorMask>)obj;
+                case Cell_FieldIndex.Owner:
+                    this.Owner = (Exception)obj;
+                    break;
+                case Cell_FieldIndex.FactionRank:
+                    this.FactionRank = (Exception)obj;
+                    break;
+                case Cell_FieldIndex.GlobalVariable:
+                    this.GlobalVariable = (Exception)obj;
                     break;
                 case Cell_FieldIndex.PathGrid:
                     this.PathGrid = (MaskItem<Exception, PathGrid_ErrorMask>)obj;
@@ -3674,7 +3871,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (WaterHeight != null) return true;
             if (Climate != null) return true;
             if (Water != null) return true;
-            if (Ownership != null) return true;
+            if (Owner != null) return true;
+            if (FactionRank != null) return true;
+            if (GlobalVariable != null) return true;
             if (PathGrid != null) return true;
             if (Persistent != null) return true;
             if (Temporary != null) return true;
@@ -3743,7 +3942,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine($"WaterHeight => {WaterHeight}");
             fg.AppendLine($"Climate => {Climate}");
             fg.AppendLine($"Water => {Water}");
-            Ownership?.ToString(fg);
+            fg.AppendLine($"Owner => {Owner}");
+            fg.AppendLine($"FactionRank => {FactionRank}");
+            fg.AppendLine($"GlobalVariable => {GlobalVariable}");
             PathGrid?.ToString(fg);
             fg.AppendLine("Persistent =>");
             fg.AppendLine("[");
@@ -3826,7 +4027,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.WaterHeight = this.WaterHeight.Combine(rhs.WaterHeight);
             ret.Climate = this.Climate.Combine(rhs.Climate);
             ret.Water = this.Water.Combine(rhs.Water);
-            ret.Ownership = new MaskItem<Exception, Ownership_ErrorMask>(this.Ownership.Overall.Combine(rhs.Ownership.Overall), ((IErrorMask<Ownership_ErrorMask>)this.Ownership.Specific).Combine(rhs.Ownership.Specific));
+            ret.Owner = this.Owner.Combine(rhs.Owner);
+            ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
+            ret.GlobalVariable = this.GlobalVariable.Combine(rhs.GlobalVariable);
             ret.PathGrid = new MaskItem<Exception, PathGrid_ErrorMask>(this.PathGrid.Overall.Combine(rhs.PathGrid.Overall), ((IErrorMask<PathGrid_ErrorMask>)this.PathGrid.Specific).Combine(rhs.PathGrid.Specific));
             ret.Persistent = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>>(this.Persistent.Overall.Combine(rhs.Persistent.Overall), new List<MaskItem<Exception, Placed_ErrorMask>>(this.Persistent.Specific.And(rhs.Persistent.Specific)));
             ret.Temporary = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>>(this.Temporary.Overall.Combine(rhs.Temporary.Overall), new List<MaskItem<Exception, Placed_ErrorMask>>(this.Temporary.Specific.And(rhs.Temporary.Specific)));
@@ -3852,7 +4055,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool WaterHeight;
         public bool Climate;
         public bool Water;
-        public MaskItem<CopyOption, Ownership_CopyMask> Ownership;
+        public bool Owner;
+        public bool FactionRank;
+        public bool GlobalVariable;
         public MaskItem<CopyOption, PathGrid_CopyMask> PathGrid;
         public MaskItem<CopyOption, Placed_CopyMask> Persistent;
         public MaskItem<CopyOption, Placed_CopyMask> Temporary;

@@ -3,7 +3,9 @@
   <Object name="PlacedCreature" baseClass="Placed" objType="Record" recordType="ACRE" GUID="b0f41e71-09f4-46b3-8769-7252455d209f" ID="128">
     <Fields>
       <FormIDLink name="Base" recordType="NAME" refName="Creature" />
-      <RefDirect name="Ownership" refName="Ownership" />
+      <FormIDLink name="Owner" recordType="XOWN" refName="Faction" />
+      <Int32 name="FactionRank" recordType="XRNK" />
+      <FormIDLink name="GlobalVariable" recordType="XGLB" refName="Global" />
       <RefDirect name="EnableParent" refName="EnableParent" />
       <ByteArray name="RagdollData" recordType="XRGD" />
       <Float name="Scale" recordType="XSCL" />
