@@ -39,6 +39,154 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
+        #region Climate
+        public FormIDSetLink<Climate> Climate_Property { get; } = new FormIDSetLink<Climate>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public Climate Climate { get => Climate_Property.Item; set => Climate_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        FormIDSetLink<Climate> IWorldspaceGetter.Climate_Property => this.Climate_Property;
+        #endregion
+        #region Water
+        public FormIDSetLink<Water> Water_Property { get; } = new FormIDSetLink<Water>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public Water Water { get => Water_Property.Item; set => Water_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        FormIDSetLink<Water> IWorldspaceGetter.Water_Property => this.Water_Property;
+        #endregion
+        #region Icon
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingSetItem<FilePath> Icon_Property => _Icon;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public FilePath Icon
+        {
+            get => this._Icon.Item;
+            set => this._Icon.Set(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItem<FilePath> IWorldspace.Icon_Property => this.Icon_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<FilePath> IWorldspaceGetter.Icon_Property => this.Icon_Property;
+        #endregion
+        #region UsableDimensions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected INotifyingItem<P2Int> _UsableDimensions = NotifyingItem.Factory<P2Int>();
+        public INotifyingItem<P2Int> UsableDimensions_Property => _UsableDimensions;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public P2Int UsableDimensions
+        {
+            get => this._UsableDimensions.Item;
+            set => this._UsableDimensions.Set(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingItem<P2Int> IWorldspace.UsableDimensions_Property => this.UsableDimensions_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingItemGetter<P2Int> IWorldspaceGetter.UsableDimensions_Property => this.UsableDimensions_Property;
+        #endregion
+        #region CellCoordinatesNWCell
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected INotifyingItem<P2Int16> _CellCoordinatesNWCell = NotifyingItem.Factory<P2Int16>();
+        public INotifyingItem<P2Int16> CellCoordinatesNWCell_Property => _CellCoordinatesNWCell;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public P2Int16 CellCoordinatesNWCell
+        {
+            get => this._CellCoordinatesNWCell.Item;
+            set => this._CellCoordinatesNWCell.Set(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingItem<P2Int16> IWorldspace.CellCoordinatesNWCell_Property => this.CellCoordinatesNWCell_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingItemGetter<P2Int16> IWorldspaceGetter.CellCoordinatesNWCell_Property => this.CellCoordinatesNWCell_Property;
+        #endregion
+        #region CellCoordinatesSECell
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected INotifyingItem<P2Int16> _CellCoordinatesSECell = NotifyingItem.Factory<P2Int16>();
+        public INotifyingItem<P2Int16> CellCoordinatesSECell_Property => _CellCoordinatesSECell;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public P2Int16 CellCoordinatesSECell
+        {
+            get => this._CellCoordinatesSECell.Item;
+            set => this._CellCoordinatesSECell.Set(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingItem<P2Int16> IWorldspace.CellCoordinatesSECell_Property => this.CellCoordinatesSECell_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingItemGetter<P2Int16> IWorldspaceGetter.CellCoordinatesSECell_Property => this.CellCoordinatesSECell_Property;
+        #endregion
+        #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected INotifyingSetItem<Worldspace.Flag> _Flags = NotifyingSetItem.Factory<Worldspace.Flag>(markAsSet: false);
+        public INotifyingSetItem<Worldspace.Flag> Flags_Property => _Flags;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public Worldspace.Flag Flags
+        {
+            get => this._Flags.Item;
+            set => this._Flags.Set(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItem<Worldspace.Flag> IWorldspace.Flags_Property => this.Flags_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<Worldspace.Flag> IWorldspaceGetter.Flags_Property => this.Flags_Property;
+        #endregion
+        #region ObjectBoundsMin
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected INotifyingSetItem<P2Float> _ObjectBoundsMin = NotifyingSetItem.Factory<P2Float>(markAsSet: false);
+        public INotifyingSetItem<P2Float> ObjectBoundsMin_Property => _ObjectBoundsMin;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public P2Float ObjectBoundsMin
+        {
+            get => this._ObjectBoundsMin.Item;
+            set => this._ObjectBoundsMin.Set(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItem<P2Float> IWorldspace.ObjectBoundsMin_Property => this.ObjectBoundsMin_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<P2Float> IWorldspaceGetter.ObjectBoundsMin_Property => this.ObjectBoundsMin_Property;
+        #endregion
+        #region ObjectBoundsMax
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected INotifyingSetItem<P2Float> _ObjectBoundsMax = NotifyingSetItem.Factory<P2Float>(markAsSet: false);
+        public INotifyingSetItem<P2Float> ObjectBoundsMax_Property => _ObjectBoundsMax;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public P2Float ObjectBoundsMax
+        {
+            get => this._ObjectBoundsMax.Item;
+            set => this._ObjectBoundsMax.Set(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItem<P2Float> IWorldspace.ObjectBoundsMax_Property => this.ObjectBoundsMax_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<P2Float> IWorldspaceGetter.ObjectBoundsMax_Property => this.ObjectBoundsMax_Property;
+        #endregion
+        #region Music
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected INotifyingSetItem<MusicType> _Music = NotifyingSetItem.Factory<MusicType>(markAsSet: false);
+        public INotifyingSetItem<MusicType> Music_Property => _Music;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public MusicType Music
+        {
+            get => this._Music.Item;
+            set => this._Music.Set(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItem<MusicType> IWorldspace.Music_Property => this.Music_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<MusicType> IWorldspaceGetter.Music_Property => this.Music_Property;
+        #endregion
+        #region OffsetData
+        protected INotifyingSetItem<Byte[]> _OffsetData = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
+        public INotifyingSetItem<Byte[]> OffsetData_Property => _OffsetData;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public Byte[] OffsetData
+        {
+            get => this._OffsetData.Item;
+            set => this._OffsetData.Set(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItem<Byte[]> IWorldspace.OffsetData_Property => this.OffsetData_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<Byte[]> IWorldspaceGetter.OffsetData_Property => this.OffsetData_Property;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -98,12 +246,90 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (Climate_Property.HasBeenSet != rhs.Climate_Property.HasBeenSet) return false;
+            if (Climate_Property.HasBeenSet)
+            {
+                if (Climate != rhs.Climate) return false;
+            }
+            if (Water_Property.HasBeenSet != rhs.Water_Property.HasBeenSet) return false;
+            if (Water_Property.HasBeenSet)
+            {
+                if (Water != rhs.Water) return false;
+            }
+            if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
+            if (Icon_Property.HasBeenSet)
+            {
+                if (!object.Equals(Icon, rhs.Icon)) return false;
+            }
+            if (UsableDimensions != rhs.UsableDimensions) return false;
+            if (CellCoordinatesNWCell != rhs.CellCoordinatesNWCell) return false;
+            if (CellCoordinatesSECell != rhs.CellCoordinatesSECell) return false;
+            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
+            if (Flags_Property.HasBeenSet)
+            {
+                if (Flags != rhs.Flags) return false;
+            }
+            if (ObjectBoundsMin_Property.HasBeenSet != rhs.ObjectBoundsMin_Property.HasBeenSet) return false;
+            if (ObjectBoundsMin_Property.HasBeenSet)
+            {
+                if (ObjectBoundsMin != rhs.ObjectBoundsMin) return false;
+            }
+            if (ObjectBoundsMax_Property.HasBeenSet != rhs.ObjectBoundsMax_Property.HasBeenSet) return false;
+            if (ObjectBoundsMax_Property.HasBeenSet)
+            {
+                if (ObjectBoundsMax != rhs.ObjectBoundsMax) return false;
+            }
+            if (Music_Property.HasBeenSet != rhs.Music_Property.HasBeenSet) return false;
+            if (Music_Property.HasBeenSet)
+            {
+                if (Music != rhs.Music) return false;
+            }
+            if (OffsetData_Property.HasBeenSet != rhs.OffsetData_Property.HasBeenSet) return false;
+            if (OffsetData_Property.HasBeenSet)
+            {
+                if (!OffsetData.EqualsFast(rhs.OffsetData)) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
+            if (Climate_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Climate).CombineHashCode(ret);
+            }
+            if (Water_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Water).CombineHashCode(ret);
+            }
+            if (Icon_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
+            }
+            ret = HashHelper.GetHashCode(UsableDimensions).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(CellCoordinatesNWCell).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(CellCoordinatesSECell).CombineHashCode(ret);
+            if (Flags_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
+            }
+            if (ObjectBoundsMin_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(ObjectBoundsMin).CombineHashCode(ret);
+            }
+            if (ObjectBoundsMax_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(ObjectBoundsMax).CombineHashCode(ret);
+            }
+            if (Music_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Music).CombineHashCode(ret);
+            }
+            if (OffsetData_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(OffsetData).CombineHashCode(ret);
+            }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -321,6 +547,74 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "Climate":
+                    item.Climate_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Worldspace_FieldIndex.Climate,
+                        errorMask: errorMask));
+                    break;
+                case "Water":
+                    item.Water_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Worldspace_FieldIndex.Water,
+                        errorMask: errorMask));
+                    break;
+                case "Icon":
+                    item._Icon.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Worldspace_FieldIndex.Icon,
+                        errorMask: errorMask));
+                    break;
+                case "UsableDimensions":
+                    item._UsableDimensions.SetIfSucceeded(P2IntXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Worldspace_FieldIndex.UsableDimensions,
+                        errorMask: errorMask));
+                    break;
+                case "CellCoordinatesNWCell":
+                    item._CellCoordinatesNWCell.SetIfSucceeded(P2Int16XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Worldspace_FieldIndex.CellCoordinatesNWCell,
+                        errorMask: errorMask));
+                    break;
+                case "CellCoordinatesSECell":
+                    item._CellCoordinatesSECell.SetIfSucceeded(P2Int16XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Worldspace_FieldIndex.CellCoordinatesSECell,
+                        errorMask: errorMask));
+                    break;
+                case "Flags":
+                    item._Flags.SetIfSucceeded(EnumXmlTranslation<Worldspace.Flag>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)Worldspace_FieldIndex.Flags,
+                        errorMask: errorMask).Bubble((o) => o.Value));
+                    break;
+                case "ObjectBoundsMin":
+                    item._ObjectBoundsMin.SetIfSucceeded(P2FloatXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMin,
+                        errorMask: errorMask));
+                    break;
+                case "ObjectBoundsMax":
+                    item._ObjectBoundsMax.SetIfSucceeded(P2FloatXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMax,
+                        errorMask: errorMask));
+                    break;
+                case "Music":
+                    item._Music.SetIfSucceeded(EnumXmlTranslation<MusicType>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)Worldspace_FieldIndex.Music,
+                        errorMask: errorMask).Bubble((o) => o.Value));
+                    break;
+                case "OffsetData":
+                    item._OffsetData.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)Worldspace_FieldIndex.OffsetData,
+                        errorMask: errorMask));
+                    break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
                         item: item,
@@ -335,6 +629,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Worldspace_Registration.TRIGGERING_RECORD_TYPE;
+        public override IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in base.Links)
+            {
+                yield return item;
+            }
+            yield return Climate_Property;
+            yield return Water_Property;
+            yield break;
+        }
         #endregion
 
         #region Binary Translation
@@ -507,19 +812,61 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
+        static partial void FillBinary_OffsetLength_Custom(
+            MutagenFrame frame,
+            Worldspace item,
+            Func<Worldspace_ErrorMask> errorMask);
+
+        static partial void WriteBinary_OffsetLength_Custom(
+            MutagenWriter writer,
+            Worldspace item,
+            Func<Worldspace_ErrorMask> errorMask);
+
+        public static void WriteBinary_OffsetLength(
+            MutagenWriter writer,
+            Worldspace item,
+            Func<Worldspace_ErrorMask> errorMask)
+        {
+            try
+            {
+                WriteBinary_OffsetLength_Custom(
+                    writer: writer,
+                    item: item,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
+        }
+
         private static Worldspace Create_Binary_Internal(
             MutagenFrame frame,
             Func<Worldspace_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Worldspace, Worldspace_ErrorMask, Worldspace_FieldIndex>(
+            var ret = UtilityTranslation.MajorRecordParse<Worldspace, Worldspace_ErrorMask, Worldspace_FieldIndex>(
                 record: new Worldspace(),
                 frame: frame,
                 errorMask: errorMask,
                 recType: Worldspace_Registration.WRLD_HEADER,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: Fill_Binary_Structs,
-                fillTyped: null);
+                fillTyped: Fill_Binary_RecordTypes);
+            try
+            {
+                CustomBinaryEnd_Import(
+                    frame: frame,
+                    obj: ret,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
+            return ret;
         }
 
         protected static void Fill_Binary_Structs(
@@ -533,6 +880,128 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
+        protected static TryGet<Worldspace_FieldIndex?> Fill_Binary_RecordTypes(
+            Worldspace item,
+            MutagenFrame frame,
+            Func<Worldspace_ErrorMask> errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+                reader: frame.Reader,
+                contentLength: out var contentLength,
+                recordTypeConverter: recordTypeConverter);
+            switch (nextRecordType.Type)
+            {
+                case "CNAM":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    item.Climate_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)Worldspace_FieldIndex.Climate,
+                        errorMask: errorMask));
+                    return TryGet<Worldspace_FieldIndex?>.Succeed(Worldspace_FieldIndex.Climate);
+                case "NAM2":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    item.Water_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)Worldspace_FieldIndex.Water,
+                        errorMask: errorMask));
+                    return TryGet<Worldspace_FieldIndex?>.Succeed(Worldspace_FieldIndex.Water);
+                case "ICON":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)Worldspace_FieldIndex.Icon,
+                        errorMask: errorMask));
+                    return TryGet<Worldspace_FieldIndex?>.Succeed(Worldspace_FieldIndex.Icon);
+                case "MNAM":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    using (var dataFrame = frame.Spawn(contentLength))
+                    {
+                        item._UsableDimensions.SetIfSucceeded(Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)Worldspace_FieldIndex.UsableDimensions,
+                            errorMask: errorMask));
+                        item._CellCoordinatesNWCell.SetIfSucceeded(Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)Worldspace_FieldIndex.CellCoordinatesNWCell,
+                            errorMask: errorMask));
+                        item._CellCoordinatesSECell.SetIfSucceeded(Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)Worldspace_FieldIndex.CellCoordinatesSECell,
+                            errorMask: errorMask));
+                    }
+                    return TryGet<Worldspace_FieldIndex?>.Succeed(Worldspace_FieldIndex.CellCoordinatesSECell);
+                case "DATA":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Worldspace.Flag>.Instance.Parse(
+                        frame.Spawn(contentLength),
+                        fieldIndex: (int)Worldspace_FieldIndex.Flags,
+                        errorMask: errorMask));
+                    return TryGet<Worldspace_FieldIndex?>.Succeed(Worldspace_FieldIndex.Flags);
+                case "NAM0":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    item._ObjectBoundsMin.SetIfSucceeded(Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMin,
+                        errorMask: errorMask));
+                    return TryGet<Worldspace_FieldIndex?>.Succeed(Worldspace_FieldIndex.ObjectBoundsMin);
+                case "NAM9":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    item._ObjectBoundsMax.SetIfSucceeded(Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMax,
+                        errorMask: errorMask));
+                    return TryGet<Worldspace_FieldIndex?>.Succeed(Worldspace_FieldIndex.ObjectBoundsMax);
+                case "SNAM":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    item._Music.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.Parse(
+                        frame.Spawn(contentLength),
+                        fieldIndex: (int)Worldspace_FieldIndex.Music,
+                        errorMask: errorMask));
+                    return TryGet<Worldspace_FieldIndex?>.Succeed(Worldspace_FieldIndex.Music);
+                case "XXXX":
+                    try
+                    {
+                        using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
+                        {
+                            FillBinary_OffsetLength_Custom(
+                                frame: subFrame,
+                                item: item,
+                                errorMask: errorMask);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask().Overall = ex;
+                    }
+                    return TryGet<Worldspace_FieldIndex?>.Succeed(null);
+                default:
+                    return NamedMajorRecord.Fill_Binary_RecordTypes(
+                        item: item,
+                        frame: frame,
+                        errorMask: errorMask).Bubble((i) => WorldspaceCommon.ConvertFieldIndex(i));
+            }
+        }
+
+        static partial void CustomBinaryEnd_Import(
+            MutagenFrame frame,
+            Worldspace obj,
+            Func<Worldspace_ErrorMask> errorMask);
+        static partial void CustomBinaryEnd_Export(
+            MutagenWriter writer,
+            Worldspace obj,
+            Func<Worldspace_ErrorMask> errorMask);
+        public static void CustomBinaryEnd_ExportInternal(
+            MutagenWriter writer,
+            Worldspace obj,
+            Func<Worldspace_ErrorMask> errorMask)
+        {
+            CustomBinaryEnd_Export(
+                writer: writer,
+                obj: obj,
+                errorMask: errorMask);
+        }
         #endregion
 
         public Worldspace Copy(
@@ -635,6 +1104,61 @@ namespace Mutagen.Bethesda.Oblivion
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Climate:
+                    this.Climate_Property.Set(
+                        (FormIDSetLink<Climate>)obj,
+                        cmds);
+                    break;
+                case Worldspace_FieldIndex.Water:
+                    this.Water_Property.Set(
+                        (FormIDSetLink<Water>)obj,
+                        cmds);
+                    break;
+                case Worldspace_FieldIndex.Icon:
+                    this._Icon.Set(
+                        (FilePath)obj,
+                        cmds);
+                    break;
+                case Worldspace_FieldIndex.UsableDimensions:
+                    this._UsableDimensions.Set(
+                        (P2Int)obj,
+                        cmds);
+                    break;
+                case Worldspace_FieldIndex.CellCoordinatesNWCell:
+                    this._CellCoordinatesNWCell.Set(
+                        (P2Int16)obj,
+                        cmds);
+                    break;
+                case Worldspace_FieldIndex.CellCoordinatesSECell:
+                    this._CellCoordinatesSECell.Set(
+                        (P2Int16)obj,
+                        cmds);
+                    break;
+                case Worldspace_FieldIndex.Flags:
+                    this._Flags.Set(
+                        (Worldspace.Flag)obj,
+                        cmds);
+                    break;
+                case Worldspace_FieldIndex.ObjectBoundsMin:
+                    this._ObjectBoundsMin.Set(
+                        (P2Float)obj,
+                        cmds);
+                    break;
+                case Worldspace_FieldIndex.ObjectBoundsMax:
+                    this._ObjectBoundsMax.Set(
+                        (P2Float)obj,
+                        cmds);
+                    break;
+                case Worldspace_FieldIndex.Music:
+                    this._Music.Set(
+                        (MusicType)obj,
+                        cmds);
+                    break;
+                case Worldspace_FieldIndex.OffsetData:
+                    this._OffsetData.Set(
+                        (Byte[])obj,
+                        cmds);
+                    break;
                 default:
                     base.SetNthObject(index, obj, cmds);
                     break;
@@ -666,6 +1190,61 @@ namespace Mutagen.Bethesda.Oblivion
             }
             switch (enu)
             {
+                case Worldspace_FieldIndex.Climate:
+                    obj.Climate_Property.Set(
+                        (FormIDSetLink<Climate>)pair.Value,
+                        null);
+                    break;
+                case Worldspace_FieldIndex.Water:
+                    obj.Water_Property.Set(
+                        (FormIDSetLink<Water>)pair.Value,
+                        null);
+                    break;
+                case Worldspace_FieldIndex.Icon:
+                    obj._Icon.Set(
+                        (FilePath)pair.Value,
+                        null);
+                    break;
+                case Worldspace_FieldIndex.UsableDimensions:
+                    obj._UsableDimensions.Set(
+                        (P2Int)pair.Value,
+                        null);
+                    break;
+                case Worldspace_FieldIndex.CellCoordinatesNWCell:
+                    obj._CellCoordinatesNWCell.Set(
+                        (P2Int16)pair.Value,
+                        null);
+                    break;
+                case Worldspace_FieldIndex.CellCoordinatesSECell:
+                    obj._CellCoordinatesSECell.Set(
+                        (P2Int16)pair.Value,
+                        null);
+                    break;
+                case Worldspace_FieldIndex.Flags:
+                    obj._Flags.Set(
+                        (Worldspace.Flag)pair.Value,
+                        null);
+                    break;
+                case Worldspace_FieldIndex.ObjectBoundsMin:
+                    obj._ObjectBoundsMin.Set(
+                        (P2Float)pair.Value,
+                        null);
+                    break;
+                case Worldspace_FieldIndex.ObjectBoundsMax:
+                    obj._ObjectBoundsMax.Set(
+                        (P2Float)pair.Value,
+                        null);
+                    break;
+                case Worldspace_FieldIndex.Music:
+                    obj._Music.Set(
+                        (MusicType)pair.Value,
+                        null);
+                    break;
+                case Worldspace_FieldIndex.OffsetData:
+                    obj._OffsetData.Set(
+                        (Byte[])pair.Value,
+                        null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -681,10 +1260,94 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IWorldspace : IWorldspaceGetter, INamedMajorRecord, ILoquiClass<IWorldspace, IWorldspaceGetter>, ILoquiClass<Worldspace, IWorldspaceGetter>
     {
+        new Climate Climate { get; set; }
+        new Water Water { get; set; }
+        new FilePath Icon { get; set; }
+        new INotifyingSetItem<FilePath> Icon_Property { get; }
+
+        new P2Int UsableDimensions { get; set; }
+        new INotifyingItem<P2Int> UsableDimensions_Property { get; }
+
+        new P2Int16 CellCoordinatesNWCell { get; set; }
+        new INotifyingItem<P2Int16> CellCoordinatesNWCell_Property { get; }
+
+        new P2Int16 CellCoordinatesSECell { get; set; }
+        new INotifyingItem<P2Int16> CellCoordinatesSECell_Property { get; }
+
+        new Worldspace.Flag Flags { get; set; }
+        new INotifyingSetItem<Worldspace.Flag> Flags_Property { get; }
+
+        new P2Float ObjectBoundsMin { get; set; }
+        new INotifyingSetItem<P2Float> ObjectBoundsMin_Property { get; }
+
+        new P2Float ObjectBoundsMax { get; set; }
+        new INotifyingSetItem<P2Float> ObjectBoundsMax_Property { get; }
+
+        new MusicType Music { get; set; }
+        new INotifyingSetItem<MusicType> Music_Property { get; }
+
+        new Byte[] OffsetData { get; set; }
+        new INotifyingSetItem<Byte[]> OffsetData_Property { get; }
+
     }
 
     public partial interface IWorldspaceGetter : INamedMajorRecordGetter
     {
+        #region Climate
+        Climate Climate { get; }
+        FormIDSetLink<Climate> Climate_Property { get; }
+
+        #endregion
+        #region Water
+        Water Water { get; }
+        FormIDSetLink<Water> Water_Property { get; }
+
+        #endregion
+        #region Icon
+        FilePath Icon { get; }
+        INotifyingSetItemGetter<FilePath> Icon_Property { get; }
+
+        #endregion
+        #region UsableDimensions
+        P2Int UsableDimensions { get; }
+        INotifyingItemGetter<P2Int> UsableDimensions_Property { get; }
+
+        #endregion
+        #region CellCoordinatesNWCell
+        P2Int16 CellCoordinatesNWCell { get; }
+        INotifyingItemGetter<P2Int16> CellCoordinatesNWCell_Property { get; }
+
+        #endregion
+        #region CellCoordinatesSECell
+        P2Int16 CellCoordinatesSECell { get; }
+        INotifyingItemGetter<P2Int16> CellCoordinatesSECell_Property { get; }
+
+        #endregion
+        #region Flags
+        Worldspace.Flag Flags { get; }
+        INotifyingSetItemGetter<Worldspace.Flag> Flags_Property { get; }
+
+        #endregion
+        #region ObjectBoundsMin
+        P2Float ObjectBoundsMin { get; }
+        INotifyingSetItemGetter<P2Float> ObjectBoundsMin_Property { get; }
+
+        #endregion
+        #region ObjectBoundsMax
+        P2Float ObjectBoundsMax { get; }
+        INotifyingSetItemGetter<P2Float> ObjectBoundsMax_Property { get; }
+
+        #endregion
+        #region Music
+        MusicType Music { get; }
+        INotifyingSetItemGetter<MusicType> Music_Property { get; }
+
+        #endregion
+        #region OffsetData
+        Byte[] OffsetData { get; }
+        INotifyingSetItemGetter<Byte[]> OffsetData_Property { get; }
+
+        #endregion
 
     }
 
@@ -703,6 +1366,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         EditorID = 3,
         RecordType = 4,
         Name = 5,
+        Climate = 6,
+        Water = 7,
+        Icon = 8,
+        UsableDimensions = 9,
+        CellCoordinatesNWCell = 10,
+        CellCoordinatesSECell = 11,
+        Flags = 12,
+        ObjectBoundsMin = 13,
+        ObjectBoundsMax = 14,
+        Music = 15,
+        OffsetData = 16,
     }
     #endregion
 
@@ -720,7 +1394,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "d95e86a2-5fdd-4bb1-a2b9-c16161ef2f62";
 
-        public const ushort FieldCount = 0;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(Worldspace_Mask<>);
 
@@ -748,6 +1422,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
+                case "CLIMATE":
+                    return (ushort)Worldspace_FieldIndex.Climate;
+                case "WATER":
+                    return (ushort)Worldspace_FieldIndex.Water;
+                case "ICON":
+                    return (ushort)Worldspace_FieldIndex.Icon;
+                case "USABLEDIMENSIONS":
+                    return (ushort)Worldspace_FieldIndex.UsableDimensions;
+                case "CELLCOORDINATESNWCELL":
+                    return (ushort)Worldspace_FieldIndex.CellCoordinatesNWCell;
+                case "CELLCOORDINATESSECELL":
+                    return (ushort)Worldspace_FieldIndex.CellCoordinatesSECell;
+                case "FLAGS":
+                    return (ushort)Worldspace_FieldIndex.Flags;
+                case "OBJECTBOUNDSMIN":
+                    return (ushort)Worldspace_FieldIndex.ObjectBoundsMin;
+                case "OBJECTBOUNDSMAX":
+                    return (ushort)Worldspace_FieldIndex.ObjectBoundsMax;
+                case "MUSIC":
+                    return (ushort)Worldspace_FieldIndex.Music;
+                case "OFFSETDATA":
+                    return (ushort)Worldspace_FieldIndex.OffsetData;
                 default:
                     return null;
             }
@@ -758,6 +1454,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Climate:
+                case Worldspace_FieldIndex.Water:
+                case Worldspace_FieldIndex.Icon:
+                case Worldspace_FieldIndex.UsableDimensions:
+                case Worldspace_FieldIndex.CellCoordinatesNWCell:
+                case Worldspace_FieldIndex.CellCoordinatesSECell:
+                case Worldspace_FieldIndex.Flags:
+                case Worldspace_FieldIndex.ObjectBoundsMin:
+                case Worldspace_FieldIndex.ObjectBoundsMax:
+                case Worldspace_FieldIndex.Music:
+                case Worldspace_FieldIndex.OffsetData:
+                    return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -768,6 +1476,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Climate:
+                case Worldspace_FieldIndex.Water:
+                case Worldspace_FieldIndex.Icon:
+                case Worldspace_FieldIndex.UsableDimensions:
+                case Worldspace_FieldIndex.CellCoordinatesNWCell:
+                case Worldspace_FieldIndex.CellCoordinatesSECell:
+                case Worldspace_FieldIndex.Flags:
+                case Worldspace_FieldIndex.ObjectBoundsMin:
+                case Worldspace_FieldIndex.ObjectBoundsMax:
+                case Worldspace_FieldIndex.Music:
+                case Worldspace_FieldIndex.OffsetData:
+                    return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -778,6 +1498,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Climate:
+                case Worldspace_FieldIndex.Water:
+                case Worldspace_FieldIndex.Icon:
+                case Worldspace_FieldIndex.UsableDimensions:
+                case Worldspace_FieldIndex.CellCoordinatesNWCell:
+                case Worldspace_FieldIndex.CellCoordinatesSECell:
+                case Worldspace_FieldIndex.Flags:
+                case Worldspace_FieldIndex.ObjectBoundsMin:
+                case Worldspace_FieldIndex.ObjectBoundsMax:
+                case Worldspace_FieldIndex.Music:
+                case Worldspace_FieldIndex.OffsetData:
+                    return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -788,6 +1520,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Climate:
+                    return "Climate";
+                case Worldspace_FieldIndex.Water:
+                    return "Water";
+                case Worldspace_FieldIndex.Icon:
+                    return "Icon";
+                case Worldspace_FieldIndex.UsableDimensions:
+                    return "UsableDimensions";
+                case Worldspace_FieldIndex.CellCoordinatesNWCell:
+                    return "CellCoordinatesNWCell";
+                case Worldspace_FieldIndex.CellCoordinatesSECell:
+                    return "CellCoordinatesSECell";
+                case Worldspace_FieldIndex.Flags:
+                    return "Flags";
+                case Worldspace_FieldIndex.ObjectBoundsMin:
+                    return "ObjectBoundsMin";
+                case Worldspace_FieldIndex.ObjectBoundsMax:
+                    return "ObjectBoundsMax";
+                case Worldspace_FieldIndex.Music:
+                    return "Music";
+                case Worldspace_FieldIndex.OffsetData:
+                    return "OffsetData";
                 default:
                     return NamedMajorRecord_Registration.GetNthName(index);
             }
@@ -798,6 +1552,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Climate:
+                case Worldspace_FieldIndex.Water:
+                case Worldspace_FieldIndex.Icon:
+                case Worldspace_FieldIndex.UsableDimensions:
+                case Worldspace_FieldIndex.CellCoordinatesNWCell:
+                case Worldspace_FieldIndex.CellCoordinatesSECell:
+                case Worldspace_FieldIndex.Flags:
+                case Worldspace_FieldIndex.ObjectBoundsMin:
+                case Worldspace_FieldIndex.ObjectBoundsMax:
+                case Worldspace_FieldIndex.Music:
+                case Worldspace_FieldIndex.OffsetData:
+                    return false;
                 default:
                     return NamedMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -808,6 +1574,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Climate:
+                case Worldspace_FieldIndex.Water:
+                case Worldspace_FieldIndex.Icon:
+                case Worldspace_FieldIndex.UsableDimensions:
+                case Worldspace_FieldIndex.CellCoordinatesNWCell:
+                case Worldspace_FieldIndex.CellCoordinatesSECell:
+                case Worldspace_FieldIndex.Flags:
+                case Worldspace_FieldIndex.ObjectBoundsMin:
+                case Worldspace_FieldIndex.ObjectBoundsMax:
+                case Worldspace_FieldIndex.Music:
+                case Worldspace_FieldIndex.OffsetData:
+                    return false;
                 default:
                     return NamedMajorRecord_Registration.IsProtected(index);
             }
@@ -818,15 +1596,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Climate:
+                    return typeof(FormIDSetLink<Climate>);
+                case Worldspace_FieldIndex.Water:
+                    return typeof(FormIDSetLink<Water>);
+                case Worldspace_FieldIndex.Icon:
+                    return typeof(FilePath);
+                case Worldspace_FieldIndex.UsableDimensions:
+                    return typeof(P2Int);
+                case Worldspace_FieldIndex.CellCoordinatesNWCell:
+                    return typeof(P2Int16);
+                case Worldspace_FieldIndex.CellCoordinatesSECell:
+                    return typeof(P2Int16);
+                case Worldspace_FieldIndex.Flags:
+                    return typeof(Worldspace.Flag);
+                case Worldspace_FieldIndex.ObjectBoundsMin:
+                    return typeof(P2Float);
+                case Worldspace_FieldIndex.ObjectBoundsMax:
+                    return typeof(P2Float);
+                case Worldspace_FieldIndex.Music:
+                    return typeof(MusicType);
+                case Worldspace_FieldIndex.OffsetData:
+                    return typeof(Byte[]);
                 default:
                     return NamedMajorRecord_Registration.GetNthType(index);
             }
         }
 
         public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
+        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
+        public static readonly RecordType NAM2_HEADER = new RecordType("NAM2");
+        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
+        public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
+        public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
+        public static readonly RecordType NAM9_HEADER = new RecordType("NAM9");
+        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
+        public static readonly RecordType XXXX_HEADER = new RecordType("XXXX");
+        public static readonly RecordType OFST_HEADER = new RecordType("OFST");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = WRLD_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
+        public const int NumTypedFields = 8;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -877,6 +1687,168 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask,
                 copyMask,
                 cmds);
+            if (copyMask?.Climate ?? true)
+            {
+                try
+                {
+                    item.Climate_Property.SetToWithDefault(
+                        rhs: rhs.Climate_Property,
+                        def: def?.Climate_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Worldspace_FieldIndex.Climate, ex);
+                }
+            }
+            if (copyMask?.Water ?? true)
+            {
+                try
+                {
+                    item.Water_Property.SetToWithDefault(
+                        rhs: rhs.Water_Property,
+                        def: def?.Water_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Worldspace_FieldIndex.Water, ex);
+                }
+            }
+            if (copyMask?.Icon ?? true)
+            {
+                try
+                {
+                    item.Icon_Property.SetToWithDefault(
+                        rhs: rhs.Icon_Property,
+                        def: def?.Icon_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Worldspace_FieldIndex.Icon, ex);
+                }
+            }
+            if (copyMask?.UsableDimensions ?? true)
+            {
+                try
+                {
+                    item.UsableDimensions_Property.Set(
+                        value: rhs.UsableDimensions,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Worldspace_FieldIndex.UsableDimensions, ex);
+                }
+            }
+            if (copyMask?.CellCoordinatesNWCell ?? true)
+            {
+                try
+                {
+                    item.CellCoordinatesNWCell_Property.Set(
+                        value: rhs.CellCoordinatesNWCell,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Worldspace_FieldIndex.CellCoordinatesNWCell, ex);
+                }
+            }
+            if (copyMask?.CellCoordinatesSECell ?? true)
+            {
+                try
+                {
+                    item.CellCoordinatesSECell_Property.Set(
+                        value: rhs.CellCoordinatesSECell,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Worldspace_FieldIndex.CellCoordinatesSECell, ex);
+                }
+            }
+            if (copyMask?.Flags ?? true)
+            {
+                try
+                {
+                    item.Flags_Property.SetToWithDefault(
+                        rhs: rhs.Flags_Property,
+                        def: def?.Flags_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Worldspace_FieldIndex.Flags, ex);
+                }
+            }
+            if (copyMask?.ObjectBoundsMin ?? true)
+            {
+                try
+                {
+                    item.ObjectBoundsMin_Property.SetToWithDefault(
+                        rhs: rhs.ObjectBoundsMin_Property,
+                        def: def?.ObjectBoundsMin_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Worldspace_FieldIndex.ObjectBoundsMin, ex);
+                }
+            }
+            if (copyMask?.ObjectBoundsMax ?? true)
+            {
+                try
+                {
+                    item.ObjectBoundsMax_Property.SetToWithDefault(
+                        rhs: rhs.ObjectBoundsMax_Property,
+                        def: def?.ObjectBoundsMax_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Worldspace_FieldIndex.ObjectBoundsMax, ex);
+                }
+            }
+            if (copyMask?.Music ?? true)
+            {
+                try
+                {
+                    item.Music_Property.SetToWithDefault(
+                        rhs: rhs.Music_Property,
+                        def: def?.Music_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Worldspace_FieldIndex.Music, ex);
+                }
+            }
+            if (copyMask?.OffsetData ?? true)
+            {
+                try
+                {
+                    item.OffsetData_Property.SetToWithDefault(
+                        rhs: rhs.OffsetData_Property,
+                        def: def?.OffsetData_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Worldspace_FieldIndex.OffsetData, ex);
+                }
+            }
         }
 
         #endregion
@@ -890,6 +1862,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.UsableDimensions:
+                case Worldspace_FieldIndex.CellCoordinatesNWCell:
+                case Worldspace_FieldIndex.CellCoordinatesSECell:
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                case Worldspace_FieldIndex.Climate:
+                    obj.Climate_Property.HasBeenSet = on;
+                    break;
+                case Worldspace_FieldIndex.Water:
+                    obj.Water_Property.HasBeenSet = on;
+                    break;
+                case Worldspace_FieldIndex.Icon:
+                    obj.Icon_Property.HasBeenSet = on;
+                    break;
+                case Worldspace_FieldIndex.Flags:
+                    obj.Flags_Property.HasBeenSet = on;
+                    break;
+                case Worldspace_FieldIndex.ObjectBoundsMin:
+                    obj.ObjectBoundsMin_Property.HasBeenSet = on;
+                    break;
+                case Worldspace_FieldIndex.ObjectBoundsMax:
+                    obj.ObjectBoundsMax_Property.HasBeenSet = on;
+                    break;
+                case Worldspace_FieldIndex.Music:
+                    obj.Music_Property.HasBeenSet = on;
+                    break;
+                case Worldspace_FieldIndex.OffsetData:
+                    obj.OffsetData_Property.HasBeenSet = on;
+                    break;
                 default:
                     NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -904,6 +1905,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Climate:
+                    obj.Climate_Property.Unset(cmds);
+                    break;
+                case Worldspace_FieldIndex.Water:
+                    obj.Water_Property.Unset(cmds);
+                    break;
+                case Worldspace_FieldIndex.Icon:
+                    obj.Icon_Property.Unset(cmds);
+                    break;
+                case Worldspace_FieldIndex.UsableDimensions:
+                    obj.UsableDimensions = default(P2Int);
+                    break;
+                case Worldspace_FieldIndex.CellCoordinatesNWCell:
+                    obj.CellCoordinatesNWCell = default(P2Int16);
+                    break;
+                case Worldspace_FieldIndex.CellCoordinatesSECell:
+                    obj.CellCoordinatesSECell = default(P2Int16);
+                    break;
+                case Worldspace_FieldIndex.Flags:
+                    obj.Flags_Property.Unset(cmds);
+                    break;
+                case Worldspace_FieldIndex.ObjectBoundsMin:
+                    obj.ObjectBoundsMin_Property.Unset(cmds);
+                    break;
+                case Worldspace_FieldIndex.ObjectBoundsMax:
+                    obj.ObjectBoundsMax_Property.Unset(cmds);
+                    break;
+                case Worldspace_FieldIndex.Music:
+                    obj.Music_Property.Unset(cmds);
+                    break;
+                case Worldspace_FieldIndex.OffsetData:
+                    obj.OffsetData_Property.Unset(cmds);
+                    break;
                 default:
                     NamedMajorRecordCommon.UnsetNthObject(index, obj);
                     break;
@@ -917,6 +1951,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.UsableDimensions:
+                case Worldspace_FieldIndex.CellCoordinatesNWCell:
+                case Worldspace_FieldIndex.CellCoordinatesSECell:
+                    return true;
+                case Worldspace_FieldIndex.Climate:
+                    return obj.Climate_Property.HasBeenSet;
+                case Worldspace_FieldIndex.Water:
+                    return obj.Water_Property.HasBeenSet;
+                case Worldspace_FieldIndex.Icon:
+                    return obj.Icon_Property.HasBeenSet;
+                case Worldspace_FieldIndex.Flags:
+                    return obj.Flags_Property.HasBeenSet;
+                case Worldspace_FieldIndex.ObjectBoundsMin:
+                    return obj.ObjectBoundsMin_Property.HasBeenSet;
+                case Worldspace_FieldIndex.ObjectBoundsMax:
+                    return obj.ObjectBoundsMax_Property.HasBeenSet;
+                case Worldspace_FieldIndex.Music:
+                    return obj.Music_Property.HasBeenSet;
+                case Worldspace_FieldIndex.OffsetData:
+                    return obj.OffsetData_Property.HasBeenSet;
                 default:
                     return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -929,6 +1983,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Climate:
+                    return obj.Climate;
+                case Worldspace_FieldIndex.Water:
+                    return obj.Water;
+                case Worldspace_FieldIndex.Icon:
+                    return obj.Icon;
+                case Worldspace_FieldIndex.UsableDimensions:
+                    return obj.UsableDimensions;
+                case Worldspace_FieldIndex.CellCoordinatesNWCell:
+                    return obj.CellCoordinatesNWCell;
+                case Worldspace_FieldIndex.CellCoordinatesSECell:
+                    return obj.CellCoordinatesSECell;
+                case Worldspace_FieldIndex.Flags:
+                    return obj.Flags;
+                case Worldspace_FieldIndex.ObjectBoundsMin:
+                    return obj.ObjectBoundsMin;
+                case Worldspace_FieldIndex.ObjectBoundsMax:
+                    return obj.ObjectBoundsMax;
+                case Worldspace_FieldIndex.Music:
+                    return obj.Music;
+                case Worldspace_FieldIndex.OffsetData:
+                    return obj.OffsetData;
                 default:
                     return NamedMajorRecordCommon.GetNthObject(index, obj);
             }
@@ -938,6 +2014,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWorldspace item,
             NotifyingUnsetParameters cmds = null)
         {
+            item.Climate_Property.Unset(cmds.ToUnsetParams());
+            item.Water_Property.Unset(cmds.ToUnsetParams());
+            item.Icon_Property.Unset(cmds.ToUnsetParams());
+            item.UsableDimensions = default(P2Int);
+            item.CellCoordinatesNWCell = default(P2Int16);
+            item.CellCoordinatesSECell = default(P2Int16);
+            item.Flags_Property.Unset(cmds.ToUnsetParams());
+            item.ObjectBoundsMin_Property.Unset(cmds.ToUnsetParams());
+            item.ObjectBoundsMax_Property.Unset(cmds.ToUnsetParams());
+            item.Music_Property.Unset(cmds.ToUnsetParams());
+            item.OffsetData_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static Worldspace_Mask<bool> GetEqualsMask(
@@ -955,6 +2042,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_Mask<bool> ret)
         {
             if (rhs == null) return;
+            ret.Climate = item.Climate_Property.Equals(rhs.Climate_Property, (l, r) => l == r);
+            ret.Water = item.Water_Property.Equals(rhs.Water_Property, (l, r) => l == r);
+            ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
+            ret.UsableDimensions = item.UsableDimensions == rhs.UsableDimensions;
+            ret.CellCoordinatesNWCell = item.CellCoordinatesNWCell == rhs.CellCoordinatesNWCell;
+            ret.CellCoordinatesSECell = item.CellCoordinatesSECell == rhs.CellCoordinatesSECell;
+            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
+            ret.ObjectBoundsMin = item.ObjectBoundsMin_Property.Equals(rhs.ObjectBoundsMin_Property, (l, r) => l == r);
+            ret.ObjectBoundsMax = item.ObjectBoundsMax_Property.Equals(rhs.ObjectBoundsMax_Property, (l, r) => l == r);
+            ret.Music = item.Music_Property.Equals(rhs.Music_Property, (l, r) => l == r);
+            ret.OffsetData = item.OffsetData_Property.Equals(rhs.OffsetData_Property, (l, r) => l.EqualsFast(r));
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -985,6 +2083,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Climate ?? true)
+                {
+                    fg.AppendLine($"Climate => {item.Climate_Property}");
+                }
+                if (printMask?.Water ?? true)
+                {
+                    fg.AppendLine($"Water => {item.Water_Property}");
+                }
+                if (printMask?.Icon ?? true)
+                {
+                    fg.AppendLine($"Icon => {item.Icon}");
+                }
+                if (printMask?.UsableDimensions ?? true)
+                {
+                    fg.AppendLine($"UsableDimensions => {item.UsableDimensions}");
+                }
+                if (printMask?.CellCoordinatesNWCell ?? true)
+                {
+                    fg.AppendLine($"CellCoordinatesNWCell => {item.CellCoordinatesNWCell}");
+                }
+                if (printMask?.CellCoordinatesSECell ?? true)
+                {
+                    fg.AppendLine($"CellCoordinatesSECell => {item.CellCoordinatesSECell}");
+                }
+                if (printMask?.Flags ?? true)
+                {
+                    fg.AppendLine($"Flags => {item.Flags}");
+                }
+                if (printMask?.ObjectBoundsMin ?? true)
+                {
+                    fg.AppendLine($"ObjectBoundsMin => {item.ObjectBoundsMin}");
+                }
+                if (printMask?.ObjectBoundsMax ?? true)
+                {
+                    fg.AppendLine($"ObjectBoundsMax => {item.ObjectBoundsMax}");
+                }
+                if (printMask?.Music ?? true)
+                {
+                    fg.AppendLine($"Music => {item.Music}");
+                }
+                if (printMask?.OffsetData ?? true)
+                {
+                    fg.AppendLine($"OffsetData => {item.OffsetData}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -993,12 +2135,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IWorldspaceGetter item,
             Worldspace_Mask<bool?> checkMask)
         {
+            if (checkMask.Climate.HasValue && checkMask.Climate.Value != item.Climate_Property.HasBeenSet) return false;
+            if (checkMask.Water.HasValue && checkMask.Water.Value != item.Water_Property.HasBeenSet) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
+            if (checkMask.ObjectBoundsMin.HasValue && checkMask.ObjectBoundsMin.Value != item.ObjectBoundsMin_Property.HasBeenSet) return false;
+            if (checkMask.ObjectBoundsMax.HasValue && checkMask.ObjectBoundsMax.Value != item.ObjectBoundsMax_Property.HasBeenSet) return false;
+            if (checkMask.Music.HasValue && checkMask.Music.Value != item.Music_Property.HasBeenSet) return false;
+            if (checkMask.OffsetData.HasValue && checkMask.OffsetData.Value != item.OffsetData_Property.HasBeenSet) return false;
             return true;
         }
 
         public static Worldspace_Mask<bool> GetHasBeenSetMask(IWorldspaceGetter item)
         {
             var ret = new Worldspace_Mask<bool>();
+            ret.Climate = item.Climate_Property.HasBeenSet;
+            ret.Water = item.Water_Property.HasBeenSet;
+            ret.Icon = item.Icon_Property.HasBeenSet;
+            ret.UsableDimensions = true;
+            ret.CellCoordinatesNWCell = true;
+            ret.CellCoordinatesSECell = true;
+            ret.Flags = item.Flags_Property.HasBeenSet;
+            ret.ObjectBoundsMin = item.ObjectBoundsMin_Property.HasBeenSet;
+            ret.ObjectBoundsMax = item.ObjectBoundsMax_Property.HasBeenSet;
+            ret.Music = item.Music_Property.HasBeenSet;
+            ret.OffsetData = item.OffsetData_Property.HasBeenSet;
             return ret;
         }
 
@@ -1086,6 +2247,96 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Worldspace");
                     }
+                    if (item.Climate_Property.HasBeenSet)
+                    {
+                        FormIDXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Climate),
+                            item: item.Climate?.FormID,
+                            fieldIndex: (int)Worldspace_FieldIndex.Climate,
+                            errorMask: errorMask);
+                    }
+                    if (item.Water_Property.HasBeenSet)
+                    {
+                        FormIDXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Water),
+                            item: item.Water?.FormID,
+                            fieldIndex: (int)Worldspace_FieldIndex.Water,
+                            errorMask: errorMask);
+                    }
+                    if (item.Icon_Property.HasBeenSet)
+                    {
+                        FilePathXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Icon),
+                            item: item.Icon_Property,
+                            fieldIndex: (int)Worldspace_FieldIndex.Icon,
+                            errorMask: errorMask);
+                    }
+                    P2IntXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.UsableDimensions),
+                        item: item.UsableDimensions_Property,
+                        fieldIndex: (int)Worldspace_FieldIndex.UsableDimensions,
+                        errorMask: errorMask);
+                    P2Int16XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.CellCoordinatesNWCell),
+                        item: item.CellCoordinatesNWCell_Property,
+                        fieldIndex: (int)Worldspace_FieldIndex.CellCoordinatesNWCell,
+                        errorMask: errorMask);
+                    P2Int16XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.CellCoordinatesSECell),
+                        item: item.CellCoordinatesSECell_Property,
+                        fieldIndex: (int)Worldspace_FieldIndex.CellCoordinatesSECell,
+                        errorMask: errorMask);
+                    if (item.Flags_Property.HasBeenSet)
+                    {
+                        EnumXmlTranslation<Worldspace.Flag>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Flags),
+                            item: item.Flags_Property,
+                            fieldIndex: (int)Worldspace_FieldIndex.Flags,
+                            errorMask: errorMask);
+                    }
+                    if (item.ObjectBoundsMin_Property.HasBeenSet)
+                    {
+                        P2FloatXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.ObjectBoundsMin),
+                            item: item.ObjectBoundsMin_Property,
+                            fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMin,
+                            errorMask: errorMask);
+                    }
+                    if (item.ObjectBoundsMax_Property.HasBeenSet)
+                    {
+                        P2FloatXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.ObjectBoundsMax),
+                            item: item.ObjectBoundsMax_Property,
+                            fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMax,
+                            errorMask: errorMask);
+                    }
+                    if (item.Music_Property.HasBeenSet)
+                    {
+                        EnumXmlTranslation<MusicType>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Music),
+                            item: item.Music_Property,
+                            fieldIndex: (int)Worldspace_FieldIndex.Music,
+                            errorMask: errorMask);
+                    }
+                    if (item.OffsetData_Property.HasBeenSet)
+                    {
+                        ByteArrayXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.OffsetData),
+                            item: item.OffsetData_Property,
+                            fieldIndex: (int)Worldspace_FieldIndex.OffsetData,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1133,12 +2384,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item,
                         writer: writer,
                         errorMask: errorMask);
-                    NamedMajorRecordCommon.Write_Binary_RecordTypes(
+                    Write_Binary_RecordTypes(
                         item: item,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter,
                         errorMask: errorMask);
                 }
+                Worldspace.CustomBinaryEnd_ExportInternal(
+                    writer: writer,
+                    obj: item,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (errorMask != null)
@@ -1147,6 +2402,92 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         #endregion
+
+        public static void Write_Binary_RecordTypes(
+            Worldspace item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            Func<Worldspace_ErrorMask> errorMask)
+        {
+            NamedMajorRecordCommon.Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Climate_Property,
+                fieldIndex: (int)Worldspace_FieldIndex.Climate,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.CNAM_HEADER),
+                nullable: false);
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Water_Property,
+                fieldIndex: (int)Worldspace_FieldIndex.Water,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.NAM2_HEADER),
+                nullable: false);
+            Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Icon_Property,
+                fieldIndex: (int)Worldspace_FieldIndex.Icon,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.ICON_HEADER),
+                nullable: false);
+            using (HeaderExport.ExportSubRecordHeader(writer, Worldspace_Registration.MNAM_HEADER))
+            {
+                Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.UsableDimensions_Property,
+                    fieldIndex: (int)Worldspace_FieldIndex.UsableDimensions,
+                    errorMask: errorMask);
+                Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.CellCoordinatesNWCell_Property,
+                    fieldIndex: (int)Worldspace_FieldIndex.CellCoordinatesNWCell,
+                    errorMask: errorMask);
+                Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.CellCoordinatesSECell_Property,
+                    fieldIndex: (int)Worldspace_FieldIndex.CellCoordinatesSECell,
+                    errorMask: errorMask);
+            }
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Worldspace.Flag>.Instance.Write(
+                writer,
+                item.Flags_Property,
+                length: new ContentLength(4),
+                fieldIndex: (int)Worldspace_FieldIndex.Flags,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.DATA_HEADER),
+                nullable: false);
+            Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.ObjectBoundsMin_Property,
+                fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMin,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.NAM0_HEADER),
+                nullable: false);
+            Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.ObjectBoundsMax_Property,
+                fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMax,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.NAM9_HEADER),
+                nullable: false);
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.Write(
+                writer,
+                item.Music_Property,
+                length: new ContentLength(4),
+                fieldIndex: (int)Worldspace_FieldIndex.Music,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.SNAM_HEADER),
+                nullable: false);
+            Worldspace.WriteBinary_OffsetLength(
+                writer: writer,
+                item: item,
+                errorMask: errorMask);
+        }
 
         #endregion
 
@@ -1165,7 +2506,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Worldspace_Mask(T initialValue)
         {
+            this.Climate = initialValue;
+            this.Water = initialValue;
+            this.Icon = initialValue;
+            this.UsableDimensions = initialValue;
+            this.CellCoordinatesNWCell = initialValue;
+            this.CellCoordinatesSECell = initialValue;
+            this.Flags = initialValue;
+            this.ObjectBoundsMin = initialValue;
+            this.ObjectBoundsMax = initialValue;
+            this.Music = initialValue;
+            this.OffsetData = initialValue;
         }
+        #endregion
+
+        #region Members
+        public T Climate;
+        public T Water;
+        public T Icon;
+        public T UsableDimensions;
+        public T CellCoordinatesNWCell;
+        public T CellCoordinatesSECell;
+        public T Flags;
+        public T ObjectBoundsMin;
+        public T ObjectBoundsMax;
+        public T Music;
+        public T OffsetData;
         #endregion
 
         #region Equals
@@ -1179,11 +2545,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(this.Climate, rhs.Climate)) return false;
+            if (!object.Equals(this.Water, rhs.Water)) return false;
+            if (!object.Equals(this.Icon, rhs.Icon)) return false;
+            if (!object.Equals(this.UsableDimensions, rhs.UsableDimensions)) return false;
+            if (!object.Equals(this.CellCoordinatesNWCell, rhs.CellCoordinatesNWCell)) return false;
+            if (!object.Equals(this.CellCoordinatesSECell, rhs.CellCoordinatesSECell)) return false;
+            if (!object.Equals(this.Flags, rhs.Flags)) return false;
+            if (!object.Equals(this.ObjectBoundsMin, rhs.ObjectBoundsMin)) return false;
+            if (!object.Equals(this.ObjectBoundsMax, rhs.ObjectBoundsMax)) return false;
+            if (!object.Equals(this.Music, rhs.Music)) return false;
+            if (!object.Equals(this.OffsetData, rhs.OffsetData)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = ret.CombineHashCode(this.Climate?.GetHashCode());
+            ret = ret.CombineHashCode(this.Water?.GetHashCode());
+            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
+            ret = ret.CombineHashCode(this.UsableDimensions?.GetHashCode());
+            ret = ret.CombineHashCode(this.CellCoordinatesNWCell?.GetHashCode());
+            ret = ret.CombineHashCode(this.CellCoordinatesSECell?.GetHashCode());
+            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+            ret = ret.CombineHashCode(this.ObjectBoundsMin?.GetHashCode());
+            ret = ret.CombineHashCode(this.ObjectBoundsMax?.GetHashCode());
+            ret = ret.CombineHashCode(this.Music?.GetHashCode());
+            ret = ret.CombineHashCode(this.OffsetData?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1194,6 +2582,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool AllEqual(Func<T, bool> eval)
         {
             if (!base.AllEqual(eval)) return false;
+            if (!eval(this.Climate)) return false;
+            if (!eval(this.Water)) return false;
+            if (!eval(this.Icon)) return false;
+            if (!eval(this.UsableDimensions)) return false;
+            if (!eval(this.CellCoordinatesNWCell)) return false;
+            if (!eval(this.CellCoordinatesSECell)) return false;
+            if (!eval(this.Flags)) return false;
+            if (!eval(this.ObjectBoundsMin)) return false;
+            if (!eval(this.ObjectBoundsMax)) return false;
+            if (!eval(this.Music)) return false;
+            if (!eval(this.OffsetData)) return false;
             return true;
         }
         #endregion
@@ -1209,6 +2608,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected void Translate_InternalFill<R>(Worldspace_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
+            obj.Climate = eval(this.Climate);
+            obj.Water = eval(this.Water);
+            obj.Icon = eval(this.Icon);
+            obj.UsableDimensions = eval(this.UsableDimensions);
+            obj.CellCoordinatesNWCell = eval(this.CellCoordinatesNWCell);
+            obj.CellCoordinatesSECell = eval(this.CellCoordinatesSECell);
+            obj.Flags = eval(this.Flags);
+            obj.ObjectBoundsMin = eval(this.ObjectBoundsMin);
+            obj.ObjectBoundsMax = eval(this.ObjectBoundsMax);
+            obj.Music = eval(this.Music);
+            obj.OffsetData = eval(this.OffsetData);
         }
         #endregion
 
@@ -1238,6 +2648,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Climate ?? true)
+                {
+                    fg.AppendLine($"Climate => {Climate}");
+                }
+                if (printMask?.Water ?? true)
+                {
+                    fg.AppendLine($"Water => {Water}");
+                }
+                if (printMask?.Icon ?? true)
+                {
+                    fg.AppendLine($"Icon => {Icon}");
+                }
+                if (printMask?.UsableDimensions ?? true)
+                {
+                    fg.AppendLine($"UsableDimensions => {UsableDimensions}");
+                }
+                if (printMask?.CellCoordinatesNWCell ?? true)
+                {
+                    fg.AppendLine($"CellCoordinatesNWCell => {CellCoordinatesNWCell}");
+                }
+                if (printMask?.CellCoordinatesSECell ?? true)
+                {
+                    fg.AppendLine($"CellCoordinatesSECell => {CellCoordinatesSECell}");
+                }
+                if (printMask?.Flags ?? true)
+                {
+                    fg.AppendLine($"Flags => {Flags}");
+                }
+                if (printMask?.ObjectBoundsMin ?? true)
+                {
+                    fg.AppendLine($"ObjectBoundsMin => {ObjectBoundsMin}");
+                }
+                if (printMask?.ObjectBoundsMax ?? true)
+                {
+                    fg.AppendLine($"ObjectBoundsMax => {ObjectBoundsMax}");
+                }
+                if (printMask?.Music ?? true)
+                {
+                    fg.AppendLine($"Music => {Music}");
+                }
+                if (printMask?.OffsetData ?? true)
+                {
+                    fg.AppendLine($"OffsetData => {OffsetData}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1247,12 +2701,59 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public class Worldspace_ErrorMask : NamedMajorRecord_ErrorMask, IErrorMask<Worldspace_ErrorMask>
     {
+        #region Members
+        public Exception Climate;
+        public Exception Water;
+        public Exception Icon;
+        public Exception UsableDimensions;
+        public Exception CellCoordinatesNWCell;
+        public Exception CellCoordinatesSECell;
+        public Exception Flags;
+        public Exception ObjectBoundsMin;
+        public Exception ObjectBoundsMax;
+        public Exception Music;
+        public Exception OffsetData;
+        #endregion
+
         #region IErrorMask
         public override void SetNthException(int index, Exception ex)
         {
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Climate:
+                    this.Climate = ex;
+                    break;
+                case Worldspace_FieldIndex.Water:
+                    this.Water = ex;
+                    break;
+                case Worldspace_FieldIndex.Icon:
+                    this.Icon = ex;
+                    break;
+                case Worldspace_FieldIndex.UsableDimensions:
+                    this.UsableDimensions = ex;
+                    break;
+                case Worldspace_FieldIndex.CellCoordinatesNWCell:
+                    this.CellCoordinatesNWCell = ex;
+                    break;
+                case Worldspace_FieldIndex.CellCoordinatesSECell:
+                    this.CellCoordinatesSECell = ex;
+                    break;
+                case Worldspace_FieldIndex.Flags:
+                    this.Flags = ex;
+                    break;
+                case Worldspace_FieldIndex.ObjectBoundsMin:
+                    this.ObjectBoundsMin = ex;
+                    break;
+                case Worldspace_FieldIndex.ObjectBoundsMax:
+                    this.ObjectBoundsMax = ex;
+                    break;
+                case Worldspace_FieldIndex.Music:
+                    this.Music = ex;
+                    break;
+                case Worldspace_FieldIndex.OffsetData:
+                    this.OffsetData = ex;
+                    break;
                 default:
                     base.SetNthException(index, ex);
                     break;
@@ -1264,6 +2765,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Climate:
+                    this.Climate = (Exception)obj;
+                    break;
+                case Worldspace_FieldIndex.Water:
+                    this.Water = (Exception)obj;
+                    break;
+                case Worldspace_FieldIndex.Icon:
+                    this.Icon = (Exception)obj;
+                    break;
+                case Worldspace_FieldIndex.UsableDimensions:
+                    this.UsableDimensions = (Exception)obj;
+                    break;
+                case Worldspace_FieldIndex.CellCoordinatesNWCell:
+                    this.CellCoordinatesNWCell = (Exception)obj;
+                    break;
+                case Worldspace_FieldIndex.CellCoordinatesSECell:
+                    this.CellCoordinatesSECell = (Exception)obj;
+                    break;
+                case Worldspace_FieldIndex.Flags:
+                    this.Flags = (Exception)obj;
+                    break;
+                case Worldspace_FieldIndex.ObjectBoundsMin:
+                    this.ObjectBoundsMin = (Exception)obj;
+                    break;
+                case Worldspace_FieldIndex.ObjectBoundsMax:
+                    this.ObjectBoundsMax = (Exception)obj;
+                    break;
+                case Worldspace_FieldIndex.Music:
+                    this.Music = (Exception)obj;
+                    break;
+                case Worldspace_FieldIndex.OffsetData:
+                    this.OffsetData = (Exception)obj;
+                    break;
                 default:
                     base.SetNthMask(index, obj);
                     break;
@@ -1273,6 +2807,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool IsInError()
         {
             if (Overall != null) return true;
+            if (Climate != null) return true;
+            if (Water != null) return true;
+            if (Icon != null) return true;
+            if (UsableDimensions != null) return true;
+            if (CellCoordinatesNWCell != null) return true;
+            if (CellCoordinatesSECell != null) return true;
+            if (Flags != null) return true;
+            if (ObjectBoundsMin != null) return true;
+            if (ObjectBoundsMax != null) return true;
+            if (Music != null) return true;
+            if (OffsetData != null) return true;
             return false;
         }
         #endregion
@@ -1308,6 +2853,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
+            fg.AppendLine($"Climate => {Climate}");
+            fg.AppendLine($"Water => {Water}");
+            fg.AppendLine($"Icon => {Icon}");
+            fg.AppendLine($"UsableDimensions => {UsableDimensions}");
+            fg.AppendLine($"CellCoordinatesNWCell => {CellCoordinatesNWCell}");
+            fg.AppendLine($"CellCoordinatesSECell => {CellCoordinatesSECell}");
+            fg.AppendLine($"Flags => {Flags}");
+            fg.AppendLine($"ObjectBoundsMin => {ObjectBoundsMin}");
+            fg.AppendLine($"ObjectBoundsMax => {ObjectBoundsMax}");
+            fg.AppendLine($"Music => {Music}");
+            fg.AppendLine($"OffsetData => {OffsetData}");
         }
         #endregion
 
@@ -1315,6 +2871,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Worldspace_ErrorMask Combine(Worldspace_ErrorMask rhs)
         {
             var ret = new Worldspace_ErrorMask();
+            ret.Climate = this.Climate.Combine(rhs.Climate);
+            ret.Water = this.Water.Combine(rhs.Water);
+            ret.Icon = this.Icon.Combine(rhs.Icon);
+            ret.UsableDimensions = this.UsableDimensions.Combine(rhs.UsableDimensions);
+            ret.CellCoordinatesNWCell = this.CellCoordinatesNWCell.Combine(rhs.CellCoordinatesNWCell);
+            ret.CellCoordinatesSECell = this.CellCoordinatesSECell.Combine(rhs.CellCoordinatesSECell);
+            ret.Flags = this.Flags.Combine(rhs.Flags);
+            ret.ObjectBoundsMin = this.ObjectBoundsMin.Combine(rhs.ObjectBoundsMin);
+            ret.ObjectBoundsMax = this.ObjectBoundsMax.Combine(rhs.ObjectBoundsMax);
+            ret.Music = this.Music.Combine(rhs.Music);
+            ret.OffsetData = this.OffsetData.Combine(rhs.OffsetData);
             return ret;
         }
         public static Worldspace_ErrorMask Combine(Worldspace_ErrorMask lhs, Worldspace_ErrorMask rhs)
@@ -1327,6 +2894,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Worldspace_CopyMask : NamedMajorRecord_CopyMask
     {
+        #region Members
+        public bool Climate;
+        public bool Water;
+        public bool Icon;
+        public bool UsableDimensions;
+        public bool CellCoordinatesNWCell;
+        public bool CellCoordinatesSECell;
+        public bool Flags;
+        public bool ObjectBoundsMin;
+        public bool ObjectBoundsMax;
+        public bool Music;
+        public bool OffsetData;
+        #endregion
+
     }
     #endregion
 

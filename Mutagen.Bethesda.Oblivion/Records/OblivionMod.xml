@@ -52,6 +52,7 @@
           <GenericSpecification Definition="Oblivion.CellBlock" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Group name="Worldspaces" refName="Worldspace" />
     </Fields>
   </Object>
 </Loqui>

@@ -72,6 +72,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="noBinary" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether to consider in binary translations
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -100,13 +107,6 @@
             <xs:annotation>
               <xs:documentation>
                 Whether to expose a custom import/export snippet for binary translation
-              </xs:documentation>
-            </xs:annotation>
-          </xs:attribute>
-          <xs:attribute name="noBinary" type="xs:boolean" >
-            <xs:annotation>
-              <xs:documentation>
-                Whether to consider in binary translations
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>

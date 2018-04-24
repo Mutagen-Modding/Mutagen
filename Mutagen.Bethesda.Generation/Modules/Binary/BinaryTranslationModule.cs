@@ -49,8 +49,10 @@ namespace Mutagen.Bethesda.Generation
             this._typeGenerations[typeof(P2FloatType)] = new PrimitiveBinaryTranslationGeneration<P2Float>();
             this._typeGenerations[typeof(P3FloatNullType)] = new PrimitiveBinaryTranslationGeneration<P3Float?>();
             this._typeGenerations[typeof(P3FloatType)] = new PrimitiveBinaryTranslationGeneration<P3Float>();
-            this._typeGenerations[typeof(P2IntNullType)] = new PrimitiveBinaryTranslationGeneration<P2Int?>();
-            this._typeGenerations[typeof(P2IntType)] = new PrimitiveBinaryTranslationGeneration<P2Int>();
+            this._typeGenerations[typeof(P2Int32NullType)] = new PrimitiveBinaryTranslationGeneration<P2Int?>();
+            this._typeGenerations[typeof(P2Int32Type)] = new PrimitiveBinaryTranslationGeneration<P2Int>();
+            this._typeGenerations[typeof(P2Int16NullType)] = new PrimitiveBinaryTranslationGeneration<P2Int16?>();
+            this._typeGenerations[typeof(P2Int16Type)] = new PrimitiveBinaryTranslationGeneration<P2Int16>();
             this._typeGenerations[typeof(P2FloatNullType)] = new PrimitiveBinaryTranslationGeneration<P2Float?>();
             this._typeGenerations[typeof(P2FloatType)] = new PrimitiveBinaryTranslationGeneration<P2Float>();
             this._typeGenerations[typeof(StringType)] = new StringBinaryTranslationGeneration();
