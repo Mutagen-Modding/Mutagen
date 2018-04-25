@@ -93,6 +93,11 @@ namespace Mutagen.Bethesda.Generation
                     if (typeGen.Succeeded)
                     {
                         typeGen.Value.HasBeenSetProperty.Item = false;
+                        if (typeGen.Value is LoquiType loqui
+                            && loqui.SingletonType == SingletonLevel.None)
+                        {
+                            loqui.SingletonType = SingletonLevel.NotNull;
+                        }
                         this.SubFields.Add(typeGen.Value);
                     }
                 }

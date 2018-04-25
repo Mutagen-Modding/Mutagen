@@ -98,5 +98,45 @@ namespace Mutagen.Bethesda.Generation
                 return !data.HasTrigger;
             });
         }
+
+        public static LoquiType GetGroupLoquiType(this ObjectGeneration objGen)
+        {
+            if (objGen.GetObjectType() != ObjectType.Group)
+            {
+                throw new ArgumentException();
+            }
+            foreach (var field in objGen.IterateFields())
+            {
+                if (field.Name != "Items") continue;
+                if (field is ContainerType cont)
+                {
+                    return cont.SingleTypeGen as LoquiType;
+                }
+                else if (field is DictType dictType)
+                {
+                    return dictType.ValueTypeGen as LoquiType;
+                }
+                else
+                {
+                    throw new ArgumentException();
+                }
+            }
+            throw new ArgumentException();
+        }
+
+        public static LoquiType GetGroupLoquiTypeLowest(this ObjectGeneration objGen)
+        {
+            if (objGen.GetObjectType() != ObjectType.Group)
+            {
+                throw new ArgumentException();
+            }
+
+            var loquiType = GetGroupLoquiType(objGen);
+            while (loquiType.TargetObjectGeneration.GetObjectType() == ObjectType.Group)
+            {
+                loquiType = GetGroupLoquiType(loquiType.TargetObjectGeneration);
+            }
+            return loquiType;
+        }
     }
 }

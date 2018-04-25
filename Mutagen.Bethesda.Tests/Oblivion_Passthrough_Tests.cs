@@ -574,6 +574,28 @@ namespace Mutagen.Bethesda.Tests
         }
 
         [Fact]
+        public void OblivionESM_Folder_Reimport()
+        {
+            var mod = OblivionMod.Create_Binary(
+                Properties.Settings.Default.OblivionESM,
+                out var inputErrMask);
+            Assert.False(inputErrMask?.IsInError() ?? false);
+            using (var tmp = new TempFolder("Mutagen_Oblivion_XmlFolder"))
+            {
+                mod.Write_XmlFolder(
+                    tmp.Dir,
+                    out var exportMask);
+                Assert.False(exportMask?.IsInError() ?? false);
+            }
+        }
+
+        [Fact]
+        public void OblivionESM_Equals()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
         public void KnightsESP_Binary()
         {
             //OblivionMod_ErrorMask inputErrMask, outputErrMask;

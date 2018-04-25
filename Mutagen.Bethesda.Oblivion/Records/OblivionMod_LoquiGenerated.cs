@@ -2024,6 +2024,242 @@ namespace Mutagen.Bethesda.Oblivion
             }
             yield break;
         }
+        public void Write_XmlFolder(
+            DirectoryPath dir,
+            out OblivionMod_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            OblivionMod_ErrorMask errMaskRet = null;
+            Func<OblivionMod_ErrorMask> errMaskFunc = doMasks ? () => errMaskRet ?? (errMaskRet = new OblivionMod_ErrorMask()) : default(Func<OblivionMod_ErrorMask>);
+            try
+            {
+                dir.Create();
+                this.TES4.Write_XML(
+                    path: Path.Combine(dir.Path, "TES4.xml"),
+                    errorMask: out var TES4ErrorMask,
+                    doMasks: doMasks);
+                ErrorMask.HandleErrorMask(
+                    creator: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.TES4,
+                    errMaskObj: TES4ErrorMask);
+                GameSettings.Write_XmlFolder<GameSetting_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "GameSettings")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.GameSettings,
+                    doMasks: doMasks);
+                Globals.Write_XmlFolder<Global_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Globals")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Globals,
+                    doMasks: doMasks);
+                Classes.Write_XmlFolder<Class_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Classes")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Classes,
+                    doMasks: doMasks);
+                Factions.Write_XmlFolder<Faction_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Factions")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Factions,
+                    doMasks: doMasks);
+                Hairs.Write_XmlFolder<Hair_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Hairs")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Hairs,
+                    doMasks: doMasks);
+                Eyes.Write_XmlFolder<Eye_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Eyes")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Eyes,
+                    doMasks: doMasks);
+                Races.Write_XmlFolder<Race_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Races")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Races,
+                    doMasks: doMasks);
+                Sounds.Write_XmlFolder<Sound_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Sounds")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Sounds,
+                    doMasks: doMasks);
+                Skills.Write_XmlFolder<SkillRecord_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Skills")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Skills,
+                    doMasks: doMasks);
+                MagicEffects.Write_XmlFolder<MagicEffect_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "MagicEffects")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.MagicEffects,
+                    doMasks: doMasks);
+                Scripts.Write_XmlFolder<Script_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Scripts")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Scripts,
+                    doMasks: doMasks);
+                LandTextures.Write_XmlFolder<LandTexture_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "LandTextures")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.LandTextures,
+                    doMasks: doMasks);
+                Enchantments.Write_XmlFolder<Enchantment_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Enchantments")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Enchantments,
+                    doMasks: doMasks);
+                Spells.Write_XmlFolder<SpellUnleveled_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Spells")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Spells,
+                    doMasks: doMasks);
+                Birthsigns.Write_XmlFolder<Birthsign_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Birthsigns")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Birthsigns,
+                    doMasks: doMasks);
+                Activators.Write_XmlFolder<Activator_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Activators")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Activators,
+                    doMasks: doMasks);
+                AlchemicalApparatus.Write_XmlFolder<AlchemicalApparatus_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "AlchemicalApparatus")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.AlchemicalApparatus,
+                    doMasks: doMasks);
+                Armors.Write_XmlFolder<Armor_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Armors")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Armors,
+                    doMasks: doMasks);
+                Books.Write_XmlFolder<Book_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Books")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Books,
+                    doMasks: doMasks);
+                Clothes.Write_XmlFolder<Clothing_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Clothes")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Clothes,
+                    doMasks: doMasks);
+                Containers.Write_XmlFolder<Container_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Containers")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Containers,
+                    doMasks: doMasks);
+                Doors.Write_XmlFolder<Door_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Doors")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Doors,
+                    doMasks: doMasks);
+                Ingredients.Write_XmlFolder<Ingredient_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Ingredients")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Ingredients,
+                    doMasks: doMasks);
+                Lights.Write_XmlFolder<Light_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Lights")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Lights,
+                    doMasks: doMasks);
+                Miscellaneous.Write_XmlFolder<Miscellaneous_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Miscellaneous")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Miscellaneous,
+                    doMasks: doMasks);
+                Statics.Write_XmlFolder<Static_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Statics")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Statics,
+                    doMasks: doMasks);
+                Grasses.Write_XmlFolder<Grass_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Grasses")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Grasses,
+                    doMasks: doMasks);
+                Trees.Write_XmlFolder<Tree_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Trees")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Trees,
+                    doMasks: doMasks);
+                Flora.Write_XmlFolder<Flora_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Flora")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Flora,
+                    doMasks: doMasks);
+                Furnature.Write_XmlFolder<Furnature_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Furnature")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Furnature,
+                    doMasks: doMasks);
+                Weapons.Write_XmlFolder<Weapon_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Weapons")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Weapons,
+                    doMasks: doMasks);
+                Ammo.Write_XmlFolder<Ammo_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Ammo")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Ammo,
+                    doMasks: doMasks);
+                NPCs.Write_XmlFolder<NPC_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "NPCs")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.NPCs,
+                    doMasks: doMasks);
+                Creatures.Write_XmlFolder<Creature_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Creatures")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Creatures,
+                    doMasks: doMasks);
+                LeveledCreatures.Write_XmlFolder<LeveledCreature_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "LeveledCreatures")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.LeveledCreatures,
+                    doMasks: doMasks);
+                SoulGems.Write_XmlFolder<SoulGem_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "SoulGems")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.SoulGems,
+                    doMasks: doMasks);
+                Keys.Write_XmlFolder<Key_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Keys")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Keys,
+                    doMasks: doMasks);
+                Potions.Write_XmlFolder<Potion_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Potions")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Potions,
+                    doMasks: doMasks);
+                Subspaces.Write_XmlFolder<Subspace_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Subspaces")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Subspaces,
+                    doMasks: doMasks);
+                SigilStones.Write_XmlFolder<SigilStone_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "SigilStones")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.SigilStones,
+                    doMasks: doMasks);
+                LeveledItems.Write_XmlFolder<LeveledItem_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "LeveledItems")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.LeveledItems,
+                    doMasks: doMasks);
+                Weathers.Write_XmlFolder<Weather_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Weathers")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Weathers,
+                    doMasks: doMasks);
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                errMaskFunc().Overall = ex;
+            }
+            errorMask = errMaskRet;
+        }
         #endregion
 
         #region Binary Translation

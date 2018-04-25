@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Internals;
+using Noggog;
 
 namespace Mutagen.Bethesda
 {
@@ -14,7 +15,7 @@ namespace Mutagen.Bethesda
         where T : MajorRecord, ILoquiObjectGetter
     {
         static partial void FillBinary_ContainedRecordType_Custom<T_ErrMask>(
-            MutagenFrame frame, 
+            MutagenFrame frame,
             Group<T> item,
             int fieldIndex,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
@@ -24,9 +25,9 @@ namespace Mutagen.Bethesda
         }
 
         static partial void WriteBinary_ContainedRecordType_Custom<T_ErrMask>(
-            MutagenWriter writer, 
+            MutagenWriter writer,
             Group<T> item,
-            int fieldIndex, 
+            int fieldIndex,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
@@ -40,6 +41,45 @@ namespace Mutagen.Bethesda
                 errorMask,
                 fieldIndex,
                 err);
+        }
+
+        public void Write_XmlFolder<T_ErrMask>(
+            DirectoryPath dir,
+            Func<IErrorMask> errMaskFunc,
+            int index,
+            bool doMasks)
+            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+        {
+            Group_ErrorMask<T_ErrMask> grupErrMask = null;
+            try
+            {
+                dir.Create();
+                int counter = 0;
+                foreach (var item in this.Items.Values)
+                {
+                    item.Write_XML(
+                        path: Path.Combine(dir.Path, $"{counter++} - {item.FormID.IDString()} - {item.EditorID}.xml"),
+                        errorMask: out var itemErrMask,
+                        doMasks: doMasks);
+                    if (itemErrMask == null) continue;
+                    if (grupErrMask == null)
+                    {
+                        grupErrMask = new Group_ErrorMask<T_ErrMask>();
+                        errMaskFunc().SetNthMask(
+                            index,
+                            new MaskItem<Exception, Group_ErrorMask<T_ErrMask>>(null, grupErrMask));
+                    }
+                    ErrorMask.HandleErrorMaskAddition<IErrorMask, T_ErrMask>(
+                        creator: () => grupErrMask,
+                        index: (int)Group_FieldIndex.Items,
+                        errMaskObj: (T_ErrMask)itemErrMask);
+                }
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                errMaskFunc().Overall = ex;
+            }
         }
     }
 

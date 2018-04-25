@@ -329,21 +329,23 @@ namespace Mutagen.Bethesda.Binary
                 default:
                     throw new NotImplementedException();
             }
-            if (EnumExt<E>.IsFlagsEnum())
-            {
-                ex = null;
-                return (E)Enum.ToObject(typeof(E), i);
-            }
-            else
-            {
-                if (!EnumExt.TryParse<E>(i, out var e))
-                {
-                    ex = new ArgumentException($"Undefined {typeof(E).Name} enum value: {i}");
-                    return (E)Enum.ToObject(typeof(E), i);
-                }
-                ex = null;
-                return e;
-            }
+            ex = null;
+            return (E)Enum.ToObject(typeof(E), i);
+            //if (EnumExt<E>.IsFlagsEnum())
+            //{
+            //    return (E)Enum.ToObject(typeof(E), i);
+            //    ex = null;
+            //}
+            //else
+            //{
+            //    if (!EnumExt.TryParse<E>(i, out var e))
+            //    {
+            //        ex = new ArgumentException($"Undefined {typeof(E).Name} enum value: {i}");
+            //        return (E)Enum.ToObject(typeof(E), i);
+            //    }
+            //    ex = null;
+            //    return e;
+            //}
         }
 
         protected void WriteValue(MutagenWriter writer, E item, ContentLength length)
