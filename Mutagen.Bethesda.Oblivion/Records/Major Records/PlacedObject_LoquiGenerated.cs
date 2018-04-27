@@ -1399,6 +1399,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return Placed.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
+                        recordTypeConverter: recordTypeConverter,
                         errorMask: errorMask).Bubble((i) => PlacedObjectCommon.ConvertFieldIndex(i));
             }
         }

@@ -613,6 +613,7 @@ namespace Mutagen.Bethesda.Generation
                                 {
                                     args.Add("item: item");
                                     args.Add("frame: frame");
+                                    args.Add("recordTypeConverter: recordTypeConverter");
                                     args.Add($"errorMask: errorMask");
                                 }
                             }

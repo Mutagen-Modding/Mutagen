@@ -17,7 +17,7 @@
       <P2Float name="ObjectBoundsMax" recordType="NAM9" />
       <Enum name="Music" recordType="SNAM" enumName="MusicType" />
       <CustomLogic name="OffsetLength" recordType="XXXX" />
-      <ByteArray name="OffsetData" recordType="OFST" noBinary="true" nullable="NotNull" />
+      <ByteArray name="OffsetData" recordType="OFST" noBinary="true" />
     </Fields>
   </Object>
 </Loqui>

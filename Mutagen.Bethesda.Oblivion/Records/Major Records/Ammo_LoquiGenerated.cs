@@ -877,6 +877,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return ItemAbstract.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
+                        recordTypeConverter: recordTypeConverter,
                         errorMask: errorMask).Bubble((i) => AmmoCommon.ConvertFieldIndex(i));
             }
         }

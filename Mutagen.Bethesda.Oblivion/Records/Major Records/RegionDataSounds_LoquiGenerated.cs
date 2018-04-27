@@ -672,6 +672,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return RegionData.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
+                        recordTypeConverter: recordTypeConverter,
                         errorMask: errorMask).Bubble((i) => RegionDataSoundsCommon.ConvertFieldIndex(i));
             }
         }

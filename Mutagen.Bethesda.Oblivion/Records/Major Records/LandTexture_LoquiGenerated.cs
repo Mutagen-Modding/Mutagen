@@ -718,6 +718,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
+                        recordTypeConverter: recordTypeConverter,
                         errorMask: errorMask).Bubble((i) => LandTextureCommon.ConvertFieldIndex(i));
             }
         }
