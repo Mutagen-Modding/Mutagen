@@ -136,6 +136,44 @@ namespace Mutagen.Bethesda.Oblivion
                 );
         }
 
+        static void ParseTemporaryOutliers(MutagenFrame frame, Cell obj, Func<Cell_ErrorMask> errorMask)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                var nextHeader = HeaderTranslation.GetNextRecordType(frame.Reader, out var pathLen);
+                if (nextHeader.Equals(PathGrid_Registration.PGRD_HEADER))
+                {
+                    using (var subFrame = frame.Spawn(pathLen + Constants.RECORD_HEADER_LENGTH))
+                    {
+                        obj.PathGrid = PathGrid.Create_Binary(
+                            subFrame,
+                            out var subMask);
+                        if (subMask != null)
+                        {
+                            errorMask().PathGrid = new MaskItem<Exception, PathGrid_ErrorMask>(null, subMask);
+                        }
+                    }
+                }
+                else if (nextHeader.Equals(Landscape_Registration.LAND_HEADER))
+                {
+                    using (var subFrame = frame.Spawn(pathLen + Constants.RECORD_HEADER_LENGTH))
+                    {
+                        obj.Landscape = Landscape.Create_Binary(
+                            subFrame,
+                            out var subMask);
+                        if (subMask != null)
+                        {
+                            errorMask().Landscape = new MaskItem<Exception, Landscape_ErrorMask>(null, subMask);
+                        }
+                    }
+                }
+                else
+                {
+                    return;
+                }
+            }
+        }
+
         static void ParseTemporary(MutagenFrame frame, Cell obj, Func<Cell_ErrorMask> errorMask)
         {
             frame.Reader.Position += 8;
@@ -146,20 +184,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             frame.Reader.Position += 4;
             obj._temporaryTimeStamp = frame.Reader.ReadBytes(4);
-            var pathGridHeader = HeaderTranslation.GetNextRecordType(frame.Reader, out var pathLen);
-            if (pathGridHeader.Equals(PathGrid_Registration.PGRD_HEADER))
-            {
-                using (var pathGridFrame = frame.Spawn(pathLen + Constants.RECORD_HEADER_LENGTH))
-                {
-                    obj.PathGrid = PathGrid.Create_Binary(
-                        pathGridFrame,
-                        out var pathGridMask);
-                    if (pathGridMask != null)
-                    {
-                        errorMask().PathGrid = new MaskItem<Exception, PathGrid_ErrorMask>(null, pathGridMask);
-                    }
-                }
-            }
+            ParseTemporaryOutliers(frame, obj, errorMask);
             var persistentTryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.ParseRepeatedItem(
                 frame: frame,
                 fieldIndex: (int)Cell_FieldIndex.Persistent,
@@ -197,7 +222,8 @@ namespace Mutagen.Bethesda.Oblivion
             if (obj.Persistent.Count == 0
                 && obj.Temporary.Count == 0
                 && obj.VisibleWhenDistant.Count == 0
-                && !obj.PathGrid_Property.HasBeenSet) return;
+                && !obj.PathGrid_Property.HasBeenSet
+                && !obj.Landscape_Property.HasBeenSet) return;
             using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
             {
                 writer.Write(obj.FormID.ID);
@@ -240,7 +266,8 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                 }
                 if (obj.Temporary.Count > 0
-                    || obj.PathGrid_Property.HasBeenSet)
+                    || obj.PathGrid_Property.HasBeenSet
+                    || obj.Landscape_Property.HasBeenSet)
                 {
                     using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                     {
@@ -253,6 +280,14 @@ namespace Mutagen.Bethesda.Oblivion
                         else
                         {
                             writer.WriteZeros(4);
+                        }
+                        if (obj.Landscape_Property.HasBeenSet)
+                        {
+                            LoquiBinaryTranslation<Landscape, Landscape_ErrorMask>.Instance.Write(
+                                writer,
+                                obj.Landscape,
+                                (int)Cell_FieldIndex.Landscape,
+                                errorMask);
                         }
                         if (obj.PathGrid_Property.HasBeenSet)
                         {

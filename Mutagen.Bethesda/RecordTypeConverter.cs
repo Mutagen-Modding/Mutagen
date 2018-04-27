@@ -42,5 +42,12 @@ namespace Mutagen.Bethesda
             }
             return rec;
         }
+
+        public static RecordTypeConverter Combine(this RecordTypeConverter converter, RecordTypeConverter rhs)
+        {
+            if (converter == null) return rhs;
+            if (rhs == null) return null;
+            throw new NotImplementedException();
+        }
     }
 }

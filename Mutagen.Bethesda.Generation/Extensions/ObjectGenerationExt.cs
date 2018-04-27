@@ -122,8 +122,9 @@ namespace Mutagen.Bethesda.Generation
             });
         }
 
-        public static LoquiType GetGroupLoquiType(this ObjectGeneration objGen)
+        public static async Task<LoquiType> GetGroupLoquiType(this ObjectGeneration objGen)
         {
+            await objGen.LoadingCompleteTask.Task;
             if (objGen.GetObjectType() != ObjectType.Group)
             {
                 throw new ArgumentException();
@@ -147,19 +148,25 @@ namespace Mutagen.Bethesda.Generation
             throw new ArgumentException();
         }
         
-        public static LoquiType GetGroupLoquiTypeLowest(this ObjectGeneration objGen)
+        public static async Task<LoquiType> GetGroupLoquiTypeLowest(this ObjectGeneration objGen)
         {
+            await objGen.LoadingCompleteTask.Task;
             if (objGen.GetObjectType() != ObjectType.Group)
             {
                 throw new ArgumentException();
             }
 
-            var loquiType = GetGroupLoquiType(objGen);
+            var loquiType = await GetGroupLoquiType(objGen);
             while (loquiType.TargetObjectGeneration.GetObjectType() == ObjectType.Group)
             {
-                loquiType = GetGroupLoquiType(loquiType.TargetObjectGeneration);
+                loquiType = await GetGroupLoquiType(loquiType.TargetObjectGeneration);
             }
             return loquiType;
+        }
+
+        public static bool IsTypelessStruct(this ObjectGeneration objGen)
+        {
+            return objGen.GetObjectType() == ObjectType.Subrecord && !objGen.HasRecordType();
         }
     }
 }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Landscape" recordType="LAND" objType="Record" baseClass="Placed" GUID="f03a09c7-ce1f-4764-ac9a-bccccfa481d4" ID="143">
+    <Fields>
+      <ByteArray name="Unknown" recordType="DATA" />
+      <ByteArray name="VertexNormals" recordType="VNML" />
+      <ByteArray name="VertexHeightMap" recordType="VHGT" />
+      <ByteArray name="VertexColors" recordType="VCLR" />
+      <Dict name="Layers">
+        <KeyedValue keyAccessor="LayerNumber" keyType="ushort">
+          <Ref>
+            <Direct refName="BaseLayer" />
+          </Ref>
+        </KeyedValue>
+      </Dict>
+      <List name="Textures" recordType="VTEX">
+        <FormIDLink refName="LandTexture" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="BaseLayer" objType="Subrecord" GUID="4b14f70e-5702-4ed0-b691-09996696e4d9" ID="145">
+    <Fields>
+      <Data recordType="BTXT">
+        <Fields>
+          <FormIDLink name="Texture" refName="LandTexture" />
+          <Enum name="Quadrant" enumName="AlphaLayer.QuadrantEnum" byteLength="2" />
+          <UInt16 name="LayerNumber" protected="true" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+  <Object name="AlphaLayer" objType="Subrecord" baseClass="BaseLayer" GUID="757f00fc-f49c-4ce3-90c8-a86cf9e93ff7" ID="144">
+    <Fields>
+      <ByteArray name="AlphaLayerData" recordType="VTXT" />
+    </Fields>
+    <BaseRecordTypeOverrides>
+      <Mapping From="BTXT" To="ATXT" />
+    </BaseRecordTypeOverrides>
+  </Object>
+</Loqui>

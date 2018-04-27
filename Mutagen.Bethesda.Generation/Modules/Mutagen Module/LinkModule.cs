@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Generation
                         switch (linktype)
                         {
                             case LinkCase.Yes:
-                                fg.AppendLine($"foreach (var item in {field.Name}.SelectMany(f => f.Links))");
+                                fg.AppendLine($"foreach (var item in {field.Name}.Values.SelectMany(f => f.Links))");
                                 break;
                             case LinkCase.Maybe:
                                 fg.AppendLine($"foreach (var item in Items.SelectWhere((f) => TryGet<ILinkContainer>.Create(successful: f is ILinkContainer, val: f as ILinkContainer))");

@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Loqui;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     public partial class Worldspace
     {
+        private byte[] _timeStamp;
+
         [Flags]
         public enum Flag
         {
@@ -48,7 +52,66 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void CustomBinaryEnd_Import(MutagenFrame frame, Worldspace obj, Func<Worldspace_ErrorMask> errorMask)
         {
-            throw new NotImplementedException();
+            if (frame.Reader.Complete) return;
+            var next = HeaderTranslation.GetNextType(frame.Reader, out var len, hopGroup: false);
+            if (!next.Equals("GRUP")) return;
+            frame.Reader.Position += 8;
+            var id = frame.Reader.ReadUInt32();
+            var grupType = (GroupTypeEnum)frame.Reader.ReadInt32();
+            if (grupType == GroupTypeEnum.WorldChildren)
+            {
+                obj._timeStamp = frame.Reader.ReadBytes(4);
+                if (id != obj.FormID.ID)
+                {
+                    throw new ArgumentException("Cell children group did not match the FormID of the parent worldspace.");
+                }
+            }
+            else
+            {
+                frame.Reader.Position -= 16;
+                return;
+            }
+            using (var subFrame = new MutagenFrame(frame.Reader, new ContentLength(len - 20)))
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    if (subFrame.Complete) return;
+                    var subType = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var subLen);
+                    subFrame.Reader.Position -= 6;
+                    switch (subType.Type)
+                    {
+                        case "ROAD":
+                            obj.Road_Property.SetIfSucceeded(LoquiBinaryTranslation<Road, Road_ErrorMask>.Instance.Parse(
+                                frame: subFrame,
+                                fieldIndex: (int)Worldspace_FieldIndex.Road,
+                                errorMask: errorMask));
+                            break;
+                        case "CELL":
+                            obj.TopCell_Property.SetIfSucceeded(LoquiBinaryTranslation<Cell, Cell_ErrorMask>.Instance.Parse(
+                                frame: subFrame,
+                                fieldIndex: (int)Worldspace_FieldIndex.TopCell,
+                                errorMask: errorMask));
+                            break;
+                        case "GRUP":
+                            obj._SubCells.SetIfSucceeded(Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock, MaskItem<Exception, WorldspaceBlock_ErrorMask>>.Instance.ParseRepeatedItem(
+                                frame: frame,
+                                triggeringRecord: Worldspace_Registration.GRUP_HEADER,
+                                fieldIndex: (int)Worldspace_FieldIndex.SubCells,
+                                lengthLength: Mutagen.Bethesda.Constants.RECORD_LENGTHLENGTH,
+                                errorMask: errorMask,
+                                transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, WorldspaceBlock_ErrorMask> listSubMask) =>
+                                {
+                                    return LoquiBinaryTranslation<WorldspaceBlock, WorldspaceBlock_ErrorMask>.Instance.Parse(
+                                        frame: r.Spawn(snapToFinalPosition: false),
+                                        doMasks: listDoMasks,
+                                        errorMask: out listSubMask);
+                                }));
+                            break;
+                        default:
+                            return;
+                    }
+                }
+            }
         }
 
         static partial void CustomBinaryEnd_Export(MutagenWriter writer, Worldspace obj, Func<Worldspace_ErrorMask> errorMask)

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -76,6 +76,9 @@
     </Compile>
     <Compile Include="Records\Major Records\AlchemicalApparatus.cs">
       <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AlphaLayer.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Ammo.cs">
       <DependentUpon>Ammo.xml</DependentUpon>
@@ -274,6 +277,9 @@
     </Compile>
     <Compile Include="Records\Major Records\RegionSound.cs">
       <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Road.cs">
+      <DependentUpon>Road.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Script.cs">
       <DependentUpon>Script.xml</DependentUpon>
@@ -590,6 +596,27 @@
     <Compile Include="Records\Major Records\CellLighting_LoquiGenerated.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Road_LoquiGenerated.cs">
+      <DependentUpon>Road.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceBlock_LoquiGenerated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceSubBlock_LoquiGenerated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RoadPoint_LoquiGenerated.cs">
+      <DependentUpon>Road.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AlphaLayer_LoquiGenerated.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BaseLayer_LoquiGenerated.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Landscape_LoquiGenerated.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\DistantLODData.xml">
@@ -704,6 +731,9 @@
     <Content Include="Records\Major Records\Key.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Records\Major Records\Landscape.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Records\Major Records\LandTexture.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -753,6 +783,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Region.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Road.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Script.xml">

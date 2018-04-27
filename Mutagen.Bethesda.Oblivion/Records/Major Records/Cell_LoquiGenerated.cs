@@ -187,6 +187,19 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<PathGrid> ICellGetter.PathGrid_Property => this.PathGrid_Property;
         #endregion
+        #region Landscape
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly INotifyingSetItem<Landscape> _Landscape = new NotifyingSetItem<Landscape>();
+        public INotifyingSetItem<Landscape> Landscape_Property => this._Landscape;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Landscape ICellGetter.Landscape => this.Landscape;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public Landscape Landscape { get => _Landscape.Item; set => _Landscape.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItem<Landscape> ICell.Landscape_Property => this.Landscape_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<Landscape> ICellGetter.Landscape_Property => this.Landscape_Property;
+        #endregion
         #region Persistent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<Placed> _Persistent = new NotifyingList<Placed>();
@@ -360,6 +373,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!object.Equals(PathGrid, rhs.PathGrid)) return false;
             }
+            if (Landscape_Property.HasBeenSet != rhs.Landscape_Property.HasBeenSet) return false;
+            if (Landscape_Property.HasBeenSet)
+            {
+                if (!object.Equals(Landscape, rhs.Landscape)) return false;
+            }
             if (Persistent.HasBeenSet != rhs.Persistent.HasBeenSet) return false;
             if (Persistent.HasBeenSet)
             {
@@ -428,6 +446,10 @@ namespace Mutagen.Bethesda.Oblivion
             if (PathGrid_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(PathGrid).CombineHashCode(ret);
+            }
+            if (Landscape_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Landscape).CombineHashCode(ret);
             }
             if (Persistent.HasBeenSet)
             {
@@ -741,6 +763,12 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Cell_FieldIndex.PathGrid,
                         errorMask: errorMask));
                     break;
+                case "Landscape":
+                    item._Landscape.SetIfSucceeded(LoquiXmlTranslation<Landscape, Landscape_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Cell_FieldIndex.Landscape,
+                        errorMask: errorMask));
+                    break;
                 case "Persistent":
                     item._Persistent.SetIfSucceeded(ListXmlTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.Parse(
                         root: root,
@@ -811,6 +839,13 @@ namespace Mutagen.Bethesda.Oblivion
             if (PathGrid != null)
             {
                 foreach (var item in PathGrid.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (Landscape != null)
+            {
+                foreach (var item in Landscape.Links)
                 {
                     yield return item;
                 }
@@ -1313,6 +1348,11 @@ namespace Mutagen.Bethesda.Oblivion
                         (PathGrid)obj,
                         cmds);
                     break;
+                case Cell_FieldIndex.Landscape:
+                    this._Landscape.Set(
+                        (Landscape)obj,
+                        cmds);
+                    break;
                 case Cell_FieldIndex.Persistent:
                     this._Persistent.SetTo((IEnumerable<Placed>)obj, cmds);
                     break;
@@ -1411,6 +1451,11 @@ namespace Mutagen.Bethesda.Oblivion
                         (PathGrid)pair.Value,
                         null);
                     break;
+                case Cell_FieldIndex.Landscape:
+                    obj._Landscape.Set(
+                        (Landscape)pair.Value,
+                        null);
+                    break;
                 case Cell_FieldIndex.Persistent:
                     obj._Persistent.SetTo((IEnumerable<Placed>)pair.Value, null);
                     break;
@@ -1460,6 +1505,9 @@ namespace Mutagen.Bethesda.Oblivion
         new Global GlobalVariable { get; set; }
         new PathGrid PathGrid { get; set; }
         new INotifyingSetItem<PathGrid> PathGrid_Property { get; }
+
+        new Landscape Landscape { get; set; }
+        new INotifyingSetItem<Landscape> Landscape_Property { get; }
 
         new INotifyingList<Placed> Persistent { get; }
         new INotifyingList<Placed> Temporary { get; }
@@ -1526,6 +1574,11 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<PathGrid> PathGrid_Property { get; }
 
         #endregion
+        #region Landscape
+        Landscape Landscape { get; }
+        INotifyingSetItemGetter<Landscape> Landscape_Property { get; }
+
+        #endregion
         #region Persistent
         INotifyingListGetter<Placed> Persistent { get; }
         #endregion
@@ -1565,9 +1618,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FactionRank = 15,
         GlobalVariable = 16,
         PathGrid = 17,
-        Persistent = 18,
-        Temporary = 19,
-        VisibleWhenDistant = 20,
+        Landscape = 18,
+        Persistent = 19,
+        Temporary = 20,
+        VisibleWhenDistant = 21,
     }
     #endregion
 
@@ -1585,7 +1639,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "d54abb07-d896-4ddb-b857-9b9df945dd1e";
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(Cell_Mask<>);
 
@@ -1637,6 +1691,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Cell_FieldIndex.GlobalVariable;
                 case "PATHGRID":
                     return (ushort)Cell_FieldIndex.PathGrid;
+                case "LANDSCAPE":
+                    return (ushort)Cell_FieldIndex.Landscape;
                 case "PERSISTENT":
                     return (ushort)Cell_FieldIndex.Persistent;
                 case "TEMPORARY":
@@ -1669,6 +1725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.FactionRank:
                 case Cell_FieldIndex.GlobalVariable:
                 case Cell_FieldIndex.PathGrid:
+                case Cell_FieldIndex.Landscape:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1682,6 +1739,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Cell_FieldIndex.Lighting:
                 case Cell_FieldIndex.PathGrid:
+                case Cell_FieldIndex.Landscape:
                 case Cell_FieldIndex.Persistent:
                 case Cell_FieldIndex.Temporary:
                 case Cell_FieldIndex.VisibleWhenDistant:
@@ -1719,6 +1777,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.FactionRank:
                 case Cell_FieldIndex.GlobalVariable:
                 case Cell_FieldIndex.PathGrid:
+                case Cell_FieldIndex.Landscape:
                 case Cell_FieldIndex.Persistent:
                 case Cell_FieldIndex.Temporary:
                 case Cell_FieldIndex.VisibleWhenDistant:
@@ -1757,6 +1816,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "GlobalVariable";
                 case Cell_FieldIndex.PathGrid:
                     return "PathGrid";
+                case Cell_FieldIndex.Landscape:
+                    return "Landscape";
                 case Cell_FieldIndex.Persistent:
                     return "Persistent";
                 case Cell_FieldIndex.Temporary:
@@ -1785,6 +1846,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.FactionRank:
                 case Cell_FieldIndex.GlobalVariable:
                 case Cell_FieldIndex.PathGrid:
+                case Cell_FieldIndex.Landscape:
                 case Cell_FieldIndex.Persistent:
                 case Cell_FieldIndex.Temporary:
                 case Cell_FieldIndex.VisibleWhenDistant:
@@ -1811,6 +1873,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.FactionRank:
                 case Cell_FieldIndex.GlobalVariable:
                 case Cell_FieldIndex.PathGrid:
+                case Cell_FieldIndex.Landscape:
                 case Cell_FieldIndex.Persistent:
                 case Cell_FieldIndex.Temporary:
                 case Cell_FieldIndex.VisibleWhenDistant:
@@ -1849,6 +1912,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(FormIDSetLink<Global>);
                 case Cell_FieldIndex.PathGrid:
                     return typeof(PathGrid);
+                case Cell_FieldIndex.Landscape:
+                    return typeof(Landscape);
                 case Cell_FieldIndex.Persistent:
                     return typeof(NotifyingList<Placed>);
                 case Cell_FieldIndex.Temporary:
@@ -1873,12 +1938,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType XRNK_HEADER = new RecordType("XRNK");
         public static readonly RecordType XGLB_HEADER = new RecordType("XGLB");
         public static readonly RecordType PGRD_HEADER = new RecordType("PGRD");
+        public static readonly RecordType LAND_HEADER = new RecordType("LAND");
         public static readonly RecordType ACRE_HEADER = new RecordType("ACRE");
         public static readonly RecordType ACHR_HEADER = new RecordType("ACHR");
         public static readonly RecordType REFR_HEADER = new RecordType("REFR");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = CELL_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 15;
+        public const int NumTypedFields = 16;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2177,6 +2243,55 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)Cell_FieldIndex.PathGrid, ex);
                 }
             }
+            if (copyMask?.Landscape.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Landscape_Property.SetToWithDefault(
+                        rhs.Landscape_Property,
+                        def?.Landscape_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Landscape.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    LandscapeCommon.CopyFieldsFrom(
+                                        item: item.Landscape,
+                                        rhs: rhs.Landscape,
+                                        def: def?.Landscape,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Landscape_ErrorMask>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            var mask = new Landscape_ErrorMask();
+                                            baseMask.SetNthMask((int)Cell_FieldIndex.Landscape, mask);
+                                            return mask;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Landscape.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Landscape);
+                                    return Landscape.Copy(
+                                        r,
+                                        copyMask?.Landscape?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Landscape?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Cell_FieldIndex.Landscape, ex);
+                }
+            }
             if (copyMask?.Persistent.Overall != CopyOption.Skip)
             {
                 try
@@ -2322,6 +2437,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.PathGrid:
                     obj.PathGrid_Property.HasBeenSet = on;
                     break;
+                case Cell_FieldIndex.Landscape:
+                    obj.Landscape_Property.HasBeenSet = on;
+                    break;
                 case Cell_FieldIndex.Persistent:
                     obj.Persistent.HasBeenSet = on;
                     break;
@@ -2381,6 +2499,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.PathGrid:
                     obj.PathGrid_Property.Unset(cmds);
                     break;
+                case Cell_FieldIndex.Landscape:
+                    obj.Landscape_Property.Unset(cmds);
+                    break;
                 case Cell_FieldIndex.Persistent:
                     obj.Persistent.Unset(cmds);
                     break;
@@ -2427,6 +2548,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.GlobalVariable_Property.HasBeenSet;
                 case Cell_FieldIndex.PathGrid:
                     return obj.PathGrid_Property.HasBeenSet;
+                case Cell_FieldIndex.Landscape:
+                    return obj.Landscape_Property.HasBeenSet;
                 case Cell_FieldIndex.Persistent:
                     return obj.Persistent.HasBeenSet;
                 case Cell_FieldIndex.Temporary:
@@ -2469,6 +2592,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.GlobalVariable;
                 case Cell_FieldIndex.PathGrid:
                     return obj.PathGrid;
+                case Cell_FieldIndex.Landscape:
+                    return obj.Landscape;
                 case Cell_FieldIndex.Persistent:
                     return obj.Persistent;
                 case Cell_FieldIndex.Temporary:
@@ -2496,6 +2621,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.FactionRank_Property.Unset(cmds.ToUnsetParams());
             item.GlobalVariable_Property.Unset(cmds.ToUnsetParams());
             item.PathGrid_Property.Unset(cmds.ToUnsetParams());
+            item.Landscape_Property.Unset(cmds.ToUnsetParams());
             item.Persistent.Unset(cmds.ToUnsetParams());
             item.Temporary.Unset(cmds.ToUnsetParams());
             item.VisibleWhenDistant.Unset(cmds.ToUnsetParams());
@@ -2546,6 +2672,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.FactionRank = item.FactionRank_Property.Equals(rhs.FactionRank_Property, (l, r) => l == r);
             ret.GlobalVariable = item.GlobalVariable_Property.Equals(rhs.GlobalVariable_Property, (l, r) => l == r);
             ret.PathGrid = item.PathGrid_Property.LoquiEqualsHelper(rhs.PathGrid_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Landscape = item.Landscape_Property.LoquiEqualsHelper(rhs.Landscape_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             if (item.Persistent.HasBeenSet == rhs.Persistent.HasBeenSet)
             {
                 if (item.Persistent.HasBeenSet)
@@ -2713,6 +2840,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.PathGrid?.ToString(fg, "PathGrid");
                 }
+                if (printMask?.Landscape?.Overall ?? true)
+                {
+                    item.Landscape?.ToString(fg, "Landscape");
+                }
                 if (printMask?.Persistent?.Overall ?? true)
                 {
                     fg.AppendLine("Persistent =>");
@@ -2789,6 +2920,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.GlobalVariable.HasValue && checkMask.GlobalVariable.Value != item.GlobalVariable_Property.HasBeenSet) return false;
             if (checkMask.PathGrid.Overall.HasValue && checkMask.PathGrid.Overall.Value != item.PathGrid_Property.HasBeenSet) return false;
             if (checkMask.PathGrid.Specific != null && (item.PathGrid == null || !item.PathGrid.HasBeenSet(checkMask.PathGrid.Specific))) return false;
+            if (checkMask.Landscape.Overall.HasValue && checkMask.Landscape.Overall.Value != item.Landscape_Property.HasBeenSet) return false;
+            if (checkMask.Landscape.Specific != null && (item.Landscape == null || !item.Landscape.HasBeenSet(checkMask.Landscape.Specific))) return false;
             if (checkMask.Persistent.Overall.HasValue && checkMask.Persistent.Overall.Value != item.Persistent.HasBeenSet) return false;
             if (checkMask.Temporary.Overall.HasValue && checkMask.Temporary.Overall.Value != item.Temporary.HasBeenSet) return false;
             if (checkMask.VisibleWhenDistant.Overall.HasValue && checkMask.VisibleWhenDistant.Overall.Value != item.VisibleWhenDistant.HasBeenSet) return false;
@@ -2810,6 +2943,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.FactionRank = item.FactionRank_Property.HasBeenSet;
             ret.GlobalVariable = item.GlobalVariable_Property.HasBeenSet;
             ret.PathGrid = new MaskItem<bool, PathGrid_Mask<bool>>(item.PathGrid_Property.HasBeenSet, PathGridCommon.GetHasBeenSetMask(item.PathGrid));
+            ret.Landscape = new MaskItem<bool, Landscape_Mask<bool>>(item.Landscape_Property.HasBeenSet, LandscapeCommon.GetHasBeenSetMask(item.Landscape));
             ret.Persistent = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>(item.Persistent.HasBeenSet, item.Persistent.Select((i) => new MaskItem<bool, Placed_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.Temporary = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>(item.Temporary.HasBeenSet, item.Temporary.Select((i) => new MaskItem<bool, Placed_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.VisibleWhenDistant = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>(item.VisibleWhenDistant.HasBeenSet, item.VisibleWhenDistant.Select((i) => new MaskItem<bool, Placed_Mask<bool>>(true, i.GetHasBeenSetMask())));
@@ -3016,6 +3150,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             item: item.PathGrid_Property,
                             name: nameof(item.PathGrid),
                             fieldIndex: (int)Cell_FieldIndex.PathGrid,
+                            errorMask: errorMask);
+                    }
+                    if (item.Landscape_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Landscape, Landscape_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: item.Landscape_Property,
+                            name: nameof(item.Landscape),
+                            fieldIndex: (int)Cell_FieldIndex.Landscape,
                             errorMask: errorMask);
                     }
                     if (item.Persistent.HasBeenSet)
@@ -3268,6 +3411,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.FactionRank = initialValue;
             this.GlobalVariable = initialValue;
             this.PathGrid = new MaskItem<T, PathGrid_Mask<T>>(initialValue, new PathGrid_Mask<T>(initialValue));
+            this.Landscape = new MaskItem<T, Landscape_Mask<T>>(initialValue, new Landscape_Mask<T>(initialValue));
             this.Persistent = new MaskItem<T, IEnumerable<MaskItem<T, Placed_Mask<T>>>>(initialValue, null);
             this.Temporary = new MaskItem<T, IEnumerable<MaskItem<T, Placed_Mask<T>>>>(initialValue, null);
             this.VisibleWhenDistant = new MaskItem<T, IEnumerable<MaskItem<T, Placed_Mask<T>>>>(initialValue, null);
@@ -3287,6 +3431,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T FactionRank;
         public T GlobalVariable;
         public MaskItem<T, PathGrid_Mask<T>> PathGrid { get; set; }
+        public MaskItem<T, Landscape_Mask<T>> Landscape { get; set; }
         public MaskItem<T, IEnumerable<MaskItem<T, Placed_Mask<T>>>> Persistent;
         public MaskItem<T, IEnumerable<MaskItem<T, Placed_Mask<T>>>> Temporary;
         public MaskItem<T, IEnumerable<MaskItem<T, Placed_Mask<T>>>> VisibleWhenDistant;
@@ -3315,6 +3460,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.FactionRank, rhs.FactionRank)) return false;
             if (!object.Equals(this.GlobalVariable, rhs.GlobalVariable)) return false;
             if (!object.Equals(this.PathGrid, rhs.PathGrid)) return false;
+            if (!object.Equals(this.Landscape, rhs.Landscape)) return false;
             if (!object.Equals(this.Persistent, rhs.Persistent)) return false;
             if (!object.Equals(this.Temporary, rhs.Temporary)) return false;
             if (!object.Equals(this.VisibleWhenDistant, rhs.VisibleWhenDistant)) return false;
@@ -3335,6 +3481,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.FactionRank?.GetHashCode());
             ret = ret.CombineHashCode(this.GlobalVariable?.GetHashCode());
             ret = ret.CombineHashCode(this.PathGrid?.GetHashCode());
+            ret = ret.CombineHashCode(this.Landscape?.GetHashCode());
             ret = ret.CombineHashCode(this.Persistent?.GetHashCode());
             ret = ret.CombineHashCode(this.Temporary?.GetHashCode());
             ret = ret.CombineHashCode(this.VisibleWhenDistant?.GetHashCode());
@@ -3377,6 +3524,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!eval(this.PathGrid.Overall)) return false;
                 if (this.PathGrid.Specific != null && !this.PathGrid.Specific.AllEqual(eval)) return false;
+            }
+            if (Landscape != null)
+            {
+                if (!eval(this.Landscape.Overall)) return false;
+                if (this.Landscape.Specific != null && !this.Landscape.Specific.AllEqual(eval)) return false;
             }
             if (this.Persistent != null)
             {
@@ -3470,6 +3622,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 if (this.PathGrid.Specific != null)
                 {
                     obj.PathGrid.Specific = this.PathGrid.Specific.Translate(eval);
+                }
+            }
+            if (this.Landscape != null)
+            {
+                obj.Landscape = new MaskItem<R, Landscape_Mask<R>>();
+                obj.Landscape.Overall = eval(this.Landscape.Overall);
+                if (this.Landscape.Specific != null)
+                {
+                    obj.Landscape.Specific = this.Landscape.Specific.Translate(eval);
                 }
             }
             if (Persistent != null)
@@ -3646,6 +3807,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     PathGrid?.ToString(fg);
                 }
+                if (printMask?.Landscape?.Overall ?? true)
+                {
+                    Landscape?.ToString(fg);
+                }
                 if (printMask?.Persistent?.Overall ?? true)
                 {
                     fg.AppendLine("Persistent =>");
@@ -3743,6 +3908,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception FactionRank;
         public Exception GlobalVariable;
         public MaskItem<Exception, PathGrid_ErrorMask> PathGrid;
+        public MaskItem<Exception, Landscape_ErrorMask> Landscape;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>> Persistent;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>> Temporary;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>> VisibleWhenDistant;
@@ -3789,6 +3955,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Cell_FieldIndex.PathGrid:
                     this.PathGrid = new MaskItem<Exception, PathGrid_ErrorMask>(ex, null);
+                    break;
+                case Cell_FieldIndex.Landscape:
+                    this.Landscape = new MaskItem<Exception, Landscape_ErrorMask>(ex, null);
                     break;
                 case Cell_FieldIndex.Persistent:
                     this.Persistent = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>>(ex, null);
@@ -3846,6 +4015,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.PathGrid:
                     this.PathGrid = (MaskItem<Exception, PathGrid_ErrorMask>)obj;
                     break;
+                case Cell_FieldIndex.Landscape:
+                    this.Landscape = (MaskItem<Exception, Landscape_ErrorMask>)obj;
+                    break;
                 case Cell_FieldIndex.Persistent:
                     this.Persistent = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>>)obj;
                     break;
@@ -3876,6 +4048,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (FactionRank != null) return true;
             if (GlobalVariable != null) return true;
             if (PathGrid != null) return true;
+            if (Landscape != null) return true;
             if (Persistent != null) return true;
             if (Temporary != null) return true;
             if (VisibleWhenDistant != null) return true;
@@ -3947,6 +4120,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine($"FactionRank => {FactionRank}");
             fg.AppendLine($"GlobalVariable => {GlobalVariable}");
             PathGrid?.ToString(fg);
+            Landscape?.ToString(fg);
             fg.AppendLine("Persistent =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -4032,6 +4206,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
             ret.GlobalVariable = this.GlobalVariable.Combine(rhs.GlobalVariable);
             ret.PathGrid = new MaskItem<Exception, PathGrid_ErrorMask>(this.PathGrid.Overall.Combine(rhs.PathGrid.Overall), ((IErrorMask<PathGrid_ErrorMask>)this.PathGrid.Specific).Combine(rhs.PathGrid.Specific));
+            ret.Landscape = new MaskItem<Exception, Landscape_ErrorMask>(this.Landscape.Overall.Combine(rhs.Landscape.Overall), ((IErrorMask<Landscape_ErrorMask>)this.Landscape.Specific).Combine(rhs.Landscape.Specific));
             ret.Persistent = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>>(this.Persistent.Overall.Combine(rhs.Persistent.Overall), new List<MaskItem<Exception, Placed_ErrorMask>>(this.Persistent.Specific.And(rhs.Persistent.Specific)));
             ret.Temporary = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>>(this.Temporary.Overall.Combine(rhs.Temporary.Overall), new List<MaskItem<Exception, Placed_ErrorMask>>(this.Temporary.Specific.And(rhs.Temporary.Specific)));
             ret.VisibleWhenDistant = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Placed_ErrorMask>>>(this.VisibleWhenDistant.Overall.Combine(rhs.VisibleWhenDistant.Overall), new List<MaskItem<Exception, Placed_ErrorMask>>(this.VisibleWhenDistant.Specific.And(rhs.VisibleWhenDistant.Specific)));
@@ -4060,6 +4235,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool FactionRank;
         public bool GlobalVariable;
         public MaskItem<CopyOption, PathGrid_CopyMask> PathGrid;
+        public MaskItem<CopyOption, Landscape_CopyMask> Landscape;
         public MaskItem<CopyOption, Placed_CopyMask> Persistent;
         public MaskItem<CopyOption, Placed_CopyMask> Temporary;
         public MaskItem<CopyOption, Placed_CopyMask> VisibleWhenDistant;

@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Generation
         private async Task GenerateCreateExtras(ObjectGeneration obj, FileGeneration fg)
         {
             var data = obj.GetObjectData();
-            bool typelessStruct = obj.GetObjectType() == ObjectType.Subrecord && !obj.HasRecordType();
+            bool typelessStruct = obj.IsTypelessStruct();
             if (!obj.Abstract)
             {
                 ObjectType objType = obj.GetObjectType();
@@ -613,7 +613,18 @@ namespace Mutagen.Bethesda.Generation
                                 {
                                     args.Add("item: item");
                                     args.Add("frame: frame");
-                                    args.Add("recordTypeConverter: recordTypeConverter");
+                                    if (obj.BaseClass.IsTypelessStruct())
+                                    {
+                                        args.Add($"lastParsed: null");
+                                    }
+                                    if (data.BaseRecordTypeConverter?.FromConversions.Count > 0)
+                                    {
+                                        args.Add($"recordTypeConverter: recordTypeConverter.Combine({obj.RegistrationName}.BaseConverter)");
+                                    }
+                                    else
+                                    {
+                                        args.Add("recordTypeConverter: recordTypeConverter");
+                                    }
                                     args.Add($"errorMask: errorMask");
                                 }
                             }

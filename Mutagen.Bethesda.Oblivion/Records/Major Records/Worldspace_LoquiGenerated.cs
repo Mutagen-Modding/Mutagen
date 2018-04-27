@@ -12,6 +12,7 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -187,6 +188,50 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Byte[]> IWorldspaceGetter.OffsetData_Property => this.OffsetData_Property;
         #endregion
+        #region Road
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly INotifyingSetItem<Road> _Road = new NotifyingSetItem<Road>();
+        public INotifyingSetItem<Road> Road_Property => this._Road;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Road IWorldspaceGetter.Road => this.Road;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public Road Road { get => _Road.Item; set => _Road.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItem<Road> IWorldspace.Road_Property => this.Road_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<Road> IWorldspaceGetter.Road_Property => this.Road_Property;
+        #endregion
+        #region TopCell
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly INotifyingSetItem<Cell> _TopCell = new NotifyingSetItem<Cell>();
+        public INotifyingSetItem<Cell> TopCell_Property => this._TopCell;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Cell IWorldspaceGetter.TopCell => this.TopCell;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public Cell TopCell { get => _TopCell.Item; set => _TopCell.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItem<Cell> IWorldspace.TopCell_Property => this.TopCell_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<Cell> IWorldspaceGetter.TopCell_Property => this.TopCell_Property;
+        #endregion
+        #region SubCells
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly INotifyingList<WorldspaceBlock> _SubCells = new NotifyingList<WorldspaceBlock>();
+        public INotifyingList<WorldspaceBlock> SubCells => _SubCells;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IEnumerable<WorldspaceBlock> SubCellsEnumerable
+        {
+            get => _SubCells;
+            set => _SubCells.SetTo(value);
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingList<WorldspaceBlock> IWorldspace.SubCells => _SubCells;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingListGetter<WorldspaceBlock> IWorldspaceGetter.SubCells => _SubCells;
+        #endregion
+
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -289,6 +334,21 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!OffsetData.EqualsFast(rhs.OffsetData)) return false;
             }
+            if (Road_Property.HasBeenSet != rhs.Road_Property.HasBeenSet) return false;
+            if (Road_Property.HasBeenSet)
+            {
+                if (!object.Equals(Road, rhs.Road)) return false;
+            }
+            if (TopCell_Property.HasBeenSet != rhs.TopCell_Property.HasBeenSet) return false;
+            if (TopCell_Property.HasBeenSet)
+            {
+                if (!object.Equals(TopCell, rhs.TopCell)) return false;
+            }
+            if (SubCells.HasBeenSet != rhs.SubCells.HasBeenSet) return false;
+            if (SubCells.HasBeenSet)
+            {
+                if (!SubCells.SequenceEqual(rhs.SubCells)) return false;
+            }
             return true;
         }
 
@@ -329,6 +389,18 @@ namespace Mutagen.Bethesda.Oblivion
             if (OffsetData_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(OffsetData).CombineHashCode(ret);
+            }
+            if (Road_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Road).CombineHashCode(ret);
+            }
+            if (TopCell_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(TopCell).CombineHashCode(ret);
+            }
+            if (SubCells.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(SubCells).CombineHashCode(ret);
             }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -615,6 +687,32 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Worldspace_FieldIndex.OffsetData,
                         errorMask: errorMask));
                     break;
+                case "Road":
+                    item._Road.SetIfSucceeded(LoquiXmlTranslation<Road, Road_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Worldspace_FieldIndex.Road,
+                        errorMask: errorMask));
+                    break;
+                case "TopCell":
+                    item._TopCell.SetIfSucceeded(LoquiXmlTranslation<Cell, Cell_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Worldspace_FieldIndex.TopCell,
+                        errorMask: errorMask));
+                    break;
+                case "SubCells":
+                    item._SubCells.SetIfSucceeded(ListXmlTranslation<WorldspaceBlock, MaskItem<Exception, WorldspaceBlock_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Worldspace_FieldIndex.SubCells,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, WorldspaceBlock_ErrorMask> listSubMask) =>
+                        {
+                            return LoquiXmlTranslation<WorldspaceBlock, WorldspaceBlock_ErrorMask>.Instance.Parse(
+                                root: r,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        ));
+                    break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
                         item: item,
@@ -638,6 +736,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
             yield return Climate_Property;
             yield return Water_Property;
+            if (TopCell != null)
+            {
+                foreach (var item in TopCell.Links)
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in SubCells.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
             yield break;
         }
         #endregion
@@ -1160,6 +1269,19 @@ namespace Mutagen.Bethesda.Oblivion
                         (Byte[])obj,
                         cmds);
                     break;
+                case Worldspace_FieldIndex.Road:
+                    this._Road.Set(
+                        (Road)obj,
+                        cmds);
+                    break;
+                case Worldspace_FieldIndex.TopCell:
+                    this._TopCell.Set(
+                        (Cell)obj,
+                        cmds);
+                    break;
+                case Worldspace_FieldIndex.SubCells:
+                    this._SubCells.SetTo((IEnumerable<WorldspaceBlock>)obj, cmds);
+                    break;
                 default:
                     base.SetNthObject(index, obj, cmds);
                     break;
@@ -1246,6 +1368,19 @@ namespace Mutagen.Bethesda.Oblivion
                         (Byte[])pair.Value,
                         null);
                     break;
+                case Worldspace_FieldIndex.Road:
+                    obj._Road.Set(
+                        (Road)pair.Value,
+                        null);
+                    break;
+                case Worldspace_FieldIndex.TopCell:
+                    obj._TopCell.Set(
+                        (Cell)pair.Value,
+                        null);
+                    break;
+                case Worldspace_FieldIndex.SubCells:
+                    obj._SubCells.SetTo((IEnumerable<WorldspaceBlock>)pair.Value, null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -1290,6 +1425,13 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte[] OffsetData { get; set; }
         new INotifyingSetItem<Byte[]> OffsetData_Property { get; }
 
+        new Road Road { get; set; }
+        new INotifyingSetItem<Road> Road_Property { get; }
+
+        new Cell TopCell { get; set; }
+        new INotifyingSetItem<Cell> TopCell_Property { get; }
+
+        new INotifyingList<WorldspaceBlock> SubCells { get; }
     }
 
     public partial interface IWorldspaceGetter : INamedMajorRecordGetter
@@ -1349,6 +1491,19 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Byte[]> OffsetData_Property { get; }
 
         #endregion
+        #region Road
+        Road Road { get; }
+        INotifyingSetItemGetter<Road> Road_Property { get; }
+
+        #endregion
+        #region TopCell
+        Cell TopCell { get; }
+        INotifyingSetItemGetter<Cell> TopCell_Property { get; }
+
+        #endregion
+        #region SubCells
+        INotifyingListGetter<WorldspaceBlock> SubCells { get; }
+        #endregion
 
     }
 
@@ -1378,6 +1533,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ObjectBoundsMax = 14,
         Music = 15,
         OffsetData = 16,
+        Road = 17,
+        TopCell = 18,
+        SubCells = 19,
     }
     #endregion
 
@@ -1395,7 +1553,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "d95e86a2-5fdd-4bb1-a2b9-c16161ef2f62";
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(Worldspace_Mask<>);
 
@@ -1445,6 +1603,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Worldspace_FieldIndex.Music;
                 case "OFFSETDATA":
                     return (ushort)Worldspace_FieldIndex.OffsetData;
+                case "ROAD":
+                    return (ushort)Worldspace_FieldIndex.Road;
+                case "TOPCELL":
+                    return (ushort)Worldspace_FieldIndex.TopCell;
+                case "SUBCELLS":
+                    return (ushort)Worldspace_FieldIndex.SubCells;
                 default:
                     return null;
             }
@@ -1455,6 +1619,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.SubCells:
+                    return true;
                 case Worldspace_FieldIndex.Climate:
                 case Worldspace_FieldIndex.Water:
                 case Worldspace_FieldIndex.Icon:
@@ -1466,6 +1632,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.ObjectBoundsMax:
                 case Worldspace_FieldIndex.Music:
                 case Worldspace_FieldIndex.OffsetData:
+                case Worldspace_FieldIndex.Road:
+                case Worldspace_FieldIndex.TopCell:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1477,6 +1645,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Road:
+                case Worldspace_FieldIndex.TopCell:
+                case Worldspace_FieldIndex.SubCells:
+                    return true;
                 case Worldspace_FieldIndex.Climate:
                 case Worldspace_FieldIndex.Water:
                 case Worldspace_FieldIndex.Icon:
@@ -1510,6 +1682,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.ObjectBoundsMax:
                 case Worldspace_FieldIndex.Music:
                 case Worldspace_FieldIndex.OffsetData:
+                case Worldspace_FieldIndex.Road:
+                case Worldspace_FieldIndex.TopCell:
+                case Worldspace_FieldIndex.SubCells:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1543,6 +1718,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Music";
                 case Worldspace_FieldIndex.OffsetData:
                     return "OffsetData";
+                case Worldspace_FieldIndex.Road:
+                    return "Road";
+                case Worldspace_FieldIndex.TopCell:
+                    return "TopCell";
+                case Worldspace_FieldIndex.SubCells:
+                    return "SubCells";
                 default:
                     return NamedMajorRecord_Registration.GetNthName(index);
             }
@@ -1564,6 +1745,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.ObjectBoundsMax:
                 case Worldspace_FieldIndex.Music:
                 case Worldspace_FieldIndex.OffsetData:
+                case Worldspace_FieldIndex.Road:
+                case Worldspace_FieldIndex.TopCell:
+                case Worldspace_FieldIndex.SubCells:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.IsNthDerivative(index);
@@ -1586,6 +1770,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.ObjectBoundsMax:
                 case Worldspace_FieldIndex.Music:
                 case Worldspace_FieldIndex.OffsetData:
+                case Worldspace_FieldIndex.Road:
+                case Worldspace_FieldIndex.TopCell:
+                case Worldspace_FieldIndex.SubCells:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.IsProtected(index);
@@ -1619,6 +1806,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(MusicType);
                 case Worldspace_FieldIndex.OffsetData:
                     return typeof(Byte[]);
+                case Worldspace_FieldIndex.Road:
+                    return typeof(Road);
+                case Worldspace_FieldIndex.TopCell:
+                    return typeof(Cell);
+                case Worldspace_FieldIndex.SubCells:
+                    return typeof(NotifyingList<WorldspaceBlock>);
                 default:
                     return NamedMajorRecord_Registration.GetNthType(index);
             }
@@ -1635,9 +1828,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
         public static readonly RecordType XXXX_HEADER = new RecordType("XXXX");
         public static readonly RecordType OFST_HEADER = new RecordType("OFST");
+        public static readonly RecordType ROAD_HEADER = new RecordType("ROAD");
+        public static readonly RecordType CELL_HEADER = new RecordType("CELL");
+        public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = WRLD_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 8;
+        public const int NumTypedFields = 11;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1850,6 +2046,136 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)Worldspace_FieldIndex.OffsetData, ex);
                 }
             }
+            if (copyMask?.Road.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Road_Property.SetToWithDefault(
+                        rhs.Road_Property,
+                        def?.Road_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Road.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    RoadCommon.CopyFieldsFrom(
+                                        item: item.Road,
+                                        rhs: rhs.Road,
+                                        def: def?.Road,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Road_ErrorMask>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            var mask = new Road_ErrorMask();
+                                            baseMask.SetNthMask((int)Worldspace_FieldIndex.Road, mask);
+                                            return mask;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Road.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Road);
+                                    return Road.Copy(
+                                        r,
+                                        copyMask?.Road?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Road?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Worldspace_FieldIndex.Road, ex);
+                }
+            }
+            if (copyMask?.TopCell.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.TopCell_Property.SetToWithDefault(
+                        rhs.TopCell_Property,
+                        def?.TopCell_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.TopCell.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    CellCommon.CopyFieldsFrom(
+                                        item: item.TopCell,
+                                        rhs: rhs.TopCell,
+                                        def: def?.TopCell,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Cell_ErrorMask>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            var mask = new Cell_ErrorMask();
+                                            baseMask.SetNthMask((int)Worldspace_FieldIndex.TopCell, mask);
+                                            return mask;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.TopCell.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Cell);
+                                    return Cell.Copy(
+                                        r,
+                                        copyMask?.TopCell?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.TopCell?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Worldspace_FieldIndex.TopCell, ex);
+                }
+            }
+            if (copyMask?.SubCells.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.SubCells.SetToWithDefault(
+                        rhs: rhs.SubCells,
+                        def: def?.SubCells,
+                        cmds: cmds,
+                        converter: (r, d) =>
+                        {
+                            switch (copyMask?.SubCells.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(WorldspaceBlock);
+                                    return WorldspaceBlock.Copy(
+                                        r,
+                                        copyMask?.SubCells?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.SubCells.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Worldspace_FieldIndex.SubCells, ex);
+                }
+            }
         }
 
         #endregion
@@ -1891,6 +2217,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Worldspace_FieldIndex.OffsetData:
                     obj.OffsetData_Property.HasBeenSet = on;
+                    break;
+                case Worldspace_FieldIndex.Road:
+                    obj.Road_Property.HasBeenSet = on;
+                    break;
+                case Worldspace_FieldIndex.TopCell:
+                    obj.TopCell_Property.HasBeenSet = on;
+                    break;
+                case Worldspace_FieldIndex.SubCells:
+                    obj.SubCells.HasBeenSet = on;
                     break;
                 default:
                     NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
@@ -1939,6 +2274,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.OffsetData:
                     obj.OffsetData_Property.Unset(cmds);
                     break;
+                case Worldspace_FieldIndex.Road:
+                    obj.Road_Property.Unset(cmds);
+                    break;
+                case Worldspace_FieldIndex.TopCell:
+                    obj.TopCell_Property.Unset(cmds);
+                    break;
+                case Worldspace_FieldIndex.SubCells:
+                    obj.SubCells.Unset(cmds);
+                    break;
                 default:
                     NamedMajorRecordCommon.UnsetNthObject(index, obj);
                     break;
@@ -1972,6 +2316,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Music_Property.HasBeenSet;
                 case Worldspace_FieldIndex.OffsetData:
                     return obj.OffsetData_Property.HasBeenSet;
+                case Worldspace_FieldIndex.Road:
+                    return obj.Road_Property.HasBeenSet;
+                case Worldspace_FieldIndex.TopCell:
+                    return obj.TopCell_Property.HasBeenSet;
+                case Worldspace_FieldIndex.SubCells:
+                    return obj.SubCells.HasBeenSet;
                 default:
                     return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -2006,6 +2356,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Music;
                 case Worldspace_FieldIndex.OffsetData:
                     return obj.OffsetData;
+                case Worldspace_FieldIndex.Road:
+                    return obj.Road;
+                case Worldspace_FieldIndex.TopCell:
+                    return obj.TopCell;
+                case Worldspace_FieldIndex.SubCells:
+                    return obj.SubCells;
                 default:
                     return NamedMajorRecordCommon.GetNthObject(index, obj);
             }
@@ -2026,6 +2382,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ObjectBoundsMax_Property.Unset(cmds.ToUnsetParams());
             item.Music_Property.Unset(cmds.ToUnsetParams());
             item.OffsetData_Property.Unset(cmds.ToUnsetParams());
+            item.Road_Property.Unset(cmds.ToUnsetParams());
+            item.TopCell_Property.Unset(cmds.ToUnsetParams());
+            item.SubCells.Unset(cmds.ToUnsetParams());
         }
 
         public static Worldspace_Mask<bool> GetEqualsMask(
@@ -2054,6 +2413,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ObjectBoundsMax = item.ObjectBoundsMax_Property.Equals(rhs.ObjectBoundsMax_Property, (l, r) => l == r);
             ret.Music = item.Music_Property.Equals(rhs.Music_Property, (l, r) => l == r);
             ret.OffsetData = item.OffsetData_Property.Equals(rhs.OffsetData_Property, (l, r) => l.EqualsFast(r));
+            ret.Road = item.Road_Property.LoquiEqualsHelper(rhs.Road_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.TopCell = item.TopCell_Property.LoquiEqualsHelper(rhs.TopCell_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            if (item.SubCells.HasBeenSet == rhs.SubCells.HasBeenSet)
+            {
+                if (item.SubCells.HasBeenSet)
+                {
+                    ret.SubCells = new MaskItem<bool, IEnumerable<MaskItem<bool, WorldspaceBlock_Mask<bool>>>>();
+                    ret.SubCells.Specific = item.SubCells.SelectAgainst<WorldspaceBlock, MaskItem<bool, WorldspaceBlock_Mask<bool>>>(rhs.SubCells, ((l, r) =>
+                    {
+                        MaskItem<bool, WorldspaceBlock_Mask<bool>> itemRet;
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+                        return itemRet;
+                    }
+                    ), out ret.SubCells.Overall);
+                    ret.SubCells.Overall = ret.SubCells.Overall && ret.SubCells.Specific.All((b) => b.Overall);
+                }
+                else
+                {
+                    ret.SubCells = new MaskItem<bool, IEnumerable<MaskItem<bool, WorldspaceBlock_Mask<bool>>>>();
+                    ret.SubCells.Overall = true;
+                }
+            }
+            else
+            {
+                ret.SubCells = new MaskItem<bool, IEnumerable<MaskItem<bool, WorldspaceBlock_Mask<bool>>>>();
+                ret.SubCells.Overall = false;
+            }
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -2128,6 +2514,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"OffsetData => {item.OffsetData}");
                 }
+                if (printMask?.Road?.Overall ?? true)
+                {
+                    item.Road?.ToString(fg, "Road");
+                }
+                if (printMask?.TopCell?.Overall ?? true)
+                {
+                    item.TopCell?.ToString(fg, "TopCell");
+                }
+                if (printMask?.SubCells?.Overall ?? true)
+                {
+                    fg.AppendLine("SubCells =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        foreach (var subItem in item.SubCells)
+                        {
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                subItem?.ToString(fg, "Item");
+                            }
+                            fg.AppendLine("]");
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             fg.AppendLine("]");
         }
@@ -2144,6 +2556,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.ObjectBoundsMax.HasValue && checkMask.ObjectBoundsMax.Value != item.ObjectBoundsMax_Property.HasBeenSet) return false;
             if (checkMask.Music.HasValue && checkMask.Music.Value != item.Music_Property.HasBeenSet) return false;
             if (checkMask.OffsetData.HasValue && checkMask.OffsetData.Value != item.OffsetData_Property.HasBeenSet) return false;
+            if (checkMask.Road.Overall.HasValue && checkMask.Road.Overall.Value != item.Road_Property.HasBeenSet) return false;
+            if (checkMask.Road.Specific != null && (item.Road == null || !item.Road.HasBeenSet(checkMask.Road.Specific))) return false;
+            if (checkMask.TopCell.Overall.HasValue && checkMask.TopCell.Overall.Value != item.TopCell_Property.HasBeenSet) return false;
+            if (checkMask.TopCell.Specific != null && (item.TopCell == null || !item.TopCell.HasBeenSet(checkMask.TopCell.Specific))) return false;
+            if (checkMask.SubCells.Overall.HasValue && checkMask.SubCells.Overall.Value != item.SubCells.HasBeenSet) return false;
             return true;
         }
 
@@ -2161,6 +2578,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ObjectBoundsMax = item.ObjectBoundsMax_Property.HasBeenSet;
             ret.Music = item.Music_Property.HasBeenSet;
             ret.OffsetData = item.OffsetData_Property.HasBeenSet;
+            ret.Road = new MaskItem<bool, Road_Mask<bool>>(item.Road_Property.HasBeenSet, RoadCommon.GetHasBeenSetMask(item.Road));
+            ret.TopCell = new MaskItem<bool, Cell_Mask<bool>>(item.TopCell_Property.HasBeenSet, CellCommon.GetHasBeenSetMask(item.TopCell));
+            ret.SubCells = new MaskItem<bool, IEnumerable<MaskItem<bool, WorldspaceBlock_Mask<bool>>>>(item.SubCells.HasBeenSet, item.SubCells.Select((i) => new MaskItem<bool, WorldspaceBlock_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -2337,6 +2757,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             item: item.OffsetData_Property,
                             fieldIndex: (int)Worldspace_FieldIndex.OffsetData,
                             errorMask: errorMask);
+                    }
+                    if (item.Road_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Road, Road_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: item.Road_Property,
+                            name: nameof(item.Road),
+                            fieldIndex: (int)Worldspace_FieldIndex.Road,
+                            errorMask: errorMask);
+                    }
+                    if (item.TopCell_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Cell, Cell_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: item.TopCell_Property,
+                            name: nameof(item.TopCell),
+                            fieldIndex: (int)Worldspace_FieldIndex.TopCell,
+                            errorMask: errorMask);
+                    }
+                    if (item.SubCells.HasBeenSet)
+                    {
+                        ListXmlTranslation<WorldspaceBlock, MaskItem<Exception, WorldspaceBlock_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.SubCells),
+                            item: item.SubCells,
+                            fieldIndex: (int)Worldspace_FieldIndex.SubCells,
+                            errorMask: errorMask,
+                            transl: (WorldspaceBlock subItem, bool listDoMasks, out MaskItem<Exception, WorldspaceBlock_ErrorMask> listSubMask) =>
+                            {
+                                LoquiXmlTranslation<WorldspaceBlock, WorldspaceBlock_ErrorMask>.Instance.Write(
+                                    writer: writer,
+                                    item: subItem,
+                                    name: "Item",
+                                    doMasks: errorMask != null,
+                                    errorMask: out listSubMask);
+                            }
+                            );
                     }
                 }
             }
@@ -2518,6 +2975,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.ObjectBoundsMax = initialValue;
             this.Music = initialValue;
             this.OffsetData = initialValue;
+            this.Road = new MaskItem<T, Road_Mask<T>>(initialValue, new Road_Mask<T>(initialValue));
+            this.TopCell = new MaskItem<T, Cell_Mask<T>>(initialValue, new Cell_Mask<T>(initialValue));
+            this.SubCells = new MaskItem<T, IEnumerable<MaskItem<T, WorldspaceBlock_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
@@ -2533,6 +2993,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T ObjectBoundsMax;
         public T Music;
         public T OffsetData;
+        public MaskItem<T, Road_Mask<T>> Road { get; set; }
+        public MaskItem<T, Cell_Mask<T>> TopCell { get; set; }
+        public MaskItem<T, IEnumerable<MaskItem<T, WorldspaceBlock_Mask<T>>>> SubCells;
         #endregion
 
         #region Equals
@@ -2557,6 +3020,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.ObjectBoundsMax, rhs.ObjectBoundsMax)) return false;
             if (!object.Equals(this.Music, rhs.Music)) return false;
             if (!object.Equals(this.OffsetData, rhs.OffsetData)) return false;
+            if (!object.Equals(this.Road, rhs.Road)) return false;
+            if (!object.Equals(this.TopCell, rhs.TopCell)) return false;
+            if (!object.Equals(this.SubCells, rhs.SubCells)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -2573,6 +3039,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.ObjectBoundsMax?.GetHashCode());
             ret = ret.CombineHashCode(this.Music?.GetHashCode());
             ret = ret.CombineHashCode(this.OffsetData?.GetHashCode());
+            ret = ret.CombineHashCode(this.Road?.GetHashCode());
+            ret = ret.CombineHashCode(this.TopCell?.GetHashCode());
+            ret = ret.CombineHashCode(this.SubCells?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -2594,6 +3063,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!eval(this.ObjectBoundsMax)) return false;
             if (!eval(this.Music)) return false;
             if (!eval(this.OffsetData)) return false;
+            if (Road != null)
+            {
+                if (!eval(this.Road.Overall)) return false;
+                if (this.Road.Specific != null && !this.Road.Specific.AllEqual(eval)) return false;
+            }
+            if (TopCell != null)
+            {
+                if (!eval(this.TopCell.Overall)) return false;
+                if (this.TopCell.Specific != null && !this.TopCell.Specific.AllEqual(eval)) return false;
+            }
+            if (this.SubCells != null)
+            {
+                if (!eval(this.SubCells.Overall)) return false;
+                if (this.SubCells.Specific != null)
+                {
+                    foreach (var item in this.SubCells.Specific)
+                    {
+                        if (!eval(item.Overall)) return false;
+                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                    }
+                }
+            }
             return true;
         }
         #endregion
@@ -2620,6 +3111,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.ObjectBoundsMax = eval(this.ObjectBoundsMax);
             obj.Music = eval(this.Music);
             obj.OffsetData = eval(this.OffsetData);
+            if (this.Road != null)
+            {
+                obj.Road = new MaskItem<R, Road_Mask<R>>();
+                obj.Road.Overall = eval(this.Road.Overall);
+                if (this.Road.Specific != null)
+                {
+                    obj.Road.Specific = this.Road.Specific.Translate(eval);
+                }
+            }
+            if (this.TopCell != null)
+            {
+                obj.TopCell = new MaskItem<R, Cell_Mask<R>>();
+                obj.TopCell.Overall = eval(this.TopCell.Overall);
+                if (this.TopCell.Specific != null)
+                {
+                    obj.TopCell.Specific = this.TopCell.Specific.Translate(eval);
+                }
+            }
+            if (SubCells != null)
+            {
+                obj.SubCells = new MaskItem<R, IEnumerable<MaskItem<R, WorldspaceBlock_Mask<R>>>>();
+                obj.SubCells.Overall = eval(this.SubCells.Overall);
+                if (SubCells.Specific != null)
+                {
+                    List<MaskItem<R, WorldspaceBlock_Mask<R>>> l = new List<MaskItem<R, WorldspaceBlock_Mask<R>>>();
+                    obj.SubCells.Specific = l;
+                    foreach (var item in SubCells.Specific)
+                    {
+                        MaskItem<R, WorldspaceBlock_Mask<R>> mask = default(MaskItem<R, WorldspaceBlock_Mask<R>>);
+                        if (item != null)
+                        {
+                            mask = new MaskItem<R, WorldspaceBlock_Mask<R>>();
+                            mask.Overall = eval(item.Overall);
+                            if (item.Specific != null)
+                            {
+                                mask.Specific = item.Specific.Translate(eval);
+                            }
+                        }
+                        l.Add(mask);
+                    }
+                }
+            }
         }
         #endregion
 
@@ -2627,6 +3160,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void ClearEnumerables()
         {
             base.ClearEnumerables();
+            this.SubCells.Specific = null;
         }
         #endregion
 
@@ -2693,6 +3227,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"OffsetData => {OffsetData}");
                 }
+                if (printMask?.Road?.Overall ?? true)
+                {
+                    Road?.ToString(fg);
+                }
+                if (printMask?.TopCell?.Overall ?? true)
+                {
+                    TopCell?.ToString(fg);
+                }
+                if (printMask?.SubCells?.Overall ?? true)
+                {
+                    fg.AppendLine("SubCells =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        if (SubCells.Overall != null)
+                        {
+                            fg.AppendLine(SubCells.Overall.ToString());
+                        }
+                        if (SubCells.Specific != null)
+                        {
+                            foreach (var subItem in SubCells.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             fg.AppendLine("]");
         }
@@ -2714,6 +3281,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception ObjectBoundsMax;
         public Exception Music;
         public Exception OffsetData;
+        public MaskItem<Exception, Road_ErrorMask> Road;
+        public MaskItem<Exception, Cell_ErrorMask> TopCell;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, WorldspaceBlock_ErrorMask>>> SubCells;
         #endregion
 
         #region IErrorMask
@@ -2754,6 +3324,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Worldspace_FieldIndex.OffsetData:
                     this.OffsetData = ex;
+                    break;
+                case Worldspace_FieldIndex.Road:
+                    this.Road = new MaskItem<Exception, Road_ErrorMask>(ex, null);
+                    break;
+                case Worldspace_FieldIndex.TopCell:
+                    this.TopCell = new MaskItem<Exception, Cell_ErrorMask>(ex, null);
+                    break;
+                case Worldspace_FieldIndex.SubCells:
+                    this.SubCells = new MaskItem<Exception, IEnumerable<MaskItem<Exception, WorldspaceBlock_ErrorMask>>>(ex, null);
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -2799,6 +3378,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.OffsetData:
                     this.OffsetData = (Exception)obj;
                     break;
+                case Worldspace_FieldIndex.Road:
+                    this.Road = (MaskItem<Exception, Road_ErrorMask>)obj;
+                    break;
+                case Worldspace_FieldIndex.TopCell:
+                    this.TopCell = (MaskItem<Exception, Cell_ErrorMask>)obj;
+                    break;
+                case Worldspace_FieldIndex.SubCells:
+                    this.SubCells = (MaskItem<Exception, IEnumerable<MaskItem<Exception, WorldspaceBlock_ErrorMask>>>)obj;
+                    break;
                 default:
                     base.SetNthMask(index, obj);
                     break;
@@ -2819,6 +3407,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (ObjectBoundsMax != null) return true;
             if (Music != null) return true;
             if (OffsetData != null) return true;
+            if (Road != null) return true;
+            if (TopCell != null) return true;
+            if (SubCells != null) return true;
             return false;
         }
         #endregion
@@ -2865,6 +3456,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine($"ObjectBoundsMax => {ObjectBoundsMax}");
             fg.AppendLine($"Music => {Music}");
             fg.AppendLine($"OffsetData => {OffsetData}");
+            Road?.ToString(fg);
+            TopCell?.ToString(fg);
+            fg.AppendLine("SubCells =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (SubCells.Overall != null)
+                {
+                    fg.AppendLine(SubCells.Overall.ToString());
+                }
+                if (SubCells.Specific != null)
+                {
+                    foreach (var subItem in SubCells.Specific)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+            }
+            fg.AppendLine("]");
         }
         #endregion
 
@@ -2883,6 +3498,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ObjectBoundsMax = this.ObjectBoundsMax.Combine(rhs.ObjectBoundsMax);
             ret.Music = this.Music.Combine(rhs.Music);
             ret.OffsetData = this.OffsetData.Combine(rhs.OffsetData);
+            ret.Road = new MaskItem<Exception, Road_ErrorMask>(this.Road.Overall.Combine(rhs.Road.Overall), ((IErrorMask<Road_ErrorMask>)this.Road.Specific).Combine(rhs.Road.Specific));
+            ret.TopCell = new MaskItem<Exception, Cell_ErrorMask>(this.TopCell.Overall.Combine(rhs.TopCell.Overall), ((IErrorMask<Cell_ErrorMask>)this.TopCell.Specific).Combine(rhs.TopCell.Specific));
+            ret.SubCells = new MaskItem<Exception, IEnumerable<MaskItem<Exception, WorldspaceBlock_ErrorMask>>>(this.SubCells.Overall.Combine(rhs.SubCells.Overall), new List<MaskItem<Exception, WorldspaceBlock_ErrorMask>>(this.SubCells.Specific.And(rhs.SubCells.Specific)));
             return ret;
         }
         public static Worldspace_ErrorMask Combine(Worldspace_ErrorMask lhs, Worldspace_ErrorMask rhs)
@@ -2907,6 +3525,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool ObjectBoundsMax;
         public bool Music;
         public bool OffsetData;
+        public MaskItem<CopyOption, Road_CopyMask> Road;
+        public MaskItem<CopyOption, Cell_CopyMask> TopCell;
+        public MaskItem<CopyOption, WorldspaceBlock_CopyMask> SubCells;
         #endregion
 
     }

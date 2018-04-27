@@ -18,6 +18,25 @@
       <Enum name="Music" recordType="SNAM" enumName="MusicType" />
       <CustomLogic name="OffsetLength" recordType="XXXX" />
       <ByteArray name="OffsetData" recordType="OFST" noBinary="true" />
+      <RefDirect name="Road" refName="Road" noBinary="true" />
+      <RefDirect name="TopCell" refName="Cell" noBinary="true" />
+      <RefList name="SubCells" refName="WorldspaceBlock" noBinary="true" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceBlock" objType="Group" GUID="ffc71d01-f9a7-406b-9c9f-a5760acd87ea" ID="140">
+    <Fields>
+      <ByteArray name="BlockNumber" length="4" nullable="NotNull" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <ByteArray name="LastModified" length="4" nullable="NotNull" />
+      <RefList name="Items" refName="WorldspaceSubBlock" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceSubBlock" objType="Group" GUID="33d37c53-7561-4ea0-aef8-a9b9475eb68f" ID="141">
+    <Fields>
+      <ByteArray name="BlockNumber" length="4" nullable="NotNull" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <ByteArray name="LastModified" length="4" nullable="NotNull" />
+      <RefList name="Items" refName="Cell" />
     </Fields>
   </Object>
 </Loqui>

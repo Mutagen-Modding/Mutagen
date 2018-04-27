@@ -177,10 +177,9 @@ namespace Mutagen.Bethesda.Generation
             await base.GenerateInRegistration(obj, fg);
         }
 
-        private async Task SetRecordTrigger(
+        private async Task SetContainerSubTriggers(
             ObjectGeneration obj,
-            TypeGeneration field,
-            MutagenFieldData data)
+            TypeGeneration field)
         {
             if (field is ContainerType contType
                 && contType.SubTypeGeneration is LoquiType contLoqui)
@@ -210,6 +209,14 @@ namespace Mutagen.Bethesda.Generation
                         throw new NotImplementedException();
                 }
             }
+        }
+
+        private async Task SetRecordTrigger(
+            ObjectGeneration obj,
+            TypeGeneration field,
+            MutagenFieldData data)
+        {
+            await SetContainerSubTriggers(obj, field);
 
             if (field is LoquiType loqui
                 && !(field is FormIDLinkType))
@@ -227,7 +234,7 @@ namespace Mutagen.Bethesda.Generation
                         var grupObj = obj.ProtoGen.Gen.ObjectGenerationsByObjectNameKey[nameKey];
                         if (grupObj.GetObjectType() == ObjectType.Group)
                         {
-                            data.RecordType = grupObj.GetGroupLoquiTypeLowest().TargetObjectGeneration.GetRecordType();
+                            data.RecordType = (await grupObj.GetGroupLoquiTypeLowest()).TargetObjectGeneration.GetRecordType();
                         }
                         else
                         {
@@ -287,6 +294,36 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
             }
+            else if (field is DictType dictType
+                && !data.RecordType.HasValue)
+            {
+                if (dictType.ValueTypeGen is LoquiType subDictLoqui)
+                {
+                    if (subDictLoqui.GenericDef != null)
+                    {
+                        data.TriggeringRecordAccessors.Add($"{subDictLoqui.GenericDef.Name}_RecordType");
+                    }
+                    else
+                    {
+                        var subData = subDictLoqui.GetFieldData();
+                        foreach (var gen in subData.GenerationTypes)
+                        {
+                            data.TriggeringRecordTypes.Add(gen.Key);
+                        }
+                    }
+                }
+                else
+                {
+                    var subData = dictType.ValueTypeGen.CustomData.TryCreateValue(Constants.DATA_KEY, () => new MutagenFieldData(dictType.ValueTypeGen)) as MutagenFieldData;
+                    await SetRecordTrigger(obj, dictType.ValueTypeGen, subData);
+                    if (subData.HasTrigger)
+                    {
+                        data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(subData.RecordType.Value));
+                        data.TriggeringRecordTypes.Add(subData.RecordType.Value);
+                        data.RecordType = subData.RecordType;
+                    }
+                }
+            }
 
             SetTriggeringRecordAccessors(obj, field, data);
 
@@ -325,7 +362,18 @@ namespace Mutagen.Bethesda.Generation
                 var baseTrigger = await obj.BaseClass.TryGetTriggeringRecordTypes();
                 if (baseTrigger.Succeeded)
                 {
-                    data.TriggeringRecordTypes.Add(baseTrigger.Value);
+                    if (data.BaseRecordTypeConverter != null)
+                    {
+                        data.TriggeringRecordTypes.Add(
+                            baseTrigger.Value.Select((b) =>
+                            {
+                                return data.BaseRecordTypeConverter.ConvertToCustom(b);
+                            }));
+                    }
+                    else
+                    {
+                        data.TriggeringRecordTypes.Add(baseTrigger.Value);
+                    }
                     return;
                 }
             }
@@ -405,7 +453,8 @@ namespace Mutagen.Bethesda.Generation
                 data.TriggeringRecordSetAccessor = obj.RecordTypeHeaderName(data.RecordType.Value);
                 data.TriggeringRecordTypes.Add(data.RecordType.Value);
             }
-            else if (data.TriggeringRecordTypes.Count == 1)
+            else if (data.TriggeringRecordTypes.Count == 1
+                && data.SubLoquiTypes.Count == 0)
             {
                 data.TriggeringRecordSetAccessor = obj.RecordTypeHeaderName(data.TriggeringRecordTypes.First());
             }
@@ -426,7 +475,7 @@ namespace Mutagen.Bethesda.Generation
         {
             if (obj.GetObjectType() == ObjectType.Group)
             {
-                var grupLoqui = obj.GetGroupLoquiType();
+                var grupLoqui = await obj.GetGroupLoquiType();
                 if (grupLoqui.GenericDef == null)
                 {
                     fg.AppendLine($"public static readonly {nameof(RecordType)} {Mutagen.Bethesda.Constants.GRUP_RECORDTYPE_MEMBER} = (RecordType){grupLoqui.TargetObjectGeneration.Name}.{Mutagen.Bethesda.Constants.GRUP_RECORDTYPE_MEMBER};");

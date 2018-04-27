@@ -857,6 +857,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
         public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
         public static readonly RecordType REGN_HEADER = new RecordType("REGN");
+        public static readonly RecordType ROAD_HEADER = new RecordType("ROAD");
         public static readonly RecordType SCPT_HEADER = new RecordType("SCPT");
         public static readonly RecordType SKIL_HEADER = new RecordType("SKIL");
         public static readonly RecordType SOUN_HEADER = new RecordType("SOUN");
@@ -897,6 +898,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
         public static readonly RecordType LVLC_HEADER = new RecordType("LVLC");
+        public static readonly RecordType LAND_HEADER = new RecordType("LAND");
         public static readonly RecordType PGRD_HEADER = new RecordType("PGRD");
         public static readonly RecordType ACRE_HEADER = new RecordType("ACRE");
         public static readonly RecordType ACHR_HEADER = new RecordType("ACHR");
@@ -921,6 +923,7 @@ namespace Mutagen.Bethesda.Internals
                         LVLI_HEADER,
                         LIGH_HEADER,
                         REGN_HEADER,
+                        ROAD_HEADER,
                         SCPT_HEADER,
                         SKIL_HEADER,
                         SOUN_HEADER,
@@ -961,6 +964,7 @@ namespace Mutagen.Bethesda.Internals
                         SPEL_HEADER,
                         AMMO_HEADER,
                         LVLC_HEADER,
+                        LAND_HEADER,
                         PGRD_HEADER,
                         ACRE_HEADER,
                         ACHR_HEADER,

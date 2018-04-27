@@ -32,6 +32,7 @@
       <Int32 name="FactionRank" recordType="XRNK" />
       <FormIDLink name="GlobalVariable" recordType="XGLB" refName="Global" />
       <RefDirect name="PathGrid" noBinary="true" refName="PathGrid" />
+      <RefDirect name="Landscape" noBinary="true" refName="Landscape" />
       <RefList name="Persistent" noBinary="true" refName="Placed" />
       <RefList name="Temporary" noBinary="true" refName="Placed" />
       <RefList name="VisibleWhenDistant" noBinary="true" refName="Placed" />

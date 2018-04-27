@@ -505,6 +505,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly RecordType LAND_HEADER = new RecordType("LAND");
         public static readonly RecordType PGRD_HEADER = new RecordType("PGRD");
         public static readonly RecordType ACRE_HEADER = new RecordType("ACRE");
         public static readonly RecordType ACHR_HEADER = new RecordType("ACHR");
@@ -516,6 +517,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
+                        LAND_HEADER,
                         PGRD_HEADER,
                         ACRE_HEADER,
                         ACHR_HEADER,
