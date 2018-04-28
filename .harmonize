@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>5334e998c4e1823840b241eb8ca5ae913573325a</Sha>
+         <Sha>75d433f2d4b77ce3937824a238c9cd3a2c91c1f8</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>03-31-2018 17:20:19</CommitDate>
-         <Description>Merge remote-tracking branch 'origin/Laptop'</Description>
+         <CommitDate>04-23-2018 21:49:11</CommitDate>
+         <Description>P2Int16.  Removed some vestigial from P2Int</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>51c5647873cff1edc14eb303448abea208f16b1a</Sha>
+         <Sha>7ba8e4f3bbb99bc6ad5941a736403cc0f6972543</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>03-31-2018 17:31:45</CommitDate>
-         <Description>Merge fixes</Description>
+         <CommitDate>04-26-2018 19:04:21</CommitDate>
+         <Description>P3Float xsd listing.  Small fixes</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

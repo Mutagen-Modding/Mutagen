@@ -40,18 +40,18 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region PointID
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Int16> _PointID = NotifyingItem.Factory<Int16>();
-        public INotifyingItem<Int16> PointID_Property => _PointID;
+        protected INotifyingItem<Int32> _PointID = NotifyingItem.Factory<Int32>();
+        public INotifyingItem<Int32> PointID_Property => _PointID;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Int16 PointID
+        public Int32 PointID
         {
             get => this._PointID.Item;
             set => this._PointID.Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Int16> IInterCellPoint.PointID_Property => this.PointID_Property;
+        INotifyingItem<Int32> IInterCellPoint.PointID_Property => this.PointID_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Int16> IInterCellPointGetter.PointID_Property => this.PointID_Property;
+        INotifyingItemGetter<Int32> IInterCellPointGetter.PointID_Property => this.PointID_Property;
         #endregion
         #region Point
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -357,7 +357,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "PointID":
-                    item._PointID.SetIfSucceeded(Int16XmlTranslation.Instance.ParseNonNull(
+                    item._PointID.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)InterCellPoint_FieldIndex.PointID,
                         errorMask: errorMask));
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<InterCellPoint_ErrorMask> errorMask)
         {
-            item._PointID.SetIfSucceeded(Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
+            item._PointID.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)InterCellPoint_FieldIndex.PointID,
                 errorMask: errorMask));
@@ -702,7 +702,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case InterCellPoint_FieldIndex.PointID:
                     this._PointID.Set(
-                        (Int16)obj,
+                        (Int32)obj,
                         cmds);
                     break;
                 case InterCellPoint_FieldIndex.Point:
@@ -749,7 +749,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case InterCellPoint_FieldIndex.PointID:
                     obj._PointID.Set(
-                        (Int16)pair.Value,
+                        (Int32)pair.Value,
                         null);
                     break;
                 case InterCellPoint_FieldIndex.Point:
@@ -772,8 +772,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IInterCellPoint : IInterCellPointGetter, ILoquiClass<IInterCellPoint, IInterCellPointGetter>, ILoquiClass<InterCellPoint, IInterCellPointGetter>
     {
-        new Int16 PointID { get; set; }
-        new INotifyingItem<Int16> PointID_Property { get; }
+        new Int32 PointID { get; set; }
+        new INotifyingItem<Int32> PointID_Property { get; }
 
         new P3Float Point { get; set; }
         new INotifyingItem<P3Float> Point_Property { get; }
@@ -783,8 +783,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IInterCellPointGetter : ILoquiObject
     {
         #region PointID
-        Int16 PointID { get; }
-        INotifyingItemGetter<Int16> PointID_Property { get; }
+        Int32 PointID { get; }
+        INotifyingItemGetter<Int32> PointID_Property { get; }
 
         #endregion
         #region Point
@@ -945,7 +945,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case InterCellPoint_FieldIndex.PointID:
-                    return typeof(Int16);
+                    return typeof(Int32);
                 case InterCellPoint_FieldIndex.Point:
                     return typeof(P3Float);
                 default:
@@ -1056,7 +1056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case InterCellPoint_FieldIndex.PointID:
-                    obj.PointID = default(Int16);
+                    obj.PointID = default(Int32);
                     break;
                 case InterCellPoint_FieldIndex.Point:
                     obj.Point = default(P3Float);
@@ -1101,7 +1101,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IInterCellPoint item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.PointID = default(Int16);
+            item.PointID = default(Int32);
             item.Point = default(P3Float);
         }
 
@@ -1210,7 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.InterCellPoint");
                     }
-                    Int16XmlTranslation.Instance.Write(
+                    Int32XmlTranslation.Instance.Write(
                         writer: writer,
                         name: nameof(item.PointID),
                         item: item.PointID_Property,
@@ -1278,7 +1278,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             Func<InterCellPoint_ErrorMask> errorMask)
         {
-            Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.PointID_Property,
                 fieldIndex: (int)InterCellPoint_FieldIndex.PointID,

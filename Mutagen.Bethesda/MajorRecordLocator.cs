@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda
             public FileSection this[FormID id] => _fromFormIDs[id];
 
             public void Add(
-                FormID id, 
+                FormID id,
                 IEnumerable<FileLocation> parentGrupLocations,
                 FileSection section)
             {
@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda
                 return _parentGroupMapper[id];
             }
         }
-        
+
         public static FileLocations GetFileLocations(
             string filePath,
             RecordInterest interest = null)
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda
                 return GetFileLocations(stream, interest);
             }
         }
-        
+
         public static FileLocations GetFileLocations(
             Stream stream,
             RecordInterest interest = null)
@@ -188,8 +188,7 @@ namespace Mutagen.Bethesda
                 {
                     var recordLocation = reader.Position;
                     var targetRec = HeaderTranslation.ReadNextRecordType(reader);
-                    if (checkOverallGrupType
-                        && !grupRec.Equals(targetRec))
+                    if (!grupRec.Equals(targetRec))
                     {
                         reader.Position -= 4;
                         if (IsSubLevelGRUP(reader))
@@ -201,6 +200,10 @@ namespace Mutagen.Bethesda
                                 parentGroupLocations: grupLoc.And(parentGroupLocations),
                                 interest: interest);
                             continue;
+                        }
+                        else if (!checkOverallGrupType)
+                        {
+                            reader.Position += 4;
                         }
                         else
                         {
@@ -242,6 +245,7 @@ namespace Mutagen.Bethesda
                 case GroupTypeEnum.InteriorCellBlock:
                 case GroupTypeEnum.ExteriorCellBlock:
                 case GroupTypeEnum.CellChildren:
+                case GroupTypeEnum.WorldChildren:
                     return true;
                 default:
                     return false;
@@ -273,15 +277,23 @@ namespace Mutagen.Bethesda
                     HandleCells(
                         frame: frame.Spawn(recLength),
                         fileLocs: fileLocs,
-                            parentGroupLocations: grupLoc.And(parentGroupLocations),
+                        parentGroupLocations: grupLoc.And(parentGroupLocations),
                         interest: interest);
                     break;
                 case GroupTypeEnum.CellChildren:
                     HandleCellSubchildren(
                         frame: frame.Spawn(recLength),
                         fileLocs: fileLocs,
-                            parentGroupLocations: grupLoc.And(parentGroupLocations),
+                        parentGroupLocations: grupLoc.And(parentGroupLocations),
                         interest: interest);
+                    break;
+                case GroupTypeEnum.WorldChildren:
+                    ParseTopLevelGRUP(
+                        reader: frame.Reader,
+                        fileLocs: fileLocs,
+                        interest: interest,
+                        parentGroupLocations: grupLoc.And(parentGroupLocations),
+                        checkOverallGrupType: false);
                     break;
                 default:
                     throw new NotImplementedException();

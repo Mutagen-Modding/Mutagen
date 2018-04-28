@@ -19,7 +19,7 @@
   </Object>
   <Object name="InterCellPoint" objType="Subrecord" GUID="550dc884-f88b-403d-832e-130d9a0ddfd1" ID="135">
     <Fields>
-      <Int16 name="PointID" />
+      <Int32 name="PointID" />
       <P3Float name="Point" />
     </Fields>
   </Object>

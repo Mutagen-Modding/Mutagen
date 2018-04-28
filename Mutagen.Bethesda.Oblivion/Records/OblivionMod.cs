@@ -17,7 +17,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static IReadOnlyCollection<RecordType> NonTypeGroups { get; } = new HashSet<RecordType>(
             new RecordType[]
             {
-                new RecordType("WRLD"),
                 new RecordType("DIAL"),
             });
 

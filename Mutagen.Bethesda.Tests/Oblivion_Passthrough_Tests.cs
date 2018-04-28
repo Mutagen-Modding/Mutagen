@@ -592,20 +592,7 @@ namespace Mutagen.Bethesda.Tests
 
         public async Task OblivionESM_Binary_Internal(bool deleteAfter)
         {
-            var mod = OblivionMod.Create_Binary(
-                Properties.Settings.Default.OblivionESM,
-                out var inputErrMask);
-            Assert.False(inputErrMask?.IsInError() ?? false);
-
-            foreach (var record in mod.MajorRecords.Values)
-            {
-                if (record.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
-                {
-                    record.MajorRecordFlags &= ~MajorRecord.MajorRecordFlag.Compressed;
-                }
-            }
-
-            await OblivionESM_Typical(mod, inputErrMask: inputErrMask, deleteAfter: deleteAfter);
+            await OblivionESM_Typical(deleteAfter: deleteAfter);
         }
 
         public ModAligner.AlignmentRules GetAlignmentRules()
@@ -683,10 +670,7 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        private async Task OblivionESM_Typical(
-            OblivionMod mod,
-            OblivionMod_ErrorMask inputErrMask,
-            bool deleteAfter)
+        private async Task OblivionESM_Typical(bool deleteAfter)
         {
             using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary")), deleteAfter: deleteAfter))
             {
@@ -700,6 +684,20 @@ namespace Mutagen.Bethesda.Tests
                     outputPath: uncompressedPath,
                     interest: new RecordInterest(
                         uninterestingTypes: OblivionMod.NonTypeGroups));
+                
+                var mod = OblivionMod.Create_Binary(
+                    uncompressedPath,
+                    out var inputErrMask);
+                Assert.False(inputErrMask?.IsInError() ?? false);
+
+                foreach (var record in mod.MajorRecords.Values)
+                {
+                    if (record.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
+                    {
+                        record.MajorRecordFlags &= ~MajorRecord.MajorRecordFlag.Compressed;
+                    }
+                }
+
                 ModAligner.Align(
                     inputPath: uncompressedPath,
                     outputPath: alignedPath,
