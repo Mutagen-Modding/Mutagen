@@ -219,13 +219,13 @@ namespace Mutagen.Bethesda
 
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out NamedMajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             string name = null)
         {
             errorMask = this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: doMasks) as NamedMajorRecord_ErrorMask;
         }
@@ -236,16 +236,13 @@ namespace Mutagen.Bethesda
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
@@ -254,27 +251,24 @@ namespace Mutagen.Bethesda
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         protected override object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             NamedMajorRecordCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -380,6 +374,7 @@ namespace Mutagen.Bethesda
                     var NametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
+                        parseWhole: true,
                         errorMask: errorMask);
                     item._Name.SetIfSucceeded(NametryGet);
                     return TryGet<NamedMajorRecord_FieldIndex?>.Succeed(NamedMajorRecord_FieldIndex.Name);
@@ -1043,7 +1038,7 @@ namespace Mutagen.Bethesda.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             INamedMajorRecordGetter item,
             bool doMasks,
             out NamedMajorRecord_ErrorMask errorMask,
@@ -1051,7 +1046,7 @@ namespace Mutagen.Bethesda.Internals
         {
             NamedMajorRecord_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new NamedMajorRecord_ErrorMask()) : default(Func<NamedMajorRecord_ErrorMask>));
@@ -1059,28 +1054,27 @@ namespace Mutagen.Bethesda.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             INamedMajorRecordGetter item,
             Func<NamedMajorRecord_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.NamedMajorRecord"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.NamedMajorRecord");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.NamedMajorRecord");
-                    }
-                    if (item.Name_Property.HasBeenSet)
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Name),
-                            item: item.Name_Property,
-                            fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
-                            errorMask: errorMask);
-                    }
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.NamedMajorRecord");
+                }
+                if (item.Name_Property.HasBeenSet)
+                {
+                    StringXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Name),
+                        item: item.Name_Property,
+                        fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

@@ -63,6 +63,29 @@ namespace Mutagen.Bethesda.Binary
             return BytesToString(this.reader.ReadBytes(count));
         }
 
+        public string ReadStringUntil(char stopChar, bool include)
+        {
+            List<byte> chars = new List<byte>();
+            while (!this.Complete)
+            {
+                var nextChar = this.ReadByte();
+                if (nextChar == stopChar)
+                {
+                    if (include)
+                    {
+                        chars.Add(nextChar);
+                    }
+                    else
+                    {
+                        this.Position -= 1;
+                    }
+                    break;
+                }
+                chars.Add(nextChar);
+            }
+            return BytesToString(chars.ToArray());
+        }
+
         public byte ReadByte()
         {
             return this.reader.ReadByte();

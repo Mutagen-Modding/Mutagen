@@ -313,13 +313,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out Sound_ErrorMask errorMask,
             bool doMasks = true,
             string name = null)
         {
             errorMask = this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: doMasks) as Sound_ErrorMask;
         }
@@ -330,16 +330,13 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
@@ -348,24 +345,21 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public override void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -374,39 +368,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public override void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected override object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             SoundCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -1412,7 +1400,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             ISoundGetter item,
             bool doMasks,
             out Sound_ErrorMask errorMask,
@@ -1420,7 +1408,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Sound_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Sound_ErrorMask()) : default(Func<Sound_ErrorMask>));
@@ -1428,37 +1416,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             ISoundGetter item,
             Func<Sound_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.Sound"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Sound");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Sound");
-                    }
-                    if (item.File_Property.HasBeenSet)
-                    {
-                        FilePathXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.File),
-                            item: item.File_Property,
-                            fieldIndex: (int)Sound_FieldIndex.File,
-                            errorMask: errorMask);
-                    }
-                    if (item.Data_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<SoundData, SoundData_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.Data_Property,
-                            name: nameof(item.Data),
-                            fieldIndex: (int)Sound_FieldIndex.Data,
-                            errorMask: errorMask);
-                    }
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Sound");
+                }
+                if (item.File_Property.HasBeenSet)
+                {
+                    FilePathXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.File),
+                        item: item.File_Property,
+                        fieldIndex: (int)Sound_FieldIndex.File,
+                        errorMask: errorMask);
+                }
+                if (item.Data_Property.HasBeenSet)
+                {
+                    LoquiXmlTranslation<SoundData, SoundData_ErrorMask>.Instance.Write(
+                        node: elem,
+                        item: item.Data_Property,
+                        name: nameof(item.Data),
+                        fieldIndex: (int)Sound_FieldIndex.Data,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

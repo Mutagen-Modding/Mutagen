@@ -275,13 +275,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out ScriptObjectReference_ErrorMask errorMask,
             bool doMasks = true,
             string name = null)
         {
             errorMask = this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: doMasks) as ScriptObjectReference_ErrorMask;
         }
@@ -292,16 +292,13 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
@@ -310,24 +307,21 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public override void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -336,39 +330,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public override void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected override object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             ScriptObjectReferenceCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -1258,7 +1246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IScriptObjectReferenceGetter item,
             bool doMasks,
             out ScriptObjectReference_ErrorMask errorMask,
@@ -1266,7 +1254,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ScriptObjectReference_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ScriptObjectReference_ErrorMask()) : default(Func<ScriptObjectReference_ErrorMask>));
@@ -1274,26 +1262,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IScriptObjectReferenceGetter item,
             Func<ScriptObjectReference_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.ScriptObjectReference"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.ScriptObjectReference");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.ScriptObjectReference");
-                    }
-                    FormIDXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Reference),
-                        item: item.Reference?.FormID,
-                        fieldIndex: (int)ScriptObjectReference_FieldIndex.Reference,
-                        errorMask: errorMask);
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ScriptObjectReference");
                 }
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Reference),
+                    item: item.Reference?.FormID,
+                    fieldIndex: (int)ScriptObjectReference_FieldIndex.Reference,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (errorMask != null)

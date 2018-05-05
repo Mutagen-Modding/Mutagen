@@ -342,7 +342,7 @@ namespace Mutagen.Bethesda.Binary
                     item: item,
                     doMasks: doMasks,
                     maskObj: out maskObj,
-                    transl: (T item1, bool internalDoMasks, out M obj) => transl.Item.Value.Write(writer: writer, item: item1, length: ContentLength.Invalid, doMasks: internalDoMasks, maskObj: out obj));
+                    transl: (MutagenWriter subWriter, T item1, bool internalDoMasks, out M obj) => transl.Item.Value.Write(writer: subWriter, item: item1, length: ContentLength.Invalid, doMasks: internalDoMasks, maskObj: out obj));
             }
             catch (Exception ex)
             when (doMasks)

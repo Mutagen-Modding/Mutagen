@@ -306,13 +306,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out BodyData_ErrorMask errorMask,
             bool doMasks = true,
             string name = null)
         {
             errorMask = this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: doMasks) as BodyData_ErrorMask;
         }
@@ -323,16 +323,13 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
@@ -341,24 +338,21 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -367,39 +361,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             BodyDataCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -1454,7 +1442,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IBodyDataGetter item,
             bool doMasks,
             out BodyData_ErrorMask errorMask,
@@ -1462,7 +1450,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             BodyData_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new BodyData_ErrorMask()) : default(Func<BodyData_ErrorMask>));
@@ -1470,47 +1458,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IBodyDataGetter item,
             Func<BodyData_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.BodyData"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.BodyData");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.BodyData");
-                    }
-                    if (item.Model_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.Model_Property,
-                            name: nameof(item.Model),
-                            fieldIndex: (int)BodyData_FieldIndex.Model,
-                            errorMask: errorMask);
-                    }
-                    if (item.BodyParts.HasBeenSet)
-                    {
-                        ListXmlTranslation<BodyPart, MaskItem<Exception, BodyPart_ErrorMask>>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.BodyParts),
-                            item: item.BodyParts,
-                            fieldIndex: (int)BodyData_FieldIndex.BodyParts,
-                            errorMask: errorMask,
-                            transl: (BodyPart subItem, bool listDoMasks, out MaskItem<Exception, BodyPart_ErrorMask> listSubMask) =>
-                            {
-                                LoquiXmlTranslation<BodyPart, BodyPart_ErrorMask>.Instance.Write(
-                                    writer: writer,
-                                    item: subItem,
-                                    name: "Item",
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.BodyData");
+                }
+                if (item.Model_Property.HasBeenSet)
+                {
+                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
+                        node: elem,
+                        item: item.Model_Property,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)BodyData_FieldIndex.Model,
+                        errorMask: errorMask);
+                }
+                if (item.BodyParts.HasBeenSet)
+                {
+                    ListXmlTranslation<BodyPart, MaskItem<Exception, BodyPart_ErrorMask>>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.BodyParts),
+                        item: item.BodyParts,
+                        fieldIndex: (int)BodyData_FieldIndex.BodyParts,
+                        errorMask: errorMask,
+                        transl: (XElement subNode, BodyPart subItem, bool listDoMasks, out MaskItem<Exception, BodyPart_ErrorMask> listSubMask) =>
+                        {
+                            LoquiXmlTranslation<BodyPart, BodyPart_ErrorMask>.Instance.Write(
+                                node: subNode,
+                                item: subItem,
+                                name: "Item",
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
                 }
             }
             catch (Exception ex)
@@ -1579,10 +1566,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.BodyParts,
                 fieldIndex: (int)BodyData_FieldIndex.BodyParts,
                 errorMask: errorMask,
-                transl: (BodyPart subItem, bool listDoMasks, out MaskItem<Exception, BodyPart_ErrorMask> listSubMask) =>
+                transl: (MutagenWriter subWriter, BodyPart subItem, bool listDoMasks, out MaskItem<Exception, BodyPart_ErrorMask> listSubMask) =>
                 {
                     LoquiBinaryTranslation<BodyPart, BodyPart_ErrorMask>.Instance.Write(
-                        writer: writer,
+                        writer: subWriter,
                         item: subItem,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask);

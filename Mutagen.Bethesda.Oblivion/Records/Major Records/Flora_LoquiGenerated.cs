@@ -398,13 +398,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out Flora_ErrorMask errorMask,
             bool doMasks = true,
             string name = null)
         {
             errorMask = this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: doMasks) as Flora_ErrorMask;
         }
@@ -415,16 +415,13 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
@@ -433,24 +430,21 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public override void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -459,39 +453,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public override void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected override object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             FloraCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -1887,7 +1875,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IFloraGetter item,
             bool doMasks,
             out Flora_ErrorMask errorMask,
@@ -1895,7 +1883,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Flora_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Flora_ErrorMask()) : default(Func<Flora_ErrorMask>));
@@ -1903,71 +1891,70 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IFloraGetter item,
             Func<Flora_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.Flora"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Flora");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Flora");
-                    }
-                    if (item.Model_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.Model_Property,
-                            name: nameof(item.Model),
-                            fieldIndex: (int)Flora_FieldIndex.Model,
-                            errorMask: errorMask);
-                    }
-                    if (item.Script_Property.HasBeenSet)
-                    {
-                        FormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Script),
-                            item: item.Script?.FormID,
-                            fieldIndex: (int)Flora_FieldIndex.Script,
-                            errorMask: errorMask);
-                    }
-                    if (item.Ingredient_Property.HasBeenSet)
-                    {
-                        FormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Ingredient),
-                            item: item.Ingredient?.FormID,
-                            fieldIndex: (int)Flora_FieldIndex.Ingredient,
-                            errorMask: errorMask);
-                    }
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Spring),
-                        item: item.Spring_Property,
-                        fieldIndex: (int)Flora_FieldIndex.Spring,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Summer),
-                        item: item.Summer_Property,
-                        fieldIndex: (int)Flora_FieldIndex.Summer,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Fall),
-                        item: item.Fall_Property,
-                        fieldIndex: (int)Flora_FieldIndex.Fall,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Winter),
-                        item: item.Winter_Property,
-                        fieldIndex: (int)Flora_FieldIndex.Winter,
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Flora");
+                }
+                if (item.Model_Property.HasBeenSet)
+                {
+                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
+                        node: elem,
+                        item: item.Model_Property,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)Flora_FieldIndex.Model,
                         errorMask: errorMask);
                 }
+                if (item.Script_Property.HasBeenSet)
+                {
+                    FormIDXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Script),
+                        item: item.Script?.FormID,
+                        fieldIndex: (int)Flora_FieldIndex.Script,
+                        errorMask: errorMask);
+                }
+                if (item.Ingredient_Property.HasBeenSet)
+                {
+                    FormIDXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Ingredient),
+                        item: item.Ingredient?.FormID,
+                        fieldIndex: (int)Flora_FieldIndex.Ingredient,
+                        errorMask: errorMask);
+                }
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Spring),
+                    item: item.Spring_Property,
+                    fieldIndex: (int)Flora_FieldIndex.Spring,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Summer),
+                    item: item.Summer_Property,
+                    fieldIndex: (int)Flora_FieldIndex.Summer,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Fall),
+                    item: item.Fall_Property,
+                    fieldIndex: (int)Flora_FieldIndex.Fall,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Winter),
+                    item: item.Winter_Property,
+                    fieldIndex: (int)Flora_FieldIndex.Winter,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (errorMask != null)

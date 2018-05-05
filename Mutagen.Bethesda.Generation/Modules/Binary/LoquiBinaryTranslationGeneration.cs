@@ -188,6 +188,7 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration targetGen,
             TypeGeneration typeGen,
             string readerAccessor,
+            bool squashedRepeatedList,
             Accessor retAccessor,
             string doMaskAccessor,
             string maskAccessor)

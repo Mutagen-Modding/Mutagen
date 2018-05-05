@@ -323,13 +323,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out Clothing_ErrorMask errorMask,
             bool doMasks = true,
             string name = null)
         {
             errorMask = this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: doMasks) as Clothing_ErrorMask;
         }
@@ -340,16 +340,13 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
@@ -358,24 +355,21 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public override void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -384,39 +378,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public override void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected override object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             ClothingCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -1458,7 +1446,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IClothingGetter item,
             bool doMasks,
             out Clothing_ErrorMask errorMask,
@@ -1466,7 +1454,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clothing_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Clothing_ErrorMask()) : default(Func<Clothing_ErrorMask>));
@@ -1474,32 +1462,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IClothingGetter item,
             Func<Clothing_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.Clothing"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Clothing");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Clothing");
-                    }
-                    UInt32XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Value),
-                        item: item.Value_Property,
-                        fieldIndex: (int)Clothing_FieldIndex.Value,
-                        errorMask: errorMask);
-                    FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Weight),
-                        item: item.Weight_Property,
-                        fieldIndex: (int)Clothing_FieldIndex.Weight,
-                        errorMask: errorMask);
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Clothing");
                 }
+                UInt32XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Value),
+                    item: item.Value_Property,
+                    fieldIndex: (int)Clothing_FieldIndex.Value,
+                    errorMask: errorMask);
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Weight),
+                    item: item.Weight_Property,
+                    fieldIndex: (int)Clothing_FieldIndex.Weight,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (errorMask != null)

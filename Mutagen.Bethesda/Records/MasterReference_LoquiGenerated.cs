@@ -300,13 +300,13 @@ namespace Mutagen.Bethesda
 
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out MasterReference_ErrorMask errorMask,
             bool doMasks = true,
             string name = null)
         {
             errorMask = this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: doMasks) as MasterReference_ErrorMask;
         }
@@ -317,16 +317,13 @@ namespace Mutagen.Bethesda
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
@@ -335,24 +332,21 @@ namespace Mutagen.Bethesda
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -361,39 +355,33 @@ namespace Mutagen.Bethesda
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             MasterReferenceCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -677,6 +665,7 @@ namespace Mutagen.Bethesda
                     var MastertryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)MasterReference_FieldIndex.Master,
+                        parseWhole: true,
                         errorMask: errorMask);
                     item._Master.SetIfSucceeded(MastertryGet);
                     return TryGet<MasterReference_FieldIndex?>.Succeed(MasterReference_FieldIndex.Master);
@@ -1344,7 +1333,7 @@ namespace Mutagen.Bethesda.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IMasterReferenceGetter item,
             bool doMasks,
             out MasterReference_ErrorMask errorMask,
@@ -1352,7 +1341,7 @@ namespace Mutagen.Bethesda.Internals
         {
             MasterReference_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
@@ -1360,37 +1349,36 @@ namespace Mutagen.Bethesda.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IMasterReferenceGetter item,
             Func<MasterReference_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.MasterReference"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.MasterReference");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.MasterReference");
-                    }
-                    if (item.Master_Property.HasBeenSet)
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Master),
-                            item: item.Master_Property,
-                            fieldIndex: (int)MasterReference_FieldIndex.Master,
-                            errorMask: errorMask);
-                    }
-                    if (item.FileSize_Property.HasBeenSet)
-                    {
-                        UInt64XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.FileSize),
-                            item: item.FileSize_Property,
-                            fieldIndex: (int)MasterReference_FieldIndex.FileSize,
-                            errorMask: errorMask);
-                    }
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.MasterReference");
+                }
+                if (item.Master_Property.HasBeenSet)
+                {
+                    StringXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Master),
+                        item: item.Master_Property,
+                        fieldIndex: (int)MasterReference_FieldIndex.Master,
+                        errorMask: errorMask);
+                }
+                if (item.FileSize_Property.HasBeenSet)
+                {
+                    UInt64XmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.FileSize),
+                        item: item.FileSize_Property,
+                        fieldIndex: (int)MasterReference_FieldIndex.FileSize,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

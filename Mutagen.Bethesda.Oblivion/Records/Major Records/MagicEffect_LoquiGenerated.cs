@@ -527,13 +527,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out MagicEffect_ErrorMask errorMask,
             bool doMasks = true,
             string name = null)
         {
             errorMask = this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: doMasks) as MagicEffect_ErrorMask;
         }
@@ -544,16 +544,13 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
@@ -562,24 +559,21 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public override void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -588,39 +582,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public override void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected override object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             MagicEffectCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -998,6 +986,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var DescriptiontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)MagicEffect_FieldIndex.Description,
+                        parseWhole: true,
                         errorMask: errorMask);
                     item._Description.SetIfSucceeded(DescriptiontryGet);
                     return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.Description);
@@ -2602,7 +2591,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IMagicEffectGetter item,
             bool doMasks,
             out MagicEffect_ErrorMask errorMask,
@@ -2610,7 +2599,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             MagicEffect_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MagicEffect_ErrorMask()) : default(Func<MagicEffect_ErrorMask>));
@@ -2618,125 +2607,124 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IMagicEffectGetter item,
             Func<MagicEffect_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.MagicEffect"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.MagicEffect");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.MagicEffect");
-                    }
-                    if (item.Description_Property.HasBeenSet)
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Description),
-                            item: item.Description_Property,
-                            fieldIndex: (int)MagicEffect_FieldIndex.Description,
-                            errorMask: errorMask);
-                    }
-                    if (item.Icon_Property.HasBeenSet)
-                    {
-                        FilePathXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Icon),
-                            item: item.Icon_Property,
-                            fieldIndex: (int)MagicEffect_FieldIndex.Icon,
-                            errorMask: errorMask);
-                    }
-                    if (item.Model_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.Model_Property,
-                            name: nameof(item.Model),
-                            fieldIndex: (int)MagicEffect_FieldIndex.Model,
-                            errorMask: errorMask);
-                    }
-                    EnumXmlTranslation<MagicEffect.MagicFlag>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Flags),
-                        item: item.Flags_Property,
-                        fieldIndex: (int)MagicEffect_FieldIndex.Flags,
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.MagicEffect");
+                }
+                if (item.Description_Property.HasBeenSet)
+                {
+                    StringXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Description),
+                        item: item.Description_Property,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Description,
                         errorMask: errorMask);
-                    FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.BaseCost),
-                        item: item.BaseCost_Property,
-                        fieldIndex: (int)MagicEffect_FieldIndex.BaseCost,
+                }
+                if (item.Icon_Property.HasBeenSet)
+                {
+                    FilePathXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Icon),
+                        item: item.Icon_Property,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Icon,
                         errorMask: errorMask);
-                    ByteArrayXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Unused),
-                        item: item.Unused_Property,
-                        fieldIndex: (int)MagicEffect_FieldIndex.Unused,
+                }
+                if (item.Model_Property.HasBeenSet)
+                {
+                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
+                        node: elem,
+                        item: item.Model_Property,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)MagicEffect_FieldIndex.Model,
                         errorMask: errorMask);
-                    EnumXmlTranslation<MagicSchool>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.MagicSchool),
-                        item: item.MagicSchool_Property,
-                        fieldIndex: (int)MagicEffect_FieldIndex.MagicSchool,
-                        errorMask: errorMask);
-                    EnumXmlTranslation<Resistance>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Resistance),
-                        item: item.Resistance_Property,
-                        fieldIndex: (int)MagicEffect_FieldIndex.Resistance,
-                        errorMask: errorMask);
-                    UInt32XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.CounterEffectCount),
-                        item: item.CounterEffectCount_Property,
-                        fieldIndex: (int)MagicEffect_FieldIndex.CounterEffectCount,
-                        errorMask: errorMask);
-                    FormIDXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Light),
-                        item: item.Light?.FormID,
-                        fieldIndex: (int)MagicEffect_FieldIndex.Light,
-                        errorMask: errorMask);
-                    FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.ProjectileSpeed),
-                        item: item.ProjectileSpeed_Property,
-                        fieldIndex: (int)MagicEffect_FieldIndex.ProjectileSpeed,
-                        errorMask: errorMask);
-                    FormIDXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.EffectShader),
-                        item: item.EffectShader?.FormID,
-                        fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<MagicEffectSubData, MagicEffectSubData_ErrorMask>.Instance.Write(
-                        writer: writer,
-                        item: item.SubData_Property,
-                        name: nameof(item.SubData),
-                        fieldIndex: (int)MagicEffect_FieldIndex.SubData,
-                        errorMask: errorMask);
-                    if (item.CounterEffects.HasBeenSet)
-                    {
-                        ListXmlTranslation<EDIDLink<MagicEffect>, Exception>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.CounterEffects),
-                            item: item.CounterEffects,
-                            fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
-                            errorMask: errorMask,
-                            transl: (EDIDLink<MagicEffect> subItem, bool listDoMasks, out Exception listSubMask) =>
-                            {
-                                FormIDXmlTranslation.Instance.Write(
-                                    writer: writer,
-                                    name: "Item",
-                                    item: subItem?.FormID,
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
+                }
+                EnumXmlTranslation<MagicEffect.MagicFlag>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Flags),
+                    item: item.Flags_Property,
+                    fieldIndex: (int)MagicEffect_FieldIndex.Flags,
+                    errorMask: errorMask);
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.BaseCost),
+                    item: item.BaseCost_Property,
+                    fieldIndex: (int)MagicEffect_FieldIndex.BaseCost,
+                    errorMask: errorMask);
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Unused),
+                    item: item.Unused_Property,
+                    fieldIndex: (int)MagicEffect_FieldIndex.Unused,
+                    errorMask: errorMask);
+                EnumXmlTranslation<MagicSchool>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.MagicSchool),
+                    item: item.MagicSchool_Property,
+                    fieldIndex: (int)MagicEffect_FieldIndex.MagicSchool,
+                    errorMask: errorMask);
+                EnumXmlTranslation<Resistance>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Resistance),
+                    item: item.Resistance_Property,
+                    fieldIndex: (int)MagicEffect_FieldIndex.Resistance,
+                    errorMask: errorMask);
+                UInt32XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.CounterEffectCount),
+                    item: item.CounterEffectCount_Property,
+                    fieldIndex: (int)MagicEffect_FieldIndex.CounterEffectCount,
+                    errorMask: errorMask);
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Light),
+                    item: item.Light?.FormID,
+                    fieldIndex: (int)MagicEffect_FieldIndex.Light,
+                    errorMask: errorMask);
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.ProjectileSpeed),
+                    item: item.ProjectileSpeed_Property,
+                    fieldIndex: (int)MagicEffect_FieldIndex.ProjectileSpeed,
+                    errorMask: errorMask);
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.EffectShader),
+                    item: item.EffectShader?.FormID,
+                    fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<MagicEffectSubData, MagicEffectSubData_ErrorMask>.Instance.Write(
+                    node: elem,
+                    item: item.SubData_Property,
+                    name: nameof(item.SubData),
+                    fieldIndex: (int)MagicEffect_FieldIndex.SubData,
+                    errorMask: errorMask);
+                if (item.CounterEffects.HasBeenSet)
+                {
+                    ListXmlTranslation<EDIDLink<MagicEffect>, Exception>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.CounterEffects),
+                        item: item.CounterEffects,
+                        fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
+                        errorMask: errorMask,
+                        transl: (XElement subNode, EDIDLink<MagicEffect> subItem, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            FormIDXmlTranslation.Instance.Write(
+                                node: subNode,
+                                name: "Item",
+                                item: subItem?.FormID,
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
                 }
             }
             catch (Exception ex)
@@ -2894,10 +2882,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
                 recordType: MagicEffect_Registration.ESCE_HEADER,
                 errorMask: errorMask,
-                transl: (EDIDLink<MagicEffect> subItem, bool listDoMasks, out Exception listSubMask) =>
+                transl: (MutagenWriter subWriter, EDIDLink<MagicEffect> subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
                     Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
-                        writer: writer,
+                        writer: subWriter,
                         item: subItem,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask);

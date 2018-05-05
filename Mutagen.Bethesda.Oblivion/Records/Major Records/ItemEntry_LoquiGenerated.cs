@@ -287,13 +287,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out ItemEntry_ErrorMask errorMask,
             bool doMasks = true,
             string name = null)
         {
             errorMask = this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: doMasks) as ItemEntry_ErrorMask;
         }
@@ -304,16 +304,13 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
@@ -322,24 +319,21 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -348,39 +342,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             ItemEntryCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -1303,7 +1291,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IItemEntryGetter item,
             bool doMasks,
             out ItemEntry_ErrorMask errorMask,
@@ -1311,7 +1299,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ItemEntry_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ItemEntry_ErrorMask()) : default(Func<ItemEntry_ErrorMask>));
@@ -1319,34 +1307,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IItemEntryGetter item,
             Func<ItemEntry_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.ItemEntry"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.ItemEntry");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.ItemEntry");
-                    }
-                    FormIDXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Item),
-                        item: item.Item?.FormID,
-                        fieldIndex: (int)ItemEntry_FieldIndex.Item,
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ItemEntry");
+                }
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Item),
+                    item: item.Item?.FormID,
+                    fieldIndex: (int)ItemEntry_FieldIndex.Item,
+                    errorMask: errorMask);
+                if (item.Count_Property.HasBeenSet)
+                {
+                    Int32XmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Count),
+                        item: item.Count_Property,
+                        fieldIndex: (int)ItemEntry_FieldIndex.Count,
                         errorMask: errorMask);
-                    if (item.Count_Property.HasBeenSet)
-                    {
-                        Int32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Count),
-                            item: item.Count_Property,
-                            fieldIndex: (int)ItemEntry_FieldIndex.Count,
-                            errorMask: errorMask);
-                    }
                 }
             }
             catch (Exception ex)

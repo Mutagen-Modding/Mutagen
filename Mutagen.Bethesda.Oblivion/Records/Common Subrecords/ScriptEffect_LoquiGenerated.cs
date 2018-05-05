@@ -328,13 +328,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out ScriptEffect_ErrorMask errorMask,
             bool doMasks = true,
             string name = null)
         {
             errorMask = this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: doMasks) as ScriptEffect_ErrorMask;
         }
@@ -345,16 +345,13 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
@@ -363,24 +360,21 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -389,39 +383,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             ScriptEffectCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -797,6 +785,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var NametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)ScriptEffect_FieldIndex.Name,
+                        parseWhole: true,
                         errorMask: errorMask);
                     item._Name.SetIfSucceeded(NametryGet);
                     return TryGet<ScriptEffect_FieldIndex?>.Succeed(ScriptEffect_FieldIndex.Name);
@@ -1613,7 +1602,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IScriptEffectGetter item,
             bool doMasks,
             out ScriptEffect_ErrorMask errorMask,
@@ -1621,7 +1610,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ScriptEffect_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ScriptEffect_ErrorMask()) : default(Func<ScriptEffect_ErrorMask>));
@@ -1629,52 +1618,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IScriptEffectGetter item,
             Func<ScriptEffect_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.ScriptEffect"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.ScriptEffect");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.ScriptEffect");
-                    }
-                    FormIDXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Script),
-                        item: item.Script?.FormID,
-                        fieldIndex: (int)ScriptEffect_FieldIndex.Script,
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ScriptEffect");
+                }
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Script),
+                    item: item.Script?.FormID,
+                    fieldIndex: (int)ScriptEffect_FieldIndex.Script,
+                    errorMask: errorMask);
+                EnumXmlTranslation<MagicSchool>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.MagicSchool),
+                    item: item.MagicSchool_Property,
+                    fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
+                    errorMask: errorMask);
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.VisualEffect),
+                    item: item.VisualEffect?.FormID,
+                    fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
+                    errorMask: errorMask);
+                EnumXmlTranslation<ScriptEffect.Flag>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Flags),
+                    item: item.Flags_Property,
+                    fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
+                    errorMask: errorMask);
+                if (item.Name_Property.HasBeenSet)
+                {
+                    StringXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Name),
+                        item: item.Name_Property,
+                        fieldIndex: (int)ScriptEffect_FieldIndex.Name,
                         errorMask: errorMask);
-                    EnumXmlTranslation<MagicSchool>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.MagicSchool),
-                        item: item.MagicSchool_Property,
-                        fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
-                        errorMask: errorMask);
-                    FormIDXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.VisualEffect),
-                        item: item.VisualEffect?.FormID,
-                        fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
-                        errorMask: errorMask);
-                    EnumXmlTranslation<ScriptEffect.Flag>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Flags),
-                        item: item.Flags_Property,
-                        fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
-                        errorMask: errorMask);
-                    if (item.Name_Property.HasBeenSet)
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Name),
-                            item: item.Name_Property,
-                            fieldIndex: (int)ScriptEffect_FieldIndex.Name,
-                            errorMask: errorMask);
-                    }
                 }
             }
             catch (Exception ex)

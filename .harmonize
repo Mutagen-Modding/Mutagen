@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>758cde794ee0c5bd6fb554468b62de96dbf86c4b</Sha>
+         <Sha>b8aabb674b75a69fdfd8e7a67ba82ade7857f261</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>04-25-2018 17:00:25</CommitDate>
-         <Description>EnumExt.TryToStingFast_Enum_Only</Description>
+         <CommitDate>05-05-2018 11:05:18</CommitDate>
+         <Description>TempFolder added missing optional parameter to path ctor</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>6e0b516b9f0bba8d94af040e10efb4d7e36f8f71</Sha>
+         <Sha>f866dd7bf281505c685b4cbff225d930284554b1</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>04-25-2018 17:01:22</CommitDate>
-         <Description>EnumXmlTranslation improvements for flag support</Description>
+         <CommitDate>04-30-2018 17:09:13</CommitDate>
+         <Description>Refactor to XML translation to fill an XElement, and then write to an XmlWriter</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

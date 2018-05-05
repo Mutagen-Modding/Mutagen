@@ -12,15 +12,37 @@ namespace Mutagen.Bethesda.Binary
     {
         public readonly static StringBinaryTranslation Instance = new StringBinaryTranslation();
 
-        public virtual TryGet<string> Parse(MutagenFrame frame, bool doMasks, out Exception errorMask)
+        public virtual TryGet<string> Parse(
+            MutagenFrame frame,
+            bool doMasks,
+            out Exception errorMask)
+        {
+            return Parse(
+                frame: frame,
+                doMasks: doMasks,
+                parseWhole: true,
+                errorMask: out errorMask);
+        }
+
+        public virtual TryGet<string> Parse(
+            MutagenFrame frame,
+            bool parseWhole,
+            bool doMasks,
+            out Exception errorMask)
         {
             try
             {
                 errorMask = null;
-                var str = frame.Reader.ReadString(frame.RemainingLength);
-                if (str[str.Length - 1] == '\0')
+                string str;
+                if (parseWhole)
                 {
-                    str = str.Substring(0, str.Length - 1);
+                    str = frame.Reader.ReadString(frame.RemainingLength);
+                    str = str.TrimEnd('\0');
+                }
+                else
+                {
+                    str = frame.Reader.ReadStringUntil('\0', include: false);
+                    frame.Reader.Position += 1;
                 }
                 return TryGet<string>.Succeed(str);
             }
@@ -38,13 +60,15 @@ namespace Mutagen.Bethesda.Binary
         public TryGet<string> Parse<M>(
             MutagenFrame frame,
             int fieldIndex,
+            bool parseWhole,
             Func<M> errorMask)
             where M : IErrorMask
         {
             var ret = this.Parse(
-                frame,
-                errorMask != null,
-                out var ex);
+                frame: frame,
+                parseWhole: parseWhole,
+                doMasks: errorMask != null,
+                errorMask: out var ex);
             ErrorMask.HandleErrorMask(
                 errorMask,
                 fieldIndex,

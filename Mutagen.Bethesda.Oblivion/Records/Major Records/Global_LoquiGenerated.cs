@@ -241,13 +241,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out Global_ErrorMask errorMask,
             bool doMasks = true,
             string name = null)
         {
             errorMask = this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: doMasks) as Global_ErrorMask;
         }
@@ -258,16 +258,13 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
@@ -276,27 +273,24 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         protected override object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             GlobalCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -1067,7 +1061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IGlobalGetter item,
             bool doMasks,
             out Global_ErrorMask errorMask,
@@ -1075,7 +1069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Global_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Global_ErrorMask()) : default(Func<Global_ErrorMask>));
@@ -1083,28 +1077,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IGlobalGetter item,
             Func<Global_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.Global"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Global");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Global");
-                    }
-                    if (item.RawFloat_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.RawFloat),
-                            item: item.RawFloat_Property,
-                            fieldIndex: (int)Global_FieldIndex.RawFloat,
-                            errorMask: errorMask);
-                    }
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Global");
+                }
+                if (item.RawFloat_Property.HasBeenSet)
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.RawFloat),
+                        item: item.RawFloat_Property,
+                        fieldIndex: (int)Global_FieldIndex.RawFloat,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

@@ -507,13 +507,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out SkillRecord_ErrorMask errorMask,
             bool doMasks = true,
             string name = null)
         {
             errorMask = this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: doMasks) as SkillRecord_ErrorMask;
         }
@@ -524,16 +524,13 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
@@ -542,24 +539,21 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public override void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -568,39 +562,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public override void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected override object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             SkillRecordCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -941,6 +929,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var DescriptiontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.Description,
+                        parseWhole: true,
                         errorMask: errorMask);
                     item._Description.SetIfSucceeded(DescriptiontryGet);
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.Description);
@@ -982,6 +971,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var ApprenticeTexttryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.ApprenticeText,
+                        parseWhole: true,
                         errorMask: errorMask);
                     item._ApprenticeText.SetIfSucceeded(ApprenticeTexttryGet);
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.ApprenticeText);
@@ -990,6 +980,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var JourneymanTexttryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.JourneymanText,
+                        parseWhole: true,
                         errorMask: errorMask);
                     item._JourneymanText.SetIfSucceeded(JourneymanTexttryGet);
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.JourneymanText);
@@ -998,6 +989,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var ExpertTexttryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.ExpertText,
+                        parseWhole: true,
                         errorMask: errorMask);
                     item._ExpertText.SetIfSucceeded(ExpertTexttryGet);
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.ExpertText);
@@ -1006,6 +998,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var MasterTexttryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.MasterText,
+                        parseWhole: true,
                         errorMask: errorMask);
                     item._MasterText.SetIfSucceeded(MasterTexttryGet);
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.MasterText);
@@ -2306,7 +2299,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             ISkillRecordGetter item,
             bool doMasks,
             out SkillRecord_ErrorMask errorMask,
@@ -2314,7 +2307,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             SkillRecord_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SkillRecord_ErrorMask()) : default(Func<SkillRecord_ErrorMask>));
@@ -2322,112 +2315,111 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             ISkillRecordGetter item,
             Func<SkillRecord_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.SkillRecord"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.SkillRecord");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.SkillRecord");
-                    }
-                    if (item.Skill_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<ActorValue>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Skill),
-                            item: item.Skill_Property,
-                            fieldIndex: (int)SkillRecord_FieldIndex.Skill,
-                            errorMask: errorMask);
-                    }
-                    if (item.Description_Property.HasBeenSet)
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Description),
-                            item: item.Description_Property,
-                            fieldIndex: (int)SkillRecord_FieldIndex.Description,
-                            errorMask: errorMask);
-                    }
-                    if (item.Icon_Property.HasBeenSet)
-                    {
-                        FilePathXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Icon),
-                            item: item.Icon_Property,
-                            fieldIndex: (int)SkillRecord_FieldIndex.Icon,
-                            errorMask: errorMask);
-                    }
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SkillRecord");
+                }
+                if (item.Skill_Property.HasBeenSet)
+                {
                     EnumXmlTranslation<ActorValue>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Action),
-                        item: item.Action_Property,
-                        fieldIndex: (int)SkillRecord_FieldIndex.Action,
+                        node: elem,
+                        name: nameof(item.Skill),
+                        item: item.Skill_Property,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Skill,
                         errorMask: errorMask);
-                    EnumXmlTranslation<ActorValue>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Attribute),
-                        item: item.Attribute_Property,
-                        fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
+                }
+                if (item.Description_Property.HasBeenSet)
+                {
+                    StringXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Description),
+                        item: item.Description_Property,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Description,
                         errorMask: errorMask);
-                    EnumXmlTranslation<Specialization>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Specialization),
-                        item: item.Specialization_Property,
-                        fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
+                }
+                if (item.Icon_Property.HasBeenSet)
+                {
+                    FilePathXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Icon),
+                        item: item.Icon_Property,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Icon,
                         errorMask: errorMask);
-                    FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.UseValueFirst),
-                        item: item.UseValueFirst_Property,
-                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
+                }
+                EnumXmlTranslation<ActorValue>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Action),
+                    item: item.Action_Property,
+                    fieldIndex: (int)SkillRecord_FieldIndex.Action,
+                    errorMask: errorMask);
+                EnumXmlTranslation<ActorValue>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Attribute),
+                    item: item.Attribute_Property,
+                    fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
+                    errorMask: errorMask);
+                EnumXmlTranslation<Specialization>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Specialization),
+                    item: item.Specialization_Property,
+                    fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
+                    errorMask: errorMask);
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.UseValueFirst),
+                    item: item.UseValueFirst_Property,
+                    fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
+                    errorMask: errorMask);
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.UseValueSecond),
+                    item: item.UseValueSecond_Property,
+                    fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
+                    errorMask: errorMask);
+                if (item.ApprenticeText_Property.HasBeenSet)
+                {
+                    StringXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.ApprenticeText),
+                        item: item.ApprenticeText_Property,
+                        fieldIndex: (int)SkillRecord_FieldIndex.ApprenticeText,
                         errorMask: errorMask);
-                    FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.UseValueSecond),
-                        item: item.UseValueSecond_Property,
-                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
+                }
+                if (item.JourneymanText_Property.HasBeenSet)
+                {
+                    StringXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.JourneymanText),
+                        item: item.JourneymanText_Property,
+                        fieldIndex: (int)SkillRecord_FieldIndex.JourneymanText,
                         errorMask: errorMask);
-                    if (item.ApprenticeText_Property.HasBeenSet)
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.ApprenticeText),
-                            item: item.ApprenticeText_Property,
-                            fieldIndex: (int)SkillRecord_FieldIndex.ApprenticeText,
-                            errorMask: errorMask);
-                    }
-                    if (item.JourneymanText_Property.HasBeenSet)
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.JourneymanText),
-                            item: item.JourneymanText_Property,
-                            fieldIndex: (int)SkillRecord_FieldIndex.JourneymanText,
-                            errorMask: errorMask);
-                    }
-                    if (item.ExpertText_Property.HasBeenSet)
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.ExpertText),
-                            item: item.ExpertText_Property,
-                            fieldIndex: (int)SkillRecord_FieldIndex.ExpertText,
-                            errorMask: errorMask);
-                    }
-                    if (item.MasterText_Property.HasBeenSet)
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.MasterText),
-                            item: item.MasterText_Property,
-                            fieldIndex: (int)SkillRecord_FieldIndex.MasterText,
-                            errorMask: errorMask);
-                    }
+                }
+                if (item.ExpertText_Property.HasBeenSet)
+                {
+                    StringXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.ExpertText),
+                        item: item.ExpertText_Property,
+                        fieldIndex: (int)SkillRecord_FieldIndex.ExpertText,
+                        errorMask: errorMask);
+                }
+                if (item.MasterText_Property.HasBeenSet)
+                {
+                    StringXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.MasterText),
+                        item: item.MasterText_Property,
+                        fieldIndex: (int)SkillRecord_FieldIndex.MasterText,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

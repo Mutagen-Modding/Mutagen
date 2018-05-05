@@ -435,13 +435,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out ClothingAbstract_ErrorMask errorMask,
             bool doMasks = true,
             string name = null)
         {
             errorMask = this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: doMasks) as ClothingAbstract_ErrorMask;
         }
@@ -452,16 +452,13 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
@@ -470,27 +467,24 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         protected override object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             ClothingAbstractCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -2188,7 +2182,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IClothingAbstractGetter item,
             bool doMasks,
             out ClothingAbstract_ErrorMask errorMask,
@@ -2196,7 +2190,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClothingAbstract_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ClothingAbstract_ErrorMask()) : default(Func<ClothingAbstract_ErrorMask>));
@@ -2204,112 +2198,111 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IClothingAbstractGetter item,
             Func<ClothingAbstract_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.ClothingAbstract"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.ClothingAbstract");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.ClothingAbstract");
-                    }
-                    if (item.Script_Property.HasBeenSet)
-                    {
-                        FormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Script),
-                            item: item.Script?.FormID,
-                            fieldIndex: (int)ClothingAbstract_FieldIndex.Script,
-                            errorMask: errorMask);
-                    }
-                    if (item.Enchantment_Property.HasBeenSet)
-                    {
-                        FormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Enchantment),
-                            item: item.Enchantment?.FormID,
-                            fieldIndex: (int)ClothingAbstract_FieldIndex.Enchantment,
-                            errorMask: errorMask);
-                    }
-                    if (item.EnchantmentPoints_Property.HasBeenSet)
-                    {
-                        UInt16XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.EnchantmentPoints),
-                            item: item.EnchantmentPoints_Property,
-                            fieldIndex: (int)ClothingAbstract_FieldIndex.EnchantmentPoints,
-                            errorMask: errorMask);
-                    }
-                    EnumXmlTranslation<BipedFlag>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.BipedFlags),
-                        item: item.BipedFlags_Property,
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ClothingAbstract");
+                }
+                if (item.Script_Property.HasBeenSet)
+                {
+                    FormIDXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Script),
+                        item: item.Script?.FormID,
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.Script,
                         errorMask: errorMask);
-                    EnumXmlTranslation<EquipmentFlag>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Flags),
-                        item: item.Flags_Property,
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
+                }
+                if (item.Enchantment_Property.HasBeenSet)
+                {
+                    FormIDXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Enchantment),
+                        item: item.Enchantment?.FormID,
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.Enchantment,
                         errorMask: errorMask);
-                    if (item.MaleBipedModel_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.MaleBipedModel_Property,
-                            name: nameof(item.MaleBipedModel),
-                            fieldIndex: (int)ClothingAbstract_FieldIndex.MaleBipedModel,
-                            errorMask: errorMask);
-                    }
-                    if (item.MaleWorldModel_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.MaleWorldModel_Property,
-                            name: nameof(item.MaleWorldModel),
-                            fieldIndex: (int)ClothingAbstract_FieldIndex.MaleWorldModel,
-                            errorMask: errorMask);
-                    }
-                    if (item.MaleIcon_Property.HasBeenSet)
-                    {
-                        FilePathXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.MaleIcon),
-                            item: item.MaleIcon_Property,
-                            fieldIndex: (int)ClothingAbstract_FieldIndex.MaleIcon,
-                            errorMask: errorMask);
-                    }
-                    if (item.FemaleBipedModel_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.FemaleBipedModel_Property,
-                            name: nameof(item.FemaleBipedModel),
-                            fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleBipedModel,
-                            errorMask: errorMask);
-                    }
-                    if (item.FemaleWorldModel_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.FemaleWorldModel_Property,
-                            name: nameof(item.FemaleWorldModel),
-                            fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleWorldModel,
-                            errorMask: errorMask);
-                    }
-                    if (item.FemaleIcon_Property.HasBeenSet)
-                    {
-                        FilePathXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.FemaleIcon),
-                            item: item.FemaleIcon_Property,
-                            fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleIcon,
-                            errorMask: errorMask);
-                    }
+                }
+                if (item.EnchantmentPoints_Property.HasBeenSet)
+                {
+                    UInt16XmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.EnchantmentPoints),
+                        item: item.EnchantmentPoints_Property,
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.EnchantmentPoints,
+                        errorMask: errorMask);
+                }
+                EnumXmlTranslation<BipedFlag>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.BipedFlags),
+                    item: item.BipedFlags_Property,
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
+                    errorMask: errorMask);
+                EnumXmlTranslation<EquipmentFlag>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Flags),
+                    item: item.Flags_Property,
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
+                    errorMask: errorMask);
+                if (item.MaleBipedModel_Property.HasBeenSet)
+                {
+                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
+                        node: elem,
+                        item: item.MaleBipedModel_Property,
+                        name: nameof(item.MaleBipedModel),
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.MaleBipedModel,
+                        errorMask: errorMask);
+                }
+                if (item.MaleWorldModel_Property.HasBeenSet)
+                {
+                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
+                        node: elem,
+                        item: item.MaleWorldModel_Property,
+                        name: nameof(item.MaleWorldModel),
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.MaleWorldModel,
+                        errorMask: errorMask);
+                }
+                if (item.MaleIcon_Property.HasBeenSet)
+                {
+                    FilePathXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.MaleIcon),
+                        item: item.MaleIcon_Property,
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.MaleIcon,
+                        errorMask: errorMask);
+                }
+                if (item.FemaleBipedModel_Property.HasBeenSet)
+                {
+                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
+                        node: elem,
+                        item: item.FemaleBipedModel_Property,
+                        name: nameof(item.FemaleBipedModel),
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleBipedModel,
+                        errorMask: errorMask);
+                }
+                if (item.FemaleWorldModel_Property.HasBeenSet)
+                {
+                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
+                        node: elem,
+                        item: item.FemaleWorldModel_Property,
+                        name: nameof(item.FemaleWorldModel),
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleWorldModel,
+                        errorMask: errorMask);
+                }
+                if (item.FemaleIcon_Property.HasBeenSet)
+                {
+                    FilePathXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.FemaleIcon),
+                        item: item.FemaleIcon_Property,
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleIcon,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

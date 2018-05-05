@@ -450,13 +450,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out Grass_ErrorMask errorMask,
             bool doMasks = true,
             string name = null)
         {
             errorMask = this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: doMasks) as Grass_ErrorMask;
         }
@@ -467,16 +467,13 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
@@ -485,24 +482,21 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public override void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -511,39 +505,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public override void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected override object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             GrassCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -2209,7 +2197,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IGrassGetter item,
             bool doMasks,
             out Grass_ErrorMask errorMask,
@@ -2217,7 +2205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Grass_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Grass_ErrorMask()) : default(Func<Grass_ErrorMask>));
@@ -2225,89 +2213,88 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IGrassGetter item,
             Func<Grass_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.Grass"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Grass");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Grass");
-                    }
-                    if (item.Model_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.Model_Property,
-                            name: nameof(item.Model),
-                            fieldIndex: (int)Grass_FieldIndex.Model,
-                            errorMask: errorMask);
-                    }
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Density),
-                        item: item.Density_Property,
-                        fieldIndex: (int)Grass_FieldIndex.Density,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.MinSlope),
-                        item: item.MinSlope_Property,
-                        fieldIndex: (int)Grass_FieldIndex.MinSlope,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.MaxSlope),
-                        item: item.MaxSlope_Property,
-                        fieldIndex: (int)Grass_FieldIndex.MaxSlope,
-                        errorMask: errorMask);
-                    UInt16XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.UnitFromWaterAmount),
-                        item: item.UnitFromWaterAmount_Property,
-                        fieldIndex: (int)Grass_FieldIndex.UnitFromWaterAmount,
-                        errorMask: errorMask);
-                    EnumXmlTranslation<Grass.UnitFromWaterType>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.UnitFromWaterMode),
-                        item: item.UnitFromWaterMode_Property,
-                        fieldIndex: (int)Grass_FieldIndex.UnitFromWaterMode,
-                        errorMask: errorMask);
-                    FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.PositionRange),
-                        item: item.PositionRange_Property,
-                        fieldIndex: (int)Grass_FieldIndex.PositionRange,
-                        errorMask: errorMask);
-                    FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.HeightRange),
-                        item: item.HeightRange_Property,
-                        fieldIndex: (int)Grass_FieldIndex.HeightRange,
-                        errorMask: errorMask);
-                    FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.ColorRange),
-                        item: item.ColorRange_Property,
-                        fieldIndex: (int)Grass_FieldIndex.ColorRange,
-                        errorMask: errorMask);
-                    FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.WavePeriod),
-                        item: item.WavePeriod_Property,
-                        fieldIndex: (int)Grass_FieldIndex.WavePeriod,
-                        errorMask: errorMask);
-                    EnumXmlTranslation<Grass.GrassFlag>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Flags),
-                        item: item.Flags_Property,
-                        fieldIndex: (int)Grass_FieldIndex.Flags,
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Grass");
+                }
+                if (item.Model_Property.HasBeenSet)
+                {
+                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
+                        node: elem,
+                        item: item.Model_Property,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)Grass_FieldIndex.Model,
                         errorMask: errorMask);
                 }
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Density),
+                    item: item.Density_Property,
+                    fieldIndex: (int)Grass_FieldIndex.Density,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.MinSlope),
+                    item: item.MinSlope_Property,
+                    fieldIndex: (int)Grass_FieldIndex.MinSlope,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.MaxSlope),
+                    item: item.MaxSlope_Property,
+                    fieldIndex: (int)Grass_FieldIndex.MaxSlope,
+                    errorMask: errorMask);
+                UInt16XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.UnitFromWaterAmount),
+                    item: item.UnitFromWaterAmount_Property,
+                    fieldIndex: (int)Grass_FieldIndex.UnitFromWaterAmount,
+                    errorMask: errorMask);
+                EnumXmlTranslation<Grass.UnitFromWaterType>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.UnitFromWaterMode),
+                    item: item.UnitFromWaterMode_Property,
+                    fieldIndex: (int)Grass_FieldIndex.UnitFromWaterMode,
+                    errorMask: errorMask);
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.PositionRange),
+                    item: item.PositionRange_Property,
+                    fieldIndex: (int)Grass_FieldIndex.PositionRange,
+                    errorMask: errorMask);
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.HeightRange),
+                    item: item.HeightRange_Property,
+                    fieldIndex: (int)Grass_FieldIndex.HeightRange,
+                    errorMask: errorMask);
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.ColorRange),
+                    item: item.ColorRange_Property,
+                    fieldIndex: (int)Grass_FieldIndex.ColorRange,
+                    errorMask: errorMask);
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.WavePeriod),
+                    item: item.WavePeriod_Property,
+                    fieldIndex: (int)Grass_FieldIndex.WavePeriod,
+                    errorMask: errorMask);
+                EnumXmlTranslation<Grass.GrassFlag>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Flags),
+                    item: item.Flags_Property,
+                    fieldIndex: (int)Grass_FieldIndex.Flags,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (errorMask != null)

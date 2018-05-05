@@ -363,13 +363,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out LandTexture_ErrorMask errorMask,
             bool doMasks = true,
             string name = null)
         {
             errorMask = this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: doMasks) as LandTexture_ErrorMask;
         }
@@ -380,16 +380,13 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
@@ -398,24 +395,21 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public override void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -424,39 +418,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public override void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected override object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             LandTextureCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -1654,7 +1642,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             ILandTextureGetter item,
             bool doMasks,
             out LandTexture_ErrorMask errorMask,
@@ -1662,7 +1650,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             LandTexture_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new LandTexture_ErrorMask()) : default(Func<LandTexture_ErrorMask>));
@@ -1670,65 +1658,64 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             ILandTextureGetter item,
             Func<LandTexture_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.LandTexture"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.LandTexture");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.LandTexture");
-                    }
-                    if (item.Icon_Property.HasBeenSet)
-                    {
-                        FilePathXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Icon),
-                            item: item.Icon_Property,
-                            fieldIndex: (int)LandTexture_FieldIndex.Icon,
-                            errorMask: errorMask);
-                    }
-                    if (item.Havok_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<HavokData, HavokData_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.Havok_Property,
-                            name: nameof(item.Havok),
-                            fieldIndex: (int)LandTexture_FieldIndex.Havok,
-                            errorMask: errorMask);
-                    }
-                    if (item.TextureSpecularExponent_Property.HasBeenSet)
-                    {
-                        ByteXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.TextureSpecularExponent),
-                            item: item.TextureSpecularExponent_Property,
-                            fieldIndex: (int)LandTexture_FieldIndex.TextureSpecularExponent,
-                            errorMask: errorMask);
-                    }
-                    if (item.PotentialGrass.HasBeenSet)
-                    {
-                        ListXmlTranslation<FormIDSetLink<Grass>, Exception>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.PotentialGrass),
-                            item: item.PotentialGrass,
-                            fieldIndex: (int)LandTexture_FieldIndex.PotentialGrass,
-                            errorMask: errorMask,
-                            transl: (FormIDSetLink<Grass> subItem, bool listDoMasks, out Exception listSubMask) =>
-                            {
-                                FormIDXmlTranslation.Instance.Write(
-                                    writer: writer,
-                                    name: "Item",
-                                    item: subItem?.FormID,
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LandTexture");
+                }
+                if (item.Icon_Property.HasBeenSet)
+                {
+                    FilePathXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Icon),
+                        item: item.Icon_Property,
+                        fieldIndex: (int)LandTexture_FieldIndex.Icon,
+                        errorMask: errorMask);
+                }
+                if (item.Havok_Property.HasBeenSet)
+                {
+                    LoquiXmlTranslation<HavokData, HavokData_ErrorMask>.Instance.Write(
+                        node: elem,
+                        item: item.Havok_Property,
+                        name: nameof(item.Havok),
+                        fieldIndex: (int)LandTexture_FieldIndex.Havok,
+                        errorMask: errorMask);
+                }
+                if (item.TextureSpecularExponent_Property.HasBeenSet)
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.TextureSpecularExponent),
+                        item: item.TextureSpecularExponent_Property,
+                        fieldIndex: (int)LandTexture_FieldIndex.TextureSpecularExponent,
+                        errorMask: errorMask);
+                }
+                if (item.PotentialGrass.HasBeenSet)
+                {
+                    ListXmlTranslation<FormIDSetLink<Grass>, Exception>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.PotentialGrass),
+                        item: item.PotentialGrass,
+                        fieldIndex: (int)LandTexture_FieldIndex.PotentialGrass,
+                        errorMask: errorMask,
+                        transl: (XElement subNode, FormIDSetLink<Grass> subItem, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            FormIDXmlTranslation.Instance.Write(
+                                node: subNode,
+                                name: "Item",
+                                item: subItem?.FormID,
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
                 }
             }
             catch (Exception ex)
@@ -1826,10 +1813,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.PotentialGrass,
                 fieldIndex: (int)LandTexture_FieldIndex.PotentialGrass,
                 errorMask: errorMask,
-                transl: (FormIDSetLink<Grass> subItem, bool listDoMasks, out Exception listSubMask) =>
+                transl: (MutagenWriter subWriter, FormIDSetLink<Grass> subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                        writer: writer,
+                        writer: subWriter,
                         item: subItem,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask,

@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Binary
 
         public override void WriteSingleItem<ErrMask>(MutagenWriter writer, BinarySubWriteDelegate<T, ErrMask> transl, T item, bool doMasks, out ErrMask maskObj)
         {
-            transl(item, doMasks, out maskObj);
+            transl(writer, item, doMasks, out maskObj);
         }
 
         public override TryGet<T> ParseSingleItem(MutagenFrame reader, BinarySubParseDelegate<T, M> transl, bool doMasks, out M maskObj)

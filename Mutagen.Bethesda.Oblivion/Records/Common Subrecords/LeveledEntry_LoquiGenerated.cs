@@ -352,14 +352,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region XML Write
         public virtual void Write_XML<T_ErrMask>(
-            XmlWriter writer,
+            XElement node,
             out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
             bool doMasks = true,
             string name = null)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             errorMask = this.Write_XML_Internal<T_ErrMask>(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: doMasks) as LeveledEntry_ErrorMask<T_ErrMask>;
         }
@@ -371,16 +371,13 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML<T_ErrMask>(
@@ -390,34 +387,31 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             Write_XML<MajorRecord_ErrorMask>(
-                writer: writer,
+                node: node,
                 name: name);
         }
 
         public void Write_XML<T_ErrMask>(
-            XmlWriter writer,
+            XElement node,
             string name = null)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             this.Write_XML_Internal<T_ErrMask>(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -436,14 +430,11 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public void Write_XML(
@@ -460,18 +451,15 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected object Write_XML_Internal<T_ErrMask>(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
@@ -479,7 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
             LeveledEntryCommon.Write_XML<T, T_ErrMask>(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -1686,7 +1674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML<T, T_ErrMask>(
-            XmlWriter writer,
+            XElement node,
             ILeveledEntryGetter<T> item,
             bool doMasks,
             out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
@@ -1696,7 +1684,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             LeveledEntry_ErrorMask<T_ErrMask> errMaskRet = null;
             Write_XML_Internal<T, T_ErrMask>(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new LeveledEntry_ErrorMask<T_ErrMask>()) : default(Func<LeveledEntry_ErrorMask<T_ErrMask>>));
@@ -1704,7 +1692,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal<T, T_ErrMask>(
-            XmlWriter writer,
+            XElement node,
             ILeveledEntryGetter<T> item,
             Func<LeveledEntry_ErrorMask<T_ErrMask>> errorMask,
             string name = null)
@@ -1713,48 +1701,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.LeveledEntry"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.LeveledEntry");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.LeveledEntry");
-                    }
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LeveledEntry");
+                }
+                Int16XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Level),
+                    item: item.Level_Property,
+                    fieldIndex: (int)LeveledEntry_FieldIndex.Level,
+                    errorMask: errorMask);
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Fluff),
+                    item: item.Fluff_Property,
+                    fieldIndex: (int)LeveledEntry_FieldIndex.Fluff,
+                    errorMask: errorMask);
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Reference),
+                    item: item.Reference?.FormID,
+                    fieldIndex: (int)LeveledEntry_FieldIndex.Reference,
+                    errorMask: errorMask);
+                if (item.Count_Property.HasBeenSet)
+                {
                     Int16XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Level),
-                        item: item.Level_Property,
-                        fieldIndex: (int)LeveledEntry_FieldIndex.Level,
+                        node: elem,
+                        name: nameof(item.Count),
+                        item: item.Count_Property,
+                        fieldIndex: (int)LeveledEntry_FieldIndex.Count,
                         errorMask: errorMask);
+                }
+                if (item.Fluff2_Property.HasBeenSet)
+                {
                     ByteArrayXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Fluff),
-                        item: item.Fluff_Property,
-                        fieldIndex: (int)LeveledEntry_FieldIndex.Fluff,
+                        node: elem,
+                        name: nameof(item.Fluff2),
+                        item: item.Fluff2_Property,
+                        fieldIndex: (int)LeveledEntry_FieldIndex.Fluff2,
                         errorMask: errorMask);
-                    FormIDXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Reference),
-                        item: item.Reference?.FormID,
-                        fieldIndex: (int)LeveledEntry_FieldIndex.Reference,
-                        errorMask: errorMask);
-                    if (item.Count_Property.HasBeenSet)
-                    {
-                        Int16XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Count),
-                            item: item.Count_Property,
-                            fieldIndex: (int)LeveledEntry_FieldIndex.Count,
-                            errorMask: errorMask);
-                    }
-                    if (item.Fluff2_Property.HasBeenSet)
-                    {
-                        ByteArrayXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Fluff2),
-                            item: item.Fluff2_Property,
-                            fieldIndex: (int)LeveledEntry_FieldIndex.Fluff2,
-                            errorMask: errorMask);
-                    }
                 }
             }
             catch (Exception ex)
