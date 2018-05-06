@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>b8aabb674b75a69fdfd8e7a67ba82ade7857f261</Sha>
+         <Sha>758cde794ee0c5bd6fb554468b62de96dbf86c4b</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>05-05-2018 11:05:18</CommitDate>
-         <Description>TempFolder added missing optional parameter to path ctor</Description>
+         <CommitDate>04-25-2018 17:00:25</CommitDate>
+         <Description>EnumExt.TryToStingFast_Enum_Only</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

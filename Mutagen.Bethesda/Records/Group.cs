@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda
                 err);
         }
 
-        public void Write_XmlFolder<T_ErrMask>(
+        public async Task Write_XmlFolder<T_ErrMask>(
             DirectoryPath dir,
             Func<IErrorMask> errMaskFunc,
             int index,
@@ -54,13 +54,22 @@ namespace Mutagen.Bethesda
             try
             {
                 dir.Create();
+                List<Task<MajorRecord_ErrorMask>> writeTasks = new List<Task<MajorRecord_ErrorMask>>();
                 int counter = 0;
                 foreach (var item in this.Items.Values)
                 {
-                    item.Write_XML(
-                        path: Path.Combine(dir.Path, $"{counter++} - {item.FormID.IDString()} - {item.EditorID}.xml"),
-                        errorMask: out var itemErrMask,
-                        doMasks: doMasks);
+                    writeTasks.Add(Task.Run(() =>
+                    {
+                        item.Write_XML(
+                            path: Path.Combine(dir.Path, $"{counter++} - {item.FormID.IDString()} - {item.EditorID}.xml"),
+                            errorMask: out var itemErrMask,
+                            doMasks: doMasks);
+                        return itemErrMask;
+                    }));
+                }
+                var errMasks = await Task.WhenAll(writeTasks);
+                foreach (var itemErrMask in errMasks)
+                {
                     if (itemErrMask == null) continue;
                     if (grupErrMask == null)
                     {

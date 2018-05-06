@@ -10,20 +10,26 @@ namespace Mutagen.Bethesda.Generation
 {
     public class FolderExportModule : GenerationModule
     {
+        public override IEnumerable<string> RequiredUsingStatements(ObjectGeneration obj)
+        {
+            if (obj.GetObjectType() != ObjectType.Mod) yield break;
+            yield return "System.Threading.Tasks";
+        }
+
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             await base.GenerateInClass(obj, fg);
             if (obj.GetObjectType() != ObjectType.Mod) return;
             using (var args = new FunctionWrapper(fg,
-                $"public void Write_XmlFolder"))
+                $"public async Task<{obj.Mask(MaskType.Error)}> Write_XmlFolder"))
             {
                 args.Add("DirectoryPath dir");
-                args.Add($"out {obj.Mask(MaskType.Error)} errorMask");
                 args.Add("bool doMasks = true");
             }
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine($"{obj.Mask(MaskType.Error)} errMaskRet = null;");
+                fg.AppendLine("List<Task> tasks = new List<Task>();");
                 fg.AppendLine($"Func<{obj.Mask(MaskType.Error)}> errMaskFunc = doMasks ? () => errMaskRet ?? (errMaskRet = new {obj.Mask(MaskType.Error)}()) : default(Func<{obj.Mask(MaskType.Error)}>);");
                 fg.AppendLine("try");
                 using (new BraceWrapper(fg))
@@ -78,7 +84,8 @@ namespace Mutagen.Bethesda.Generation
                                 //}
                                 if (!group.TryGetSpecificationAsObject("T", out var subObj)) continue;
                                 using (var args = new ArgsWrapper(fg,
-                                    $"{field.Name}.Write_XmlFolder<{subObj.Mask(MaskType.Error)}>"))
+                                    $"tasks.Add({field.Name}.Write_XmlFolder<{subObj.Mask(MaskType.Error)}>",
+                                    suffixLine: ")"))
                                 {
                                     args.Add($"dir: new DirectoryPath(Path.Combine(dir.Path, \"{field.Name}\"))");
                                     args.Add($"errMaskFunc: errMaskFunc");
@@ -90,6 +97,7 @@ namespace Mutagen.Bethesda.Generation
                                 break;
                         }
                     }
+                    fg.AppendLine("await Task.WhenAll(tasks);");
                 }
                 fg.AppendLine("catch (Exception ex)");
                 fg.AppendLine("when (doMasks)");
@@ -97,7 +105,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     fg.AppendLine("errMaskFunc().Overall = ex;");
                 }
-                fg.AppendLine("errorMask = errMaskRet;");
+                fg.AppendLine("return errMaskRet;");
             }
         }
     }
