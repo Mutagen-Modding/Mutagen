@@ -82,7 +82,6 @@ namespace Mutagen.Bethesda.Oblivion
             _Weathers_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
             _Climates_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
             _Regions_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
-            _Worldspaces_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
             CustomCtor();
         }
         partial void CustomCtor();
@@ -325,11 +324,6 @@ namespace Mutagen.Bethesda.Oblivion
         private ListGroup<CellBlock> _Cells_Object = new ListGroup<CellBlock>();
         public ListGroup<CellBlock> Cells => _Cells_Object;
         #endregion
-        #region Worldspaces
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Worldspace> _Worldspaces_Object = new Group<Worldspace>();
-        public Group<Worldspace> Worldspaces => _Worldspaces_Object;
-        #endregion
 
         #region Loqui Getter Interface
 
@@ -442,7 +436,6 @@ namespace Mutagen.Bethesda.Oblivion
             if (!object.Equals(Climates, rhs.Climates)) return false;
             if (!object.Equals(Regions, rhs.Regions)) return false;
             if (!object.Equals(Cells, rhs.Cells)) return false;
-            if (!object.Equals(Worldspaces, rhs.Worldspaces)) return false;
             return true;
         }
 
@@ -498,7 +491,6 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(Climates).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Regions).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Cells).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Worldspaces).CombineHashCode(ret);
             return ret;
         }
 
@@ -1497,23 +1489,6 @@ namespace Mutagen.Bethesda.Oblivion
                         index: (int)OblivionMod_FieldIndex.Cells,
                         errMaskObj: MaskItem<Exception, ListGroup_ErrorMask<CellBlock_ErrorMask>>.WrapValue(ListGroup_ErrorMask<CellBlock_ErrorMask>.Combine(CellscreateMask, CellscopyMask)));
                     break;
-                case "Worldspaces":
-                    item._Worldspaces_Object.CopyFieldsFrom<Worldspace_ErrorMask, Worldspace_CopyMask>(
-                        rhs: Group<Worldspace>.Create_XML(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out Group_ErrorMask<Worldspace_ErrorMask> WorldspacescreateMask)
-                        ,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<Worldspace_ErrorMask> WorldspacescopyMask);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        index: (int)OblivionMod_FieldIndex.Worldspaces,
-                        errMaskObj: MaskItem<Exception, Group_ErrorMask<Worldspace_ErrorMask>>.WrapValue(Group_ErrorMask<Worldspace_ErrorMask>.Combine(WorldspacescreateMask, WorldspacescopyMask)));
-                    break;
                 default:
                     break;
             }
@@ -1666,9 +1641,6 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case Region regions:
                     _Regions_Object.Items.Set(regions);
-                    break;
-                case Worldspace worldspaces:
-                    _Worldspaces_Object.Items.Set(worldspaces);
                     break;
                 default:
                     throw new ArgumentException($"Unknown settable MajorRecord type: {record?.GetType()}");
@@ -1859,10 +1831,6 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 return (INotifyingKeyedCollection<FormID, T>)Cells.Items;
             }
-            if (t.Equals(typeof(Worldspace)))
-            {
-                return (INotifyingKeyedCollection<FormID, T>)Worldspaces.Items;
-            }
             throw new ArgumentException($"Unkown group type: {t}");
         }
 
@@ -1982,10 +1950,6 @@ namespace Mutagen.Bethesda.Oblivion
                 yield return item;
             }
             foreach (var item in Cells.Links)
-            {
-                yield return item;
-            }
-            foreach (var item in Worldspaces.Links)
             {
                 yield return item;
             }
@@ -3405,31 +3369,6 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Cells);
-                case "WRLD":
-                    if (importMask?.Worldspaces ?? true)
-                    {
-                        var tmpWorldspaces = Group<Worldspace>.Create_Binary(
-                            frame: frame,
-                            doMasks: errorMask != null,
-                            errorMask: out Group_ErrorMask<Worldspace_ErrorMask> WorldspacescreateMask);
-                        item._Worldspaces_Object.CopyFieldsFrom<Worldspace_ErrorMask, Worldspace_CopyMask>(
-                            rhs: tmpWorldspaces,
-                            def: null,
-                            cmds: null,
-                            copyMask: null,
-                            doMasks: errorMask != null,
-                            errorMask: out Group_ErrorMask<Worldspace_ErrorMask> WorldspaceserrorMask);
-                        var combinedWorldspaces = Group_ErrorMask<Worldspace_ErrorMask>.Combine(WorldspacescreateMask, WorldspaceserrorMask);
-                        ErrorMask.HandleErrorMask(
-                            creator: errorMask,
-                            index: (int)OblivionMod_FieldIndex.Worldspaces,
-                            errMaskObj: combinedWorldspaces == null ? null : new MaskItem<Exception, Group_ErrorMask<Worldspace_ErrorMask>>(null, combinedWorldspaces));
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Worldspaces);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
@@ -3691,9 +3630,6 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.Cells:
                     this._Cells_Object.CopyFieldsFrom<CellBlock_CopyMask>(rhs: (ListGroup<CellBlock>)obj);
                     break;
-                case OblivionMod_FieldIndex.Worldspaces:
-                    this._Worldspaces_Object.CopyFieldsFrom<Worldspace_CopyMask>(rhs: (Group<Worldspace>)obj);
-                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3869,9 +3805,6 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.Cells:
                     obj._Cells_Object.CopyFieldsFrom<CellBlock_CopyMask>(rhs: (ListGroup<CellBlock>)pair.Value);
                     break;
-                case OblivionMod_FieldIndex.Worldspaces:
-                    obj._Worldspaces_Object.CopyFieldsFrom<Worldspace_CopyMask>(rhs: (Group<Worldspace>)pair.Value);
-                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -4031,9 +3964,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region Cells
         ListGroup<CellBlock> Cells { get; }
         #endregion
-        #region Worldspaces
-        Group<Worldspace> Worldspaces { get; }
-        #endregion
 
     }
 
@@ -4092,7 +4022,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Climates = 43,
         Regions = 44,
         Cells = 45,
-        Worldspaces = 46,
     }
     #endregion
 
@@ -4110,7 +4039,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "b6f626df-b164-466b-960a-1639d88f66bc";
 
-        public const ushort FieldCount = 47;
+        public const ushort FieldCount = 46;
 
         public static readonly Type MaskType = typeof(OblivionMod_Mask<>);
 
@@ -4230,8 +4159,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)OblivionMod_FieldIndex.Regions;
                 case "CELLS":
                     return (ushort)OblivionMod_FieldIndex.Cells;
-                case "WORLDSPACES":
-                    return (ushort)OblivionMod_FieldIndex.Worldspaces;
                 default:
                     return null;
             }
@@ -4288,7 +4215,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Climates:
                 case OblivionMod_FieldIndex.Regions:
                 case OblivionMod_FieldIndex.Cells:
-                case OblivionMod_FieldIndex.Worldspaces:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4346,7 +4272,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Climates:
                 case OblivionMod_FieldIndex.Regions:
                 case OblivionMod_FieldIndex.Cells:
-                case OblivionMod_FieldIndex.Worldspaces:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4404,7 +4329,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Climates:
                 case OblivionMod_FieldIndex.Regions:
                 case OblivionMod_FieldIndex.Cells:
-                case OblivionMod_FieldIndex.Worldspaces:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4508,8 +4432,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Regions";
                 case OblivionMod_FieldIndex.Cells:
                     return "Cells";
-                case OblivionMod_FieldIndex.Worldspaces:
-                    return "Worldspaces";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4566,7 +4488,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Climates:
                 case OblivionMod_FieldIndex.Regions:
                 case OblivionMod_FieldIndex.Cells:
-                case OblivionMod_FieldIndex.Worldspaces:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4625,7 +4546,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Weathers:
                 case OblivionMod_FieldIndex.Climates:
                 case OblivionMod_FieldIndex.Regions:
-                case OblivionMod_FieldIndex.Worldspaces:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4729,8 +4649,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Group<Region>);
                 case OblivionMod_FieldIndex.Cells:
                     return typeof(ListGroup<CellBlock>);
-                case OblivionMod_FieldIndex.Worldspaces:
-                    return typeof(Group<Worldspace>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4782,7 +4700,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType CLMT_HEADER = new RecordType("CLMT");
         public static readonly RecordType REGN_HEADER = new RecordType("REGN");
         public static readonly RecordType CELL_HEADER = new RecordType("CELL");
-        public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -4796,7 +4713,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 47;
+        public const int NumTypedFields = 46;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -6035,32 +5952,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.Cells, ex);
                 }
             }
-            if (copyMask?.Worldspaces.Overall ?? true)
-            {
-                try
-                {
-                    GroupCommon.CopyFieldsFrom(
-                        item: item.Worldspaces,
-                        rhs: rhs.Worldspaces,
-                        def: def?.Worldspaces,
-                        doMasks: doMasks,
-                        errorMask: (doMasks ? new Func<Group_ErrorMask<Worldspace_ErrorMask>>(() =>
-                        {
-                            var baseMask = errorMask();
-                            var mask = new Group_ErrorMask<Worldspace_ErrorMask>();
-                            baseMask.SetNthMask((int)OblivionMod_FieldIndex.Worldspaces, mask);
-                            return mask;
-                        }
-                        ) : null),
-                        copyMask: copyMask?.Worldspaces.Specific,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)OblivionMod_FieldIndex.Worldspaces, ex);
-                }
-            }
         }
 
         #endregion
@@ -6119,7 +6010,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Climates:
                 case OblivionMod_FieldIndex.Regions:
                 case OblivionMod_FieldIndex.Cells:
-                case OblivionMod_FieldIndex.Worldspaces:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case OblivionMod_FieldIndex.TES4:
@@ -6273,9 +6163,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.Cells:
                     throw new ArgumentException("Tried to set at a readonly index " + index);
-                case OblivionMod_FieldIndex.Worldspaces:
-                    GroupCommon.Clear(obj.Worldspaces, cmds.ToUnsetParams());
-                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -6333,7 +6220,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Climates:
                 case OblivionMod_FieldIndex.Regions:
                 case OblivionMod_FieldIndex.Cells:
-                case OblivionMod_FieldIndex.Worldspaces:
                     return true;
                 case OblivionMod_FieldIndex.TES4:
                     return obj.TES4_Property.HasBeenSet;
@@ -6441,8 +6327,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Regions;
                 case OblivionMod_FieldIndex.Cells:
                     return obj.Cells;
-                case OblivionMod_FieldIndex.Worldspaces:
-                    return obj.Worldspaces;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -6605,9 +6489,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Cells = new MaskItem<bool, ListGroup_Mask<bool>>();
             ret.Cells.Specific = ListGroupCommon.GetEqualsMask(item.Cells, rhs.Cells);
             ret.Cells.Overall = ret.Cells.Specific.AllEqual((b) => b);
-            ret.Worldspaces = new MaskItem<bool, Group_Mask<bool>>();
-            ret.Worldspaces.Specific = GroupCommon.GetEqualsMask(item.Worldspaces, rhs.Worldspaces);
-            ret.Worldspaces.Overall = ret.Worldspaces.Specific.AllEqual((b) => b);
         }
 
         public static string ToString(
@@ -6821,10 +6702,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Cells?.ToString(fg, "Cells");
                 }
-                if (printMask?.Worldspaces?.Overall ?? true)
-                {
-                    item.Worldspaces?.ToString(fg, "Worldspaces");
-                }
             }
             fg.AppendLine("]");
         }
@@ -6887,7 +6764,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Climates = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Climates));
             ret.Regions = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Regions));
             ret.Cells = new MaskItem<bool, ListGroup_Mask<bool>>(true, ListGroupCommon.GetHasBeenSetMask(item.Cells));
-            ret.Worldspaces = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Worldspaces));
             return ret;
         }
 
@@ -7201,12 +7077,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.Cells,
                         name: nameof(item.Cells),
                         fieldIndex: (int)OblivionMod_FieldIndex.Cells,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Worldspace>, Group_ErrorMask<Worldspace_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Worldspaces,
-                        name: nameof(item.Worldspaces),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Worldspaces,
                         errorMask: errorMask);
                 }
             }
@@ -7771,17 +7641,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (importMask?.Worldspaces ?? true)
-            {
-                if (item.Worldspaces.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Worldspace>, Group_ErrorMask<Worldspace_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Worldspaces,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Worldspaces,
-                        errorMask: errorMask);
-                }
-            }
         }
 
         #endregion
@@ -7847,7 +7706,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Climates = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Regions = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Cells = new MaskItem<T, ListGroup_Mask<T>>(initialValue, new ListGroup_Mask<T>(initialValue));
-            this.Worldspaces = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
@@ -7898,7 +7756,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, Group_Mask<T>> Climates { get; set; }
         public MaskItem<T, Group_Mask<T>> Regions { get; set; }
         public MaskItem<T, ListGroup_Mask<T>> Cells { get; set; }
-        public MaskItem<T, Group_Mask<T>> Worldspaces { get; set; }
         #endregion
 
         #region Equals
@@ -7957,7 +7814,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Climates, rhs.Climates)) return false;
             if (!object.Equals(this.Regions, rhs.Regions)) return false;
             if (!object.Equals(this.Cells, rhs.Cells)) return false;
-            if (!object.Equals(this.Worldspaces, rhs.Worldspaces)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -8009,7 +7865,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Climates?.GetHashCode());
             ret = ret.CombineHashCode(this.Regions?.GetHashCode());
             ret = ret.CombineHashCode(this.Cells?.GetHashCode());
-            ret = ret.CombineHashCode(this.Worldspaces?.GetHashCode());
             return ret;
         }
 
@@ -8247,11 +8102,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!eval(this.Cells.Overall)) return false;
                 if (this.Cells.Specific != null && !this.Cells.Specific.AllEqual(eval)) return false;
-            }
-            if (Worldspaces != null)
-            {
-                if (!eval(this.Worldspaces.Overall)) return false;
-                if (this.Worldspaces.Specific != null && !this.Worldspaces.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -8681,15 +8531,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Cells.Specific = this.Cells.Specific.Translate(eval);
                 }
             }
-            if (this.Worldspaces != null)
-            {
-                obj.Worldspaces = new MaskItem<R, Group_Mask<R>>();
-                obj.Worldspaces.Overall = eval(this.Worldspaces.Overall);
-                if (this.Worldspaces.Specific != null)
-                {
-                    obj.Worldspaces.Specific = this.Worldspaces.Specific.Translate(eval);
-                }
-            }
         }
         #endregion
 
@@ -8902,10 +8743,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Cells?.ToString(fg);
                 }
-                if (printMask?.Worldspaces?.Overall ?? true)
-                {
-                    Worldspaces?.ToString(fg);
-                }
             }
             fg.AppendLine("]");
         }
@@ -8975,7 +8812,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, Group_ErrorMask<Climate_ErrorMask>> Climates;
         public MaskItem<Exception, Group_ErrorMask<Region_ErrorMask>> Regions;
         public MaskItem<Exception, ListGroup_ErrorMask<CellBlock_ErrorMask>> Cells;
-        public MaskItem<Exception, Group_ErrorMask<Worldspace_ErrorMask>> Worldspaces;
         #endregion
 
         #region IErrorMask
@@ -9121,9 +8957,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.Cells:
                     this.Cells = new MaskItem<Exception, ListGroup_ErrorMask<CellBlock_ErrorMask>>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Worldspaces:
-                    this.Worldspaces = new MaskItem<Exception, Group_ErrorMask<Worldspace_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -9273,9 +9106,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Cells:
                     this.Cells = (MaskItem<Exception, ListGroup_ErrorMask<CellBlock_ErrorMask>>)obj;
                     break;
-                case OblivionMod_FieldIndex.Worldspaces:
-                    this.Worldspaces = (MaskItem<Exception, Group_ErrorMask<Worldspace_ErrorMask>>)obj;
-                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -9330,7 +9160,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Climates != null) return true;
             if (Regions != null) return true;
             if (Cells != null) return true;
-            if (Worldspaces != null) return true;
             return false;
         }
         #endregion
@@ -9411,7 +9240,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Climates?.ToString(fg);
             Regions?.ToString(fg);
             Cells?.ToString(fg);
-            Worldspaces?.ToString(fg);
         }
         #endregion
 
@@ -9465,7 +9293,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Climates = new MaskItem<Exception, Group_ErrorMask<Climate_ErrorMask>>(this.Climates.Overall.Combine(rhs.Climates.Overall), ((IErrorMask<Group_ErrorMask<Climate_ErrorMask>>)this.Climates.Specific).Combine(rhs.Climates.Specific));
             ret.Regions = new MaskItem<Exception, Group_ErrorMask<Region_ErrorMask>>(this.Regions.Overall.Combine(rhs.Regions.Overall), ((IErrorMask<Group_ErrorMask<Region_ErrorMask>>)this.Regions.Specific).Combine(rhs.Regions.Specific));
             ret.Cells = new MaskItem<Exception, ListGroup_ErrorMask<CellBlock_ErrorMask>>(this.Cells.Overall.Combine(rhs.Cells.Overall), ((IErrorMask<ListGroup_ErrorMask<CellBlock_ErrorMask>>)this.Cells.Specific).Combine(rhs.Cells.Specific));
-            ret.Worldspaces = new MaskItem<Exception, Group_ErrorMask<Worldspace_ErrorMask>>(this.Worldspaces.Overall.Combine(rhs.Worldspaces.Overall), ((IErrorMask<Group_ErrorMask<Worldspace_ErrorMask>>)this.Worldspaces.Specific).Combine(rhs.Worldspaces.Specific));
             return ret;
         }
         public static OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask lhs, OblivionMod_ErrorMask rhs)
@@ -9525,7 +9352,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<bool, Group_CopyMask<Climate_CopyMask>> Climates;
         public MaskItem<bool, Group_CopyMask<Region_CopyMask>> Regions;
         public MaskItem<bool, ListGroup_CopyMask<CellBlock_CopyMask>> Cells;
-        public MaskItem<bool, Group_CopyMask<Worldspace_CopyMask>> Worldspaces;
         #endregion
 
     }
@@ -9580,7 +9406,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Climates;
         public bool Regions;
         public bool Cells;
-        public bool Worldspaces;
     }
     #endregion
 
