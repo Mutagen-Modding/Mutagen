@@ -1614,7 +1614,7 @@ namespace Mutagen.Bethesda.Oblivion
                             fieldIndex: (int)Weather_FieldIndex.ThunderLightningFrequency,
                             errorMask: errorMask));
                         item._Classification.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(1)),
+                            frame: dataFrame.SpawnWithLength(1),
                             fieldIndex: (int)Weather_FieldIndex.Classification,
                             errorMask: errorMask));
                         item._LightningColor.SetIfSucceeded(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
@@ -4950,7 +4950,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Write(
                     writer,
                     item.Classification_Property,
-                    length: new ContentLength(1),
+                    length: 1,
                     fieldIndex: (int)Weather_FieldIndex.Classification,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(

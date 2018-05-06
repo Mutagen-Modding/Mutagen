@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Binary
     public class ColorBinaryTranslation : PrimitiveBinaryTranslation<Color>
     {
         public readonly static ColorBinaryTranslation Instance = new ColorBinaryTranslation();
-        public override ContentLength? ExpectedLength => new ContentLength(3);
+        public override int? ExpectedLength => 3;
 
         protected override Color ParseValue(MutagenFrame reader)
         {

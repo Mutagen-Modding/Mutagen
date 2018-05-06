@@ -1,4 +1,5 @@
 ﻿using Mutagen.Bethesda.Internals;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,15 +15,15 @@ namespace Mutagen.Bethesda.Tests
             var config = new BinaryFileProcessor.Config();
             foreach (var move in this.Moves)
             {
-                config.SetMove(new FileSection(move.SectionToMove), new FileLocation(move.LocationToMove));
+                config.SetMove(move.SectionToMove, move.LocationToMove);
             }
             foreach (var sub in this.Substitutions)
             {
-                config.SetSubstitution(new FileLocation(sub.Location), sub.Data);
+                config.SetSubstitution(sub.Location, sub.Data);
             }
             foreach (var add in this.Additions)
             {
-                config.SetAddition(new FileLocation(add.Location), add.Data);
+                config.SetAddition(add.Location, add.Data);
             }
             return config;
         }

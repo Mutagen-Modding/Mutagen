@@ -2057,7 +2057,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Door.DoorFlag>.Instance.Write(
                 writer,
                 item.Flags_Property,
-                length: new ContentLength(1),
+                length: 1,
                 fieldIndex: (int)Door_FieldIndex.Flags,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Door_Registration.FNAM_HEADER),

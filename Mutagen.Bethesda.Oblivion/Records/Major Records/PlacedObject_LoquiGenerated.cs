@@ -3946,7 +3946,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<PlacedObject.ActionFlag>.Instance.Write(
                 writer,
                 item.ActionFlags_Property,
-                length: new ContentLength(4),
+                length: 4,
                 fieldIndex: (int)PlacedObject_FieldIndex.ActionFlags,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XACT_HEADER),

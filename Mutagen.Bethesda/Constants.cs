@@ -8,19 +8,19 @@ namespace Mutagen.Bethesda
 {
     public static class Constants
     {
-        public static readonly ContentLength HEADER_LENGTH = new ContentLength(4);
-        public static readonly ContentLength RECORD_LENGTHLENGTH = new ContentLength(4);
-        public static readonly ContentLength RECORD_LENGTH = HEADER_LENGTH + RECORD_LENGTHLENGTH;
-        public static readonly ContentLength SUBRECORD_LENGTHLENGTH = new ContentLength(2);
-        public static readonly ContentLength SUBRECORD_LENGTH = HEADER_LENGTH + SUBRECORD_LENGTHLENGTH;
-        public static readonly ContentLength SUBRECORD_HEADER_OFFSET = new ContentLength(0);
-        public static readonly ContentLength RECORD_META_LENGTH = new ContentLength(16);
-        public static readonly ContentLength RECORD_META_SKIP = RECORD_META_LENGTH - RECORD_LENGTHLENGTH;
-        public static readonly ContentLength RECORD_HEADER_LENGTH = RECORD_META_LENGTH + HEADER_LENGTH;
-        public static readonly ContentLength RECORD_META_OFFSET = new ContentLength(12);
-        public static readonly ContentLength GRUP_LENGTHLENGTH = RECORD_LENGTHLENGTH;
-        public static readonly ContentLength GRUP_LENGTH = HEADER_LENGTH + RECORD_META_LENGTH;
-        public static readonly ContentLength GRUP_HEADER_OFFSET = new ContentLength(-8);
+        public static readonly int HEADER_LENGTH = 4;
+        public static readonly int RECORD_LENGTHLENGTH = 4;
+        public static readonly int RECORD_LENGTH = HEADER_LENGTH + RECORD_LENGTHLENGTH;
+        public static readonly int SUBRECORD_LENGTHLENGTH = 2;
+        public static readonly int SUBRECORD_LENGTH = HEADER_LENGTH + SUBRECORD_LENGTHLENGTH;
+        public static readonly int SUBRECORD_HEADER_OFFSET = 0;
+        public static readonly int RECORD_META_LENGTH = 16;
+        public static readonly int RECORD_META_SKIP = RECORD_META_LENGTH - RECORD_LENGTHLENGTH;
+        public static readonly int RECORD_HEADER_LENGTH = RECORD_META_LENGTH + HEADER_LENGTH;
+        public static readonly int RECORD_META_OFFSET = 12;
+        public static readonly int GRUP_LENGTHLENGTH = RECORD_LENGTHLENGTH;
+        public static readonly int GRUP_LENGTH = HEADER_LENGTH + RECORD_META_LENGTH;
+        public static readonly int GRUP_HEADER_OFFSET = -8;
         public const string TRIGGERING_RECORDTYPE_MEMBER = "TRIGGERING_RECORD_TYPE";
         public const string GRUP_RECORDTYPE_MEMBER = "GRUP_RECORD_TYPE";
 

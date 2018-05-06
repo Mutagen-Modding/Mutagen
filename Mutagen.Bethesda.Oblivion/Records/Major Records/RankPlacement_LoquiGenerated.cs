@@ -610,7 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fieldIndex: (int)RankPlacement_FieldIndex.Rank,
                 errorMask: errorMask));
             var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(new ContentLength(3)),
+                frame: frame.SpawnWithLength(3),
                 fieldIndex: (int)RankPlacement_FieldIndex.Fluff,
                 errorMask: errorMask);
             item._Fluff.SetIfSucceeded(FlufftryGet);

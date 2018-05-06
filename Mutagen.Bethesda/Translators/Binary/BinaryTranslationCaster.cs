@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Binary
             this.Source = src;
         }
 
-        void IBinaryTranslation<object, object>.Write(MutagenWriter writer, object item, ContentLength length, bool doMasks, out object maskObj)
+        void IBinaryTranslation<object, object>.Write(MutagenWriter writer, object item, long length, bool doMasks, out object maskObj)
         {
             Source.Write(writer, (T)item, length, doMasks, out var subMaskObj);
             maskObj = subMaskObj;

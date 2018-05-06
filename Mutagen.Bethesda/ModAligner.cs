@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda
                     while (!mutaReader.Complete)
                     {
                         // Import until next listed major record
-                        ContentLength noRecordLength;
+                        long noRecordLength;
                         if (fileLocs.ListedRecords.TryGetInDirection(
                             mutaReader.Position,
                             higher: true,
@@ -57,9 +57,9 @@ namespace Mutagen.Bethesda
                         }
                         else
                         {
-                            noRecordLength = mutaReader.FinalLocation - mutaReader.Position;
+                            noRecordLength = mutaReader.Remaining;
                         }
-                        writer.Write(mutaReader.ReadBytes((int)noRecordLength.Value));
+                        writer.Write(mutaReader.ReadBytes((int)noRecordLength));
 
                         // If complete overall, return
                         if (mutaReader.Complete) break;
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda
             }
 
             tempMemOutput.Position = 0;
-            using (var mutaReader = new MutagenReader(tempMemOutput))
+            using (var mutaReader = new MutagenReader(tempMemOutput.GetBuffer()))
             {
                 using (var writer = new MutagenWriter(outputStream))
                 {
@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda
                     {
                         if (grup <= mutaReader.Position) continue;
                         var noRecordLength = grup - mutaReader.Position;
-                        writer.Write(mutaReader.ReadBytes(noRecordLength));
+                        writer.Write(mutaReader.ReadBytes(checked((int)noRecordLength)));
 
                         // If complete overall, return
                         if (mutaReader.Complete) break;
@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda
                             writer.Write(content);
                         }
                     }
-                    writer.Write(mutaReader.ReadBytes(mutaReader.RemainingLength));
+                    writer.Write(mutaReader.ReadBytes(checked((int)mutaReader.Remaining)));
                 }
             }
         }

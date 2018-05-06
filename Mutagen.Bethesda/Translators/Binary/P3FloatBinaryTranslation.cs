@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Binary
     public class P3FloatBinaryTranslation : PrimitiveBinaryTranslation<P3Float>
     {
         public readonly static P3FloatBinaryTranslation Instance = new P3FloatBinaryTranslation();
-        public override ContentLength? ExpectedLength => new ContentLength(1);
+        public override int? ExpectedLength => 1;
 
         protected override P3Float ParseValue(MutagenFrame reader)
         {

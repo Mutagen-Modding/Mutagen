@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Binary
             try
             {
                 errorMask = null;
-                var str = frame.Reader.ReadString(frame.RemainingLength);
+                var str = frame.Reader.ReadString(checked((int)frame.Remaining));
                 if (str[str.Length - 1] == '\0')
                 {
                     str = str.Substring(0, str.Length - 1);
@@ -238,7 +238,7 @@ namespace Mutagen.Bethesda.Binary
                 nullTerminate: nullTerminate);
         }
 
-        void IBinaryTranslation<string, Exception>.Write(MutagenWriter writer, string item, ContentLength length, bool doMasks, out Exception maskObj)
+        void IBinaryTranslation<string, Exception>.Write(MutagenWriter writer, string item, long length, bool doMasks, out Exception maskObj)
         {
             if (length != item.Length)
             {

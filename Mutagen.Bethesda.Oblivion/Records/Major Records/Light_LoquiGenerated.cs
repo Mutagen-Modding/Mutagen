@@ -957,7 +957,7 @@ namespace Mutagen.Bethesda.Oblivion
                             errorMask: errorMask,
                             extraByte: true));
                         item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Light.LightFlag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Light_FieldIndex.Flags,
                             errorMask: errorMask));
                         if (dataFrame.TotalLength > 24)
@@ -2641,7 +2641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Light.LightFlag>.Instance.Write(
                     writer,
                     item.Flags_Property,
-                    length: new ContentLength(4),
+                    length: 4,
                     fieldIndex: (int)Light_FieldIndex.Flags,
                     errorMask: errorMask);
                 if (item.DATADataTypeState.HasFlag(Light.DATADataType.Range0))

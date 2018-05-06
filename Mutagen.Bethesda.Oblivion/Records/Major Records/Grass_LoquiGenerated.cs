@@ -917,7 +917,7 @@ namespace Mutagen.Bethesda.Oblivion
                             errorMask().Overall = ex;
                         }
                         item._UnitFromWaterMode.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Grass_FieldIndex.UnitFromWaterMode,
                             errorMask: errorMask));
                         item._PositionRange.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
@@ -937,7 +937,7 @@ namespace Mutagen.Bethesda.Oblivion
                             fieldIndex: (int)Grass_FieldIndex.WavePeriod,
                             errorMask: errorMask));
                         item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.GrassFlag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Grass_FieldIndex.Flags,
                             errorMask: errorMask));
                     }
@@ -2337,7 +2337,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Write(
                     writer,
                     item.UnitFromWaterMode_Property,
-                    length: new ContentLength(4),
+                    length: 4,
                     fieldIndex: (int)Grass_FieldIndex.UnitFromWaterMode,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
@@ -2363,7 +2363,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.GrassFlag>.Instance.Write(
                     writer,
                     item.Flags_Property,
-                    length: new ContentLength(4),
+                    length: 4,
                     fieldIndex: (int)Grass_FieldIndex.Flags,
                     errorMask: errorMask);
             }

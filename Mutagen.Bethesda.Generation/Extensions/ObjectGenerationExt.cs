@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Generation
             throw new ArgumentException($"Object {objGen.Name} did not have object type defined.");
         }
 
-        public static ContentLength GetLengthLength(this ObjectGeneration objGen)
+        public static long GetLengthLength(this ObjectGeneration objGen)
         {
             var objType = objGen.GetObjectType();
             switch (objType)

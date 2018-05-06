@@ -585,7 +585,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fieldIndex: (int)EnableParent_FieldIndex.Reference,
                 errorMask: errorMask));
             item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<EnableParent.Flag>.Instance.Parse(
-                frame: frame.SpawnWithLength(new ContentLength(4)),
+                frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)EnableParent_FieldIndex.Flags,
                 errorMask: errorMask));
         }
@@ -1298,7 +1298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<EnableParent.Flag>.Instance.Write(
                 writer,
                 item.Flags_Property,
-                length: new ContentLength(4),
+                length: 4,
                 fieldIndex: (int)EnableParent_FieldIndex.Flags,
                 errorMask: errorMask);
         }

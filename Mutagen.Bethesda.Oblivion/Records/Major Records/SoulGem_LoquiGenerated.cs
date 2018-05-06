@@ -1998,7 +1998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.Write(
                 writer,
                 item.ContainedSoul_Property,
-                length: new ContentLength(1),
+                length: 1,
                 fieldIndex: (int)SoulGem_FieldIndex.ContainedSoul,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(SoulGem_Registration.SOUL_HEADER),
@@ -2006,7 +2006,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.Write(
                 writer,
                 item.MaximumCapacity_Property,
-                length: new ContentLength(1),
+                length: 1,
                 fieldIndex: (int)SoulGem_FieldIndex.MaximumCapacity,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(SoulGem_Registration.SLCP_HEADER),

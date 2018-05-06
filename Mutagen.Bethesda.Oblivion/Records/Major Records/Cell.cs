@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Oblivion
             return Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.ParseRepeatedItem(
                 frame: frame,
                 fieldIndex: (int)Cell_FieldIndex.Persistent,
-                lengthLength: new ContentLength(4),
+                lengthLength: 4,
                 errorMask: errorMask,
                 transl: (MutagenFrame r, RecordType header, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
                 {
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Oblivion
             var persistentTryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.ParseRepeatedItem(
                 frame: frame,
                 fieldIndex: (int)Cell_FieldIndex.Persistent,
-                lengthLength: new ContentLength(4),
+                lengthLength: 4,
                 errorMask: errorMask,
                 transl: (MutagenFrame r, RecordType header, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
                 {

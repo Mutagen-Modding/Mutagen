@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             bool doMasks,
             RecordType triggeringRecord,
-            ContentLength lengthLength,
+            int lengthLength,
             out MaskItem<Exception, IEnumerable<M>> errorMask,
             BinarySubParseDelegate<T, M> transl)
         {
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Binary
         public TryGet<IEnumerable<T>> ParseRepeatedItem(
             MutagenFrame frame,
             bool doMasks,
-            ContentLength lengthLength,
+            long lengthLength,
             out MaskItem<Exception, IEnumerable<M>> errorMask,
             BinarySubParseRecordDelegate<T, M> transl,
             ICollectionGetter<RecordType> triggeringRecord = null)
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Binary
         public TryGet<IEnumerable<T>> ParseRepeatedItem(
             MutagenFrame frame,
             bool doMasks,
-            ContentLength lengthLength,
+            long lengthLength,
             out MaskItem<Exception, IEnumerable<M>> errorMask,
             BinarySubParseDelegate<T, M> transl)
         {
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             int fieldIndex,
             RecordType triggeringRecord,
-            ContentLength lengthLength,
+            int lengthLength,
             Func<Mask> errorMask,
             BinarySubParseDelegate<T, M> transl)
             where Mask : IErrorMask
@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             int fieldIndex,
             ICollectionGetter<RecordType> triggeringRecord,
-            ContentLength lengthLength,
+            long lengthLength,
             Func<Mask> errorMask,
             BinarySubParseRecordDelegate<T, M> transl)
             where Mask : IErrorMask
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             int fieldIndex,
             ICollectionGetter<RecordType> triggeringRecord,
-            ContentLength lengthLength,
+            long lengthLength,
             Func<Mask> errorMask,
             BinarySubParseDelegate<T, M> transl)
             where Mask : IErrorMask
@@ -236,7 +236,7 @@ namespace Mutagen.Bethesda.Binary
         public TryGet<IEnumerable<T>> ParseRepeatedItem<Mask>(
             MutagenFrame frame,
             int fieldIndex,
-            ContentLength lengthLength,
+            long lengthLength,
             Func<Mask> errorMask,
             BinarySubParseDelegate<T, M> transl)
             where Mask : IErrorMask
@@ -257,7 +257,7 @@ namespace Mutagen.Bethesda.Binary
         public TryGet<IEnumerable<T>> ParseRepeatedItem<Mask>(
             MutagenFrame frame,
             int fieldIndex,
-            ContentLength lengthLength,
+            long lengthLength,
             Func<Mask> errorMask,
             BinarySubParseRecordDelegate<T, M> transl)
             where Mask : IErrorMask
@@ -340,7 +340,7 @@ namespace Mutagen.Bethesda.Binary
 
         public abstract TryGet<T> ParseSingleItem(MutagenFrame frame, BinarySubParseDelegate<T, M> transl, bool doMasks, out M maskObj);
 
-        void IBinaryTranslation<IEnumerable<T>, MaskItem<Exception, IEnumerable<M>>>.Write(MutagenWriter writer, IEnumerable<T> item, ContentLength length, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
+        void IBinaryTranslation<IEnumerable<T>, MaskItem<Exception, IEnumerable<M>>>.Write(MutagenWriter writer, IEnumerable<T> item, long length, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
         {
             Write(writer, item, doMasks, out maskObj);
         }
@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Binary
                     item: item,
                     doMasks: doMasks,
                     maskObj: out maskObj,
-                    transl: (T item1, bool internalDoMasks, out M obj) => transl.Item.Value.Write(writer: writer, item: item1, length: ContentLength.Invalid, doMasks: internalDoMasks, maskObj: out obj));
+                    transl: (T item1, bool internalDoMasks, out M obj) => transl.Item.Value.Write(writer: writer, item: item1, length: -1, doMasks: internalDoMasks, maskObj: out obj));
             }
             catch (Exception ex)
             when (doMasks)

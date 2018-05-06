@@ -690,11 +690,11 @@ namespace Mutagen.Bethesda
                 errorMask().Overall = ex;
             }
             item._GroupType.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
-                frame: frame.SpawnWithLength(new ContentLength(4)),
+                frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)ListGroup_FieldIndex.GroupType,
                 errorMask: errorMask));
             var LastModifiedtryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(new ContentLength(4)),
+                frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)ListGroup_FieldIndex.LastModified,
                 errorMask: errorMask);
             item._LastModified.SetIfSucceeded(LastModifiedtryGet);
@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda
                             frame: frame,
                             triggeringRecord: T_RecordType,
                             fieldIndex: (int)ListGroup_FieldIndex.Items,
-                            lengthLength: new ContentLength(4),
+                            lengthLength: 4,
                             errorMask: errorMask,
                             transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
                             {
@@ -1636,7 +1636,7 @@ namespace Mutagen.Bethesda.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
                 writer,
                 item.GroupType_Property,
-                length: new ContentLength(4),
+                length: 4,
                 fieldIndex: (int)ListGroup_FieldIndex.GroupType,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(

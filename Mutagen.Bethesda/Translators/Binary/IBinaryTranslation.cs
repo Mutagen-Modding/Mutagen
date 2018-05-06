@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Binary
 
     public interface IBinaryTranslation<T, M>
     {
-        void Write(MutagenWriter writer, T item, ContentLength length, bool doMasks, out M maskObj);
+        void Write(MutagenWriter writer, T item, long length, bool doMasks, out M maskObj);
         TryGet<T> Parse(MutagenFrame reader, bool doMasks, out M maskObj);
     }
 }

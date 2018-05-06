@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<HavokData_ErrorMask> errorMask)
         {
             item._Material.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<HavokData.MaterialType>.Instance.Parse(
-                frame: frame.SpawnWithLength(new ContentLength(1)),
+                frame: frame.SpawnWithLength(1),
                 fieldIndex: (int)HavokData_FieldIndex.Material,
                 errorMask: errorMask));
             item._Friction.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
@@ -1388,7 +1388,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<HavokData.MaterialType>.Instance.Write(
                 writer,
                 item.Material_Property,
-                length: new ContentLength(1),
+                length: 1,
                 fieldIndex: (int)HavokData_FieldIndex.Material,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(

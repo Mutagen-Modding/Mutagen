@@ -1819,7 +1819,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<LeveledFlag>.Instance.Write(
                 writer,
                 item.Flags_Property,
-                length: new ContentLength(1),
+                length: 1,
                 fieldIndex: (int)LeveledCreature_FieldIndex.Flags,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(LeveledCreature_Registration.LVLF_HEADER),

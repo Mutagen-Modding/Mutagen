@@ -901,15 +901,15 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._Action.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)SkillRecord_FieldIndex.Action,
                             errorMask: errorMask));
                         item._Attribute.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
                             errorMask: errorMask));
                         item._Specialization.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Specialization>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
                             errorMask: errorMask));
                         item._UseValueFirst.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
@@ -2404,7 +2404,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                 writer,
                 item.Skill_Property,
-                length: new ContentLength(4),
+                length: 4,
                 fieldIndex: (int)SkillRecord_FieldIndex.Skill,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(SkillRecord_Registration.INDX_HEADER),
@@ -2428,19 +2428,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                     writer,
                     item.Action_Property,
-                    length: new ContentLength(4),
+                    length: 4,
                     fieldIndex: (int)SkillRecord_FieldIndex.Action,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                     writer,
                     item.Attribute_Property,
-                    length: new ContentLength(4),
+                    length: 4,
                     fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Specialization>.Instance.Write(
                     writer,
                     item.Specialization_Property,
-                    length: new ContentLength(4),
+                    length: 4,
                     fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(

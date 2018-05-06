@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Tests
     public class Oblivion_Passthrough_Tests
     {
         private BinaryProcessorInstructions GetOblivionInstructions(
-            Dictionary<FileLocation, uint> lengthTracker,
+            Dictionary<long, uint> lengthTracker,
             MajorRecordLocator.FileLocations fileLocs)
         {
             var instructions = new BinaryProcessorInstructions();
@@ -47,9 +47,9 @@ namespace Mutagen.Bethesda.Tests
             MajorRecord rec,
             Instruction instr,
             string filePath,
-            FileSection loc,
+            RangeInt64 loc,
             MajorRecordLocator.FileLocations fileLocs,
-            Dictionary<FileLocation, uint> lengthTracker,
+            Dictionary<long, uint> lengthTracker,
             bool compressed,
             bool processing)
         {
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Tests
             MajorRecord rec,
             Instruction instr,
             string filePath,
-            FileSection loc,
+            RangeInt64 loc,
             bool compressed,
             bool processing)
         {
@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Tests
             MajorRecord rec,
             Instruction instr,
             string filePath,
-            FileSection loc,
+            RangeInt64 loc,
             bool compressed,
             bool processing)
         {
@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.Tests
             MajorRecord rec,
             Instruction instr,
             string filePath,
-            FileSection loc,
+            RangeInt64 loc,
             bool processing)
         {
             if (!processing) return;
@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Tests
             using (var stream = new MutagenReader(filePath))
             {
                 stream.Position = loc.Min;
-                var str = stream.ReadString((int)loc.Range.Width + Constants.RECORD_HEADER_LENGTH);
+                var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
                 var dataIndex = str.IndexOf("DATA");
                 if (dataIndex == -1) return;
 
@@ -204,7 +204,7 @@ namespace Mutagen.Bethesda.Tests
             MajorRecord rec,
             Instruction instr,
             string filePath,
-            FileSection loc,
+            RangeInt64 loc,
             bool processing)
         {
             if (!processing) return;
@@ -212,19 +212,19 @@ namespace Mutagen.Bethesda.Tests
             using (var stream = new MutagenReader(filePath))
             {
                 stream.Position = loc.Min;
-                var str = stream.ReadString((int)loc.Range.Width + Constants.RECORD_HEADER_LENGTH);
+                var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
                 var rdatIndex = str.IndexOf("RDAT");
                 if (rdatIndex == -1) return;
                 SortedList<uint, RangeInt64> rdats = new SortedList<uint, RangeInt64>();
                 while (rdatIndex != -1)
                 {
                     var nextRdat = str.IndexOf("RDAT", rdatIndex + 1);
-                    stream.Position = new FileLocation(rdatIndex + 6 + loc.Min);
+                    stream.Position = rdatIndex + 6 + loc.Min;
                     var index = stream.ReadUInt32();
                     rdats[index] =
                         new RangeInt64(
-                            rdatIndex + loc.Min.Offset,
-                            nextRdat == -1 ? loc.Max.Offset : nextRdat - 1 + loc.Min.Offset);
+                            rdatIndex + loc.Min,
+                            nextRdat == -1 ? loc.Max : nextRdat - 1 + loc.Min);
                     rdatIndex = nextRdat;
                 }
                 foreach (var item in rdats.Reverse())
@@ -245,14 +245,14 @@ namespace Mutagen.Bethesda.Tests
                     {
                         throw new ArgumentException();
                     }
-                    stream.Position = new FileLocation(edidIndex + loc.Min + Constants.HEADER_LENGTH);
+                    stream.Position = edidIndex + loc.Min + Constants.HEADER_LENGTH;
                     var edidLen = stream.ReadUInt16();
                     stream.Position += edidLen;
-                    var locToPlace = stream.Position.Offset;
+                    var locToPlace = stream.Position;
 
                     // Get icon string
                     var iconLoc = rdats[(int)RegionData.RegionDataType.Icon];
-                    stream.Position = new FileLocation(iconLoc.Min + Region.RDAT_LEN + 6);
+                    stream.Position = iconLoc.Min + Region.RDAT_LEN + 6;
                     var iconStr = stream.ReadString((int)(iconLoc.Max - stream.Position));
 
                     // Get icon bytes
@@ -290,9 +290,9 @@ namespace Mutagen.Bethesda.Tests
             MajorRecord rec,
             Instruction instr,
             string filePath,
-            FileSection loc,
+            RangeInt64 loc,
             MajorRecordLocator.FileLocations fileLocs,
-            Dictionary<FileLocation, uint> lengthTracker,
+            Dictionary<long, uint> lengthTracker,
             bool processing)
         {
             if (!(rec is PlacedObject)) return;
@@ -301,7 +301,7 @@ namespace Mutagen.Bethesda.Tests
                 using (var stream = new MutagenReader(filePath))
                 {
                     stream.Position = loc.Min;
-                    var str = stream.ReadString((int)loc.Range.Width + Constants.RECORD_HEADER_LENGTH);
+                    var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
                     var datIndex = str.IndexOf("XLOC");
                     if (datIndex == -1) return;
                     stream.Position = loc.Min + datIndex;
@@ -337,7 +337,7 @@ namespace Mutagen.Bethesda.Tests
                 using (var stream = new MutagenReader(filePath))
                 {
                     stream.Position = loc.Min;
-                    var str = stream.ReadString((int)loc.Range.Width + Constants.RECORD_HEADER_LENGTH);
+                    var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
                     var datIndex = str.IndexOf("DATA");
                     if (datIndex != -1)
                     {
@@ -383,9 +383,9 @@ namespace Mutagen.Bethesda.Tests
             MajorRecord rec,
             Instruction instr,
             string filePath,
-            FileSection loc,
+            RangeInt64 loc,
             MajorRecordLocator.FileLocations fileLocs,
-            Dictionary<FileLocation, uint> lengthTracker,
+            Dictionary<long, uint> lengthTracker,
             bool processing)
         {
             if (!processing) return;
@@ -393,7 +393,7 @@ namespace Mutagen.Bethesda.Tests
 
             // Clean empty child groups
             List<RangeInt64> moves = new List<RangeInt64>();
-            FileLocation grupPos;
+            long grupPos;
             using (var stream = new MutagenReader(filePath))
             {
                 stream.Position = loc.Min + 4;
@@ -464,7 +464,7 @@ namespace Mutagen.Bethesda.Tests
         private bool DynamicMove(
             Instruction instr,
             string filePath,
-            FileSection loc,
+            RangeInt64 loc,
             IEnumerable<RecordType> offendingIndices,
             IEnumerable<RecordType> offendingLimits,
             IEnumerable<RecordType> locationsToMove)
@@ -472,7 +472,7 @@ namespace Mutagen.Bethesda.Tests
             using (var stream = new MutagenReader(filePath))
             {
                 stream.Position = loc.Min;
-                var str = stream.ReadString((int)loc.Range.Width + Constants.RECORD_HEADER_LENGTH);
+                var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
                 if (!LocateFirstOf(
                     str,
                     loc.Min,
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Tests
                     locationsToMove,
                     out var locToMove))
                 {
-                    locToMove = new FileLocation(loc.Min + str.Length);
+                    locToMove = loc.Min + str.Length;
                 }
                 if (limit == locToMove) return false;
                 if (offender < limit)
@@ -513,13 +513,13 @@ namespace Mutagen.Bethesda.Tests
         private void AlignRecords(
             Instruction instr,
             string filePath,
-            FileSection loc,
+            RangeInt64 loc,
             IEnumerable<RecordType> rectypes)
         {
             using (var stream = new MutagenReader(filePath))
             {
                 stream.Position = loc.Min;
-                var bytes = stream.ReadBytes((int)loc.Range.Width + Constants.RECORD_HEADER_LENGTH);
+                var bytes = stream.ReadBytes((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
                 var str = MutagenReader.BytesToString(bytes);
                 List<(RecordType rec, int sourceIndex, int loc)> list = new List<(RecordType rec, int sourceIndex, int loc)>();
                 int recTypeIndex = -1;
@@ -570,17 +570,17 @@ namespace Mutagen.Bethesda.Tests
 
         private bool LocateFirstOf(
             string str,
-            FileLocation offset,
+            long offset,
             IEnumerable<RecordType> types,
-            out FileLocation loc)
+            out long loc)
         {
             List<int> indices = new List<int>(types.Select((r) => str.IndexOf(r.Type)).Where((i) => i != -1));
             if (indices.Count == 0)
             {
-                loc = default(FileLocation);
+                loc = default(long);
                 return false;
             }
-            loc = new FileLocation(MathExt.Min(indices) + offset.Offset);
+            loc = MathExt.Min(indices) + offset;
             return true;
         }
 
@@ -708,7 +708,7 @@ namespace Mutagen.Bethesda.Tests
                     interest: new RecordInterest(
                         uninterestingTypes: OblivionMod.NonTypeGroups));
 
-                Dictionary<FileLocation, uint> lengthTracker = new Dictionary<FileLocation, uint>();
+                Dictionary<long, uint> lengthTracker = new Dictionary<long, uint>();
 
                 using (var reader = new MutagenReader(alignedPath))
                 {
@@ -870,7 +870,7 @@ namespace Mutagen.Bethesda.Tests
 
         private void CopyOverOffendingRecords(
             OblivionMod mod,
-            IEnumerable<(FileSection Source, FileSection? Output)> sections,
+            IEnumerable<(RangeInt64 Source, RangeInt64? Output)> sections,
             string tmpFolder,
             string origPath,
             string processedPath,
@@ -895,21 +895,21 @@ namespace Mutagen.Bethesda.Tests
                         throw new NotImplementedException();
                     }
                     var output = Path.Combine(tmpFolder, $"{majorRec.TitleString} - Original");
-                    using (var inStream = new MutagenReader(origPath))
+                    using (var inStream = new MutagenReader(File.OpenRead(origPath)))
                     {
                         inStream.Position = sourceLoc.Min;
                         using (var outStream = new MutagenWriter(origRecOutputPath))
                         {
-                            outStream.Write(inStream.ReadBytes(sourceLoc.Width));
+                            outStream.Write(inStream.ReadBytes((int)sourceLoc.Width));
                         }
                     }
                     output = Path.Combine(tmpFolder, $"{majorRec.TitleString} - Processed");
-                    using (var inStream = new MutagenReader(processedPath))
+                    using (var inStream = new MutagenReader(File.OpenRead(processedPath)))
                     {
                         inStream.Position = sourceLoc.Min;
                         using (var outStream = new MutagenWriter(output))
                         {
-                            outStream.Write(inStream.ReadBytes(sourceLoc.Width));
+                            outStream.Write(inStream.ReadBytes((int)sourceLoc.Width));
                         }
                     }
                     if (!Output.HasValue) continue;
@@ -919,12 +919,12 @@ namespace Mutagen.Bethesda.Tests
                         throw new NotImplementedException();
                     }
                     output = Path.Combine(tmpFolder, $"{majorRec.TitleString} - Output");
-                    using (var inStream = new MutagenReader(outputPath))
+                    using (var inStream = new MutagenReader(File.OpenRead(outputPath)))
                     {
                         inStream.Position = outputLoc.Min;
                         using (var outStream = new MutagenWriter(output))
                         {
-                            outStream.Write(inStream.ReadBytes(outputLoc.Width));
+                            outStream.Write(inStream.ReadBytes((int)outputLoc.Width));
                         }
                     }
                 }
@@ -934,10 +934,10 @@ namespace Mutagen.Bethesda.Tests
         private async Task OblivionESM_Compression(
             OblivionMod mod,
             BinaryProcessorInstructions instructions,
-            Task<MajorRecordLocator.FileLocations> fileLocationsTasks,
+            Task<MajorRecordLocator.FileLocations> longsTasks,
             bool deleteAfter)
         {
-            MajorRecordLocator.FileLocations fileLocs = await fileLocationsTasks;
+            MajorRecordLocator.FileLocations fileLocs = await longsTasks;
 
             using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary_CompressionTests")), deleteAfter: deleteAfter))
             {
@@ -962,7 +962,7 @@ namespace Mutagen.Bethesda.Tests
                     tasks.Add(
                         Task.Run(() =>
                         {
-                            using (var stream = new MutagenReader(Properties.Settings.Default.OblivionESM))
+                            using (var stream = new MutagenReader(File.OpenRead(outputPath)))
                             {
                                 majorRec.Write_Binary(outputPath);
 
@@ -972,7 +972,7 @@ namespace Mutagen.Bethesda.Tests
                                 }
 
                                 stream.Position = majorLoc.Min + 4;
-                                var majorLen = new ContentLength(stream.ReadUInt32());
+                                var majorLen = stream.ReadUInt32();
                                 stream.Position = majorLoc.Min;
 
                                 var memStream = new MemoryStream();
@@ -981,9 +981,9 @@ namespace Mutagen.Bethesda.Tests
                                     var recType = stream.ReadString(4);
                                     using (HeaderExport.ExportRecordHeader(outputStream, new RecordType(recType)))
                                     {
-                                        stream.Position += new ContentLength(4);
+                                        stream.Position += 4;
                                         outputStream.Write(stream.ReadBytes(Constants.RECORD_META_LENGTH - 4));
-                                        using (var frame = new MutagenFrame(stream, majorLen))
+                                        using (var frame = MutagenFrame.ByLength(stream, majorLen))
                                         {
                                             using (var decomp = frame.Decompress())
                                             {
@@ -1006,7 +1006,7 @@ namespace Mutagen.Bethesda.Tests
                                     filePath: origPath,
                                     lengthTracker: null,
                                     fileLocs: null,
-                                    loc: new FileSection(0, memStream.Length),
+                                    loc: new RangeInt64(0, memStream.Length),
                                     compressed: true,
                                     processing: true);
                                 var binaryConfig = processorConfig.ToProcessorConfig();

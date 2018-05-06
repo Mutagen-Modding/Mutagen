@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Generation
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 if (list.CustomData.TryGetValue("lengthLength", out object len))
                 {
-                    args.Add($"lengthLength: new ContentLength({len})");
+                    args.Add($"lengthLength: {len}");
                 }
                 else if (!list.MaxValue.HasValue)
                 {

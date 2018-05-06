@@ -1509,7 +1509,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.FaceIndex>.Instance.Write(
                 writer,
                 item.Index_Property,
-                length: new ContentLength(4),
+                length: 4,
                 fieldIndex: (int)FacePart_FieldIndex.Index,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(FacePart_Registration.INDX_HEADER),

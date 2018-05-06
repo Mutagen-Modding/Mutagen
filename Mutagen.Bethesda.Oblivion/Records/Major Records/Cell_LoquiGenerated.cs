@@ -3298,7 +3298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Cell.Flag>.Instance.Write(
                 writer,
                 item.Flags_Property,
-                length: new ContentLength(1),
+                length: 1,
                 fieldIndex: (int)Cell_FieldIndex.Flags,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Cell_Registration.DATA_HEADER),
@@ -3333,7 +3333,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.Write(
                 writer,
                 item.MusicType_Property,
-                length: new ContentLength(1),
+                length: 1,
                 fieldIndex: (int)Cell_FieldIndex.MusicType,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Cell_Registration.XCMT_HEADER),

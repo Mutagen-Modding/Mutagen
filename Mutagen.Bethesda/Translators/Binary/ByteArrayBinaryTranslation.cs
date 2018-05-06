@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Binary
 
         protected override Byte[] ParseValue(MutagenFrame frame)
         {
-            return frame.Reader.ReadBytes(frame.RemainingLength);
+            return frame.Reader.ReadBytes(checked((int)frame.Remaining));
         }
 
         protected override byte[] ParseBytes(byte[] bytes)

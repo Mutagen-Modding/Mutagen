@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Generation
 
             if (data.MarkerType.HasValue)
             {
-                fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker");
+                fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH + long; // Skip marker");
             }
             else if (listBinaryType == ListBinaryType.Trigger)
             {
@@ -152,7 +152,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else if (listBinaryType == ListBinaryType.Trigger)
                 {
-                    args.Add($"frame: frame.Spawn(contentLength)");
+                    args.Add($"frame: frame.Spawn(long)");
                 }
                 else
                 {
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Generation
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 if (dict.CustomData.TryGetValue("lengthLength", out object len))
                 {
-                    args.Add($"lengthLength: new ContentLength({len})");
+                    args.Add($"lengthLength: {len}");
                 }
                 else if (dict.ValueTypeGen is LoquiType loqui)
                 {

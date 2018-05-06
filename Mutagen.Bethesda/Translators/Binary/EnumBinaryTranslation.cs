@@ -47,12 +47,12 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public void Write(MutagenWriter writer, E item, ContentLength length, bool doMasks, out Exception errorMask)
+        public void Write(MutagenWriter writer, E item, long length, bool doMasks, out Exception errorMask)
         {
             Write(writer, (E?)item, length, doMasks, out errorMask);
         }
 
-        public void Write(MutagenWriter writer, E? item, ContentLength length, bool doMasks, out Exception errorMask)
+        public void Write(MutagenWriter writer, E? item, long length, bool doMasks, out Exception errorMask)
         {
             if (!item.HasValue)
             {
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Binary
         public void Write<M>(
             MutagenWriter writer,
             E? item,
-            ContentLength length,
+            long length,
             int fieldIndex,
             Func<M> errorMask)
             where M : IErrorMask
@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Binary
         public void Write<M>(
             MutagenWriter writer,
             IHasBeenSetItemGetter<E?> item,
-            ContentLength length,
+            long length,
             int fieldIndex,
             Func<M> errorMask)
             where M : IErrorMask
@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Binary
         public void Write<M>(
             MutagenWriter writer,
             IHasBeenSetItemGetter<E> item,
-            ContentLength length,
+            long length,
             int fieldIndex,
             Func<M> errorMask)
             where M : IErrorMask
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Binary
         public void Write<M>(
             MutagenWriter writer,
             IHasItemGetter<E?> item,
-            ContentLength length,
+            long length,
             int fieldIndex,
             Func<M> errorMask)
             where M : IErrorMask
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Binary
         public void Write<M>(
             MutagenWriter writer,
             IHasItemGetter<E> item,
-            ContentLength length,
+            long length,
             int fieldIndex,
             Func<M> errorMask)
             where M : IErrorMask
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             E? item,
             RecordType header,
-            ContentLength length,
+            long length,
             bool nullable,
             bool doMasks,
             out Exception errorMask)
@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             E? item,
             RecordType header,
-            ContentLength length,
+            long length,
             int fieldIndex,
             bool nullable,
             bool doMasks,
@@ -221,7 +221,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             IHasBeenSetItemGetter<E?> item,
             RecordType header,
-            ContentLength length,
+            long length,
             int fieldIndex,
             bool nullable,
             Func<M> errorMask)
@@ -243,7 +243,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             IHasBeenSetItemGetter<E> item,
             RecordType header,
-            ContentLength length,
+            long length,
             int fieldIndex,
             bool nullable,
             Func<M> errorMask)
@@ -265,7 +265,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             IHasItemGetter<E?> item,
             RecordType header,
-            ContentLength length,
+            long length,
             int fieldIndex,
             bool nullable,
             Func<M> errorMask)
@@ -286,7 +286,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             IHasItemGetter<E> item,
             RecordType header,
-            ContentLength length,
+            long length,
             int fieldIndex,
             bool nullable,
             Func<M> errorMask)
@@ -306,7 +306,7 @@ namespace Mutagen.Bethesda.Binary
         public E ParseValue(MutagenFrame reader)
         {
             int i;
-            switch (reader.RemainingLength.Value)
+            switch (reader.Remaining)
             {
                 case 1:
                     i = reader.Reader.ReadByte();
@@ -323,9 +323,9 @@ namespace Mutagen.Bethesda.Binary
             return (E)Enum.ToObject(typeof(E), i);
         }
 
-        protected void WriteValue(MutagenWriter writer, E item, ContentLength length)
+        protected void WriteValue(MutagenWriter writer, E item, long length)
         {
-            switch (length.Value)
+            switch (length)
             {
                 case 1:
                     writer.Write(item.ToByte(null));

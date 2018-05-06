@@ -189,7 +189,7 @@ namespace Mutagen.Bethesda.Binary
                 errorMask);
         }
 
-        void IBinaryTranslation<T, Exception>.Write(MutagenWriter writer, T item, ContentLength length, bool doMasks, out Exception maskObj)
+        void IBinaryTranslation<T, Exception>.Write(MutagenWriter writer, T item, long length, bool doMasks, out Exception maskObj)
         {
             Write(writer, item, doMasks, out maskObj);
         }

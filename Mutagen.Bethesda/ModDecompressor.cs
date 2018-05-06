@@ -22,22 +22,22 @@ namespace Mutagen.Bethesda
             using (var mutaReader = new MutagenReader(inputStream))
             {
                 // Construct group length container for later use
-                Dictionary<FileLocation, ContentLength> grupLengths = new Dictionary<FileLocation, ContentLength>();
+                Dictionary<long, long> grupLengths = new Dictionary<long, long>();
                 foreach (var grupLoc in fileLocs.GrupLocations)
                 {
                     mutaReader.Position = grupLoc + 4;
-                    grupLengths[grupLoc] = new ContentLength(mutaReader.ReadUInt32());
+                    grupLengths[grupLoc] = mutaReader.ReadUInt32();
                 }
 
-                Dictionary<FileLocation, ContentLength> grupOffsets = new Dictionary<FileLocation, ContentLength>();
+                Dictionary<long, long> grupOffsets = new Dictionary<long, long>();
 
-                inputStream.Position = 0;
+                mutaReader.Position = 0;
                 using (var writer = new System.IO.BinaryWriter(outputStream))
                 {
                     while (!mutaReader.Complete)
                     {
                         // Import until next listed major record
-                        ContentLength noRecordLength;
+                        long noRecordLength;
                         if (fileLocs.ListedRecords.TryGetInDirection(
                             mutaReader.Position,
                             higher: true,
@@ -48,17 +48,17 @@ namespace Mutagen.Bethesda
                         }
                         else
                         {
-                            noRecordLength = mutaReader.FinalLocation - mutaReader.Position;
+                            noRecordLength = mutaReader.Length - mutaReader.Position;
                         }
-                        noRecordLength += new ContentLength(4);
-                        writer.Write(mutaReader.ReadBytes((int)noRecordLength.Value));
-
+                        noRecordLength += 4;
+                        writer.Write(mutaReader.ReadBytes((int)noRecordLength));
+                        
                         // If complete overall, return
                         if (mutaReader.Complete) return;
 
                         // Get compression status
-                        var recLengthLocation = new FileLocation(writer.BaseStream.Position);
-                        var len = new ContentLength(mutaReader.ReadUInt32());
+                        var recLengthLocation = writer.BaseStream.Position;
+                        var len = mutaReader.ReadUInt32();
                         writer.Write(len);
                         var flags = (MajorRecord.MajorRecordFlag)mutaReader.ReadInt32();
 
@@ -67,13 +67,13 @@ namespace Mutagen.Bethesda
                             writer.Write((int)flags);
                             continue;
                         }
-
+                        
                         // Turn compressed flag off
                         flags &= ~MajorRecord.MajorRecordFlag.Compressed;
                         writer.Write((int)flags);
 
                         writer.Write(mutaReader.ReadBytes(8));
-                        using (var frame = new MutagenFrame(
+                        using (var frame = MutagenFrame.ByLength(
                             reader: mutaReader,
                             length: len,
                             snapToFinalPosition: false))
@@ -82,27 +82,27 @@ namespace Mutagen.Bethesda
                             var decompressed = frame.Decompress();
                             var decompressedLen = decompressed.TotalLength;
                             writer.Write(decompressed.ReadRemaining());
-
+                            
                             // If no difference in lengths, move on
                             var lengthDiff = decompressedLen - len;
                             if (lengthDiff == 0) continue;
                             
                             // Modify record length
                             writer.BaseStream.Position = recLengthLocation;
-                            writer.Write((uint)(len + lengthDiff.Value));
+                            writer.Write((uint)(len + lengthDiff));
 
                             // Modify parent group lengths
                             foreach (var grupLoc in fileLocs.GetContainingGroupLocations(nextRec.Value))
                             {
                                 if (!grupOffsets.TryGetValue(grupLoc, out var offset))
                                 {
-                                    offset = new ContentLength(runningDiff);
+                                    offset = runningDiff;
                                     grupOffsets[grupLoc] = offset;
                                 }
                                 var grupLen = grupLengths[grupLoc];
                                 writer.BaseStream.Position = grupLoc + 4 + offset;
-                                writer.Write((uint)(grupLen + lengthDiff.Value));
-                                grupLengths[grupLoc] = new ContentLength(grupLen + lengthDiff);
+                                writer.Write((uint)(grupLen + lengthDiff));
+                                grupLengths[grupLoc] = grupLen + lengthDiff;
                             }
                             runningDiff += lengthDiff;
                             writer.BaseStream.Position = writer.BaseStream.Length;

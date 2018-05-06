@@ -1474,7 +1474,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.Write(
                 writer,
                 item.MusicType_Property,
-                length: new ContentLength(4),
+                length: 4,
                 fieldIndex: (int)RegionDataSounds_FieldIndex.MusicType,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(RegionDataSounds_Registration.RDMD_HEADER),

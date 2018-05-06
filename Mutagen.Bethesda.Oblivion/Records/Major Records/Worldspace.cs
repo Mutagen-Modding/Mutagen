@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
                 frame.Reader.Position -= 16;
                 return;
             }
-            using (var subFrame = new MutagenFrame(frame.Reader, new ContentLength(len - 20)))
+            using (var subFrame = MutagenFrame.ByLength(frame.Reader, len - 20))
             {
                 for (int i = 0; i < 3; i++)
                 {

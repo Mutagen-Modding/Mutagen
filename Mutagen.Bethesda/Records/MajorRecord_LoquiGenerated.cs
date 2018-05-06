@@ -383,7 +383,7 @@ namespace Mutagen.Bethesda
             Func<MajorRecord_ErrorMask> errorMask)
         {
             item._MajorRecordFlags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MajorRecord.MajorRecordFlag>.Instance.Parse(
-                frame: frame.SpawnWithLength(new ContentLength(4)),
+                frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
                 errorMask: errorMask));
             item._FormID.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda
                 fieldIndex: (int)MajorRecord_FieldIndex.FormID,
                 errorMask: errorMask));
             var VersiontryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(new ContentLength(4)),
+                frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)MajorRecord_FieldIndex.Version,
                 errorMask: errorMask);
             item._Version.SetIfSucceeded(VersiontryGet);
@@ -1378,7 +1378,7 @@ namespace Mutagen.Bethesda.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<MajorRecord.MajorRecordFlag>.Instance.Write(
                 writer,
                 item.MajorRecordFlags_Property,
-                length: new ContentLength(4),
+                length: 4,
                 fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(

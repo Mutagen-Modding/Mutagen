@@ -1565,7 +1565,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Hair.HairFlag>.Instance.Write(
                 writer,
                 item.Flags_Property,
-                length: new ContentLength(1),
+                length: 1,
                 fieldIndex: (int)Hair_FieldIndex.Flags,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Hair_Registration.DATA_HEADER),

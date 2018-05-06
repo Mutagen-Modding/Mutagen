@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Oblivion
                             fieldIndex: (int)BaseLayer_FieldIndex.Texture,
                             errorMask: errorMask));
                         item._Quadrant.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(2)),
+                            frame: dataFrame.SpawnWithLength(2),
                             fieldIndex: (int)BaseLayer_FieldIndex.Quadrant,
                             errorMask: errorMask));
                         item._LayerNumber.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
@@ -1412,7 +1412,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Write(
                     writer,
                     item.Quadrant_Property,
-                    length: new ContentLength(2),
+                    length: 2,
                     fieldIndex: (int)BaseLayer_FieldIndex.Quadrant,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(

@@ -779,7 +779,7 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Container.ContainerFlag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(1)),
+                            frame: dataFrame.SpawnWithLength(1),
                             fieldIndex: (int)Container_FieldIndex.Flags,
                             errorMask: errorMask));
                         item._Weight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
@@ -2058,7 +2058,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Container.ContainerFlag>.Instance.Write(
                     writer,
                     item.Flags_Property,
-                    length: new ContentLength(1),
+                    length: 1,
                     fieldIndex: (int)Container_FieldIndex.Flags,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(

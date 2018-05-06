@@ -585,7 +585,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fieldIndex: (int)WeatherSound_FieldIndex.Sound,
                 errorMask: errorMask));
             item._Type.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<WeatherSound.SoundType>.Instance.Parse(
-                frame: frame.SpawnWithLength(new ContentLength(4)),
+                frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)WeatherSound_FieldIndex.Type,
                 errorMask: errorMask));
         }
@@ -1298,7 +1298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<WeatherSound.SoundType>.Instance.Write(
                 writer,
                 item.Type_Property,
-                length: new ContentLength(4),
+                length: 4,
                 fieldIndex: (int)WeatherSound_FieldIndex.Type,
                 errorMask: errorMask);
         }

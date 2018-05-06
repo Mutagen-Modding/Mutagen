@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Binary
         void IBinaryTranslation<FilePath, Exception>.Write(
             MutagenWriter writer, 
             FilePath item, 
-            ContentLength length,
+            long length,
             bool doMasks,
             out Exception maskObj)
         {

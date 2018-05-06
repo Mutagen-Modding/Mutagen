@@ -43,9 +43,7 @@
   <ItemGroup>
     <Compile Include="BinaryFileProcessor.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="ContentLength.cs" />
-    <Compile Include="FileLocation.cs" />
-    <Compile Include="FileSection.cs" />
+    <Compile Include="Extensions\IBinaryStreamExt.cs" />
     <Compile Include="Links\EDIDSetLink.cs" />
     <Compile Include="Links\EDIDLink.cs" />
     <Compile Include="Links\FormIDSetLink.cs" />
@@ -98,6 +96,7 @@
     <Compile Include="Translators\Binary\EnumBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\FilePathBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\FloatBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\MutagenReader.cs" />
     <Compile Include="Translators\Binary\P2Int16BinaryTranslation.cs" />
     <Compile Include="Translators\Binary\P2IntBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\P3FloatBinaryTranslation.cs" />
@@ -115,7 +114,6 @@
     <Compile Include="Translators\Binary\ListBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\LoquiBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\MutagenFrame.cs" />
-    <Compile Include="Translators\Binary\MutagenReader.cs" />
     <Compile Include="Translators\Binary\MutagenWriter.cs" />
     <Compile Include="Translators\Binary\PrimitiveBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\StringBinaryTranslation.cs" />

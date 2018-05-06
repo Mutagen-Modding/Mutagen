@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Binary
     public abstract class PrimitiveBinaryTranslation<T> : IBinaryTranslation<T, Exception>, IBinaryTranslation<T?, Exception>
         where T : struct
     {
-        public abstract ContentLength? ExpectedLength { get; }
+        public abstract int? ExpectedLength { get; }
 
         protected abstract T ParseValue(MutagenFrame reader);
 
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public TryGet<T> Parse(MutagenFrame frame, ContentLength length, bool doMasks, out Exception errorMask)
+        public TryGet<T> Parse(MutagenFrame frame, long length, bool doMasks, out Exception errorMask)
         {
             if (this.ExpectedLength.HasValue && length != this.ExpectedLength)
             {
@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Binary
                 out maskObj).Bubble<T?>((t) => t);
         }
 
-        void IBinaryTranslation<T?, Exception>.Write(MutagenWriter writer, T? item, ContentLength length, bool doMasks, out Exception errorMask)
+        void IBinaryTranslation<T?, Exception>.Write(MutagenWriter writer, T? item, long length, bool doMasks, out Exception errorMask)
         {
             if (this.ExpectedLength.HasValue && length != this.ExpectedLength)
             {
@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Binary
             return null;
         }
 
-        void IBinaryTranslation<T, Exception>.Write(MutagenWriter writer, T item, ContentLength length, bool doMasks, out Exception errorMask)
+        void IBinaryTranslation<T, Exception>.Write(MutagenWriter writer, T item, long length, bool doMasks, out Exception errorMask)
         {
             if (this.ExpectedLength.HasValue && length != this.ExpectedLength)
             {

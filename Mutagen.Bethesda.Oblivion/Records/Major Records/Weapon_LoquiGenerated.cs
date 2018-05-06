@@ -914,7 +914,7 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._Type.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weapon.WeaponType>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Weapon_FieldIndex.Type,
                             errorMask: errorMask));
                         item._Speed.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
@@ -926,7 +926,7 @@ namespace Mutagen.Bethesda.Oblivion
                             fieldIndex: (int)Weapon_FieldIndex.Reach,
                             errorMask: errorMask));
                         item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weapon.WeaponFlag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Weapon_FieldIndex.Flags,
                             errorMask: errorMask));
                         item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
@@ -2538,7 +2538,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weapon.WeaponType>.Instance.Write(
                     writer,
                     item.Type_Property,
-                    length: new ContentLength(4),
+                    length: 4,
                     fieldIndex: (int)Weapon_FieldIndex.Type,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
@@ -2554,7 +2554,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weapon.WeaponFlag>.Instance.Write(
                     writer,
                     item.Flags_Property,
-                    length: new ContentLength(4),
+                    length: 4,
                     fieldIndex: (int)Weapon_FieldIndex.Flags,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(

@@ -1,5 +1,6 @@
 ﻿using Ionic.Zlib;
 using Mutagen.Bethesda.Internals;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,18 +16,18 @@ namespace Mutagen.Bethesda.Binary
         public static bool ErrorOnFinalPosition;
 
         public readonly MutagenReader Reader;
-        public readonly FileLocation InitialPosition;
-        public readonly FileLocation FinalLocation;
+        public readonly long InitialPosition;
+        public readonly long FinalLocation;
         public readonly bool SnapToFinalPosition;
 
         public bool Complete => this.Position >= this.FinalLocation;
-        public FileLocation Position
+        public long Position
         {
             get => this.Reader.Position;
             set => this.Reader.Position = value;
         }
-        public ContentLength TotalLength => this.FinalLocation - this.InitialPosition;
-        public ContentLength RemainingLength => this.FinalLocation - this.Position;
+        public long TotalLength => this.FinalLocation - this.InitialPosition;
+        public long Remaining => this.FinalLocation - this.Position;
 
         [DebuggerStepThrough]
         public MutagenFrame(MutagenReader reader)
@@ -38,9 +39,9 @@ namespace Mutagen.Bethesda.Binary
         }
 
         [DebuggerStepThrough]
-        public MutagenFrame(
+        private MutagenFrame(
             MutagenReader reader,
-            FileLocation finalPosition,
+            long finalPosition,
             bool snapToFinalPosition = true)
         {
             this.Reader = reader;
@@ -49,24 +50,12 @@ namespace Mutagen.Bethesda.Binary
             this.SnapToFinalPosition = snapToFinalPosition;
         }
 
-        [DebuggerStepThrough]
-        public MutagenFrame(
-            MutagenReader reader,
-            ContentLength length,
-            bool snapToFinalPosition = true)
-        {
-            this.Reader = reader;
-            this.InitialPosition = reader.Position;
-            this.FinalLocation = reader.Position + length;
-            this.SnapToFinalPosition = snapToFinalPosition;
-        }
-
-        public bool TryCheckUpcomingRead(ContentLength length)
+        public bool TryCheckUpcomingRead(long length)
         {
             return this.Position + length <= this.FinalLocation;
         }
 
-        public void CheckUpcomingRead(ContentLength length)
+        public void CheckUpcomingRead(long length)
         {
             if (!TryCheckUpcomingRead(length, out var ex))
             {
@@ -74,18 +63,18 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        public bool TryCheckUpcomingRead(ContentLength length, out Exception ex)
+        public bool TryCheckUpcomingRead(long length, out Exception ex)
         {
             if (!TryCheckUpcomingRead(length))
             {
                 if (Complete)
                 {
-                    ex = new ArgumentException($"Frame was complete, so did not have any remaining bytes to parse. At {this.Position}. Desired {length} more bytes. {this.RemainingLength} past the final position {this.FinalLocation}.");
+                    ex = new ArgumentException($"Frame was complete, so did not have any remaining bytes to parse. At {this.Position}. Desired {length} more bytes. {this.Remaining} past the final position {this.FinalLocation}.");
                     return false;
                 }
                 else
                 {
-                    ex = new ArgumentException($"Frame did not have enough remaining bytes to parse. At {this.Position}. Desired {length} more bytes.  Only {this.RemainingLength} left before final position {this.FinalLocation}.");
+                    ex = new ArgumentException($"Frame did not have enough remaining bytes to parse. At {this.Position}. Desired {length} more bytes.  Only {this.Remaining} left before final position {this.FinalLocation}.");
                     return false;
                 }
             }
@@ -93,19 +82,19 @@ namespace Mutagen.Bethesda.Binary
             return true;
         }
 
-        public bool ContainsPosition(FileLocation loc)
+        public bool ContainsPosition(long loc)
         {
             return this.Position <= loc && this.FinalLocation >= loc;
         }
 
-        public void SetPosition(FileLocation pos)
+        public void SetPosition(long pos)
         {
             this.Position = pos;
         }
 
         public void Dispose()
         {
-            if (this.SnapToFinalPosition 
+            if (this.SnapToFinalPosition
                 && this.Reader.Position != FinalLocation)
             {
                 if (ErrorOnFinalPosition)
@@ -123,16 +112,40 @@ namespace Mutagen.Bethesda.Binary
 
         public byte[] ReadRemaining()
         {
-            return this.Reader.ReadBytes(this.RemainingLength);
+            return this.Reader.ReadBytes(checked((int)this.Remaining));
         }
 
         public override string ToString()
         {
-            return $"{this.Position} - {this.FinalLocation - 1} ({this.RemainingLength})";
+            return $"0x{this.Position.ToString("X")} - 0x{(this.FinalLocation - 1).ToString("X")} (0x{this.Remaining.ToString("X")})";
         }
 
         [DebuggerStepThrough]
-        public MutagenFrame SpawnWithFinalPosition(FileLocation finalPosition)
+        public static MutagenFrame ByFinalPosition(
+            MutagenReader reader,
+            long finalPosition,
+            bool snapToFinalPosition = true)
+        {
+            return new MutagenFrame(
+                reader: reader,
+                finalPosition: finalPosition,
+                snapToFinalPosition: snapToFinalPosition);
+        }
+
+        [DebuggerStepThrough]
+        public static MutagenFrame ByLength(
+            MutagenReader reader,
+            long length,
+            bool snapToFinalPosition = true)
+        {
+            return new MutagenFrame(
+                reader: reader,
+                finalPosition: reader.Position + length,
+                snapToFinalPosition: snapToFinalPosition);
+        }
+
+        [DebuggerStepThrough]
+        public MutagenFrame SpawnWithFinalPosition(long finalPosition)
         {
             return new MutagenFrame(
                 this.Reader,
@@ -140,7 +153,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         [DebuggerStepThrough]
-        public MutagenFrame SpawnWithLength(ContentLength length, bool snapToFinalPosition = true)
+        public MutagenFrame SpawnWithLength(long length, bool snapToFinalPosition = true)
         {
             return new MutagenFrame(
                 this.Reader,
@@ -160,7 +173,7 @@ namespace Mutagen.Bethesda.Binary
         public MutagenFrame Decompress()
         { 
             var resultLen = this.Reader.ReadUInt32();
-            var bytes = this.Reader.ReadBytes((int)this.RemainingLength.Value);
+            var bytes = this.Reader.ReadBytes((int)this.Remaining);
             var res = ZlibStream.UncompressBuffer(bytes);
             return new MutagenFrame(
                 new MutagenReader(res));

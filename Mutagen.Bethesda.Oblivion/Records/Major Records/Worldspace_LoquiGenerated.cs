@@ -2914,7 +2914,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Worldspace.Flag>.Instance.Write(
                 writer,
                 item.Flags_Property,
-                length: new ContentLength(4),
+                length: 4,
                 fieldIndex: (int)Worldspace_FieldIndex.Flags,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.DATA_HEADER),
@@ -2936,7 +2936,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.Write(
                 writer,
                 item.Music_Property,
-                length: new ContentLength(4),
+                length: 4,
                 fieldIndex: (int)Worldspace_FieldIndex.Music,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.SNAM_HEADER),

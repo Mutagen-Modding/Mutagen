@@ -751,7 +751,7 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._Type.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlchemicalApparatus.ApparatusType>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(1)),
+                            frame: dataFrame.SpawnWithLength(1),
                             fieldIndex: (int)AlchemicalApparatus_FieldIndex.Type,
                             errorMask: errorMask));
                         item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
@@ -1945,7 +1945,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlchemicalApparatus.ApparatusType>.Instance.Write(
                     writer,
                     item.Type_Property,
-                    length: new ContentLength(1),
+                    length: 1,
                     fieldIndex: (int)AlchemicalApparatus_FieldIndex.Type,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(

@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Binary
     public class RecordTypeBinaryTranslation : PrimitiveBinaryTranslation<RecordType>
     {
         public readonly static RecordTypeBinaryTranslation Instance = new RecordTypeBinaryTranslation();
-        public override ContentLength? ExpectedLength => new ContentLength(4);
+        public override int? ExpectedLength => 4;
 
         protected override RecordType ParseValue(MutagenFrame reader)
         {

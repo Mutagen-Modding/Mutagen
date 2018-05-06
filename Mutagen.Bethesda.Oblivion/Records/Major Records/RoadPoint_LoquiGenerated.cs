@@ -613,7 +613,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fieldIndex: (int)RoadPoint_FieldIndex.Point,
                 errorMask: errorMask));
             var NumConnectionsFluffBytestryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(new ContentLength(3)),
+                frame: frame.SpawnWithLength(3),
                 fieldIndex: (int)RoadPoint_FieldIndex.NumConnectionsFluffBytes,
                 errorMask: errorMask);
             item._NumConnectionsFluffBytes.SetIfSucceeded(NumConnectionsFluffBytestryGet);

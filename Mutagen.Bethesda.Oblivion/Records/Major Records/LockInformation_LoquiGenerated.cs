@@ -630,7 +630,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fieldIndex: (int)LockInformation_FieldIndex.LockLevel,
                 errorMask: errorMask));
             var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(new ContentLength(3)),
+                frame: frame.SpawnWithLength(3),
                 fieldIndex: (int)LockInformation_FieldIndex.Fluff,
                 errorMask: errorMask);
             item._Fluff.SetIfSucceeded(FlufftryGet);
@@ -639,7 +639,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fieldIndex: (int)LockInformation_FieldIndex.Key,
                 errorMask: errorMask));
             item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<LockInformation.Flag>.Instance.Parse(
-                frame: frame.SpawnWithLength(new ContentLength(4)),
+                frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)LockInformation_FieldIndex.Flags,
                 errorMask: errorMask));
         }
@@ -1490,7 +1490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<LockInformation.Flag>.Instance.Write(
                 writer,
                 item.Flags_Property,
-                length: new ContentLength(4),
+                length: 4,
                 fieldIndex: (int)LockInformation_FieldIndex.Flags,
                 errorMask: errorMask);
         }

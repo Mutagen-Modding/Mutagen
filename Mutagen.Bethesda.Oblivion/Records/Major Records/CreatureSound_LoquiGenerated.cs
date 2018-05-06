@@ -1459,7 +1459,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<CreatureSound.CreatureSoundType>.Instance.Write(
                 writer,
                 item.SoundType_Property,
-                length: new ContentLength(4),
+                length: 4,
                 fieldIndex: (int)CreatureSound_FieldIndex.SoundType,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(CreatureSound_Registration.CSDT_HEADER),

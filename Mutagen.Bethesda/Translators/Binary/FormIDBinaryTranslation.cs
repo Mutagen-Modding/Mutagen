@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Binary
     public class FormIDBinaryTranslation : PrimitiveBinaryTranslation<FormID>
     {
         public readonly static FormIDBinaryTranslation Instance = new FormIDBinaryTranslation();
-        public override ContentLength? ExpectedLength => new ContentLength(4);
+        public override int? ExpectedLength => 4;
 
         protected override FormID ParseValue(MutagenFrame reader)
         {

@@ -20,16 +20,16 @@ namespace Mutagen.Bethesda.Oblivion
         static partial void SpecialParse_EffectInitial(Effect item, MutagenFrame frame, Func<Effect_ErrorMask> errorMask)
         {
             var recType = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var contentLen);
-            if (contentLen.Value != 4)
+            if (contentLen != 4)
             {
-                throw new ArgumentException($"Magic effect name must be length 4.  Was: {contentLen.Value}");
+                throw new ArgumentException($"Magic effect name must be length 4.  Was: {contentLen}");
             }
             var magicEffName = frame.Reader.ReadString(4);
             var pos = frame.Position;
             var efit = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var efitLength);
-            if (efitLength.Value < 4)
+            if (efitLength < 4)
             {
-                throw new ArgumentException($"Magic effect ref length was less than 4.  Was: {efitLength.Value}");
+                throw new ArgumentException($"Magic effect ref length was less than 4.  Was: {efitLength}");
             }
             var magicEffName2 = frame.Reader.ReadString(4);
             if (!magicEffName.Equals(magicEffName2))

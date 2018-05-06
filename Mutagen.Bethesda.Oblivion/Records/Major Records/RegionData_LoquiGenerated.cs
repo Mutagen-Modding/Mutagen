@@ -342,11 +342,11 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._DataType.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)RegionData_FieldIndex.DataType,
                             errorMask: errorMask));
                         item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionData.RegionDataFlag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(1)),
+                            frame: dataFrame.SpawnWithLength(1),
                             fieldIndex: (int)RegionData_FieldIndex.Flags,
                             errorMask: errorMask));
                         item._Priority.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
@@ -1090,13 +1090,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Write(
                     writer,
                     item.DataType_Property,
-                    length: new ContentLength(4),
+                    length: 4,
                     fieldIndex: (int)RegionData_FieldIndex.DataType,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionData.RegionDataFlag>.Instance.Write(
                     writer,
                     item.Flags_Property,
-                    length: new ContentLength(1),
+                    length: 1,
                     fieldIndex: (int)RegionData_FieldIndex.Flags,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(

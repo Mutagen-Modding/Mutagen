@@ -766,7 +766,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<TES4_ErrorMask> errorMask)
         {
             var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(new ContentLength(12)),
+                frame: frame.SpawnWithLength(12),
                 fieldIndex: (int)TES4_FieldIndex.Fluff,
                 errorMask: errorMask);
             item._Fluff.SetIfSucceeded(FlufftryGet);

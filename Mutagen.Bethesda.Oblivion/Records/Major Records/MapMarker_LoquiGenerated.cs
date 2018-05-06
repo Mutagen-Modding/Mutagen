@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {
                             return Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Type>.Instance.Parse(
-                                frame: r.SpawnWithLength(new ContentLength(2)),
+                                frame: r.SpawnWithLength(2),
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
@@ -1532,7 +1532,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Flag>.Instance.Write(
                 writer,
                 item.Flags_Property,
-                length: new ContentLength(1),
+                length: 1,
                 fieldIndex: (int)MapMarker_FieldIndex.Flags,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(MapMarker_Registration.FNAM_HEADER),
@@ -1555,7 +1555,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Type>.Instance.Write(
                         writer,
                         subItem,
-                        length: new ContentLength(2),
+                        length: 2,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask);
                 }

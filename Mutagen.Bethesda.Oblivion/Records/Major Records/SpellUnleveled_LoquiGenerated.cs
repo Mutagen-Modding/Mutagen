@@ -700,7 +700,7 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._Type.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellType>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)SpellUnleveled_FieldIndex.Type,
                             errorMask: errorMask));
                         item._Cost.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
@@ -708,11 +708,11 @@ namespace Mutagen.Bethesda.Oblivion
                             fieldIndex: (int)SpellUnleveled_FieldIndex.Cost,
                             errorMask: errorMask));
                         item._Level.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellLevel>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)SpellUnleveled_FieldIndex.Level,
                             errorMask: errorMask));
                         item._Flag.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellFlag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)SpellUnleveled_FieldIndex.Flag,
                             errorMask: errorMask));
                     }
@@ -1798,7 +1798,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellType>.Instance.Write(
                     writer,
                     item.Type_Property,
-                    length: new ContentLength(4),
+                    length: 4,
                     fieldIndex: (int)SpellUnleveled_FieldIndex.Type,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
@@ -1809,13 +1809,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellLevel>.Instance.Write(
                     writer,
                     item.Level_Property,
-                    length: new ContentLength(4),
+                    length: 4,
                     fieldIndex: (int)SpellUnleveled_FieldIndex.Level,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellFlag>.Instance.Write(
                     writer,
                     item.Flag_Property,
-                    length: new ContentLength(4),
+                    length: 4,
                     fieldIndex: (int)SpellUnleveled_FieldIndex.Flag,
                     errorMask: errorMask);
             }

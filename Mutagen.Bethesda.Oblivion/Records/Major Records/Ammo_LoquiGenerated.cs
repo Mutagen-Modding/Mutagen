@@ -856,7 +856,7 @@ namespace Mutagen.Bethesda.Oblivion
                             fieldIndex: (int)Ammo_FieldIndex.Speed,
                             errorMask: errorMask));
                         item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Ammo.AmmoFlag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Ammo_FieldIndex.Flags,
                             errorMask: errorMask));
                         item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
@@ -2276,7 +2276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Ammo.AmmoFlag>.Instance.Write(
                     writer,
                     item.Flags_Property,
-                    length: new ContentLength(4),
+                    length: 4,
                     fieldIndex: (int)Ammo_FieldIndex.Flags,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(

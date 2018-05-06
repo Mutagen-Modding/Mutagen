@@ -1306,7 +1306,7 @@ namespace Mutagen.Bethesda.Oblivion
                             );
                         item._SkillBoosts.SetIfSucceeded(SkillBooststryGet);
                         var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Race_FieldIndex.Fluff,
                             errorMask: errorMask);
                         item._Fluff.SetIfSucceeded(FlufftryGet);
@@ -1327,7 +1327,7 @@ namespace Mutagen.Bethesda.Oblivion
                             fieldIndex: (int)Race_FieldIndex.FemaleWeight,
                             errorMask: errorMask));
                         item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.Flag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(2)),
+                            frame: dataFrame.SpawnWithLength(2),
                             fieldIndex: (int)Race_FieldIndex.Flags,
                             errorMask: errorMask));
                     }
@@ -4157,7 +4157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.Flag>.Instance.Write(
                     writer,
                     item.Flags_Property,
-                    length: new ContentLength(2),
+                    length: 2,
                     fieldIndex: (int)Race_FieldIndex.Flags,
                     errorMask: errorMask);
             }

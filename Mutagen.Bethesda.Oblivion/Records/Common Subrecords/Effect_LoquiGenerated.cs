@@ -779,11 +779,11 @@ namespace Mutagen.Bethesda.Oblivion
                             fieldIndex: (int)Effect_FieldIndex.Duration,
                             errorMask: errorMask));
                         item._Type.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Effect.EffectType>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Effect_FieldIndex.Type,
                             errorMask: errorMask));
                         item._ActorValue.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Effect_FieldIndex.ActorValue,
                             errorMask: errorMask));
                     }
@@ -1890,13 +1890,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Effect.EffectType>.Instance.Write(
                     writer,
                     item.Type_Property,
-                    length: new ContentLength(4),
+                    length: 4,
                     fieldIndex: (int)Effect_FieldIndex.Type,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                     writer,
                     item.ActorValue_Property,
-                    length: new ContentLength(4),
+                    length: 4,
                     fieldIndex: (int)Effect_FieldIndex.ActorValue,
                     errorMask: errorMask);
             }

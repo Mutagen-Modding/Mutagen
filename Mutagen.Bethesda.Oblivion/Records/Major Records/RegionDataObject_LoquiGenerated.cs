@@ -928,7 +928,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fieldIndex: (int)RegionDataObject_FieldIndex.ParentIndex,
                 errorMask: errorMask));
             var Unknown1tryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(new ContentLength(2)),
+                frame: frame.SpawnWithLength(2),
                 fieldIndex: (int)RegionDataObject_FieldIndex.Unknown1,
                 errorMask: errorMask);
             item._Unknown1.SetIfSucceeded(Unknown1tryGet);
@@ -949,7 +949,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fieldIndex: (int)RegionDataObject_FieldIndex.MaxSlope,
                 errorMask: errorMask));
             item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionDataObject.Flag>.Instance.Parse(
-                frame: frame.SpawnWithLength(new ContentLength(1)),
+                frame: frame.SpawnWithLength(1),
                 fieldIndex: (int)RegionDataObject_FieldIndex.Flags,
                 errorMask: errorMask));
             item._RadiusWrtPercent.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
@@ -985,7 +985,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fieldIndex: (int)RegionDataObject_FieldIndex.AngleVariance,
                 errorMask: errorMask));
             var Unknow2ntryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(new ContentLength(6)),
+                frame: frame.SpawnWithLength(6),
                 fieldIndex: (int)RegionDataObject_FieldIndex.Unknow2n,
                 errorMask: errorMask);
             item._Unknow2n.SetIfSucceeded(Unknow2ntryGet);
@@ -2681,7 +2681,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionDataObject.Flag>.Instance.Write(
                 writer,
                 item.Flags_Property,
-                length: new ContentLength(1),
+                length: 1,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Flags,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(

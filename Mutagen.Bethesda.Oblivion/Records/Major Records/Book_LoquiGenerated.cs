@@ -860,11 +860,11 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Book.BookFlag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(1)),
+                            frame: dataFrame.SpawnWithLength(1),
                             fieldIndex: (int)Book_FieldIndex.Flags,
                             errorMask: errorMask));
                         item._Teaches.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(1)),
+                            frame: dataFrame.SpawnWithLength(1),
                             fieldIndex: (int)Book_FieldIndex.Teaches,
                             errorMask: errorMask));
                         item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
@@ -2292,13 +2292,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Book.BookFlag>.Instance.Write(
                     writer,
                     item.Flags_Property,
-                    length: new ContentLength(1),
+                    length: 1,
                     fieldIndex: (int)Book_FieldIndex.Flags,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
                     writer,
                     item.Teaches_Property,
-                    length: new ContentLength(1),
+                    length: 1,
                     fieldIndex: (int)Book_FieldIndex.Teaches,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(

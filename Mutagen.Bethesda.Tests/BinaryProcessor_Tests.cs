@@ -1,4 +1,5 @@
 ﻿using Mutagen.Bethesda.Internals;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -43,13 +44,13 @@ namespace Mutagen.Bethesda.Tests
                 source.Length);
         }
 
-        public byte[] DoMove(byte[] buf, FileSection section, FileLocation loc)
+        public byte[] DoMove(byte[] buf, RangeInt64 section, long loc)
         {
             byte[] move = new byte[section.Width];
             Array.Copy(buf, section.Min, move, 0, section.Width);
             List<byte> ret = new List<byte>(buf);
             ret.InsertRange((int)(loc), move);
-            ret.RemoveRange((int)section.Min.Offset, section.Width);
+            ret.RemoveRange((int)section.Min, checked((int)section.Width));
             return ret.ToArray();
         }
 
@@ -67,11 +68,11 @@ namespace Mutagen.Bethesda.Tests
         [Fact]
         public void Substitutions_FirstPass()
         {
-            var loc = new FileLocation(6);
+            var loc = 6;
             byte val = 75;
             var sourceBuf = GetBuffer((int)(BUFFER_SIZE));
             var expectedBuf = GetBuffer((int)(BUFFER_SIZE));
-            expectedBuf[loc.Offset] = val;
+            expectedBuf[loc] = val;
             BinaryFileProcessor.Config config = new BinaryFileProcessor.Config();
             config.SetSubstitution(loc, val);
             var outputBuf = GetBytes(
@@ -83,11 +84,11 @@ namespace Mutagen.Bethesda.Tests
         [Fact]
         public void Substitutions_SecondPass()
         {
-            var loc = new FileLocation(BUFFER_SIZE + 6);
+            var loc = BUFFER_SIZE + 6;
             byte val = 75;
             var sourceBuf = GetBuffer((int)(BUFFER_SIZE * 2));
             var expectedBuf = GetBuffer((int)(BUFFER_SIZE * 2));
-            expectedBuf[loc.Offset] = val;
+            expectedBuf[loc] = val;
             BinaryFileProcessor.Config config = new BinaryFileProcessor.Config();
             config.SetSubstitution(loc, val);
             var outputBuf = GetBytes(
@@ -99,11 +100,11 @@ namespace Mutagen.Bethesda.Tests
         [Fact]
         public void Substitutions_FirstByte()
         {
-            var loc = new FileLocation(BUFFER_SIZE);
+            var loc = BUFFER_SIZE;
             byte val = 75;
             var sourceBuf = GetBuffer((int)(BUFFER_SIZE * 2));
             var expectedBuf = GetBuffer((int)(BUFFER_SIZE * 2));
-            expectedBuf[loc.Offset] = val;
+            expectedBuf[loc] = val;
             BinaryFileProcessor.Config config = new BinaryFileProcessor.Config();
             config.SetSubstitution(loc, val);
             var outputBuf = GetBytes(
@@ -115,11 +116,11 @@ namespace Mutagen.Bethesda.Tests
         [Fact]
         public void Substitutions_LastByte()
         {
-            var loc = new FileLocation(BUFFER_SIZE - 1);
+            var loc = BUFFER_SIZE - 1;
             byte val = 75;
             var sourceBuf = GetBuffer((int)(BUFFER_SIZE * 2));
             var expectedBuf = GetBuffer((int)(BUFFER_SIZE * 2));
-            expectedBuf[loc.Offset] = val;
+            expectedBuf[loc] = val;
             BinaryFileProcessor.Config config = new BinaryFileProcessor.Config();
             config.SetSubstitution(loc, val);
             var outputBuf = GetBytes(
@@ -139,13 +140,13 @@ namespace Mutagen.Bethesda.Tests
         [Fact]
         public void Substitutions_Section_Typical()
         {
-            var loc = new FileLocation(6);
+            var loc = 6;
             byte[] val = new byte[] { 75, 76, 77 };
             var sourceBuf = GetBuffer((int)(BUFFER_SIZE));
             var expectedBuf = GetBuffer((int)(BUFFER_SIZE));
             for (int i = 0; i < val.Length; i++)
             {
-                expectedBuf[loc.Offset + i] = val[i];
+                expectedBuf[loc + i] = val[i];
             }
             BinaryFileProcessor.Config config = new BinaryFileProcessor.Config();
             config.SetSubstitution(loc, val);
@@ -158,13 +159,13 @@ namespace Mutagen.Bethesda.Tests
         [Fact]
         public void Substitutions_Section_Overlap()
         {
-            var loc = new FileLocation(15);
+            var loc = 15;
             byte[] val = new byte[] { 75, 76, 77, 78 };
             var sourceBuf = GetBuffer((int)(BUFFER_SIZE * 2));
             var expectedBuf = GetBuffer((int)(BUFFER_SIZE * 2));
             for (int i = 0; i < val.Length; i++)
             {
-                expectedBuf[loc.Offset + i] = val[i];
+                expectedBuf[loc + i] = val[i];
             }
             BinaryFileProcessor.Config config = new BinaryFileProcessor.Config();
             config.SetSubstitution(loc, val);
@@ -179,8 +180,8 @@ namespace Mutagen.Bethesda.Tests
         [Fact]
         public void Move_Inside_FirstPass()
         {
-            var section = new FileSection(5, 6);
-            FileLocation loc = new FileLocation(11);
+            var section = new RangeInt64(5, 6);
+            long loc = 11;
             var sourceBuf = GetBuffer((int)(BUFFER_SIZE * 2));
             var expectedBuf = DoMove(
                 GetBuffer((int)(BUFFER_SIZE * 2)),
@@ -197,8 +198,8 @@ namespace Mutagen.Bethesda.Tests
         [Fact]
         public void Move_Inside_SecondPass()
         {
-            var section = new FileSection(BUFFER_SIZE + 4, BUFFER_SIZE + 7);
-            FileLocation loc = new FileLocation(BUFFER_SIZE + 9);
+            var section = new RangeInt64(BUFFER_SIZE + 4, BUFFER_SIZE + 7);
+            long loc = BUFFER_SIZE + 9;
             var sourceBuf = GetBuffer((int)(BUFFER_SIZE * 3));
             var expectedBuf = DoMove(
                 GetBuffer((int)(BUFFER_SIZE * 3)),
@@ -215,10 +216,10 @@ namespace Mutagen.Bethesda.Tests
         [Fact]
         public void Move_Inside_Two()
         {
-            var section = new FileSection(BUFFER_SIZE + 2, BUFFER_SIZE + 4);
-            FileLocation loc = new FileLocation(BUFFER_SIZE + 6);
-            var section2 = new FileSection(BUFFER_SIZE + 8, BUFFER_SIZE + 10);
-            FileLocation loc2 = new FileLocation(BUFFER_SIZE + 12);
+            var section = new RangeInt64(BUFFER_SIZE + 2, BUFFER_SIZE + 4);
+            long loc = BUFFER_SIZE + 6;
+            var section2 = new RangeInt64(BUFFER_SIZE + 8, BUFFER_SIZE + 10);
+            long loc2 = BUFFER_SIZE + 12;
             var sourceBuf = GetBuffer((int)(BUFFER_SIZE * 3));
             var expectedBuf = DoMove(
                 GetBuffer((int)(BUFFER_SIZE * 3)),
@@ -235,8 +236,8 @@ namespace Mutagen.Bethesda.Tests
         [Fact]
         public void Move_StartingEdge()
         {
-            var section = new FileSection(BUFFER_SIZE * 2, BUFFER_SIZE * 2 + 4);
-            FileLocation loc = new FileLocation(BUFFER_SIZE * 2 + 7);
+            var section = new RangeInt64(BUFFER_SIZE * 2, BUFFER_SIZE * 2 + 4);
+            long loc = BUFFER_SIZE * 2 + 7;
             var sourceBuf = GetBuffer((int)(BUFFER_SIZE * 3));
             var expectedBuf = DoMove(
                 GetBuffer((int)(BUFFER_SIZE * 3)),
@@ -253,8 +254,8 @@ namespace Mutagen.Bethesda.Tests
         [Fact]
         public void Move_EndingEdge()
         {
-            var section = new FileSection(BUFFER_SIZE * 2 - 4, BUFFER_SIZE * 2 - 1);
-            FileLocation loc = new FileLocation(BUFFER_SIZE * 2 + 5);
+            var section = new RangeInt64(BUFFER_SIZE * 2 - 4, BUFFER_SIZE * 2 - 1);
+            long loc = BUFFER_SIZE * 2 + 5;
             var sourceBuf = GetBuffer((int)(BUFFER_SIZE * 3));
             var expectedBuf = DoMove(
                 GetBuffer((int)(BUFFER_SIZE * 3)),
@@ -271,10 +272,10 @@ namespace Mutagen.Bethesda.Tests
         [Fact]
         public void Move_TwoBeforePaste()
         {
-            var section = new FileSection(1, 3);
-            var section2 = new FileSection(5, 6);
-            FileLocation loc = new FileLocation(9);
-            FileLocation loc2 = new FileLocation(11);
+            var section = new RangeInt64(1, 3);
+            var section2 = new RangeInt64(5, 6);
+            long loc = 9;
+            long loc2 = 11;
             var sourceBuf = GetBuffer((int)(BUFFER_SIZE));
             var expectedBuf = new byte[]
             {
@@ -306,8 +307,8 @@ namespace Mutagen.Bethesda.Tests
         [Fact]
         public void Move_Overlap()
         {
-            var section = new FileSection(BUFFER_SIZE - 3, BUFFER_SIZE + 3);
-            FileLocation loc = new FileLocation(BUFFER_SIZE + 7);
+            var section = new RangeInt64(BUFFER_SIZE - 3, BUFFER_SIZE + 3);
+            long loc = BUFFER_SIZE + 7;
             var sourceBuf = GetBuffer((int)(BUFFER_SIZE * 2));
             var expectedBuf = DoMove(
                 GetBuffer((int)(BUFFER_SIZE * 2)),
@@ -324,10 +325,10 @@ namespace Mutagen.Bethesda.Tests
         [Fact]
         public void Move_Overlap_And_Another()
         {
-            var section = new FileSection(BUFFER_SIZE - 2, BUFFER_SIZE + 2);
-            FileLocation loc = new FileLocation(BUFFER_SIZE + 4);
-            var section2 = new FileSection(BUFFER_SIZE + 7, BUFFER_SIZE + 9);
-            FileLocation loc2 = new FileLocation(BUFFER_SIZE + 12);
+            var section = new RangeInt64(BUFFER_SIZE - 2, BUFFER_SIZE + 2);
+            long loc = BUFFER_SIZE + 4;
+            var section2 = new RangeInt64(BUFFER_SIZE + 7, BUFFER_SIZE + 9);
+            long loc2 = BUFFER_SIZE + 12;
             var sourceBuf = GetBuffer((int)(BUFFER_SIZE * 2));
             var expectedBuf = DoMove(
                 GetBuffer((int)(BUFFER_SIZE * 2)),
@@ -348,10 +349,10 @@ namespace Mutagen.Bethesda.Tests
         [Fact]
         public void Move_SameLocation()
         {
-            var section = new FileSection(2, 3);
-            FileLocation loc = new FileLocation(12);
-            var section2 = new FileSection(7, 9);
-            FileLocation loc2 = new FileLocation(12);
+            var section = new RangeInt64(2, 3);
+            long loc = 12;
+            var section2 = new RangeInt64(7, 9);
+            long loc2 = 12;
             var sourceBuf = GetBuffer((int)(BUFFER_SIZE));
             var expectedBuf = new byte[]
             {
@@ -384,10 +385,10 @@ namespace Mutagen.Bethesda.Tests
         [Fact]
         public void Move_SameLocation_Flip()
         {
-            var section = new FileSection(2, 3);
-            FileLocation loc = new FileLocation(12);
-            var section2 = new FileSection(7, 9);
-            FileLocation loc2 = new FileLocation(12);
+            var section = new RangeInt64(2, 3);
+            long loc = 12;
+            var section2 = new RangeInt64(7, 9);
+            long loc2 = 12;
             var sourceBuf = GetBuffer((int)(BUFFER_SIZE));
             var expectedBuf = new byte[]
             {
@@ -420,10 +421,10 @@ namespace Mutagen.Bethesda.Tests
         [Fact]
         public void Move_Cross()
         {
-            var section = new FileSection(2, 3);
-            FileLocation loc = new FileLocation(12);
-            var section2 = new FileSection(6, 8);
-            FileLocation loc2 = new FileLocation(10);
+            var section = new RangeInt64(2, 3);
+            long loc = 12;
+            var section2 = new RangeInt64(6, 8);
+            long loc2 = 10;
             var sourceBuf = GetBuffer((int)(BUFFER_SIZE));
             var expectedBuf = new byte[]
             {

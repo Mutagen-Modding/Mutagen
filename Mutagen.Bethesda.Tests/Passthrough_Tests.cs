@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Tests
 {
     public class Passthrough_Tests
     {
-        public static IEnumerable<(FileSection Source, FileSection? Output)> ConstructRanges<T>(
+        public static IEnumerable<(RangeInt64 Source, RangeInt64? Output)> ConstructRanges<T>(
             IEnumerable<(long Source, long Output, T Item)> items,
             Func<T, bool> eval)
         {
@@ -39,12 +39,12 @@ namespace Mutagen.Bethesda.Tests
                 {
                     if (inRange)
                     {
-                        var sourceRange = new FileSection(startRange, item.Source - 1);
-                        FileSection? outputRange = null;
+                        var sourceRange = new RangeInt64(startRange, item.Source - 1);
+                        RangeInt64? outputRange = null;
                         if (startRange != outputStartRange
                             || item.Source != item.Output)
                         {
-                            outputRange = new FileSection(outputStartRange, item.Output - 1);
+                            outputRange = new RangeInt64(outputStartRange, item.Output - 1);
                         }
                         yield return (sourceRange, outputRange);
                         inRange = false;
@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        public static (Exception Exception, IEnumerable<(FileSection Source, FileSection? Output)> Sections) AssertFilesEqual(
+        public static (Exception Exception, IEnumerable<(RangeInt64 Source, RangeInt64? Output)> Sections) AssertFilesEqual(
             Stream stream,
             string path2,
             RangeCollection ignoreList = null,
@@ -73,22 +73,22 @@ namespace Mutagen.Bethesda.Tests
                     {
                         if (r.Output == null)
                         {
-                            return r.Source.Range.ToString("X");
+                            return r.Source.ToString("X");
                         }
                         else
                         {
-                            return $"[{r.Source.Range.ToString("X")} --- {r.Output.Value.Range.ToString("X")}]";
+                            return $"[{r.Source.ToString("X")} --- {r.Output.Value.ToString("X")}]";
                         }
                     }));
                     return (new ArgumentException($"{path2} Bytes did not match at positions: {posStr}"), errs);
                 }
                 if (stream.Position != stream.Length)
                 {
-                    return (new ArgumentException($"{path2} Stream had more data past position 0x{new FileLocation(stream.Position)} than {path2}"), errs);
+                    return (new ArgumentException($"{path2} Stream had more data past position 0x{stream.Position} than {path2}"), errs);
                 }
                 if (reader2.Position != reader2.Length)
                 {
-                    return (new ArgumentException($"{path2} Stream {path2} had more data past position 0x{new FileLocation(reader2.Position)} than source stream."), errs);
+                    return (new ArgumentException($"{path2} Stream {path2} had more data past position 0x{reader2.Position} than source stream."), errs);
                 }
                 return (null, errs);
             }
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Tests
             MutagenReader stream)
         {
             var curPos = stream.Position;
-            stream.Position = new FileLocation(range.Min);
+            stream.Position = range.Min;
             var bytes = new byte[range.Width];
             stream.ReadInto(bytes);
             stream.Position = curPos;
@@ -129,13 +129,13 @@ namespace Mutagen.Bethesda.Tests
                 if (reader1Skips != null
                     && reader1Skips.TryGetCurrentRange(reader1.Position, out var range1))
                 {
-                    reader1.Position = new FileLocation(range1.Max + 1);
+                    reader1.Position = range1.Max + 1;
                     continue;
                 }
                 if (reader2Skips != null
                     && reader2Skips.TryGetCurrentRange(reader2.Position, out var range2))
                 {
-                    reader2.Position = new FileLocation(range2.Max + 1);
+                    reader2.Position = range2.Max + 1;
                     continue;
                 }
                 var b1 = reader1.ReadByte();

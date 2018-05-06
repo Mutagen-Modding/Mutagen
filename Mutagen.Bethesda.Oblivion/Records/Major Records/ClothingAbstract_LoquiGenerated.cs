@@ -589,11 +589,11 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._BipedFlags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedFlag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(2)),
+                            frame: dataFrame.SpawnWithLength(2),
                             fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
                             errorMask: errorMask));
                         item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<EquipmentFlag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(2)),
+                            frame: dataFrame.SpawnWithLength(2),
                             fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
                             errorMask: errorMask));
                     }
@@ -2252,13 +2252,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedFlag>.Instance.Write(
                     writer,
                     item.BipedFlags_Property,
-                    length: new ContentLength(2),
+                    length: 2,
                     fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<EquipmentFlag>.Instance.Write(
                     writer,
                     item.Flags_Property,
-                    length: new ContentLength(2),
+                    length: 2,
                     fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
                     errorMask: errorMask);
             }

@@ -719,7 +719,7 @@ namespace Mutagen.Bethesda.Oblivion
                             return TryGet<ScriptEffect_FieldIndex?>.Succeed(ScriptEffect_FieldIndex.Script);
                         }
                         item._MagicSchool.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
                             errorMask: errorMask));
                         item.VisualEffect_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
@@ -732,7 +732,7 @@ namespace Mutagen.Bethesda.Oblivion
                             return TryGet<ScriptEffect_FieldIndex?>.Succeed(ScriptEffect_FieldIndex.VisualEffect);
                         }
                         item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
                             errorMask: errorMask));
                     }
@@ -1657,7 +1657,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Write(
                         writer,
                         item.MagicSchool_Property,
-                        length: new ContentLength(4),
+                        length: 4,
                         fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
@@ -1670,7 +1670,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Write(
                             writer,
                             item.Flags_Property,
-                            length: new ContentLength(4),
+                            length: 4,
                             fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
                             errorMask: errorMask);
                     }

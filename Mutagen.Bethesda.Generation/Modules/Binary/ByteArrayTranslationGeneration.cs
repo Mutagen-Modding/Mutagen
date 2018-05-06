@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else
                 {
-                    args.Add($"frame: {nodeAccessor}.SpawnWithLength(new ContentLength({data.Length.Value}))");
+                    args.Add($"frame: {nodeAccessor}.SpawnWithLength({data.Length.Value})");
                 }
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 args.Add($"errorMask: {maskAccessor}");

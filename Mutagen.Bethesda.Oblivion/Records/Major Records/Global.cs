@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             // Skip to FNAM
             var initialPos = frame.Position;
-            frame.CheckUpcomingRead(new ContentLength(26));
+            frame.CheckUpcomingRead(26);
             frame.Position += 24;
             var edidLength = frame.Reader.ReadInt16();
             frame.Position += edidLength;
@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Overall = ex
                 });
             }
-            if (len.Value != 1)
+            if (len != 1)
             {
                 var ex = new ArgumentException($"FNAM had non 1 length: {len}");
                 if (!doMasks) throw ex;

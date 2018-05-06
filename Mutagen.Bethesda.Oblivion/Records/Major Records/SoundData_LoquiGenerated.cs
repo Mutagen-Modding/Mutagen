@@ -722,7 +722,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask));
             frame.Position += 1;
             item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoundData.Flag>.Instance.Parse(
-                frame: frame.SpawnWithLength(new ContentLength(4)),
+                frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)SoundData_FieldIndex.Flags,
                 errorMask: errorMask));
         }
@@ -1590,7 +1590,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoundData.Flag>.Instance.Write(
                 writer,
                 item.Flags_Property,
-                length: new ContentLength(4),
+                length: 4,
                 fieldIndex: (int)SoundData_FieldIndex.Flags,
                 errorMask: errorMask);
         }

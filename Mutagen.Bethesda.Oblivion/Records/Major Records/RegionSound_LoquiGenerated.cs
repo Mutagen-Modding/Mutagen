@@ -601,7 +601,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fieldIndex: (int)RegionSound_FieldIndex.Sound,
                 errorMask: errorMask));
             item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionSound.Flag>.Instance.Parse(
-                frame: frame.SpawnWithLength(new ContentLength(4)),
+                frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)RegionSound_FieldIndex.Flags,
                 errorMask: errorMask));
             item._Chance.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
@@ -1374,7 +1374,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionSound.Flag>.Instance.Write(
                 writer,
                 item.Flags_Property,
-                length: new ContentLength(4),
+                length: 4,
                 fieldIndex: (int)RegionSound_FieldIndex.Flags,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(

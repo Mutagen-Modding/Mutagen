@@ -2203,7 +2203,7 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._NPCFlags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.NPCFlag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)NPC_FieldIndex.NPCFlags,
                             errorMask: errorMask));
                         item._BaseSpellPoints.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
@@ -2326,11 +2326,11 @@ namespace Mutagen.Bethesda.Oblivion
                             fieldIndex: (int)NPC_FieldIndex.Responsibility,
                             errorMask: errorMask));
                         item._BuySellServices.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)NPC_FieldIndex.BuySellServices,
                             errorMask: errorMask));
                         item._Teaches.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(1)),
+                            frame: dataFrame.SpawnWithLength(1),
                             fieldIndex: (int)NPC_FieldIndex.Teaches,
                             errorMask: errorMask));
                         item._MaximumTrainingLevel.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
@@ -2338,7 +2338,7 @@ namespace Mutagen.Bethesda.Oblivion
                             fieldIndex: (int)NPC_FieldIndex.MaximumTrainingLevel,
                             errorMask: errorMask));
                         var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(2)),
+                            frame: dataFrame.SpawnWithLength(2),
                             fieldIndex: (int)NPC_FieldIndex.Fluff,
                             errorMask: errorMask);
                         item._Fluff.SetIfSucceeded(FlufftryGet);
@@ -7788,7 +7788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.NPCFlag>.Instance.Write(
                     writer,
                     item.NPCFlags_Property,
-                    length: new ContentLength(4),
+                    length: 4,
                     fieldIndex: (int)NPC_FieldIndex.NPCFlags,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
@@ -7912,13 +7912,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Write(
                     writer,
                     item.BuySellServices_Property,
-                    length: new ContentLength(4),
+                    length: 4,
                     fieldIndex: (int)NPC_FieldIndex.BuySellServices,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
                     writer,
                     item.Teaches_Property,
-                    length: new ContentLength(1),
+                    length: 1,
                     fieldIndex: (int)NPC_FieldIndex.Teaches,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(

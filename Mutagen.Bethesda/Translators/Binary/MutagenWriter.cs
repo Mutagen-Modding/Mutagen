@@ -15,15 +15,15 @@ namespace Mutagen.Bethesda.Binary
         public System.IO.BinaryWriter Writer;
         private static byte Zero = 0;
 
-        public FileLocation Position
+        public long Position
         {
-            get => new FileLocation(this.Writer.BaseStream.Position);
+            get => this.Writer.BaseStream.Position;
             set => this.Writer.BaseStream.Position = value;
         }
 
-        public FileLocation Length
+        public long Length
         {
-            get => new FileLocation(this.Writer.BaseStream.Length);
+            get => this.Writer.BaseStream.Length;
         }
 
         public MutagenWriter(string path)

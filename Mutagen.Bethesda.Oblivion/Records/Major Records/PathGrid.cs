@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Loqui;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion
 {

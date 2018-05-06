@@ -180,12 +180,12 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public TryGet<T> Parse(MutagenFrame reader, ContentLength length, bool doMasks, out M maskObj)
+        public TryGet<T> Parse(MutagenFrame reader, long length, bool doMasks, out M maskObj)
         {
             throw new NotImplementedException();
         }
 
-        public TryGet<T> Parse(MutagenFrame reader, RecordType header, ContentLength lengthLength, bool doMasks, out M maskObj)
+        public TryGet<T> Parse(MutagenFrame reader, RecordType header, long lengthLength, bool doMasks, out M maskObj)
         {
             throw new NotImplementedException();
         }
@@ -216,7 +216,7 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        void IBinaryTranslation<T, M>.Write(MutagenWriter writer, T item, ContentLength length, bool doMasks, out M mask)
+        void IBinaryTranslation<T, M>.Write(MutagenWriter writer, T item, long length, bool doMasks, out M mask)
         {
             throw new NotImplementedException();
         }

@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<LocalVariableData_ErrorMask> errorMask)
         {
             var DatatryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(new ContentLength(24)),
+                frame: frame.SpawnWithLength(24),
                 fieldIndex: (int)LocalVariableData_FieldIndex.Data,
                 errorMask: errorMask);
             item._Data.SetIfSucceeded(DatatryGet);

@@ -797,14 +797,14 @@ namespace Mutagen.Bethesda.Oblivion
                             transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                             {
                                 return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                                    frame: r.SpawnWithLength(new ContentLength(4)),
+                                    frame: r.SpawnWithLength(4),
                                     doMasks: listDoMasks,
                                     errorMask: out listSubMask);
                             }
                             );
                         item._PrimaryAttributes.SetIfSucceeded(PrimaryAttributestryGet);
                         item._Specialization.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Class_FieldIndex.Specialization,
                             errorMask: errorMask));
                         var SecondaryAttributestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.ParseRepeatedItem(
@@ -815,18 +815,18 @@ namespace Mutagen.Bethesda.Oblivion
                             transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                             {
                                 return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                                    frame: r.SpawnWithLength(new ContentLength(4)),
+                                    frame: r.SpawnWithLength(4),
                                     doMasks: listDoMasks,
                                     errorMask: out listSubMask);
                             }
                             );
                         item._SecondaryAttributes.SetIfSucceeded(SecondaryAttributestryGet);
                         item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ClassFlag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Class_FieldIndex.Flags,
                             errorMask: errorMask));
                         item._ClassServices.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ClassService>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Class_FieldIndex.ClassServices,
                             errorMask: errorMask));
                         if (dataFrame.Complete)
@@ -2119,7 +2119,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                             writer,
                             subItem,
-                            length: new ContentLength(4),
+                            length: 4,
                             doMasks: listDoMasks,
                             errorMask: out listSubMask);
                     }
@@ -2127,7 +2127,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Write(
                     writer,
                     item.Specialization_Property,
-                    length: new ContentLength(4),
+                    length: 4,
                     fieldIndex: (int)Class_FieldIndex.Specialization,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.Write(
@@ -2140,7 +2140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                             writer,
                             subItem,
-                            length: new ContentLength(4),
+                            length: 4,
                             doMasks: listDoMasks,
                             errorMask: out listSubMask);
                     }
@@ -2148,13 +2148,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<ClassFlag>.Instance.Write(
                     writer,
                     item.Flags_Property,
-                    length: new ContentLength(4),
+                    length: 4,
                     fieldIndex: (int)Class_FieldIndex.Flags,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<ClassService>.Instance.Write(
                     writer,
                     item.ClassServices_Property,
-                    length: new ContentLength(4),
+                    length: 4,
                     fieldIndex: (int)Class_FieldIndex.ClassServices,
                     errorMask: errorMask);
                 if (!item.DATADataTypeState.HasFlag(Class.DATADataType.Break0))

@@ -937,7 +937,7 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicEffect.MagicFlag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)MagicEffect_FieldIndex.Flags,
                             errorMask: errorMask));
                         item._BaseCost.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
@@ -945,16 +945,16 @@ namespace Mutagen.Bethesda.Oblivion
                             fieldIndex: (int)MagicEffect_FieldIndex.BaseCost,
                             errorMask: errorMask));
                         var UnusedtryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)MagicEffect_FieldIndex.Unused,
                             errorMask: errorMask);
                         item._Unused.SetIfSucceeded(UnusedtryGet);
                         item._MagicSchool.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)MagicEffect_FieldIndex.MagicSchool,
                             errorMask: errorMask));
                         item._Resistance.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Resistance>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)MagicEffect_FieldIndex.Resistance,
                             errorMask: errorMask));
                         item._CounterEffectCount.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
@@ -2703,7 +2703,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicEffect.MagicFlag>.Instance.Write(
                     writer,
                     item.Flags_Property,
-                    length: new ContentLength(4),
+                    length: 4,
                     fieldIndex: (int)MagicEffect_FieldIndex.Flags,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
@@ -2719,13 +2719,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Write(
                     writer,
                     item.MagicSchool_Property,
-                    length: new ContentLength(4),
+                    length: 4,
                     fieldIndex: (int)MagicEffect_FieldIndex.MagicSchool,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Resistance>.Instance.Write(
                     writer,
                     item.Resistance_Property,
-                    length: new ContentLength(4),
+                    length: 4,
                     fieldIndex: (int)MagicEffect_FieldIndex.Resistance,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(

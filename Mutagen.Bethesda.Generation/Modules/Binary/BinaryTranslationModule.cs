@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Generation
 
         private void ConvertFromStreamIn(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
-            fg.AppendLine("using (var reader = new MutagenReader(stream))");
+            fg.AppendLine($"using (var reader = new {nameof(MutagenReader)}(stream))");
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("var frame = new MutagenFrame(reader);");
@@ -887,7 +887,7 @@ namespace Mutagen.Bethesda.Generation
 
         private void ConvertFromPathIn(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
-            fg.AppendLine("using (var reader = new MutagenReader(path))");
+            fg.AppendLine($"using (var reader = new MutagenReader(path))");
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("var frame = new MutagenFrame(reader);");

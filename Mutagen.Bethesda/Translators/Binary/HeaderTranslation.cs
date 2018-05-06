@@ -1,4 +1,5 @@
 ﻿using Mutagen.Bethesda.Internals;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,31 +16,31 @@ namespace Mutagen.Bethesda.Binary
         public static bool TryParse(
             MutagenReader reader,
             RecordType expectedHeader,
-            out ContentLength contentLength,
-            ContentLength lengthLength)
+            out long contentLength,
+            long lengthLength)
         {
-            if (!reader.TryCheckUpcomingRead(Constants.HEADER_LENGTH))
+            if (reader.Remaining < Constants.HEADER_LENGTH)
             {
-                contentLength = ContentLength.Invalid;
+                contentLength = -1;
                 return false;
             }
             var header = Encoding.ASCII.GetString(reader.ReadBytes(Constants.HEADER_LENGTH));
             if (!expectedHeader.Equals(header))
             {
-                contentLength = ContentLength.Invalid;
+                contentLength = -1;
                 reader.Position -= Constants.HEADER_LENGTH;
                 return false;
             }
-            switch (lengthLength.Value)
+            switch (lengthLength)
             {
                 case 1:
-                    contentLength = new ContentLength(reader.ReadByte());
+                    contentLength = reader.ReadByte();
                     break;
                 case 2:
-                    contentLength = new ContentLength(reader.ReadInt16());
+                    contentLength = reader.ReadInt16();
                     break;
                 case 4:
-                    contentLength = new ContentLength(reader.ReadInt32());
+                    contentLength = reader.ReadInt32();
                     break;
                 default:
                     throw new NotImplementedException();
@@ -50,8 +51,8 @@ namespace Mutagen.Bethesda.Binary
         public static bool TryGet(
             MutagenReader reader,
             RecordType expectedHeader,
-            out ContentLength contentLength,
-            ContentLength lengthLength)
+            out long contentLength,
+            long lengthLength)
         {
             var ret = TryParse(
                 reader,
@@ -65,10 +66,10 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public static ContentLength Parse(
+        public static long Parse(
             MutagenReader reader,
             RecordType expectedHeader,
-            ContentLength lengthLength)
+            int lengthLength)
         {
             if (!TryParse(
                 reader,
@@ -81,7 +82,7 @@ namespace Mutagen.Bethesda.Binary
             return contentLength;
         }
 
-        public static FileLocation ParseRecord(
+        public static long ParseRecord(
             MutagenReader reader,
             RecordType expectedHeader)
         {
@@ -96,7 +97,7 @@ namespace Mutagen.Bethesda.Binary
             return reader.Position + contentLength + Constants.RECORD_META_SKIP;
         }
 
-        public static FileLocation ParseSubrecord(
+        public static long ParseSubrecord(
             MutagenReader reader,
             RecordType expectedHeader)
         {
@@ -111,7 +112,7 @@ namespace Mutagen.Bethesda.Binary
             return reader.Position + contentLength;
         }
 
-        public static FileLocation ParseGroup(
+        public static long ParseGroup(
             MutagenReader reader)
         {
             if (!TryParse(
@@ -127,7 +128,7 @@ namespace Mutagen.Bethesda.Binary
 
         public static bool TryParseRecordType(
             MutagenReader reader,
-            ContentLength lengthLength,
+            int lengthLength,
             RecordType expectedHeader)
         {
             if (TryParse(
@@ -143,7 +144,7 @@ namespace Mutagen.Bethesda.Binary
 
         public static bool TryGetRecordType(
             MutagenReader reader,
-            ContentLength lengthLength,
+            int lengthLength,
             RecordType expectedHeader)
         {
             if (TryGet(
@@ -157,7 +158,7 @@ namespace Mutagen.Bethesda.Binary
             return false;
         }
 
-        public static FileLocation GetSubrecord(
+        public static long GetSubrecord(
             MutagenReader reader,
             RecordType expectedHeader)
         {
@@ -188,7 +189,7 @@ namespace Mutagen.Bethesda.Binary
 
         public static RecordType GetNextRecordType(
             MutagenReader reader,
-            out ContentLength contentLength,
+            out int contentLength,
             RecordTypeConverter recordTypeConverter = null)
         {
             var ret = ReadNextRecordType(reader, out contentLength);
@@ -197,18 +198,18 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        protected static ContentLength ReadContentLength(
+        protected static int ReadContentLength(
             MutagenReader reader,
-            ContentLength lengthLength)
+            int lengthLength)
         {
-            switch (lengthLength.Value)
+            switch (lengthLength)
             {
                 case 1:
-                    return new ContentLength(reader.ReadByte());
+                    return reader.ReadByte();
                 case 2:
-                    return new ContentLength(reader.ReadUInt16());
+                    return reader.ReadUInt16();
                 case 4:
-                    return new ContentLength((int)reader.ReadUInt32());
+                    return (int)reader.ReadUInt32();
                 default:
                     throw new NotImplementedException();
             }
@@ -216,10 +217,9 @@ namespace Mutagen.Bethesda.Binary
 
         public static RecordType ReadNextRecordType(
             MutagenReader reader,
-            ContentLength lengthLength,
-            out ContentLength contentLength)
+            int lengthLength,
+            out int contentLength)
         {
-            reader.CheckUpcomingRead(Constants.HEADER_LENGTH + lengthLength);
             var ret = ReadNextRecordType(reader);
             contentLength = ReadContentLength(reader, lengthLength);
             return ret;
@@ -227,7 +227,7 @@ namespace Mutagen.Bethesda.Binary
 
         public static RecordType ReadNextRecordType(
             MutagenReader reader,
-            out ContentLength contentLength)
+            out int contentLength)
         {
             return ReadNextRecordType(
                 reader,
@@ -237,7 +237,7 @@ namespace Mutagen.Bethesda.Binary
 
         public static RecordType ReadNextSubRecordType(
             MutagenReader reader,
-            out ContentLength contentLength)
+            out int contentLength)
         {
             return ReadNextRecordType(
                 reader,
@@ -247,9 +247,8 @@ namespace Mutagen.Bethesda.Binary
 
         public static RecordType ReadNextType(
             MutagenReader reader,
-            out ContentLength contentLength)
+            out int contentLength)
         {
-            reader.CheckUpcomingRead(Constants.HEADER_LENGTH + Constants.RECORD_LENGTHLENGTH);
             var ret = ReadNextRecordType(reader);
             contentLength = ReadContentLength(reader, Constants.RECORD_LENGTHLENGTH);
             if (ret.Equals(GRUP_HEADER))
@@ -261,11 +260,10 @@ namespace Mutagen.Bethesda.Binary
 
         public static RecordType GetNextType(
             MutagenReader reader,
-            out ContentLength contentLength,
+            out int contentLength,
             RecordTypeConverter recordTypeConverter = null,
             bool hopGroup = true)
         {
-            reader.CheckUpcomingRead(Constants.HEADER_LENGTH + Constants.RECORD_LENGTHLENGTH);
             var ret = ReadNextRecordType(reader);
             ret = recordTypeConverter.ConvertToStandard(ret);
             contentLength = ReadContentLength(reader, Constants.RECORD_LENGTHLENGTH);
@@ -279,7 +277,7 @@ namespace Mutagen.Bethesda.Binary
 
         public static RecordType GetNextSubRecordType(
             MutagenReader reader,
-            out ContentLength contentLength,
+            out int contentLength,
             RecordTypeConverter recordTypeConverter = null)
         {
             var ret = ReadNextRecordType(
