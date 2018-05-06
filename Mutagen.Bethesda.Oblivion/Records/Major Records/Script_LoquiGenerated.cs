@@ -749,7 +749,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "SCDA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var CompiledScripttryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Script_FieldIndex.CompiledScript,
                         errorMask: errorMask);
                     item._CompiledScript.SetIfSucceeded(CompiledScripttryGet);
@@ -757,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "SCTX":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var SourceCodetryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Script_FieldIndex.SourceCode,
                         errorMask: errorMask);
                     item._SourceCode.SetIfSucceeded(SourceCodetryGet);

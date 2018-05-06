@@ -548,7 +548,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new RaceStatsGendered();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
                     RaceStatsGendered_Registration.ATTR_HEADER));
                 using (frame)

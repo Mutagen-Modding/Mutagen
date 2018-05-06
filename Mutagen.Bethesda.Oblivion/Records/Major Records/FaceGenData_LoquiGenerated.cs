@@ -646,7 +646,7 @@ namespace Mutagen.Bethesda.Oblivion
                     if (lastParsed.HasValue && lastParsed.Value >= FaceGenData_FieldIndex.SymmetricGeometry) return TryGet<FaceGenData_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var SymmetricGeometrytryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)FaceGenData_FieldIndex.SymmetricGeometry,
                         errorMask: errorMask);
                     item._SymmetricGeometry.SetIfSucceeded(SymmetricGeometrytryGet);
@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Oblivion
                     if (lastParsed.HasValue && lastParsed.Value >= FaceGenData_FieldIndex.AsymmetricGeometry) return TryGet<FaceGenData_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var AsymmetricGeometrytryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
                         errorMask: errorMask);
                     item._AsymmetricGeometry.SetIfSucceeded(AsymmetricGeometrytryGet);
@@ -664,7 +664,7 @@ namespace Mutagen.Bethesda.Oblivion
                     if (lastParsed.HasValue && lastParsed.Value >= FaceGenData_FieldIndex.SymmetricTexture) return TryGet<FaceGenData_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var SymmetricTexturetryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,
                         errorMask: errorMask);
                     item._SymmetricTexture.SetIfSucceeded(SymmetricTexturetryGet);

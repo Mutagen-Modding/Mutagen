@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         try
                         {

@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Oblivion
                     if (lastParsed.HasValue && lastParsed.Value >= BodyPart_FieldIndex.Index) return TryGet<BodyPart_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Index.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.BodyIndex>.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)BodyPart_FieldIndex.Index,
                         errorMask: errorMask));
                     return TryGet<BodyPart_FieldIndex?>.Succeed(BodyPart_FieldIndex.Index);
@@ -628,7 +628,7 @@ namespace Mutagen.Bethesda.Oblivion
                     if (lastParsed.HasValue && lastParsed.Value >= BodyPart_FieldIndex.Icon) return TryGet<BodyPart_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)BodyPart_FieldIndex.Icon,
                         errorMask: errorMask));
                     return TryGet<BodyPart_FieldIndex?>.Succeed(BodyPart_FieldIndex.Icon);

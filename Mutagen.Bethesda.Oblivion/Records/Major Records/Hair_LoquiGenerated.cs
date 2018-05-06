@@ -644,14 +644,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Hair_FieldIndex.Icon,
                         errorMask: errorMask));
                     return TryGet<Hair_FieldIndex?>.Succeed(Hair_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Hair.HairFlag>.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Hair_FieldIndex.Flags,
                         errorMask: errorMask));
                     return TryGet<Hair_FieldIndex?>.Succeed(Hair_FieldIndex.Flags);

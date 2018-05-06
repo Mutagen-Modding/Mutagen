@@ -760,7 +760,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Effect_FieldIndex?>.Succeed(lastParsed);
                 case "EFIT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item.MagicEffect_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
@@ -779,11 +779,11 @@ namespace Mutagen.Bethesda.Oblivion
                             fieldIndex: (int)Effect_FieldIndex.Duration,
                             errorMask: errorMask));
                         item._Type.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Effect.EffectType>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
                             fieldIndex: (int)Effect_FieldIndex.Type,
                             errorMask: errorMask));
                         item._ActorValue.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
                             fieldIndex: (int)Effect_FieldIndex.ActorValue,
                             errorMask: errorMask));
                     }

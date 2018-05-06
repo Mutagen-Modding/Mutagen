@@ -1901,7 +1901,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "NIFZ":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var ModelstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<String, Exception>.Instance.ParseRepeatedItem(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.Models,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
@@ -1918,17 +1918,17 @@ namespace Mutagen.Bethesda.Oblivion
                 case "NIFT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var NIFTtryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.NIFT,
                         errorMask: errorMask);
                     item._NIFT.SetIfSucceeded(NIFTtryGet);
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.NIFT);
                 case "ACBS":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureFlag>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
                             fieldIndex: (int)Creature_FieldIndex.Flags,
                             errorMask: errorMask));
                         item._BaseSpellPoints.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
@@ -1977,20 +1977,20 @@ namespace Mutagen.Bethesda.Oblivion
                 case "INAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.DeathItem_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.DeathItem,
                         errorMask: errorMask));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.DeathItem);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.Script,
                         errorMask: errorMask));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Script);
                 case "AIDT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._Aggression.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
@@ -2009,11 +2009,11 @@ namespace Mutagen.Bethesda.Oblivion
                             fieldIndex: (int)Creature_FieldIndex.Responsibility,
                             errorMask: errorMask));
                         item._BuySellServices.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
                             fieldIndex: (int)Creature_FieldIndex.BuySellServices,
                             errorMask: errorMask));
                         item._Teaches.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(1)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(1)),
                             fieldIndex: (int)Creature_FieldIndex.Teaches,
                             errorMask: errorMask));
                         item._MaximumTrainingLevel.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
@@ -2044,7 +2044,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "KFFZ":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var AnimationstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<String, Exception>.Instance.ParseRepeatedItem(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.Animations,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
@@ -2060,10 +2060,10 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Animations);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._CreatureType.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureTypeEnum>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(1)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(1)),
                             fieldIndex: (int)Creature_FieldIndex.CreatureType,
                             errorMask: errorMask));
                         item._CombatSKill.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
@@ -2079,7 +2079,7 @@ namespace Mutagen.Bethesda.Oblivion
                             fieldIndex: (int)Creature_FieldIndex.StealthSKill,
                             errorMask: errorMask));
                         item._SoulLevel.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(2)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(2)),
                             fieldIndex: (int)Creature_FieldIndex.SoulLevel,
                             errorMask: errorMask));
                         item._Health.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
@@ -2127,56 +2127,56 @@ namespace Mutagen.Bethesda.Oblivion
                 case "RNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._AttackReach.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.AttackReach,
                         errorMask: errorMask));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.AttackReach);
                 case "ZNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.CombatStyle_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.CombatStyle,
                         errorMask: errorMask));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.CombatStyle);
                 case "TNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._TurningSpeed.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.TurningSpeed,
                         errorMask: errorMask));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.TurningSpeed);
                 case "BNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._BaseScale.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.BaseScale,
                         errorMask: errorMask));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.BaseScale);
                 case "WNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._FootWeight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.FootWeight,
                         errorMask: errorMask));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.FootWeight);
                 case "NAM0":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._BloodSpray.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.BloodSpray,
                         errorMask: errorMask));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.BloodSpray);
                 case "NAM1":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._BloodDecal.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.BloodDecal,
                         errorMask: errorMask));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.BloodDecal);
                 case "CSCR":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.InheritsSoundFrom_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.InheritsSoundFrom,
                         errorMask: errorMask));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.InheritsSoundFrom);

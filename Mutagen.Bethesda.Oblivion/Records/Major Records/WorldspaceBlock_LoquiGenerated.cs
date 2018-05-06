@@ -630,7 +630,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new WorldspaceBlock();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseGroup(frame.Reader));
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseGroup(frame.Reader));
                 using (frame)
                 {
                     Fill_Binary_Structs(
@@ -662,16 +662,16 @@ namespace Mutagen.Bethesda.Oblivion
             Func<WorldspaceBlock_ErrorMask> errorMask)
         {
             var BlockNumbertryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(new ContentLength(4)),
+                frame: frame.SpawnWithLength(new ContentLength(4)),
                 fieldIndex: (int)WorldspaceBlock_FieldIndex.BlockNumber,
                 errorMask: errorMask);
             item._BlockNumber.SetIfSucceeded(BlockNumbertryGet);
             item._GroupType.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
-                frame: frame.Spawn(new ContentLength(4)),
+                frame: frame.SpawnWithLength(new ContentLength(4)),
                 fieldIndex: (int)WorldspaceBlock_FieldIndex.GroupType,
                 errorMask: errorMask));
             var LastModifiedtryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(new ContentLength(4)),
+                frame: frame.SpawnWithLength(new ContentLength(4)),
                 fieldIndex: (int)WorldspaceBlock_FieldIndex.LastModified,
                 errorMask: errorMask);
             item._LastModified.SetIfSucceeded(LastModifiedtryGet);

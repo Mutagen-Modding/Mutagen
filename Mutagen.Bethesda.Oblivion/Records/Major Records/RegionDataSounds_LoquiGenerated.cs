@@ -647,14 +647,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "RDMD":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._MusicType.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)RegionDataSounds_FieldIndex.MusicType,
                         errorMask: errorMask));
                     return TryGet<RegionDataSounds_FieldIndex?>.Succeed(RegionDataSounds_FieldIndex.MusicType);
                 case "RDSD":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var SoundstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionSound, MaskItem<Exception, RegionSound_ErrorMask>>.Instance.ParseRepeatedItem(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)RegionDataSounds_FieldIndex.Sounds,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,

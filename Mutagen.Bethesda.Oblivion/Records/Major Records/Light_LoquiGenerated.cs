@@ -920,14 +920,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Light_FieldIndex.Script,
                         errorMask: errorMask));
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Script);
                 case "FULL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var NametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Light_FieldIndex.Name,
                         errorMask: errorMask);
                     item._Name.SetIfSucceeded(NametryGet);
@@ -935,13 +935,13 @@ namespace Mutagen.Bethesda.Oblivion
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Light_FieldIndex.Icon,
                         errorMask: errorMask));
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._Time.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
@@ -957,7 +957,7 @@ namespace Mutagen.Bethesda.Oblivion
                             errorMask: errorMask,
                             extraByte: true));
                         item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Light.LightFlag>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
                             fieldIndex: (int)Light_FieldIndex.Flags,
                             errorMask: errorMask));
                         if (dataFrame.TotalLength > 24)
@@ -985,14 +985,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Fade.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Light_FieldIndex.Fade,
                         errorMask: errorMask));
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Fade);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Sound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Light_FieldIndex.Sound,
                         errorMask: errorMask));
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Sound);

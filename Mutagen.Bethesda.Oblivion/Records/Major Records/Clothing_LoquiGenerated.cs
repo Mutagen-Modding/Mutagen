@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,

@@ -580,7 +580,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new DistantLODData();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
                     DistantLODData_Registration.XLOD_HEADER));
                 using (frame)

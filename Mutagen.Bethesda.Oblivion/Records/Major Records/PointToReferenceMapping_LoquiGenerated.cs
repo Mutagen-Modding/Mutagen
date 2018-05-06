@@ -567,7 +567,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new PointToReferenceMapping();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
                     PointToReferenceMapping_Registration.PGRL_HEADER));
                 using (frame)

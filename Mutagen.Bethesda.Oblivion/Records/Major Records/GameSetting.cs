@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             frame.Position += 6;
             var edid = StringBinaryTranslation.Instance.Parse(
-                frame.Spawn(edidLength),
+                frame.SpawnWithLength(edidLength),
                 doMasks,
                 out var err);
             if (err != null)

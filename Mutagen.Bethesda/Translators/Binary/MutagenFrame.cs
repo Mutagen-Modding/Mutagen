@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         [DebuggerStepThrough]
-        public MutagenFrame Spawn(FileLocation finalPosition)
+        public MutagenFrame SpawnWithFinalPosition(FileLocation finalPosition)
         {
             return new MutagenFrame(
                 this.Reader,
@@ -140,7 +140,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         [DebuggerStepThrough]
-        public MutagenFrame Spawn(ContentLength length, bool snapToFinalPosition = true)
+        public MutagenFrame SpawnWithLength(ContentLength length, bool snapToFinalPosition = true)
         {
             return new MutagenFrame(
                 this.Reader,

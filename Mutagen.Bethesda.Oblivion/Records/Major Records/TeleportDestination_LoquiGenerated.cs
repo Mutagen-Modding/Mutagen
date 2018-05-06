@@ -578,7 +578,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new TeleportDestination();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
                     TeleportDestination_Registration.XTEL_HEADER));
                 using (frame)

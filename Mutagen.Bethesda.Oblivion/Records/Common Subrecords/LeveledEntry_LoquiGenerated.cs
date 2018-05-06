@@ -709,7 +709,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new LeveledEntry<T>();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
                     LeveledEntry_Registration.LVLO_HEADER));
                 using (frame)
@@ -757,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fieldIndex: (int)LeveledEntry_FieldIndex.Level,
                 errorMask: errorMask));
             var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(new ContentLength(2)),
+                frame: frame.SpawnWithLength(new ContentLength(2)),
                 fieldIndex: (int)LeveledEntry_FieldIndex.Fluff,
                 errorMask: errorMask);
             item._Fluff.SetIfSucceeded(FlufftryGet);
@@ -772,7 +772,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask));
             if (frame.Complete) return;
             var Fluff2tryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(new ContentLength(2)),
+                frame: frame.SpawnWithLength(new ContentLength(2)),
                 fieldIndex: (int)LeveledEntry_FieldIndex.Fluff2,
                 errorMask: errorMask);
             item._Fluff2.SetIfSucceeded(Fluff2tryGet);

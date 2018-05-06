@@ -696,10 +696,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "ENIT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._Type.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
                             fieldIndex: (int)Enchantment_FieldIndex.Type,
                             errorMask: errorMask));
                         item._ChargeAmount.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
@@ -711,7 +711,7 @@ namespace Mutagen.Bethesda.Oblivion
                             fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
                             errorMask: errorMask));
                         item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.Flag>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
                             fieldIndex: (int)Enchantment_FieldIndex.Flags,
                             errorMask: errorMask));
                     }

@@ -638,21 +638,21 @@ namespace Mutagen.Bethesda.Oblivion
                     if (lastParsed.HasValue && lastParsed.Value >= Model_FieldIndex.File) return TryGet<Model_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._File.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Model_FieldIndex.File,
                         errorMask: errorMask));
                     return TryGet<Model_FieldIndex?>.Succeed(Model_FieldIndex.File);
                 case "MODB":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._BoundRadius.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Model_FieldIndex.BoundRadius,
                         errorMask: errorMask));
                     return TryGet<Model_FieldIndex?>.Succeed(Model_FieldIndex.BoundRadius);
                 case "MODT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var HashestryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Model_FieldIndex.Hashes,
                         errorMask: errorMask);
                     item._Hashes.SetIfSucceeded(HashestryGet);

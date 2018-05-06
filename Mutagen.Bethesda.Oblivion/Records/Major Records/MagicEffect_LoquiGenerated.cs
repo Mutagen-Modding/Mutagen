@@ -914,7 +914,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "DESC":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var DescriptiontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)MagicEffect_FieldIndex.Description,
                         errorMask: errorMask);
                     item._Description.SetIfSucceeded(DescriptiontryGet);
@@ -922,7 +922,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)MagicEffect_FieldIndex.Icon,
                         errorMask: errorMask));
                     return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.Icon);
@@ -934,10 +934,10 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.Model);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicEffect.MagicFlag>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
                             fieldIndex: (int)MagicEffect_FieldIndex.Flags,
                             errorMask: errorMask));
                         item._BaseCost.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
@@ -945,16 +945,16 @@ namespace Mutagen.Bethesda.Oblivion
                             fieldIndex: (int)MagicEffect_FieldIndex.BaseCost,
                             errorMask: errorMask));
                         var UnusedtryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
                             fieldIndex: (int)MagicEffect_FieldIndex.Unused,
                             errorMask: errorMask);
                         item._Unused.SetIfSucceeded(UnusedtryGet);
                         item._MagicSchool.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
                             fieldIndex: (int)MagicEffect_FieldIndex.MagicSchool,
                             errorMask: errorMask));
                         item._Resistance.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Resistance>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
                             fieldIndex: (int)MagicEffect_FieldIndex.Resistance,
                             errorMask: errorMask));
                         item._CounterEffectCount.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
@@ -987,7 +987,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "ESCE":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var CounterEffectstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<EDIDLink<MagicEffect>, Exception>.Instance.ParseRepeatedItem(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,

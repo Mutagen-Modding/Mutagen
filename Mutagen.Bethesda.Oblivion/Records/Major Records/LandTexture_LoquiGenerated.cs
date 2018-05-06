@@ -679,7 +679,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)LandTexture_FieldIndex.Icon,
                         errorMask: errorMask));
                     return TryGet<LandTexture_FieldIndex?>.Succeed(LandTexture_FieldIndex.Icon);
@@ -692,7 +692,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._TextureSpecularExponent.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)LandTexture_FieldIndex.TextureSpecularExponent,
                         errorMask: errorMask));
                     return TryGet<LandTexture_FieldIndex?>.Succeed(LandTexture_FieldIndex.TextureSpecularExponent);

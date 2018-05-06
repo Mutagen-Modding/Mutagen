@@ -873,14 +873,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Region_FieldIndex.Icon,
                         errorMask: errorMask));
                     return TryGet<Region_FieldIndex?>.Succeed(Region_FieldIndex.Icon);
                 case "RCLR":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._MapColor.SetIfSucceeded(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Region_FieldIndex.MapColor,
                         errorMask: errorMask,
                         extraByte: true));
@@ -888,7 +888,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "WNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Worldspace_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Region_FieldIndex.Worldspace,
                         errorMask: errorMask));
                     return TryGet<Region_FieldIndex?>.Succeed(Region_FieldIndex.Worldspace);
@@ -913,7 +913,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "RDAT":
                     try
                     {
-                        using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
+                        using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
                         {
                             FillBinary_RegionAreaLogic_Custom(
                                 frame: subFrame,

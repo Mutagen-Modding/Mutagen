@@ -661,7 +661,7 @@ namespace Mutagen.Bethesda.Oblivion
                     if (lastParsed.HasValue && lastParsed.Value >= MapMarker_FieldIndex.Flags) return TryGet<MapMarker_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Flag>.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)MapMarker_FieldIndex.Flags,
                         errorMask: errorMask));
                     return TryGet<MapMarker_FieldIndex?>.Succeed(MapMarker_FieldIndex.Flags);
@@ -669,7 +669,7 @@ namespace Mutagen.Bethesda.Oblivion
                     if (lastParsed.HasValue && lastParsed.Value >= MapMarker_FieldIndex.Name) return TryGet<MapMarker_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var NametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)MapMarker_FieldIndex.Name,
                         errorMask: errorMask);
                     item._Name.SetIfSucceeded(NametryGet);
@@ -678,14 +678,14 @@ namespace Mutagen.Bethesda.Oblivion
                     if (lastParsed.HasValue && lastParsed.Value >= MapMarker_FieldIndex.Types) return TryGet<MapMarker_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var TypestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<MapMarker.Type, Exception>.Instance.ParseRepeatedItem(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)MapMarker_FieldIndex.Types,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {
                             return Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Type>.Instance.Parse(
-                                frame: r.Spawn(new ContentLength(2)),
+                                frame: r.SpawnWithLength(new ContentLength(2)),
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }

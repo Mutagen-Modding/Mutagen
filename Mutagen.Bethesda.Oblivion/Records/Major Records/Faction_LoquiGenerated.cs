@@ -722,14 +722,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Faction_FieldIndex.Flags,
                         errorMask: errorMask));
                     return TryGet<Faction_FieldIndex?>.Succeed(Faction_FieldIndex.Flags);
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._CrimeGoldMultiplier.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Faction_FieldIndex.CrimeGoldMultiplier,
                         errorMask: errorMask));
                     return TryGet<Faction_FieldIndex?>.Succeed(Faction_FieldIndex.CrimeGoldMultiplier);

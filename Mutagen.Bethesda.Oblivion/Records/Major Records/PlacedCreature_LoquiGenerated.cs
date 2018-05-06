@@ -797,28 +797,28 @@ namespace Mutagen.Bethesda.Oblivion
                 case "NAME":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Base_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedCreature_FieldIndex.Base,
                         errorMask: errorMask));
                     return TryGet<PlacedCreature_FieldIndex?>.Succeed(PlacedCreature_FieldIndex.Base);
                 case "XOWN":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Owner_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedCreature_FieldIndex.Owner,
                         errorMask: errorMask));
                     return TryGet<PlacedCreature_FieldIndex?>.Succeed(PlacedCreature_FieldIndex.Owner);
                 case "XRNK":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._FactionRank.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedCreature_FieldIndex.FactionRank,
                         errorMask: errorMask));
                     return TryGet<PlacedCreature_FieldIndex?>.Succeed(PlacedCreature_FieldIndex.FactionRank);
                 case "XGLB":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.GlobalVariable_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedCreature_FieldIndex.GlobalVariable,
                         errorMask: errorMask));
                     return TryGet<PlacedCreature_FieldIndex?>.Succeed(PlacedCreature_FieldIndex.GlobalVariable);
@@ -831,7 +831,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "XRGD":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var RagdollDatatryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedCreature_FieldIndex.RagdollData,
                         errorMask: errorMask);
                     item._RagdollData.SetIfSucceeded(RagdollDatatryGet);
@@ -839,13 +839,13 @@ namespace Mutagen.Bethesda.Oblivion
                 case "XSCL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Scale.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedCreature_FieldIndex.Scale,
                         errorMask: errorMask));
                     return TryGet<PlacedCreature_FieldIndex?>.Succeed(PlacedCreature_FieldIndex.Scale);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._Position.SetIfSucceeded(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,

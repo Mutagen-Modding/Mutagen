@@ -697,10 +697,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "SPIT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._Type.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellType>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
                             fieldIndex: (int)SpellUnleveled_FieldIndex.Type,
                             errorMask: errorMask));
                         item._Cost.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
@@ -708,11 +708,11 @@ namespace Mutagen.Bethesda.Oblivion
                             fieldIndex: (int)SpellUnleveled_FieldIndex.Cost,
                             errorMask: errorMask));
                         item._Level.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellLevel>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
                             fieldIndex: (int)SpellUnleveled_FieldIndex.Level,
                             errorMask: errorMask));
                         item._Flag.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellFlag>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
                             fieldIndex: (int)SpellUnleveled_FieldIndex.Flag,
                             errorMask: errorMask));
                     }

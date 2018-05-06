@@ -884,37 +884,37 @@ namespace Mutagen.Bethesda.Oblivion
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Weapon_FieldIndex.Icon,
                         errorMask: errorMask));
                     return TryGet<Weapon_FieldIndex?>.Succeed(Weapon_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Weapon_FieldIndex.Script,
                         errorMask: errorMask));
                     return TryGet<Weapon_FieldIndex?>.Succeed(Weapon_FieldIndex.Script);
                 case "ENAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Enchantment_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Weapon_FieldIndex.Enchantment,
                         errorMask: errorMask));
                     return TryGet<Weapon_FieldIndex?>.Succeed(Weapon_FieldIndex.Enchantment);
                 case "ANAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._EnchantmentPoints.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Weapon_FieldIndex.EnchantmentPoints,
                         errorMask: errorMask));
                     return TryGet<Weapon_FieldIndex?>.Succeed(Weapon_FieldIndex.EnchantmentPoints);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._Type.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weapon.WeaponType>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
                             fieldIndex: (int)Weapon_FieldIndex.Type,
                             errorMask: errorMask));
                         item._Speed.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
@@ -926,7 +926,7 @@ namespace Mutagen.Bethesda.Oblivion
                             fieldIndex: (int)Weapon_FieldIndex.Reach,
                             errorMask: errorMask));
                         item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weapon.WeaponFlag>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
                             fieldIndex: (int)Weapon_FieldIndex.Flags,
                             errorMask: errorMask));
                         item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(

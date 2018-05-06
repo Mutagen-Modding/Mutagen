@@ -595,7 +595,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<ClassTraining_ErrorMask> errorMask)
         {
             item._TrainedSkill.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
-                frame: frame.Spawn(new ContentLength(1)),
+                frame: frame.SpawnWithLength(new ContentLength(1)),
                 fieldIndex: (int)ClassTraining_FieldIndex.TrainedSkill,
                 errorMask: errorMask));
             item._MaximumTrainingLevel.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
@@ -603,7 +603,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fieldIndex: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
                 errorMask: errorMask));
             var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(new ContentLength(2)),
+                frame: frame.SpawnWithLength(new ContentLength(2)),
                 fieldIndex: (int)ClassTraining_FieldIndex.Fluff,
                 errorMask: errorMask);
             item._Fluff.SetIfSucceeded(FlufftryGet);

@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "RDOT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var ObjectstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionDataObject, MaskItem<Exception, RegionDataObject_ErrorMask>>.Instance.ParseRepeatedItem(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)RegionDataObjects_FieldIndex.Objects,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,

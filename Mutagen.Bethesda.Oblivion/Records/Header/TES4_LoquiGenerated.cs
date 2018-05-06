@@ -732,7 +732,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new TES4();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseRecord(
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
                     frame.Reader,
                     TES4_Registration.TES4_HEADER));
                 using (frame)
@@ -766,7 +766,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<TES4_ErrorMask> errorMask)
         {
             var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(new ContentLength(12)),
+                frame: frame.SpawnWithLength(new ContentLength(12)),
                 fieldIndex: (int)TES4_FieldIndex.Fluff,
                 errorMask: errorMask);
             item._Fluff.SetIfSucceeded(FlufftryGet);
@@ -793,7 +793,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "OFST":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var TypeOffsetstryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
                         errorMask: errorMask);
                     item._TypeOffsets.SetIfSucceeded(TypeOffsetstryGet);
@@ -801,7 +801,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "DELE":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var DeletedtryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)TES4_FieldIndex.Deleted,
                         errorMask: errorMask);
                     item._Deleted.SetIfSucceeded(DeletedtryGet);
@@ -809,7 +809,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var AuthortryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)TES4_FieldIndex.Author,
                         errorMask: errorMask);
                     item._Author.SetIfSucceeded(AuthortryGet);
@@ -817,7 +817,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var DescriptiontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)TES4_FieldIndex.Description,
                         errorMask: errorMask);
                     item._Description.SetIfSucceeded(DescriptiontryGet);

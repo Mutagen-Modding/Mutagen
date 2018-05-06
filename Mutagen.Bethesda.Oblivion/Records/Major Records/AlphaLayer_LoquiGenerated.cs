@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "VTXT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var AlphaLayerDatatryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)AlphaLayer_FieldIndex.AlphaLayerData,
                         errorMask: errorMask);
                     item._AlphaLayerData.SetIfSucceeded(AlphaLayerDatatryGet);

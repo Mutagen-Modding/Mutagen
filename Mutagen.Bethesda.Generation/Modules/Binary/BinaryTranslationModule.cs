@@ -294,7 +294,7 @@ namespace Mutagen.Bethesda.Generation
                                         if (obj.TryGetRecordType(out var recType))
                                         {
                                             using (var args = new ArgsWrapper(fg,
-                                                $"frame = frame.Spawn({nameof(HeaderTranslation)}.ParseSubrecord",
+                                                $"frame = frame.SpawnWithFinalPosition({nameof(HeaderTranslation)}.ParseSubrecord",
                                                 suffixLine: ")"))
                                             {
                                                 args.Add("frame.Reader");
@@ -304,7 +304,7 @@ namespace Mutagen.Bethesda.Generation
                                         break;
                                     case ObjectType.Record:
                                         using (var args = new ArgsWrapper(fg,
-                                            $"frame = frame.Spawn({nameof(HeaderTranslation)}.ParseRecord",
+                                            $"frame = frame.SpawnWithFinalPosition({nameof(HeaderTranslation)}.ParseRecord",
                                             suffixLine: ")"))
                                         {
                                             args.Add("frame.Reader");
@@ -313,7 +313,7 @@ namespace Mutagen.Bethesda.Generation
                                         break;
                                     case ObjectType.Group:
                                         using (var args = new ArgsWrapper(fg,
-                                            $"frame = frame.Spawn({nameof(HeaderTranslation)}.ParseGroup",
+                                            $"frame = frame.SpawnWithFinalPosition({nameof(HeaderTranslation)}.ParseGroup",
                                             suffixLine: ")"))
                                         {
                                             args.Add("frame.Reader");
@@ -806,7 +806,7 @@ namespace Mutagen.Bethesda.Generation
             if (field is DataType set)
             {
                 fg.AppendLine($"{frameAccessor}.Position += Constants.SUBRECORD_LENGTH;");
-                fg.AppendLine($"using (var dataFrame = {frameAccessor}.Spawn(contentLength))");
+                fg.AppendLine($"using (var dataFrame = {frameAccessor}.SpawnWithLength(contentLength))");
                 using (new BraceWrapper(fg))
                 {
                     bool isInRange = false;

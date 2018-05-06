@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda
             var ret = new ListGroup<T>();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseGroup(frame.Reader));
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseGroup(frame.Reader));
                 using (frame)
                 {
                     Fill_Binary_Structs(
@@ -690,11 +690,11 @@ namespace Mutagen.Bethesda
                 errorMask().Overall = ex;
             }
             item._GroupType.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
-                frame: frame.Spawn(new ContentLength(4)),
+                frame: frame.SpawnWithLength(new ContentLength(4)),
                 fieldIndex: (int)ListGroup_FieldIndex.GroupType,
                 errorMask: errorMask));
             var LastModifiedtryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(new ContentLength(4)),
+                frame: frame.SpawnWithLength(new ContentLength(4)),
                 fieldIndex: (int)ListGroup_FieldIndex.LastModified,
                 errorMask: errorMask);
             item._LastModified.SetIfSucceeded(LastModifiedtryGet);

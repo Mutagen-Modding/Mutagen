@@ -759,14 +759,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SigilStone_FieldIndex.Icon,
                         errorMask: errorMask));
                     return TryGet<SigilStone_FieldIndex?>.Succeed(SigilStone_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SigilStone_FieldIndex.Script,
                         errorMask: errorMask));
                     return TryGet<SigilStone_FieldIndex?>.Succeed(SigilStone_FieldIndex.Script);
@@ -789,7 +789,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<SigilStone_FieldIndex?>.Succeed(SigilStone_FieldIndex.Effects);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._Uses.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,

@@ -623,7 +623,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "PGRP":
                     try
                     {
-                        using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
+                        using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
                         {
                             FillBinary_Points_Custom(
                                 frame: subFrame,

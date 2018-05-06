@@ -596,7 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "RDMP":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var MapNametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)RegionDataMapName_FieldIndex.MapName,
                         errorMask: errorMask);
                     item._MapName.SetIfSucceeded(MapNametryGet);

@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new EnableParent();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
                     EnableParent_Registration.XESP_HEADER));
                 using (frame)
@@ -585,7 +585,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fieldIndex: (int)EnableParent_FieldIndex.Reference,
                 errorMask: errorMask));
             item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<EnableParent.Flag>.Instance.Parse(
-                frame: frame.Spawn(new ContentLength(4)),
+                frame: frame.SpawnWithLength(new ContentLength(4)),
                 fieldIndex: (int)EnableParent_FieldIndex.Flags,
                 errorMask: errorMask));
         }

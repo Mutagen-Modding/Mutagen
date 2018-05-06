@@ -1048,7 +1048,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "WLST":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var WeatherstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherChance, MaskItem<Exception, WeatherChance_ErrorMask>>.Instance.ParseRepeatedItem(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Climate_FieldIndex.Weathers,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
@@ -1065,14 +1065,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._SunTexture.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Climate_FieldIndex.SunTexture,
                         errorMask: errorMask));
                     return TryGet<Climate_FieldIndex?>.Succeed(Climate_FieldIndex.SunTexture);
                 case "GNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._SunGlareTexture.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Climate_FieldIndex.SunGlareTexture,
                         errorMask: errorMask));
                     return TryGet<Climate_FieldIndex?>.Succeed(Climate_FieldIndex.SunGlareTexture);
@@ -1084,7 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Climate_FieldIndex?>.Succeed(Climate_FieldIndex.Model);
                 case "TNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         try
                         {

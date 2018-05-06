@@ -822,49 +822,49 @@ namespace Mutagen.Bethesda.Oblivion
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Book_FieldIndex.Icon,
                         errorMask: errorMask));
                     return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Book_FieldIndex.Script,
                         errorMask: errorMask));
                     return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.Script);
                 case "ENAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Enchantment_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Book_FieldIndex.Enchantment,
                         errorMask: errorMask));
                     return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.Enchantment);
                 case "ANAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._EnchantmentPoints.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Book_FieldIndex.EnchantmentPoints,
                         errorMask: errorMask));
                     return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.EnchantmentPoints);
                 case "DESC":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var DescriptiontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Book_FieldIndex.Description,
                         errorMask: errorMask);
                     item._Description.SetIfSucceeded(DescriptiontryGet);
                     return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.Description);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Book.BookFlag>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(1)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(1)),
                             fieldIndex: (int)Book_FieldIndex.Flags,
                             errorMask: errorMask));
                         item._Teaches.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(1)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(1)),
                             fieldIndex: (int)Book_FieldIndex.Teaches,
                             errorMask: errorMask));
                         item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(

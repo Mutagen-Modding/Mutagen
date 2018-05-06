@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "RDWT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var WeatherstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherChance, MaskItem<Exception, WeatherChance_ErrorMask>>.Instance.ParseRepeatedItem(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)RegionDataWeather_FieldIndex.Weathers,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,

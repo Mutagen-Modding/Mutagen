@@ -885,14 +885,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Tree_FieldIndex.Icon,
                         errorMask: errorMask));
                     return TryGet<Tree_FieldIndex?>.Succeed(Tree_FieldIndex.Icon);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var SpeedTreeSeedstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32, Exception>.Instance.ParseRepeatedItem(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Tree_FieldIndex.SpeedTreeSeeds,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
@@ -908,7 +908,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Tree_FieldIndex?>.Succeed(Tree_FieldIndex.SpeedTreeSeeds);
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._LeafCurvature.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
@@ -946,7 +946,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Tree_FieldIndex?>.Succeed(Tree_FieldIndex.RustleSpeed);
                 case "BNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._BillboardWidth.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,

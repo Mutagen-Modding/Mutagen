@@ -548,7 +548,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new RaceHair();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
                     RaceHair_Registration.DNAM_HEADER));
                 using (frame)

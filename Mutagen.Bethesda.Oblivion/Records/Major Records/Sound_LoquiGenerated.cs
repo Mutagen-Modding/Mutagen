@@ -607,7 +607,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._File.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Sound_FieldIndex.File,
                         errorMask: errorMask));
                     return TryGet<Sound_FieldIndex?>.Succeed(Sound_FieldIndex.File);

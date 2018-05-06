@@ -275,14 +275,14 @@ namespace Mutagen.Bethesda
                 case GroupTypeEnum.InteriorCellBlock:
                 case GroupTypeEnum.ExteriorCellBlock:
                     HandleCells(
-                        frame: frame.Spawn(recLength),
+                        frame: frame.SpawnWithLength(recLength),
                         fileLocs: fileLocs,
                         parentGroupLocations: grupLoc.And(parentGroupLocations),
                         interest: interest);
                     break;
                 case GroupTypeEnum.CellChildren:
                     HandleCellSubchildren(
-                        frame: frame.Spawn(recLength),
+                        frame: frame.SpawnWithLength(recLength),
                         fileLocs: fileLocs,
                         parentGroupLocations: grupLoc.And(parentGroupLocations),
                         interest: interest);

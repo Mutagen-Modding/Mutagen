@@ -74,11 +74,11 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (data.HasTrigger)
                 {
-                    args.Add($"{nodeAccessor}.Spawn(contentLength)");
+                    args.Add($"{nodeAccessor}.SpawnWithLength(contentLength)");
                 }
                 else
                 {
-                    args.Add($"frame: {nodeAccessor}.Spawn(new ContentLength({eType.ByteLength}))");
+                    args.Add($"frame: {nodeAccessor}.SpawnWithLength(new ContentLength({eType.ByteLength}))");
                 }
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 args.Add($"errorMask: {maskAccessor}");
@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor.DirectAccess}{this.Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse"))
             {
-                args.Add($"frame: {nodeAccessor}.Spawn(new ContentLength({eType.ByteLength}))");
+                args.Add($"frame: {nodeAccessor}.SpawnWithLength(new ContentLength({eType.ByteLength}))");
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
             }

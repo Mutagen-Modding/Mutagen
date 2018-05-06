@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (data.HasTrigger)
                 {
-                    args.Add($"frame: {nodeAccessor}.Spawn(contentLength)");
+                    args.Add($"frame: {nodeAccessor}.SpawnWithLength(contentLength)");
                 }
                 else
                 {

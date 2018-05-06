@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda
         {
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseRecord(
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
                     frame.Reader,
                     recType));
                 fillStructs(

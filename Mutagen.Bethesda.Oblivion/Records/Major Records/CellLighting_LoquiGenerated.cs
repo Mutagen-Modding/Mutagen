@@ -719,7 +719,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new CellLighting();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
                     CellLighting_Registration.XCLL_HEADER));
                 using (frame)

@@ -1078,14 +1078,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Cell.Flag>.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Cell_FieldIndex.Flags,
                         errorMask: errorMask));
                     return TryGet<Cell_FieldIndex?>.Succeed(Cell_FieldIndex.Flags);
                 case "XCLC":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Grid.SetIfSucceeded(Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Cell_FieldIndex.Grid,
                         errorMask: errorMask));
                     return TryGet<Cell_FieldIndex?>.Succeed(Cell_FieldIndex.Grid);
@@ -1098,7 +1098,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "XCLR":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var RegionstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Region>, Exception>.Instance.ParseRepeatedItem(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Cell_FieldIndex.Regions,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
@@ -1115,49 +1115,49 @@ namespace Mutagen.Bethesda.Oblivion
                 case "XCMT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._MusicType.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Cell_FieldIndex.MusicType,
                         errorMask: errorMask));
                     return TryGet<Cell_FieldIndex?>.Succeed(Cell_FieldIndex.MusicType);
                 case "XCLW":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._WaterHeight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Cell_FieldIndex.WaterHeight,
                         errorMask: errorMask));
                     return TryGet<Cell_FieldIndex?>.Succeed(Cell_FieldIndex.WaterHeight);
                 case "XCCM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Climate_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Cell_FieldIndex.Climate,
                         errorMask: errorMask));
                     return TryGet<Cell_FieldIndex?>.Succeed(Cell_FieldIndex.Climate);
                 case "XCWT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Water_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Cell_FieldIndex.Water,
                         errorMask: errorMask));
                     return TryGet<Cell_FieldIndex?>.Succeed(Cell_FieldIndex.Water);
                 case "XOWN":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Owner_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Cell_FieldIndex.Owner,
                         errorMask: errorMask));
                     return TryGet<Cell_FieldIndex?>.Succeed(Cell_FieldIndex.Owner);
                 case "XRNK":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._FactionRank.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Cell_FieldIndex.FactionRank,
                         errorMask: errorMask));
                     return TryGet<Cell_FieldIndex?>.Succeed(Cell_FieldIndex.FactionRank);
                 case "XGLB":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.GlobalVariable_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Cell_FieldIndex.GlobalVariable,
                         errorMask: errorMask));
                     return TryGet<Cell_FieldIndex?>.Succeed(Cell_FieldIndex.GlobalVariable);

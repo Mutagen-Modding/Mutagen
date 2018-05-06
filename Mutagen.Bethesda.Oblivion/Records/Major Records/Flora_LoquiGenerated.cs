@@ -730,20 +730,20 @@ namespace Mutagen.Bethesda.Oblivion
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Flora_FieldIndex.Script,
                         errorMask: errorMask));
                     return TryGet<Flora_FieldIndex?>.Succeed(Flora_FieldIndex.Script);
                 case "PFIG":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Ingredient_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Flora_FieldIndex.Ingredient,
                         errorMask: errorMask));
                     return TryGet<Flora_FieldIndex?>.Succeed(Flora_FieldIndex.Ingredient);
                 case "PFPC":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._Spring.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,

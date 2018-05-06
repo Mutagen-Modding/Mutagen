@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new SoundData();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
                     SoundData_Registration.SNDD_HEADER));
                 using (frame)
@@ -722,7 +722,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask));
             frame.Position += 1;
             item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoundData.Flag>.Instance.Parse(
-                frame: frame.Spawn(new ContentLength(4)),
+                frame: frame.SpawnWithLength(new ContentLength(4)),
                 fieldIndex: (int)SoundData_FieldIndex.Flags,
                 errorMask: errorMask));
         }

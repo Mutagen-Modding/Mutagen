@@ -60,11 +60,11 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (data.HasTrigger)
                 {
-                    args.Add($"{nodeAccessor}.Spawn(contentLength)");
+                    args.Add($"{nodeAccessor}.SpawnWithLength(contentLength)");
                 }
                 else
                 {
-                    args.Add($"frame: {nodeAccessor}.Spawn(new ContentLength({data.Length.Value}))");
+                    args.Add($"frame: {nodeAccessor}.SpawnWithLength(new ContentLength({data.Length.Value}))");
                 }
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 args.Add($"errorMask: {maskAccessor}");

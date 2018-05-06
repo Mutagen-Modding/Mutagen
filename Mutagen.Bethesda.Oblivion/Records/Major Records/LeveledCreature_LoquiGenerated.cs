@@ -710,14 +710,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "LVLD":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._ChanceNone.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)LeveledCreature_FieldIndex.ChanceNone,
                         errorMask: errorMask));
                     return TryGet<LeveledCreature_FieldIndex?>.Succeed(LeveledCreature_FieldIndex.ChanceNone);
                 case "LVLF":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<LeveledFlag>.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)LeveledCreature_FieldIndex.Flags,
                         errorMask: errorMask));
                     return TryGet<LeveledCreature_FieldIndex?>.Succeed(LeveledCreature_FieldIndex.Flags);
@@ -741,14 +741,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)LeveledCreature_FieldIndex.Script,
                         errorMask: errorMask));
                     return TryGet<LeveledCreature_FieldIndex?>.Succeed(LeveledCreature_FieldIndex.Script);
                 case "TNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Template_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)LeveledCreature_FieldIndex.Template,
                         errorMask: errorMask));
                     return TryGet<LeveledCreature_FieldIndex?>.Succeed(LeveledCreature_FieldIndex.Template);

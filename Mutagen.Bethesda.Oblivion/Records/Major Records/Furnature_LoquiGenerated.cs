@@ -646,14 +646,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Furnature_FieldIndex.Script,
                         errorMask: errorMask));
                     return TryGet<Furnature_FieldIndex?>.Succeed(Furnature_FieldIndex.Script);
                 case "MNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var MarkerFlagstryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Furnature_FieldIndex.MarkerFlags,
                         errorMask: errorMask);
                     item._MarkerFlags.SetIfSucceeded(MarkerFlagstryGet);

@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new ScriptMetaSummary();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
                     ScriptMetaSummary_Registration.SCHR_HEADER));
                 using (frame)
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<ScriptMetaSummary_ErrorMask> errorMask)
         {
             var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(new ContentLength(4)),
+                frame: frame.SpawnWithLength(new ContentLength(4)),
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.Fluff,
                 errorMask: errorMask);
             item._Fluff.SetIfSucceeded(FlufftryGet);
@@ -708,7 +708,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
                 errorMask: errorMask));
             item._Type.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Script.ScriptType>.Instance.Parse(
-                frame: frame.Spawn(new ContentLength(4)),
+                frame: frame.SpawnWithLength(new ContentLength(4)),
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.Type,
                 errorMask: errorMask));
         }

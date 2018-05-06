@@ -618,7 +618,7 @@ namespace Mutagen.Bethesda
                     if (lastParsed.HasValue && lastParsed.Value >= MasterReference_FieldIndex.Master) return TryGet<MasterReference_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var MastertryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)MasterReference_FieldIndex.Master,
                         errorMask: errorMask);
                     item._Master.SetIfSucceeded(MastertryGet);
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda
                     if (lastParsed.HasValue && lastParsed.Value >= MasterReference_FieldIndex.FileSize) return TryGet<MasterReference_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._FileSize.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)MasterReference_FieldIndex.FileSize,
                         errorMask: errorMask));
                     return TryGet<MasterReference_FieldIndex?>.Succeed(MasterReference_FieldIndex.FileSize);

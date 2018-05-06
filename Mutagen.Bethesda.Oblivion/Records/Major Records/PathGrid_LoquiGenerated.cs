@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "DATA":
                     try
                     {
-                        using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
+                        using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
                         {
                             FillBinary_PointToPointConnections_Custom(
                                 frame: subFrame,
@@ -798,7 +798,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "PGAG":
                     try
                     {
-                        using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
+                        using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
                         {
                             FillBinary_Unknown_Custom(
                                 frame: subFrame,
@@ -816,7 +816,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "PGRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var InterCellConnectionstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<InterCellPoint, MaskItem<Exception, InterCellPoint_ErrorMask>>.Instance.ParseRepeatedItem(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PathGrid_FieldIndex.InterCellConnections,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,

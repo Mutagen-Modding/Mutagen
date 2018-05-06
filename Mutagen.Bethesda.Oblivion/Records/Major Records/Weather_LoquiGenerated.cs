@@ -1447,14 +1447,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._TextureLowerLayer.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Weather_FieldIndex.TextureLowerLayer,
                         errorMask: errorMask));
                     return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.TextureLowerLayer);
                 case "DNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._TextureUpperLayer.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Weather_FieldIndex.TextureUpperLayer,
                         errorMask: errorMask));
                     return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.TextureUpperLayer);
@@ -1467,7 +1467,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "NAM0":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var WeatherTypestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType, MaskItem<Exception, WeatherType_ErrorMask>>.Instance.ParseRepeatedItem(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Weather_FieldIndex.WeatherTypes,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
@@ -1483,7 +1483,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.WeatherTypes);
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._FogDayNear.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
@@ -1505,7 +1505,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.FogNightFar);
                 case "HNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._HdrEyeAdaptSpeed.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
@@ -1567,7 +1567,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.HdrTreeDimmer);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._WindSpeed.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
@@ -1614,7 +1614,7 @@ namespace Mutagen.Bethesda.Oblivion
                             fieldIndex: (int)Weather_FieldIndex.ThunderLightningFrequency,
                             errorMask: errorMask));
                         item._Classification.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(1)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(1)),
                             fieldIndex: (int)Weather_FieldIndex.Classification,
                             errorMask: errorMask));
                         item._LightningColor.SetIfSucceeded(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(

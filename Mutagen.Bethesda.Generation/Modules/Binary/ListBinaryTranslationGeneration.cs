@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else if (listBinaryType == ListBinaryType.Trigger)
                 {
-                    args.Add($"frame: frame.Spawn(contentLength)");
+                    args.Add($"frame: frame.SpawnWithLength(contentLength)");
                 }
                 else if (listBinaryType == ListBinaryType.Frame)
                 {

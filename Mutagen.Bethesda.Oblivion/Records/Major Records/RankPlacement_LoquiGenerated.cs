@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new RankPlacement();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
                     RankPlacement_Registration.SNAM_HEADER));
                 using (frame)
@@ -610,7 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fieldIndex: (int)RankPlacement_FieldIndex.Rank,
                 errorMask: errorMask));
             var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(new ContentLength(3)),
+                frame: frame.SpawnWithLength(new ContentLength(3)),
                 fieldIndex: (int)RankPlacement_FieldIndex.Fluff,
                 errorMask: errorMask);
             item._Fluff.SetIfSucceeded(FlufftryGet);

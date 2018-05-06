@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (data.HasTrigger)
                 {
-                    fg.AppendLine($"using (var subFrame = {frameAccessor}.Spawn(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))");
+                    fg.AppendLine($"using (var subFrame = {frameAccessor}.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))");
                 }
                 using (new BraceWrapper(fg, doIt: data.HasTrigger))
                 {

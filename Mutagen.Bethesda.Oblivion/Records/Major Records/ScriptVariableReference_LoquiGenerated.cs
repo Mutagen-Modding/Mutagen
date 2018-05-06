@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
                     if (lastParsed.HasValue && lastParsed.Value >= ScriptVariableReference_FieldIndex.VariableIndex) return TryGet<ScriptVariableReference_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._VariableIndex.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)ScriptVariableReference_FieldIndex.VariableIndex,
                         errorMask: errorMask));
                     return TryGet<ScriptVariableReference_FieldIndex?>.Succeed(ScriptVariableReference_FieldIndex.VariableIndex);

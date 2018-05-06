@@ -625,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
                     if (lastParsed.HasValue && lastParsed.Value >= LocalVariable_FieldIndex.Name) return TryGet<LocalVariable_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var NametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)LocalVariable_FieldIndex.Name,
                         errorMask: errorMask);
                     item._Name.SetIfSucceeded(NametryGet);

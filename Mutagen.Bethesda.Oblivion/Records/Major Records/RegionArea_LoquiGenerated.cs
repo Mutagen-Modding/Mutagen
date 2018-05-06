@@ -631,7 +631,7 @@ namespace Mutagen.Bethesda.Oblivion
                     if (lastParsed.HasValue && lastParsed.Value >= RegionArea_FieldIndex.EdgeFallOff) return TryGet<RegionArea_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._EdgeFallOff.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)RegionArea_FieldIndex.EdgeFallOff,
                         errorMask: errorMask));
                     return TryGet<RegionArea_FieldIndex?>.Succeed(RegionArea_FieldIndex.EdgeFallOff);
@@ -639,7 +639,7 @@ namespace Mutagen.Bethesda.Oblivion
                     if (lastParsed.HasValue && lastParsed.Value >= RegionArea_FieldIndex.RegionPoints) return TryGet<RegionArea_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var RegionPointstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Float, Exception>.Instance.ParseRepeatedItem(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)RegionArea_FieldIndex.RegionPoints,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,

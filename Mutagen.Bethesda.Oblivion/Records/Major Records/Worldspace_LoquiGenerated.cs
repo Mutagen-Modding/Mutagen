@@ -1004,27 +1004,27 @@ namespace Mutagen.Bethesda.Oblivion
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Climate_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Worldspace_FieldIndex.Climate,
                         errorMask: errorMask));
                     return TryGet<Worldspace_FieldIndex?>.Succeed(Worldspace_FieldIndex.Climate);
                 case "NAM2":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Water_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Worldspace_FieldIndex.Water,
                         errorMask: errorMask));
                     return TryGet<Worldspace_FieldIndex?>.Succeed(Worldspace_FieldIndex.Water);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Worldspace_FieldIndex.Icon,
                         errorMask: errorMask));
                     return TryGet<Worldspace_FieldIndex?>.Succeed(Worldspace_FieldIndex.Icon);
                 case "MNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._UsableDimensions.SetIfSucceeded(Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
@@ -1043,35 +1043,35 @@ namespace Mutagen.Bethesda.Oblivion
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Worldspace.Flag>.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Worldspace_FieldIndex.Flags,
                         errorMask: errorMask));
                     return TryGet<Worldspace_FieldIndex?>.Succeed(Worldspace_FieldIndex.Flags);
                 case "NAM0":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._ObjectBoundsMin.SetIfSucceeded(Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMin,
                         errorMask: errorMask));
                     return TryGet<Worldspace_FieldIndex?>.Succeed(Worldspace_FieldIndex.ObjectBoundsMin);
                 case "NAM9":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._ObjectBoundsMax.SetIfSucceeded(Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMax,
                         errorMask: errorMask));
                     return TryGet<Worldspace_FieldIndex?>.Succeed(Worldspace_FieldIndex.ObjectBoundsMax);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Music.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Worldspace_FieldIndex.Music,
                         errorMask: errorMask));
                     return TryGet<Worldspace_FieldIndex?>.Succeed(Worldspace_FieldIndex.Music);
                 case "XXXX":
                     try
                     {
-                        using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
+                        using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
                         {
                             FillBinary_OffsetLength_Custom(
                                 frame: subFrame,

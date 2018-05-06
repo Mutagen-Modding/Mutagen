@@ -627,14 +627,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "BTXT":
                     if (lastParsed.HasValue && lastParsed.Value >= BaseLayer_FieldIndex.LayerNumber) return TryGet<BaseLayer_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item.Texture_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)BaseLayer_FieldIndex.Texture,
                             errorMask: errorMask));
                         item._Quadrant.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(2)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(2)),
                             fieldIndex: (int)BaseLayer_FieldIndex.Quadrant,
                             errorMask: errorMask));
                         item._LayerNumber.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(

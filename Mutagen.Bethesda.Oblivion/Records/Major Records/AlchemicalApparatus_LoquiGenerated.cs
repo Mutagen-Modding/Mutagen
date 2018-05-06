@@ -735,23 +735,23 @@ namespace Mutagen.Bethesda.Oblivion
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)AlchemicalApparatus_FieldIndex.Icon,
                         errorMask: errorMask));
                     return TryGet<AlchemicalApparatus_FieldIndex?>.Succeed(AlchemicalApparatus_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)AlchemicalApparatus_FieldIndex.Script,
                         errorMask: errorMask));
                     return TryGet<AlchemicalApparatus_FieldIndex?>.Succeed(AlchemicalApparatus_FieldIndex.Script);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._Type.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlchemicalApparatus.ApparatusType>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(1)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(1)),
                             fieldIndex: (int)AlchemicalApparatus_FieldIndex.Type,
                             errorMask: errorMask));
                         item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(

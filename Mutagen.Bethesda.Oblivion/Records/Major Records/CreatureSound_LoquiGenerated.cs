@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Oblivion
                     if (lastParsed.HasValue && lastParsed.Value >= CreatureSound_FieldIndex.SoundType) return TryGet<CreatureSound_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._SoundType.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)CreatureSound_FieldIndex.SoundType,
                         errorMask: errorMask));
                     return TryGet<CreatureSound_FieldIndex?>.Succeed(CreatureSound_FieldIndex.SoundType);

@@ -352,7 +352,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "FNAM":
                     try
                     {
-                        using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
+                        using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
                         {
                             FillBinary_TypeChar_Custom(
                                 frame: subFrame,
@@ -370,7 +370,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "FLTV":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._RawFloat.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Global_FieldIndex.RawFloat,
                         errorMask: errorMask));
                     return TryGet<Global_FieldIndex?>.Succeed(Global_FieldIndex.RawFloat);

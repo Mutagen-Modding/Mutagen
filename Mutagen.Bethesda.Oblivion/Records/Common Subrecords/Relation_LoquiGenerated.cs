@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new Relation();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
                     Relation_Registration.XNAM_HEADER));
                 using (frame)

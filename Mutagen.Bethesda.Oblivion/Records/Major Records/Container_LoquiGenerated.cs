@@ -753,7 +753,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Container_FieldIndex.Script,
                         errorMask: errorMask));
                     return TryGet<Container_FieldIndex?>.Succeed(Container_FieldIndex.Script);
@@ -776,10 +776,10 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Container_FieldIndex?>.Succeed(Container_FieldIndex.Items);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Container.ContainerFlag>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(1)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(1)),
                             fieldIndex: (int)Container_FieldIndex.Flags,
                             errorMask: errorMask));
                         item._Weight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
@@ -791,14 +791,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.OpenSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Container_FieldIndex.OpenSound,
                         errorMask: errorMask));
                     return TryGet<Container_FieldIndex?>.Succeed(Container_FieldIndex.OpenSound);
                 case "QNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.CloseSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Container_FieldIndex.CloseSound,
                         errorMask: errorMask));
                     return TryGet<Container_FieldIndex?>.Succeed(Container_FieldIndex.CloseSound);

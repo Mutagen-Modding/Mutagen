@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Oblivion
                 return;
             }
             uint ptCount;
-            using (var subFrame = frame.Spawn(len))
+            using (var subFrame = frame.SpawnWithLength(len))
             {
                 ptCount = frame.Reader.ReadUInt16();
             }
@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (nextRec.Type)
                 {
                     case "PGAG":
-                        using (var subFrame = frame.Spawn(len))
+                        using (var subFrame = frame.SpawnWithLength(len))
                         {
                             var UnknowntryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                                subFrame,

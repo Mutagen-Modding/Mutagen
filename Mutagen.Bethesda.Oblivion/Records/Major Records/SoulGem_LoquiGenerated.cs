@@ -753,20 +753,20 @@ namespace Mutagen.Bethesda.Oblivion
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SoulGem_FieldIndex.Icon,
                         errorMask: errorMask));
                     return TryGet<SoulGem_FieldIndex?>.Succeed(SoulGem_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SoulGem_FieldIndex.Script,
                         errorMask: errorMask));
                     return TryGet<SoulGem_FieldIndex?>.Succeed(SoulGem_FieldIndex.Script);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
@@ -781,14 +781,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "SOUL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._ContainedSoul.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SoulGem_FieldIndex.ContainedSoul,
                         errorMask: errorMask));
                     return TryGet<SoulGem_FieldIndex?>.Succeed(SoulGem_FieldIndex.ContainedSoul);
                 case "SLCP":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._MaximumCapacity.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SoulGem_FieldIndex.MaximumCapacity,
                         errorMask: errorMask));
                     return TryGet<SoulGem_FieldIndex?>.Succeed(SoulGem_FieldIndex.MaximumCapacity);

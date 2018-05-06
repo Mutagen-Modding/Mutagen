@@ -707,7 +707,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "SCIT":
                     if (lastParsed.HasValue && lastParsed.Value >= ScriptEffect_FieldIndex.Flags) return TryGet<ScriptEffect_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
@@ -719,7 +719,7 @@ namespace Mutagen.Bethesda.Oblivion
                             return TryGet<ScriptEffect_FieldIndex?>.Succeed(ScriptEffect_FieldIndex.Script);
                         }
                         item._MagicSchool.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
                             fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
                             errorMask: errorMask));
                         item.VisualEffect_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
@@ -732,7 +732,7 @@ namespace Mutagen.Bethesda.Oblivion
                             return TryGet<ScriptEffect_FieldIndex?>.Succeed(ScriptEffect_FieldIndex.VisualEffect);
                         }
                         item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            frame: dataFrame.SpawnWithLength(new ContentLength(4)),
                             fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
                             errorMask: errorMask));
                     }
@@ -740,7 +740,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "FULL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var NametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)ScriptEffect_FieldIndex.Name,
                         errorMask: errorMask);
                     item._Name.SetIfSucceeded(NametryGet);

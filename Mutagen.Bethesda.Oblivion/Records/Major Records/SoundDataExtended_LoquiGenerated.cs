@@ -684,7 +684,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new SoundDataExtended();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
                     SoundDataExtended_Registration.SNDX_HEADER));
                 using (frame)

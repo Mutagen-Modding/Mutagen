@@ -579,7 +579,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Data.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)GameSettingInt_FieldIndex.Data,
                         errorMask: errorMask));
                     return TryGet<GameSettingInt_FieldIndex?>.Succeed(GameSettingInt_FieldIndex.Data);

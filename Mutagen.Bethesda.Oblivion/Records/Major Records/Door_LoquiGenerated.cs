@@ -757,35 +757,35 @@ namespace Mutagen.Bethesda.Oblivion
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Door_FieldIndex.Script,
                         errorMask: errorMask));
                     return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.Script);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.OpenSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Door_FieldIndex.OpenSound,
                         errorMask: errorMask));
                     return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.OpenSound);
                 case "ANAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.CloseSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Door_FieldIndex.CloseSound,
                         errorMask: errorMask));
                     return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.CloseSound);
                 case "BNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.LoopSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Door_FieldIndex.LoopSound,
                         errorMask: errorMask));
                     return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.LoopSound);
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Door.DoorFlag>.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Door_FieldIndex.Flags,
                         errorMask: errorMask));
                     return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.Flags);

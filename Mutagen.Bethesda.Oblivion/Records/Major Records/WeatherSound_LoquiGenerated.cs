@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new WeatherSound();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
                     WeatherSound_Registration.SNAM_HEADER));
                 using (frame)
@@ -585,7 +585,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fieldIndex: (int)WeatherSound_FieldIndex.Sound,
                 errorMask: errorMask));
             item._Type.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<WeatherSound.SoundType>.Instance.Parse(
-                frame: frame.Spawn(new ContentLength(4)),
+                frame: frame.SpawnWithLength(new ContentLength(4)),
                 fieldIndex: (int)WeatherSound_FieldIndex.Type,
                 errorMask: errorMask));
         }

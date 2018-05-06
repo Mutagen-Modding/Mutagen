@@ -608,7 +608,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "RDGS":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var GrassestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Grass>, Exception>.Instance.ParseRepeatedItem(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)RegionDataGrasses_FieldIndex.Grasses,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,

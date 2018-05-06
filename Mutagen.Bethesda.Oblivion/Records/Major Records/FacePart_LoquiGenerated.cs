@@ -649,7 +649,7 @@ namespace Mutagen.Bethesda.Oblivion
                     if (lastParsed.HasValue && lastParsed.Value >= FacePart_FieldIndex.Index) return TryGet<FacePart_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Index.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.FaceIndex>.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)FacePart_FieldIndex.Index,
                         errorMask: errorMask));
                     return TryGet<FacePart_FieldIndex?>.Succeed(FacePart_FieldIndex.Index);
@@ -664,7 +664,7 @@ namespace Mutagen.Bethesda.Oblivion
                     if (lastParsed.HasValue && lastParsed.Value >= FacePart_FieldIndex.Icon) return TryGet<FacePart_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)FacePart_FieldIndex.Icon,
                         errorMask: errorMask));
                     return TryGet<FacePart_FieldIndex?>.Succeed(FacePart_FieldIndex.Icon);

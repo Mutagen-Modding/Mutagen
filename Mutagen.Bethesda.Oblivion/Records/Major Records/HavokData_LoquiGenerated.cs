@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new HavokData();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
                     HavokData_Registration.HNAM_HEADER));
                 using (frame)
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<HavokData_ErrorMask> errorMask)
         {
             item._Material.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<HavokData.MaterialType>.Instance.Parse(
-                frame: frame.Spawn(new ContentLength(1)),
+                frame: frame.SpawnWithLength(new ContentLength(1)),
                 fieldIndex: (int)HavokData_FieldIndex.Material,
                 errorMask: errorMask));
             item._Friction.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(

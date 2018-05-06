@@ -682,14 +682,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "LVLD":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._ChanceNone.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)LeveledItem_FieldIndex.ChanceNone,
                         errorMask: errorMask));
                     return TryGet<LeveledItem_FieldIndex?>.Succeed(LeveledItem_FieldIndex.ChanceNone);
                 case "LVLF":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<LeveledFlag>.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)LeveledItem_FieldIndex.Flags,
                         errorMask: errorMask));
                     return TryGet<LeveledItem_FieldIndex?>.Succeed(LeveledItem_FieldIndex.Flags);

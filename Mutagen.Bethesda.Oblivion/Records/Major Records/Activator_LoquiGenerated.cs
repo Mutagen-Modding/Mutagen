@@ -638,14 +638,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Activator_FieldIndex.Script,
                         errorMask: errorMask));
                     return TryGet<Activator_FieldIndex?>.Succeed(Activator_FieldIndex.Script);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Sound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Activator_FieldIndex.Sound,
                         errorMask: errorMask));
                     return TryGet<Activator_FieldIndex?>.Succeed(Activator_FieldIndex.Sound);

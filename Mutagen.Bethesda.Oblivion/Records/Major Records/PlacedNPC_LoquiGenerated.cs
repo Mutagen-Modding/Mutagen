@@ -795,7 +795,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "NAME":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Base_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedNPC_FieldIndex.Base,
                         errorMask: errorMask));
                     return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.Base);
@@ -814,21 +814,21 @@ namespace Mutagen.Bethesda.Oblivion
                 case "XMRC":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.MerchantContainer_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedNPC_FieldIndex.MerchantContainer,
                         errorMask: errorMask));
                     return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.MerchantContainer);
                 case "XHRS":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Horse_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedNPC_FieldIndex.Horse,
                         errorMask: errorMask));
                     return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.Horse);
                 case "XRGD":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var RagdollDatatryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedNPC_FieldIndex.RagdollData,
                         errorMask: errorMask);
                     item._RagdollData.SetIfSucceeded(RagdollDatatryGet);
@@ -836,13 +836,13 @@ namespace Mutagen.Bethesda.Oblivion
                 case "XSCL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Scale.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedNPC_FieldIndex.Scale,
                         errorMask: errorMask));
                     return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.Scale);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.Spawn(contentLength))
+                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item._Position.SetIfSucceeded(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,

@@ -563,7 +563,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new ItemEntry();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
                     ItemEntry_Registration.CNTO_HEADER));
                 using (frame)

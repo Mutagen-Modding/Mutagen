@@ -752,7 +752,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var UnknowntryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Landscape_FieldIndex.Unknown,
                         errorMask: errorMask);
                     item._Unknown.SetIfSucceeded(UnknowntryGet);
@@ -760,7 +760,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "VNML":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var VertexNormalstryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Landscape_FieldIndex.VertexNormals,
                         errorMask: errorMask);
                     item._VertexNormals.SetIfSucceeded(VertexNormalstryGet);
@@ -768,7 +768,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "VHGT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var VertexHeightMaptryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Landscape_FieldIndex.VertexHeightMap,
                         errorMask: errorMask);
                     item._VertexHeightMap.SetIfSucceeded(VertexHeightMaptryGet);
@@ -776,7 +776,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "VCLR":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var VertexColorstryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame.Spawn(contentLength),
+                        frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Landscape_FieldIndex.VertexColors,
                         errorMask: errorMask);
                     item._VertexColors.SetIfSucceeded(VertexColorstryGet);
@@ -819,7 +819,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "VTEX":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var TexturestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<LandTexture>, Exception>.Instance.ParseRepeatedItem(
-                        frame: frame.Spawn(contentLength),
+                        frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Landscape_FieldIndex.Textures,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,

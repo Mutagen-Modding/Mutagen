@@ -548,7 +548,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new RaceVoices();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
                     RaceVoices_Registration.VNAM_HEADER));
                 using (frame)
