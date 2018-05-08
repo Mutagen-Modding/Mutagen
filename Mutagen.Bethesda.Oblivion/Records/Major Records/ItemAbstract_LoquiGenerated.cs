@@ -112,59 +112,144 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region XML Translation
+        #region XML Copy In
+        public override void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<ItemAbstract, ItemAbstract_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out ItemAbstract_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<ItemAbstract, ItemAbstract_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out ItemAbstract_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out ItemAbstract_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
+            out MajorRecord_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out ItemAbstract_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out ItemAbstract_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (ItemAbstract_ErrorMask)this.Write_XML_Internal(
-                writer: writer,
+            errorMask = this.Write_XML_Internal(
+                node: node,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as ItemAbstract_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out ItemAbstract_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             out ItemAbstract_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         protected override object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             ItemAbstractCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -199,35 +284,40 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out ItemAbstract_ErrorMask errorMask)
+            out ItemAbstract_ErrorMask errorMask,
+            bool doMasks = true)
         {
-            errorMask = (ItemAbstract_ErrorMask)this.Write_Binary_Internal(
+            errorMask = this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as ItemAbstract_ErrorMask;
         }
 
         public virtual void Write_Binary(
             string path,
-            out ItemAbstract_ErrorMask errorMask)
+            out ItemAbstract_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
-            out ItemAbstract_ErrorMask errorMask)
+            out ItemAbstract_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -716,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IItemAbstractGetter item,
             bool doMasks,
             out ItemAbstract_ErrorMask errorMask,
@@ -724,7 +814,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ItemAbstract_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ItemAbstract_ErrorMask()) : default(Func<ItemAbstract_ErrorMask>));
@@ -732,19 +822,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IItemAbstractGetter item,
             Func<ItemAbstract_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.ItemAbstract"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.ItemAbstract");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.ItemAbstract");
-                    }
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ItemAbstract");
                 }
             }
             catch (Exception ex)
@@ -901,6 +990,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class ItemAbstract_ErrorMask : MajorRecord_ErrorMask, IErrorMask<ItemAbstract_ErrorMask>
     {
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            ItemAbstract_FieldIndex enu = (ItemAbstract_FieldIndex)index;
+            switch (enu)
+            {
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             ItemAbstract_FieldIndex enu = (ItemAbstract_FieldIndex)index;

@@ -21,6 +21,7 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
@@ -511,19 +512,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static OblivionMod Create_XML(
             XElement root,
-            out OblivionMod_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static OblivionMod Create_XML(
-            XElement root,
-            bool doMasks,
-            out OblivionMod_ErrorMask errorMask)
+            out OblivionMod_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_XML(
                 root: root,
@@ -578,56 +568,129 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region XML Copy In
+        public void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<OblivionMod, OblivionMod_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out OblivionMod_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<OblivionMod, OblivionMod_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out OblivionMod_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out OblivionMod_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out OblivionMod_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (OblivionMod_ErrorMask)this.Write_XML_Internal(
-                writer: writer,
+            errorMask = this.Write_XML_Internal(
+                node: node,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as OblivionMod_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out OblivionMod_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             out OblivionMod_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -636,39 +699,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             OblivionModCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -1955,6 +2012,243 @@ namespace Mutagen.Bethesda.Oblivion
             }
             yield break;
         }
+        public async Task<OblivionMod_ErrorMask> Write_XmlFolder(
+            DirectoryPath dir,
+            bool doMasks = true)
+        {
+            OblivionMod_ErrorMask errMaskRet = null;
+            List<Task> tasks = new List<Task>();
+            Func<OblivionMod_ErrorMask> errMaskFunc = doMasks ? () => errMaskRet ?? (errMaskRet = new OblivionMod_ErrorMask()) : default(Func<OblivionMod_ErrorMask>);
+            try
+            {
+                dir.Create();
+                this.TES4.Write_XML(
+                    path: Path.Combine(dir.Path, "TES4.xml"),
+                    errorMask: out var TES4ErrorMask,
+                    doMasks: doMasks);
+                ErrorMask.HandleErrorMask(
+                    creator: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.TES4,
+                    errMaskObj: TES4ErrorMask);
+                tasks.Add(GameSettings.Write_XmlFolder<GameSetting_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "GameSettings")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.GameSettings,
+                    doMasks: doMasks));
+                tasks.Add(Globals.Write_XmlFolder<Global_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Globals")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Globals,
+                    doMasks: doMasks));
+                tasks.Add(Classes.Write_XmlFolder<Class_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Classes")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Classes,
+                    doMasks: doMasks));
+                tasks.Add(Factions.Write_XmlFolder<Faction_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Factions")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Factions,
+                    doMasks: doMasks));
+                tasks.Add(Hairs.Write_XmlFolder<Hair_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Hairs")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Hairs,
+                    doMasks: doMasks));
+                tasks.Add(Eyes.Write_XmlFolder<Eye_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Eyes")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Eyes,
+                    doMasks: doMasks));
+                tasks.Add(Races.Write_XmlFolder<Race_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Races")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Races,
+                    doMasks: doMasks));
+                tasks.Add(Sounds.Write_XmlFolder<Sound_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Sounds")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Sounds,
+                    doMasks: doMasks));
+                tasks.Add(Skills.Write_XmlFolder<SkillRecord_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Skills")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Skills,
+                    doMasks: doMasks));
+                tasks.Add(MagicEffects.Write_XmlFolder<MagicEffect_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "MagicEffects")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.MagicEffects,
+                    doMasks: doMasks));
+                tasks.Add(Scripts.Write_XmlFolder<Script_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Scripts")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Scripts,
+                    doMasks: doMasks));
+                tasks.Add(LandTextures.Write_XmlFolder<LandTexture_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "LandTextures")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.LandTextures,
+                    doMasks: doMasks));
+                tasks.Add(Enchantments.Write_XmlFolder<Enchantment_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Enchantments")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Enchantments,
+                    doMasks: doMasks));
+                tasks.Add(Spells.Write_XmlFolder<SpellUnleveled_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Spells")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Spells,
+                    doMasks: doMasks));
+                tasks.Add(Birthsigns.Write_XmlFolder<Birthsign_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Birthsigns")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Birthsigns,
+                    doMasks: doMasks));
+                tasks.Add(Activators.Write_XmlFolder<Activator_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Activators")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Activators,
+                    doMasks: doMasks));
+                tasks.Add(AlchemicalApparatus.Write_XmlFolder<AlchemicalApparatus_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "AlchemicalApparatus")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.AlchemicalApparatus,
+                    doMasks: doMasks));
+                tasks.Add(Armors.Write_XmlFolder<Armor_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Armors")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Armors,
+                    doMasks: doMasks));
+                tasks.Add(Books.Write_XmlFolder<Book_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Books")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Books,
+                    doMasks: doMasks));
+                tasks.Add(Clothes.Write_XmlFolder<Clothing_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Clothes")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Clothes,
+                    doMasks: doMasks));
+                tasks.Add(Containers.Write_XmlFolder<Container_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Containers")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Containers,
+                    doMasks: doMasks));
+                tasks.Add(Doors.Write_XmlFolder<Door_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Doors")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Doors,
+                    doMasks: doMasks));
+                tasks.Add(Ingredients.Write_XmlFolder<Ingredient_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Ingredients")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Ingredients,
+                    doMasks: doMasks));
+                tasks.Add(Lights.Write_XmlFolder<Light_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Lights")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Lights,
+                    doMasks: doMasks));
+                tasks.Add(Miscellaneous.Write_XmlFolder<Miscellaneous_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Miscellaneous")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Miscellaneous,
+                    doMasks: doMasks));
+                tasks.Add(Statics.Write_XmlFolder<Static_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Statics")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Statics,
+                    doMasks: doMasks));
+                tasks.Add(Grasses.Write_XmlFolder<Grass_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Grasses")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Grasses,
+                    doMasks: doMasks));
+                tasks.Add(Trees.Write_XmlFolder<Tree_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Trees")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Trees,
+                    doMasks: doMasks));
+                tasks.Add(Flora.Write_XmlFolder<Flora_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Flora")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Flora,
+                    doMasks: doMasks));
+                tasks.Add(Furnature.Write_XmlFolder<Furnature_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Furnature")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Furnature,
+                    doMasks: doMasks));
+                tasks.Add(Weapons.Write_XmlFolder<Weapon_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Weapons")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Weapons,
+                    doMasks: doMasks));
+                tasks.Add(Ammo.Write_XmlFolder<Ammo_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Ammo")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Ammo,
+                    doMasks: doMasks));
+                tasks.Add(NPCs.Write_XmlFolder<NPC_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "NPCs")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.NPCs,
+                    doMasks: doMasks));
+                tasks.Add(Creatures.Write_XmlFolder<Creature_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Creatures")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Creatures,
+                    doMasks: doMasks));
+                tasks.Add(LeveledCreatures.Write_XmlFolder<LeveledCreature_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "LeveledCreatures")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.LeveledCreatures,
+                    doMasks: doMasks));
+                tasks.Add(SoulGems.Write_XmlFolder<SoulGem_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "SoulGems")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.SoulGems,
+                    doMasks: doMasks));
+                tasks.Add(Keys.Write_XmlFolder<Key_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Keys")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Keys,
+                    doMasks: doMasks));
+                tasks.Add(Potions.Write_XmlFolder<Potion_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Potions")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Potions,
+                    doMasks: doMasks));
+                tasks.Add(Subspaces.Write_XmlFolder<Subspace_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Subspaces")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Subspaces,
+                    doMasks: doMasks));
+                tasks.Add(SigilStones.Write_XmlFolder<SigilStone_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "SigilStones")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.SigilStones,
+                    doMasks: doMasks));
+                tasks.Add(LeveledItems.Write_XmlFolder<LeveledItem_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "LeveledItems")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.LeveledItems,
+                    doMasks: doMasks));
+                tasks.Add(Weathers.Write_XmlFolder<Weather_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Weathers")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Weathers,
+                    doMasks: doMasks));
+                await Task.WhenAll(tasks);
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                errMaskFunc().Overall = ex;
+            }
+            return errMaskRet;
+        }
         #endregion
 
         #region Binary Translation
@@ -1975,20 +2269,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static OblivionMod Create_Binary(
             MutagenFrame frame,
             out OblivionMod_ErrorMask errorMask,
-            GroupMask importMask = null)
-        {
-            return Create_Binary(
-                frame: frame,
-                importMask: importMask,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static OblivionMod Create_Binary(
-            MutagenFrame frame,
-            bool doMasks,
-            out OblivionMod_ErrorMask errorMask,
+            bool doMasks = true,
             GroupMask importMask = null)
         {
             var ret = Create_Binary(
@@ -2078,18 +2359,20 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void Write_Binary(
             MutagenWriter writer,
             out OblivionMod_ErrorMask errorMask,
+            bool doMasks = true,
             GroupMask importMask = null)
         {
-            errorMask = (OblivionMod_ErrorMask)this.Write_Binary_Internal(
+            errorMask = this.Write_Binary_Internal(
                 writer: writer,
                 importMask: importMask,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as OblivionMod_ErrorMask;
         }
 
         public virtual void Write_Binary(
             string path,
             out OblivionMod_ErrorMask errorMask,
+            bool doMasks = true,
             GroupMask importMask = null)
         {
             using (var writer = new MutagenWriter(path))
@@ -2097,13 +2380,15 @@ namespace Mutagen.Bethesda.Oblivion
                 Write_Binary(
                     writer: writer,
                     importMask: importMask,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
             out OblivionMod_ErrorMask errorMask,
+            bool doMasks = true,
             GroupMask importMask = null)
         {
             using (var writer = new MutagenWriter(stream))
@@ -2111,7 +2396,8 @@ namespace Mutagen.Bethesda.Oblivion
                 Write_Binary(
                     writer: writer,
                     importMask: importMask,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -6770,7 +7056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IOblivionModGetter item,
             bool doMasks,
             out OblivionMod_ErrorMask errorMask,
@@ -6778,7 +7064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             OblivionMod_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new OblivionMod_ErrorMask()) : default(Func<OblivionMod_ErrorMask>));
@@ -6786,279 +7072,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IOblivionModGetter item,
             Func<OblivionMod_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.OblivionMod"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.OblivionMod");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.OblivionMod");
-                    }
-                    if (item.TES4_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.TES4_Property,
-                            name: nameof(item.TES4),
-                            fieldIndex: (int)OblivionMod_FieldIndex.TES4,
-                            errorMask: errorMask);
-                    }
-                    LoquiXmlTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.GameSettings,
-                        name: nameof(item.GameSettings),
-                        fieldIndex: (int)OblivionMod_FieldIndex.GameSettings,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Globals,
-                        name: nameof(item.Globals),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Globals,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Classes,
-                        name: nameof(item.Classes),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Classes,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Faction>, Group_ErrorMask<Faction_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Factions,
-                        name: nameof(item.Factions),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Factions,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Hair>, Group_ErrorMask<Hair_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Hairs,
-                        name: nameof(item.Hairs),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Hairs,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Eye>, Group_ErrorMask<Eye_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Eyes,
-                        name: nameof(item.Eyes),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Eyes,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Race>, Group_ErrorMask<Race_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Races,
-                        name: nameof(item.Races),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Races,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Sound>, Group_ErrorMask<Sound_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Sounds,
-                        name: nameof(item.Sounds),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Sounds,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<SkillRecord>, Group_ErrorMask<SkillRecord_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Skills,
-                        name: nameof(item.Skills),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Skills,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<MagicEffect>, Group_ErrorMask<MagicEffect_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.MagicEffects,
-                        name: nameof(item.MagicEffects),
-                        fieldIndex: (int)OblivionMod_FieldIndex.MagicEffects,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Script>, Group_ErrorMask<Script_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Scripts,
-                        name: nameof(item.Scripts),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Scripts,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<LandTexture>, Group_ErrorMask<LandTexture_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.LandTextures,
-                        name: nameof(item.LandTextures),
-                        fieldIndex: (int)OblivionMod_FieldIndex.LandTextures,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Enchantment>, Group_ErrorMask<Enchantment_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Enchantments,
-                        name: nameof(item.Enchantments),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Enchantments,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<SpellUnleveled>, Group_ErrorMask<SpellUnleveled_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Spells,
-                        name: nameof(item.Spells),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Spells,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Birthsign>, Group_ErrorMask<Birthsign_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Birthsigns,
-                        name: nameof(item.Birthsigns),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Birthsigns,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Activator>, Group_ErrorMask<Activator_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Activators,
-                        name: nameof(item.Activators),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Activators,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<AlchemicalApparatus>, Group_ErrorMask<AlchemicalApparatus_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.AlchemicalApparatus,
-                        name: nameof(item.AlchemicalApparatus),
-                        fieldIndex: (int)OblivionMod_FieldIndex.AlchemicalApparatus,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Armor>, Group_ErrorMask<Armor_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Armors,
-                        name: nameof(item.Armors),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Armors,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Book>, Group_ErrorMask<Book_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Books,
-                        name: nameof(item.Books),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Books,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Clothing>, Group_ErrorMask<Clothing_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Clothes,
-                        name: nameof(item.Clothes),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Clothes,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Container>, Group_ErrorMask<Container_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Containers,
-                        name: nameof(item.Containers),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Containers,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Door>, Group_ErrorMask<Door_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Doors,
-                        name: nameof(item.Doors),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Doors,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Ingredient>, Group_ErrorMask<Ingredient_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Ingredients,
-                        name: nameof(item.Ingredients),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Ingredients,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Light>, Group_ErrorMask<Light_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Lights,
-                        name: nameof(item.Lights),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Lights,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Miscellaneous>, Group_ErrorMask<Miscellaneous_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Miscellaneous,
-                        name: nameof(item.Miscellaneous),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Miscellaneous,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Static>, Group_ErrorMask<Static_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Statics,
-                        name: nameof(item.Statics),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Statics,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Grass>, Group_ErrorMask<Grass_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Grasses,
-                        name: nameof(item.Grasses),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Grasses,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Tree>, Group_ErrorMask<Tree_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Trees,
-                        name: nameof(item.Trees),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Trees,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Flora>, Group_ErrorMask<Flora_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Flora,
-                        name: nameof(item.Flora),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Flora,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Furnature>, Group_ErrorMask<Furnature_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Furnature,
-                        name: nameof(item.Furnature),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Furnature,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Weapon>, Group_ErrorMask<Weapon_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Weapons,
-                        name: nameof(item.Weapons),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Weapons,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Ammo>, Group_ErrorMask<Ammo_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Ammo,
-                        name: nameof(item.Ammo),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Ammo,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<NPC>, Group_ErrorMask<NPC_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.NPCs,
-                        name: nameof(item.NPCs),
-                        fieldIndex: (int)OblivionMod_FieldIndex.NPCs,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Creature>, Group_ErrorMask<Creature_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Creatures,
-                        name: nameof(item.Creatures),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Creatures,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<LeveledCreature>, Group_ErrorMask<LeveledCreature_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.LeveledCreatures,
-                        name: nameof(item.LeveledCreatures),
-                        fieldIndex: (int)OblivionMod_FieldIndex.LeveledCreatures,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<SoulGem>, Group_ErrorMask<SoulGem_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.SoulGems,
-                        name: nameof(item.SoulGems),
-                        fieldIndex: (int)OblivionMod_FieldIndex.SoulGems,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Key>, Group_ErrorMask<Key_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Keys,
-                        name: nameof(item.Keys),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Keys,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Potion>, Group_ErrorMask<Potion_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Potions,
-                        name: nameof(item.Potions),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Potions,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Subspace>, Group_ErrorMask<Subspace_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Subspaces,
-                        name: nameof(item.Subspaces),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Subspaces,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<SigilStone>, Group_ErrorMask<SigilStone_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.SigilStones,
-                        name: nameof(item.SigilStones),
-                        fieldIndex: (int)OblivionMod_FieldIndex.SigilStones,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<LeveledItem>, Group_ErrorMask<LeveledItem_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.LeveledItems,
-                        name: nameof(item.LeveledItems),
-                        fieldIndex: (int)OblivionMod_FieldIndex.LeveledItems,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Weather>, Group_ErrorMask<Weather_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Weathers,
-                        name: nameof(item.Weathers),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Weathers,
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.OblivionMod");
+                }
+                if (item.TES4_Property.HasBeenSet)
+                {
+                    LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.Write(
+                        node: elem,
+                        item: item.TES4_Property,
+                        name: nameof(item.TES4),
+                        fieldIndex: (int)OblivionMod_FieldIndex.TES4,
                         errorMask: errorMask);
                     LoquiXmlTranslation<Group<Climate>, Group_ErrorMask<Climate_ErrorMask>>.Instance.Write(
                         writer: writer,
@@ -7079,6 +7112,258 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         fieldIndex: (int)OblivionMod_FieldIndex.Cells,
                         errorMask: errorMask);
                 }
+                LoquiXmlTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.GameSettings,
+                    name: nameof(item.GameSettings),
+                    fieldIndex: (int)OblivionMod_FieldIndex.GameSettings,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Globals,
+                    name: nameof(item.Globals),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Globals,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Classes,
+                    name: nameof(item.Classes),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Classes,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Faction>, Group_ErrorMask<Faction_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Factions,
+                    name: nameof(item.Factions),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Factions,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Hair>, Group_ErrorMask<Hair_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Hairs,
+                    name: nameof(item.Hairs),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Hairs,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Eye>, Group_ErrorMask<Eye_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Eyes,
+                    name: nameof(item.Eyes),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Eyes,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Race>, Group_ErrorMask<Race_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Races,
+                    name: nameof(item.Races),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Races,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Sound>, Group_ErrorMask<Sound_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Sounds,
+                    name: nameof(item.Sounds),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Sounds,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<SkillRecord>, Group_ErrorMask<SkillRecord_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Skills,
+                    name: nameof(item.Skills),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Skills,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<MagicEffect>, Group_ErrorMask<MagicEffect_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.MagicEffects,
+                    name: nameof(item.MagicEffects),
+                    fieldIndex: (int)OblivionMod_FieldIndex.MagicEffects,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Script>, Group_ErrorMask<Script_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Scripts,
+                    name: nameof(item.Scripts),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Scripts,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<LandTexture>, Group_ErrorMask<LandTexture_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.LandTextures,
+                    name: nameof(item.LandTextures),
+                    fieldIndex: (int)OblivionMod_FieldIndex.LandTextures,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Enchantment>, Group_ErrorMask<Enchantment_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Enchantments,
+                    name: nameof(item.Enchantments),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Enchantments,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<SpellUnleveled>, Group_ErrorMask<SpellUnleveled_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Spells,
+                    name: nameof(item.Spells),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Spells,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Birthsign>, Group_ErrorMask<Birthsign_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Birthsigns,
+                    name: nameof(item.Birthsigns),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Birthsigns,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Activator>, Group_ErrorMask<Activator_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Activators,
+                    name: nameof(item.Activators),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Activators,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<AlchemicalApparatus>, Group_ErrorMask<AlchemicalApparatus_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.AlchemicalApparatus,
+                    name: nameof(item.AlchemicalApparatus),
+                    fieldIndex: (int)OblivionMod_FieldIndex.AlchemicalApparatus,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Armor>, Group_ErrorMask<Armor_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Armors,
+                    name: nameof(item.Armors),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Armors,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Book>, Group_ErrorMask<Book_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Books,
+                    name: nameof(item.Books),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Books,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Clothing>, Group_ErrorMask<Clothing_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Clothes,
+                    name: nameof(item.Clothes),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Clothes,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Container>, Group_ErrorMask<Container_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Containers,
+                    name: nameof(item.Containers),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Containers,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Door>, Group_ErrorMask<Door_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Doors,
+                    name: nameof(item.Doors),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Doors,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Ingredient>, Group_ErrorMask<Ingredient_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Ingredients,
+                    name: nameof(item.Ingredients),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Ingredients,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Light>, Group_ErrorMask<Light_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Lights,
+                    name: nameof(item.Lights),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Lights,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Miscellaneous>, Group_ErrorMask<Miscellaneous_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Miscellaneous,
+                    name: nameof(item.Miscellaneous),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Miscellaneous,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Static>, Group_ErrorMask<Static_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Statics,
+                    name: nameof(item.Statics),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Statics,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Grass>, Group_ErrorMask<Grass_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Grasses,
+                    name: nameof(item.Grasses),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Grasses,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Tree>, Group_ErrorMask<Tree_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Trees,
+                    name: nameof(item.Trees),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Trees,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Flora>, Group_ErrorMask<Flora_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Flora,
+                    name: nameof(item.Flora),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Flora,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Furnature>, Group_ErrorMask<Furnature_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Furnature,
+                    name: nameof(item.Furnature),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Furnature,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Weapon>, Group_ErrorMask<Weapon_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Weapons,
+                    name: nameof(item.Weapons),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Weapons,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Ammo>, Group_ErrorMask<Ammo_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Ammo,
+                    name: nameof(item.Ammo),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Ammo,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<NPC>, Group_ErrorMask<NPC_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.NPCs,
+                    name: nameof(item.NPCs),
+                    fieldIndex: (int)OblivionMod_FieldIndex.NPCs,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Creature>, Group_ErrorMask<Creature_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Creatures,
+                    name: nameof(item.Creatures),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Creatures,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<LeveledCreature>, Group_ErrorMask<LeveledCreature_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.LeveledCreatures,
+                    name: nameof(item.LeveledCreatures),
+                    fieldIndex: (int)OblivionMod_FieldIndex.LeveledCreatures,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<SoulGem>, Group_ErrorMask<SoulGem_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.SoulGems,
+                    name: nameof(item.SoulGems),
+                    fieldIndex: (int)OblivionMod_FieldIndex.SoulGems,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Key>, Group_ErrorMask<Key_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Keys,
+                    name: nameof(item.Keys),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Keys,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Potion>, Group_ErrorMask<Potion_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Potions,
+                    name: nameof(item.Potions),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Potions,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Subspace>, Group_ErrorMask<Subspace_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Subspaces,
+                    name: nameof(item.Subspaces),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Subspaces,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<SigilStone>, Group_ErrorMask<SigilStone_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.SigilStones,
+                    name: nameof(item.SigilStones),
+                    fieldIndex: (int)OblivionMod_FieldIndex.SigilStones,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<LeveledItem>, Group_ErrorMask<LeveledItem_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.LeveledItems,
+                    name: nameof(item.LeveledItems),
+                    fieldIndex: (int)OblivionMod_FieldIndex.LeveledItems,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Weather>, Group_ErrorMask<Weather_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Weathers,
+                    name: nameof(item.Weathers),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Weathers,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (errorMask != null)
@@ -8815,6 +9100,102 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;
+            switch (enu)
+            {
+                case OblivionMod_FieldIndex.TES4:
+                    return TES4;
+                case OblivionMod_FieldIndex.GameSettings:
+                    return GameSettings;
+                case OblivionMod_FieldIndex.Globals:
+                    return Globals;
+                case OblivionMod_FieldIndex.Classes:
+                    return Classes;
+                case OblivionMod_FieldIndex.Factions:
+                    return Factions;
+                case OblivionMod_FieldIndex.Hairs:
+                    return Hairs;
+                case OblivionMod_FieldIndex.Eyes:
+                    return Eyes;
+                case OblivionMod_FieldIndex.Races:
+                    return Races;
+                case OblivionMod_FieldIndex.Sounds:
+                    return Sounds;
+                case OblivionMod_FieldIndex.Skills:
+                    return Skills;
+                case OblivionMod_FieldIndex.MagicEffects:
+                    return MagicEffects;
+                case OblivionMod_FieldIndex.Scripts:
+                    return Scripts;
+                case OblivionMod_FieldIndex.LandTextures:
+                    return LandTextures;
+                case OblivionMod_FieldIndex.Enchantments:
+                    return Enchantments;
+                case OblivionMod_FieldIndex.Spells:
+                    return Spells;
+                case OblivionMod_FieldIndex.Birthsigns:
+                    return Birthsigns;
+                case OblivionMod_FieldIndex.Activators:
+                    return Activators;
+                case OblivionMod_FieldIndex.AlchemicalApparatus:
+                    return AlchemicalApparatus;
+                case OblivionMod_FieldIndex.Armors:
+                    return Armors;
+                case OblivionMod_FieldIndex.Books:
+                    return Books;
+                case OblivionMod_FieldIndex.Clothes:
+                    return Clothes;
+                case OblivionMod_FieldIndex.Containers:
+                    return Containers;
+                case OblivionMod_FieldIndex.Doors:
+                    return Doors;
+                case OblivionMod_FieldIndex.Ingredients:
+                    return Ingredients;
+                case OblivionMod_FieldIndex.Lights:
+                    return Lights;
+                case OblivionMod_FieldIndex.Miscellaneous:
+                    return Miscellaneous;
+                case OblivionMod_FieldIndex.Statics:
+                    return Statics;
+                case OblivionMod_FieldIndex.Grasses:
+                    return Grasses;
+                case OblivionMod_FieldIndex.Trees:
+                    return Trees;
+                case OblivionMod_FieldIndex.Flora:
+                    return Flora;
+                case OblivionMod_FieldIndex.Furnature:
+                    return Furnature;
+                case OblivionMod_FieldIndex.Weapons:
+                    return Weapons;
+                case OblivionMod_FieldIndex.Ammo:
+                    return Ammo;
+                case OblivionMod_FieldIndex.NPCs:
+                    return NPCs;
+                case OblivionMod_FieldIndex.Creatures:
+                    return Creatures;
+                case OblivionMod_FieldIndex.LeveledCreatures:
+                    return LeveledCreatures;
+                case OblivionMod_FieldIndex.SoulGems:
+                    return SoulGems;
+                case OblivionMod_FieldIndex.Keys:
+                    return Keys;
+                case OblivionMod_FieldIndex.Potions:
+                    return Potions;
+                case OblivionMod_FieldIndex.Subspaces:
+                    return Subspaces;
+                case OblivionMod_FieldIndex.SigilStones:
+                    return SigilStones;
+                case OblivionMod_FieldIndex.LeveledItems:
+                    return LeveledItems;
+                case OblivionMod_FieldIndex.Weathers:
+                    return Weathers;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;

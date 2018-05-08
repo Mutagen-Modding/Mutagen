@@ -171,19 +171,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static GenderedBodyData Create_XML(
             XElement root,
-            out GenderedBodyData_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static GenderedBodyData Create_XML(
-            XElement root,
-            bool doMasks,
-            out GenderedBodyData_ErrorMask errorMask)
+            out GenderedBodyData_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_XML(
                 root: root,
@@ -238,56 +227,129 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region XML Copy In
+        public void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<GenderedBodyData, GenderedBodyData_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out GenderedBodyData_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<GenderedBodyData, GenderedBodyData_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out GenderedBodyData_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out GenderedBodyData_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out GenderedBodyData_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (GenderedBodyData_ErrorMask)this.Write_XML_Internal(
-                writer: writer,
+            errorMask = this.Write_XML_Internal(
+                node: node,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as GenderedBodyData_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out GenderedBodyData_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             out GenderedBodyData_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -296,39 +358,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             GenderedBodyDataCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -400,19 +456,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static GenderedBodyData Create_Binary(
             MutagenFrame frame,
-            out GenderedBodyData_ErrorMask errorMask)
-        {
-            return Create_Binary(
-                frame: frame,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static GenderedBodyData Create_Binary(
-            MutagenFrame frame,
-            bool doMasks,
-            out GenderedBodyData_ErrorMask errorMask)
+            out GenderedBodyData_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -485,35 +530,40 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out GenderedBodyData_ErrorMask errorMask)
+            out GenderedBodyData_ErrorMask errorMask,
+            bool doMasks = true)
         {
-            errorMask = (GenderedBodyData_ErrorMask)this.Write_Binary_Internal(
+            errorMask = this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as GenderedBodyData_ErrorMask;
         }
 
         public virtual void Write_Binary(
             string path,
-            out GenderedBodyData_ErrorMask errorMask)
+            out GenderedBodyData_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
-            out GenderedBodyData_ErrorMask errorMask)
+            out GenderedBodyData_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -1321,7 +1371,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IGenderedBodyDataGetter item,
             bool doMasks,
             out GenderedBodyData_ErrorMask errorMask,
@@ -1329,7 +1379,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             GenderedBodyData_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new GenderedBodyData_ErrorMask()) : default(Func<GenderedBodyData_ErrorMask>));
@@ -1337,37 +1387,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IGenderedBodyDataGetter item,
             Func<GenderedBodyData_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.GenderedBodyData"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.GenderedBodyData");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.GenderedBodyData");
-                    }
-                    if (item.Male_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<BodyData, BodyData_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.Male_Property,
-                            name: nameof(item.Male),
-                            fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
-                            errorMask: errorMask);
-                    }
-                    if (item.Female_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<BodyData, BodyData_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.Female_Property,
-                            name: nameof(item.Female),
-                            fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
-                            errorMask: errorMask);
-                    }
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.GenderedBodyData");
+                }
+                if (item.Male_Property.HasBeenSet)
+                {
+                    LoquiXmlTranslation<BodyData, BodyData_ErrorMask>.Instance.Write(
+                        node: elem,
+                        item: item.Male_Property,
+                        name: nameof(item.Male),
+                        fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
+                        errorMask: errorMask);
+                }
+                if (item.Female_Property.HasBeenSet)
+                {
+                    LoquiXmlTranslation<BodyData, BodyData_ErrorMask>.Instance.Write(
+                        node: elem,
+                        item: item.Female_Property,
+                        name: nameof(item.Female),
+                        fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)
@@ -1606,6 +1655,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            GenderedBodyData_FieldIndex enu = (GenderedBodyData_FieldIndex)index;
+            switch (enu)
+            {
+                case GenderedBodyData_FieldIndex.Male:
+                    return Male;
+                case GenderedBodyData_FieldIndex.Female:
+                    return Female;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             GenderedBodyData_FieldIndex enu = (GenderedBodyData_FieldIndex)index;

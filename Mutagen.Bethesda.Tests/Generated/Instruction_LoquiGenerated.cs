@@ -245,19 +245,8 @@ namespace Mutagen.Bethesda.Tests
         [DebuggerStepThrough]
         public static Instruction Create_XML(
             XElement root,
-            out Instruction_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static Instruction Create_XML(
-            XElement root,
-            bool doMasks,
-            out Instruction_ErrorMask errorMask)
+            out Instruction_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_XML(
                 root: root,
@@ -312,56 +301,129 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
+        #region XML Copy In
+        public virtual void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<Instruction, Instruction_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out Instruction_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<Instruction, Instruction_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out Instruction_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out Instruction_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out Instruction_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (Instruction_ErrorMask)this.Write_XML_Internal(
-                writer: writer,
+            errorMask = this.Write_XML_Internal(
+                node: node,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as Instruction_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out Instruction_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             out Instruction_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -370,39 +432,33 @@ namespace Mutagen.Bethesda.Tests
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected virtual object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             InstructionCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -1514,7 +1570,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IInstructionGetter item,
             bool doMasks,
             out Instruction_ErrorMask errorMask,
@@ -1522,7 +1578,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             Instruction_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Instruction_ErrorMask()) : default(Func<Instruction_ErrorMask>));
@@ -1530,116 +1586,115 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IInstructionGetter item,
             Func<Instruction_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Tests.Instruction"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.Instruction");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Tests.Instruction");
-                    }
-                    ListXmlTranslation<Move, MaskItem<Exception, Move_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Moves),
-                        item: item.Moves,
-                        fieldIndex: (int)Instruction_FieldIndex.Moves,
-                        errorMask: errorMask,
-                        transl: (Move subItem, bool listDoMasks, out MaskItem<Exception, Move_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<Move, Move_ErrorMask>.Instance.Write(
-                                writer: writer,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    ListXmlTranslation<DataTarget, MaskItem<Exception, DataTarget_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Substitutions),
-                        item: item.Substitutions,
-                        fieldIndex: (int)Instruction_FieldIndex.Substitutions,
-                        errorMask: errorMask,
-                        transl: (DataTarget subItem, bool listDoMasks, out MaskItem<Exception, DataTarget_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<DataTarget, DataTarget_ErrorMask>.Instance.Write(
-                                writer: writer,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    ListXmlTranslation<DataTarget, MaskItem<Exception, DataTarget_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Additions),
-                        item: item.Additions,
-                        fieldIndex: (int)Instruction_FieldIndex.Additions,
-                        errorMask: errorMask,
-                        transl: (DataTarget subItem, bool listDoMasks, out MaskItem<Exception, DataTarget_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<DataTarget, DataTarget_ErrorMask>.Instance.Write(
-                                writer: writer,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    ListXmlTranslation<RangeInt64, Exception>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.SkipSourceSections),
-                        item: item.SkipSourceSections,
-                        fieldIndex: (int)Instruction_FieldIndex.SkipSourceSections,
-                        errorMask: errorMask,
-                        transl: (RangeInt64 subItem, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            RangeInt64XmlTranslation.Instance.Write(
-                                writer: writer,
-                                name: "Item",
-                                item: subItem,
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    ListXmlTranslation<RangeInt64, Exception>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.SkipOutputSections),
-                        item: item.SkipOutputSections,
-                        fieldIndex: (int)Instruction_FieldIndex.SkipOutputSections,
-                        errorMask: errorMask,
-                        transl: (RangeInt64 subItem, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            RangeInt64XmlTranslation.Instance.Write(
-                                writer: writer,
-                                name: "Item",
-                                item: subItem,
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    ListXmlTranslation<RangeInt64, Exception>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.IgnoreDifferenceSections),
-                        item: item.IgnoreDifferenceSections,
-                        fieldIndex: (int)Instruction_FieldIndex.IgnoreDifferenceSections,
-                        errorMask: errorMask,
-                        transl: (RangeInt64 subItem, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            RangeInt64XmlTranslation.Instance.Write(
-                                writer: writer,
-                                name: "Item",
-                                item: subItem,
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.Instruction");
                 }
+                ListXmlTranslation<Move, MaskItem<Exception, Move_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Moves),
+                    item: item.Moves,
+                    fieldIndex: (int)Instruction_FieldIndex.Moves,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, Move subItem, bool listDoMasks, out MaskItem<Exception, Move_ErrorMask> listSubMask) =>
+                    {
+                        LoquiXmlTranslation<Move, Move_ErrorMask>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            doMasks: errorMask != null,
+                            errorMask: out listSubMask);
+                    }
+                    );
+                ListXmlTranslation<DataTarget, MaskItem<Exception, DataTarget_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Substitutions),
+                    item: item.Substitutions,
+                    fieldIndex: (int)Instruction_FieldIndex.Substitutions,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, DataTarget subItem, bool listDoMasks, out MaskItem<Exception, DataTarget_ErrorMask> listSubMask) =>
+                    {
+                        LoquiXmlTranslation<DataTarget, DataTarget_ErrorMask>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            doMasks: errorMask != null,
+                            errorMask: out listSubMask);
+                    }
+                    );
+                ListXmlTranslation<DataTarget, MaskItem<Exception, DataTarget_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Additions),
+                    item: item.Additions,
+                    fieldIndex: (int)Instruction_FieldIndex.Additions,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, DataTarget subItem, bool listDoMasks, out MaskItem<Exception, DataTarget_ErrorMask> listSubMask) =>
+                    {
+                        LoquiXmlTranslation<DataTarget, DataTarget_ErrorMask>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            doMasks: errorMask != null,
+                            errorMask: out listSubMask);
+                    }
+                    );
+                ListXmlTranslation<RangeInt64, Exception>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.SkipSourceSections),
+                    item: item.SkipSourceSections,
+                    fieldIndex: (int)Instruction_FieldIndex.SkipSourceSections,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, RangeInt64 subItem, bool listDoMasks, out Exception listSubMask) =>
+                    {
+                        RangeInt64XmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Item",
+                            item: subItem,
+                            doMasks: errorMask != null,
+                            errorMask: out listSubMask);
+                    }
+                    );
+                ListXmlTranslation<RangeInt64, Exception>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.SkipOutputSections),
+                    item: item.SkipOutputSections,
+                    fieldIndex: (int)Instruction_FieldIndex.SkipOutputSections,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, RangeInt64 subItem, bool listDoMasks, out Exception listSubMask) =>
+                    {
+                        RangeInt64XmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Item",
+                            item: subItem,
+                            doMasks: errorMask != null,
+                            errorMask: out listSubMask);
+                    }
+                    );
+                ListXmlTranslation<RangeInt64, Exception>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.IgnoreDifferenceSections),
+                    item: item.IgnoreDifferenceSections,
+                    fieldIndex: (int)Instruction_FieldIndex.IgnoreDifferenceSections,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, RangeInt64 subItem, bool listDoMasks, out Exception listSubMask) =>
+                    {
+                        RangeInt64XmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Item",
+                            item: subItem,
+                            doMasks: errorMask != null,
+                            errorMask: out listSubMask);
+                    }
+                    );
             }
             catch (Exception ex)
             when (errorMask != null)
@@ -2138,6 +2193,28 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
 
         #region IErrorMask
+        public virtual object GetNthMask(int index)
+        {
+            Instruction_FieldIndex enu = (Instruction_FieldIndex)index;
+            switch (enu)
+            {
+                case Instruction_FieldIndex.Moves:
+                    return Moves;
+                case Instruction_FieldIndex.Substitutions:
+                    return Substitutions;
+                case Instruction_FieldIndex.Additions:
+                    return Additions;
+                case Instruction_FieldIndex.SkipSourceSections:
+                    return SkipSourceSections;
+                case Instruction_FieldIndex.SkipOutputSections:
+                    return SkipOutputSections;
+                case Instruction_FieldIndex.IgnoreDifferenceSections:
+                    return IgnoreDifferenceSections;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public virtual void SetNthException(int index, Exception ex)
         {
             Instruction_FieldIndex enu = (Instruction_FieldIndex)index;

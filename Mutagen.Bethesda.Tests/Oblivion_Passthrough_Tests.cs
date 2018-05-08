@@ -809,9 +809,9 @@ namespace Mutagen.Bethesda.Tests
                 });
             Assert.False(inputErrMask?.IsInError() ?? false);
 
-            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary_GroupMask_Import"))))
+            using (var tmp = new TempFolder("Mutagen_Oblivion_Binary_GroupMask_Import"))
             {
-                var oblivionOutputPath = Path.Combine(tmp.Dir.FullName, Constants.OBLIVION_ESM);
+                var oblivionOutputPath = Path.Combine(tmp.Dir.Path, Constants.OBLIVION_ESM);
                 mod.Write_Binary(
                     oblivionOutputPath,
                     out var outputErrMask);
@@ -839,9 +839,9 @@ namespace Mutagen.Bethesda.Tests
                 out var inputErrMask);
             Assert.False(inputErrMask?.IsInError() ?? false);
 
-            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary_GroupMask_Export"))))
+            using (var tmp = new TempFolder("Mutagen_Oblivion_Binary_GroupMask_Export"))
             {
-                var oblivionOutputPath = Path.Combine(tmp.Dir.FullName, Constants.OBLIVION_ESM);
+                var oblivionOutputPath = Path.Combine(tmp.Dir.Path, Constants.OBLIVION_ESM);
                 mod.Write_Binary(
                     oblivionOutputPath,
                     out var outputErrMask,
@@ -937,7 +937,7 @@ namespace Mutagen.Bethesda.Tests
         {
             MajorRecordLocator.FileLocations fileLocs = await longsTasks;
 
-            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary_CompressionTests")), deleteAfter: deleteAfter))
+            using (var tmp = new TempFolder("Mutagen_Oblivion_Binary_CompressionTests", deleteAfter: deleteAfter))
             {
                 List<Task> tasks = new List<Task>();
                 int i = 0;
@@ -945,8 +945,8 @@ namespace Mutagen.Bethesda.Tests
                 {
                     if (!majorRec.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed)) continue;
 
-                    var origPath = Path.Combine(tmp.Dir.FullName, $"{i} - {majorRec.TitleString}");
-                    var outputPath = Path.Combine(tmp.Dir.FullName, $"{i} - {majorRec.TitleString} - Output");
+                    var origPath = Path.Combine(tmp.Dir.Path, $"{i} - {majorRec.TitleString}");
+                    var outputPath = Path.Combine(tmp.Dir.Path, $"{i} - {majorRec.TitleString} - Output");
                     i++;
 
                     if (!instructions.CompressionInstructions.TryGetValue(majorRec.FormID, out var processorConfig))
@@ -1041,7 +1041,27 @@ namespace Mutagen.Bethesda.Tests
                 await Task.WhenAll(tasks);
             }
         }
-        
+
+        public async Task OblivionESM_Folder_Reimport()
+        {
+            var mod = OblivionMod.Create_Binary(
+                Properties.Settings.Default.OblivionESM,
+                out var inputErrMask);
+            Assert.False(inputErrMask?.IsInError() ?? false);
+            using (var tmp = new TempFolder("Mutagen_Oblivion_XmlFolder", deleteAfter: false))
+            {
+                mod[FormID.Factory("0006371E")].Write_XML(Path.Combine(tmp.Dir.Path, "Test"));
+                var exportMask = await mod.Write_XmlFolder(
+                    tmp.Dir);
+                Assert.False(exportMask?.IsInError() ?? false);
+            }
+        }
+
+        public void OblivionESM_Equals()
+        {
+            throw new NotImplementedException();
+        }
+
         public void KnightsESP_Binary()
         {
             //OblivionMod_ErrorMask inputErrMask, outputErrMask;
@@ -1066,9 +1086,9 @@ namespace Mutagen.Bethesda.Tests
                 Properties.Settings.Default.OblivionESM,
                 out var binInputErrMask);
             Assert.Null(binInputErrMask);
-            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_XML"))))
+            using (var tmp = new TempFolder("Mutagen_Oblivion_XML"))
             {
-                var outputPath = Path.Combine(tmp.Dir.FullName, Path.GetRandomFileName());
+                var outputPath = Path.Combine(tmp.Dir.Path, Path.GetRandomFileName());
                 modFromBinary.Write_XML(
                     outputPath,
                     out var outputErrMask);
@@ -1087,9 +1107,9 @@ namespace Mutagen.Bethesda.Tests
                 Properties.Settings.Default.KnightsESP,
                 out var binInputErrMask);
             Assert.Null(binInputErrMask);
-            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Knights_XML"))))
+            using (var tmp = new TempFolder("Mutagen_Knights_XML"))
             {
-                var outputPath = Path.Combine(tmp.Dir.FullName, Path.GetRandomFileName());
+                var outputPath = Path.Combine(tmp.Dir.Path, Path.GetRandomFileName());
                 modFromBinary.Write_XML(
                     outputPath,
                     out var outputErrMask);

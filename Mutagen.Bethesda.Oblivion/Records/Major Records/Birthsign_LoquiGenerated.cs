@@ -200,19 +200,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Birthsign Create_XML(
             XElement root,
-            out Birthsign_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static Birthsign Create_XML(
-            XElement root,
-            bool doMasks,
-            out Birthsign_ErrorMask errorMask)
+            out Birthsign_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_XML(
                 root: root,
@@ -267,56 +256,153 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region XML Copy In
+        public override void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<Birthsign, Birthsign_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out Birthsign_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<Birthsign, Birthsign_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out Birthsign_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out Birthsign_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
+            out NamedMajorRecord_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out Birthsign_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
+            out MajorRecord_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out Birthsign_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out Birthsign_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (Birthsign_ErrorMask)this.Write_XML_Internal(
-                writer: writer,
+            errorMask = this.Write_XML_Internal(
+                node: node,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as Birthsign_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out Birthsign_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             out Birthsign_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public override void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -325,39 +411,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public override void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected override object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             BirthsignCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -453,19 +533,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Birthsign Create_Binary(
             MutagenFrame frame,
-            out Birthsign_ErrorMask errorMask)
-        {
-            return Create_Binary(
-                frame: frame,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static Birthsign Create_Binary(
-            MutagenFrame frame,
-            bool doMasks,
-            out Birthsign_ErrorMask errorMask)
+            out Birthsign_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -538,35 +607,40 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out Birthsign_ErrorMask errorMask)
+            out Birthsign_ErrorMask errorMask,
+            bool doMasks = true)
         {
-            errorMask = (Birthsign_ErrorMask)this.Write_Binary_Internal(
+            errorMask = this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as Birthsign_ErrorMask;
         }
 
         public virtual void Write_Binary(
             string path,
-            out Birthsign_ErrorMask errorMask)
+            out Birthsign_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
-            out Birthsign_ErrorMask errorMask)
+            out Birthsign_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -659,6 +733,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var DescriptiontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Birthsign_FieldIndex.Description,
+                        parseWhole: true,
                         errorMask: errorMask);
                     item._Description.SetIfSucceeded(DescriptiontryGet);
                     return TryGet<Birthsign_FieldIndex?>.Succeed(Birthsign_FieldIndex.Description);
@@ -1435,7 +1510,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IBirthsignGetter item,
             bool doMasks,
             out Birthsign_ErrorMask errorMask,
@@ -1443,7 +1518,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Birthsign_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Birthsign_ErrorMask()) : default(Func<Birthsign_ErrorMask>));
@@ -1451,56 +1526,55 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IBirthsignGetter item,
             Func<Birthsign_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.Birthsign"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Birthsign");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Birthsign");
-                    }
-                    if (item.Icon_Property.HasBeenSet)
-                    {
-                        FilePathXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Icon),
-                            item: item.Icon_Property,
-                            fieldIndex: (int)Birthsign_FieldIndex.Icon,
-                            errorMask: errorMask);
-                    }
-                    if (item.Description_Property.HasBeenSet)
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Description),
-                            item: item.Description_Property,
-                            fieldIndex: (int)Birthsign_FieldIndex.Description,
-                            errorMask: errorMask);
-                    }
-                    if (item.Spells.HasBeenSet)
-                    {
-                        ListXmlTranslation<FormIDSetLink<Spell>, Exception>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Spells),
-                            item: item.Spells,
-                            fieldIndex: (int)Birthsign_FieldIndex.Spells,
-                            errorMask: errorMask,
-                            transl: (FormIDSetLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
-                            {
-                                FormIDXmlTranslation.Instance.Write(
-                                    writer: writer,
-                                    name: "Item",
-                                    item: subItem?.FormID,
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Birthsign");
+                }
+                if (item.Icon_Property.HasBeenSet)
+                {
+                    FilePathXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Icon),
+                        item: item.Icon_Property,
+                        fieldIndex: (int)Birthsign_FieldIndex.Icon,
+                        errorMask: errorMask);
+                }
+                if (item.Description_Property.HasBeenSet)
+                {
+                    StringXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Description),
+                        item: item.Description_Property,
+                        fieldIndex: (int)Birthsign_FieldIndex.Description,
+                        errorMask: errorMask);
+                }
+                if (item.Spells.HasBeenSet)
+                {
+                    ListXmlTranslation<FormIDSetLink<Spell>, Exception>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Spells),
+                        item: item.Spells,
+                        fieldIndex: (int)Birthsign_FieldIndex.Spells,
+                        errorMask: errorMask,
+                        transl: (XElement subNode, FormIDSetLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            FormIDXmlTranslation.Instance.Write(
+                                node: subNode,
+                                name: "Item",
+                                item: subItem?.FormID,
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
                 }
             }
             catch (Exception ex)
@@ -1593,10 +1667,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Spells,
                 fieldIndex: (int)Birthsign_FieldIndex.Spells,
                 errorMask: errorMask,
-                transl: (FormIDSetLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
+                transl: (MutagenWriter subWriter, FormIDSetLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                        writer: writer,
+                        writer: subWriter,
                         item: subItem,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask,
@@ -1792,6 +1866,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
+            switch (enu)
+            {
+                case Birthsign_FieldIndex.Icon:
+                    return Icon;
+                case Birthsign_FieldIndex.Description:
+                    return Description;
+                case Birthsign_FieldIndex.Spells:
+                    return Spells;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;

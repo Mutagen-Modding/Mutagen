@@ -17,8 +17,21 @@ namespace Mutagen.Bethesda.Generation
         {
         }
 
-        public override void GenerateCopyInRet(FileGeneration fg, ObjectGeneration objGen, TypeGeneration targetGen, TypeGeneration typeGen, string readerAccessor, Accessor retAccessor, string doMaskAccessor, string maskAccessor)
+        public override void GenerateCopyInRet(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration targetGen,
+            TypeGeneration typeGen,
+            string readerAccessor,
+            bool squashedRepeatedList,
+            Accessor retAccessor, 
+            string doMaskAccessor, 
+            string maskAccessor)
         {
+            if (squashedRepeatedList)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public override void GenerateWrite(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string writerAccessor, Accessor itemAccessor, string doMaskAccessor, string maskAccessor)

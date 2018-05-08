@@ -199,52 +199,125 @@ namespace Mutagen.Bethesda
 
 
         #region XML Translation
+        #region XML Copy In
+        public virtual void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<MajorRecord, MajorRecord_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out MajorRecord_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<MajorRecord, MajorRecord_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out MajorRecord_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out MajorRecord_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (MajorRecord_ErrorMask)this.Write_XML_Internal(
-                writer: writer,
+            errorMask = this.Write_XML_Internal(
+                node: node,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as MajorRecord_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out MajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             out MajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public abstract void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null);
         public abstract void Write_XML(
             string path,
@@ -254,14 +327,14 @@ namespace Mutagen.Bethesda
             string name = null);
 
         protected virtual object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             MajorRecordCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -326,35 +399,40 @@ namespace Mutagen.Bethesda
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out MajorRecord_ErrorMask errorMask)
+            out MajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
         {
-            errorMask = (MajorRecord_ErrorMask)this.Write_Binary_Internal(
+            errorMask = this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as MajorRecord_ErrorMask;
         }
 
         public virtual void Write_Binary(
             string path,
-            out MajorRecord_ErrorMask errorMask)
+            out MajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
-            out MajorRecord_ErrorMask errorMask)
+            out MajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -414,6 +492,7 @@ namespace Mutagen.Bethesda
                     var EditorIDtryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
+                        parseWhole: true,
                         errorMask: errorMask);
                     item._EditorID.SetIfSucceeded(EditorIDtryGet);
                     return TryGet<MajorRecord_FieldIndex?>.Succeed(MajorRecord_FieldIndex.EditorID);
@@ -1258,7 +1337,7 @@ namespace Mutagen.Bethesda.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IMajorRecordGetter item,
             bool doMasks,
             out MajorRecord_ErrorMask errorMask,
@@ -1266,7 +1345,7 @@ namespace Mutagen.Bethesda.Internals
         {
             MajorRecord_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MajorRecord_ErrorMask()) : default(Func<MajorRecord_ErrorMask>));
@@ -1274,46 +1353,45 @@ namespace Mutagen.Bethesda.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IMajorRecordGetter item,
             Func<MajorRecord_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.MajorRecord"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.MajorRecord");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.MajorRecord");
-                    }
-                    EnumXmlTranslation<MajorRecord.MajorRecordFlag>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.MajorRecordFlags),
-                        item: item.MajorRecordFlags_Property,
-                        fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.MajorRecord");
+                }
+                EnumXmlTranslation<MajorRecord.MajorRecordFlag>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.MajorRecordFlags),
+                    item: item.MajorRecordFlags_Property,
+                    fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
+                    errorMask: errorMask);
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.FormID),
+                    item: item.FormID_Property,
+                    fieldIndex: (int)MajorRecord_FieldIndex.FormID,
+                    errorMask: errorMask);
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Version),
+                    item: item.Version_Property,
+                    fieldIndex: (int)MajorRecord_FieldIndex.Version,
+                    errorMask: errorMask);
+                if (item.EditorID_Property.HasBeenSet)
+                {
+                    StringXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.EditorID),
+                        item: item.EditorID_Property,
+                        fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
                         errorMask: errorMask);
-                    FormIDXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.FormID),
-                        item: item.FormID_Property,
-                        fieldIndex: (int)MajorRecord_FieldIndex.FormID,
-                        errorMask: errorMask);
-                    ByteArrayXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Version),
-                        item: item.Version_Property,
-                        fieldIndex: (int)MajorRecord_FieldIndex.Version,
-                        errorMask: errorMask);
-                    if (item.EditorID_Property.HasBeenSet)
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.EditorID),
-                            item: item.EditorID_Property,
-                            fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
-                            errorMask: errorMask);
-                    }
                 }
             }
             catch (Exception ex)
@@ -1577,6 +1655,26 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
         #region IErrorMask
+        public virtual object GetNthMask(int index)
+        {
+            MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
+            switch (enu)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return MajorRecordFlags;
+                case MajorRecord_FieldIndex.FormID:
+                    return FormID;
+                case MajorRecord_FieldIndex.Version:
+                    return Version;
+                case MajorRecord_FieldIndex.EditorID:
+                    return EditorID;
+                case MajorRecord_FieldIndex.RecordType:
+                    return RecordType;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public virtual void SetNthException(int index, Exception ex)
         {
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;

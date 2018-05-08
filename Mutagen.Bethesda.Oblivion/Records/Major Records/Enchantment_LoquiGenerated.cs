@@ -221,19 +221,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Enchantment Create_XML(
             XElement root,
-            out Enchantment_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static Enchantment Create_XML(
-            XElement root,
-            bool doMasks,
-            out Enchantment_ErrorMask errorMask)
+            out Enchantment_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_XML(
                 root: root,
@@ -288,56 +277,153 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region XML Copy In
+        public override void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<Enchantment, Enchantment_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out Enchantment_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<Enchantment, Enchantment_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out Enchantment_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out Enchantment_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
+            out NamedMajorRecord_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out Enchantment_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
+            out MajorRecord_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out Enchantment_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out Enchantment_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (Enchantment_ErrorMask)this.Write_XML_Internal(
-                writer: writer,
+            errorMask = this.Write_XML_Internal(
+                node: node,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as Enchantment_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out Enchantment_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             out Enchantment_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public override void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -346,39 +432,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public override void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected override object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             EnchantmentCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -500,19 +580,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Enchantment Create_Binary(
             MutagenFrame frame,
-            out Enchantment_ErrorMask errorMask)
-        {
-            return Create_Binary(
-                frame: frame,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static Enchantment Create_Binary(
-            MutagenFrame frame,
-            bool doMasks,
-            out Enchantment_ErrorMask errorMask)
+            out Enchantment_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -585,35 +654,40 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out Enchantment_ErrorMask errorMask)
+            out Enchantment_ErrorMask errorMask,
+            bool doMasks = true)
         {
-            errorMask = (Enchantment_ErrorMask)this.Write_Binary_Internal(
+            errorMask = this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as Enchantment_ErrorMask;
         }
 
         public virtual void Write_Binary(
             string path,
-            out Enchantment_ErrorMask errorMask)
+            out Enchantment_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
-            out Enchantment_ErrorMask errorMask)
+            out Enchantment_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -1620,7 +1694,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IEnchantmentGetter item,
             bool doMasks,
             out Enchantment_ErrorMask errorMask,
@@ -1628,7 +1702,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Enchantment_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Enchantment_ErrorMask()) : default(Func<Enchantment_ErrorMask>));
@@ -1636,62 +1710,61 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IEnchantmentGetter item,
             Func<Enchantment_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.Enchantment"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Enchantment");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Enchantment");
-                    }
-                    EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Type),
-                        item: item.Type_Property,
-                        fieldIndex: (int)Enchantment_FieldIndex.Type,
-                        errorMask: errorMask);
-                    UInt32XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.ChargeAmount),
-                        item: item.ChargeAmount_Property,
-                        fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
-                        errorMask: errorMask);
-                    UInt32XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.EnchantCost),
-                        item: item.EnchantCost_Property,
-                        fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
-                        errorMask: errorMask);
-                    EnumXmlTranslation<Enchantment.Flag>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Flags),
-                        item: item.Flags_Property,
-                        fieldIndex: (int)Enchantment_FieldIndex.Flags,
-                        errorMask: errorMask);
-                    if (item.Effects.HasBeenSet)
-                    {
-                        ListXmlTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Effects),
-                            item: item.Effects,
-                            fieldIndex: (int)Enchantment_FieldIndex.Effects,
-                            errorMask: errorMask,
-                            transl: (Effect subItem, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
-                            {
-                                LoquiXmlTranslation<Effect, Effect_ErrorMask>.Instance.Write(
-                                    writer: writer,
-                                    item: subItem,
-                                    name: "Item",
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Enchantment");
+                }
+                EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Type),
+                    item: item.Type_Property,
+                    fieldIndex: (int)Enchantment_FieldIndex.Type,
+                    errorMask: errorMask);
+                UInt32XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.ChargeAmount),
+                    item: item.ChargeAmount_Property,
+                    fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
+                    errorMask: errorMask);
+                UInt32XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.EnchantCost),
+                    item: item.EnchantCost_Property,
+                    fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
+                    errorMask: errorMask);
+                EnumXmlTranslation<Enchantment.Flag>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Flags),
+                    item: item.Flags_Property,
+                    fieldIndex: (int)Enchantment_FieldIndex.Flags,
+                    errorMask: errorMask);
+                if (item.Effects.HasBeenSet)
+                {
+                    ListXmlTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Effects),
+                        item: item.Effects,
+                        fieldIndex: (int)Enchantment_FieldIndex.Effects,
+                        errorMask: errorMask,
+                        transl: (XElement subNode, Effect subItem, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
+                        {
+                            LoquiXmlTranslation<Effect, Effect_ErrorMask>.Instance.Write(
+                                node: subNode,
+                                item: subItem,
+                                name: "Item",
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
                 }
             }
             catch (Exception ex)
@@ -1795,10 +1868,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Effects,
                 fieldIndex: (int)Enchantment_FieldIndex.Effects,
                 errorMask: errorMask,
-                transl: (Effect subItem, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
+                transl: (MutagenWriter subWriter, Effect subItem, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
                 {
                     LoquiBinaryTranslation<Effect, Effect_ErrorMask>.Instance.Write(
-                        writer: writer,
+                        writer: subWriter,
                         item: subItem,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask);
@@ -2023,6 +2096,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
+            switch (enu)
+            {
+                case Enchantment_FieldIndex.Type:
+                    return Type;
+                case Enchantment_FieldIndex.ChargeAmount:
+                    return ChargeAmount;
+                case Enchantment_FieldIndex.EnchantCost:
+                    return EnchantCost;
+                case Enchantment_FieldIndex.Flags:
+                    return Flags;
+                case Enchantment_FieldIndex.Effects:
+                    return Effects;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;

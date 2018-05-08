@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>25cb92281b33ae9127ae6ddadfc7f290d4d1ad50</Sha>
+         <Sha>760d3dce4f1cd6df2ce68f63648b16c71afe85d2</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>05-07-2018 23:46:57</CommitDate>
-         <Description>IBinaryStream BinaryMemoryStream BinaryReadStream</Description>
+         <CommitDate>05-08-2018 18:24:44</CommitDate>
+         <Description>Merge branch 'Laptop' into Desktop</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>7ba8e4f3bbb99bc6ad5941a736403cc0f6972543</Sha>
+         <Sha>7981caa1031172c1f1bf48cbe09b6983882152ba</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>04-26-2018 19:04:21</CommitDate>
-         <Description>P3Float xsd listing.  Small fixes</Description>
+         <CommitDate>05-08-2018 18:41:59</CommitDate>
+         <Description>Merge fixes</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

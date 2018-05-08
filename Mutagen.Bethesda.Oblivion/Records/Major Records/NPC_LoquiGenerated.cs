@@ -1311,19 +1311,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static NPC Create_XML(
             XElement root,
-            out NPC_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static NPC Create_XML(
-            XElement root,
-            bool doMasks,
-            out NPC_ErrorMask errorMask)
+            out NPC_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_XML(
                 root: root,
@@ -1378,56 +1367,153 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region XML Copy In
+        public override void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<NPC, NPC_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out NPC_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<NPC, NPC_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out NPC_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out NPC_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
+            out NamedMajorRecord_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out NPC_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
+            out MajorRecord_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out NPC_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out NPC_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (NPC_ErrorMask)this.Write_XML_Internal(
-                writer: writer,
+            errorMask = this.Write_XML_Internal(
+                node: node,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as NPC_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out NPC_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             out NPC_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public override void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -1436,39 +1522,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public override void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected override object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             NPCCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -1998,19 +2078,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static NPC Create_Binary(
             MutagenFrame frame,
-            out NPC_ErrorMask errorMask)
-        {
-            return Create_Binary(
-                frame: frame,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static NPC Create_Binary(
-            MutagenFrame frame,
-            bool doMasks,
-            out NPC_ErrorMask errorMask)
+            out NPC_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -2083,35 +2152,40 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out NPC_ErrorMask errorMask)
+            out NPC_ErrorMask errorMask,
+            bool doMasks = true)
         {
-            errorMask = (NPC_ErrorMask)this.Write_Binary_Internal(
+            errorMask = this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as NPC_ErrorMask;
         }
 
         public virtual void Write_Binary(
             string path,
-            out NPC_ErrorMask errorMask)
+            out NPC_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
-            out NPC_ErrorMask errorMask)
+            out NPC_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -2374,7 +2448,8 @@ namespace Mutagen.Bethesda.Oblivion
                             return Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                                 r,
                                 doMasks: listDoMasks,
-                                errorMask: out listSubMask);
+                                errorMask: out listSubMask,
+                                parseWhole: false);
                         }
                         );
                     item._Animations.SetIfSucceeded(AnimationstryGet);
@@ -7175,7 +7250,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             INPCGetter item,
             bool doMasks,
             out NPC_ErrorMask errorMask,
@@ -7183,7 +7258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             NPC_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new NPC_ErrorMask()) : default(Func<NPC_ErrorMask>));
@@ -7191,520 +7266,519 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             INPCGetter item,
             Func<NPC_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.NPC"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.NPC");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.NPC");
-                    }
-                    if (item.Model_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.Model_Property,
-                            name: nameof(item.Model),
-                            fieldIndex: (int)NPC_FieldIndex.Model,
-                            errorMask: errorMask);
-                    }
-                    EnumXmlTranslation<NPC.NPCFlag>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.NPCFlags),
-                        item: item.NPCFlags_Property,
-                        fieldIndex: (int)NPC_FieldIndex.NPCFlags,
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.NPC");
+                }
+                if (item.Model_Property.HasBeenSet)
+                {
+                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
+                        node: elem,
+                        item: item.Model_Property,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)NPC_FieldIndex.Model,
                         errorMask: errorMask);
-                    UInt16XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.BaseSpellPoints),
-                        item: item.BaseSpellPoints_Property,
-                        fieldIndex: (int)NPC_FieldIndex.BaseSpellPoints,
+                }
+                EnumXmlTranslation<NPC.NPCFlag>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.NPCFlags),
+                    item: item.NPCFlags_Property,
+                    fieldIndex: (int)NPC_FieldIndex.NPCFlags,
+                    errorMask: errorMask);
+                UInt16XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.BaseSpellPoints),
+                    item: item.BaseSpellPoints_Property,
+                    fieldIndex: (int)NPC_FieldIndex.BaseSpellPoints,
+                    errorMask: errorMask);
+                UInt16XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Fatigue),
+                    item: item.Fatigue_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Fatigue,
+                    errorMask: errorMask);
+                UInt16XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.BarterGold),
+                    item: item.BarterGold_Property,
+                    fieldIndex: (int)NPC_FieldIndex.BarterGold,
+                    errorMask: errorMask);
+                Int16XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.LevelOffset),
+                    item: item.LevelOffset_Property,
+                    fieldIndex: (int)NPC_FieldIndex.LevelOffset,
+                    errorMask: errorMask);
+                UInt16XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.CalcMin),
+                    item: item.CalcMin_Property,
+                    fieldIndex: (int)NPC_FieldIndex.CalcMin,
+                    errorMask: errorMask);
+                UInt16XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.CalcMax),
+                    item: item.CalcMax_Property,
+                    fieldIndex: (int)NPC_FieldIndex.CalcMax,
+                    errorMask: errorMask);
+                if (item.Factions.HasBeenSet)
+                {
+                    ListXmlTranslation<RankPlacement, MaskItem<Exception, RankPlacement_ErrorMask>>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Factions),
+                        item: item.Factions,
+                        fieldIndex: (int)NPC_FieldIndex.Factions,
+                        errorMask: errorMask,
+                        transl: (XElement subNode, RankPlacement subItem, bool listDoMasks, out MaskItem<Exception, RankPlacement_ErrorMask> listSubMask) =>
+                        {
+                            LoquiXmlTranslation<RankPlacement, RankPlacement_ErrorMask>.Instance.Write(
+                                node: subNode,
+                                item: subItem,
+                                name: "Item",
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                }
+                if (item.DeathItem_Property.HasBeenSet)
+                {
+                    FormIDXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.DeathItem),
+                        item: item.DeathItem?.FormID,
+                        fieldIndex: (int)NPC_FieldIndex.DeathItem,
                         errorMask: errorMask);
-                    UInt16XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Fatigue),
-                        item: item.Fatigue_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Fatigue,
+                }
+                if (item.Race_Property.HasBeenSet)
+                {
+                    FormIDXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Race),
+                        item: item.Race?.FormID,
+                        fieldIndex: (int)NPC_FieldIndex.Race,
                         errorMask: errorMask);
-                    UInt16XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.BarterGold),
-                        item: item.BarterGold_Property,
-                        fieldIndex: (int)NPC_FieldIndex.BarterGold,
+                }
+                if (item.Spells.HasBeenSet)
+                {
+                    ListXmlTranslation<FormIDSetLink<Spell>, Exception>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Spells),
+                        item: item.Spells,
+                        fieldIndex: (int)NPC_FieldIndex.Spells,
+                        errorMask: errorMask,
+                        transl: (XElement subNode, FormIDSetLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            FormIDXmlTranslation.Instance.Write(
+                                node: subNode,
+                                name: "Item",
+                                item: subItem?.FormID,
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                }
+                if (item.Script_Property.HasBeenSet)
+                {
+                    FormIDXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Script),
+                        item: item.Script?.FormID,
+                        fieldIndex: (int)NPC_FieldIndex.Script,
                         errorMask: errorMask);
-                    Int16XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.LevelOffset),
-                        item: item.LevelOffset_Property,
-                        fieldIndex: (int)NPC_FieldIndex.LevelOffset,
+                }
+                if (item.Items.HasBeenSet)
+                {
+                    ListXmlTranslation<ItemEntry, MaskItem<Exception, ItemEntry_ErrorMask>>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Items),
+                        item: item.Items,
+                        fieldIndex: (int)NPC_FieldIndex.Items,
+                        errorMask: errorMask,
+                        transl: (XElement subNode, ItemEntry subItem, bool listDoMasks, out MaskItem<Exception, ItemEntry_ErrorMask> listSubMask) =>
+                        {
+                            LoquiXmlTranslation<ItemEntry, ItemEntry_ErrorMask>.Instance.Write(
+                                node: subNode,
+                                item: subItem,
+                                name: "Item",
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                }
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Aggression),
+                    item: item.Aggression_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Aggression,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Confidence),
+                    item: item.Confidence_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Confidence,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.EnergyLevel),
+                    item: item.EnergyLevel_Property,
+                    fieldIndex: (int)NPC_FieldIndex.EnergyLevel,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Responsibility),
+                    item: item.Responsibility_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Responsibility,
+                    errorMask: errorMask);
+                EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.BuySellServices),
+                    item: item.BuySellServices_Property,
+                    fieldIndex: (int)NPC_FieldIndex.BuySellServices,
+                    errorMask: errorMask);
+                EnumXmlTranslation<Skill>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Teaches),
+                    item: item.Teaches_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Teaches,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.MaximumTrainingLevel),
+                    item: item.MaximumTrainingLevel_Property,
+                    fieldIndex: (int)NPC_FieldIndex.MaximumTrainingLevel,
+                    errorMask: errorMask);
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Fluff),
+                    item: item.Fluff_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Fluff,
+                    errorMask: errorMask);
+                if (item.AIPackages.HasBeenSet)
+                {
+                    ListXmlTranslation<FormIDSetLink<AIPackage>, Exception>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.AIPackages),
+                        item: item.AIPackages,
+                        fieldIndex: (int)NPC_FieldIndex.AIPackages,
+                        errorMask: errorMask,
+                        transl: (XElement subNode, FormIDSetLink<AIPackage> subItem, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            FormIDXmlTranslation.Instance.Write(
+                                node: subNode,
+                                name: "Item",
+                                item: subItem?.FormID,
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                }
+                if (item.Animations.HasBeenSet)
+                {
+                    ListXmlTranslation<String, Exception>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Animations),
+                        item: item.Animations,
+                        fieldIndex: (int)NPC_FieldIndex.Animations,
+                        errorMask: errorMask,
+                        transl: (XElement subNode, String subItem, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            StringXmlTranslation.Instance.Write(
+                                node: subNode,
+                                name: "Item",
+                                item: subItem,
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                }
+                if (item.Class_Property.HasBeenSet)
+                {
+                    FormIDXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Class),
+                        item: item.Class?.FormID,
+                        fieldIndex: (int)NPC_FieldIndex.Class,
                         errorMask: errorMask);
-                    UInt16XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.CalcMin),
-                        item: item.CalcMin_Property,
-                        fieldIndex: (int)NPC_FieldIndex.CalcMin,
+                }
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Armorer),
+                    item: item.Armorer_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Armorer,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Athletics),
+                    item: item.Athletics_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Athletics,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Blade),
+                    item: item.Blade_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Blade,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Block),
+                    item: item.Block_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Block,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Blunt),
+                    item: item.Blunt_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Blunt,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.HandToHand),
+                    item: item.HandToHand_Property,
+                    fieldIndex: (int)NPC_FieldIndex.HandToHand,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.HeavyArmor),
+                    item: item.HeavyArmor_Property,
+                    fieldIndex: (int)NPC_FieldIndex.HeavyArmor,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Alchemy),
+                    item: item.Alchemy_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Alchemy,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Alteration),
+                    item: item.Alteration_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Alteration,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Conjuration),
+                    item: item.Conjuration_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Conjuration,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Destruction),
+                    item: item.Destruction_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Destruction,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Illusion),
+                    item: item.Illusion_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Illusion,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Mysticism),
+                    item: item.Mysticism_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Mysticism,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Restoration),
+                    item: item.Restoration_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Restoration,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Acrobatics),
+                    item: item.Acrobatics_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Acrobatics,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.LightArmor),
+                    item: item.LightArmor_Property,
+                    fieldIndex: (int)NPC_FieldIndex.LightArmor,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Marksman),
+                    item: item.Marksman_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Marksman,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Mercantile),
+                    item: item.Mercantile_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Mercantile,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Security),
+                    item: item.Security_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Security,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Sneak),
+                    item: item.Sneak_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Sneak,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Speechcraft),
+                    item: item.Speechcraft_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Speechcraft,
+                    errorMask: errorMask);
+                UInt32XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Health),
+                    item: item.Health_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Health,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Strength),
+                    item: item.Strength_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Strength,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Intelligence),
+                    item: item.Intelligence_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Intelligence,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Willpower),
+                    item: item.Willpower_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Willpower,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Agility),
+                    item: item.Agility_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Agility,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Speed),
+                    item: item.Speed_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Speed,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Endurance),
+                    item: item.Endurance_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Endurance,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Personality),
+                    item: item.Personality_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Personality,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Luck),
+                    item: item.Luck_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Luck,
+                    errorMask: errorMask);
+                if (item.Hair_Property.HasBeenSet)
+                {
+                    FormIDXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Hair),
+                        item: item.Hair?.FormID,
+                        fieldIndex: (int)NPC_FieldIndex.Hair,
                         errorMask: errorMask);
-                    UInt16XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.CalcMax),
-                        item: item.CalcMax_Property,
-                        fieldIndex: (int)NPC_FieldIndex.CalcMax,
+                }
+                if (item.HairLength_Property.HasBeenSet)
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.HairLength),
+                        item: item.HairLength_Property,
+                        fieldIndex: (int)NPC_FieldIndex.HairLength,
                         errorMask: errorMask);
-                    if (item.Factions.HasBeenSet)
-                    {
-                        ListXmlTranslation<RankPlacement, MaskItem<Exception, RankPlacement_ErrorMask>>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Factions),
-                            item: item.Factions,
-                            fieldIndex: (int)NPC_FieldIndex.Factions,
-                            errorMask: errorMask,
-                            transl: (RankPlacement subItem, bool listDoMasks, out MaskItem<Exception, RankPlacement_ErrorMask> listSubMask) =>
-                            {
-                                LoquiXmlTranslation<RankPlacement, RankPlacement_ErrorMask>.Instance.Write(
-                                    writer: writer,
-                                    item: subItem,
-                                    name: "Item",
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
-                    if (item.DeathItem_Property.HasBeenSet)
-                    {
-                        FormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.DeathItem),
-                            item: item.DeathItem?.FormID,
-                            fieldIndex: (int)NPC_FieldIndex.DeathItem,
-                            errorMask: errorMask);
-                    }
-                    if (item.Race_Property.HasBeenSet)
-                    {
-                        FormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Race),
-                            item: item.Race?.FormID,
-                            fieldIndex: (int)NPC_FieldIndex.Race,
-                            errorMask: errorMask);
-                    }
-                    if (item.Spells.HasBeenSet)
-                    {
-                        ListXmlTranslation<FormIDSetLink<Spell>, Exception>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Spells),
-                            item: item.Spells,
-                            fieldIndex: (int)NPC_FieldIndex.Spells,
-                            errorMask: errorMask,
-                            transl: (FormIDSetLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
-                            {
-                                FormIDXmlTranslation.Instance.Write(
-                                    writer: writer,
-                                    name: "Item",
-                                    item: subItem?.FormID,
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
-                    if (item.Script_Property.HasBeenSet)
-                    {
-                        FormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Script),
-                            item: item.Script?.FormID,
-                            fieldIndex: (int)NPC_FieldIndex.Script,
-                            errorMask: errorMask);
-                    }
-                    if (item.Items.HasBeenSet)
-                    {
-                        ListXmlTranslation<ItemEntry, MaskItem<Exception, ItemEntry_ErrorMask>>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Items),
-                            item: item.Items,
-                            fieldIndex: (int)NPC_FieldIndex.Items,
-                            errorMask: errorMask,
-                            transl: (ItemEntry subItem, bool listDoMasks, out MaskItem<Exception, ItemEntry_ErrorMask> listSubMask) =>
-                            {
-                                LoquiXmlTranslation<ItemEntry, ItemEntry_ErrorMask>.Instance.Write(
-                                    writer: writer,
-                                    item: subItem,
-                                    name: "Item",
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Aggression),
-                        item: item.Aggression_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Aggression,
+                }
+                if (item.Eyes.HasBeenSet)
+                {
+                    ListXmlTranslation<FormIDLink<Eye>, Exception>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Eyes),
+                        item: item.Eyes,
+                        fieldIndex: (int)NPC_FieldIndex.Eyes,
+                        errorMask: errorMask,
+                        transl: (XElement subNode, FormIDLink<Eye> subItem, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            FormIDXmlTranslation.Instance.Write(
+                                node: subNode,
+                                name: "Item",
+                                item: subItem?.FormID,
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                }
+                if (item.HairColor_Property.HasBeenSet)
+                {
+                    ColorXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.HairColor),
+                        item: item.HairColor_Property,
+                        fieldIndex: (int)NPC_FieldIndex.HairColor,
                         errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Confidence),
-                        item: item.Confidence_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Confidence,
+                }
+                if (item.CombatStyle_Property.HasBeenSet)
+                {
+                    FormIDXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.CombatStyle),
+                        item: item.CombatStyle?.FormID,
+                        fieldIndex: (int)NPC_FieldIndex.CombatStyle,
                         errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.EnergyLevel),
-                        item: item.EnergyLevel_Property,
-                        fieldIndex: (int)NPC_FieldIndex.EnergyLevel,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Responsibility),
-                        item: item.Responsibility_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Responsibility,
-                        errorMask: errorMask);
-                    EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.BuySellServices),
-                        item: item.BuySellServices_Property,
-                        fieldIndex: (int)NPC_FieldIndex.BuySellServices,
-                        errorMask: errorMask);
-                    EnumXmlTranslation<Skill>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Teaches),
-                        item: item.Teaches_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Teaches,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.MaximumTrainingLevel),
-                        item: item.MaximumTrainingLevel_Property,
-                        fieldIndex: (int)NPC_FieldIndex.MaximumTrainingLevel,
-                        errorMask: errorMask);
+                }
+                if (item.FaceGenGeometrySymmetric_Property.HasBeenSet)
+                {
                     ByteArrayXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Fluff),
-                        item: item.Fluff_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Fluff,
+                        node: elem,
+                        name: nameof(item.FaceGenGeometrySymmetric),
+                        item: item.FaceGenGeometrySymmetric_Property,
+                        fieldIndex: (int)NPC_FieldIndex.FaceGenGeometrySymmetric,
                         errorMask: errorMask);
-                    if (item.AIPackages.HasBeenSet)
-                    {
-                        ListXmlTranslation<FormIDSetLink<AIPackage>, Exception>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.AIPackages),
-                            item: item.AIPackages,
-                            fieldIndex: (int)NPC_FieldIndex.AIPackages,
-                            errorMask: errorMask,
-                            transl: (FormIDSetLink<AIPackage> subItem, bool listDoMasks, out Exception listSubMask) =>
-                            {
-                                FormIDXmlTranslation.Instance.Write(
-                                    writer: writer,
-                                    name: "Item",
-                                    item: subItem?.FormID,
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
-                    if (item.Animations.HasBeenSet)
-                    {
-                        ListXmlTranslation<String, Exception>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Animations),
-                            item: item.Animations,
-                            fieldIndex: (int)NPC_FieldIndex.Animations,
-                            errorMask: errorMask,
-                            transl: (String subItem, bool listDoMasks, out Exception listSubMask) =>
-                            {
-                                StringXmlTranslation.Instance.Write(
-                                    writer: writer,
-                                    name: "Item",
-                                    item: subItem,
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
-                    if (item.Class_Property.HasBeenSet)
-                    {
-                        FormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Class),
-                            item: item.Class?.FormID,
-                            fieldIndex: (int)NPC_FieldIndex.Class,
-                            errorMask: errorMask);
-                    }
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Armorer),
-                        item: item.Armorer_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Armorer,
+                }
+                if (item.FaceGenGeometryAsymmetric_Property.HasBeenSet)
+                {
+                    ByteArrayXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.FaceGenGeometryAsymmetric),
+                        item: item.FaceGenGeometryAsymmetric_Property,
+                        fieldIndex: (int)NPC_FieldIndex.FaceGenGeometryAsymmetric,
                         errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Athletics),
-                        item: item.Athletics_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Athletics,
+                }
+                if (item.FaceGenTextureSymmetric_Property.HasBeenSet)
+                {
+                    ByteArrayXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.FaceGenTextureSymmetric),
+                        item: item.FaceGenTextureSymmetric_Property,
+                        fieldIndex: (int)NPC_FieldIndex.FaceGenTextureSymmetric,
                         errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Blade),
-                        item: item.Blade_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Blade,
+                }
+                if (item.Unknown_Property.HasBeenSet)
+                {
+                    ByteArrayXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Unknown),
+                        item: item.Unknown_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Unknown,
                         errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Block),
-                        item: item.Block_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Block,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Blunt),
-                        item: item.Blunt_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Blunt,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.HandToHand),
-                        item: item.HandToHand_Property,
-                        fieldIndex: (int)NPC_FieldIndex.HandToHand,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.HeavyArmor),
-                        item: item.HeavyArmor_Property,
-                        fieldIndex: (int)NPC_FieldIndex.HeavyArmor,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Alchemy),
-                        item: item.Alchemy_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Alchemy,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Alteration),
-                        item: item.Alteration_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Alteration,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Conjuration),
-                        item: item.Conjuration_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Conjuration,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Destruction),
-                        item: item.Destruction_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Destruction,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Illusion),
-                        item: item.Illusion_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Illusion,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Mysticism),
-                        item: item.Mysticism_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Mysticism,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Restoration),
-                        item: item.Restoration_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Restoration,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Acrobatics),
-                        item: item.Acrobatics_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Acrobatics,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.LightArmor),
-                        item: item.LightArmor_Property,
-                        fieldIndex: (int)NPC_FieldIndex.LightArmor,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Marksman),
-                        item: item.Marksman_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Marksman,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Mercantile),
-                        item: item.Mercantile_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Mercantile,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Security),
-                        item: item.Security_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Security,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Sneak),
-                        item: item.Sneak_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Sneak,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Speechcraft),
-                        item: item.Speechcraft_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Speechcraft,
-                        errorMask: errorMask);
-                    UInt32XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Health),
-                        item: item.Health_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Health,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Strength),
-                        item: item.Strength_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Strength,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Intelligence),
-                        item: item.Intelligence_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Intelligence,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Willpower),
-                        item: item.Willpower_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Willpower,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Agility),
-                        item: item.Agility_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Agility,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Speed),
-                        item: item.Speed_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Speed,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Endurance),
-                        item: item.Endurance_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Endurance,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Personality),
-                        item: item.Personality_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Personality,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Luck),
-                        item: item.Luck_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Luck,
-                        errorMask: errorMask);
-                    if (item.Hair_Property.HasBeenSet)
-                    {
-                        FormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Hair),
-                            item: item.Hair?.FormID,
-                            fieldIndex: (int)NPC_FieldIndex.Hair,
-                            errorMask: errorMask);
-                    }
-                    if (item.HairLength_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.HairLength),
-                            item: item.HairLength_Property,
-                            fieldIndex: (int)NPC_FieldIndex.HairLength,
-                            errorMask: errorMask);
-                    }
-                    if (item.Eyes.HasBeenSet)
-                    {
-                        ListXmlTranslation<FormIDLink<Eye>, Exception>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Eyes),
-                            item: item.Eyes,
-                            fieldIndex: (int)NPC_FieldIndex.Eyes,
-                            errorMask: errorMask,
-                            transl: (FormIDLink<Eye> subItem, bool listDoMasks, out Exception listSubMask) =>
-                            {
-                                FormIDXmlTranslation.Instance.Write(
-                                    writer: writer,
-                                    name: "Item",
-                                    item: subItem?.FormID,
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
-                    if (item.HairColor_Property.HasBeenSet)
-                    {
-                        ColorXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.HairColor),
-                            item: item.HairColor_Property,
-                            fieldIndex: (int)NPC_FieldIndex.HairColor,
-                            errorMask: errorMask);
-                    }
-                    if (item.CombatStyle_Property.HasBeenSet)
-                    {
-                        FormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.CombatStyle),
-                            item: item.CombatStyle?.FormID,
-                            fieldIndex: (int)NPC_FieldIndex.CombatStyle,
-                            errorMask: errorMask);
-                    }
-                    if (item.FaceGenGeometrySymmetric_Property.HasBeenSet)
-                    {
-                        ByteArrayXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.FaceGenGeometrySymmetric),
-                            item: item.FaceGenGeometrySymmetric_Property,
-                            fieldIndex: (int)NPC_FieldIndex.FaceGenGeometrySymmetric,
-                            errorMask: errorMask);
-                    }
-                    if (item.FaceGenGeometryAsymmetric_Property.HasBeenSet)
-                    {
-                        ByteArrayXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.FaceGenGeometryAsymmetric),
-                            item: item.FaceGenGeometryAsymmetric_Property,
-                            fieldIndex: (int)NPC_FieldIndex.FaceGenGeometryAsymmetric,
-                            errorMask: errorMask);
-                    }
-                    if (item.FaceGenTextureSymmetric_Property.HasBeenSet)
-                    {
-                        ByteArrayXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.FaceGenTextureSymmetric),
-                            item: item.FaceGenTextureSymmetric_Property,
-                            fieldIndex: (int)NPC_FieldIndex.FaceGenTextureSymmetric,
-                            errorMask: errorMask);
-                    }
-                    if (item.Unknown_Property.HasBeenSet)
-                    {
-                        ByteArrayXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Unknown),
-                            item: item.Unknown_Property,
-                            fieldIndex: (int)NPC_FieldIndex.Unknown,
-                            errorMask: errorMask);
-                    }
                 }
             }
             catch (Exception ex)
@@ -7827,10 +7901,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Factions,
                 fieldIndex: (int)NPC_FieldIndex.Factions,
                 errorMask: errorMask,
-                transl: (RankPlacement subItem, bool listDoMasks, out MaskItem<Exception, RankPlacement_ErrorMask> listSubMask) =>
+                transl: (MutagenWriter subWriter, RankPlacement subItem, bool listDoMasks, out MaskItem<Exception, RankPlacement_ErrorMask> listSubMask) =>
                 {
                     LoquiBinaryTranslation<RankPlacement, RankPlacement_ErrorMask>.Instance.Write(
-                        writer: writer,
+                        writer: subWriter,
                         item: subItem,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask);
@@ -7855,10 +7929,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Spells,
                 fieldIndex: (int)NPC_FieldIndex.Spells,
                 errorMask: errorMask,
-                transl: (FormIDSetLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
+                transl: (MutagenWriter subWriter, FormIDSetLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                        writer: writer,
+                        writer: subWriter,
                         item: subItem,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask,
@@ -7878,10 +7952,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Items,
                 fieldIndex: (int)NPC_FieldIndex.Items,
                 errorMask: errorMask,
-                transl: (ItemEntry subItem, bool listDoMasks, out MaskItem<Exception, ItemEntry_ErrorMask> listSubMask) =>
+                transl: (MutagenWriter subWriter, ItemEntry subItem, bool listDoMasks, out MaskItem<Exception, ItemEntry_ErrorMask> listSubMask) =>
                 {
                     LoquiBinaryTranslation<ItemEntry, ItemEntry_ErrorMask>.Instance.Write(
-                        writer: writer,
+                        writer: subWriter,
                         item: subItem,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask);
@@ -7937,10 +8011,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.AIPackages,
                 fieldIndex: (int)NPC_FieldIndex.AIPackages,
                 errorMask: errorMask,
-                transl: (FormIDSetLink<AIPackage> subItem, bool listDoMasks, out Exception listSubMask) =>
+                transl: (MutagenWriter subWriter, FormIDSetLink<AIPackage> subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                        writer: writer,
+                        writer: subWriter,
                         item: subItem,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask,
@@ -7954,10 +8028,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fieldIndex: (int)NPC_FieldIndex.Animations,
                 recordType: NPC_Registration.KFFZ_HEADER,
                 errorMask: errorMask,
-                transl: (String subItem, bool listDoMasks, out Exception listSubMask) =>
+                transl: (MutagenWriter subWriter, String subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
                     Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                        writer: writer,
+                        writer: subWriter,
                         item: subItem,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask);
@@ -8143,10 +8217,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fieldIndex: (int)NPC_FieldIndex.Eyes,
                 recordType: NPC_Registration.ENAM_HEADER,
                 errorMask: errorMask,
-                transl: (FormIDLink<Eye> subItem, bool listDoMasks, out Exception listSubMask) =>
+                transl: (MutagenWriter subWriter, FormIDLink<Eye> subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                        writer: writer,
+                        writer: subWriter,
                         item: subItem,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask);
@@ -9319,6 +9393,144 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            NPC_FieldIndex enu = (NPC_FieldIndex)index;
+            switch (enu)
+            {
+                case NPC_FieldIndex.Model:
+                    return Model;
+                case NPC_FieldIndex.NPCFlags:
+                    return NPCFlags;
+                case NPC_FieldIndex.BaseSpellPoints:
+                    return BaseSpellPoints;
+                case NPC_FieldIndex.Fatigue:
+                    return Fatigue;
+                case NPC_FieldIndex.BarterGold:
+                    return BarterGold;
+                case NPC_FieldIndex.LevelOffset:
+                    return LevelOffset;
+                case NPC_FieldIndex.CalcMin:
+                    return CalcMin;
+                case NPC_FieldIndex.CalcMax:
+                    return CalcMax;
+                case NPC_FieldIndex.Factions:
+                    return Factions;
+                case NPC_FieldIndex.DeathItem:
+                    return DeathItem;
+                case NPC_FieldIndex.Race:
+                    return Race;
+                case NPC_FieldIndex.Spells:
+                    return Spells;
+                case NPC_FieldIndex.Script:
+                    return Script;
+                case NPC_FieldIndex.Items:
+                    return Items;
+                case NPC_FieldIndex.Aggression:
+                    return Aggression;
+                case NPC_FieldIndex.Confidence:
+                    return Confidence;
+                case NPC_FieldIndex.EnergyLevel:
+                    return EnergyLevel;
+                case NPC_FieldIndex.Responsibility:
+                    return Responsibility;
+                case NPC_FieldIndex.BuySellServices:
+                    return BuySellServices;
+                case NPC_FieldIndex.Teaches:
+                    return Teaches;
+                case NPC_FieldIndex.MaximumTrainingLevel:
+                    return MaximumTrainingLevel;
+                case NPC_FieldIndex.Fluff:
+                    return Fluff;
+                case NPC_FieldIndex.AIPackages:
+                    return AIPackages;
+                case NPC_FieldIndex.Animations:
+                    return Animations;
+                case NPC_FieldIndex.Class:
+                    return Class;
+                case NPC_FieldIndex.Armorer:
+                    return Armorer;
+                case NPC_FieldIndex.Athletics:
+                    return Athletics;
+                case NPC_FieldIndex.Blade:
+                    return Blade;
+                case NPC_FieldIndex.Block:
+                    return Block;
+                case NPC_FieldIndex.Blunt:
+                    return Blunt;
+                case NPC_FieldIndex.HandToHand:
+                    return HandToHand;
+                case NPC_FieldIndex.HeavyArmor:
+                    return HeavyArmor;
+                case NPC_FieldIndex.Alchemy:
+                    return Alchemy;
+                case NPC_FieldIndex.Alteration:
+                    return Alteration;
+                case NPC_FieldIndex.Conjuration:
+                    return Conjuration;
+                case NPC_FieldIndex.Destruction:
+                    return Destruction;
+                case NPC_FieldIndex.Illusion:
+                    return Illusion;
+                case NPC_FieldIndex.Mysticism:
+                    return Mysticism;
+                case NPC_FieldIndex.Restoration:
+                    return Restoration;
+                case NPC_FieldIndex.Acrobatics:
+                    return Acrobatics;
+                case NPC_FieldIndex.LightArmor:
+                    return LightArmor;
+                case NPC_FieldIndex.Marksman:
+                    return Marksman;
+                case NPC_FieldIndex.Mercantile:
+                    return Mercantile;
+                case NPC_FieldIndex.Security:
+                    return Security;
+                case NPC_FieldIndex.Sneak:
+                    return Sneak;
+                case NPC_FieldIndex.Speechcraft:
+                    return Speechcraft;
+                case NPC_FieldIndex.Health:
+                    return Health;
+                case NPC_FieldIndex.Strength:
+                    return Strength;
+                case NPC_FieldIndex.Intelligence:
+                    return Intelligence;
+                case NPC_FieldIndex.Willpower:
+                    return Willpower;
+                case NPC_FieldIndex.Agility:
+                    return Agility;
+                case NPC_FieldIndex.Speed:
+                    return Speed;
+                case NPC_FieldIndex.Endurance:
+                    return Endurance;
+                case NPC_FieldIndex.Personality:
+                    return Personality;
+                case NPC_FieldIndex.Luck:
+                    return Luck;
+                case NPC_FieldIndex.Hair:
+                    return Hair;
+                case NPC_FieldIndex.HairLength:
+                    return HairLength;
+                case NPC_FieldIndex.Eyes:
+                    return Eyes;
+                case NPC_FieldIndex.HairColor:
+                    return HairColor;
+                case NPC_FieldIndex.CombatStyle:
+                    return CombatStyle;
+                case NPC_FieldIndex.FaceGenGeometrySymmetric:
+                    return FaceGenGeometrySymmetric;
+                case NPC_FieldIndex.FaceGenGeometryAsymmetric:
+                    return FaceGenGeometryAsymmetric;
+                case NPC_FieldIndex.FaceGenTextureSymmetric:
+                    return FaceGenTextureSymmetric;
+                case NPC_FieldIndex.Unknown:
+                    return Unknown;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             NPC_FieldIndex enu = (NPC_FieldIndex)index;

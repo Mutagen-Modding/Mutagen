@@ -147,19 +147,8 @@ namespace Mutagen.Bethesda.Tests
         [DebuggerStepThrough]
         public static BinaryProcessorInstructions Create_XML(
             XElement root,
-            out BinaryProcessorInstructions_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static BinaryProcessorInstructions Create_XML(
-            XElement root,
-            bool doMasks,
-            out BinaryProcessorInstructions_ErrorMask errorMask)
+            out BinaryProcessorInstructions_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_XML(
                 root: root,
@@ -214,56 +203,129 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
+        #region XML Copy In
+        public void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<BinaryProcessorInstructions, BinaryProcessorInstructions_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out BinaryProcessorInstructions_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<BinaryProcessorInstructions, BinaryProcessorInstructions_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out BinaryProcessorInstructions_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out BinaryProcessorInstructions_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out BinaryProcessorInstructions_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (BinaryProcessorInstructions_ErrorMask)this.Write_XML_Internal(
-                writer: writer,
+            errorMask = this.Write_XML_Internal(
+                node: node,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as BinaryProcessorInstructions_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out BinaryProcessorInstructions_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             out BinaryProcessorInstructions_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -272,39 +334,33 @@ namespace Mutagen.Bethesda.Tests
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             BinaryProcessorInstructionsCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -1036,7 +1092,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IBinaryProcessorInstructionsGetter item,
             bool doMasks,
             out BinaryProcessorInstructions_ErrorMask errorMask,
@@ -1044,7 +1100,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             BinaryProcessorInstructions_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new BinaryProcessorInstructions_ErrorMask()) : default(Func<BinaryProcessorInstructions_ErrorMask>));
@@ -1052,42 +1108,41 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IBinaryProcessorInstructionsGetter item,
             Func<BinaryProcessorInstructions_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Tests.BinaryProcessorInstructions"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.BinaryProcessorInstructions");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Tests.BinaryProcessorInstructions");
-                    }
-                    KeyedDictXmlTranslation<FormID, RecordInstruction, MaskItem<Exception, RecordInstruction_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.CompressionInstructions),
-                        items: item.CompressionInstructions.Values,
-                        fieldIndex: (int)BinaryProcessorInstructions_FieldIndex.CompressionInstructions,
-                        errorMask: errorMask,
-                        valTransl: (RecordInstruction subItem, bool dictDoMask, out MaskItem<Exception, RecordInstruction_ErrorMask> dictSubMask) =>
-                        {
-                            LoquiXmlTranslation<RecordInstruction, RecordInstruction_ErrorMask>.Instance.Write(
-                                writer: writer,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: dictDoMask,
-                                errorMask: out dictSubMask);
-                        }
-                        );
-                    LoquiXmlTranslation<Instruction, Instruction_ErrorMask>.Instance.Write(
-                        writer: writer,
-                        item: item.Instruction,
-                        name: nameof(item.Instruction),
-                        fieldIndex: (int)BinaryProcessorInstructions_FieldIndex.Instruction,
-                        errorMask: errorMask);
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.BinaryProcessorInstructions");
                 }
+                KeyedDictXmlTranslation<FormID, RecordInstruction, MaskItem<Exception, RecordInstruction_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.CompressionInstructions),
+                    items: item.CompressionInstructions.Values,
+                    fieldIndex: (int)BinaryProcessorInstructions_FieldIndex.CompressionInstructions,
+                    errorMask: errorMask,
+                    valTransl: (XElement subNode, RecordInstruction subItem, bool dictDoMask, out MaskItem<Exception, RecordInstruction_ErrorMask> dictSubMask) =>
+                    {
+                        LoquiXmlTranslation<RecordInstruction, RecordInstruction_ErrorMask>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            doMasks: dictDoMask,
+                            errorMask: out dictSubMask);
+                    }
+                    );
+                LoquiXmlTranslation<Instruction, Instruction_ErrorMask>.Instance.Write(
+                    node: elem,
+                    item: item.Instruction,
+                    name: nameof(item.Instruction),
+                    fieldIndex: (int)BinaryProcessorInstructions_FieldIndex.Instruction,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (errorMask != null)
@@ -1301,6 +1356,20 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            BinaryProcessorInstructions_FieldIndex enu = (BinaryProcessorInstructions_FieldIndex)index;
+            switch (enu)
+            {
+                case BinaryProcessorInstructions_FieldIndex.CompressionInstructions:
+                    return CompressionInstructions;
+                case BinaryProcessorInstructions_FieldIndex.Instruction:
+                    return Instruction;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             BinaryProcessorInstructions_FieldIndex enu = (BinaryProcessorInstructions_FieldIndex)index;

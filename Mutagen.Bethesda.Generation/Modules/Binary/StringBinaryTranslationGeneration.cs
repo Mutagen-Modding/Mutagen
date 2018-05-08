@@ -83,6 +83,7 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"frame: {nodeAccessor}");
                 }
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
+                args.Add($"parseWhole: true");
                 args.Add($"errorMask: {maskAccessor}");
             }
             if (itemAccessor.PropertyAccess != null)
@@ -105,6 +106,7 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration targetGen,
             TypeGeneration typeGen,
             string nodeAccessor,
+            bool squashedRepeatedList,
             Accessor retAccessor,
             string doMaskAccessor,
             string maskAccessor)
@@ -117,6 +119,7 @@ namespace Mutagen.Bethesda.Generation
                 args.Add(nodeAccessor);
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
+                args.Add($"parseWhole: {(squashedRepeatedList ? "false" : "true")}");
                 if (data.RecordType.HasValue)
                 {
                     args.Add($"header: recordTypeConverter.Convert({objGen.RecordTypeHeaderName(data.RecordType.Value)})");

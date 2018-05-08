@@ -321,19 +321,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Ammo Create_XML(
             XElement root,
-            out Ammo_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static Ammo Create_XML(
-            XElement root,
-            bool doMasks,
-            out Ammo_ErrorMask errorMask)
+            out Ammo_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_XML(
                 root: root,
@@ -388,56 +377,153 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region XML Copy In
+        public override void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<Ammo, Ammo_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out Ammo_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<Ammo, Ammo_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out Ammo_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out Ammo_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
+            out ItemAbstract_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out Ammo_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
+            out MajorRecord_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out Ammo_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out Ammo_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (Ammo_ErrorMask)this.Write_XML_Internal(
-                writer: writer,
+            errorMask = this.Write_XML_Internal(
+                node: node,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as Ammo_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out Ammo_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             out Ammo_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public override void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -446,39 +532,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public override void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected override object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             AmmoCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -618,19 +698,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Ammo Create_Binary(
             MutagenFrame frame,
-            out Ammo_ErrorMask errorMask)
-        {
-            return Create_Binary(
-                frame: frame,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static Ammo Create_Binary(
-            MutagenFrame frame,
-            bool doMasks,
-            out Ammo_ErrorMask errorMask)
+            out Ammo_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -703,35 +772,40 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out Ammo_ErrorMask errorMask)
+            out Ammo_ErrorMask errorMask,
+            bool doMasks = true)
         {
-            errorMask = (Ammo_ErrorMask)this.Write_Binary_Internal(
+            errorMask = this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as Ammo_ErrorMask;
         }
 
         public virtual void Write_Binary(
             string path,
-            out Ammo_ErrorMask errorMask)
+            out Ammo_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
-            out Ammo_ErrorMask errorMask)
+            out Ammo_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -817,6 +891,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var NametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Ammo_FieldIndex.Name,
+                        parseWhole: true,
                         errorMask: errorMask);
                     item._Name.SetIfSucceeded(NametryGet);
                     return TryGet<Ammo_FieldIndex?>.Succeed(Ammo_FieldIndex.Name);
@@ -2056,7 +2131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IAmmoGetter item,
             bool doMasks,
             out Ammo_ErrorMask errorMask,
@@ -2064,7 +2139,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Ammo_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Ammo_ErrorMask()) : default(Func<Ammo_ErrorMask>));
@@ -2072,95 +2147,94 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IAmmoGetter item,
             Func<Ammo_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.Ammo"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Ammo");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Ammo");
-                    }
-                    if (item.Name_Property.HasBeenSet)
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Name),
-                            item: item.Name_Property,
-                            fieldIndex: (int)Ammo_FieldIndex.Name,
-                            errorMask: errorMask);
-                    }
-                    if (item.Model_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.Model_Property,
-                            name: nameof(item.Model),
-                            fieldIndex: (int)Ammo_FieldIndex.Model,
-                            errorMask: errorMask);
-                    }
-                    if (item.Icon_Property.HasBeenSet)
-                    {
-                        FilePathXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Icon),
-                            item: item.Icon_Property,
-                            fieldIndex: (int)Ammo_FieldIndex.Icon,
-                            errorMask: errorMask);
-                    }
-                    if (item.Enchantment_Property.HasBeenSet)
-                    {
-                        FormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Enchantment),
-                            item: item.Enchantment?.FormID,
-                            fieldIndex: (int)Ammo_FieldIndex.Enchantment,
-                            errorMask: errorMask);
-                    }
-                    if (item.EnchantmentPoints_Property.HasBeenSet)
-                    {
-                        UInt16XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.EnchantmentPoints),
-                            item: item.EnchantmentPoints_Property,
-                            fieldIndex: (int)Ammo_FieldIndex.EnchantmentPoints,
-                            errorMask: errorMask);
-                    }
-                    FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Speed),
-                        item: item.Speed_Property,
-                        fieldIndex: (int)Ammo_FieldIndex.Speed,
-                        errorMask: errorMask);
-                    EnumXmlTranslation<Ammo.AmmoFlag>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Flags),
-                        item: item.Flags_Property,
-                        fieldIndex: (int)Ammo_FieldIndex.Flags,
-                        errorMask: errorMask);
-                    UInt32XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Value),
-                        item: item.Value_Property,
-                        fieldIndex: (int)Ammo_FieldIndex.Value,
-                        errorMask: errorMask);
-                    FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Weight),
-                        item: item.Weight_Property,
-                        fieldIndex: (int)Ammo_FieldIndex.Weight,
-                        errorMask: errorMask);
-                    UInt16XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Damage),
-                        item: item.Damage_Property,
-                        fieldIndex: (int)Ammo_FieldIndex.Damage,
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Ammo");
+                }
+                if (item.Name_Property.HasBeenSet)
+                {
+                    StringXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Name),
+                        item: item.Name_Property,
+                        fieldIndex: (int)Ammo_FieldIndex.Name,
                         errorMask: errorMask);
                 }
+                if (item.Model_Property.HasBeenSet)
+                {
+                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
+                        node: elem,
+                        item: item.Model_Property,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)Ammo_FieldIndex.Model,
+                        errorMask: errorMask);
+                }
+                if (item.Icon_Property.HasBeenSet)
+                {
+                    FilePathXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Icon),
+                        item: item.Icon_Property,
+                        fieldIndex: (int)Ammo_FieldIndex.Icon,
+                        errorMask: errorMask);
+                }
+                if (item.Enchantment_Property.HasBeenSet)
+                {
+                    FormIDXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Enchantment),
+                        item: item.Enchantment?.FormID,
+                        fieldIndex: (int)Ammo_FieldIndex.Enchantment,
+                        errorMask: errorMask);
+                }
+                if (item.EnchantmentPoints_Property.HasBeenSet)
+                {
+                    UInt16XmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.EnchantmentPoints),
+                        item: item.EnchantmentPoints_Property,
+                        fieldIndex: (int)Ammo_FieldIndex.EnchantmentPoints,
+                        errorMask: errorMask);
+                }
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Speed),
+                    item: item.Speed_Property,
+                    fieldIndex: (int)Ammo_FieldIndex.Speed,
+                    errorMask: errorMask);
+                EnumXmlTranslation<Ammo.AmmoFlag>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Flags),
+                    item: item.Flags_Property,
+                    fieldIndex: (int)Ammo_FieldIndex.Flags,
+                    errorMask: errorMask);
+                UInt32XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Value),
+                    item: item.Value_Property,
+                    fieldIndex: (int)Ammo_FieldIndex.Value,
+                    errorMask: errorMask);
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Weight),
+                    item: item.Weight_Property,
+                    fieldIndex: (int)Ammo_FieldIndex.Weight,
+                    errorMask: errorMask);
+                UInt16XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Damage),
+                    item: item.Damage_Property,
+                    fieldIndex: (int)Ammo_FieldIndex.Damage,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (errorMask != null)
@@ -2525,6 +2599,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Ammo_FieldIndex enu = (Ammo_FieldIndex)index;
+            switch (enu)
+            {
+                case Ammo_FieldIndex.Name:
+                    return Name;
+                case Ammo_FieldIndex.Model:
+                    return Model;
+                case Ammo_FieldIndex.Icon:
+                    return Icon;
+                case Ammo_FieldIndex.Enchantment:
+                    return Enchantment;
+                case Ammo_FieldIndex.EnchantmentPoints:
+                    return EnchantmentPoints;
+                case Ammo_FieldIndex.Speed:
+                    return Speed;
+                case Ammo_FieldIndex.Flags:
+                    return Flags;
+                case Ammo_FieldIndex.Value:
+                    return Value;
+                case Ammo_FieldIndex.Weight:
+                    return Weight;
+                case Ammo_FieldIndex.Damage:
+                    return Damage;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Ammo_FieldIndex enu = (Ammo_FieldIndex)index;

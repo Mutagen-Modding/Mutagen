@@ -29,7 +29,8 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration targetGen,
             TypeGeneration typeGen,
-            string nodeAccessor, 
+            string nodeAccessor,
+            bool squashedRepeatedList,
             Accessor retAccessor,
             string doMaskAccessor,
             string maskAccessor)

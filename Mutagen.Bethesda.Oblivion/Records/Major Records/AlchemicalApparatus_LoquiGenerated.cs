@@ -253,19 +253,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static AlchemicalApparatus Create_XML(
             XElement root,
-            out AlchemicalApparatus_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static AlchemicalApparatus Create_XML(
-            XElement root,
-            bool doMasks,
-            out AlchemicalApparatus_ErrorMask errorMask)
+            out AlchemicalApparatus_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_XML(
                 root: root,
@@ -320,56 +309,153 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region XML Copy In
+        public override void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<AlchemicalApparatus, AlchemicalApparatus_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out AlchemicalApparatus_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<AlchemicalApparatus, AlchemicalApparatus_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out AlchemicalApparatus_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out AlchemicalApparatus_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
+            out NamedMajorRecord_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out AlchemicalApparatus_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
+            out MajorRecord_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out AlchemicalApparatus_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out AlchemicalApparatus_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (AlchemicalApparatus_ErrorMask)this.Write_XML_Internal(
-                writer: writer,
+            errorMask = this.Write_XML_Internal(
+                node: node,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as AlchemicalApparatus_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out AlchemicalApparatus_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             out AlchemicalApparatus_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public override void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -378,39 +464,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public override void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected override object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             AlchemicalApparatusCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -532,19 +612,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static AlchemicalApparatus Create_Binary(
             MutagenFrame frame,
-            out AlchemicalApparatus_ErrorMask errorMask)
-        {
-            return Create_Binary(
-                frame: frame,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static AlchemicalApparatus Create_Binary(
-            MutagenFrame frame,
-            bool doMasks,
-            out AlchemicalApparatus_ErrorMask errorMask)
+            out AlchemicalApparatus_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -617,35 +686,40 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out AlchemicalApparatus_ErrorMask errorMask)
+            out AlchemicalApparatus_ErrorMask errorMask,
+            bool doMasks = true)
         {
-            errorMask = (AlchemicalApparatus_ErrorMask)this.Write_Binary_Internal(
+            errorMask = this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as AlchemicalApparatus_ErrorMask;
         }
 
         public virtual void Write_Binary(
             string path,
-            out AlchemicalApparatus_ErrorMask errorMask)
+            out AlchemicalApparatus_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
-            out AlchemicalApparatus_ErrorMask errorMask)
+            out AlchemicalApparatus_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -1768,7 +1842,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IAlchemicalApparatusGetter item,
             bool doMasks,
             out AlchemicalApparatus_ErrorMask errorMask,
@@ -1776,7 +1850,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             AlchemicalApparatus_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new AlchemicalApparatus_ErrorMask()) : default(Func<AlchemicalApparatus_ErrorMask>));
@@ -1784,71 +1858,70 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IAlchemicalApparatusGetter item,
             Func<AlchemicalApparatus_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.AlchemicalApparatus"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.AlchemicalApparatus");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.AlchemicalApparatus");
-                    }
-                    if (item.Model_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.Model_Property,
-                            name: nameof(item.Model),
-                            fieldIndex: (int)AlchemicalApparatus_FieldIndex.Model,
-                            errorMask: errorMask);
-                    }
-                    if (item.Icon_Property.HasBeenSet)
-                    {
-                        FilePathXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Icon),
-                            item: item.Icon_Property,
-                            fieldIndex: (int)AlchemicalApparatus_FieldIndex.Icon,
-                            errorMask: errorMask);
-                    }
-                    if (item.Script_Property.HasBeenSet)
-                    {
-                        FormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Script),
-                            item: item.Script?.FormID,
-                            fieldIndex: (int)AlchemicalApparatus_FieldIndex.Script,
-                            errorMask: errorMask);
-                    }
-                    EnumXmlTranslation<AlchemicalApparatus.ApparatusType>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Type),
-                        item: item.Type_Property,
-                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Type,
-                        errorMask: errorMask);
-                    UInt32XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Value),
-                        item: item.Value_Property,
-                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Value,
-                        errorMask: errorMask);
-                    FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Weight),
-                        item: item.Weight_Property,
-                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Weight,
-                        errorMask: errorMask);
-                    FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Quality),
-                        item: item.Quality_Property,
-                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Quality,
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.AlchemicalApparatus");
+                }
+                if (item.Model_Property.HasBeenSet)
+                {
+                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
+                        node: elem,
+                        item: item.Model_Property,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Model,
                         errorMask: errorMask);
                 }
+                if (item.Icon_Property.HasBeenSet)
+                {
+                    FilePathXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Icon),
+                        item: item.Icon_Property,
+                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Icon,
+                        errorMask: errorMask);
+                }
+                if (item.Script_Property.HasBeenSet)
+                {
+                    FormIDXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Script),
+                        item: item.Script?.FormID,
+                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Script,
+                        errorMask: errorMask);
+                }
+                EnumXmlTranslation<AlchemicalApparatus.ApparatusType>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Type),
+                    item: item.Type_Property,
+                    fieldIndex: (int)AlchemicalApparatus_FieldIndex.Type,
+                    errorMask: errorMask);
+                UInt32XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Value),
+                    item: item.Value_Property,
+                    fieldIndex: (int)AlchemicalApparatus_FieldIndex.Value,
+                    errorMask: errorMask);
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Weight),
+                    item: item.Weight_Property,
+                    fieldIndex: (int)AlchemicalApparatus_FieldIndex.Weight,
+                    errorMask: errorMask);
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Quality),
+                    item: item.Quality_Property,
+                    fieldIndex: (int)AlchemicalApparatus_FieldIndex.Quality,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (errorMask != null)
@@ -2161,6 +2234,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
+            switch (enu)
+            {
+                case AlchemicalApparatus_FieldIndex.Model:
+                    return Model;
+                case AlchemicalApparatus_FieldIndex.Icon:
+                    return Icon;
+                case AlchemicalApparatus_FieldIndex.Script:
+                    return Script;
+                case AlchemicalApparatus_FieldIndex.Type:
+                    return Type;
+                case AlchemicalApparatus_FieldIndex.Value:
+                    return Value;
+                case AlchemicalApparatus_FieldIndex.Weight:
+                    return Weight;
+                case AlchemicalApparatus_FieldIndex.Quality:
+                    return Quality;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;

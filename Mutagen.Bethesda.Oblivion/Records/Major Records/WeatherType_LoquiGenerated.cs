@@ -195,19 +195,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static WeatherType Create_XML(
             XElement root,
-            out WeatherType_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static WeatherType Create_XML(
-            XElement root,
-            bool doMasks,
-            out WeatherType_ErrorMask errorMask)
+            out WeatherType_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_XML(
                 root: root,
@@ -262,56 +251,129 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region XML Copy In
+        public void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<WeatherType, WeatherType_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out WeatherType_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<WeatherType, WeatherType_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out WeatherType_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out WeatherType_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out WeatherType_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (WeatherType_ErrorMask)this.Write_XML_Internal(
-                writer: writer,
+            errorMask = this.Write_XML_Internal(
+                node: node,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as WeatherType_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out WeatherType_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             out WeatherType_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -320,39 +382,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             WeatherTypeCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -436,19 +492,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static WeatherType Create_Binary(
             MutagenFrame frame,
-            out WeatherType_ErrorMask errorMask)
-        {
-            return Create_Binary(
-                frame: frame,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static WeatherType Create_Binary(
-            MutagenFrame frame,
-            bool doMasks,
-            out WeatherType_ErrorMask errorMask)
+            out WeatherType_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -521,35 +566,40 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out WeatherType_ErrorMask errorMask)
+            out WeatherType_ErrorMask errorMask,
+            bool doMasks = true)
         {
-            errorMask = (WeatherType_ErrorMask)this.Write_Binary_Internal(
+            errorMask = this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as WeatherType_ErrorMask;
         }
 
         public virtual void Write_Binary(
             string path,
-            out WeatherType_ErrorMask errorMask)
+            out WeatherType_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
-            out WeatherType_ErrorMask errorMask)
+            out WeatherType_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -1356,7 +1406,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IWeatherTypeGetter item,
             bool doMasks,
             out WeatherType_ErrorMask errorMask,
@@ -1364,7 +1414,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             WeatherType_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new WeatherType_ErrorMask()) : default(Func<WeatherType_ErrorMask>));
@@ -1372,44 +1422,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IWeatherTypeGetter item,
             Func<WeatherType_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.WeatherType"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.WeatherType");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.WeatherType");
-                    }
-                    ColorXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Sunrise),
-                        item: item.Sunrise_Property,
-                        fieldIndex: (int)WeatherType_FieldIndex.Sunrise,
-                        errorMask: errorMask);
-                    ColorXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Day),
-                        item: item.Day_Property,
-                        fieldIndex: (int)WeatherType_FieldIndex.Day,
-                        errorMask: errorMask);
-                    ColorXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Sunset),
-                        item: item.Sunset_Property,
-                        fieldIndex: (int)WeatherType_FieldIndex.Sunset,
-                        errorMask: errorMask);
-                    ColorXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Night),
-                        item: item.Night_Property,
-                        fieldIndex: (int)WeatherType_FieldIndex.Night,
-                        errorMask: errorMask);
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.WeatherType");
                 }
+                ColorXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Sunrise),
+                    item: item.Sunrise_Property,
+                    fieldIndex: (int)WeatherType_FieldIndex.Sunrise,
+                    errorMask: errorMask);
+                ColorXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Day),
+                    item: item.Day_Property,
+                    fieldIndex: (int)WeatherType_FieldIndex.Day,
+                    errorMask: errorMask);
+                ColorXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Sunset),
+                    item: item.Sunset_Property,
+                    fieldIndex: (int)WeatherType_FieldIndex.Sunset,
+                    errorMask: errorMask);
+                ColorXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Night),
+                    item: item.Night_Property,
+                    fieldIndex: (int)WeatherType_FieldIndex.Night,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (errorMask != null)
@@ -1649,6 +1698,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            WeatherType_FieldIndex enu = (WeatherType_FieldIndex)index;
+            switch (enu)
+            {
+                case WeatherType_FieldIndex.Sunrise:
+                    return Sunrise;
+                case WeatherType_FieldIndex.Day:
+                    return Day;
+                case WeatherType_FieldIndex.Sunset:
+                    return Sunset;
+                case WeatherType_FieldIndex.Night:
+                    return Night;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             WeatherType_FieldIndex enu = (WeatherType_FieldIndex)index;

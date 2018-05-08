@@ -21,7 +21,16 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"{readerAccessor}.SetPosition({readerAccessor}.Position + {zero.Length});");
         }
 
-        public override void GenerateCopyInRet(FileGeneration fg, ObjectGeneration objGen, TypeGeneration targetGen, TypeGeneration typeGen, string readerAccessor, Accessor retAccessor, string doMaskAccessor, string maskAccessor)
+        public override void GenerateCopyInRet(
+            FileGeneration fg, 
+            ObjectGeneration objGen, 
+            TypeGeneration targetGen, 
+            TypeGeneration typeGen, 
+            string readerAccessor,
+            bool squashedRepeatedList,
+            Accessor retAccessor, 
+            string doMaskAccessor,
+            string maskAccessor)
         {
             ZeroType zero = typeGen as ZeroType;
             fg.AppendLine($"{readerAccessor}.SetPosition({readerAccessor}.Position + {zero.Length});");

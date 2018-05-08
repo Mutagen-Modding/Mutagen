@@ -80,14 +80,14 @@ namespace Mutagen.Bethesda.Generation
                 args.Add($"errorMask: {maskAccessor}");
                 args.Add((gen) =>
                 {
-                    gen.AppendLine($"transl: ({list.SubTypeGeneration.TypeName} subItem, bool listDoMasks, out {subMaskStr} listSubMask) =>");
+                    gen.AppendLine($"transl: (MutagenWriter subWriter, {list.SubTypeGeneration.TypeName} subItem, bool listDoMasks, out {subMaskStr} listSubMask) =>");
                     using (new BraceWrapper(gen))
                     {
                         subTransl.GenerateWrite(
                             fg: gen,
                             objGen: objGen,
                             typeGen: list.SubTypeGeneration,
-                            writerAccessor: "writer",
+                            writerAccessor: "subWriter",
                             itemAccessor: new Accessor($"subItem"),
                             doMaskAccessor: $"listDoMasks",
                             maskAccessor: $"listSubMask");
@@ -105,7 +105,16 @@ namespace Mutagen.Bethesda.Generation
             string doMaskAccessor,
             string maskAccessor)
         {
-            GenerateCopyInRet(fg, objGen, typeGen, typeGen, nodeAccessor, new Accessor($"var {typeGen.Name}tryGet = "), doMaskAccessor, maskAccessor);
+            GenerateCopyInRet(
+                fg: fg, 
+                objGen: objGen, 
+                targetGen: typeGen, 
+                typeGen: typeGen, 
+                nodeAccessor: nodeAccessor, 
+                squashedRepeatedList: false,
+                retAccessor: new Accessor($"var {typeGen.Name}tryGet = "), 
+                doMaskAccessor: doMaskAccessor, 
+                maskAccessor: maskAccessor);
             if (itemAccessor.PropertyAccess != null)
             {
                 fg.AppendLine($"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}({typeGen.Name}tryGet);");
@@ -126,6 +135,7 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration targetGen,
             TypeGeneration typeGen,
             string nodeAccessor,
+            bool squashedRepeatedList,
             Accessor retAccessor,
             string doMaskAccessor,
             string maskAccessor)
@@ -219,6 +229,7 @@ namespace Mutagen.Bethesda.Generation
                                 targetGen: list.SubTypeGeneration,
                                 typeGen: list.SubTypeGeneration,
                                 readerAccessor: "r",
+                                squashedRepeatedList: listBinaryType == ListBinaryType.Frame,
                                 retAccessor: new Accessor("return "),
                                 doMaskAccessor: "listDoMasks",
                                 maskAccessor: "listSubMask");
@@ -246,6 +257,7 @@ namespace Mutagen.Bethesda.Generation
                                             targetGen: list.SubTypeGeneration,
                                             typeGen: item.Value,
                                             readerAccessor: "r",
+                                            squashedRepeatedList: listBinaryType == ListBinaryType.Frame,
                                             retAccessor: new Accessor("ret = "),
                                             doMaskAccessor: "listDoMasks",
                                             maskAccessor: $"var {submaskName}");

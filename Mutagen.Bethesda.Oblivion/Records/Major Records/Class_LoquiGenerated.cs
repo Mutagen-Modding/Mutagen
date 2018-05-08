@@ -152,7 +152,17 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<ClassService> IClassGetter.ClassServices_Property => this.ClassServices_Property;
         #endregion
         #region Training
-        private readonly INotifyingItem<ClassTraining> _Training = new NotifyingItem<ClassTraining>();
+        private readonly INotifyingItem<ClassTraining> _Training = new NotifyingItemConvertWrapper<ClassTraining>(
+            defaultVal: new ClassTraining(),
+            incomingConverter: (change) =>
+            {
+                if (change.New == null)
+                {
+                    return TryGet<ClassTraining>.Succeed(new ClassTraining());
+                }
+                return TryGet<ClassTraining>.Succeed(change.New);
+            }
+        );
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingItem<ClassTraining> Training_Property => this._Training;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -277,19 +287,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Class Create_XML(
             XElement root,
-            out Class_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static Class Create_XML(
-            XElement root,
-            bool doMasks,
-            out Class_ErrorMask errorMask)
+            out Class_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_XML(
                 root: root,
@@ -344,56 +343,153 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region XML Copy In
+        public override void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<Class, Class_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out Class_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<Class, Class_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out Class_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out Class_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
+            out NamedMajorRecord_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out Class_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
+            out MajorRecord_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out Class_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out Class_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (Class_ErrorMask)this.Write_XML_Internal(
-                writer: writer,
+            errorMask = this.Write_XML_Internal(
+                node: node,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as Class_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out Class_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             out Class_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public override void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -402,39 +498,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public override void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected override object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             ClassCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -576,19 +666,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Class Create_Binary(
             MutagenFrame frame,
-            out Class_ErrorMask errorMask)
-        {
-            return Create_Binary(
-                frame: frame,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static Class Create_Binary(
-            MutagenFrame frame,
-            bool doMasks,
-            out Class_ErrorMask errorMask)
+            out Class_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -661,35 +740,40 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out Class_ErrorMask errorMask)
+            out Class_ErrorMask errorMask,
+            bool doMasks = true)
         {
-            errorMask = (Class_ErrorMask)this.Write_Binary_Internal(
+            errorMask = this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as Class_ErrorMask;
         }
 
         public virtual void Write_Binary(
             string path,
-            out Class_ErrorMask errorMask)
+            out Class_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
-            out Class_ErrorMask errorMask)
+            out Class_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -775,6 +859,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var DescriptiontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Class_FieldIndex.Description,
+                        parseWhole: true,
                         errorMask: errorMask);
                     item._Description.SetIfSucceeded(DescriptiontryGet);
                     return TryGet<Class_FieldIndex?>.Succeed(Class_FieldIndex.Description);
@@ -1917,7 +2002,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IClassGetter item,
             bool doMasks,
             out Class_ErrorMask errorMask,
@@ -1925,7 +2010,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Class_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Class_ErrorMask()) : default(Func<Class_ErrorMask>));
@@ -1933,94 +2018,93 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IClassGetter item,
             Func<Class_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.Class"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Class");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Class");
-                    }
-                    if (item.Description_Property.HasBeenSet)
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Description),
-                            item: item.Description_Property,
-                            fieldIndex: (int)Class_FieldIndex.Description,
-                            errorMask: errorMask);
-                    }
-                    if (item.Icon_Property.HasBeenSet)
-                    {
-                        FilePathXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Icon),
-                            item: item.Icon_Property,
-                            fieldIndex: (int)Class_FieldIndex.Icon,
-                            errorMask: errorMask);
-                    }
-                    ListXmlTranslation<ActorValue, Exception>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.PrimaryAttributes),
-                        item: item.PrimaryAttributes,
-                        fieldIndex: (int)Class_FieldIndex.PrimaryAttributes,
-                        errorMask: errorMask,
-                        transl: (ActorValue subItem, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            EnumXmlTranslation<ActorValue>.Instance.Write(
-                                writer: writer,
-                                name: "Item",
-                                item: subItem,
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    EnumXmlTranslation<Class.SpecializationFlag>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Specialization),
-                        item: item.Specialization_Property,
-                        fieldIndex: (int)Class_FieldIndex.Specialization,
-                        errorMask: errorMask);
-                    ListXmlTranslation<ActorValue, Exception>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.SecondaryAttributes),
-                        item: item.SecondaryAttributes,
-                        fieldIndex: (int)Class_FieldIndex.SecondaryAttributes,
-                        errorMask: errorMask,
-                        transl: (ActorValue subItem, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            EnumXmlTranslation<ActorValue>.Instance.Write(
-                                writer: writer,
-                                name: "Item",
-                                item: subItem,
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    EnumXmlTranslation<ClassFlag>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Flags),
-                        item: item.Flags_Property,
-                        fieldIndex: (int)Class_FieldIndex.Flags,
-                        errorMask: errorMask);
-                    EnumXmlTranslation<ClassService>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.ClassServices),
-                        item: item.ClassServices_Property,
-                        fieldIndex: (int)Class_FieldIndex.ClassServices,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Write(
-                        writer: writer,
-                        item: item.Training_Property,
-                        name: nameof(item.Training),
-                        fieldIndex: (int)Class_FieldIndex.Training,
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Class");
+                }
+                if (item.Description_Property.HasBeenSet)
+                {
+                    StringXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Description),
+                        item: item.Description_Property,
+                        fieldIndex: (int)Class_FieldIndex.Description,
                         errorMask: errorMask);
                 }
+                if (item.Icon_Property.HasBeenSet)
+                {
+                    FilePathXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Icon),
+                        item: item.Icon_Property,
+                        fieldIndex: (int)Class_FieldIndex.Icon,
+                        errorMask: errorMask);
+                }
+                ListXmlTranslation<ActorValue, Exception>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.PrimaryAttributes),
+                    item: item.PrimaryAttributes,
+                    fieldIndex: (int)Class_FieldIndex.PrimaryAttributes,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, ActorValue subItem, bool listDoMasks, out Exception listSubMask) =>
+                    {
+                        EnumXmlTranslation<ActorValue>.Instance.Write(
+                            node: subNode,
+                            name: "Item",
+                            item: subItem,
+                            doMasks: errorMask != null,
+                            errorMask: out listSubMask);
+                    }
+                    );
+                EnumXmlTranslation<Class.SpecializationFlag>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Specialization),
+                    item: item.Specialization_Property,
+                    fieldIndex: (int)Class_FieldIndex.Specialization,
+                    errorMask: errorMask);
+                ListXmlTranslation<ActorValue, Exception>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.SecondaryAttributes),
+                    item: item.SecondaryAttributes,
+                    fieldIndex: (int)Class_FieldIndex.SecondaryAttributes,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, ActorValue subItem, bool listDoMasks, out Exception listSubMask) =>
+                    {
+                        EnumXmlTranslation<ActorValue>.Instance.Write(
+                            node: subNode,
+                            name: "Item",
+                            item: subItem,
+                            doMasks: errorMask != null,
+                            errorMask: out listSubMask);
+                    }
+                    );
+                EnumXmlTranslation<ClassFlag>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Flags),
+                    item: item.Flags_Property,
+                    fieldIndex: (int)Class_FieldIndex.Flags,
+                    errorMask: errorMask);
+                EnumXmlTranslation<ClassService>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.ClassServices),
+                    item: item.ClassServices_Property,
+                    fieldIndex: (int)Class_FieldIndex.ClassServices,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Write(
+                    node: elem,
+                    item: item.Training_Property,
+                    name: nameof(item.Training),
+                    fieldIndex: (int)Class_FieldIndex.Training,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (errorMask != null)
@@ -2114,10 +2198,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.PrimaryAttributes,
                     fieldIndex: (int)Class_FieldIndex.PrimaryAttributes,
                     errorMask: errorMask,
-                    transl: (ActorValue subItem, bool listDoMasks, out Exception listSubMask) =>
+                    transl: (MutagenWriter subWriter, ActorValue subItem, bool listDoMasks, out Exception listSubMask) =>
                     {
                         Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
-                            writer,
+                            subWriter,
                             subItem,
                             length: 4,
                             doMasks: listDoMasks,
@@ -2135,10 +2219,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.SecondaryAttributes,
                     fieldIndex: (int)Class_FieldIndex.SecondaryAttributes,
                     errorMask: errorMask,
-                    transl: (ActorValue subItem, bool listDoMasks, out Exception listSubMask) =>
+                    transl: (MutagenWriter subWriter, ActorValue subItem, bool listDoMasks, out Exception listSubMask) =>
                     {
                         Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
-                            writer,
+                            subWriter,
                             subItem,
                             length: 4,
                             doMasks: listDoMasks,
@@ -2468,6 +2552,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Class_FieldIndex enu = (Class_FieldIndex)index;
+            switch (enu)
+            {
+                case Class_FieldIndex.Description:
+                    return Description;
+                case Class_FieldIndex.Icon:
+                    return Icon;
+                case Class_FieldIndex.PrimaryAttributes:
+                    return PrimaryAttributes;
+                case Class_FieldIndex.Specialization:
+                    return Specialization;
+                case Class_FieldIndex.SecondaryAttributes:
+                    return SecondaryAttributes;
+                case Class_FieldIndex.Flags:
+                    return Flags;
+                case Class_FieldIndex.ClassServices:
+                    return ClassServices;
+                case Class_FieldIndex.Training:
+                    return Training;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Class_FieldIndex enu = (Class_FieldIndex)index;
