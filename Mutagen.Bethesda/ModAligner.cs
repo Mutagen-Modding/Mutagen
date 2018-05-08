@@ -38,9 +38,9 @@ namespace Mutagen.Bethesda
             var interest = new RecordInterest(alignmentRules.Alignments.Keys);
             var fileLocs = MajorRecordLocator.GetFileLocations(inputStream, interest);
             var tempMemOutput = new MemoryStream();
-            using (var mutaReader = new MutagenReader(inputStream))
+            inputStream.Position = 0;
+            using (var mutaReader = new BinaryReadStream(inputStream))
             {
-                inputStream.Position = 0;
                 using (var writer = new MutagenWriter(tempMemOutput, dispose: false))
                 {
                     while (!mutaReader.Complete)
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda
             }
 
             tempMemOutput.Position = 0;
-            using (var mutaReader = new MutagenReader(tempMemOutput.GetBuffer()))
+            using (var mutaReader = new BinaryMemoryStream(tempMemOutput.GetBuffer()))
             {
                 using (var writer = new MutagenWriter(outputStream))
                 {

@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Binary
     {
         public static bool ErrorOnFinalPosition;
 
-        public readonly MutagenReader Reader;
+        public readonly IBinaryStream Reader;
         public readonly long InitialPosition;
         public readonly long FinalLocation;
         public readonly bool SnapToFinalPosition;
@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Binary
         public long Remaining => this.FinalLocation - this.Position;
 
         [DebuggerStepThrough]
-        public MutagenFrame(MutagenReader reader)
+        public MutagenFrame(IBinaryStream reader)
         {
             this.Reader = reader;
             this.InitialPosition = reader.Position;
@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Binary
 
         [DebuggerStepThrough]
         private MutagenFrame(
-            MutagenReader reader,
+            IBinaryStream reader,
             long finalPosition,
             bool snapToFinalPosition = true)
         {
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Binary
 
         [DebuggerStepThrough]
         public static MutagenFrame ByFinalPosition(
-            MutagenReader reader,
+            IBinaryStream reader,
             long finalPosition,
             bool snapToFinalPosition = true)
         {
@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Binary
 
         [DebuggerStepThrough]
         public static MutagenFrame ByLength(
-            MutagenReader reader,
+            IBinaryStream reader,
             long length,
             bool snapToFinalPosition = true)
         {
@@ -174,9 +174,16 @@ namespace Mutagen.Bethesda.Binary
         { 
             var resultLen = this.Reader.ReadUInt32();
             var bytes = this.Reader.ReadBytes((int)this.Remaining);
-            var res = ZlibStream.UncompressBuffer(bytes);
-            return new MutagenFrame(
-                new MutagenReader(res));
+            try
+            {
+                var res = ZlibStream.UncompressBuffer(bytes);
+                return new MutagenFrame(
+                    new BinaryMemoryStream(res));
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

@@ -47,7 +47,6 @@ namespace Mutagen.Bethesda.Binary
                 frame,
                 fieldIndex,
                 errorMask);
-            frame.Position += 1;
             return ret;
         }
 

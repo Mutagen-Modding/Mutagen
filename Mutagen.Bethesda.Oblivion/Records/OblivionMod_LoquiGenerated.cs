@@ -2020,7 +2020,7 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             GroupMask importMask = null)
         {
-            using (var reader = new MutagenReader(path))
+            using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
@@ -2034,7 +2034,7 @@ namespace Mutagen.Bethesda.Oblivion
             out OblivionMod_ErrorMask errorMask,
             GroupMask importMask = null)
         {
-            using (var reader = new MutagenReader(path))
+            using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
@@ -2048,7 +2048,7 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             GroupMask importMask = null)
         {
-            using (var reader = new MutagenReader(stream))
+            using (var reader = new BinaryReadStream(stream))
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
@@ -2062,7 +2062,7 @@ namespace Mutagen.Bethesda.Oblivion
             out OblivionMod_ErrorMask errorMask,
             GroupMask importMask = null)
         {
-            using (var reader = new MutagenReader(stream))
+            using (var reader = new BinaryReadStream(stream))
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(

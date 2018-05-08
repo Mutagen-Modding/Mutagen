@@ -97,12 +97,12 @@ namespace Mutagen.Bethesda.Tests
         public static bool TestSub(
             RangeInt64 range,
             IEnumerable<byte[]> subs,
-            MutagenReader stream)
+            IBinaryStream stream)
         {
             var curPos = stream.Position;
             stream.Position = range.Min;
             var bytes = new byte[range.Width];
-            stream.ReadInto(bytes);
+            stream.Read(bytes);
             stream.Position = curPos;
             foreach (var sub in subs)
             {

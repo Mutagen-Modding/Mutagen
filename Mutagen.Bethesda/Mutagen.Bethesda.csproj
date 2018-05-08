@@ -96,7 +96,6 @@
     <Compile Include="Translators\Binary\EnumBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\FilePathBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\FloatBinaryTranslation.cs" />
-    <Compile Include="Translators\Binary\MutagenReader.cs" />
     <Compile Include="Translators\Binary\P2Int16BinaryTranslation.cs" />
     <Compile Include="Translators\Binary\P2IntBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\P3FloatBinaryTranslation.cs" />

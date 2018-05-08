@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>75d433f2d4b77ce3937824a238c9cd3a2c91c1f8</Sha>
+         <Sha>25cb92281b33ae9127ae6ddadfc7f290d4d1ad50</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>04-23-2018 21:49:11</CommitDate>
-         <Description>P2Int16.  Removed some vestigial from P2Int</Description>
+         <CommitDate>05-07-2018 23:46:57</CommitDate>
+         <Description>IBinaryStream BinaryMemoryStream BinaryReadStream</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

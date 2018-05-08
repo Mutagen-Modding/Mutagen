@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Binary
 
         protected override bool ParseValue(MutagenFrame reader)
         {
-            return reader.Reader.ReadBoolean();
+            return reader.Reader.ReadBool();
         }
 
         protected override void WriteValue(MutagenWriter writer, bool item)

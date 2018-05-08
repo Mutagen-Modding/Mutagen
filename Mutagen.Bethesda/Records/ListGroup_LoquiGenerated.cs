@@ -493,7 +493,7 @@ namespace Mutagen.Bethesda
             out ListGroup_ErrorMask<T_ErrMask> errorMask)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
-            using (var reader = new MutagenReader(path))
+            using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda
             out ListGroup_ErrorMask<T_ErrMask> errorMask)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
-            using (var reader = new MutagenReader(stream))
+            using (var reader = new BinaryReadStream(stream))
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(

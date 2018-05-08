@@ -19,7 +19,8 @@ namespace Mutagen.Bethesda
         {
             long runningDiff = 0;
             var fileLocs = MajorRecordLocator.GetFileLocations(inputStream, interest);
-            using (var mutaReader = new MutagenReader(inputStream))
+            inputStream.Position = 0;
+            using (var mutaReader = new BinaryReadStream(inputStream))
             {
                 // Construct group length container for later use
                 Dictionary<long, long> grupLengths = new Dictionary<long, long>();
@@ -45,12 +46,12 @@ namespace Mutagen.Bethesda
                         {
                             var recordLocation = fileLocs.ListedRecords.Keys[nextRec.Key];
                             noRecordLength = recordLocation - mutaReader.Position;
+                            noRecordLength += 4;
                         }
                         else
                         {
                             noRecordLength = mutaReader.Length - mutaReader.Position;
                         }
-                        noRecordLength += 4;
                         writer.Write(mutaReader.ReadBytes((int)noRecordLength));
                         
                         // If complete overall, return

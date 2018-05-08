@@ -58,9 +58,9 @@ namespace Mutagen.Bethesda
             {
                 if (move.Width == 0) return;
                 if (loc == move.Min) return;
-                if (loc < move.Min)
+                if (loc <= move.Max)
                 {
-                    throw new NotImplementedException("Cannot move a section earlier in the stream");
+                    throw new NotImplementedException("Cannot move a section earlier in the stream, within the move itself, or into the same spot");
                 }
                 if (_moves == null)
                 {
@@ -138,7 +138,8 @@ namespace Mutagen.Bethesda
             {
                 throw new ArgumentException("Get next buffer called when current buffer was not fully used.");
             }
-            if (bufferEnd != 0)
+            if (bufferEnd != 0
+                || _position != 0)
             {
                 this._position += this._buffer.Length + extraRead;
             }
@@ -241,6 +242,13 @@ namespace Mutagen.Bethesda
                 {
                     // Delete out move
                     var moveRange = _sortedMoves[moveFromKey.Value];
+
+                    if (moveRange.Min == 0x602DF)
+                    {
+                        int wer = 23;
+                        wer++;
+                    }
+
                     var moveLocBufStart = moveRange.Min - this._position - moveDeletions;
                     int len = (int)Math.Min(bufferEnd - moveLocBufStart, moveRange.Width);
 

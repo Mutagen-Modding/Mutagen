@@ -1,5 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
-using Noggog;
+﻿using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +8,9 @@ using System.Windows.Media;
 
 namespace Mutagen.Bethesda
 {
-    public static class MutagenReaderExt
+    public static class IBinaryStreamExt
     {
-        public static Color ReadColor(this MutagenReader stream)
+        public static Color ReadColor(this IBinaryStream stream)
         {
             var ret = Color.FromRgb(
                 stream.ReadByte(),

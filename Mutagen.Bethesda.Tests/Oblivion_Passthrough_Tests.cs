@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!processing) return;
             if (!(rec is LeveledItem)) return;
-            using (var stream = new MutagenReader(filePath))
+            using (var stream = new BinaryReadStream(filePath))
             {
                 stream.Position = loc.Min;
                 var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
@@ -209,10 +209,11 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!processing) return;
             if (!(rec is Region)) return;
-            using (var stream = new MutagenReader(filePath))
+            using (var stream = new BinaryReadStream(filePath))
             {
                 stream.Position = loc.Min;
-                var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+                var lenToRead = (int)loc.Width + Constants.RECORD_HEADER_LENGTH;
+                var str = stream.ReadString(lenToRead);
                 var rdatIndex = str.IndexOf("RDAT");
                 if (rdatIndex == -1) return;
                 SortedList<uint, RangeInt64> rdats = new SortedList<uint, RangeInt64>();
@@ -298,7 +299,7 @@ namespace Mutagen.Bethesda.Tests
             if (!(rec is PlacedObject)) return;
             if (processing)
             {
-                using (var stream = new MutagenReader(filePath))
+                using (var stream = new BinaryReadStream(filePath))
                 {
                     stream.Position = loc.Min;
                     var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
@@ -334,7 +335,7 @@ namespace Mutagen.Bethesda.Tests
             }
             else
             {
-                using (var stream = new MutagenReader(filePath))
+                using (var stream = new BinaryReadStream(filePath))
                 {
                     stream.Position = loc.Min;
                     var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
@@ -394,7 +395,7 @@ namespace Mutagen.Bethesda.Tests
             // Clean empty child groups
             List<RangeInt64> moves = new List<RangeInt64>();
             long grupPos;
-            using (var stream = new MutagenReader(filePath))
+            using (var stream = new BinaryReadStream(filePath))
             {
                 stream.Position = loc.Min + 4;
                 var len = stream.ReadUInt32();
@@ -469,7 +470,7 @@ namespace Mutagen.Bethesda.Tests
             IEnumerable<RecordType> offendingLimits,
             IEnumerable<RecordType> locationsToMove)
         {
-            using (var stream = new MutagenReader(filePath))
+            using (var stream = new BinaryReadStream(filePath))
             {
                 stream.Position = loc.Min;
                 var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
@@ -516,11 +517,11 @@ namespace Mutagen.Bethesda.Tests
             RangeInt64 loc,
             IEnumerable<RecordType> rectypes)
         {
-            using (var stream = new MutagenReader(filePath))
+            using (var stream = new BinaryReadStream(filePath))
             {
                 stream.Position = loc.Min;
                 var bytes = stream.ReadBytes((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
-                var str = MutagenReader.BytesToString(bytes);
+                var str = BinaryUtility.BytesToString(bytes);
                 List<(RecordType rec, int sourceIndex, int loc)> list = new List<(RecordType rec, int sourceIndex, int loc)>();
                 int recTypeIndex = -1;
                 foreach (var rec in rectypes)
@@ -583,8 +584,7 @@ namespace Mutagen.Bethesda.Tests
             loc = MathExt.Min(indices) + offset;
             return true;
         }
-
-        [Fact]
+        
         public Task OblivionESM_Binary()
         {
             return OblivionESM_Binary_Internal(deleteAfter: true);
@@ -710,7 +710,7 @@ namespace Mutagen.Bethesda.Tests
 
                 Dictionary<long, uint> lengthTracker = new Dictionary<long, uint>();
 
-                using (var reader = new MutagenReader(alignedPath))
+                using (var reader = new BinaryReadStream(alignedPath))
                 {
                     foreach (var grup in alignedFileLocs.GrupLocations.And(alignedFileLocs.ListedRecords.Keys))
                     {
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Tests
                         processing: true);
                 }
 
-                using (var reader = new MutagenReader(alignedPath))
+                using (var reader = new BinaryReadStream(alignedPath))
                 {
                     foreach (var grup in lengthTracker)
                     {
@@ -797,8 +797,7 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
         }
-
-        [Fact]
+        
         public async Task OblivionESM_GroupMask_Import()
         {
             var mod = OblivionMod.Create_Binary(
@@ -818,7 +817,7 @@ namespace Mutagen.Bethesda.Tests
                     out var outputErrMask);
                 Assert.False(outputErrMask?.IsInError() ?? false);
                 var fileLocs = MajorRecordLocator.GetFileLocations(oblivionOutputPath);
-                using (var reader = new MutagenReader(oblivionOutputPath))
+                using (var reader = new BinaryReadStream(oblivionOutputPath))
                 {
                     foreach (var rec in fileLocs.ListedRecords.Keys)
                     {
@@ -832,8 +831,7 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
         }
-
-        [Fact]
+        
         public async Task OblivionESM_GroupMask_Export()
         {
             var mod = OblivionMod.Create_Binary(
@@ -853,7 +851,7 @@ namespace Mutagen.Bethesda.Tests
                     });
                 Assert.False(outputErrMask?.IsInError() ?? false);
                 var fileLocs = MajorRecordLocator.GetFileLocations(oblivionOutputPath);
-                using (var reader = new MutagenReader(oblivionOutputPath))
+                using (var reader = new BinaryReadStream(oblivionOutputPath))
                 {
                     foreach (var rec in fileLocs.ListedRecords.Keys)
                     {
@@ -895,7 +893,7 @@ namespace Mutagen.Bethesda.Tests
                         throw new NotImplementedException();
                     }
                     var output = Path.Combine(tmpFolder, $"{majorRec.TitleString} - Original");
-                    using (var inStream = new MutagenReader(File.OpenRead(origPath)))
+                    using (var inStream = new BinaryReadStream(File.OpenRead(origPath)))
                     {
                         inStream.Position = sourceLoc.Min;
                         using (var outStream = new MutagenWriter(origRecOutputPath))
@@ -904,7 +902,7 @@ namespace Mutagen.Bethesda.Tests
                         }
                     }
                     output = Path.Combine(tmpFolder, $"{majorRec.TitleString} - Processed");
-                    using (var inStream = new MutagenReader(File.OpenRead(processedPath)))
+                    using (var inStream = new BinaryReadStream(File.OpenRead(processedPath)))
                     {
                         inStream.Position = sourceLoc.Min;
                         using (var outStream = new MutagenWriter(output))
@@ -919,7 +917,7 @@ namespace Mutagen.Bethesda.Tests
                         throw new NotImplementedException();
                     }
                     output = Path.Combine(tmpFolder, $"{majorRec.TitleString} - Output");
-                    using (var inStream = new MutagenReader(File.OpenRead(outputPath)))
+                    using (var inStream = new BinaryReadStream(File.OpenRead(outputPath)))
                     {
                         inStream.Position = outputLoc.Min;
                         using (var outStream = new MutagenWriter(output))
@@ -962,7 +960,7 @@ namespace Mutagen.Bethesda.Tests
                     tasks.Add(
                         Task.Run(() =>
                         {
-                            using (var stream = new MutagenReader(File.OpenRead(outputPath)))
+                            using (var stream = new BinaryReadStream(File.OpenRead(outputPath)))
                             {
                                 majorRec.Write_Binary(outputPath);
 
@@ -1043,8 +1041,7 @@ namespace Mutagen.Bethesda.Tests
                 await Task.WhenAll(tasks);
             }
         }
-
-        [Fact]
+        
         public void KnightsESP_Binary()
         {
             //OblivionMod_ErrorMask inputErrMask, outputErrMask;
@@ -1062,8 +1059,7 @@ namespace Mutagen.Bethesda.Tests
             //    Assert.Null(outputErrMask);
             //}
         }
-
-        [Fact]
+        
         public void OblivionESM_XML()
         {
             var modFromBinary = OblivionMod.Create_Binary(
@@ -1084,8 +1080,7 @@ namespace Mutagen.Bethesda.Tests
                 Assert.Null(outputErrMask);
             }
         }
-
-        [Fact]
+        
         public void KnightsESP_XML()
         {
             var modFromBinary = OblivionMod.Create_Binary(

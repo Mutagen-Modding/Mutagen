@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda
             RecordInterest interest = null)
         {
             FileLocations ret = new FileLocations();
-            using (var reader = new MutagenReader(stream, dispose: false))
+            using (var reader = new BinaryReadStream(stream, dispose: false))
             {
                 // Skip header
                 reader.Position += 4;
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda
         }
 
         private static RecordType? ParseTopLevelGRUP(
-            MutagenReader reader,
+            IBinaryStream reader,
             FileLocations fileLocs,
             RecordInterest interest,
             RecordType? grupRecOverride = null,
@@ -229,7 +229,7 @@ namespace Mutagen.Bethesda
         }
 
         private static bool IsSubLevelGRUP(
-            MutagenReader reader)
+            IBinaryStream reader)
         {
             var targetRec = HeaderTranslation.ReadNextRecordType(reader);
             if (!targetRec.Type.Equals("GRUP"))

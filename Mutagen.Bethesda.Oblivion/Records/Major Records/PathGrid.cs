@@ -30,13 +30,13 @@ namespace Mutagen.Bethesda.Oblivion
                 ptCount = frame.Reader.ReadUInt16();
             }
 
-            nextRec = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out len);
+            nextRec = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var pointsLen);
             if (!nextRec.Equals(PGRP))
             {
                 frame.Reader.Position -= Constants.RECORD_LENGTH;
                 return;
             }
-            var pointBytes = frame.Reader.ReadBytes(len);
+            var pointBytes = frame.Reader.ReadBytes(pointsLen);
             var bytePointsNum = pointBytes.Length / POINT_LEN;
             if (bytePointsNum != ptCount)
             {
@@ -61,9 +61,9 @@ namespace Mutagen.Bethesda.Oblivion
                         break;
                     case "PGRR":
                         var connectionBytes = frame.Reader.ReadBytes(len);
-                        using (var ptByteReader = new MutagenReader(pointBytes))
+                        using (var ptByteReader = new BinaryMemoryStream(pointBytes))
                         {
-                            using (var connectionReader = new MutagenReader(connectionBytes))
+                            using (var connectionReader = new BinaryMemoryStream(connectionBytes))
                             {
                                 for (int i = 0; i < pointBytes.Length; i = i + POINT_LEN)
                                 {
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             if (!readPGRR)
             {
-                using (var ptByteReader = new MutagenReader(pointBytes))
+                using (var ptByteReader = new BinaryMemoryStream(pointBytes))
                 {
                     while (!ptByteReader.Complete)
                     {
@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        private static PathGridPoint ReadPathGridPoint(MutagenReader reader, out byte numConn)
+        private static PathGridPoint ReadPathGridPoint(IBinaryStream reader, out byte numConn)
         {
             var pt = new PathGridPoint();
             pt.Point = new Noggog.P3Float(

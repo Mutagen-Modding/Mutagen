@@ -452,7 +452,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static TeleportDestination Create_Binary(string path)
         {
-            using (var reader = new MutagenReader(path))
+            using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(frame: frame);
@@ -463,7 +463,7 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out TeleportDestination_ErrorMask errorMask)
         {
-            using (var reader = new MutagenReader(path))
+            using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static TeleportDestination Create_Binary(Stream stream)
         {
-            using (var reader = new MutagenReader(stream))
+            using (var reader = new BinaryReadStream(stream))
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(frame: frame);
@@ -485,7 +485,7 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out TeleportDestination_ErrorMask errorMask)
         {
-            using (var reader = new MutagenReader(stream))
+            using (var reader = new BinaryReadStream(stream))
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
