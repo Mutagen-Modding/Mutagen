@@ -172,11 +172,11 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(ScriptMetaSummary rhs)
         {
             if (rhs == null) return false;
-            if (!Fluff.EqualsFast(rhs.Fluff)) return false;
-            if (RefCount != rhs.RefCount) return false;
-            if (CompiledSize != rhs.CompiledSize) return false;
-            if (VariableCount != rhs.VariableCount) return false;
-            if (Type != rhs.Type) return false;
+            if (!this.Fluff.EqualsFast(rhs.Fluff)) return false;
+            if (this.RefCount != rhs.RefCount) return false;
+            if (this.CompiledSize != rhs.CompiledSize) return false;
+            if (this.VariableCount != rhs.VariableCount) return false;
+            if (this.Type != rhs.Type) return false;
             return true;
         }
 

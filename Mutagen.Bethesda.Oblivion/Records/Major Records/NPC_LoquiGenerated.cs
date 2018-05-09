@@ -1026,142 +1026,142 @@ namespace Mutagen.Bethesda.Oblivion
             if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
             if (Model_Property.HasBeenSet)
             {
-                if (!object.Equals(Model, rhs.Model)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
             }
-            if (NPCFlags != rhs.NPCFlags) return false;
-            if (BaseSpellPoints != rhs.BaseSpellPoints) return false;
-            if (Fatigue != rhs.Fatigue) return false;
-            if (BarterGold != rhs.BarterGold) return false;
-            if (LevelOffset != rhs.LevelOffset) return false;
-            if (CalcMin != rhs.CalcMin) return false;
-            if (CalcMax != rhs.CalcMax) return false;
+            if (this.NPCFlags != rhs.NPCFlags) return false;
+            if (this.BaseSpellPoints != rhs.BaseSpellPoints) return false;
+            if (this.Fatigue != rhs.Fatigue) return false;
+            if (this.BarterGold != rhs.BarterGold) return false;
+            if (this.LevelOffset != rhs.LevelOffset) return false;
+            if (this.CalcMin != rhs.CalcMin) return false;
+            if (this.CalcMax != rhs.CalcMax) return false;
             if (Factions.HasBeenSet != rhs.Factions.HasBeenSet) return false;
             if (Factions.HasBeenSet)
             {
-                if (!Factions.SequenceEqual(rhs.Factions)) return false;
+                if (!this.Factions.SequenceEqual(rhs.Factions)) return false;
             }
             if (DeathItem_Property.HasBeenSet != rhs.DeathItem_Property.HasBeenSet) return false;
             if (DeathItem_Property.HasBeenSet)
             {
-                if (DeathItem != rhs.DeathItem) return false;
+                if (!this.DeathItem_Property.Equals(rhs.DeathItem_Property)) return false;
             }
             if (Race_Property.HasBeenSet != rhs.Race_Property.HasBeenSet) return false;
             if (Race_Property.HasBeenSet)
             {
-                if (Race != rhs.Race) return false;
+                if (!this.Race_Property.Equals(rhs.Race_Property)) return false;
             }
             if (Spells.HasBeenSet != rhs.Spells.HasBeenSet) return false;
             if (Spells.HasBeenSet)
             {
-                if (!Spells.SequenceEqual(rhs.Spells)) return false;
+                if (!this.Spells.SequenceEqual(rhs.Spells)) return false;
             }
             if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
             if (Script_Property.HasBeenSet)
             {
-                if (Script != rhs.Script) return false;
+                if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
             }
             if (Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
             if (Items.HasBeenSet)
             {
-                if (!Items.SequenceEqual(rhs.Items)) return false;
+                if (!this.Items.SequenceEqual(rhs.Items)) return false;
             }
-            if (Aggression != rhs.Aggression) return false;
-            if (Confidence != rhs.Confidence) return false;
-            if (EnergyLevel != rhs.EnergyLevel) return false;
-            if (Responsibility != rhs.Responsibility) return false;
-            if (BuySellServices != rhs.BuySellServices) return false;
-            if (Teaches != rhs.Teaches) return false;
-            if (MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
-            if (!Fluff.EqualsFast(rhs.Fluff)) return false;
+            if (this.Aggression != rhs.Aggression) return false;
+            if (this.Confidence != rhs.Confidence) return false;
+            if (this.EnergyLevel != rhs.EnergyLevel) return false;
+            if (this.Responsibility != rhs.Responsibility) return false;
+            if (this.BuySellServices != rhs.BuySellServices) return false;
+            if (this.Teaches != rhs.Teaches) return false;
+            if (this.MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
+            if (!this.Fluff.EqualsFast(rhs.Fluff)) return false;
             if (AIPackages.HasBeenSet != rhs.AIPackages.HasBeenSet) return false;
             if (AIPackages.HasBeenSet)
             {
-                if (!AIPackages.SequenceEqual(rhs.AIPackages)) return false;
+                if (!this.AIPackages.SequenceEqual(rhs.AIPackages)) return false;
             }
             if (Animations.HasBeenSet != rhs.Animations.HasBeenSet) return false;
             if (Animations.HasBeenSet)
             {
-                if (!Animations.SequenceEqual(rhs.Animations)) return false;
+                if (!this.Animations.SequenceEqual(rhs.Animations)) return false;
             }
             if (Class_Property.HasBeenSet != rhs.Class_Property.HasBeenSet) return false;
             if (Class_Property.HasBeenSet)
             {
-                if (Class != rhs.Class) return false;
+                if (!this.Class_Property.Equals(rhs.Class_Property)) return false;
             }
-            if (Armorer != rhs.Armorer) return false;
-            if (Athletics != rhs.Athletics) return false;
-            if (Blade != rhs.Blade) return false;
-            if (Block != rhs.Block) return false;
-            if (Blunt != rhs.Blunt) return false;
-            if (HandToHand != rhs.HandToHand) return false;
-            if (HeavyArmor != rhs.HeavyArmor) return false;
-            if (Alchemy != rhs.Alchemy) return false;
-            if (Alteration != rhs.Alteration) return false;
-            if (Conjuration != rhs.Conjuration) return false;
-            if (Destruction != rhs.Destruction) return false;
-            if (Illusion != rhs.Illusion) return false;
-            if (Mysticism != rhs.Mysticism) return false;
-            if (Restoration != rhs.Restoration) return false;
-            if (Acrobatics != rhs.Acrobatics) return false;
-            if (LightArmor != rhs.LightArmor) return false;
-            if (Marksman != rhs.Marksman) return false;
-            if (Mercantile != rhs.Mercantile) return false;
-            if (Security != rhs.Security) return false;
-            if (Sneak != rhs.Sneak) return false;
-            if (Speechcraft != rhs.Speechcraft) return false;
-            if (Health != rhs.Health) return false;
-            if (Strength != rhs.Strength) return false;
-            if (Intelligence != rhs.Intelligence) return false;
-            if (Willpower != rhs.Willpower) return false;
-            if (Agility != rhs.Agility) return false;
-            if (Speed != rhs.Speed) return false;
-            if (Endurance != rhs.Endurance) return false;
-            if (Personality != rhs.Personality) return false;
-            if (Luck != rhs.Luck) return false;
+            if (this.Armorer != rhs.Armorer) return false;
+            if (this.Athletics != rhs.Athletics) return false;
+            if (this.Blade != rhs.Blade) return false;
+            if (this.Block != rhs.Block) return false;
+            if (this.Blunt != rhs.Blunt) return false;
+            if (this.HandToHand != rhs.HandToHand) return false;
+            if (this.HeavyArmor != rhs.HeavyArmor) return false;
+            if (this.Alchemy != rhs.Alchemy) return false;
+            if (this.Alteration != rhs.Alteration) return false;
+            if (this.Conjuration != rhs.Conjuration) return false;
+            if (this.Destruction != rhs.Destruction) return false;
+            if (this.Illusion != rhs.Illusion) return false;
+            if (this.Mysticism != rhs.Mysticism) return false;
+            if (this.Restoration != rhs.Restoration) return false;
+            if (this.Acrobatics != rhs.Acrobatics) return false;
+            if (this.LightArmor != rhs.LightArmor) return false;
+            if (this.Marksman != rhs.Marksman) return false;
+            if (this.Mercantile != rhs.Mercantile) return false;
+            if (this.Security != rhs.Security) return false;
+            if (this.Sneak != rhs.Sneak) return false;
+            if (this.Speechcraft != rhs.Speechcraft) return false;
+            if (this.Health != rhs.Health) return false;
+            if (this.Strength != rhs.Strength) return false;
+            if (this.Intelligence != rhs.Intelligence) return false;
+            if (this.Willpower != rhs.Willpower) return false;
+            if (this.Agility != rhs.Agility) return false;
+            if (this.Speed != rhs.Speed) return false;
+            if (this.Endurance != rhs.Endurance) return false;
+            if (this.Personality != rhs.Personality) return false;
+            if (this.Luck != rhs.Luck) return false;
             if (Hair_Property.HasBeenSet != rhs.Hair_Property.HasBeenSet) return false;
             if (Hair_Property.HasBeenSet)
             {
-                if (Hair != rhs.Hair) return false;
+                if (!this.Hair_Property.Equals(rhs.Hair_Property)) return false;
             }
             if (HairLength_Property.HasBeenSet != rhs.HairLength_Property.HasBeenSet) return false;
             if (HairLength_Property.HasBeenSet)
             {
-                if (HairLength != rhs.HairLength) return false;
+                if (!this.HairLength.EqualsWithin(rhs.HairLength)) return false;
             }
             if (Eyes.HasBeenSet != rhs.Eyes.HasBeenSet) return false;
             if (Eyes.HasBeenSet)
             {
-                if (!Eyes.SequenceEqual(rhs.Eyes)) return false;
+                if (!this.Eyes.SequenceEqual(rhs.Eyes)) return false;
             }
             if (HairColor_Property.HasBeenSet != rhs.HairColor_Property.HasBeenSet) return false;
             if (HairColor_Property.HasBeenSet)
             {
-                if (HairColor != rhs.HairColor) return false;
+                if (this.HairColor != rhs.HairColor) return false;
             }
             if (CombatStyle_Property.HasBeenSet != rhs.CombatStyle_Property.HasBeenSet) return false;
             if (CombatStyle_Property.HasBeenSet)
             {
-                if (CombatStyle != rhs.CombatStyle) return false;
+                if (!this.CombatStyle_Property.Equals(rhs.CombatStyle_Property)) return false;
             }
             if (FaceGenGeometrySymmetric_Property.HasBeenSet != rhs.FaceGenGeometrySymmetric_Property.HasBeenSet) return false;
             if (FaceGenGeometrySymmetric_Property.HasBeenSet)
             {
-                if (!FaceGenGeometrySymmetric.EqualsFast(rhs.FaceGenGeometrySymmetric)) return false;
+                if (!this.FaceGenGeometrySymmetric.EqualsFast(rhs.FaceGenGeometrySymmetric)) return false;
             }
             if (FaceGenGeometryAsymmetric_Property.HasBeenSet != rhs.FaceGenGeometryAsymmetric_Property.HasBeenSet) return false;
             if (FaceGenGeometryAsymmetric_Property.HasBeenSet)
             {
-                if (!FaceGenGeometryAsymmetric.EqualsFast(rhs.FaceGenGeometryAsymmetric)) return false;
+                if (!this.FaceGenGeometryAsymmetric.EqualsFast(rhs.FaceGenGeometryAsymmetric)) return false;
             }
             if (FaceGenTextureSymmetric_Property.HasBeenSet != rhs.FaceGenTextureSymmetric_Property.HasBeenSet) return false;
             if (FaceGenTextureSymmetric_Property.HasBeenSet)
             {
-                if (!FaceGenTextureSymmetric.EqualsFast(rhs.FaceGenTextureSymmetric)) return false;
+                if (!this.FaceGenTextureSymmetric.EqualsFast(rhs.FaceGenTextureSymmetric)) return false;
             }
             if (Unknown_Property.HasBeenSet != rhs.Unknown_Property.HasBeenSet) return false;
             if (Unknown_Property.HasBeenSet)
             {
-                if (!Unknown.EqualsFast(rhs.Unknown)) return false;
+                if (!this.Unknown.EqualsFast(rhs.Unknown)) return false;
             }
             return true;
         }

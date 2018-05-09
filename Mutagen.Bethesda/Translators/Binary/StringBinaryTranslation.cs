@@ -2,6 +2,7 @@
 using Noggog;
 using Noggog.Notifying;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -36,12 +37,12 @@ namespace Mutagen.Bethesda.Binary
                 string str;
                 if (parseWhole)
                 {
-                    str = frame.Reader.ReadString(checked((int)frame.Remaining);
+                    str = frame.Reader.ReadString(checked((int)frame.Remaining));
                     str = str.TrimEnd('\0');
                 }
                 else
                 {
-                    str = frame.Reader.ReadStringUntil('\0', include: false);
+                    str = ReadStringUntil(frame.Reader, '\0', include: false);
                     frame.Reader.Position += 1;
                 }
                 return TryGet<string>.Succeed(str);
@@ -56,6 +57,34 @@ namespace Mutagen.Bethesda.Binary
                 throw;
             }
         }
+
+        public static string ReadStringUntil(
+            IBinaryStream reader,
+            char stopChar,
+            bool include)
+        {
+            List<byte> chars = new List<byte>();
+            while (!reader.Complete)
+            {
+                var nextChar = reader.ReadByte();
+                if (nextChar == stopChar)
+                {
+                    if (include)
+                    {
+                        chars.Add(nextChar);
+                    }
+                    else
+                    {
+                        reader.Position -= 1;
+                    }
+                    break;
+                }
+                chars.Add(nextChar);
+            }
+            return BinaryUtility.BytesToString(chars.ToArray());
+        }
+
+
 
         public TryGet<string> Parse<M>(
             MutagenFrame frame,

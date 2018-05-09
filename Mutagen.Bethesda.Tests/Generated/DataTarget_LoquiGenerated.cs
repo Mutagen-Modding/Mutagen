@@ -109,8 +109,8 @@ namespace Mutagen.Bethesda.Tests
         public bool Equals(DataTarget rhs)
         {
             if (rhs == null) return false;
-            if (Location != rhs.Location) return false;
-            if (!Data.EqualsFast(rhs.Data)) return false;
+            if (this.Location != rhs.Location) return false;
+            if (!this.Data.EqualsFast(rhs.Data)) return false;
             return true;
         }
 

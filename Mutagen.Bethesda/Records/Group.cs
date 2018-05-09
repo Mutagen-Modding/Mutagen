@@ -42,12 +42,32 @@ namespace Mutagen.Bethesda
                 fieldIndex,
                 err);
         }
+    }
 
-        public async Task Write_XmlFolder<T_ErrMask>(
+    public enum GroupTypeEnum
+    {
+        Type = 0,
+        WorldChildren = 1,
+        InteriorCellBlock = 2,
+        InteriorCellSubBlock = 3,
+        ExteriorCellBlock = 4,
+        ExteriorCellSubBlock = 5,
+        CellChildren = 6,
+        TopicChildren = 7,
+        CellPersistentChildren = 8,
+        CellTemporaryChildren = 9,
+        CellVisibleDistantChildren = 10,
+    }
+
+    public static class GroupExt
+    {
+        public static async Task Write_XmlFolder<T, T_ErrMask>(
+            this Group<T> group,
             DirectoryPath dir,
             Func<IErrorMask> errMaskFunc,
             int index,
             bool doMasks)
+            where T : MajorRecord, ILoquiObject<T>, IFormID
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             Group_ErrorMask<T_ErrMask> grupErrMask = null;
@@ -56,7 +76,7 @@ namespace Mutagen.Bethesda
                 dir.Create();
                 List<Task<MajorRecord_ErrorMask>> writeTasks = new List<Task<MajorRecord_ErrorMask>>();
                 int counter = 0;
-                foreach (var item in this.Items.Values)
+                foreach (var item in group.Items.Values)
                 {
                     writeTasks.Add(Task.Run(() =>
                     {
@@ -79,7 +99,7 @@ namespace Mutagen.Bethesda
                             new MaskItem<Exception, Group_ErrorMask<T_ErrMask>>(null, grupErrMask));
                     }
                     ErrorMask.HandleErrorMaskAddition<IErrorMask, T_ErrMask>(
-                        creator: () => grupErrMask,
+                        mask: grupErrMask,
                         index: (int)Group_FieldIndex.Items,
                         errMaskObj: (T_ErrMask)itemErrMask);
                 }
@@ -90,20 +110,5 @@ namespace Mutagen.Bethesda
                 errMaskFunc().Overall = ex;
             }
         }
-    }
-
-    public enum GroupTypeEnum
-    {
-        Type = 0,
-        WorldChildren = 1,
-        InteriorCellBlock = 2,
-        InteriorCellSubBlock = 3,
-        ExteriorCellBlock = 4,
-        ExteriorCellSubBlock = 5,
-        CellChildren = 6,
-        TopicChildren = 7,
-        CellPersistentChildren = 8,
-        CellTemporaryChildren = 9,
-        CellVisibleDistantChildren = 10,
     }
 }

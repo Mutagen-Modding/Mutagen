@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda
             if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
             if (Name_Property.HasBeenSet)
             {
-                if (!object.Equals(Name, rhs.Name)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
             }
             return true;
         }

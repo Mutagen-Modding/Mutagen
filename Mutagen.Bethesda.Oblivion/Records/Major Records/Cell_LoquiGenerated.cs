@@ -316,82 +316,82 @@ namespace Mutagen.Bethesda.Oblivion
             if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
             if (Flags_Property.HasBeenSet)
             {
-                if (Flags != rhs.Flags) return false;
+                if (this.Flags != rhs.Flags) return false;
             }
             if (Grid_Property.HasBeenSet != rhs.Grid_Property.HasBeenSet) return false;
             if (Grid_Property.HasBeenSet)
             {
-                if (Grid != rhs.Grid) return false;
+                if (this.Grid != rhs.Grid) return false;
             }
             if (Lighting_Property.HasBeenSet != rhs.Lighting_Property.HasBeenSet) return false;
             if (Lighting_Property.HasBeenSet)
             {
-                if (!object.Equals(Lighting, rhs.Lighting)) return false;
+                if (!object.Equals(this.Lighting, rhs.Lighting)) return false;
             }
             if (Regions.HasBeenSet != rhs.Regions.HasBeenSet) return false;
             if (Regions.HasBeenSet)
             {
-                if (!Regions.SequenceEqual(rhs.Regions)) return false;
+                if (!this.Regions.SequenceEqual(rhs.Regions)) return false;
             }
             if (MusicType_Property.HasBeenSet != rhs.MusicType_Property.HasBeenSet) return false;
             if (MusicType_Property.HasBeenSet)
             {
-                if (MusicType != rhs.MusicType) return false;
+                if (this.MusicType != rhs.MusicType) return false;
             }
             if (WaterHeight_Property.HasBeenSet != rhs.WaterHeight_Property.HasBeenSet) return false;
             if (WaterHeight_Property.HasBeenSet)
             {
-                if (WaterHeight != rhs.WaterHeight) return false;
+                if (!this.WaterHeight.EqualsWithin(rhs.WaterHeight)) return false;
             }
             if (Climate_Property.HasBeenSet != rhs.Climate_Property.HasBeenSet) return false;
             if (Climate_Property.HasBeenSet)
             {
-                if (Climate != rhs.Climate) return false;
+                if (!this.Climate_Property.Equals(rhs.Climate_Property)) return false;
             }
             if (Water_Property.HasBeenSet != rhs.Water_Property.HasBeenSet) return false;
             if (Water_Property.HasBeenSet)
             {
-                if (Water != rhs.Water) return false;
+                if (!this.Water_Property.Equals(rhs.Water_Property)) return false;
             }
             if (Owner_Property.HasBeenSet != rhs.Owner_Property.HasBeenSet) return false;
             if (Owner_Property.HasBeenSet)
             {
-                if (Owner != rhs.Owner) return false;
+                if (!this.Owner_Property.Equals(rhs.Owner_Property)) return false;
             }
             if (FactionRank_Property.HasBeenSet != rhs.FactionRank_Property.HasBeenSet) return false;
             if (FactionRank_Property.HasBeenSet)
             {
-                if (FactionRank != rhs.FactionRank) return false;
+                if (this.FactionRank != rhs.FactionRank) return false;
             }
             if (GlobalVariable_Property.HasBeenSet != rhs.GlobalVariable_Property.HasBeenSet) return false;
             if (GlobalVariable_Property.HasBeenSet)
             {
-                if (GlobalVariable != rhs.GlobalVariable) return false;
+                if (!this.GlobalVariable_Property.Equals(rhs.GlobalVariable_Property)) return false;
             }
             if (PathGrid_Property.HasBeenSet != rhs.PathGrid_Property.HasBeenSet) return false;
             if (PathGrid_Property.HasBeenSet)
             {
-                if (!object.Equals(PathGrid, rhs.PathGrid)) return false;
+                if (!object.Equals(this.PathGrid, rhs.PathGrid)) return false;
             }
             if (Landscape_Property.HasBeenSet != rhs.Landscape_Property.HasBeenSet) return false;
             if (Landscape_Property.HasBeenSet)
             {
-                if (!object.Equals(Landscape, rhs.Landscape)) return false;
+                if (!object.Equals(this.Landscape, rhs.Landscape)) return false;
             }
             if (Persistent.HasBeenSet != rhs.Persistent.HasBeenSet) return false;
             if (Persistent.HasBeenSet)
             {
-                if (!Persistent.SequenceEqual(rhs.Persistent)) return false;
+                if (!this.Persistent.SequenceEqual(rhs.Persistent)) return false;
             }
             if (Temporary.HasBeenSet != rhs.Temporary.HasBeenSet) return false;
             if (Temporary.HasBeenSet)
             {
-                if (!Temporary.SequenceEqual(rhs.Temporary)) return false;
+                if (!this.Temporary.SequenceEqual(rhs.Temporary)) return false;
             }
             if (VisibleWhenDistant.HasBeenSet != rhs.VisibleWhenDistant.HasBeenSet) return false;
             if (VisibleWhenDistant.HasBeenSet)
             {
-                if (!VisibleWhenDistant.SequenceEqual(rhs.VisibleWhenDistant)) return false;
+                if (!this.VisibleWhenDistant.SequenceEqual(rhs.VisibleWhenDistant)) return false;
             }
             return true;
         }
@@ -484,19 +484,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Cell Create_XML(
             XElement root,
-            out Cell_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static Cell Create_XML(
-            XElement root,
-            bool doMasks,
-            out Cell_ErrorMask errorMask)
+            out Cell_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_XML(
                 root: root,
@@ -551,56 +540,153 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region XML Copy In
+        public override void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<Cell, Cell_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out Cell_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<Cell, Cell_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out Cell_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out Cell_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
+            out NamedMajorRecord_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out Cell_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
+            out MajorRecord_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out Cell_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out Cell_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (Cell_ErrorMask)this.Write_XML_Internal(
-                writer: writer,
+            errorMask = this.Write_XML_Internal(
+                node: node,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as Cell_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out Cell_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             out Cell_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public override void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -609,39 +695,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public override void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected override object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             CellCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -868,19 +948,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Cell Create_Binary(
             MutagenFrame frame,
-            out Cell_ErrorMask errorMask)
-        {
-            return Create_Binary(
-                frame: frame,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static Cell Create_Binary(
-            MutagenFrame frame,
-            bool doMasks,
-            out Cell_ErrorMask errorMask)
+            out Cell_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -953,35 +1022,40 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out Cell_ErrorMask errorMask)
+            out Cell_ErrorMask errorMask,
+            bool doMasks = true)
         {
-            errorMask = (Cell_ErrorMask)this.Write_Binary_Internal(
+            errorMask = this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as Cell_ErrorMask;
         }
 
         public virtual void Write_Binary(
             string path,
-            out Cell_ErrorMask errorMask)
+            out Cell_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
-            out Cell_ErrorMask errorMask)
+            out Cell_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -3005,7 +3079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             ICellGetter item,
             bool doMasks,
             out Cell_ErrorMask errorMask,
@@ -3013,7 +3087,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Cell_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Cell_ErrorMask()) : default(Func<Cell_ErrorMask>));
@@ -3021,203 +3095,202 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             ICellGetter item,
             Func<Cell_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.Cell"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Cell");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Cell");
-                    }
-                    if (item.Flags_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<Cell.Flag>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Flags),
-                            item: item.Flags_Property,
-                            fieldIndex: (int)Cell_FieldIndex.Flags,
-                            errorMask: errorMask);
-                    }
-                    if (item.Grid_Property.HasBeenSet)
-                    {
-                        P2IntXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Grid),
-                            item: item.Grid_Property,
-                            fieldIndex: (int)Cell_FieldIndex.Grid,
-                            errorMask: errorMask);
-                    }
-                    if (item.Lighting_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<CellLighting, CellLighting_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.Lighting_Property,
-                            name: nameof(item.Lighting),
-                            fieldIndex: (int)Cell_FieldIndex.Lighting,
-                            errorMask: errorMask);
-                    }
-                    if (item.Regions.HasBeenSet)
-                    {
-                        ListXmlTranslation<FormIDLink<Region>, Exception>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Regions),
-                            item: item.Regions,
-                            fieldIndex: (int)Cell_FieldIndex.Regions,
-                            errorMask: errorMask,
-                            transl: (FormIDLink<Region> subItem, bool listDoMasks, out Exception listSubMask) =>
-                            {
-                                FormIDXmlTranslation.Instance.Write(
-                                    writer: writer,
-                                    name: "Item",
-                                    item: subItem?.FormID,
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
-                    if (item.MusicType_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<MusicType>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.MusicType),
-                            item: item.MusicType_Property,
-                            fieldIndex: (int)Cell_FieldIndex.MusicType,
-                            errorMask: errorMask);
-                    }
-                    if (item.WaterHeight_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.WaterHeight),
-                            item: item.WaterHeight_Property,
-                            fieldIndex: (int)Cell_FieldIndex.WaterHeight,
-                            errorMask: errorMask);
-                    }
-                    if (item.Climate_Property.HasBeenSet)
-                    {
-                        FormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Climate),
-                            item: item.Climate?.FormID,
-                            fieldIndex: (int)Cell_FieldIndex.Climate,
-                            errorMask: errorMask);
-                    }
-                    if (item.Water_Property.HasBeenSet)
-                    {
-                        FormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Water),
-                            item: item.Water?.FormID,
-                            fieldIndex: (int)Cell_FieldIndex.Water,
-                            errorMask: errorMask);
-                    }
-                    if (item.Owner_Property.HasBeenSet)
-                    {
-                        FormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Owner),
-                            item: item.Owner?.FormID,
-                            fieldIndex: (int)Cell_FieldIndex.Owner,
-                            errorMask: errorMask);
-                    }
-                    if (item.FactionRank_Property.HasBeenSet)
-                    {
-                        Int32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.FactionRank),
-                            item: item.FactionRank_Property,
-                            fieldIndex: (int)Cell_FieldIndex.FactionRank,
-                            errorMask: errorMask);
-                    }
-                    if (item.GlobalVariable_Property.HasBeenSet)
-                    {
-                        FormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.GlobalVariable),
-                            item: item.GlobalVariable?.FormID,
-                            fieldIndex: (int)Cell_FieldIndex.GlobalVariable,
-                            errorMask: errorMask);
-                    }
-                    if (item.PathGrid_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<PathGrid, PathGrid_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.PathGrid_Property,
-                            name: nameof(item.PathGrid),
-                            fieldIndex: (int)Cell_FieldIndex.PathGrid,
-                            errorMask: errorMask);
-                    }
-                    if (item.Landscape_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<Landscape, Landscape_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.Landscape_Property,
-                            name: nameof(item.Landscape),
-                            fieldIndex: (int)Cell_FieldIndex.Landscape,
-                            errorMask: errorMask);
-                    }
-                    if (item.Persistent.HasBeenSet)
-                    {
-                        ListXmlTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Persistent),
-                            item: item.Persistent,
-                            fieldIndex: (int)Cell_FieldIndex.Persistent,
-                            errorMask: errorMask,
-                            transl: (Placed subItem, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
-                            {
-                                LoquiXmlTranslation<Placed, Placed_ErrorMask>.Instance.Write(
-                                    writer: writer,
-                                    item: subItem,
-                                    name: "Item",
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
-                    if (item.Temporary.HasBeenSet)
-                    {
-                        ListXmlTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Temporary),
-                            item: item.Temporary,
-                            fieldIndex: (int)Cell_FieldIndex.Temporary,
-                            errorMask: errorMask,
-                            transl: (Placed subItem, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
-                            {
-                                LoquiXmlTranslation<Placed, Placed_ErrorMask>.Instance.Write(
-                                    writer: writer,
-                                    item: subItem,
-                                    name: "Item",
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
-                    if (item.VisibleWhenDistant.HasBeenSet)
-                    {
-                        ListXmlTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.VisibleWhenDistant),
-                            item: item.VisibleWhenDistant,
-                            fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistant,
-                            errorMask: errorMask,
-                            transl: (Placed subItem, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
-                            {
-                                LoquiXmlTranslation<Placed, Placed_ErrorMask>.Instance.Write(
-                                    writer: writer,
-                                    item: subItem,
-                                    name: "Item",
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Cell");
+                }
+                if (item.Flags_Property.HasBeenSet)
+                {
+                    EnumXmlTranslation<Cell.Flag>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Flags),
+                        item: item.Flags_Property,
+                        fieldIndex: (int)Cell_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
+                if (item.Grid_Property.HasBeenSet)
+                {
+                    P2IntXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Grid),
+                        item: item.Grid_Property,
+                        fieldIndex: (int)Cell_FieldIndex.Grid,
+                        errorMask: errorMask);
+                }
+                if (item.Lighting_Property.HasBeenSet)
+                {
+                    LoquiXmlTranslation<CellLighting, CellLighting_ErrorMask>.Instance.Write(
+                        node: elem,
+                        item: item.Lighting_Property,
+                        name: nameof(item.Lighting),
+                        fieldIndex: (int)Cell_FieldIndex.Lighting,
+                        errorMask: errorMask);
+                }
+                if (item.Regions.HasBeenSet)
+                {
+                    ListXmlTranslation<FormIDLink<Region>, Exception>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Regions),
+                        item: item.Regions,
+                        fieldIndex: (int)Cell_FieldIndex.Regions,
+                        errorMask: errorMask,
+                        transl: (XElement subNode, FormIDLink<Region> subItem, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            FormIDXmlTranslation.Instance.Write(
+                                node: subNode,
+                                name: "Item",
+                                item: subItem?.FormID,
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                }
+                if (item.MusicType_Property.HasBeenSet)
+                {
+                    EnumXmlTranslation<MusicType>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.MusicType),
+                        item: item.MusicType_Property,
+                        fieldIndex: (int)Cell_FieldIndex.MusicType,
+                        errorMask: errorMask);
+                }
+                if (item.WaterHeight_Property.HasBeenSet)
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.WaterHeight),
+                        item: item.WaterHeight_Property,
+                        fieldIndex: (int)Cell_FieldIndex.WaterHeight,
+                        errorMask: errorMask);
+                }
+                if (item.Climate_Property.HasBeenSet)
+                {
+                    FormIDXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Climate),
+                        item: item.Climate?.FormID,
+                        fieldIndex: (int)Cell_FieldIndex.Climate,
+                        errorMask: errorMask);
+                }
+                if (item.Water_Property.HasBeenSet)
+                {
+                    FormIDXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Water),
+                        item: item.Water?.FormID,
+                        fieldIndex: (int)Cell_FieldIndex.Water,
+                        errorMask: errorMask);
+                }
+                if (item.Owner_Property.HasBeenSet)
+                {
+                    FormIDXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Owner),
+                        item: item.Owner?.FormID,
+                        fieldIndex: (int)Cell_FieldIndex.Owner,
+                        errorMask: errorMask);
+                }
+                if (item.FactionRank_Property.HasBeenSet)
+                {
+                    Int32XmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.FactionRank),
+                        item: item.FactionRank_Property,
+                        fieldIndex: (int)Cell_FieldIndex.FactionRank,
+                        errorMask: errorMask);
+                }
+                if (item.GlobalVariable_Property.HasBeenSet)
+                {
+                    FormIDXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.GlobalVariable),
+                        item: item.GlobalVariable?.FormID,
+                        fieldIndex: (int)Cell_FieldIndex.GlobalVariable,
+                        errorMask: errorMask);
+                }
+                if (item.PathGrid_Property.HasBeenSet)
+                {
+                    LoquiXmlTranslation<PathGrid, PathGrid_ErrorMask>.Instance.Write(
+                        node: elem,
+                        item: item.PathGrid_Property,
+                        name: nameof(item.PathGrid),
+                        fieldIndex: (int)Cell_FieldIndex.PathGrid,
+                        errorMask: errorMask);
+                }
+                if (item.Landscape_Property.HasBeenSet)
+                {
+                    LoquiXmlTranslation<Landscape, Landscape_ErrorMask>.Instance.Write(
+                        node: elem,
+                        item: item.Landscape_Property,
+                        name: nameof(item.Landscape),
+                        fieldIndex: (int)Cell_FieldIndex.Landscape,
+                        errorMask: errorMask);
+                }
+                if (item.Persistent.HasBeenSet)
+                {
+                    ListXmlTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Persistent),
+                        item: item.Persistent,
+                        fieldIndex: (int)Cell_FieldIndex.Persistent,
+                        errorMask: errorMask,
+                        transl: (XElement subNode, Placed subItem, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
+                        {
+                            LoquiXmlTranslation<Placed, Placed_ErrorMask>.Instance.Write(
+                                node: subNode,
+                                item: subItem,
+                                name: "Item",
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                }
+                if (item.Temporary.HasBeenSet)
+                {
+                    ListXmlTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Temporary),
+                        item: item.Temporary,
+                        fieldIndex: (int)Cell_FieldIndex.Temporary,
+                        errorMask: errorMask,
+                        transl: (XElement subNode, Placed subItem, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
+                        {
+                            LoquiXmlTranslation<Placed, Placed_ErrorMask>.Instance.Write(
+                                node: subNode,
+                                item: subItem,
+                                name: "Item",
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                }
+                if (item.VisibleWhenDistant.HasBeenSet)
+                {
+                    ListXmlTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.VisibleWhenDistant),
+                        item: item.VisibleWhenDistant,
+                        fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistant,
+                        errorMask: errorMask,
+                        transl: (XElement subNode, Placed subItem, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
+                        {
+                            LoquiXmlTranslation<Placed, Placed_ErrorMask>.Instance.Write(
+                                node: subNode,
+                                item: subItem,
+                                name: "Item",
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
                 }
             }
             catch (Exception ex)
@@ -3321,10 +3394,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fieldIndex: (int)Cell_FieldIndex.Regions,
                 recordType: Cell_Registration.XCLR_HEADER,
                 errorMask: errorMask,
-                transl: (FormIDLink<Region> subItem, bool listDoMasks, out Exception listSubMask) =>
+                transl: (MutagenWriter subWriter, FormIDLink<Region> subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                        writer: writer,
+                        writer: subWriter,
                         item: subItem,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask);
@@ -3915,6 +3988,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Cell_FieldIndex enu = (Cell_FieldIndex)index;
+            switch (enu)
+            {
+                case Cell_FieldIndex.Flags:
+                    return Flags;
+                case Cell_FieldIndex.Grid:
+                    return Grid;
+                case Cell_FieldIndex.Lighting:
+                    return Lighting;
+                case Cell_FieldIndex.Regions:
+                    return Regions;
+                case Cell_FieldIndex.MusicType:
+                    return MusicType;
+                case Cell_FieldIndex.WaterHeight:
+                    return WaterHeight;
+                case Cell_FieldIndex.Climate:
+                    return Climate;
+                case Cell_FieldIndex.Water:
+                    return Water;
+                case Cell_FieldIndex.Owner:
+                    return Owner;
+                case Cell_FieldIndex.FactionRank:
+                    return FactionRank;
+                case Cell_FieldIndex.GlobalVariable:
+                    return GlobalVariable;
+                case Cell_FieldIndex.PathGrid:
+                    return PathGrid;
+                case Cell_FieldIndex.Landscape:
+                    return Landscape;
+                case Cell_FieldIndex.Persistent:
+                    return Persistent;
+                case Cell_FieldIndex.Temporary:
+                    return Temporary;
+                case Cell_FieldIndex.VisibleWhenDistant:
+                    return VisibleWhenDistant;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Cell_FieldIndex enu = (Cell_FieldIndex)index;

@@ -138,17 +138,17 @@ namespace Mutagen.Bethesda.Oblivion
             if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
             if (Model_Property.HasBeenSet)
             {
-                if (!object.Equals(Model, rhs.Model)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
             }
             if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
             if (Script_Property.HasBeenSet)
             {
-                if (Script != rhs.Script) return false;
+                if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
             }
             if (MarkerFlags_Property.HasBeenSet != rhs.MarkerFlags_Property.HasBeenSet) return false;
             if (MarkerFlags_Property.HasBeenSet)
             {
-                if (!MarkerFlags.EqualsFast(rhs.MarkerFlags)) return false;
+                if (!this.MarkerFlags.EqualsFast(rhs.MarkerFlags)) return false;
             }
             return true;
         }

@@ -808,126 +808,126 @@ namespace Mutagen.Bethesda.Oblivion
             if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
             if (Model_Property.HasBeenSet)
             {
-                if (!object.Equals(Model, rhs.Model)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
             }
             if (Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
             if (Items.HasBeenSet)
             {
-                if (!Items.SequenceEqual(rhs.Items)) return false;
+                if (!this.Items.SequenceEqual(rhs.Items)) return false;
             }
             if (Spells.HasBeenSet != rhs.Spells.HasBeenSet) return false;
             if (Spells.HasBeenSet)
             {
-                if (!Spells.SequenceEqual(rhs.Spells)) return false;
+                if (!this.Spells.SequenceEqual(rhs.Spells)) return false;
             }
             if (Models.HasBeenSet != rhs.Models.HasBeenSet) return false;
             if (Models.HasBeenSet)
             {
-                if (!Models.SequenceEqual(rhs.Models)) return false;
+                if (!this.Models.SequenceEqual(rhs.Models)) return false;
             }
             if (NIFT_Property.HasBeenSet != rhs.NIFT_Property.HasBeenSet) return false;
             if (NIFT_Property.HasBeenSet)
             {
-                if (!NIFT.EqualsFast(rhs.NIFT)) return false;
+                if (!this.NIFT.EqualsFast(rhs.NIFT)) return false;
             }
-            if (Flags != rhs.Flags) return false;
-            if (BaseSpellPoints != rhs.BaseSpellPoints) return false;
-            if (Fatigue != rhs.Fatigue) return false;
-            if (BarterGold != rhs.BarterGold) return false;
-            if (LevelOffset != rhs.LevelOffset) return false;
-            if (CalcMin != rhs.CalcMin) return false;
-            if (CalcMax != rhs.CalcMax) return false;
+            if (this.Flags != rhs.Flags) return false;
+            if (this.BaseSpellPoints != rhs.BaseSpellPoints) return false;
+            if (this.Fatigue != rhs.Fatigue) return false;
+            if (this.BarterGold != rhs.BarterGold) return false;
+            if (this.LevelOffset != rhs.LevelOffset) return false;
+            if (this.CalcMin != rhs.CalcMin) return false;
+            if (this.CalcMax != rhs.CalcMax) return false;
             if (Factions.HasBeenSet != rhs.Factions.HasBeenSet) return false;
             if (Factions.HasBeenSet)
             {
-                if (!Factions.SequenceEqual(rhs.Factions)) return false;
+                if (!this.Factions.SequenceEqual(rhs.Factions)) return false;
             }
             if (DeathItem_Property.HasBeenSet != rhs.DeathItem_Property.HasBeenSet) return false;
             if (DeathItem_Property.HasBeenSet)
             {
-                if (DeathItem != rhs.DeathItem) return false;
+                if (!this.DeathItem_Property.Equals(rhs.DeathItem_Property)) return false;
             }
             if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
             if (Script_Property.HasBeenSet)
             {
-                if (Script != rhs.Script) return false;
+                if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
             }
-            if (Aggression != rhs.Aggression) return false;
-            if (Confidence != rhs.Confidence) return false;
-            if (EnergyLevel != rhs.EnergyLevel) return false;
-            if (Responsibility != rhs.Responsibility) return false;
-            if (BuySellServices != rhs.BuySellServices) return false;
-            if (Teaches != rhs.Teaches) return false;
-            if (MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
+            if (this.Aggression != rhs.Aggression) return false;
+            if (this.Confidence != rhs.Confidence) return false;
+            if (this.EnergyLevel != rhs.EnergyLevel) return false;
+            if (this.Responsibility != rhs.Responsibility) return false;
+            if (this.BuySellServices != rhs.BuySellServices) return false;
+            if (this.Teaches != rhs.Teaches) return false;
+            if (this.MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
             if (AIPackages.HasBeenSet != rhs.AIPackages.HasBeenSet) return false;
             if (AIPackages.HasBeenSet)
             {
-                if (!AIPackages.SequenceEqual(rhs.AIPackages)) return false;
+                if (!this.AIPackages.SequenceEqual(rhs.AIPackages)) return false;
             }
             if (Animations.HasBeenSet != rhs.Animations.HasBeenSet) return false;
             if (Animations.HasBeenSet)
             {
-                if (!Animations.SequenceEqual(rhs.Animations)) return false;
+                if (!this.Animations.SequenceEqual(rhs.Animations)) return false;
             }
-            if (CreatureType != rhs.CreatureType) return false;
-            if (CombatSKill != rhs.CombatSKill) return false;
-            if (MagicSKill != rhs.MagicSKill) return false;
-            if (StealthSKill != rhs.StealthSKill) return false;
-            if (SoulLevel != rhs.SoulLevel) return false;
-            if (Health != rhs.Health) return false;
-            if (AttackDamage != rhs.AttackDamage) return false;
-            if (Strength != rhs.Strength) return false;
-            if (Intelligence != rhs.Intelligence) return false;
-            if (Willpower != rhs.Willpower) return false;
-            if (Agility != rhs.Agility) return false;
-            if (Speed != rhs.Speed) return false;
-            if (Endurance != rhs.Endurance) return false;
-            if (Personality != rhs.Personality) return false;
-            if (Luck != rhs.Luck) return false;
+            if (this.CreatureType != rhs.CreatureType) return false;
+            if (this.CombatSKill != rhs.CombatSKill) return false;
+            if (this.MagicSKill != rhs.MagicSKill) return false;
+            if (this.StealthSKill != rhs.StealthSKill) return false;
+            if (this.SoulLevel != rhs.SoulLevel) return false;
+            if (this.Health != rhs.Health) return false;
+            if (this.AttackDamage != rhs.AttackDamage) return false;
+            if (this.Strength != rhs.Strength) return false;
+            if (this.Intelligence != rhs.Intelligence) return false;
+            if (this.Willpower != rhs.Willpower) return false;
+            if (this.Agility != rhs.Agility) return false;
+            if (this.Speed != rhs.Speed) return false;
+            if (this.Endurance != rhs.Endurance) return false;
+            if (this.Personality != rhs.Personality) return false;
+            if (this.Luck != rhs.Luck) return false;
             if (AttackReach_Property.HasBeenSet != rhs.AttackReach_Property.HasBeenSet) return false;
             if (AttackReach_Property.HasBeenSet)
             {
-                if (AttackReach != rhs.AttackReach) return false;
+                if (this.AttackReach != rhs.AttackReach) return false;
             }
             if (CombatStyle_Property.HasBeenSet != rhs.CombatStyle_Property.HasBeenSet) return false;
             if (CombatStyle_Property.HasBeenSet)
             {
-                if (CombatStyle != rhs.CombatStyle) return false;
+                if (!this.CombatStyle_Property.Equals(rhs.CombatStyle_Property)) return false;
             }
             if (TurningSpeed_Property.HasBeenSet != rhs.TurningSpeed_Property.HasBeenSet) return false;
             if (TurningSpeed_Property.HasBeenSet)
             {
-                if (TurningSpeed != rhs.TurningSpeed) return false;
+                if (!this.TurningSpeed.EqualsWithin(rhs.TurningSpeed)) return false;
             }
             if (BaseScale_Property.HasBeenSet != rhs.BaseScale_Property.HasBeenSet) return false;
             if (BaseScale_Property.HasBeenSet)
             {
-                if (BaseScale != rhs.BaseScale) return false;
+                if (!this.BaseScale.EqualsWithin(rhs.BaseScale)) return false;
             }
             if (FootWeight_Property.HasBeenSet != rhs.FootWeight_Property.HasBeenSet) return false;
             if (FootWeight_Property.HasBeenSet)
             {
-                if (FootWeight != rhs.FootWeight) return false;
+                if (!this.FootWeight.EqualsWithin(rhs.FootWeight)) return false;
             }
             if (BloodSpray_Property.HasBeenSet != rhs.BloodSpray_Property.HasBeenSet) return false;
             if (BloodSpray_Property.HasBeenSet)
             {
-                if (!object.Equals(BloodSpray, rhs.BloodSpray)) return false;
+                if (!object.Equals(this.BloodSpray, rhs.BloodSpray)) return false;
             }
             if (BloodDecal_Property.HasBeenSet != rhs.BloodDecal_Property.HasBeenSet) return false;
             if (BloodDecal_Property.HasBeenSet)
             {
-                if (!object.Equals(BloodDecal, rhs.BloodDecal)) return false;
+                if (!object.Equals(this.BloodDecal, rhs.BloodDecal)) return false;
             }
             if (InheritsSoundFrom_Property.HasBeenSet != rhs.InheritsSoundFrom_Property.HasBeenSet) return false;
             if (InheritsSoundFrom_Property.HasBeenSet)
             {
-                if (InheritsSoundFrom != rhs.InheritsSoundFrom) return false;
+                if (!this.InheritsSoundFrom_Property.Equals(rhs.InheritsSoundFrom_Property)) return false;
             }
             if (Sounds.HasBeenSet != rhs.Sounds.HasBeenSet) return false;
             if (Sounds.HasBeenSet)
             {
-                if (!Sounds.SequenceEqual(rhs.Sounds)) return false;
+                if (!this.Sounds.SequenceEqual(rhs.Sounds)) return false;
             }
             return true;
         }

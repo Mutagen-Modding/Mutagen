@@ -265,30 +265,30 @@ namespace Mutagen.Bethesda.Oblivion
             if (Weathers.HasBeenSet != rhs.Weathers.HasBeenSet) return false;
             if (Weathers.HasBeenSet)
             {
-                if (!Weathers.SequenceEqual(rhs.Weathers)) return false;
+                if (!this.Weathers.SequenceEqual(rhs.Weathers)) return false;
             }
             if (SunTexture_Property.HasBeenSet != rhs.SunTexture_Property.HasBeenSet) return false;
             if (SunTexture_Property.HasBeenSet)
             {
-                if (!object.Equals(SunTexture, rhs.SunTexture)) return false;
+                if (!object.Equals(this.SunTexture, rhs.SunTexture)) return false;
             }
             if (SunGlareTexture_Property.HasBeenSet != rhs.SunGlareTexture_Property.HasBeenSet) return false;
             if (SunGlareTexture_Property.HasBeenSet)
             {
-                if (!object.Equals(SunGlareTexture, rhs.SunGlareTexture)) return false;
+                if (!object.Equals(this.SunGlareTexture, rhs.SunGlareTexture)) return false;
             }
             if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
             if (Model_Property.HasBeenSet)
             {
-                if (!object.Equals(Model, rhs.Model)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
             }
-            if (SunriseBegin != rhs.SunriseBegin) return false;
-            if (SunriseEnd != rhs.SunriseEnd) return false;
-            if (SunsetBegin != rhs.SunsetBegin) return false;
-            if (SunsetEnd != rhs.SunsetEnd) return false;
-            if (Volatility != rhs.Volatility) return false;
-            if (Phase != rhs.Phase) return false;
-            if (PhaseLength != rhs.PhaseLength) return false;
+            if (this.SunriseBegin != rhs.SunriseBegin) return false;
+            if (this.SunriseEnd != rhs.SunriseEnd) return false;
+            if (this.SunsetBegin != rhs.SunsetBegin) return false;
+            if (this.SunsetEnd != rhs.SunsetEnd) return false;
+            if (this.Volatility != rhs.Volatility) return false;
+            if (this.Phase != rhs.Phase) return false;
+            if (this.PhaseLength != rhs.PhaseLength) return false;
             return true;
         }
 
@@ -339,19 +339,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Climate Create_XML(
             XElement root,
-            out Climate_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static Climate Create_XML(
-            XElement root,
-            bool doMasks,
-            out Climate_ErrorMask errorMask)
+            out Climate_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_XML(
                 root: root,
@@ -406,56 +395,141 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region XML Copy In
+        public override void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<Climate, Climate_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out Climate_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<Climate, Climate_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out Climate_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out Climate_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
+            out MajorRecord_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out Climate_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out Climate_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (Climate_ErrorMask)this.Write_XML_Internal(
-                writer: writer,
+            errorMask = this.Write_XML_Internal(
+                node: node,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as Climate_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out Climate_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             out Climate_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public override void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -464,39 +538,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public override void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected override object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             ClimateCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -653,19 +721,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Climate Create_Binary(
             MutagenFrame frame,
-            out Climate_ErrorMask errorMask)
-        {
-            return Create_Binary(
-                frame: frame,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static Climate Create_Binary(
-            MutagenFrame frame,
-            bool doMasks,
-            out Climate_ErrorMask errorMask)
+            out Climate_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -738,35 +795,40 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out Climate_ErrorMask errorMask)
+            out Climate_ErrorMask errorMask,
+            bool doMasks = true)
         {
-            errorMask = (Climate_ErrorMask)this.Write_Binary_Internal(
+            errorMask = this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as Climate_ErrorMask;
         }
 
         public virtual void Write_Binary(
             string path,
-            out Climate_ErrorMask errorMask)
+            out Climate_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
-            out Climate_ErrorMask errorMask)
+            out Climate_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -2432,7 +2494,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IClimateGetter item,
             bool doMasks,
             out Climate_ErrorMask errorMask,
@@ -2440,7 +2502,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Climate_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Climate_ErrorMask()) : default(Func<Climate_ErrorMask>));
@@ -2448,108 +2510,107 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IClimateGetter item,
             Func<Climate_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.Climate"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Climate");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Climate");
-                    }
-                    if (item.Weathers.HasBeenSet)
-                    {
-                        ListXmlTranslation<WeatherChance, MaskItem<Exception, WeatherChance_ErrorMask>>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Weathers),
-                            item: item.Weathers,
-                            fieldIndex: (int)Climate_FieldIndex.Weathers,
-                            errorMask: errorMask,
-                            transl: (WeatherChance subItem, bool listDoMasks, out MaskItem<Exception, WeatherChance_ErrorMask> listSubMask) =>
-                            {
-                                LoquiXmlTranslation<WeatherChance, WeatherChance_ErrorMask>.Instance.Write(
-                                    writer: writer,
-                                    item: subItem,
-                                    name: "Item",
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
-                    if (item.SunTexture_Property.HasBeenSet)
-                    {
-                        FilePathXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.SunTexture),
-                            item: item.SunTexture_Property,
-                            fieldIndex: (int)Climate_FieldIndex.SunTexture,
-                            errorMask: errorMask);
-                    }
-                    if (item.SunGlareTexture_Property.HasBeenSet)
-                    {
-                        FilePathXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.SunGlareTexture),
-                            item: item.SunGlareTexture_Property,
-                            fieldIndex: (int)Climate_FieldIndex.SunGlareTexture,
-                            errorMask: errorMask);
-                    }
-                    if (item.Model_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.Model_Property,
-                            name: nameof(item.Model),
-                            fieldIndex: (int)Climate_FieldIndex.Model,
-                            errorMask: errorMask);
-                    }
-                    DateTimeXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.SunriseBegin),
-                        item: item.SunriseBegin_Property,
-                        fieldIndex: (int)Climate_FieldIndex.SunriseBegin,
-                        errorMask: errorMask);
-                    DateTimeXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.SunriseEnd),
-                        item: item.SunriseEnd_Property,
-                        fieldIndex: (int)Climate_FieldIndex.SunriseEnd,
-                        errorMask: errorMask);
-                    DateTimeXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.SunsetBegin),
-                        item: item.SunsetBegin_Property,
-                        fieldIndex: (int)Climate_FieldIndex.SunsetBegin,
-                        errorMask: errorMask);
-                    DateTimeXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.SunsetEnd),
-                        item: item.SunsetEnd_Property,
-                        fieldIndex: (int)Climate_FieldIndex.SunsetEnd,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Volatility),
-                        item: item.Volatility_Property,
-                        fieldIndex: (int)Climate_FieldIndex.Volatility,
-                        errorMask: errorMask);
-                    EnumXmlTranslation<Climate.MoonPhase>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Phase),
-                        item: item.Phase_Property,
-                        fieldIndex: (int)Climate_FieldIndex.Phase,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.PhaseLength),
-                        item: item.PhaseLength_Property,
-                        fieldIndex: (int)Climate_FieldIndex.PhaseLength,
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Climate");
+                }
+                if (item.Weathers.HasBeenSet)
+                {
+                    ListXmlTranslation<WeatherChance, MaskItem<Exception, WeatherChance_ErrorMask>>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Weathers),
+                        item: item.Weathers,
+                        fieldIndex: (int)Climate_FieldIndex.Weathers,
+                        errorMask: errorMask,
+                        transl: (XElement subNode, WeatherChance subItem, bool listDoMasks, out MaskItem<Exception, WeatherChance_ErrorMask> listSubMask) =>
+                        {
+                            LoquiXmlTranslation<WeatherChance, WeatherChance_ErrorMask>.Instance.Write(
+                                node: subNode,
+                                item: subItem,
+                                name: "Item",
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                }
+                if (item.SunTexture_Property.HasBeenSet)
+                {
+                    FilePathXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.SunTexture),
+                        item: item.SunTexture_Property,
+                        fieldIndex: (int)Climate_FieldIndex.SunTexture,
                         errorMask: errorMask);
                 }
+                if (item.SunGlareTexture_Property.HasBeenSet)
+                {
+                    FilePathXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.SunGlareTexture),
+                        item: item.SunGlareTexture_Property,
+                        fieldIndex: (int)Climate_FieldIndex.SunGlareTexture,
+                        errorMask: errorMask);
+                }
+                if (item.Model_Property.HasBeenSet)
+                {
+                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
+                        node: elem,
+                        item: item.Model_Property,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)Climate_FieldIndex.Model,
+                        errorMask: errorMask);
+                }
+                DateTimeXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.SunriseBegin),
+                    item: item.SunriseBegin_Property,
+                    fieldIndex: (int)Climate_FieldIndex.SunriseBegin,
+                    errorMask: errorMask);
+                DateTimeXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.SunriseEnd),
+                    item: item.SunriseEnd_Property,
+                    fieldIndex: (int)Climate_FieldIndex.SunriseEnd,
+                    errorMask: errorMask);
+                DateTimeXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.SunsetBegin),
+                    item: item.SunsetBegin_Property,
+                    fieldIndex: (int)Climate_FieldIndex.SunsetBegin,
+                    errorMask: errorMask);
+                DateTimeXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.SunsetEnd),
+                    item: item.SunsetEnd_Property,
+                    fieldIndex: (int)Climate_FieldIndex.SunsetEnd,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Volatility),
+                    item: item.Volatility_Property,
+                    fieldIndex: (int)Climate_FieldIndex.Volatility,
+                    errorMask: errorMask);
+                EnumXmlTranslation<Climate.MoonPhase>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Phase),
+                    item: item.Phase_Property,
+                    fieldIndex: (int)Climate_FieldIndex.Phase,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.PhaseLength),
+                    item: item.PhaseLength_Property,
+                    fieldIndex: (int)Climate_FieldIndex.PhaseLength,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (errorMask != null)
@@ -2628,10 +2689,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fieldIndex: (int)Climate_FieldIndex.Weathers,
                 recordType: Climate_Registration.WLST_HEADER,
                 errorMask: errorMask,
-                transl: (WeatherChance subItem, bool listDoMasks, out MaskItem<Exception, WeatherChance_ErrorMask> listSubMask) =>
+                transl: (MutagenWriter subWriter, WeatherChance subItem, bool listDoMasks, out MaskItem<Exception, WeatherChance_ErrorMask> listSubMask) =>
                 {
                     LoquiBinaryTranslation<WeatherChance, WeatherChance_ErrorMask>.Instance.Write(
-                        writer: writer,
+                        writer: subWriter,
                         item: subItem,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask);
@@ -2991,6 +3052,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            Climate_FieldIndex enu = (Climate_FieldIndex)index;
+            switch (enu)
+            {
+                case Climate_FieldIndex.Weathers:
+                    return Weathers;
+                case Climate_FieldIndex.SunTexture:
+                    return SunTexture;
+                case Climate_FieldIndex.SunGlareTexture:
+                    return SunGlareTexture;
+                case Climate_FieldIndex.Model:
+                    return Model;
+                case Climate_FieldIndex.SunriseBegin:
+                    return SunriseBegin;
+                case Climate_FieldIndex.SunriseEnd:
+                    return SunriseEnd;
+                case Climate_FieldIndex.SunsetBegin:
+                    return SunsetBegin;
+                case Climate_FieldIndex.SunsetEnd:
+                    return SunsetEnd;
+                case Climate_FieldIndex.Volatility:
+                    return Volatility;
+                case Climate_FieldIndex.Phase:
+                    return Phase;
+                case Climate_FieldIndex.PhaseLength:
+                    return PhaseLength;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             Climate_FieldIndex enu = (Climate_FieldIndex)index;

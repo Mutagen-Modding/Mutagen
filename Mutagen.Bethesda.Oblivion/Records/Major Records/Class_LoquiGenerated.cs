@@ -233,19 +233,19 @@ namespace Mutagen.Bethesda.Oblivion
             if (Description_Property.HasBeenSet != rhs.Description_Property.HasBeenSet) return false;
             if (Description_Property.HasBeenSet)
             {
-                if (!object.Equals(Description, rhs.Description)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
             }
             if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
             if (Icon_Property.HasBeenSet)
             {
-                if (!object.Equals(Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
             }
-            if (!PrimaryAttributes.SequenceEqual(rhs.PrimaryAttributes)) return false;
-            if (Specialization != rhs.Specialization) return false;
-            if (!SecondaryAttributes.SequenceEqual(rhs.SecondaryAttributes)) return false;
-            if (Flags != rhs.Flags) return false;
-            if (ClassServices != rhs.ClassServices) return false;
-            if (!object.Equals(Training, rhs.Training)) return false;
+            if (!this.PrimaryAttributes.SequenceEqual(rhs.PrimaryAttributes)) return false;
+            if (this.Specialization != rhs.Specialization) return false;
+            if (!this.SecondaryAttributes.SequenceEqual(rhs.SecondaryAttributes)) return false;
+            if (this.Flags != rhs.Flags) return false;
+            if (this.ClassServices != rhs.ClassServices) return false;
+            if (!object.Equals(this.Training, rhs.Training)) return false;
             return true;
         }
 

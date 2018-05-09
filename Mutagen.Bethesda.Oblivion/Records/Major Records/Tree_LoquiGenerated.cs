@@ -298,28 +298,28 @@ namespace Mutagen.Bethesda.Oblivion
             if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
             if (Model_Property.HasBeenSet)
             {
-                if (!object.Equals(Model, rhs.Model)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
             }
             if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
             if (Icon_Property.HasBeenSet)
             {
-                if (!object.Equals(Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
             }
             if (SpeedTreeSeeds.HasBeenSet != rhs.SpeedTreeSeeds.HasBeenSet) return false;
             if (SpeedTreeSeeds.HasBeenSet)
             {
-                if (!SpeedTreeSeeds.SequenceEqual(rhs.SpeedTreeSeeds)) return false;
+                if (!this.SpeedTreeSeeds.SequenceEqual(rhs.SpeedTreeSeeds)) return false;
             }
-            if (LeafCurvature != rhs.LeafCurvature) return false;
-            if (MinimumLeafAngle != rhs.MinimumLeafAngle) return false;
-            if (MaximumLeafAngle != rhs.MaximumLeafAngle) return false;
-            if (BranchDimmingValue != rhs.BranchDimmingValue) return false;
-            if (LeafDimmingValue != rhs.LeafDimmingValue) return false;
-            if (ShadowRadius != rhs.ShadowRadius) return false;
-            if (RockingSpeed != rhs.RockingSpeed) return false;
-            if (RustleSpeed != rhs.RustleSpeed) return false;
-            if (BillboardWidth != rhs.BillboardWidth) return false;
-            if (BillboardHeight != rhs.BillboardHeight) return false;
+            if (!this.LeafCurvature.EqualsWithin(rhs.LeafCurvature)) return false;
+            if (!this.MinimumLeafAngle.EqualsWithin(rhs.MinimumLeafAngle)) return false;
+            if (!this.MaximumLeafAngle.EqualsWithin(rhs.MaximumLeafAngle)) return false;
+            if (!this.BranchDimmingValue.EqualsWithin(rhs.BranchDimmingValue)) return false;
+            if (!this.LeafDimmingValue.EqualsWithin(rhs.LeafDimmingValue)) return false;
+            if (this.ShadowRadius != rhs.ShadowRadius) return false;
+            if (!this.RockingSpeed.EqualsWithin(rhs.RockingSpeed)) return false;
+            if (!this.RustleSpeed.EqualsWithin(rhs.RustleSpeed)) return false;
+            if (!this.BillboardWidth.EqualsWithin(rhs.BillboardWidth)) return false;
+            if (!this.BillboardHeight.EqualsWithin(rhs.BillboardHeight)) return false;
             return true;
         }
 

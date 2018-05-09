@@ -136,9 +136,9 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(RankPlacement rhs)
         {
             if (rhs == null) return false;
-            if (Faction != rhs.Faction) return false;
-            if (Rank != rhs.Rank) return false;
-            if (!Fluff.EqualsFast(rhs.Fluff)) return false;
+            if (!this.Faction_Property.Equals(rhs.Faction_Property)) return false;
+            if (this.Rank != rhs.Rank) return false;
+            if (!this.Fluff.EqualsFast(rhs.Fluff)) return false;
             return true;
         }
 

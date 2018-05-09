@@ -182,27 +182,27 @@ namespace Mutagen.Bethesda.Oblivion
             if (MetadataSummary_Property.HasBeenSet != rhs.MetadataSummary_Property.HasBeenSet) return false;
             if (MetadataSummary_Property.HasBeenSet)
             {
-                if (!object.Equals(MetadataSummary, rhs.MetadataSummary)) return false;
+                if (!object.Equals(this.MetadataSummary, rhs.MetadataSummary)) return false;
             }
             if (CompiledScript_Property.HasBeenSet != rhs.CompiledScript_Property.HasBeenSet) return false;
             if (CompiledScript_Property.HasBeenSet)
             {
-                if (!CompiledScript.EqualsFast(rhs.CompiledScript)) return false;
+                if (!this.CompiledScript.EqualsFast(rhs.CompiledScript)) return false;
             }
             if (SourceCode_Property.HasBeenSet != rhs.SourceCode_Property.HasBeenSet) return false;
             if (SourceCode_Property.HasBeenSet)
             {
-                if (!object.Equals(SourceCode, rhs.SourceCode)) return false;
+                if (!object.Equals(this.SourceCode, rhs.SourceCode)) return false;
             }
             if (LocalVariables.HasBeenSet != rhs.LocalVariables.HasBeenSet) return false;
             if (LocalVariables.HasBeenSet)
             {
-                if (!LocalVariables.SequenceEqual(rhs.LocalVariables)) return false;
+                if (!this.LocalVariables.SequenceEqual(rhs.LocalVariables)) return false;
             }
             if (References.HasBeenSet != rhs.References.HasBeenSet) return false;
             if (References.HasBeenSet)
             {
-                if (!References.SequenceEqual(rhs.References)) return false;
+                if (!this.References.SequenceEqual(rhs.References)) return false;
             }
             return true;
         }

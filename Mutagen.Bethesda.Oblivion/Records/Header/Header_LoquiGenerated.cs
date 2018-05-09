@@ -145,9 +145,9 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(Header rhs)
         {
             if (rhs == null) return false;
-            if (Version != rhs.Version) return false;
-            if (NumRecords != rhs.NumRecords) return false;
-            if (NextObjectID != rhs.NextObjectID) return false;
+            if (!this.Version.EqualsWithin(rhs.Version)) return false;
+            if (this.NumRecords != rhs.NumRecords) return false;
+            if (this.NextObjectID != rhs.NextObjectID) return false;
             return true;
         }
 

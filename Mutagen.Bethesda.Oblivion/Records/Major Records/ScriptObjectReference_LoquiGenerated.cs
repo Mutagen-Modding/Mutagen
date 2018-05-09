@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Reference != rhs.Reference) return false;
+            if (!this.Reference_Property.Equals(rhs.Reference_Property)) return false;
             return true;
         }
 

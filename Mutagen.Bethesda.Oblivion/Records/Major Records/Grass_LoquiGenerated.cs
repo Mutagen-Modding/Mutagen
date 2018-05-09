@@ -265,18 +265,18 @@ namespace Mutagen.Bethesda.Oblivion
             if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
             if (Model_Property.HasBeenSet)
             {
-                if (!object.Equals(Model, rhs.Model)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
             }
-            if (Density != rhs.Density) return false;
-            if (MinSlope != rhs.MinSlope) return false;
-            if (MaxSlope != rhs.MaxSlope) return false;
-            if (UnitFromWaterAmount != rhs.UnitFromWaterAmount) return false;
-            if (UnitFromWaterMode != rhs.UnitFromWaterMode) return false;
-            if (PositionRange != rhs.PositionRange) return false;
-            if (HeightRange != rhs.HeightRange) return false;
-            if (ColorRange != rhs.ColorRange) return false;
-            if (WavePeriod != rhs.WavePeriod) return false;
-            if (Flags != rhs.Flags) return false;
+            if (this.Density != rhs.Density) return false;
+            if (this.MinSlope != rhs.MinSlope) return false;
+            if (this.MaxSlope != rhs.MaxSlope) return false;
+            if (this.UnitFromWaterAmount != rhs.UnitFromWaterAmount) return false;
+            if (this.UnitFromWaterMode != rhs.UnitFromWaterMode) return false;
+            if (!this.PositionRange.EqualsWithin(rhs.PositionRange)) return false;
+            if (!this.HeightRange.EqualsWithin(rhs.HeightRange)) return false;
+            if (!this.ColorRange.EqualsWithin(rhs.ColorRange)) return false;
+            if (!this.WavePeriod.EqualsWithin(rhs.WavePeriod)) return false;
+            if (this.Flags != rhs.Flags) return false;
             return true;
         }
 

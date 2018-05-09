@@ -647,58 +647,58 @@ namespace Mutagen.Bethesda.Oblivion
             if (TextureLowerLayer_Property.HasBeenSet != rhs.TextureLowerLayer_Property.HasBeenSet) return false;
             if (TextureLowerLayer_Property.HasBeenSet)
             {
-                if (!object.Equals(TextureLowerLayer, rhs.TextureLowerLayer)) return false;
+                if (!object.Equals(this.TextureLowerLayer, rhs.TextureLowerLayer)) return false;
             }
             if (TextureUpperLayer_Property.HasBeenSet != rhs.TextureUpperLayer_Property.HasBeenSet) return false;
             if (TextureUpperLayer_Property.HasBeenSet)
             {
-                if (!object.Equals(TextureUpperLayer, rhs.TextureUpperLayer)) return false;
+                if (!object.Equals(this.TextureUpperLayer, rhs.TextureUpperLayer)) return false;
             }
             if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
             if (Model_Property.HasBeenSet)
             {
-                if (!object.Equals(Model, rhs.Model)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
             }
             if (WeatherTypes.HasBeenSet != rhs.WeatherTypes.HasBeenSet) return false;
             if (WeatherTypes.HasBeenSet)
             {
-                if (!WeatherTypes.SequenceEqual(rhs.WeatherTypes)) return false;
+                if (!this.WeatherTypes.SequenceEqual(rhs.WeatherTypes)) return false;
             }
-            if (FogDayNear != rhs.FogDayNear) return false;
-            if (FogDayFar != rhs.FogDayFar) return false;
-            if (FogNightNear != rhs.FogNightNear) return false;
-            if (FogNightFar != rhs.FogNightFar) return false;
-            if (HdrEyeAdaptSpeed != rhs.HdrEyeAdaptSpeed) return false;
-            if (HdrBlurRadius != rhs.HdrBlurRadius) return false;
-            if (HdrBlurPasses != rhs.HdrBlurPasses) return false;
-            if (HdrEmissiveMult != rhs.HdrEmissiveMult) return false;
-            if (HdrTargetLum != rhs.HdrTargetLum) return false;
-            if (HdrUpperLumClamp != rhs.HdrUpperLumClamp) return false;
-            if (HdrBrightScale != rhs.HdrBrightScale) return false;
-            if (HdrBrightClamp != rhs.HdrBrightClamp) return false;
-            if (HdrLumRampNoTex != rhs.HdrLumRampNoTex) return false;
-            if (HdrLumRampMin != rhs.HdrLumRampMin) return false;
-            if (HdrLumRampMax != rhs.HdrLumRampMax) return false;
-            if (HdrSunlightDimmer != rhs.HdrSunlightDimmer) return false;
-            if (HdrGrassDimmer != rhs.HdrGrassDimmer) return false;
-            if (HdrTreeDimmer != rhs.HdrTreeDimmer) return false;
-            if (WindSpeed != rhs.WindSpeed) return false;
-            if (CloudSpeedLower != rhs.CloudSpeedLower) return false;
-            if (CloudSpeedUpper != rhs.CloudSpeedUpper) return false;
-            if (TransDelta != rhs.TransDelta) return false;
-            if (SunGlare != rhs.SunGlare) return false;
-            if (SunDamage != rhs.SunDamage) return false;
-            if (PrecipitationBeginFadeIn != rhs.PrecipitationBeginFadeIn) return false;
-            if (PrecipitationEndFadeOut != rhs.PrecipitationEndFadeOut) return false;
-            if (ThunderLightningBeginFadeIn != rhs.ThunderLightningBeginFadeIn) return false;
-            if (ThunderLightningEndFadeOut != rhs.ThunderLightningEndFadeOut) return false;
-            if (ThunderLightningFrequency != rhs.ThunderLightningFrequency) return false;
-            if (Classification != rhs.Classification) return false;
-            if (LightningColor != rhs.LightningColor) return false;
+            if (!this.FogDayNear.EqualsWithin(rhs.FogDayNear)) return false;
+            if (!this.FogDayFar.EqualsWithin(rhs.FogDayFar)) return false;
+            if (!this.FogNightNear.EqualsWithin(rhs.FogNightNear)) return false;
+            if (!this.FogNightFar.EqualsWithin(rhs.FogNightFar)) return false;
+            if (!this.HdrEyeAdaptSpeed.EqualsWithin(rhs.HdrEyeAdaptSpeed)) return false;
+            if (!this.HdrBlurRadius.EqualsWithin(rhs.HdrBlurRadius)) return false;
+            if (!this.HdrBlurPasses.EqualsWithin(rhs.HdrBlurPasses)) return false;
+            if (!this.HdrEmissiveMult.EqualsWithin(rhs.HdrEmissiveMult)) return false;
+            if (!this.HdrTargetLum.EqualsWithin(rhs.HdrTargetLum)) return false;
+            if (!this.HdrUpperLumClamp.EqualsWithin(rhs.HdrUpperLumClamp)) return false;
+            if (!this.HdrBrightScale.EqualsWithin(rhs.HdrBrightScale)) return false;
+            if (!this.HdrBrightClamp.EqualsWithin(rhs.HdrBrightClamp)) return false;
+            if (!this.HdrLumRampNoTex.EqualsWithin(rhs.HdrLumRampNoTex)) return false;
+            if (!this.HdrLumRampMin.EqualsWithin(rhs.HdrLumRampMin)) return false;
+            if (!this.HdrLumRampMax.EqualsWithin(rhs.HdrLumRampMax)) return false;
+            if (!this.HdrSunlightDimmer.EqualsWithin(rhs.HdrSunlightDimmer)) return false;
+            if (!this.HdrGrassDimmer.EqualsWithin(rhs.HdrGrassDimmer)) return false;
+            if (!this.HdrTreeDimmer.EqualsWithin(rhs.HdrTreeDimmer)) return false;
+            if (this.WindSpeed != rhs.WindSpeed) return false;
+            if (this.CloudSpeedLower != rhs.CloudSpeedLower) return false;
+            if (this.CloudSpeedUpper != rhs.CloudSpeedUpper) return false;
+            if (this.TransDelta != rhs.TransDelta) return false;
+            if (this.SunGlare != rhs.SunGlare) return false;
+            if (this.SunDamage != rhs.SunDamage) return false;
+            if (this.PrecipitationBeginFadeIn != rhs.PrecipitationBeginFadeIn) return false;
+            if (this.PrecipitationEndFadeOut != rhs.PrecipitationEndFadeOut) return false;
+            if (this.ThunderLightningBeginFadeIn != rhs.ThunderLightningBeginFadeIn) return false;
+            if (this.ThunderLightningEndFadeOut != rhs.ThunderLightningEndFadeOut) return false;
+            if (this.ThunderLightningFrequency != rhs.ThunderLightningFrequency) return false;
+            if (this.Classification != rhs.Classification) return false;
+            if (this.LightningColor != rhs.LightningColor) return false;
             if (Sounds.HasBeenSet != rhs.Sounds.HasBeenSet) return false;
             if (Sounds.HasBeenSet)
             {
-                if (!Sounds.SequenceEqual(rhs.Sounds)) return false;
+                if (!this.Sounds.SequenceEqual(rhs.Sounds)) return false;
             }
             return true;
         }

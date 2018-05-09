@@ -151,10 +151,10 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(LockInformation rhs)
         {
             if (rhs == null) return false;
-            if (LockLevel != rhs.LockLevel) return false;
-            if (!Fluff.EqualsFast(rhs.Fluff)) return false;
-            if (Key != rhs.Key) return false;
-            if (Flags != rhs.Flags) return false;
+            if (this.LockLevel != rhs.LockLevel) return false;
+            if (!this.Fluff.EqualsFast(rhs.Fluff)) return false;
+            if (!this.Key_Property.Equals(rhs.Key_Property)) return false;
+            if (this.Flags != rhs.Flags) return false;
             return true;
         }
 
@@ -185,19 +185,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static LockInformation Create_XML(
             XElement root,
-            out LockInformation_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static LockInformation Create_XML(
-            XElement root,
-            bool doMasks,
-            out LockInformation_ErrorMask errorMask)
+            out LockInformation_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_XML(
                 root: root,
@@ -252,56 +241,129 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region XML Copy In
+        public void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<LockInformation, LockInformation_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out LockInformation_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<LockInformation, LockInformation_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out LockInformation_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out LockInformation_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out LockInformation_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (LockInformation_ErrorMask)this.Write_XML_Internal(
-                writer: writer,
+            errorMask = this.Write_XML_Internal(
+                node: node,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as LockInformation_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out LockInformation_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             out LockInformation_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -310,39 +372,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             LockInformationCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -437,19 +493,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static LockInformation Create_Binary(
             MutagenFrame frame,
-            out LockInformation_ErrorMask errorMask)
-        {
-            return Create_Binary(
-                frame: frame,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static LockInformation Create_Binary(
-            MutagenFrame frame,
-            bool doMasks,
-            out LockInformation_ErrorMask errorMask)
+            out LockInformation_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -522,35 +567,40 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out LockInformation_ErrorMask errorMask)
+            out LockInformation_ErrorMask errorMask,
+            bool doMasks = true)
         {
-            errorMask = (LockInformation_ErrorMask)this.Write_Binary_Internal(
+            errorMask = this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as LockInformation_ErrorMask;
         }
 
         public virtual void Write_Binary(
             string path,
-            out LockInformation_ErrorMask errorMask)
+            out LockInformation_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
-            out LockInformation_ErrorMask errorMask)
+            out LockInformation_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -1357,7 +1407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             ILockInformationGetter item,
             bool doMasks,
             out LockInformation_ErrorMask errorMask,
@@ -1365,7 +1415,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             LockInformation_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new LockInformation_ErrorMask()) : default(Func<LockInformation_ErrorMask>));
@@ -1373,44 +1423,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             ILockInformationGetter item,
             Func<LockInformation_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.LockInformation"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.LockInformation");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.LockInformation");
-                    }
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.LockLevel),
-                        item: item.LockLevel_Property,
-                        fieldIndex: (int)LockInformation_FieldIndex.LockLevel,
-                        errorMask: errorMask);
-                    ByteArrayXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Fluff),
-                        item: item.Fluff_Property,
-                        fieldIndex: (int)LockInformation_FieldIndex.Fluff,
-                        errorMask: errorMask);
-                    FormIDXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Key),
-                        item: item.Key?.FormID,
-                        fieldIndex: (int)LockInformation_FieldIndex.Key,
-                        errorMask: errorMask);
-                    EnumXmlTranslation<LockInformation.Flag>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Flags),
-                        item: item.Flags_Property,
-                        fieldIndex: (int)LockInformation_FieldIndex.Flags,
-                        errorMask: errorMask);
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LockInformation");
                 }
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.LockLevel),
+                    item: item.LockLevel_Property,
+                    fieldIndex: (int)LockInformation_FieldIndex.LockLevel,
+                    errorMask: errorMask);
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Fluff),
+                    item: item.Fluff_Property,
+                    fieldIndex: (int)LockInformation_FieldIndex.Fluff,
+                    errorMask: errorMask);
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Key),
+                    item: item.Key?.FormID,
+                    fieldIndex: (int)LockInformation_FieldIndex.Key,
+                    errorMask: errorMask);
+                EnumXmlTranslation<LockInformation.Flag>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Flags),
+                    item: item.Flags_Property,
+                    fieldIndex: (int)LockInformation_FieldIndex.Flags,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (errorMask != null)
@@ -1653,6 +1702,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            LockInformation_FieldIndex enu = (LockInformation_FieldIndex)index;
+            switch (enu)
+            {
+                case LockInformation_FieldIndex.LockLevel:
+                    return LockLevel;
+                case LockInformation_FieldIndex.Fluff:
+                    return Fluff;
+                case LockInformation_FieldIndex.Key:
+                    return Key;
+                case LockInformation_FieldIndex.Flags:
+                    return Flags;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             LockInformation_FieldIndex enu = (LockInformation_FieldIndex)index;

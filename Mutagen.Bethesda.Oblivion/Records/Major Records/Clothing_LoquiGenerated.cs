@@ -129,8 +129,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Value != rhs.Value) return false;
-            if (Weight != rhs.Weight) return false;
+            if (this.Value != rhs.Value) return false;
+            if (!this.Weight.EqualsWithin(rhs.Weight)) return false;
             return true;
         }
 

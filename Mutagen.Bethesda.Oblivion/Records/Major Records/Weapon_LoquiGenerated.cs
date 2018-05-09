@@ -279,36 +279,36 @@ namespace Mutagen.Bethesda.Oblivion
             if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
             if (Model_Property.HasBeenSet)
             {
-                if (!object.Equals(Model, rhs.Model)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
             }
             if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
             if (Icon_Property.HasBeenSet)
             {
-                if (!object.Equals(Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
             }
             if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
             if (Script_Property.HasBeenSet)
             {
-                if (Script != rhs.Script) return false;
+                if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
             }
             if (Enchantment_Property.HasBeenSet != rhs.Enchantment_Property.HasBeenSet) return false;
             if (Enchantment_Property.HasBeenSet)
             {
-                if (Enchantment != rhs.Enchantment) return false;
+                if (!this.Enchantment_Property.Equals(rhs.Enchantment_Property)) return false;
             }
             if (EnchantmentPoints_Property.HasBeenSet != rhs.EnchantmentPoints_Property.HasBeenSet) return false;
             if (EnchantmentPoints_Property.HasBeenSet)
             {
-                if (EnchantmentPoints != rhs.EnchantmentPoints) return false;
+                if (this.EnchantmentPoints != rhs.EnchantmentPoints) return false;
             }
-            if (Type != rhs.Type) return false;
-            if (Speed != rhs.Speed) return false;
-            if (Reach != rhs.Reach) return false;
-            if (Flags != rhs.Flags) return false;
-            if (Value != rhs.Value) return false;
-            if (Health != rhs.Health) return false;
-            if (Weight != rhs.Weight) return false;
-            if (Damage != rhs.Damage) return false;
+            if (this.Type != rhs.Type) return false;
+            if (!this.Speed.EqualsWithin(rhs.Speed)) return false;
+            if (!this.Reach.EqualsWithin(rhs.Reach)) return false;
+            if (this.Flags != rhs.Flags) return false;
+            if (this.Value != rhs.Value) return false;
+            if (this.Health != rhs.Health) return false;
+            if (!this.Weight.EqualsWithin(rhs.Weight)) return false;
+            if (this.Damage != rhs.Damage) return false;
             return true;
         }
 

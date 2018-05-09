@@ -136,12 +136,12 @@ namespace Mutagen.Bethesda.Oblivion
             if (EdgeFallOff_Property.HasBeenSet != rhs.EdgeFallOff_Property.HasBeenSet) return false;
             if (EdgeFallOff_Property.HasBeenSet)
             {
-                if (EdgeFallOff != rhs.EdgeFallOff) return false;
+                if (this.EdgeFallOff != rhs.EdgeFallOff) return false;
             }
             if (RegionPoints.HasBeenSet != rhs.RegionPoints.HasBeenSet) return false;
             if (RegionPoints.HasBeenSet)
             {
-                if (!RegionPoints.SequenceEqual(rhs.RegionPoints)) return false;
+                if (!this.RegionPoints.SequenceEqual(rhs.RegionPoints)) return false;
             }
             return true;
         }
@@ -177,19 +177,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RegionArea Create_XML(
             XElement root,
-            out RegionArea_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static RegionArea Create_XML(
-            XElement root,
-            bool doMasks,
-            out RegionArea_ErrorMask errorMask)
+            out RegionArea_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_XML(
                 root: root,
@@ -244,56 +233,129 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region XML Copy In
+        public void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<RegionArea, RegionArea_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out RegionArea_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<RegionArea, RegionArea_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out RegionArea_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out RegionArea_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out RegionArea_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (RegionArea_ErrorMask)this.Write_XML_Internal(
-                writer: writer,
+            errorMask = this.Write_XML_Internal(
+                node: node,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as RegionArea_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out RegionArea_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             out RegionArea_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -302,39 +364,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             RegionAreaCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -415,19 +471,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RegionArea Create_Binary(
             MutagenFrame frame,
-            out RegionArea_ErrorMask errorMask)
-        {
-            return Create_Binary(
-                frame: frame,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static RegionArea Create_Binary(
-            MutagenFrame frame,
-            bool doMasks,
-            out RegionArea_ErrorMask errorMask)
+            out RegionArea_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -500,35 +545,40 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out RegionArea_ErrorMask errorMask)
+            out RegionArea_ErrorMask errorMask,
+            bool doMasks = true)
         {
-            errorMask = (RegionArea_ErrorMask)this.Write_Binary_Internal(
+            errorMask = this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as RegionArea_ErrorMask;
         }
 
         public virtual void Write_Binary(
             string path,
-            out RegionArea_ErrorMask errorMask)
+            out RegionArea_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
-            out RegionArea_ErrorMask errorMask)
+            out RegionArea_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -1301,7 +1351,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IRegionAreaGetter item,
             bool doMasks,
             out RegionArea_ErrorMask errorMask,
@@ -1309,7 +1359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             RegionArea_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RegionArea_ErrorMask()) : default(Func<RegionArea_ErrorMask>));
@@ -1317,47 +1367,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IRegionAreaGetter item,
             Func<RegionArea_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.RegionArea"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RegionArea");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.RegionArea");
-                    }
-                    if (item.EdgeFallOff_Property.HasBeenSet)
-                    {
-                        UInt32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.EdgeFallOff),
-                            item: item.EdgeFallOff_Property,
-                            fieldIndex: (int)RegionArea_FieldIndex.EdgeFallOff,
-                            errorMask: errorMask);
-                    }
-                    if (item.RegionPoints.HasBeenSet)
-                    {
-                        ListXmlTranslation<P2Float, Exception>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.RegionPoints),
-                            item: item.RegionPoints,
-                            fieldIndex: (int)RegionArea_FieldIndex.RegionPoints,
-                            errorMask: errorMask,
-                            transl: (P2Float subItem, bool listDoMasks, out Exception listSubMask) =>
-                            {
-                                P2FloatXmlTranslation.Instance.Write(
-                                    writer: writer,
-                                    name: "Item",
-                                    item: subItem,
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionArea");
+                }
+                if (item.EdgeFallOff_Property.HasBeenSet)
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.EdgeFallOff),
+                        item: item.EdgeFallOff_Property,
+                        fieldIndex: (int)RegionArea_FieldIndex.EdgeFallOff,
+                        errorMask: errorMask);
+                }
+                if (item.RegionPoints.HasBeenSet)
+                {
+                    ListXmlTranslation<P2Float, Exception>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.RegionPoints),
+                        item: item.RegionPoints,
+                        fieldIndex: (int)RegionArea_FieldIndex.RegionPoints,
+                        errorMask: errorMask,
+                        transl: (XElement subNode, P2Float subItem, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            P2FloatXmlTranslation.Instance.Write(
+                                node: subNode,
+                                name: "Item",
+                                item: subItem,
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
                 }
             }
             catch (Exception ex)
@@ -1429,10 +1478,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fieldIndex: (int)RegionArea_FieldIndex.RegionPoints,
                 recordType: RegionArea_Registration.RPLD_HEADER,
                 errorMask: errorMask,
-                transl: (P2Float subItem, bool listDoMasks, out Exception listSubMask) =>
+                transl: (MutagenWriter subWriter, P2Float subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
                     Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
+                        writer: subWriter,
                         item: subItem,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask);
@@ -1623,6 +1672,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            RegionArea_FieldIndex enu = (RegionArea_FieldIndex)index;
+            switch (enu)
+            {
+                case RegionArea_FieldIndex.EdgeFallOff:
+                    return EdgeFallOff;
+                case RegionArea_FieldIndex.RegionPoints:
+                    return RegionPoints;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             RegionArea_FieldIndex enu = (RegionArea_FieldIndex)index;

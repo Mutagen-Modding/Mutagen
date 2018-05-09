@@ -161,10 +161,10 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(WeatherType rhs)
         {
             if (rhs == null) return false;
-            if (Sunrise != rhs.Sunrise) return false;
-            if (Day != rhs.Day) return false;
-            if (Sunset != rhs.Sunset) return false;
-            if (Night != rhs.Night) return false;
+            if (this.Sunrise != rhs.Sunrise) return false;
+            if (this.Day != rhs.Day) return false;
+            if (this.Sunset != rhs.Sunset) return false;
+            if (this.Night != rhs.Night) return false;
             return true;
         }
 

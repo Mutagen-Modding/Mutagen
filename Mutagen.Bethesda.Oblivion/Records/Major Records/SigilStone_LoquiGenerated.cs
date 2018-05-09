@@ -200,26 +200,26 @@ namespace Mutagen.Bethesda.Oblivion
             if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
             if (Model_Property.HasBeenSet)
             {
-                if (!object.Equals(Model, rhs.Model)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
             }
             if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
             if (Icon_Property.HasBeenSet)
             {
-                if (!object.Equals(Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
             }
             if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
             if (Script_Property.HasBeenSet)
             {
-                if (Script != rhs.Script) return false;
+                if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
             }
             if (Effects.HasBeenSet != rhs.Effects.HasBeenSet) return false;
             if (Effects.HasBeenSet)
             {
-                if (!Effects.SequenceEqual(rhs.Effects)) return false;
+                if (!this.Effects.SequenceEqual(rhs.Effects)) return false;
             }
-            if (Uses != rhs.Uses) return false;
-            if (Value != rhs.Value) return false;
-            if (Weight != rhs.Weight) return false;
+            if (this.Uses != rhs.Uses) return false;
+            if (this.Value != rhs.Value) return false;
+            if (!this.Weight.EqualsWithin(rhs.Weight)) return false;
             return true;
         }
 

@@ -163,22 +163,22 @@ namespace Mutagen.Bethesda.Oblivion
             if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
             if (Icon_Property.HasBeenSet)
             {
-                if (!object.Equals(Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
             }
             if (Havok_Property.HasBeenSet != rhs.Havok_Property.HasBeenSet) return false;
             if (Havok_Property.HasBeenSet)
             {
-                if (!object.Equals(Havok, rhs.Havok)) return false;
+                if (!object.Equals(this.Havok, rhs.Havok)) return false;
             }
             if (TextureSpecularExponent_Property.HasBeenSet != rhs.TextureSpecularExponent_Property.HasBeenSet) return false;
             if (TextureSpecularExponent_Property.HasBeenSet)
             {
-                if (TextureSpecularExponent != rhs.TextureSpecularExponent) return false;
+                if (this.TextureSpecularExponent != rhs.TextureSpecularExponent) return false;
             }
             if (PotentialGrass.HasBeenSet != rhs.PotentialGrass.HasBeenSet) return false;
             if (PotentialGrass.HasBeenSet)
             {
-                if (!PotentialGrass.SequenceEqual(rhs.PotentialGrass)) return false;
+                if (!this.PotentialGrass.SequenceEqual(rhs.PotentialGrass)) return false;
             }
             return true;
         }

@@ -141,9 +141,9 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(ClassTraining rhs)
         {
             if (rhs == null) return false;
-            if (TrainedSkill != rhs.TrainedSkill) return false;
-            if (MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
-            if (!Fluff.EqualsFast(rhs.Fluff)) return false;
+            if (this.TrainedSkill != rhs.TrainedSkill) return false;
+            if (this.MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
+            if (!this.Fluff.EqualsFast(rhs.Fluff)) return false;
             return true;
         }
 

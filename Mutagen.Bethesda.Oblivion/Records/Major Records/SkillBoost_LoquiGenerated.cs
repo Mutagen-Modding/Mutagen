@@ -130,8 +130,8 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(SkillBoost rhs)
         {
             if (rhs == null) return false;
-            if (Skill != rhs.Skill) return false;
-            if (Boost != rhs.Boost) return false;
+            if (this.Skill != rhs.Skill) return false;
+            if (this.Boost != rhs.Boost) return false;
             return true;
         }
 

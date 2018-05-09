@@ -440,84 +440,84 @@ namespace Mutagen.Bethesda.Oblivion
             if (Description_Property.HasBeenSet != rhs.Description_Property.HasBeenSet) return false;
             if (Description_Property.HasBeenSet)
             {
-                if (!object.Equals(Description, rhs.Description)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
             }
             if (Spells.HasBeenSet != rhs.Spells.HasBeenSet) return false;
             if (Spells.HasBeenSet)
             {
-                if (!Spells.SequenceEqual(rhs.Spells)) return false;
+                if (!this.Spells.SequenceEqual(rhs.Spells)) return false;
             }
             if (Relations.HasBeenSet != rhs.Relations.HasBeenSet) return false;
             if (Relations.HasBeenSet)
             {
-                if (!Relations.SequenceEqual(rhs.Relations)) return false;
+                if (!this.Relations.SequenceEqual(rhs.Relations)) return false;
             }
-            if (!SkillBoosts.SequenceEqual(rhs.SkillBoosts)) return false;
-            if (!Fluff.EqualsFast(rhs.Fluff)) return false;
-            if (MaleHeight != rhs.MaleHeight) return false;
-            if (FemaleHeight != rhs.FemaleHeight) return false;
-            if (MaleWeight != rhs.MaleWeight) return false;
-            if (FemaleWeight != rhs.FemaleWeight) return false;
-            if (Flags != rhs.Flags) return false;
+            if (!this.SkillBoosts.SequenceEqual(rhs.SkillBoosts)) return false;
+            if (!this.Fluff.EqualsFast(rhs.Fluff)) return false;
+            if (!this.MaleHeight.EqualsWithin(rhs.MaleHeight)) return false;
+            if (!this.FemaleHeight.EqualsWithin(rhs.FemaleHeight)) return false;
+            if (!this.MaleWeight.EqualsWithin(rhs.MaleWeight)) return false;
+            if (!this.FemaleWeight.EqualsWithin(rhs.FemaleWeight)) return false;
+            if (this.Flags != rhs.Flags) return false;
             if (Voices_Property.HasBeenSet != rhs.Voices_Property.HasBeenSet) return false;
             if (Voices_Property.HasBeenSet)
             {
-                if (!object.Equals(Voices, rhs.Voices)) return false;
+                if (!object.Equals(this.Voices, rhs.Voices)) return false;
             }
             if (DefaultHair_Property.HasBeenSet != rhs.DefaultHair_Property.HasBeenSet) return false;
             if (DefaultHair_Property.HasBeenSet)
             {
-                if (!object.Equals(DefaultHair, rhs.DefaultHair)) return false;
+                if (!object.Equals(this.DefaultHair, rhs.DefaultHair)) return false;
             }
             if (DefaultHairColor_Property.HasBeenSet != rhs.DefaultHairColor_Property.HasBeenSet) return false;
             if (DefaultHairColor_Property.HasBeenSet)
             {
-                if (DefaultHairColor != rhs.DefaultHairColor) return false;
+                if (this.DefaultHairColor != rhs.DefaultHairColor) return false;
             }
             if (FaceGenMainClamp_Property.HasBeenSet != rhs.FaceGenMainClamp_Property.HasBeenSet) return false;
             if (FaceGenMainClamp_Property.HasBeenSet)
             {
-                if (FaceGenMainClamp != rhs.FaceGenMainClamp) return false;
+                if (this.FaceGenMainClamp != rhs.FaceGenMainClamp) return false;
             }
             if (FaceGenFaceClamp_Property.HasBeenSet != rhs.FaceGenFaceClamp_Property.HasBeenSet) return false;
             if (FaceGenFaceClamp_Property.HasBeenSet)
             {
-                if (FaceGenFaceClamp != rhs.FaceGenFaceClamp) return false;
+                if (this.FaceGenFaceClamp != rhs.FaceGenFaceClamp) return false;
             }
             if (RaceStats_Property.HasBeenSet != rhs.RaceStats_Property.HasBeenSet) return false;
             if (RaceStats_Property.HasBeenSet)
             {
-                if (!object.Equals(RaceStats, rhs.RaceStats)) return false;
+                if (!object.Equals(this.RaceStats, rhs.RaceStats)) return false;
             }
             if (FaceData.HasBeenSet != rhs.FaceData.HasBeenSet) return false;
             if (FaceData.HasBeenSet)
             {
-                if (!FaceData.SequenceEqual(rhs.FaceData)) return false;
+                if (!this.FaceData.SequenceEqual(rhs.FaceData)) return false;
             }
             if (BodyData_Property.HasBeenSet != rhs.BodyData_Property.HasBeenSet) return false;
             if (BodyData_Property.HasBeenSet)
             {
-                if (!object.Equals(BodyData, rhs.BodyData)) return false;
+                if (!object.Equals(this.BodyData, rhs.BodyData)) return false;
             }
             if (Hairs.HasBeenSet != rhs.Hairs.HasBeenSet) return false;
             if (Hairs.HasBeenSet)
             {
-                if (!Hairs.SequenceEqual(rhs.Hairs)) return false;
+                if (!this.Hairs.SequenceEqual(rhs.Hairs)) return false;
             }
             if (Eyes.HasBeenSet != rhs.Eyes.HasBeenSet) return false;
             if (Eyes.HasBeenSet)
             {
-                if (!Eyes.SequenceEqual(rhs.Eyes)) return false;
+                if (!this.Eyes.SequenceEqual(rhs.Eyes)) return false;
             }
             if (FaceGenData_Property.HasBeenSet != rhs.FaceGenData_Property.HasBeenSet) return false;
             if (FaceGenData_Property.HasBeenSet)
             {
-                if (!object.Equals(FaceGenData, rhs.FaceGenData)) return false;
+                if (!object.Equals(this.FaceGenData, rhs.FaceGenData)) return false;
             }
             if (Unknown_Property.HasBeenSet != rhs.Unknown_Property.HasBeenSet) return false;
             if (Unknown_Property.HasBeenSet)
             {
-                if (!Unknown.EqualsFast(rhs.Unknown)) return false;
+                if (!this.Unknown.EqualsFast(rhs.Unknown)) return false;
             }
             return true;
         }

@@ -114,8 +114,8 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(RaceHair rhs)
         {
             if (rhs == null) return false;
-            if (Male != rhs.Male) return false;
-            if (Female != rhs.Female) return false;
+            if (!this.Male_Property.Equals(rhs.Male_Property)) return false;
+            if (!this.Female_Property.Equals(rhs.Female_Property)) return false;
             return true;
         }
 

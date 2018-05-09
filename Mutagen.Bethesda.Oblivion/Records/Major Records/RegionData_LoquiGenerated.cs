@@ -143,9 +143,9 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(RegionData rhs)
         {
             if (rhs == null) return false;
-            if (DataType != rhs.DataType) return false;
-            if (Flags != rhs.Flags) return false;
-            if (Priority != rhs.Priority) return false;
+            if (this.DataType != rhs.DataType) return false;
+            if (this.Flags != rhs.Flags) return false;
+            if (this.Priority != rhs.Priority) return false;
             return true;
         }
 
@@ -162,52 +162,125 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region XML Translation
+        #region XML Copy In
+        public virtual void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<RegionData, RegionData_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out RegionData_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<RegionData, RegionData_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out RegionData_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out RegionData_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out RegionData_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (RegionData_ErrorMask)this.Write_XML_Internal(
-                writer: writer,
+            errorMask = this.Write_XML_Internal(
+                node: node,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as RegionData_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out RegionData_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             out RegionData_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public abstract void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null);
         public abstract void Write_XML(
             string path,
@@ -217,14 +290,14 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null);
 
         protected virtual object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             RegionDataCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -274,35 +347,40 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out RegionData_ErrorMask errorMask)
+            out RegionData_ErrorMask errorMask,
+            bool doMasks = true)
         {
-            errorMask = (RegionData_ErrorMask)this.Write_Binary_Internal(
+            errorMask = this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as RegionData_ErrorMask;
         }
 
         public virtual void Write_Binary(
             string path,
-            out RegionData_ErrorMask errorMask)
+            out RegionData_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
-            out RegionData_ErrorMask errorMask)
+            out RegionData_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -974,7 +1052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IRegionDataGetter item,
             bool doMasks,
             out RegionData_ErrorMask errorMask,
@@ -982,7 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             RegionData_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RegionData_ErrorMask()) : default(Func<RegionData_ErrorMask>));
@@ -990,38 +1068,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IRegionDataGetter item,
             Func<RegionData_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.RegionData"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RegionData");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.RegionData");
-                    }
-                    EnumXmlTranslation<RegionData.RegionDataType>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.DataType),
-                        item: item.DataType_Property,
-                        fieldIndex: (int)RegionData_FieldIndex.DataType,
-                        errorMask: errorMask);
-                    EnumXmlTranslation<RegionData.RegionDataFlag>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Flags),
-                        item: item.Flags_Property,
-                        fieldIndex: (int)RegionData_FieldIndex.Flags,
-                        errorMask: errorMask);
-                    ByteXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Priority),
-                        item: item.Priority_Property,
-                        fieldIndex: (int)RegionData_FieldIndex.Priority,
-                        errorMask: errorMask);
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionData");
                 }
+                EnumXmlTranslation<RegionData.RegionDataType>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.DataType),
+                    item: item.DataType_Property,
+                    fieldIndex: (int)RegionData_FieldIndex.DataType,
+                    errorMask: errorMask);
+                EnumXmlTranslation<RegionData.RegionDataFlag>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Flags),
+                    item: item.Flags_Property,
+                    fieldIndex: (int)RegionData_FieldIndex.Flags,
+                    errorMask: errorMask);
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Priority),
+                    item: item.Priority_Property,
+                    fieldIndex: (int)RegionData_FieldIndex.Priority,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (errorMask != null)
@@ -1255,6 +1332,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public virtual object GetNthMask(int index)
+        {
+            RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
+            switch (enu)
+            {
+                case RegionData_FieldIndex.DataType:
+                    return DataType;
+                case RegionData_FieldIndex.Flags:
+                    return Flags;
+                case RegionData_FieldIndex.Priority:
+                    return Priority;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public virtual void SetNthException(int index, Exception ex)
         {
             RegionData_FieldIndex enu = (RegionData_FieldIndex)index;

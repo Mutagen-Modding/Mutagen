@@ -117,8 +117,8 @@ namespace Mutagen.Bethesda.Tests
         public bool Equals(BinaryProcessorInstructions rhs)
         {
             if (rhs == null) return false;
-            if (!CompressionInstructions.SequenceEqual(rhs.CompressionInstructions)) return false;
-            if (!object.Equals(Instruction, rhs.Instruction)) return false;
+            if (!this.CompressionInstructions.SequenceEqual(rhs.CompressionInstructions)) return false;
+            if (!object.Equals(this.Instruction, rhs.Instruction)) return false;
             return true;
         }
 

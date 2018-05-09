@@ -390,53 +390,53 @@ namespace Mutagen.Bethesda.Oblivion
             if (TES4_Property.HasBeenSet != rhs.TES4_Property.HasBeenSet) return false;
             if (TES4_Property.HasBeenSet)
             {
-                if (!object.Equals(TES4, rhs.TES4)) return false;
+                if (!object.Equals(this.TES4, rhs.TES4)) return false;
             }
-            if (!object.Equals(GameSettings, rhs.GameSettings)) return false;
-            if (!object.Equals(Globals, rhs.Globals)) return false;
-            if (!object.Equals(Classes, rhs.Classes)) return false;
-            if (!object.Equals(Factions, rhs.Factions)) return false;
-            if (!object.Equals(Hairs, rhs.Hairs)) return false;
-            if (!object.Equals(Eyes, rhs.Eyes)) return false;
-            if (!object.Equals(Races, rhs.Races)) return false;
-            if (!object.Equals(Sounds, rhs.Sounds)) return false;
-            if (!object.Equals(Skills, rhs.Skills)) return false;
-            if (!object.Equals(MagicEffects, rhs.MagicEffects)) return false;
-            if (!object.Equals(Scripts, rhs.Scripts)) return false;
-            if (!object.Equals(LandTextures, rhs.LandTextures)) return false;
-            if (!object.Equals(Enchantments, rhs.Enchantments)) return false;
-            if (!object.Equals(Spells, rhs.Spells)) return false;
-            if (!object.Equals(Birthsigns, rhs.Birthsigns)) return false;
-            if (!object.Equals(Activators, rhs.Activators)) return false;
-            if (!object.Equals(AlchemicalApparatus, rhs.AlchemicalApparatus)) return false;
-            if (!object.Equals(Armors, rhs.Armors)) return false;
-            if (!object.Equals(Books, rhs.Books)) return false;
-            if (!object.Equals(Clothes, rhs.Clothes)) return false;
-            if (!object.Equals(Containers, rhs.Containers)) return false;
-            if (!object.Equals(Doors, rhs.Doors)) return false;
-            if (!object.Equals(Ingredients, rhs.Ingredients)) return false;
-            if (!object.Equals(Lights, rhs.Lights)) return false;
-            if (!object.Equals(Miscellaneous, rhs.Miscellaneous)) return false;
-            if (!object.Equals(Statics, rhs.Statics)) return false;
-            if (!object.Equals(Grasses, rhs.Grasses)) return false;
-            if (!object.Equals(Trees, rhs.Trees)) return false;
-            if (!object.Equals(Flora, rhs.Flora)) return false;
-            if (!object.Equals(Furnature, rhs.Furnature)) return false;
-            if (!object.Equals(Weapons, rhs.Weapons)) return false;
-            if (!object.Equals(Ammo, rhs.Ammo)) return false;
-            if (!object.Equals(NPCs, rhs.NPCs)) return false;
-            if (!object.Equals(Creatures, rhs.Creatures)) return false;
-            if (!object.Equals(LeveledCreatures, rhs.LeveledCreatures)) return false;
-            if (!object.Equals(SoulGems, rhs.SoulGems)) return false;
-            if (!object.Equals(Keys, rhs.Keys)) return false;
-            if (!object.Equals(Potions, rhs.Potions)) return false;
-            if (!object.Equals(Subspaces, rhs.Subspaces)) return false;
-            if (!object.Equals(SigilStones, rhs.SigilStones)) return false;
-            if (!object.Equals(LeveledItems, rhs.LeveledItems)) return false;
-            if (!object.Equals(Weathers, rhs.Weathers)) return false;
-            if (!object.Equals(Climates, rhs.Climates)) return false;
-            if (!object.Equals(Regions, rhs.Regions)) return false;
-            if (!object.Equals(Cells, rhs.Cells)) return false;
+            if (!object.Equals(this.GameSettings, rhs.GameSettings)) return false;
+            if (!object.Equals(this.Globals, rhs.Globals)) return false;
+            if (!object.Equals(this.Classes, rhs.Classes)) return false;
+            if (!object.Equals(this.Factions, rhs.Factions)) return false;
+            if (!object.Equals(this.Hairs, rhs.Hairs)) return false;
+            if (!object.Equals(this.Eyes, rhs.Eyes)) return false;
+            if (!object.Equals(this.Races, rhs.Races)) return false;
+            if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
+            if (!object.Equals(this.Skills, rhs.Skills)) return false;
+            if (!object.Equals(this.MagicEffects, rhs.MagicEffects)) return false;
+            if (!object.Equals(this.Scripts, rhs.Scripts)) return false;
+            if (!object.Equals(this.LandTextures, rhs.LandTextures)) return false;
+            if (!object.Equals(this.Enchantments, rhs.Enchantments)) return false;
+            if (!object.Equals(this.Spells, rhs.Spells)) return false;
+            if (!object.Equals(this.Birthsigns, rhs.Birthsigns)) return false;
+            if (!object.Equals(this.Activators, rhs.Activators)) return false;
+            if (!object.Equals(this.AlchemicalApparatus, rhs.AlchemicalApparatus)) return false;
+            if (!object.Equals(this.Armors, rhs.Armors)) return false;
+            if (!object.Equals(this.Books, rhs.Books)) return false;
+            if (!object.Equals(this.Clothes, rhs.Clothes)) return false;
+            if (!object.Equals(this.Containers, rhs.Containers)) return false;
+            if (!object.Equals(this.Doors, rhs.Doors)) return false;
+            if (!object.Equals(this.Ingredients, rhs.Ingredients)) return false;
+            if (!object.Equals(this.Lights, rhs.Lights)) return false;
+            if (!object.Equals(this.Miscellaneous, rhs.Miscellaneous)) return false;
+            if (!object.Equals(this.Statics, rhs.Statics)) return false;
+            if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
+            if (!object.Equals(this.Trees, rhs.Trees)) return false;
+            if (!object.Equals(this.Flora, rhs.Flora)) return false;
+            if (!object.Equals(this.Furnature, rhs.Furnature)) return false;
+            if (!object.Equals(this.Weapons, rhs.Weapons)) return false;
+            if (!object.Equals(this.Ammo, rhs.Ammo)) return false;
+            if (!object.Equals(this.NPCs, rhs.NPCs)) return false;
+            if (!object.Equals(this.Creatures, rhs.Creatures)) return false;
+            if (!object.Equals(this.LeveledCreatures, rhs.LeveledCreatures)) return false;
+            if (!object.Equals(this.SoulGems, rhs.SoulGems)) return false;
+            if (!object.Equals(this.Keys, rhs.Keys)) return false;
+            if (!object.Equals(this.Potions, rhs.Potions)) return false;
+            if (!object.Equals(this.Subspaces, rhs.Subspaces)) return false;
+            if (!object.Equals(this.SigilStones, rhs.SigilStones)) return false;
+            if (!object.Equals(this.LeveledItems, rhs.LeveledItems)) return false;
+            if (!object.Equals(this.Weathers, rhs.Weathers)) return false;
+            if (!object.Equals(this.Climates, rhs.Climates)) return false;
+            if (!object.Equals(this.Regions, rhs.Regions)) return false;
+            if (!object.Equals(this.Cells, rhs.Cells)) return false;
             return true;
         }
 
@@ -2030,215 +2030,225 @@ namespace Mutagen.Bethesda.Oblivion
                     creator: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.TES4,
                     errMaskObj: TES4ErrorMask);
-                tasks.Add(GameSettings.Write_XmlFolder<GameSetting_ErrorMask>(
+                tasks.Add(GameSettings.Write_XmlFolder<GameSetting, GameSetting_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "GameSettings")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.GameSettings,
                     doMasks: doMasks));
-                tasks.Add(Globals.Write_XmlFolder<Global_ErrorMask>(
+                tasks.Add(Globals.Write_XmlFolder<Global, Global_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Globals")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Globals,
                     doMasks: doMasks));
-                tasks.Add(Classes.Write_XmlFolder<Class_ErrorMask>(
+                tasks.Add(Classes.Write_XmlFolder<Class, Class_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Classes")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Classes,
                     doMasks: doMasks));
-                tasks.Add(Factions.Write_XmlFolder<Faction_ErrorMask>(
+                tasks.Add(Factions.Write_XmlFolder<Faction, Faction_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Factions")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Factions,
                     doMasks: doMasks));
-                tasks.Add(Hairs.Write_XmlFolder<Hair_ErrorMask>(
+                tasks.Add(Hairs.Write_XmlFolder<Hair, Hair_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Hairs")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Hairs,
                     doMasks: doMasks));
-                tasks.Add(Eyes.Write_XmlFolder<Eye_ErrorMask>(
+                tasks.Add(Eyes.Write_XmlFolder<Eye, Eye_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Eyes")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Eyes,
                     doMasks: doMasks));
-                tasks.Add(Races.Write_XmlFolder<Race_ErrorMask>(
+                tasks.Add(Races.Write_XmlFolder<Race, Race_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Races")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Races,
                     doMasks: doMasks));
-                tasks.Add(Sounds.Write_XmlFolder<Sound_ErrorMask>(
+                tasks.Add(Sounds.Write_XmlFolder<Sound, Sound_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Sounds")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Sounds,
                     doMasks: doMasks));
-                tasks.Add(Skills.Write_XmlFolder<SkillRecord_ErrorMask>(
+                tasks.Add(Skills.Write_XmlFolder<SkillRecord, SkillRecord_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Skills")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Skills,
                     doMasks: doMasks));
-                tasks.Add(MagicEffects.Write_XmlFolder<MagicEffect_ErrorMask>(
+                tasks.Add(MagicEffects.Write_XmlFolder<MagicEffect, MagicEffect_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "MagicEffects")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.MagicEffects,
                     doMasks: doMasks));
-                tasks.Add(Scripts.Write_XmlFolder<Script_ErrorMask>(
+                tasks.Add(Scripts.Write_XmlFolder<Script, Script_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Scripts")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Scripts,
                     doMasks: doMasks));
-                tasks.Add(LandTextures.Write_XmlFolder<LandTexture_ErrorMask>(
+                tasks.Add(LandTextures.Write_XmlFolder<LandTexture, LandTexture_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "LandTextures")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.LandTextures,
                     doMasks: doMasks));
-                tasks.Add(Enchantments.Write_XmlFolder<Enchantment_ErrorMask>(
+                tasks.Add(Enchantments.Write_XmlFolder<Enchantment, Enchantment_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Enchantments")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Enchantments,
                     doMasks: doMasks));
-                tasks.Add(Spells.Write_XmlFolder<SpellUnleveled_ErrorMask>(
+                tasks.Add(Spells.Write_XmlFolder<SpellUnleveled, SpellUnleveled_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Spells")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Spells,
                     doMasks: doMasks));
-                tasks.Add(Birthsigns.Write_XmlFolder<Birthsign_ErrorMask>(
+                tasks.Add(Birthsigns.Write_XmlFolder<Birthsign, Birthsign_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Birthsigns")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Birthsigns,
                     doMasks: doMasks));
-                tasks.Add(Activators.Write_XmlFolder<Activator_ErrorMask>(
+                tasks.Add(Activators.Write_XmlFolder<Activator, Activator_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Activators")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Activators,
                     doMasks: doMasks));
-                tasks.Add(AlchemicalApparatus.Write_XmlFolder<AlchemicalApparatus_ErrorMask>(
+                tasks.Add(AlchemicalApparatus.Write_XmlFolder<AlchemicalApparatus, AlchemicalApparatus_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "AlchemicalApparatus")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.AlchemicalApparatus,
                     doMasks: doMasks));
-                tasks.Add(Armors.Write_XmlFolder<Armor_ErrorMask>(
+                tasks.Add(Armors.Write_XmlFolder<Armor, Armor_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Armors")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Armors,
                     doMasks: doMasks));
-                tasks.Add(Books.Write_XmlFolder<Book_ErrorMask>(
+                tasks.Add(Books.Write_XmlFolder<Book, Book_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Books")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Books,
                     doMasks: doMasks));
-                tasks.Add(Clothes.Write_XmlFolder<Clothing_ErrorMask>(
+                tasks.Add(Clothes.Write_XmlFolder<Clothing, Clothing_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Clothes")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Clothes,
                     doMasks: doMasks));
-                tasks.Add(Containers.Write_XmlFolder<Container_ErrorMask>(
+                tasks.Add(Containers.Write_XmlFolder<Container, Container_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Containers")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Containers,
                     doMasks: doMasks));
-                tasks.Add(Doors.Write_XmlFolder<Door_ErrorMask>(
+                tasks.Add(Doors.Write_XmlFolder<Door, Door_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Doors")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Doors,
                     doMasks: doMasks));
-                tasks.Add(Ingredients.Write_XmlFolder<Ingredient_ErrorMask>(
+                tasks.Add(Ingredients.Write_XmlFolder<Ingredient, Ingredient_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Ingredients")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Ingredients,
                     doMasks: doMasks));
-                tasks.Add(Lights.Write_XmlFolder<Light_ErrorMask>(
+                tasks.Add(Lights.Write_XmlFolder<Light, Light_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Lights")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Lights,
                     doMasks: doMasks));
-                tasks.Add(Miscellaneous.Write_XmlFolder<Miscellaneous_ErrorMask>(
+                tasks.Add(Miscellaneous.Write_XmlFolder<Miscellaneous, Miscellaneous_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Miscellaneous")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Miscellaneous,
                     doMasks: doMasks));
-                tasks.Add(Statics.Write_XmlFolder<Static_ErrorMask>(
+                tasks.Add(Statics.Write_XmlFolder<Static, Static_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Statics")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Statics,
                     doMasks: doMasks));
-                tasks.Add(Grasses.Write_XmlFolder<Grass_ErrorMask>(
+                tasks.Add(Grasses.Write_XmlFolder<Grass, Grass_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Grasses")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Grasses,
                     doMasks: doMasks));
-                tasks.Add(Trees.Write_XmlFolder<Tree_ErrorMask>(
+                tasks.Add(Trees.Write_XmlFolder<Tree, Tree_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Trees")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Trees,
                     doMasks: doMasks));
-                tasks.Add(Flora.Write_XmlFolder<Flora_ErrorMask>(
+                tasks.Add(Flora.Write_XmlFolder<Flora, Flora_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Flora")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Flora,
                     doMasks: doMasks));
-                tasks.Add(Furnature.Write_XmlFolder<Furnature_ErrorMask>(
+                tasks.Add(Furnature.Write_XmlFolder<Furnature, Furnature_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Furnature")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Furnature,
                     doMasks: doMasks));
-                tasks.Add(Weapons.Write_XmlFolder<Weapon_ErrorMask>(
+                tasks.Add(Weapons.Write_XmlFolder<Weapon, Weapon_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Weapons")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Weapons,
                     doMasks: doMasks));
-                tasks.Add(Ammo.Write_XmlFolder<Ammo_ErrorMask>(
+                tasks.Add(Ammo.Write_XmlFolder<Ammo, Ammo_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Ammo")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Ammo,
                     doMasks: doMasks));
-                tasks.Add(NPCs.Write_XmlFolder<NPC_ErrorMask>(
+                tasks.Add(NPCs.Write_XmlFolder<NPC, NPC_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "NPCs")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.NPCs,
                     doMasks: doMasks));
-                tasks.Add(Creatures.Write_XmlFolder<Creature_ErrorMask>(
+                tasks.Add(Creatures.Write_XmlFolder<Creature, Creature_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Creatures")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Creatures,
                     doMasks: doMasks));
-                tasks.Add(LeveledCreatures.Write_XmlFolder<LeveledCreature_ErrorMask>(
+                tasks.Add(LeveledCreatures.Write_XmlFolder<LeveledCreature, LeveledCreature_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "LeveledCreatures")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.LeveledCreatures,
                     doMasks: doMasks));
-                tasks.Add(SoulGems.Write_XmlFolder<SoulGem_ErrorMask>(
+                tasks.Add(SoulGems.Write_XmlFolder<SoulGem, SoulGem_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "SoulGems")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.SoulGems,
                     doMasks: doMasks));
-                tasks.Add(Keys.Write_XmlFolder<Key_ErrorMask>(
+                tasks.Add(Keys.Write_XmlFolder<Key, Key_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Keys")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Keys,
                     doMasks: doMasks));
-                tasks.Add(Potions.Write_XmlFolder<Potion_ErrorMask>(
+                tasks.Add(Potions.Write_XmlFolder<Potion, Potion_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Potions")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Potions,
                     doMasks: doMasks));
-                tasks.Add(Subspaces.Write_XmlFolder<Subspace_ErrorMask>(
+                tasks.Add(Subspaces.Write_XmlFolder<Subspace, Subspace_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Subspaces")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Subspaces,
                     doMasks: doMasks));
-                tasks.Add(SigilStones.Write_XmlFolder<SigilStone_ErrorMask>(
+                tasks.Add(SigilStones.Write_XmlFolder<SigilStone, SigilStone_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "SigilStones")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.SigilStones,
                     doMasks: doMasks));
-                tasks.Add(LeveledItems.Write_XmlFolder<LeveledItem_ErrorMask>(
+                tasks.Add(LeveledItems.Write_XmlFolder<LeveledItem, LeveledItem_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "LeveledItems")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.LeveledItems,
                     doMasks: doMasks));
-                tasks.Add(Weathers.Write_XmlFolder<Weather_ErrorMask>(
+                tasks.Add(Weathers.Write_XmlFolder<Weather, Weather_ErrorMask>(
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Weathers")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Weathers,
+                    doMasks: doMasks));
+                tasks.Add(Climates.Write_XmlFolder<Climate, Climate_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Climates")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Climates,
+                    doMasks: doMasks));
+                tasks.Add(Regions.Write_XmlFolder<Region, Region_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Regions")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Regions,
                     doMasks: doMasks));
                 await Task.WhenAll(tasks);
             }
@@ -7093,24 +7103,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         name: nameof(item.TES4),
                         fieldIndex: (int)OblivionMod_FieldIndex.TES4,
                         errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Climate>, Group_ErrorMask<Climate_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Climates,
-                        name: nameof(item.Climates),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Climates,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Region>, Group_ErrorMask<Region_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Regions,
-                        name: nameof(item.Regions),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Regions,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<ListGroup<CellBlock>, ListGroup_ErrorMask<CellBlock_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Cells,
-                        name: nameof(item.Cells),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Cells,
-                        errorMask: errorMask);
                 }
                 LoquiXmlTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Write(
                     node: elem,
@@ -7363,6 +7355,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Weathers,
                     name: nameof(item.Weathers),
                     fieldIndex: (int)OblivionMod_FieldIndex.Weathers,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Climate>, Group_ErrorMask<Climate_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Climates,
+                    name: nameof(item.Climates),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Climates,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<Group<Region>, Group_ErrorMask<Region_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Regions,
+                    name: nameof(item.Regions),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Regions,
+                    errorMask: errorMask);
+                LoquiXmlTranslation<ListGroup<CellBlock>, ListGroup_ErrorMask<CellBlock_ErrorMask>>.Instance.Write(
+                    node: elem,
+                    item: item.Cells,
+                    name: nameof(item.Cells),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Cells,
                     errorMask: errorMask);
             }
             catch (Exception ex)
@@ -9191,6 +9201,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return LeveledItems;
                 case OblivionMod_FieldIndex.Weathers:
                     return Weathers;
+                case OblivionMod_FieldIndex.Climates:
+                    return Climates;
+                case OblivionMod_FieldIndex.Regions:
+                    return Regions;
+                case OblivionMod_FieldIndex.Cells:
+                    return Cells;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

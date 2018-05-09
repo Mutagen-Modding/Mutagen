@@ -122,11 +122,11 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(ItemEntry rhs)
         {
             if (rhs == null) return false;
-            if (Item != rhs.Item) return false;
+            if (!this.Item_Property.Equals(rhs.Item_Property)) return false;
             if (Count_Property.HasBeenSet != rhs.Count_Property.HasBeenSet) return false;
             if (Count_Property.HasBeenSet)
             {
-                if (Count != rhs.Count) return false;
+                if (this.Count != rhs.Count) return false;
             }
             return true;
         }

@@ -184,29 +184,29 @@ namespace Mutagen.Bethesda.Oblivion
             if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
             if (Model_Property.HasBeenSet)
             {
-                if (!object.Equals(Model, rhs.Model)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
             }
             if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
             if (Script_Property.HasBeenSet)
             {
-                if (Script != rhs.Script) return false;
+                if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
             }
             if (Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
             if (Items.HasBeenSet)
             {
-                if (!Items.SequenceEqual(rhs.Items)) return false;
+                if (!this.Items.SequenceEqual(rhs.Items)) return false;
             }
-            if (Flags != rhs.Flags) return false;
-            if (Weight != rhs.Weight) return false;
+            if (this.Flags != rhs.Flags) return false;
+            if (!this.Weight.EqualsWithin(rhs.Weight)) return false;
             if (OpenSound_Property.HasBeenSet != rhs.OpenSound_Property.HasBeenSet) return false;
             if (OpenSound_Property.HasBeenSet)
             {
-                if (OpenSound != rhs.OpenSound) return false;
+                if (!this.OpenSound_Property.Equals(rhs.OpenSound_Property)) return false;
             }
             if (CloseSound_Property.HasBeenSet != rhs.CloseSound_Property.HasBeenSet) return false;
             if (CloseSound_Property.HasBeenSet)
             {
-                if (CloseSound != rhs.CloseSound) return false;
+                if (!this.CloseSound_Property.Equals(rhs.CloseSound_Property)) return false;
             }
             return true;
         }

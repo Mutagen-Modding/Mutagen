@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Record != rhs.Record) return false;
+            if (this.Record != rhs.Record) return false;
             return true;
         }
 

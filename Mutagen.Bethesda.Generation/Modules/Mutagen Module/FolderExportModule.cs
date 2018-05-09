@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Generation
                                 //}
                                 if (!group.TryGetSpecificationAsObject("T", out var subObj)) continue;
                                 using (var args = new ArgsWrapper(fg,
-                                    $"tasks.Add({field.Name}.Write_XmlFolder<{subObj.Mask(MaskType.Error)}>",
+                                    $"tasks.Add({field.Name}.Write_XmlFolder<{subObj.Name}, {subObj.Mask(MaskType.Error)}>",
                                     suffixLine: ")"))
                                 {
                                     args.Add($"dir: new DirectoryPath(Path.Combine(dir.Path, \"{field.Name}\"))");

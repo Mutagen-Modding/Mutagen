@@ -145,17 +145,17 @@ namespace Mutagen.Bethesda.Oblivion
             if (SymmetricGeometry_Property.HasBeenSet != rhs.SymmetricGeometry_Property.HasBeenSet) return false;
             if (SymmetricGeometry_Property.HasBeenSet)
             {
-                if (!SymmetricGeometry.EqualsFast(rhs.SymmetricGeometry)) return false;
+                if (!this.SymmetricGeometry.EqualsFast(rhs.SymmetricGeometry)) return false;
             }
             if (AsymmetricGeometry_Property.HasBeenSet != rhs.AsymmetricGeometry_Property.HasBeenSet) return false;
             if (AsymmetricGeometry_Property.HasBeenSet)
             {
-                if (!AsymmetricGeometry.EqualsFast(rhs.AsymmetricGeometry)) return false;
+                if (!this.AsymmetricGeometry.EqualsFast(rhs.AsymmetricGeometry)) return false;
             }
             if (SymmetricTexture_Property.HasBeenSet != rhs.SymmetricTexture_Property.HasBeenSet) return false;
             if (SymmetricTexture_Property.HasBeenSet)
             {
-                if (!SymmetricTexture.EqualsFast(rhs.SymmetricTexture)) return false;
+                if (!this.SymmetricTexture.EqualsFast(rhs.SymmetricTexture)) return false;
             }
             return true;
         }

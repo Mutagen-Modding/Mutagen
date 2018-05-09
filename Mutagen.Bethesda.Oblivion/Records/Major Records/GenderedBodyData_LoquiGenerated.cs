@@ -130,12 +130,12 @@ namespace Mutagen.Bethesda.Oblivion
             if (Male_Property.HasBeenSet != rhs.Male_Property.HasBeenSet) return false;
             if (Male_Property.HasBeenSet)
             {
-                if (!object.Equals(Male, rhs.Male)) return false;
+                if (!object.Equals(this.Male, rhs.Male)) return false;
             }
             if (Female_Property.HasBeenSet != rhs.Female_Property.HasBeenSet) return false;
             if (Female_Property.HasBeenSet)
             {
-                if (!object.Equals(Female, rhs.Female)) return false;
+                if (!object.Equals(this.Female, rhs.Female)) return false;
             }
             return true;
         }

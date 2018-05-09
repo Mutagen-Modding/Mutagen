@@ -131,12 +131,12 @@ namespace Mutagen.Bethesda.Oblivion
             if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
             if (Icon_Property.HasBeenSet)
             {
-                if (!object.Equals(Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
             }
             if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
             if (Flags_Property.HasBeenSet)
             {
-                if (Flags != rhs.Flags) return false;
+                if (this.Flags != rhs.Flags) return false;
             }
             return true;
         }

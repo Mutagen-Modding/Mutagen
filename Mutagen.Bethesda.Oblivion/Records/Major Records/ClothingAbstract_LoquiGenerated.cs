@@ -243,49 +243,49 @@ namespace Mutagen.Bethesda.Oblivion
             if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
             if (Script_Property.HasBeenSet)
             {
-                if (Script != rhs.Script) return false;
+                if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
             }
             if (Enchantment_Property.HasBeenSet != rhs.Enchantment_Property.HasBeenSet) return false;
             if (Enchantment_Property.HasBeenSet)
             {
-                if (Enchantment != rhs.Enchantment) return false;
+                if (!this.Enchantment_Property.Equals(rhs.Enchantment_Property)) return false;
             }
             if (EnchantmentPoints_Property.HasBeenSet != rhs.EnchantmentPoints_Property.HasBeenSet) return false;
             if (EnchantmentPoints_Property.HasBeenSet)
             {
-                if (EnchantmentPoints != rhs.EnchantmentPoints) return false;
+                if (this.EnchantmentPoints != rhs.EnchantmentPoints) return false;
             }
-            if (BipedFlags != rhs.BipedFlags) return false;
-            if (Flags != rhs.Flags) return false;
+            if (this.BipedFlags != rhs.BipedFlags) return false;
+            if (this.Flags != rhs.Flags) return false;
             if (MaleBipedModel_Property.HasBeenSet != rhs.MaleBipedModel_Property.HasBeenSet) return false;
             if (MaleBipedModel_Property.HasBeenSet)
             {
-                if (!object.Equals(MaleBipedModel, rhs.MaleBipedModel)) return false;
+                if (!object.Equals(this.MaleBipedModel, rhs.MaleBipedModel)) return false;
             }
             if (MaleWorldModel_Property.HasBeenSet != rhs.MaleWorldModel_Property.HasBeenSet) return false;
             if (MaleWorldModel_Property.HasBeenSet)
             {
-                if (!object.Equals(MaleWorldModel, rhs.MaleWorldModel)) return false;
+                if (!object.Equals(this.MaleWorldModel, rhs.MaleWorldModel)) return false;
             }
             if (MaleIcon_Property.HasBeenSet != rhs.MaleIcon_Property.HasBeenSet) return false;
             if (MaleIcon_Property.HasBeenSet)
             {
-                if (!object.Equals(MaleIcon, rhs.MaleIcon)) return false;
+                if (!object.Equals(this.MaleIcon, rhs.MaleIcon)) return false;
             }
             if (FemaleBipedModel_Property.HasBeenSet != rhs.FemaleBipedModel_Property.HasBeenSet) return false;
             if (FemaleBipedModel_Property.HasBeenSet)
             {
-                if (!object.Equals(FemaleBipedModel, rhs.FemaleBipedModel)) return false;
+                if (!object.Equals(this.FemaleBipedModel, rhs.FemaleBipedModel)) return false;
             }
             if (FemaleWorldModel_Property.HasBeenSet != rhs.FemaleWorldModel_Property.HasBeenSet) return false;
             if (FemaleWorldModel_Property.HasBeenSet)
             {
-                if (!object.Equals(FemaleWorldModel, rhs.FemaleWorldModel)) return false;
+                if (!object.Equals(this.FemaleWorldModel, rhs.FemaleWorldModel)) return false;
             }
             if (FemaleIcon_Property.HasBeenSet != rhs.FemaleIcon_Property.HasBeenSet) return false;
             if (FemaleIcon_Property.HasBeenSet)
             {
-                if (!object.Equals(FemaleIcon, rhs.FemaleIcon)) return false;
+                if (!object.Equals(this.FemaleIcon, rhs.FemaleIcon)) return false;
             }
             return true;
         }

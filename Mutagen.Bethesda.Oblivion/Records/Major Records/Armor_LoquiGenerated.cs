@@ -159,10 +159,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (ArmorValue != rhs.ArmorValue) return false;
-            if (Value != rhs.Value) return false;
-            if (Health != rhs.Health) return false;
-            if (Weight != rhs.Weight) return false;
+            if (!this.ArmorValue.EqualsWithin(rhs.ArmorValue)) return false;
+            if (this.Value != rhs.Value) return false;
+            if (this.Health != rhs.Health) return false;
+            if (!this.Weight.EqualsWithin(rhs.Weight)) return false;
             return true;
         }
 

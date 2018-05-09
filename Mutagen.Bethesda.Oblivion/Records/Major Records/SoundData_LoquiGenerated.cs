@@ -160,10 +160,10 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(SoundData rhs)
         {
             if (rhs == null) return false;
-            if (MinimumAttenuationDistance != rhs.MinimumAttenuationDistance) return false;
-            if (MaximumAttenuationDistance != rhs.MaximumAttenuationDistance) return false;
-            if (FrequencyAdjustment != rhs.FrequencyAdjustment) return false;
-            if (Flags != rhs.Flags) return false;
+            if (this.MinimumAttenuationDistance != rhs.MinimumAttenuationDistance) return false;
+            if (this.MaximumAttenuationDistance != rhs.MaximumAttenuationDistance) return false;
+            if (this.FrequencyAdjustment != rhs.FrequencyAdjustment) return false;
+            if (this.Flags != rhs.Flags) return false;
             return true;
         }
 

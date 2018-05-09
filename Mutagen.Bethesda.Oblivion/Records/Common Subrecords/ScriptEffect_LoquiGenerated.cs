@@ -159,14 +159,14 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(ScriptEffect rhs)
         {
             if (rhs == null) return false;
-            if (Script != rhs.Script) return false;
-            if (MagicSchool != rhs.MagicSchool) return false;
-            if (VisualEffect != rhs.VisualEffect) return false;
-            if (Flags != rhs.Flags) return false;
+            if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
+            if (this.MagicSchool != rhs.MagicSchool) return false;
+            if (!this.VisualEffect_Property.Equals(rhs.VisualEffect_Property)) return false;
+            if (this.Flags != rhs.Flags) return false;
             if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
             if (Name_Property.HasBeenSet)
             {
-                if (!object.Equals(Name, rhs.Name)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
             }
             return true;
         }

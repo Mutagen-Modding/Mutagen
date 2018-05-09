@@ -134,9 +134,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (StaticAttenuation != rhs.StaticAttenuation) return false;
-            if (StopTime != rhs.StopTime) return false;
-            if (StartTime != rhs.StartTime) return false;
+            if (!this.StaticAttenuation.EqualsWithin(rhs.StaticAttenuation)) return false;
+            if (!this.StopTime.EqualsWithin(rhs.StopTime)) return false;
+            if (!this.StartTime.EqualsWithin(rhs.StartTime)) return false;
             return true;
         }
 

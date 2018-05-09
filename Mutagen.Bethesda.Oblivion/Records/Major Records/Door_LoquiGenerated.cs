@@ -176,37 +176,37 @@ namespace Mutagen.Bethesda.Oblivion
             if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
             if (Model_Property.HasBeenSet)
             {
-                if (!object.Equals(Model, rhs.Model)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
             }
             if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
             if (Script_Property.HasBeenSet)
             {
-                if (Script != rhs.Script) return false;
+                if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
             }
             if (OpenSound_Property.HasBeenSet != rhs.OpenSound_Property.HasBeenSet) return false;
             if (OpenSound_Property.HasBeenSet)
             {
-                if (OpenSound != rhs.OpenSound) return false;
+                if (!this.OpenSound_Property.Equals(rhs.OpenSound_Property)) return false;
             }
             if (CloseSound_Property.HasBeenSet != rhs.CloseSound_Property.HasBeenSet) return false;
             if (CloseSound_Property.HasBeenSet)
             {
-                if (CloseSound != rhs.CloseSound) return false;
+                if (!this.CloseSound_Property.Equals(rhs.CloseSound_Property)) return false;
             }
             if (LoopSound_Property.HasBeenSet != rhs.LoopSound_Property.HasBeenSet) return false;
             if (LoopSound_Property.HasBeenSet)
             {
-                if (LoopSound != rhs.LoopSound) return false;
+                if (!this.LoopSound_Property.Equals(rhs.LoopSound_Property)) return false;
             }
             if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
             if (Flags_Property.HasBeenSet)
             {
-                if (Flags != rhs.Flags) return false;
+                if (this.Flags != rhs.Flags) return false;
             }
             if (RandomTeleportDestinations.HasBeenSet != rhs.RandomTeleportDestinations.HasBeenSet) return false;
             if (RandomTeleportDestinations.HasBeenSet)
             {
-                if (!RandomTeleportDestinations.SequenceEqual(rhs.RandomTeleportDestinations)) return false;
+                if (!this.RandomTeleportDestinations.SequenceEqual(rhs.RandomTeleportDestinations)) return false;
             }
             return true;
         }

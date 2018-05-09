@@ -135,9 +135,9 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(BaseLayer rhs)
         {
             if (rhs == null) return false;
-            if (Texture != rhs.Texture) return false;
-            if (Quadrant != rhs.Quadrant) return false;
-            if (LayerNumber != rhs.LayerNumber) return false;
+            if (!this.Texture_Property.Equals(rhs.Texture_Property)) return false;
+            if (this.Quadrant != rhs.Quadrant) return false;
+            if (this.LayerNumber != rhs.LayerNumber) return false;
             return true;
         }
 
@@ -167,19 +167,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static BaseLayer Create_XML(
             XElement root,
-            out BaseLayer_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static BaseLayer Create_XML(
-            XElement root,
-            bool doMasks,
-            out BaseLayer_ErrorMask errorMask)
+            out BaseLayer_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_XML(
                 root: root,
@@ -234,56 +223,129 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region XML Copy In
+        public virtual void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<BaseLayer, BaseLayer_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out BaseLayer_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<BaseLayer, BaseLayer_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out BaseLayer_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out BaseLayer_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out BaseLayer_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (BaseLayer_ErrorMask)this.Write_XML_Internal(
-                writer: writer,
+            errorMask = this.Write_XML_Internal(
+                node: node,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as BaseLayer_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out BaseLayer_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             out BaseLayer_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -292,39 +354,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected virtual object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             BaseLayerCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -412,19 +468,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static BaseLayer Create_Binary(
             MutagenFrame frame,
-            out BaseLayer_ErrorMask errorMask)
-        {
-            return Create_Binary(
-                frame: frame,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static BaseLayer Create_Binary(
-            MutagenFrame frame,
-            bool doMasks,
-            out BaseLayer_ErrorMask errorMask)
+            out BaseLayer_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -497,35 +542,40 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out BaseLayer_ErrorMask errorMask)
+            out BaseLayer_ErrorMask errorMask,
+            bool doMasks = true)
         {
-            errorMask = (BaseLayer_ErrorMask)this.Write_Binary_Internal(
+            errorMask = this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as BaseLayer_ErrorMask;
         }
 
         public virtual void Write_Binary(
             string path,
-            out BaseLayer_ErrorMask errorMask)
+            out BaseLayer_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
-            out BaseLayer_ErrorMask errorMask)
+            out BaseLayer_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -1297,7 +1347,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IBaseLayerGetter item,
             bool doMasks,
             out BaseLayer_ErrorMask errorMask,
@@ -1305,7 +1355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             BaseLayer_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new BaseLayer_ErrorMask()) : default(Func<BaseLayer_ErrorMask>));
@@ -1313,38 +1363,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IBaseLayerGetter item,
             Func<BaseLayer_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.BaseLayer"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.BaseLayer");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.BaseLayer");
-                    }
-                    FormIDXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Texture),
-                        item: item.Texture?.FormID,
-                        fieldIndex: (int)BaseLayer_FieldIndex.Texture,
-                        errorMask: errorMask);
-                    EnumXmlTranslation<AlphaLayer.QuadrantEnum>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Quadrant),
-                        item: item.Quadrant_Property,
-                        fieldIndex: (int)BaseLayer_FieldIndex.Quadrant,
-                        errorMask: errorMask);
-                    UInt16XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.LayerNumber),
-                        item: item.LayerNumber_Property,
-                        fieldIndex: (int)BaseLayer_FieldIndex.LayerNumber,
-                        errorMask: errorMask);
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.BaseLayer");
                 }
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Texture),
+                    item: item.Texture?.FormID,
+                    fieldIndex: (int)BaseLayer_FieldIndex.Texture,
+                    errorMask: errorMask);
+                EnumXmlTranslation<AlphaLayer.QuadrantEnum>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Quadrant),
+                    item: item.Quadrant_Property,
+                    fieldIndex: (int)BaseLayer_FieldIndex.Quadrant,
+                    errorMask: errorMask);
+                UInt16XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.LayerNumber),
+                    item: item.LayerNumber_Property,
+                    fieldIndex: (int)BaseLayer_FieldIndex.LayerNumber,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (errorMask != null)
@@ -1570,6 +1619,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public virtual object GetNthMask(int index)
+        {
+            BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+            switch (enu)
+            {
+                case BaseLayer_FieldIndex.Texture:
+                    return Texture;
+                case BaseLayer_FieldIndex.Quadrant:
+                    return Quadrant;
+                case BaseLayer_FieldIndex.LayerNumber:
+                    return LayerNumber;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public virtual void SetNthException(int index, Exception ex)
         {
             BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;

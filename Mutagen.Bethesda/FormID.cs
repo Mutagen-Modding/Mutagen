@@ -24,6 +24,12 @@ namespace Mutagen.Bethesda
             this.ID = id;
         }
 
+        public FormID(uint id)
+        {
+            this.ModID = new ModID(0);
+            this.ID = id;
+        }
+
         public static bool TryFactory(string hexString, out FormID id)
         {
             if (TryFactory(hexString, out FormID? idNull))

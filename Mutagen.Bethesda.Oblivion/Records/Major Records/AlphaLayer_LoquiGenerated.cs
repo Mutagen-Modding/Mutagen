@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (AlphaLayerData_Property.HasBeenSet != rhs.AlphaLayerData_Property.HasBeenSet) return false;
             if (AlphaLayerData_Property.HasBeenSet)
             {
-                if (!AlphaLayerData.EqualsFast(rhs.AlphaLayerData)) return false;
+                if (!this.AlphaLayerData.EqualsFast(rhs.AlphaLayerData)) return false;
             }
             return true;
         }
@@ -148,19 +148,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static AlphaLayer Create_XML(
             XElement root,
-            out AlphaLayer_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static AlphaLayer Create_XML(
-            XElement root,
-            bool doMasks,
-            out AlphaLayer_ErrorMask errorMask)
+            out AlphaLayer_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_XML(
                 root: root,
@@ -215,98 +204,189 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region XML Copy In
+        public override void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<AlphaLayer, AlphaLayer_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out AlphaLayer_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<AlphaLayer, AlphaLayer_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out AlphaLayer_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out AlphaLayer_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
+            out BaseLayer_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out AlphaLayer_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out AlphaLayer_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (AlphaLayer_ErrorMask)this.Write_XML_Internal(
-                writer: writer,
+            errorMask = this.Write_XML_Internal(
+                node: node,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as AlphaLayer_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out AlphaLayer_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             out AlphaLayer_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         #region Base Class Trickdown Overrides
         public override void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out BaseLayer_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
             Write_XML(
-                writer: writer,
+                node: node,
                 name: name,
-                errorMask: out AlphaLayer_ErrorMask errMask);
+                errorMask: out AlphaLayer_ErrorMask errMask,
+                doMasks: doMasks);
             errorMask = errMask;
         }
 
         public override void Write_XML(
             string path,
             out BaseLayer_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
             Write_XML(
                 path: path,
                 name: name,
-                errorMask: out AlphaLayer_ErrorMask errMask);
+                errorMask: out AlphaLayer_ErrorMask errMask,
+                doMasks: doMasks);
             errorMask = errMask;
         }
 
         public override void Write_XML(
             Stream stream,
             out BaseLayer_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
             Write_XML(
                 stream: stream,
                 name: name,
-                errorMask: out AlphaLayer_ErrorMask errMask);
+                errorMask: out AlphaLayer_ErrorMask errMask,
+                doMasks: doMasks);
             errorMask = errMask;
         }
 
         #endregion
 
         protected override object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             AlphaLayerCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -381,19 +461,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static AlphaLayer Create_Binary(
             MutagenFrame frame,
-            out AlphaLayer_ErrorMask errorMask)
-        {
-            return Create_Binary(
-                frame: frame,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static AlphaLayer Create_Binary(
-            MutagenFrame frame,
-            bool doMasks,
-            out AlphaLayer_ErrorMask errorMask)
+            out AlphaLayer_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -466,66 +535,77 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out AlphaLayer_ErrorMask errorMask)
+            out AlphaLayer_ErrorMask errorMask,
+            bool doMasks = true)
         {
-            errorMask = (AlphaLayer_ErrorMask)this.Write_Binary_Internal(
+            errorMask = this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as AlphaLayer_ErrorMask;
         }
 
         public virtual void Write_Binary(
             string path,
-            out AlphaLayer_ErrorMask errorMask)
+            out AlphaLayer_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
-            out AlphaLayer_ErrorMask errorMask)
+            out AlphaLayer_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
-            out BaseLayer_ErrorMask errorMask)
+            out BaseLayer_ErrorMask errorMask,
+            bool doMasks = true)
         {
             Write_Binary(
                 writer: writer,
-                errorMask: out AlphaLayer_ErrorMask errMask);
+                errorMask: out AlphaLayer_ErrorMask errMask,
+                doMasks: doMasks);
             errorMask = errMask;
         }
 
         public override void Write_Binary(
             string path,
-            out BaseLayer_ErrorMask errorMask)
+            out BaseLayer_ErrorMask errorMask,
+            bool doMasks = true)
         {
             Write_Binary(
                 path: path,
-                errorMask: out AlphaLayer_ErrorMask errMask);
+                errorMask: out AlphaLayer_ErrorMask errMask,
+                doMasks: doMasks);
             errorMask = errMask;
         }
 
         public override void Write_Binary(
             Stream stream,
-            out BaseLayer_ErrorMask errorMask)
+            out BaseLayer_ErrorMask errorMask,
+            bool doMasks = true)
         {
             Write_Binary(
                 stream: stream,
-                errorMask: out AlphaLayer_ErrorMask errMask);
+                errorMask: out AlphaLayer_ErrorMask errMask,
+                doMasks: doMasks);
             errorMask = errMask;
         }
 
@@ -1177,7 +1257,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IAlphaLayerGetter item,
             bool doMasks,
             out AlphaLayer_ErrorMask errorMask,
@@ -1185,7 +1265,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             AlphaLayer_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new AlphaLayer_ErrorMask()) : default(Func<AlphaLayer_ErrorMask>));
@@ -1193,28 +1273,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IAlphaLayerGetter item,
             Func<AlphaLayer_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.AlphaLayer"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.AlphaLayer");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.AlphaLayer");
-                    }
-                    if (item.AlphaLayerData_Property.HasBeenSet)
-                    {
-                        ByteArrayXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.AlphaLayerData),
-                            item: item.AlphaLayerData_Property,
-                            fieldIndex: (int)AlphaLayer_FieldIndex.AlphaLayerData,
-                            errorMask: errorMask);
-                    }
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.AlphaLayer");
+                }
+                if (item.AlphaLayerData_Property.HasBeenSet)
+                {
+                    ByteArrayXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.AlphaLayerData),
+                        item: item.AlphaLayerData_Property,
+                        fieldIndex: (int)AlphaLayer_FieldIndex.AlphaLayerData,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)
@@ -1404,6 +1483,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            AlphaLayer_FieldIndex enu = (AlphaLayer_FieldIndex)index;
+            switch (enu)
+            {
+                case AlphaLayer_FieldIndex.AlphaLayerData:
+                    return AlphaLayerData;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             AlphaLayer_FieldIndex enu = (AlphaLayer_FieldIndex)index;

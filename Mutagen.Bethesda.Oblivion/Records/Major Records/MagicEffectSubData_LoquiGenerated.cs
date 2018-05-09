@@ -165,13 +165,13 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(MagicEffectSubData rhs)
         {
             if (rhs == null) return false;
-            if (EnchantEffect != rhs.EnchantEffect) return false;
-            if (CastingSound != rhs.CastingSound) return false;
-            if (BoltSound != rhs.BoltSound) return false;
-            if (HitSound != rhs.HitSound) return false;
-            if (AreaSound != rhs.AreaSound) return false;
-            if (ConstantEffectEnchantmentFactor != rhs.ConstantEffectEnchantmentFactor) return false;
-            if (ConstantEffectBarterFactor != rhs.ConstantEffectBarterFactor) return false;
+            if (!this.EnchantEffect_Property.Equals(rhs.EnchantEffect_Property)) return false;
+            if (!this.CastingSound_Property.Equals(rhs.CastingSound_Property)) return false;
+            if (!this.BoltSound_Property.Equals(rhs.BoltSound_Property)) return false;
+            if (!this.HitSound_Property.Equals(rhs.HitSound_Property)) return false;
+            if (!this.AreaSound_Property.Equals(rhs.AreaSound_Property)) return false;
+            if (!this.ConstantEffectEnchantmentFactor.EqualsWithin(rhs.ConstantEffectEnchantmentFactor)) return false;
+            if (!this.ConstantEffectBarterFactor.EqualsWithin(rhs.ConstantEffectBarterFactor)) return false;
             return true;
         }
 

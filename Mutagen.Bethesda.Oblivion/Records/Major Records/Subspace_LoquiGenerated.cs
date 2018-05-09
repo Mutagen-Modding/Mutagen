@@ -143,9 +143,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (X != rhs.X) return false;
-            if (Y != rhs.Y) return false;
-            if (Z != rhs.Z) return false;
+            if (!this.X.EqualsWithin(rhs.X)) return false;
+            if (!this.Y.EqualsWithin(rhs.Y)) return false;
+            if (!this.Z.EqualsWithin(rhs.Z)) return false;
             return true;
         }
 

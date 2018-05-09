@@ -137,12 +137,12 @@ namespace Mutagen.Bethesda.Oblivion
             if (SoundType_Property.HasBeenSet != rhs.SoundType_Property.HasBeenSet) return false;
             if (SoundType_Property.HasBeenSet)
             {
-                if (SoundType != rhs.SoundType) return false;
+                if (this.SoundType != rhs.SoundType) return false;
             }
             if (Sounds.HasBeenSet != rhs.Sounds.HasBeenSet) return false;
             if (Sounds.HasBeenSet)
             {
-                if (!Sounds.SequenceEqual(rhs.Sounds)) return false;
+                if (!this.Sounds.SequenceEqual(rhs.Sounds)) return false;
             }
             return true;
         }

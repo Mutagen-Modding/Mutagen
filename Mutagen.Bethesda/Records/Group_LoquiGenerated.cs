@@ -157,13 +157,13 @@ namespace Mutagen.Bethesda
         public bool Equals(Group<T> rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(ContainedRecordType, rhs.ContainedRecordType)) return false;
-            if (GroupType != rhs.GroupType) return false;
-            if (!LastModified.EqualsFast(rhs.LastModified)) return false;
+            if (!object.Equals(this.ContainedRecordType, rhs.ContainedRecordType)) return false;
+            if (this.GroupType != rhs.GroupType) return false;
+            if (!this.LastModified.EqualsFast(rhs.LastModified)) return false;
             if (Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
             if (Items.HasBeenSet)
             {
-                if (!Items.SequenceEqual(rhs.Items)) return false;
+                if (!this.Items.SequenceEqual(rhs.Items)) return false;
             }
             return true;
         }
@@ -189,20 +189,8 @@ namespace Mutagen.Bethesda
         [DebuggerStepThrough]
         public static Group<T> Create_XML<T_ErrMask>(
             XElement root,
-            out Group_ErrorMask<T_ErrMask> errorMask)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static Group<T> Create_XML<T_ErrMask>(
-            XElement root,
-            bool doMasks,
-            out Group_ErrorMask<T_ErrMask> errorMask)
+            out Group_ErrorMask<T_ErrMask> errorMask,
+            bool doMasks = true)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
             var ret = Create_XML<T_ErrMask>(
@@ -249,60 +237,103 @@ namespace Mutagen.Bethesda
 
         #endregion
 
+        #region XML Copy In
+        public virtual void CopyIn_XML<T_ErrMask>(
+            XElement root,
+            out Group_ErrorMask<T_ErrMask> errorMask,
+            NotifyingFireParameters cmds = null)
+            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+        {
+            LoquiXmlTranslation<Group<T>, Group_ErrorMask<T_ErrMask>>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML<T_ErrMask>(
+            string path,
+            out Group_ErrorMask<T_ErrMask> errorMask,
+            NotifyingFireParameters cmds = null)
+            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML<T_ErrMask>(
+            Stream stream,
+            out Group_ErrorMask<T_ErrMask> errorMask,
+            NotifyingFireParameters cmds = null)
+            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML<T_ErrMask>(
-            XmlWriter writer,
+            XElement node,
             out Group_ErrorMask<T_ErrMask> errorMask,
+            bool doMasks = true,
             string name = null)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
-            errorMask = (Group_ErrorMask<T_ErrMask>)this.Write_XML_Internal<T_ErrMask>(
-                writer: writer,
+            errorMask = this.Write_XML_Internal<T_ErrMask>(
+                node: node,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as Group_ErrorMask<T_ErrMask>;
         }
 
         public virtual void Write_XML<T_ErrMask>(
             string path,
             out Group_ErrorMask<T_ErrMask> errorMask,
+            bool doMasks = true,
             string name = null)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML<T_ErrMask>(
             Stream stream,
             out Group_ErrorMask<T_ErrMask> errorMask,
+            bool doMasks = true,
             string name = null)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public void Write_XML<T_ErrMask>(
-            XmlWriter writer,
+            XElement node,
             string name = null)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
             this.Write_XML_Internal<T_ErrMask>(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -312,14 +343,11 @@ namespace Mutagen.Bethesda
             string name = null)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML<T_ErrMask>(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML<T_ErrMask>(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public void Write_XML<T_ErrMask>(
@@ -327,18 +355,15 @@ namespace Mutagen.Bethesda
             string name = null)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML<T_ErrMask>(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML<T_ErrMask>(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected object Write_XML_Internal<T_ErrMask>(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
@@ -346,7 +371,7 @@ namespace Mutagen.Bethesda
             GroupCommon.Write_XML<T, T_ErrMask>(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -447,20 +472,8 @@ namespace Mutagen.Bethesda
         [DebuggerStepThrough]
         public static Group<T> Create_Binary<T_ErrMask>(
             MutagenFrame frame,
-            out Group_ErrorMask<T_ErrMask> errorMask)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-        {
-            return Create_Binary(
-                frame: frame,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static Group<T> Create_Binary<T_ErrMask>(
-            MutagenFrame frame,
-            bool doMasks,
-            out Group_ErrorMask<T_ErrMask> errorMask)
+            out Group_ErrorMask<T_ErrMask> errorMask,
+            bool doMasks = true)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
             var ret = Create_Binary<T_ErrMask>(
@@ -519,38 +532,43 @@ namespace Mutagen.Bethesda
         #region Binary Write
         public virtual void Write_Binary<T_ErrMask>(
             MutagenWriter writer,
-            out Group_ErrorMask<T_ErrMask> errorMask)
+            out Group_ErrorMask<T_ErrMask> errorMask,
+            bool doMasks = true)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
-            errorMask = (Group_ErrorMask<T_ErrMask>)this.Write_Binary_Internal<T_ErrMask>(
+            errorMask = this.Write_Binary_Internal<T_ErrMask>(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as Group_ErrorMask<T_ErrMask>;
         }
 
         public virtual void Write_Binary<T_ErrMask>(
             string path,
-            out Group_ErrorMask<T_ErrMask> errorMask)
+            out Group_ErrorMask<T_ErrMask> errorMask,
+            bool doMasks = true)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary<T_ErrMask>(
             Stream stream,
-            out Group_ErrorMask<T_ErrMask> errorMask)
+            out Group_ErrorMask<T_ErrMask> errorMask,
+            bool doMasks = true)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -1497,7 +1515,7 @@ namespace Mutagen.Bethesda.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML<T, T_ErrMask>(
-            XmlWriter writer,
+            XElement node,
             IGroupGetter<T> item,
             bool doMasks,
             out Group_ErrorMask<T_ErrMask> errorMask,
@@ -1507,7 +1525,7 @@ namespace Mutagen.Bethesda.Internals
         {
             Group_ErrorMask<T_ErrMask> errMaskRet = null;
             Write_XML_Internal<T, T_ErrMask>(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Group_ErrorMask<T_ErrMask>()) : default(Func<Group_ErrorMask<T_ErrMask>>));
@@ -1515,7 +1533,7 @@ namespace Mutagen.Bethesda.Internals
         }
 
         private static void Write_XML_Internal<T, T_ErrMask>(
-            XmlWriter writer,
+            XElement node,
             IGroupGetter<T> item,
             Func<Group_ErrorMask<T_ErrMask>> errorMask,
             string name = null)
@@ -1524,43 +1542,42 @@ namespace Mutagen.Bethesda.Internals
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Group"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Group");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Group");
-                    }
-                    EnumXmlTranslation<GroupTypeEnum>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.GroupType),
-                        item: item.GroupType_Property,
-                        fieldIndex: (int)Group_FieldIndex.GroupType,
-                        errorMask: errorMask);
-                    ByteArrayXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.LastModified),
-                        item: item.LastModified_Property,
-                        fieldIndex: (int)Group_FieldIndex.LastModified,
-                        errorMask: errorMask);
-                    if (item.Items.HasBeenSet)
-                    {
-                        KeyedDictXmlTranslation<FormID, T, MaskItem<Exception, T_ErrMask>>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Items),
-                            items: item.Items.Values,
-                            fieldIndex: (int)Group_FieldIndex.Items,
-                            errorMask: errorMask,
-                            valTransl: (T subItem, bool dictDoMask, out MaskItem<Exception, T_ErrMask> dictSubMask) =>
-                            {
-                                LoquiXmlTranslation<T, T_ErrMask>.Instance.Write(
-                                    writer: writer,
-                                    item: subItem,
-                                    name: "Item",
-                                    doMasks: dictDoMask,
-                                    errorMask: out dictSubMask);
-                            }
-                            );
-                    }
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Group");
+                }
+                EnumXmlTranslation<GroupTypeEnum>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.GroupType),
+                    item: item.GroupType_Property,
+                    fieldIndex: (int)Group_FieldIndex.GroupType,
+                    errorMask: errorMask);
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.LastModified),
+                    item: item.LastModified_Property,
+                    fieldIndex: (int)Group_FieldIndex.LastModified,
+                    errorMask: errorMask);
+                if (item.Items.HasBeenSet)
+                {
+                    KeyedDictXmlTranslation<FormID, T, MaskItem<Exception, T_ErrMask>>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Items),
+                        items: item.Items.Values,
+                        fieldIndex: (int)Group_FieldIndex.Items,
+                        errorMask: errorMask,
+                        valTransl: (XElement subNode, T subItem, bool dictDoMask, out MaskItem<Exception, T_ErrMask> dictSubMask) =>
+                        {
+                            LoquiXmlTranslation<T, T_ErrMask>.Instance.Write(
+                                node: subNode,
+                                item: subItem,
+                                name: "Item",
+                                doMasks: dictDoMask,
+                                errorMask: out dictSubMask);
+                        }
+                        );
                 }
             }
             catch (Exception ex)
@@ -1665,10 +1682,10 @@ namespace Mutagen.Bethesda.Internals
                 item: item.Items.Values,
                 fieldIndex: (int)Group_FieldIndex.Items,
                 errorMask: errorMask,
-                transl: (T subItem, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
+                transl: (MutagenWriter subWriter, T subItem, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
                 {
                     LoquiBinaryTranslation<T, T_ErrMask>.Instance.Write(
-                        writer: writer,
+                        writer: subWriter,
                         item: subItem,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask);
@@ -1888,6 +1905,24 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            Group_FieldIndex enu = (Group_FieldIndex)index;
+            switch (enu)
+            {
+                case Group_FieldIndex.ContainedRecordType:
+                    return ContainedRecordType;
+                case Group_FieldIndex.GroupType:
+                    return GroupType;
+                case Group_FieldIndex.LastModified:
+                    return LastModified;
+                case Group_FieldIndex.Items:
+                    return Items;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             Group_FieldIndex enu = (Group_FieldIndex)index;

@@ -132,12 +132,12 @@ namespace Mutagen.Bethesda
             if (Master_Property.HasBeenSet != rhs.Master_Property.HasBeenSet) return false;
             if (Master_Property.HasBeenSet)
             {
-                if (!object.Equals(Master, rhs.Master)) return false;
+                if (!object.Equals(this.Master, rhs.Master)) return false;
             }
             if (FileSize_Property.HasBeenSet != rhs.FileSize_Property.HasBeenSet) return false;
             if (FileSize_Property.HasBeenSet)
             {
-                if (FileSize != rhs.FileSize) return false;
+                if (this.FileSize != rhs.FileSize) return false;
             }
             return true;
         }

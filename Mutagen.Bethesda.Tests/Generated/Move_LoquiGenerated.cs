@@ -104,8 +104,8 @@ namespace Mutagen.Bethesda.Tests
         public bool Equals(Move rhs)
         {
             if (rhs == null) return false;
-            if (SectionToMove != rhs.SectionToMove) return false;
-            if (LocationToMove != rhs.LocationToMove) return false;
+            if (this.SectionToMove != rhs.SectionToMove) return false;
+            if (this.LocationToMove != rhs.LocationToMove) return false;
             return true;
         }
 

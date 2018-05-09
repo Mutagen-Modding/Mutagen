@@ -122,8 +122,8 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(Relation rhs)
         {
             if (rhs == null) return false;
-            if (Faction != rhs.Faction) return false;
-            if (Modifier != rhs.Modifier) return false;
+            if (!this.Faction_Property.Equals(rhs.Faction_Property)) return false;
+            if (this.Modifier != rhs.Modifier) return false;
             return true;
         }
 

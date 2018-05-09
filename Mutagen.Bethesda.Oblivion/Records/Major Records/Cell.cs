@@ -255,10 +255,10 @@ namespace Mutagen.Bethesda.Oblivion
                             item: obj.Persistent,
                             fieldIndex: (int)Cell_FieldIndex.Persistent,
                             errorMask: errorMask,
-                            transl: (Placed subItem, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
+                            transl: (MutagenWriter subWriter, Placed subItem, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
                             {
                                 LoquiBinaryTranslation<Placed, Placed_ErrorMask>.Instance.Write(
-                                    writer: writer,
+                                    writer: subWriter,
                                     item: subItem,
                                     doMasks: listDoMasks,
                                     errorMask: out listSubMask);
@@ -302,10 +302,10 @@ namespace Mutagen.Bethesda.Oblivion
                             item: obj.Temporary,
                             fieldIndex: (int)Cell_FieldIndex.Temporary,
                             errorMask: errorMask,
-                            transl: (Placed subItem, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
+                            transl: (MutagenWriter subWriter, Placed subItem, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
                             {
                                 LoquiBinaryTranslation<Placed, Placed_ErrorMask>.Instance.Write(
-                                    writer: writer,
+                                    writer: subWriter,
                                     item: subItem,
                                     doMasks: listDoMasks,
                                     errorMask: out listSubMask);
@@ -331,10 +331,10 @@ namespace Mutagen.Bethesda.Oblivion
                             item: obj.VisibleWhenDistant,
                             fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistant,
                             errorMask: errorMask,
-                            transl: (Placed subItem, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
+                            transl: (MutagenWriter subWriter, Placed subItem, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
                             {
                                 LoquiBinaryTranslation<Placed, Placed_ErrorMask>.Instance.Write(
-                                    writer: writer,
+                                    writer: subWriter,
                                     item: subItem,
                                     doMasks: listDoMasks,
                                     errorMask: out listSubMask);

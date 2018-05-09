@@ -301,32 +301,32 @@ namespace Mutagen.Bethesda.Oblivion
             if (Description_Property.HasBeenSet != rhs.Description_Property.HasBeenSet) return false;
             if (Description_Property.HasBeenSet)
             {
-                if (!object.Equals(Description, rhs.Description)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
             }
             if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
             if (Icon_Property.HasBeenSet)
             {
-                if (!object.Equals(Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
             }
             if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
             if (Model_Property.HasBeenSet)
             {
-                if (!object.Equals(Model, rhs.Model)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
             }
-            if (Flags != rhs.Flags) return false;
-            if (BaseCost != rhs.BaseCost) return false;
-            if (!Unused.EqualsFast(rhs.Unused)) return false;
-            if (MagicSchool != rhs.MagicSchool) return false;
-            if (Resistance != rhs.Resistance) return false;
-            if (CounterEffectCount != rhs.CounterEffectCount) return false;
-            if (Light != rhs.Light) return false;
-            if (ProjectileSpeed != rhs.ProjectileSpeed) return false;
-            if (EffectShader != rhs.EffectShader) return false;
-            if (!object.Equals(SubData, rhs.SubData)) return false;
+            if (this.Flags != rhs.Flags) return false;
+            if (!this.BaseCost.EqualsWithin(rhs.BaseCost)) return false;
+            if (!this.Unused.EqualsFast(rhs.Unused)) return false;
+            if (this.MagicSchool != rhs.MagicSchool) return false;
+            if (this.Resistance != rhs.Resistance) return false;
+            if (this.CounterEffectCount != rhs.CounterEffectCount) return false;
+            if (!this.Light_Property.Equals(rhs.Light_Property)) return false;
+            if (!this.ProjectileSpeed.EqualsWithin(rhs.ProjectileSpeed)) return false;
+            if (!this.EffectShader_Property.Equals(rhs.EffectShader_Property)) return false;
+            if (!object.Equals(this.SubData, rhs.SubData)) return false;
             if (CounterEffects.HasBeenSet != rhs.CounterEffects.HasBeenSet) return false;
             if (CounterEffects.HasBeenSet)
             {
-                if (!CounterEffects.SequenceEqual(rhs.CounterEffects)) return false;
+                if (!this.CounterEffects.SequenceEqual(rhs.CounterEffects)) return false;
             }
             return true;
         }

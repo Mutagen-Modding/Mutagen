@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (Data_Property.HasBeenSet != rhs.Data_Property.HasBeenSet) return false;
             if (Data_Property.HasBeenSet)
             {
-                if (Data != rhs.Data) return false;
+                if (!this.Data.EqualsWithin(rhs.Data)) return false;
             }
             return true;
         }

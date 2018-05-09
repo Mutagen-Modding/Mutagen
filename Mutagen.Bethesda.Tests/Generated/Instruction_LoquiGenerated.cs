@@ -207,12 +207,12 @@ namespace Mutagen.Bethesda.Tests
         public bool Equals(Instruction rhs)
         {
             if (rhs == null) return false;
-            if (!Moves.SequenceEqual(rhs.Moves)) return false;
-            if (!Substitutions.SequenceEqual(rhs.Substitutions)) return false;
-            if (!Additions.SequenceEqual(rhs.Additions)) return false;
-            if (!SkipSourceSections.SequenceEqual(rhs.SkipSourceSections)) return false;
-            if (!SkipOutputSections.SequenceEqual(rhs.SkipOutputSections)) return false;
-            if (!IgnoreDifferenceSections.SequenceEqual(rhs.IgnoreDifferenceSections)) return false;
+            if (!this.Moves.SequenceEqual(rhs.Moves)) return false;
+            if (!this.Substitutions.SequenceEqual(rhs.Substitutions)) return false;
+            if (!this.Additions.SequenceEqual(rhs.Additions)) return false;
+            if (!this.SkipSourceSections.SequenceEqual(rhs.SkipSourceSections)) return false;
+            if (!this.SkipOutputSections.SequenceEqual(rhs.SkipOutputSections)) return false;
+            if (!this.IgnoreDifferenceSections.SequenceEqual(rhs.IgnoreDifferenceSections)) return false;
             return true;
         }
 

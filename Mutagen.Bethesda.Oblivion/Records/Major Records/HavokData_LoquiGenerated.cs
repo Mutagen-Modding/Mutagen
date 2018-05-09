@@ -145,9 +145,9 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(HavokData rhs)
         {
             if (rhs == null) return false;
-            if (Material != rhs.Material) return false;
-            if (Friction != rhs.Friction) return false;
-            if (Restitution != rhs.Restitution) return false;
+            if (this.Material != rhs.Material) return false;
+            if (this.Friction != rhs.Friction) return false;
+            if (this.Restitution != rhs.Restitution) return false;
             return true;
         }
 

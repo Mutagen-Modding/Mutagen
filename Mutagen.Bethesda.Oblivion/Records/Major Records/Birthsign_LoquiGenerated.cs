@@ -149,17 +149,17 @@ namespace Mutagen.Bethesda.Oblivion
             if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
             if (Icon_Property.HasBeenSet)
             {
-                if (!object.Equals(Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
             }
             if (Description_Property.HasBeenSet != rhs.Description_Property.HasBeenSet) return false;
             if (Description_Property.HasBeenSet)
             {
-                if (!object.Equals(Description, rhs.Description)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
             }
             if (Spells.HasBeenSet != rhs.Spells.HasBeenSet) return false;
             if (Spells.HasBeenSet)
             {
-                if (!Spells.SequenceEqual(rhs.Spells)) return false;
+                if (!this.Spells.SequenceEqual(rhs.Spells)) return false;
             }
             return true;
         }

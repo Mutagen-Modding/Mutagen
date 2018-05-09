@@ -151,17 +151,17 @@ namespace Mutagen.Bethesda.Oblivion
             if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
             if (Flags_Property.HasBeenSet)
             {
-                if (Flags != rhs.Flags) return false;
+                if (this.Flags != rhs.Flags) return false;
             }
             if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
             if (Name_Property.HasBeenSet)
             {
-                if (!object.Equals(Name, rhs.Name)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
             }
             if (Types.HasBeenSet != rhs.Types.HasBeenSet) return false;
             if (Types.HasBeenSet)
             {
-                if (!Types.SequenceEqual(rhs.Types)) return false;
+                if (!this.Types.SequenceEqual(rhs.Types)) return false;
             }
             return true;
         }
@@ -201,19 +201,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static MapMarker Create_XML(
             XElement root,
-            out MapMarker_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static MapMarker Create_XML(
-            XElement root,
-            bool doMasks,
-            out MapMarker_ErrorMask errorMask)
+            out MapMarker_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_XML(
                 root: root,
@@ -268,56 +257,129 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region XML Copy In
+        public void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<MapMarker, MapMarker_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out MapMarker_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<MapMarker, MapMarker_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out MapMarker_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out MapMarker_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out MapMarker_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (MapMarker_ErrorMask)this.Write_XML_Internal(
-                writer: writer,
+            errorMask = this.Write_XML_Internal(
+                node: node,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as MapMarker_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out MapMarker_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             out MapMarker_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -326,39 +388,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             MapMarkerCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -445,19 +501,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static MapMarker Create_Binary(
             MutagenFrame frame,
-            out MapMarker_ErrorMask errorMask)
-        {
-            return Create_Binary(
-                frame: frame,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static MapMarker Create_Binary(
-            MutagenFrame frame,
-            bool doMasks,
-            out MapMarker_ErrorMask errorMask)
+            out MapMarker_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -530,35 +575,40 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out MapMarker_ErrorMask errorMask)
+            out MapMarker_ErrorMask errorMask,
+            bool doMasks = true)
         {
-            errorMask = (MapMarker_ErrorMask)this.Write_Binary_Internal(
+            errorMask = this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as MapMarker_ErrorMask;
         }
 
         public virtual void Write_Binary(
             string path,
-            out MapMarker_ErrorMask errorMask)
+            out MapMarker_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
-            out MapMarker_ErrorMask errorMask)
+            out MapMarker_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -671,6 +721,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var NametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)MapMarker_FieldIndex.Name,
+                        parseWhole: true,
                         errorMask: errorMask);
                     item._Name.SetIfSucceeded(NametryGet);
                     return TryGet<MapMarker_FieldIndex?>.Succeed(MapMarker_FieldIndex.Name);
@@ -1405,7 +1456,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IMapMarkerGetter item,
             bool doMasks,
             out MapMarker_ErrorMask errorMask,
@@ -1413,7 +1464,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             MapMarker_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MapMarker_ErrorMask()) : default(Func<MapMarker_ErrorMask>));
@@ -1421,56 +1472,55 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IMapMarkerGetter item,
             Func<MapMarker_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.MapMarker"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.MapMarker");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.MapMarker");
-                    }
-                    if (item.Flags_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<MapMarker.Flag>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Flags),
-                            item: item.Flags_Property,
-                            fieldIndex: (int)MapMarker_FieldIndex.Flags,
-                            errorMask: errorMask);
-                    }
-                    if (item.Name_Property.HasBeenSet)
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Name),
-                            item: item.Name_Property,
-                            fieldIndex: (int)MapMarker_FieldIndex.Name,
-                            errorMask: errorMask);
-                    }
-                    if (item.Types.HasBeenSet)
-                    {
-                        ListXmlTranslation<MapMarker.Type, Exception>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Types),
-                            item: item.Types,
-                            fieldIndex: (int)MapMarker_FieldIndex.Types,
-                            errorMask: errorMask,
-                            transl: (MapMarker.Type subItem, bool listDoMasks, out Exception listSubMask) =>
-                            {
-                                EnumXmlTranslation<MapMarker.Type>.Instance.Write(
-                                    writer: writer,
-                                    name: "Item",
-                                    item: subItem,
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.MapMarker");
+                }
+                if (item.Flags_Property.HasBeenSet)
+                {
+                    EnumXmlTranslation<MapMarker.Flag>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Flags),
+                        item: item.Flags_Property,
+                        fieldIndex: (int)MapMarker_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
+                if (item.Name_Property.HasBeenSet)
+                {
+                    StringXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Name),
+                        item: item.Name_Property,
+                        fieldIndex: (int)MapMarker_FieldIndex.Name,
+                        errorMask: errorMask);
+                }
+                if (item.Types.HasBeenSet)
+                {
+                    ListXmlTranslation<MapMarker.Type, Exception>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Types),
+                        item: item.Types,
+                        fieldIndex: (int)MapMarker_FieldIndex.Types,
+                        errorMask: errorMask,
+                        transl: (XElement subNode, MapMarker.Type subItem, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            EnumXmlTranslation<MapMarker.Type>.Instance.Write(
+                                node: subNode,
+                                name: "Item",
+                                item: subItem,
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
                 }
             }
             catch (Exception ex)
@@ -1550,10 +1600,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fieldIndex: (int)MapMarker_FieldIndex.Types,
                 recordType: MapMarker_Registration.TNAM_HEADER,
                 errorMask: errorMask,
-                transl: (MapMarker.Type subItem, bool listDoMasks, out Exception listSubMask) =>
+                transl: (MutagenWriter subWriter, MapMarker.Type subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Type>.Instance.Write(
-                        writer,
+                        subWriter,
                         subItem,
                         length: 2,
                         doMasks: listDoMasks,
@@ -1756,6 +1806,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public object GetNthMask(int index)
+        {
+            MapMarker_FieldIndex enu = (MapMarker_FieldIndex)index;
+            switch (enu)
+            {
+                case MapMarker_FieldIndex.Flags:
+                    return Flags;
+                case MapMarker_FieldIndex.Name:
+                    return Name;
+                case MapMarker_FieldIndex.Types:
+                    return Types;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
         public void SetNthException(int index, Exception ex)
         {
             MapMarker_FieldIndex enu = (MapMarker_FieldIndex)index;

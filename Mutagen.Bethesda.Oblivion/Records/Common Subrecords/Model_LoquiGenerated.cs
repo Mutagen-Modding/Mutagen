@@ -144,12 +144,12 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(Model rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(File, rhs.File)) return false;
-            if (BoundRadius != rhs.BoundRadius) return false;
+            if (!object.Equals(this.File, rhs.File)) return false;
+            if (!this.BoundRadius.EqualsWithin(rhs.BoundRadius)) return false;
             if (Hashes_Property.HasBeenSet != rhs.Hashes_Property.HasBeenSet) return false;
             if (Hashes_Property.HasBeenSet)
             {
-                if (!Hashes.EqualsFast(rhs.Hashes)) return false;
+                if (!this.Hashes.EqualsFast(rhs.Hashes)) return false;
             }
             return true;
         }

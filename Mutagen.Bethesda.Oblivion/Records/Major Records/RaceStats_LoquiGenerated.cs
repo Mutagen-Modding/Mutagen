@@ -220,14 +220,14 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(RaceStats rhs)
         {
             if (rhs == null) return false;
-            if (Strength != rhs.Strength) return false;
-            if (Intelligence != rhs.Intelligence) return false;
-            if (Willpower != rhs.Willpower) return false;
-            if (Agility != rhs.Agility) return false;
-            if (Speed != rhs.Speed) return false;
-            if (Endurance != rhs.Endurance) return false;
-            if (Personality != rhs.Personality) return false;
-            if (Luck != rhs.Luck) return false;
+            if (this.Strength != rhs.Strength) return false;
+            if (this.Intelligence != rhs.Intelligence) return false;
+            if (this.Willpower != rhs.Willpower) return false;
+            if (this.Agility != rhs.Agility) return false;
+            if (this.Speed != rhs.Speed) return false;
+            if (this.Endurance != rhs.Endurance) return false;
+            if (this.Personality != rhs.Personality) return false;
+            if (this.Luck != rhs.Luck) return false;
             return true;
         }
 

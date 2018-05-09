@@ -168,22 +168,22 @@ namespace Mutagen.Bethesda.Oblivion
             if (Relations.HasBeenSet != rhs.Relations.HasBeenSet) return false;
             if (Relations.HasBeenSet)
             {
-                if (!Relations.SequenceEqual(rhs.Relations)) return false;
+                if (!this.Relations.SequenceEqual(rhs.Relations)) return false;
             }
             if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
             if (Flags_Property.HasBeenSet)
             {
-                if (Flags != rhs.Flags) return false;
+                if (this.Flags != rhs.Flags) return false;
             }
             if (CrimeGoldMultiplier_Property.HasBeenSet != rhs.CrimeGoldMultiplier_Property.HasBeenSet) return false;
             if (CrimeGoldMultiplier_Property.HasBeenSet)
             {
-                if (CrimeGoldMultiplier != rhs.CrimeGoldMultiplier) return false;
+                if (!this.CrimeGoldMultiplier.EqualsWithin(rhs.CrimeGoldMultiplier)) return false;
             }
             if (Ranks.HasBeenSet != rhs.Ranks.HasBeenSet) return false;
             if (Ranks.HasBeenSet)
             {
-                if (!Ranks.SequenceEqual(rhs.Ranks)) return false;
+                if (!this.Ranks.SequenceEqual(rhs.Ranks)) return false;
             }
             return true;
         }

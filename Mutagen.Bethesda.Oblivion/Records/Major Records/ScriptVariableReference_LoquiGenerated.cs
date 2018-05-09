@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (VariableIndex != rhs.VariableIndex) return false;
+            if (this.VariableIndex != rhs.VariableIndex) return false;
             return true;
         }
 

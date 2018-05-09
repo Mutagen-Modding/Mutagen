@@ -229,7 +229,7 @@ namespace Mutagen.Bethesda.Generation
                                 targetGen: list.SubTypeGeneration,
                                 typeGen: list.SubTypeGeneration,
                                 readerAccessor: "r",
-                                squashedRepeatedList: listBinaryType == ListBinaryType.Frame,
+                                squashedRepeatedList: listBinaryType == ListBinaryType.Trigger,
                                 retAccessor: new Accessor("return "),
                                 doMaskAccessor: "listDoMasks",
                                 maskAccessor: "listSubMask");
@@ -257,7 +257,7 @@ namespace Mutagen.Bethesda.Generation
                                             targetGen: list.SubTypeGeneration,
                                             typeGen: item.Value,
                                             readerAccessor: "r",
-                                            squashedRepeatedList: listBinaryType == ListBinaryType.Frame,
+                                            squashedRepeatedList: listBinaryType == ListBinaryType.Trigger,
                                             retAccessor: new Accessor("ret = "),
                                             doMaskAccessor: "listDoMasks",
                                             maskAccessor: $"var {submaskName}");

@@ -215,36 +215,36 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(TES4 rhs)
         {
             if (rhs == null) return false;
-            if (!Fluff.EqualsFast(rhs.Fluff)) return false;
+            if (!this.Fluff.EqualsFast(rhs.Fluff)) return false;
             if (Header_Property.HasBeenSet != rhs.Header_Property.HasBeenSet) return false;
             if (Header_Property.HasBeenSet)
             {
-                if (!object.Equals(Header, rhs.Header)) return false;
+                if (!object.Equals(this.Header, rhs.Header)) return false;
             }
             if (TypeOffsets_Property.HasBeenSet != rhs.TypeOffsets_Property.HasBeenSet) return false;
             if (TypeOffsets_Property.HasBeenSet)
             {
-                if (!TypeOffsets.EqualsFast(rhs.TypeOffsets)) return false;
+                if (!this.TypeOffsets.EqualsFast(rhs.TypeOffsets)) return false;
             }
             if (Deleted_Property.HasBeenSet != rhs.Deleted_Property.HasBeenSet) return false;
             if (Deleted_Property.HasBeenSet)
             {
-                if (!Deleted.EqualsFast(rhs.Deleted)) return false;
+                if (!this.Deleted.EqualsFast(rhs.Deleted)) return false;
             }
             if (Author_Property.HasBeenSet != rhs.Author_Property.HasBeenSet) return false;
             if (Author_Property.HasBeenSet)
             {
-                if (!object.Equals(Author, rhs.Author)) return false;
+                if (!object.Equals(this.Author, rhs.Author)) return false;
             }
             if (Description_Property.HasBeenSet != rhs.Description_Property.HasBeenSet) return false;
             if (Description_Property.HasBeenSet)
             {
-                if (!object.Equals(Description, rhs.Description)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
             }
             if (MasterReferences.HasBeenSet != rhs.MasterReferences.HasBeenSet) return false;
             if (MasterReferences.HasBeenSet)
             {
-                if (!MasterReferences.SequenceEqual(rhs.MasterReferences)) return false;
+                if (!this.MasterReferences.SequenceEqual(rhs.MasterReferences)) return false;
             }
             return true;
         }

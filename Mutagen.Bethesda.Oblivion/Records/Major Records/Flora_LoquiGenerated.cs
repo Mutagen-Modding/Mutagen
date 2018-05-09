@@ -189,22 +189,22 @@ namespace Mutagen.Bethesda.Oblivion
             if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
             if (Model_Property.HasBeenSet)
             {
-                if (!object.Equals(Model, rhs.Model)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
             }
             if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
             if (Script_Property.HasBeenSet)
             {
-                if (Script != rhs.Script) return false;
+                if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
             }
             if (Ingredient_Property.HasBeenSet != rhs.Ingredient_Property.HasBeenSet) return false;
             if (Ingredient_Property.HasBeenSet)
             {
-                if (Ingredient != rhs.Ingredient) return false;
+                if (!this.Ingredient_Property.Equals(rhs.Ingredient_Property)) return false;
             }
-            if (Spring != rhs.Spring) return false;
-            if (Summer != rhs.Summer) return false;
-            if (Fall != rhs.Fall) return false;
-            if (Winter != rhs.Winter) return false;
+            if (this.Spring != rhs.Spring) return false;
+            if (this.Summer != rhs.Summer) return false;
+            if (this.Fall != rhs.Fall) return false;
+            if (this.Winter != rhs.Winter) return false;
             return true;
         }
 

@@ -121,8 +121,8 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(RaceStatsGendered rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(Male, rhs.Male)) return false;
-            if (!object.Equals(Female, rhs.Female)) return false;
+            if (!object.Equals(this.Male, rhs.Male)) return false;
+            if (!object.Equals(this.Female, rhs.Female)) return false;
             return true;
         }
 

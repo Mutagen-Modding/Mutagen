@@ -50,11 +50,10 @@ namespace Mutagen.Bethesda.Tests
             RangeInt64 loc,
             MajorRecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
-            bool compressed,
             bool processing)
         {
-            ProcessNPC_Mismatch(rec, instr, filePath, loc, compressed, processing);
-            ProcessCreature_Mismatch(rec, instr, filePath, loc, compressed, processing);
+            ProcessNPC_Mismatch(rec, instr, filePath, loc, processing);
+            ProcessCreature_Mismatch(rec, instr, filePath, loc, processing);
             ProcessLeveledItemDataFields(rec, instr, filePath, loc, processing);
             ProcessRegions(rec, instr, filePath, loc, processing);
             ProcessPlacedObject_Mismatch(rec, instr, filePath, loc, fileLocs, lengthTracker, processing);
@@ -66,12 +65,10 @@ namespace Mutagen.Bethesda.Tests
             Instruction instr,
             string filePath,
             RangeInt64 loc,
-            bool compressed,
             bool processing)
         {
             if (!processing) return;
             if (!(rec is NPC)) return;
-            if (compressed != rec.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed)) return;
             this.DynamicMove(
                 instr,
                 filePath,
@@ -97,12 +94,10 @@ namespace Mutagen.Bethesda.Tests
             Instruction instr,
             string filePath,
             RangeInt64 loc,
-            bool compressed,
             bool processing)
         {
             if (!processing) return;
             if (!(rec is Creature)) return;
-            if (compressed != rec.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed)) return;
             this.AlignRecords(
                 instr,
                 filePath,
@@ -584,7 +579,7 @@ namespace Mutagen.Bethesda.Tests
             loc = MathExt.Min(indices) + offset;
             return true;
         }
-        
+
         public Task OblivionESM_Binary()
         {
             return OblivionESM_Binary_Internal(deleteAfter: true);
@@ -674,17 +669,17 @@ namespace Mutagen.Bethesda.Tests
         {
             using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary")), deleteAfter: deleteAfter))
             {
-                var oblivionOutputPath = Path.Combine(tmp.Dir.FullName, Constants.OBLIVION_ESM);
-                var uncompressedPath = Path.Combine(tmp.Dir.FullName, $"{Constants.OBLIVION_ESM}_Uncompressed");
-                var alignedPath = Path.Combine(tmp.Dir.FullName, $"{Constants.OBLIVION_ESM}_Aligned");
-                var processedPath = Path.Combine(tmp.Dir.FullName, $"{Constants.OBLIVION_ESM}_Processed");
+                var oblivionOutputPath = Path.Combine(tmp.Dir.Path, Constants.OBLIVION_ESM);
+                var uncompressedPath = Path.Combine(tmp.Dir.Path, $"{Constants.OBLIVION_ESM}_Uncompressed");
+                var alignedPath = Path.Combine(tmp.Dir.Path, $"{Constants.OBLIVION_ESM}_Aligned");
+                var processedPath = Path.Combine(tmp.Dir.Path, $"{Constants.OBLIVION_ESM}_Processed");
 
                 ModDecompressor.Decompress(
                     inputPath: Properties.Settings.Default.OblivionESM,
                     outputPath: uncompressedPath,
                     interest: new RecordInterest(
                         uninterestingTypes: OblivionMod.NonTypeGroups));
-                
+
                 var mod = OblivionMod.Create_Binary(
                     uncompressedPath,
                     out var inputErrMask);
@@ -732,7 +727,6 @@ namespace Mutagen.Bethesda.Tests
                         filePath: alignedPath,
                         fileLocs: alignedFileLocs,
                         lengthTracker: lengthTracker,
-                        compressed: false,
                         processing: true);
                 }
 
@@ -775,7 +769,6 @@ namespace Mutagen.Bethesda.Tests
                         filePath: processedPath,
                         fileLocs: processedFileLocs,
                         lengthTracker: null,
-                        compressed: false,
                         processing: false);
                 }
 
@@ -797,7 +790,7 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
         }
-        
+
         public async Task OblivionESM_GroupMask_Import()
         {
             var mod = OblivionMod.Create_Binary(
@@ -831,7 +824,7 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
         }
-        
+
         public async Task OblivionESM_GroupMask_Export()
         {
             var mod = OblivionMod.Create_Binary(
@@ -929,119 +922,6 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        private async Task OblivionESM_Compression(
-            OblivionMod mod,
-            BinaryProcessorInstructions instructions,
-            Task<MajorRecordLocator.FileLocations> longsTasks,
-            bool deleteAfter)
-        {
-            MajorRecordLocator.FileLocations fileLocs = await longsTasks;
-
-            using (var tmp = new TempFolder("Mutagen_Oblivion_Binary_CompressionTests", deleteAfter: deleteAfter))
-            {
-                List<Task> tasks = new List<Task>();
-                int i = 0;
-                foreach (var majorRec in mod.MajorRecords.Values)
-                {
-                    if (!majorRec.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed)) continue;
-
-                    var origPath = Path.Combine(tmp.Dir.Path, $"{i} - {majorRec.TitleString}");
-                    var outputPath = Path.Combine(tmp.Dir.Path, $"{i} - {majorRec.TitleString} - Output");
-                    i++;
-
-                    if (!instructions.CompressionInstructions.TryGetValue(majorRec.FormID, out var processorConfig))
-                    {
-                        processorConfig = new RecordInstruction()
-                        {
-                            Record = majorRec.FormID
-                        };
-                    }
-
-                    tasks.Add(
-                        Task.Run(() =>
-                        {
-                            using (var stream = new BinaryReadStream(File.OpenRead(outputPath)))
-                            {
-                                majorRec.Write_Binary(outputPath);
-
-                                if (!fileLocs.TryGetSection(majorRec.FormID, out var majorLoc))
-                                {
-                                    throw new ArgumentException($"Trying to process a compressed major record that is not in the locations dictionary: {majorRec}");
-                                }
-
-                                stream.Position = majorLoc.Min + 4;
-                                var majorLen = stream.ReadUInt32();
-                                stream.Position = majorLoc.Min;
-
-                                var memStream = new MemoryStream();
-                                using (var outputStream = new MutagenWriter(memStream, dispose: false))
-                                {
-                                    var recType = stream.ReadString(4);
-                                    using (HeaderExport.ExportRecordHeader(outputStream, new RecordType(recType)))
-                                    {
-                                        stream.Position += 4;
-                                        outputStream.Write(stream.ReadBytes(Constants.RECORD_META_LENGTH - 4));
-                                        using (var frame = MutagenFrame.ByLength(stream, majorLen))
-                                        {
-                                            using (var decomp = frame.Decompress())
-                                            {
-                                                outputStream.Write(decomp.ReadRemaining());
-                                            }
-                                        }
-                                    }
-                                }
-
-                                memStream.Position = 0;
-                                using (FileStream filewriteStream = new FileStream(origPath, FileMode.Create, FileAccess.Write))
-                                {
-                                    memStream.CopyTo(filewriteStream);
-                                }
-                                memStream.Position = 0;
-
-                                AddDynamicProcessorInstructions(
-                                    rec: majorRec,
-                                    instr: processorConfig,
-                                    filePath: origPath,
-                                    lengthTracker: null,
-                                    fileLocs: null,
-                                    loc: new RangeInt64(0, memStream.Length),
-                                    compressed: true,
-                                    processing: true);
-                                var binaryConfig = processorConfig.ToProcessorConfig();
-
-                                string sourcePath;
-                                if (binaryConfig.HasProcessing)
-                                {
-                                    sourcePath = $"{origPath} - Processed";
-                                    using (var proccessedStream = new BinaryFileProcessor(
-                                            memStream,
-                                            processorConfig.ToProcessorConfig()))
-                                    {
-                                        using (FileStream filewriteStream = new FileStream(sourcePath, FileMode.Create, FileAccess.Write))
-                                        {
-                                            proccessedStream.CopyTo(filewriteStream);
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    sourcePath = origPath;
-                                }
-                                memStream.Dispose();
-
-                                using (var sourceStream = new FileStream(sourcePath, FileMode.Open, FileAccess.Read))
-                                {
-                                    Passthrough_Tests.AssertFilesEqual(
-                                            sourceStream,
-                                            outputPath);
-                                }
-                            }
-                        }));
-                }
-                await Task.WhenAll(tasks);
-            }
-        }
-
         public async Task OblivionESM_Folder_Reimport()
         {
             var mod = OblivionMod.Create_Binary(
@@ -1079,7 +959,7 @@ namespace Mutagen.Bethesda.Tests
             //    Assert.Null(outputErrMask);
             //}
         }
-        
+
         public void OblivionESM_XML()
         {
             var modFromBinary = OblivionMod.Create_Binary(
@@ -1100,7 +980,7 @@ namespace Mutagen.Bethesda.Tests
                 Assert.Null(outputErrMask);
             }
         }
-        
+
         public void KnightsESP_XML()
         {
             var modFromBinary = OblivionMod.Create_Binary(

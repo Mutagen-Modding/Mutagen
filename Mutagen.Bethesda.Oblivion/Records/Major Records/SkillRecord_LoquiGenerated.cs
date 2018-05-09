@@ -281,42 +281,42 @@ namespace Mutagen.Bethesda.Oblivion
             if (Skill_Property.HasBeenSet != rhs.Skill_Property.HasBeenSet) return false;
             if (Skill_Property.HasBeenSet)
             {
-                if (Skill != rhs.Skill) return false;
+                if (this.Skill != rhs.Skill) return false;
             }
             if (Description_Property.HasBeenSet != rhs.Description_Property.HasBeenSet) return false;
             if (Description_Property.HasBeenSet)
             {
-                if (!object.Equals(Description, rhs.Description)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
             }
             if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
             if (Icon_Property.HasBeenSet)
             {
-                if (!object.Equals(Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
             }
-            if (Action != rhs.Action) return false;
-            if (Attribute != rhs.Attribute) return false;
-            if (Specialization != rhs.Specialization) return false;
-            if (UseValueFirst != rhs.UseValueFirst) return false;
-            if (UseValueSecond != rhs.UseValueSecond) return false;
+            if (this.Action != rhs.Action) return false;
+            if (this.Attribute != rhs.Attribute) return false;
+            if (this.Specialization != rhs.Specialization) return false;
+            if (!this.UseValueFirst.EqualsWithin(rhs.UseValueFirst)) return false;
+            if (!this.UseValueSecond.EqualsWithin(rhs.UseValueSecond)) return false;
             if (ApprenticeText_Property.HasBeenSet != rhs.ApprenticeText_Property.HasBeenSet) return false;
             if (ApprenticeText_Property.HasBeenSet)
             {
-                if (!object.Equals(ApprenticeText, rhs.ApprenticeText)) return false;
+                if (!object.Equals(this.ApprenticeText, rhs.ApprenticeText)) return false;
             }
             if (JourneymanText_Property.HasBeenSet != rhs.JourneymanText_Property.HasBeenSet) return false;
             if (JourneymanText_Property.HasBeenSet)
             {
-                if (!object.Equals(JourneymanText, rhs.JourneymanText)) return false;
+                if (!object.Equals(this.JourneymanText, rhs.JourneymanText)) return false;
             }
             if (ExpertText_Property.HasBeenSet != rhs.ExpertText_Property.HasBeenSet) return false;
             if (ExpertText_Property.HasBeenSet)
             {
-                if (!object.Equals(ExpertText, rhs.ExpertText)) return false;
+                if (!object.Equals(this.ExpertText, rhs.ExpertText)) return false;
             }
             if (MasterText_Property.HasBeenSet != rhs.MasterText_Property.HasBeenSet) return false;
             if (MasterText_Property.HasBeenSet)
             {
-                if (!object.Equals(MasterText, rhs.MasterText)) return false;
+                if (!object.Equals(this.MasterText, rhs.MasterText)) return false;
             }
             return true;
         }

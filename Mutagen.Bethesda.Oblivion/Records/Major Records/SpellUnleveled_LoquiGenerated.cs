@@ -177,14 +177,14 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Type != rhs.Type) return false;
-            if (Cost != rhs.Cost) return false;
-            if (Level != rhs.Level) return false;
-            if (Flag != rhs.Flag) return false;
+            if (this.Type != rhs.Type) return false;
+            if (this.Cost != rhs.Cost) return false;
+            if (this.Level != rhs.Level) return false;
+            if (this.Flag != rhs.Flag) return false;
             if (Effects.HasBeenSet != rhs.Effects.HasBeenSet) return false;
             if (Effects.HasBeenSet)
             {
-                if (!Effects.SequenceEqual(rhs.Effects)) return false;
+                if (!this.Effects.SequenceEqual(rhs.Effects)) return false;
             }
             return true;
         }

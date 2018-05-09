@@ -122,8 +122,8 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(WeatherSound rhs)
         {
             if (rhs == null) return false;
-            if (Sound != rhs.Sound) return false;
-            if (Type != rhs.Type) return false;
+            if (!this.Sound_Property.Equals(rhs.Sound_Property)) return false;
+            if (this.Type != rhs.Type) return false;
             return true;
         }
 

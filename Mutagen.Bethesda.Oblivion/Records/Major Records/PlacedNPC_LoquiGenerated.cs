@@ -208,40 +208,40 @@ namespace Mutagen.Bethesda.Oblivion
             if (Base_Property.HasBeenSet != rhs.Base_Property.HasBeenSet) return false;
             if (Base_Property.HasBeenSet)
             {
-                if (Base != rhs.Base) return false;
+                if (!this.Base_Property.Equals(rhs.Base_Property)) return false;
             }
             if (DistantLODData_Property.HasBeenSet != rhs.DistantLODData_Property.HasBeenSet) return false;
             if (DistantLODData_Property.HasBeenSet)
             {
-                if (!object.Equals(DistantLODData, rhs.DistantLODData)) return false;
+                if (!object.Equals(this.DistantLODData, rhs.DistantLODData)) return false;
             }
             if (EnableParent_Property.HasBeenSet != rhs.EnableParent_Property.HasBeenSet) return false;
             if (EnableParent_Property.HasBeenSet)
             {
-                if (!object.Equals(EnableParent, rhs.EnableParent)) return false;
+                if (!object.Equals(this.EnableParent, rhs.EnableParent)) return false;
             }
             if (MerchantContainer_Property.HasBeenSet != rhs.MerchantContainer_Property.HasBeenSet) return false;
             if (MerchantContainer_Property.HasBeenSet)
             {
-                if (MerchantContainer != rhs.MerchantContainer) return false;
+                if (!this.MerchantContainer_Property.Equals(rhs.MerchantContainer_Property)) return false;
             }
             if (Horse_Property.HasBeenSet != rhs.Horse_Property.HasBeenSet) return false;
             if (Horse_Property.HasBeenSet)
             {
-                if (Horse != rhs.Horse) return false;
+                if (!this.Horse_Property.Equals(rhs.Horse_Property)) return false;
             }
             if (RagdollData_Property.HasBeenSet != rhs.RagdollData_Property.HasBeenSet) return false;
             if (RagdollData_Property.HasBeenSet)
             {
-                if (!RagdollData.EqualsFast(rhs.RagdollData)) return false;
+                if (!this.RagdollData.EqualsFast(rhs.RagdollData)) return false;
             }
             if (Scale_Property.HasBeenSet != rhs.Scale_Property.HasBeenSet) return false;
             if (Scale_Property.HasBeenSet)
             {
-                if (Scale != rhs.Scale) return false;
+                if (!this.Scale.EqualsWithin(rhs.Scale)) return false;
             }
-            if (Position != rhs.Position) return false;
-            if (Rotation != rhs.Rotation) return false;
+            if (this.Position != rhs.Position) return false;
+            if (this.Rotation != rhs.Rotation) return false;
             return true;
         }
 
@@ -299,19 +299,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static PlacedNPC Create_XML(
             XElement root,
-            out PlacedNPC_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static PlacedNPC Create_XML(
-            XElement root,
-            bool doMasks,
-            out PlacedNPC_ErrorMask errorMask)
+            out PlacedNPC_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_XML(
                 root: root,
@@ -366,56 +355,153 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region XML Copy In
+        public override void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<PlacedNPC, PlacedNPC_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out var errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out PlacedNPC_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<PlacedNPC, PlacedNPC_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out PlacedNPC_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out PlacedNPC_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
+            out Placed_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out PlacedNPC_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
+            out MajorRecord_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out PlacedNPC_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        #endregion
+
         #region XML Write
         public virtual void Write_XML(
-            XmlWriter writer,
+            XElement node,
             out PlacedNPC_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            errorMask = (PlacedNPC_ErrorMask)this.Write_XML_Internal(
-                writer: writer,
+            errorMask = this.Write_XML_Internal(
+                node: node,
                 name: name,
-                doMasks: true);
+                doMasks: doMasks) as PlacedNPC_ErrorMask;
         }
 
         public virtual void Write_XML(
             string path,
             out PlacedNPC_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(path);
         }
 
         public virtual void Write_XML(
             Stream stream,
             out PlacedNPC_ErrorMask errorMask,
+            bool doMasks = true,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name,
-                    errorMask: out errorMask);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+            topNode.Elements().First().Save(stream);
         }
 
         public override void Write_XML(
-            XmlWriter writer,
+            XElement node,
             string name = null)
         {
             this.Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 doMasks: false);
         }
@@ -424,39 +510,33 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(path);
         }
 
         public override void Write_XML(
             Stream stream,
             string name = null)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
+            XElement topNode = new XElement("topnode");
+            Write_XML(
+                node: topNode,
+                name: name);
+            topNode.Elements().First().Save(stream);
         }
 
         protected override object Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             bool doMasks,
             string name = null)
         {
             PlacedNPCCommon.Write_XML(
                 item: this,
                 doMasks: doMasks,
-                writer: writer,
+                node: node,
                 name: name,
                 errorMask: out var errorMask);
             return errorMask;
@@ -598,19 +678,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static PlacedNPC Create_Binary(
             MutagenFrame frame,
-            out PlacedNPC_ErrorMask errorMask)
-        {
-            return Create_Binary(
-                frame: frame,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static PlacedNPC Create_Binary(
-            MutagenFrame frame,
-            bool doMasks,
-            out PlacedNPC_ErrorMask errorMask)
+            out PlacedNPC_ErrorMask errorMask,
+            bool doMasks = true)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -683,35 +752,40 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out PlacedNPC_ErrorMask errorMask)
+            out PlacedNPC_ErrorMask errorMask,
+            bool doMasks = true)
         {
-            errorMask = (PlacedNPC_ErrorMask)this.Write_Binary_Internal(
+            errorMask = this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: true);
+                doMasks: doMasks) as PlacedNPC_ErrorMask;
         }
 
         public virtual void Write_Binary(
             string path,
-            out PlacedNPC_ErrorMask errorMask)
+            out PlacedNPC_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
         public virtual void Write_Binary(
             Stream stream,
-            out PlacedNPC_ErrorMask errorMask)
+            out PlacedNPC_ErrorMask errorMask,
+            bool doMasks = true)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
-                    errorMask: out errorMask);
+                    errorMask: out errorMask,
+                    doMasks: doMasks);
             }
         }
 
@@ -2022,7 +2096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            XmlWriter writer,
+            XElement node,
             IPlacedNPCGetter item,
             bool doMasks,
             out PlacedNPC_ErrorMask errorMask,
@@ -2030,7 +2104,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             PlacedNPC_ErrorMask errMaskRet = null;
             Write_XML_Internal(
-                writer: writer,
+                node: node,
                 name: name,
                 item: item,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PlacedNPC_ErrorMask()) : default(Func<PlacedNPC_ErrorMask>));
@@ -2038,95 +2112,94 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         private static void Write_XML_Internal(
-            XmlWriter writer,
+            XElement node,
             IPlacedNPCGetter item,
             Func<PlacedNPC_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.PlacedNPC"))
+                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.PlacedNPC");
+                node.Add(elem);
+                if (name != null)
                 {
-                    if (name != null)
-                    {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.PlacedNPC");
-                    }
-                    if (item.Base_Property.HasBeenSet)
-                    {
-                        FormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Base),
-                            item: item.Base?.FormID,
-                            fieldIndex: (int)PlacedNPC_FieldIndex.Base,
-                            errorMask: errorMask);
-                    }
-                    if (item.DistantLODData_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<DistantLODData, DistantLODData_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.DistantLODData_Property,
-                            name: nameof(item.DistantLODData),
-                            fieldIndex: (int)PlacedNPC_FieldIndex.DistantLODData,
-                            errorMask: errorMask);
-                    }
-                    if (item.EnableParent_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<EnableParent, EnableParent_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.EnableParent_Property,
-                            name: nameof(item.EnableParent),
-                            fieldIndex: (int)PlacedNPC_FieldIndex.EnableParent,
-                            errorMask: errorMask);
-                    }
-                    if (item.MerchantContainer_Property.HasBeenSet)
-                    {
-                        FormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.MerchantContainer),
-                            item: item.MerchantContainer?.FormID,
-                            fieldIndex: (int)PlacedNPC_FieldIndex.MerchantContainer,
-                            errorMask: errorMask);
-                    }
-                    if (item.Horse_Property.HasBeenSet)
-                    {
-                        FormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Horse),
-                            item: item.Horse?.FormID,
-                            fieldIndex: (int)PlacedNPC_FieldIndex.Horse,
-                            errorMask: errorMask);
-                    }
-                    if (item.RagdollData_Property.HasBeenSet)
-                    {
-                        ByteArrayXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.RagdollData),
-                            item: item.RagdollData_Property,
-                            fieldIndex: (int)PlacedNPC_FieldIndex.RagdollData,
-                            errorMask: errorMask);
-                    }
-                    if (item.Scale_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Scale),
-                            item: item.Scale_Property,
-                            fieldIndex: (int)PlacedNPC_FieldIndex.Scale,
-                            errorMask: errorMask);
-                    }
-                    P3FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Position),
-                        item: item.Position_Property,
-                        fieldIndex: (int)PlacedNPC_FieldIndex.Position,
-                        errorMask: errorMask);
-                    P3FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Rotation),
-                        item: item.Rotation_Property,
-                        fieldIndex: (int)PlacedNPC_FieldIndex.Rotation,
+                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.PlacedNPC");
+                }
+                if (item.Base_Property.HasBeenSet)
+                {
+                    FormIDXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Base),
+                        item: item.Base?.FormID,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.Base,
                         errorMask: errorMask);
                 }
+                if (item.DistantLODData_Property.HasBeenSet)
+                {
+                    LoquiXmlTranslation<DistantLODData, DistantLODData_ErrorMask>.Instance.Write(
+                        node: elem,
+                        item: item.DistantLODData_Property,
+                        name: nameof(item.DistantLODData),
+                        fieldIndex: (int)PlacedNPC_FieldIndex.DistantLODData,
+                        errorMask: errorMask);
+                }
+                if (item.EnableParent_Property.HasBeenSet)
+                {
+                    LoquiXmlTranslation<EnableParent, EnableParent_ErrorMask>.Instance.Write(
+                        node: elem,
+                        item: item.EnableParent_Property,
+                        name: nameof(item.EnableParent),
+                        fieldIndex: (int)PlacedNPC_FieldIndex.EnableParent,
+                        errorMask: errorMask);
+                }
+                if (item.MerchantContainer_Property.HasBeenSet)
+                {
+                    FormIDXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.MerchantContainer),
+                        item: item.MerchantContainer?.FormID,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.MerchantContainer,
+                        errorMask: errorMask);
+                }
+                if (item.Horse_Property.HasBeenSet)
+                {
+                    FormIDXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Horse),
+                        item: item.Horse?.FormID,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.Horse,
+                        errorMask: errorMask);
+                }
+                if (item.RagdollData_Property.HasBeenSet)
+                {
+                    ByteArrayXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.RagdollData),
+                        item: item.RagdollData_Property,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.RagdollData,
+                        errorMask: errorMask);
+                }
+                if (item.Scale_Property.HasBeenSet)
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Scale),
+                        item: item.Scale_Property,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.Scale,
+                        errorMask: errorMask);
+                }
+                P3FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Position),
+                    item: item.Position_Property,
+                    fieldIndex: (int)PlacedNPC_FieldIndex.Position,
+                    errorMask: errorMask);
+                P3FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Rotation),
+                    item: item.Rotation_Property,
+                    fieldIndex: (int)PlacedNPC_FieldIndex.Rotation,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (errorMask != null)
@@ -2488,6 +2561,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
+            switch (enu)
+            {
+                case PlacedNPC_FieldIndex.Base:
+                    return Base;
+                case PlacedNPC_FieldIndex.DistantLODData:
+                    return DistantLODData;
+                case PlacedNPC_FieldIndex.EnableParent:
+                    return EnableParent;
+                case PlacedNPC_FieldIndex.MerchantContainer:
+                    return MerchantContainer;
+                case PlacedNPC_FieldIndex.Horse:
+                    return Horse;
+                case PlacedNPC_FieldIndex.RagdollData:
+                    return RagdollData;
+                case PlacedNPC_FieldIndex.Scale:
+                    return Scale;
+                case PlacedNPC_FieldIndex.Position:
+                    return Position;
+                case PlacedNPC_FieldIndex.Rotation:
+                    return Rotation;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
         public override void SetNthException(int index, Exception ex)
         {
             PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;

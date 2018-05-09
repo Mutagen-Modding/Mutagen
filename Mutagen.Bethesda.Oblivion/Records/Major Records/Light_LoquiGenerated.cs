@@ -295,40 +295,40 @@ namespace Mutagen.Bethesda.Oblivion
             if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
             if (Model_Property.HasBeenSet)
             {
-                if (!object.Equals(Model, rhs.Model)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
             }
             if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
             if (Script_Property.HasBeenSet)
             {
-                if (Script != rhs.Script) return false;
+                if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
             }
             if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
             if (Name_Property.HasBeenSet)
             {
-                if (!object.Equals(Name, rhs.Name)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
             }
             if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
             if (Icon_Property.HasBeenSet)
             {
-                if (!object.Equals(Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
             }
-            if (Time != rhs.Time) return false;
-            if (Radius != rhs.Radius) return false;
-            if (Color != rhs.Color) return false;
-            if (Flags != rhs.Flags) return false;
-            if (FalloffExponent != rhs.FalloffExponent) return false;
-            if (FOV != rhs.FOV) return false;
-            if (Value != rhs.Value) return false;
-            if (Weight != rhs.Weight) return false;
+            if (this.Time != rhs.Time) return false;
+            if (this.Radius != rhs.Radius) return false;
+            if (this.Color != rhs.Color) return false;
+            if (this.Flags != rhs.Flags) return false;
+            if (!this.FalloffExponent.EqualsWithin(rhs.FalloffExponent)) return false;
+            if (!this.FOV.EqualsWithin(rhs.FOV)) return false;
+            if (this.Value != rhs.Value) return false;
+            if (!this.Weight.EqualsWithin(rhs.Weight)) return false;
             if (Fade_Property.HasBeenSet != rhs.Fade_Property.HasBeenSet) return false;
             if (Fade_Property.HasBeenSet)
             {
-                if (Fade != rhs.Fade) return false;
+                if (!this.Fade.EqualsWithin(rhs.Fade)) return false;
             }
             if (Sound_Property.HasBeenSet != rhs.Sound_Property.HasBeenSet) return false;
             if (Sound_Property.HasBeenSet)
             {
-                if (Sound != rhs.Sound) return false;
+                if (!this.Sound_Property.Equals(rhs.Sound_Property)) return false;
             }
             return true;
         }

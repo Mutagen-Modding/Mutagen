@@ -169,15 +169,15 @@ namespace Mutagen.Bethesda
         public bool Equals(MajorRecord rhs)
         {
             if (rhs == null) return false;
-            if (MajorRecordFlags != rhs.MajorRecordFlags) return false;
-            if (FormID != rhs.FormID) return false;
-            if (!Version.EqualsFast(rhs.Version)) return false;
+            if (this.MajorRecordFlags != rhs.MajorRecordFlags) return false;
+            if (this.FormID != rhs.FormID) return false;
+            if (!this.Version.EqualsFast(rhs.Version)) return false;
             if (EditorID_Property.HasBeenSet != rhs.EditorID_Property.HasBeenSet) return false;
             if (EditorID_Property.HasBeenSet)
             {
-                if (!object.Equals(EditorID, rhs.EditorID)) return false;
+                if (!object.Equals(this.EditorID, rhs.EditorID)) return false;
             }
-            if (!object.Equals(RecordType, rhs.RecordType)) return false;
+            if (!object.Equals(this.RecordType, rhs.RecordType)) return false;
             return true;
         }
 

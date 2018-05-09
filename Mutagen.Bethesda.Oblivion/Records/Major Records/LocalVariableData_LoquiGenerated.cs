@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(LocalVariableData rhs)
         {
             if (rhs == null) return false;
-            if (!Data.EqualsFast(rhs.Data)) return false;
+            if (!this.Data.EqualsFast(rhs.Data)) return false;
             return true;
         }
 
