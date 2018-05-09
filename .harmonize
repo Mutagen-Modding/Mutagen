@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>760d3dce4f1cd6df2ce68f63648b16c71afe85d2</Sha>
+         <Sha>94860c2000c4f17e228503651d2328cc0728c173</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>05-08-2018 18:24:44</CommitDate>
-         <Description>Merge branch 'Laptop' into Desktop</Description>
+         <CommitDate>05-09-2018 19:26:35</CommitDate>
+         <Description>Removed ObjectPool usage from notifying systems</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

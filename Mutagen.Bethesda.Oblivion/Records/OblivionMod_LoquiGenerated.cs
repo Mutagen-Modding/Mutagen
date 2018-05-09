@@ -2022,7 +2022,7 @@ namespace Mutagen.Bethesda.Oblivion
             try
             {
                 dir.Create();
-                this.TES4.Write_XML(
+                this.TES4.Write_XML_Folder(
                     path: Path.Combine(dir.Path, "TES4.xml"),
                     errorMask: out var TES4ErrorMask,
                     doMasks: doMasks);

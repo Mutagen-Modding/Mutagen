@@ -393,6 +393,16 @@ namespace Mutagen.Bethesda
         {
             yield break;
         }
+        public virtual void Write_XML_Folder(
+            string path,
+            out MajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            Write_XML(
+                path: path,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+        }
         #endregion
 
         #region Binary Translation

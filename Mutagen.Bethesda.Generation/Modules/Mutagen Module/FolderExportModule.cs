@@ -19,7 +19,23 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             await base.GenerateInClass(obj, fg);
-            if (obj.GetObjectType() != ObjectType.Mod) return;
+            switch (obj.GetObjectType())
+            {
+                case ObjectType.Record:
+                    await GenerateForRecord(obj, fg);
+                    break;
+                case ObjectType.Mod:
+                    GenerateForMod(obj, fg);
+                    break;
+                case ObjectType.Subrecord:
+                case ObjectType.Group:
+                default:
+                    break;
+            }
+        }
+
+        private void GenerateForMod(ObjectGeneration obj, FileGeneration fg)
+        {
             using (var args = new FunctionWrapper(fg,
                 $"public async Task<{obj.Mask(MaskType.Error)}> Write_XmlFolder"))
             {
@@ -45,7 +61,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             case ObjectType.Record:
                                 using (var args = new ArgsWrapper(fg,
-                                    $"this.{field.Name}.Write_XML"))
+                                    $"this.{field.Name}.Write_XML_Folder"))
                                 {
                                     args.Add($"path: Path.Combine(dir.Path, \"{field.Name}.xml\")");
                                     args.Add($"errorMask: out var {field.Name}ErrorMask");
@@ -61,27 +77,6 @@ namespace Mutagen.Bethesda.Generation
                                 break;
                             case ObjectType.Group:
                                 if (!(field is GroupType group)) break;
-                                //fg.AppendLine($"var {field.Name}Dir = new DirectoryPath(Path.Combine(dir.Path, \"{field.Name}\"));");
-                                //fg.AppendLine($"{field.Name}Dir.Create();");
-                                //fg.AppendLine($"int {field.Name}Counter = 0;");
-                                //fg.AppendLine($"foreach (var item in this.{field.Name}.Items.Values)");
-                                //using (new BraceWrapper(fg))
-                                //{
-                                //    using (var args = new ArgsWrapper(fg,
-                                //        $"item.Write_XML"))
-                                //    {
-                                //        args.Add($"path: Path.Combine({field.Name}Dir.Path, $\"{{{field.Name}Counter++}} - {{item.FormID.IDString()}} - {{item.EditorID}}.xml\")");
-                                //        args.Add($"errorMask: out var {field.Name}ErrorMask");
-                                //        args.Add($"doMasks: doMasks");
-                                //    }
-                                //    using (var args = new ArgsWrapper(fg,
-                                //        $"ErrorMask.HandleErrorMaskAddition"))
-                                //    {
-                                //        args.Add($"creator: errMaskFunc");
-                                //        args.Add($"index: (int){field.IndexEnumName}");
-                                //        args.Add($"errMaskObj: {field.Name}ErrorMask");
-                                //    }
-                                //}
                                 if (!group.TryGetSpecificationAsObject("T", out var subObj)) continue;
                                 using (var args = new ArgsWrapper(fg,
                                     $"tasks.Add({field.Name}.Write_XmlFolder<{subObj.Name}, {subObj.Mask(MaskType.Error)}>",
@@ -106,6 +101,28 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine("errMaskFunc().Overall = ex;");
                 }
                 fg.AppendLine("return errMaskRet;");
+            }
+        }
+
+        private async Task GenerateForRecord(ObjectGeneration obj, FileGeneration fg)
+        {
+            if (!obj.IsTopClass) return;
+            using (var args = new FunctionWrapper(fg,
+                $"public{await obj.FunctionOverride()}void Write_XML_Folder"))
+            {
+                args.Add("string path");
+                args.Add($"out {obj.Mask(MaskType.Error)} errorMask");
+                args.Add($"bool doMasks = true");
+            }
+            using (new BraceWrapper(fg))
+            {
+                using (var args = new ArgsWrapper(fg,
+                    "Write_XML"))
+                {
+                    args.Add("path: path");
+                    args.Add("errorMask: out errorMask");
+                    args.Add("doMasks: doMasks");
+                }
             }
         }
     }

@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda
                 {
                     writeTasks.Add(Task.Run(() =>
                     {
-                        item.Write_XML(
+                        item.Write_XML_Folder(
                             path: Path.Combine(dir.Path, $"{counter++} - {item.FormID.IDString()} - {item.EditorID}.xml"),
                             errorMask: out var itemErrMask,
                             doMasks: doMasks);
