@@ -18,7 +18,6 @@ namespace Mutagen.Bethesda
 
         public FormIDSetLink()
         {
-            this.Subscribe(UpdateUnlinkedForm);
         }
 
         public FormIDSetLink(FormID unlinkedForm)
@@ -26,13 +25,18 @@ namespace Mutagen.Bethesda
         {
             this.UnlinkedForm = unlinkedForm;
             this.HasBeenSet = true;
-            this.Subscribe(UpdateUnlinkedForm);
         }
 
-        private void UpdateUnlinkedForm(Change<T> change)
+        private void UpdateUnlinkedForm(T change)
         {
-            this.UnlinkedForm = change.New?.FormID ?? UnlinkedForm;
+            this.UnlinkedForm = change?.FormID ?? UnlinkedForm;
             this.HasBeenSet = this.UnlinkedForm.HasValue;
+        }
+
+        public override void Set(T value, bool hasBeenSet, NotifyingFireParameters cmds = null)
+        {
+            UpdateUnlinkedForm(value);
+            base.Set(value, hasBeenSet, cmds);
         }
 
         public void SetIfSucceeded(TryGet<FormID> formID)
