@@ -53,17 +53,7 @@ namespace Mutagen.Bethesda
         INotifyingItemGetter<MajorRecord.MajorRecordFlag> IMajorRecordGetter.MajorRecordFlags_Property => this.MajorRecordFlags_Property;
         #endregion
         #region FormID
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<FormID> _FormID = NotifyingItem.Factory<FormID>();
-        public INotifyingItemGetter<FormID> FormID_Property => _FormID;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public FormID FormID
-        {
-            get => this._FormID.Item;
-            protected set => this._FormID.Set(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<FormID> IMajorRecordGetter.FormID_Property => this.FormID_Property;
+        public FormID FormID { get; protected set; }
         #endregion
         #region Version
         protected INotifyingItem<Byte[]> _Version = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[4]);
@@ -95,17 +85,7 @@ namespace Mutagen.Bethesda
         INotifyingSetItemGetter<String> IMajorRecordGetter.EditorID_Property => this.EditorID_Property;
         #endregion
         #region RecordType
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<RecordType> _RecordType = NotifyingItem.Factory<RecordType>();
-        public INotifyingItemGetter<RecordType> RecordType_Property => _RecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public RecordType RecordType
-        {
-            get => this._RecordType.Item;
-            protected set => this._RecordType.Set(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<RecordType> IMajorRecordGetter.RecordType_Property => this.RecordType_Property;
+        public RecordType RecordType { get; protected set; }
         #endregion
 
         #region Loqui Getter Interface
@@ -357,10 +337,10 @@ namespace Mutagen.Bethesda
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "FormID":
-                    item._FormID.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.FormID = FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)MajorRecord_FieldIndex.FormID,
-                        errorMask: errorMask));
+                        errorMask: errorMask).GetOrDefault(item.FormID);
                     break;
                 case "Version":
                     item._Version.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
@@ -375,10 +355,10 @@ namespace Mutagen.Bethesda
                         errorMask: errorMask));
                     break;
                 case "RecordType":
-                    item._RecordType.SetIfSucceeded(WildcardXmlTranslation.Instance.Parse(
+                    item.RecordType = WildcardXmlTranslation.Instance.Parse(
                         root: root,
                         fieldIndex: (int)MajorRecord_FieldIndex.RecordType,
-                        errorMask: errorMask).Bubble<RecordType>(i => (RecordType)i));
+                        errorMask: errorMask).Bubble<RecordType>(i => (RecordType)i).GetOrDefault(item.RecordType);
                     break;
                 default:
                     break;
@@ -464,10 +444,14 @@ namespace Mutagen.Bethesda
                 frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
                 errorMask: errorMask));
-            item._FormID.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+            var FormIDtryGet = Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)MajorRecord_FieldIndex.FormID,
-                errorMask: errorMask));
+                errorMask: errorMask);
+            if (FormIDtryGet.Succeeded)
+            {
+                item.FormID = FormIDtryGet.Value;
+            }
             var VersiontryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)MajorRecord_FieldIndex.Version,
@@ -611,9 +595,7 @@ namespace Mutagen.Bethesda
                         cmds);
                     break;
                 case MajorRecord_FieldIndex.FormID:
-                    this._FormID.Set(
-                        (FormID)obj,
-                        cmds);
+                    this.FormID = (FormID)obj;
                     break;
                 case MajorRecord_FieldIndex.Version:
                     this._Version.Set(
@@ -658,9 +640,7 @@ namespace Mutagen.Bethesda
                         null);
                     break;
                 case MajorRecord_FieldIndex.FormID:
-                    obj._FormID.Set(
-                        (FormID)pair.Value,
-                        null);
+                    obj.FormID = (FormID)pair.Value;
                     break;
                 case MajorRecord_FieldIndex.Version:
                     obj._Version.Set(
@@ -707,7 +687,6 @@ namespace Mutagen.Bethesda
         #endregion
         #region FormID
         FormID FormID { get; }
-        INotifyingItemGetter<FormID> FormID_Property { get; }
 
         #endregion
         #region Version
@@ -722,7 +701,6 @@ namespace Mutagen.Bethesda
         #endregion
         #region RecordType
         RecordType RecordType { get; }
-        INotifyingItemGetter<RecordType> RecordType_Property { get; }
 
         #endregion
 
@@ -1375,7 +1353,7 @@ namespace Mutagen.Bethesda.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.FormID),
-                    item: item.FormID_Property,
+                    item: item.FormID,
                     fieldIndex: (int)MajorRecord_FieldIndex.FormID,
                     errorMask: errorMask);
                 ByteArrayXmlTranslation.Instance.Write(
@@ -1461,7 +1439,7 @@ namespace Mutagen.Bethesda.Internals
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.FormID_Property,
+                item: item.FormID,
                 fieldIndex: (int)MajorRecord_FieldIndex.FormID,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(

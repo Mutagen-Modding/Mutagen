@@ -24,13 +24,13 @@ namespace Mutagen.Bethesda
             : base(markAsSet: true)
         {
             this.UnlinkedForm = unlinkedForm;
-            this.HasBeenSet = true;
+            this._HasBeenSet = true;
         }
 
         private void UpdateUnlinkedForm(T change)
         {
             this.UnlinkedForm = change?.FormID ?? UnlinkedForm;
-            this.HasBeenSet = this.UnlinkedForm.HasValue;
+            this._HasBeenSet = this.UnlinkedForm.HasValue;
         }
 
         public override void Set(T value, bool hasBeenSet, NotifyingFireParameters cmds = null)
