@@ -43,33 +43,33 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region TextureLowerLayer
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<FilePath> _TextureLowerLayer = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingSetItem<FilePath> TextureLowerLayer_Property => _TextureLowerLayer;
+        protected INotifyingSetItem<String> _TextureLowerLayer = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> TextureLowerLayer_Property => _TextureLowerLayer;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public FilePath TextureLowerLayer
+        public String TextureLowerLayer
         {
             get => this._TextureLowerLayer.Item;
             set => this._TextureLowerLayer.Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<FilePath> IWeather.TextureLowerLayer_Property => this.TextureLowerLayer_Property;
+        INotifyingSetItem<String> IWeather.TextureLowerLayer_Property => this.TextureLowerLayer_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<FilePath> IWeatherGetter.TextureLowerLayer_Property => this.TextureLowerLayer_Property;
+        INotifyingSetItemGetter<String> IWeatherGetter.TextureLowerLayer_Property => this.TextureLowerLayer_Property;
         #endregion
         #region TextureUpperLayer
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<FilePath> _TextureUpperLayer = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingSetItem<FilePath> TextureUpperLayer_Property => _TextureUpperLayer;
+        protected INotifyingSetItem<String> _TextureUpperLayer = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> TextureUpperLayer_Property => _TextureUpperLayer;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public FilePath TextureUpperLayer
+        public String TextureUpperLayer
         {
             get => this._TextureUpperLayer.Item;
             set => this._TextureUpperLayer.Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<FilePath> IWeather.TextureUpperLayer_Property => this.TextureUpperLayer_Property;
+        INotifyingSetItem<String> IWeather.TextureUpperLayer_Property => this.TextureUpperLayer_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<FilePath> IWeatherGetter.TextureUpperLayer_Property => this.TextureUpperLayer_Property;
+        INotifyingSetItemGetter<String> IWeatherGetter.TextureUpperLayer_Property => this.TextureUpperLayer_Property;
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1043,13 +1043,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "TextureLowerLayer":
-                    item._TextureLowerLayer.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                    item._TextureLowerLayer.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.TextureLowerLayer,
                         errorMask: errorMask));
                     break;
                 case "TextureUpperLayer":
-                    item._TextureUpperLayer.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                    item._TextureUpperLayer.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.TextureUpperLayer,
                         errorMask: errorMask));
@@ -1508,17 +1508,21 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._TextureLowerLayer.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    var TextureLowerLayertryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Weather_FieldIndex.TextureLowerLayer,
-                        errorMask: errorMask));
+                        parseWhole: true,
+                        errorMask: errorMask);
+                    item._TextureLowerLayer.SetIfSucceeded(TextureLowerLayertryGet);
                     return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.TextureLowerLayer);
                 case "DNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._TextureUpperLayer.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    var TextureUpperLayertryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Weather_FieldIndex.TextureUpperLayer,
-                        errorMask: errorMask));
+                        parseWhole: true,
+                        errorMask: errorMask);
+                    item._TextureUpperLayer.SetIfSucceeded(TextureUpperLayertryGet);
                     return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.TextureUpperLayer);
                 case "MODL":
                     item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
@@ -1815,12 +1819,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case Weather_FieldIndex.TextureLowerLayer:
                     this._TextureLowerLayer.Set(
-                        (FilePath)obj,
+                        (String)obj,
                         cmds);
                     break;
                 case Weather_FieldIndex.TextureUpperLayer:
                     this._TextureUpperLayer.Set(
-                        (FilePath)obj,
+                        (String)obj,
                         cmds);
                     break;
                 case Weather_FieldIndex.Model:
@@ -2022,12 +2026,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case Weather_FieldIndex.TextureLowerLayer:
                     obj._TextureLowerLayer.Set(
-                        (FilePath)pair.Value,
+                        (String)pair.Value,
                         null);
                     break;
                 case Weather_FieldIndex.TextureUpperLayer:
                     obj._TextureUpperLayer.Set(
-                        (FilePath)pair.Value,
+                        (String)pair.Value,
                         null);
                     break;
                 case Weather_FieldIndex.Model:
@@ -2211,11 +2215,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IWeather : IWeatherGetter, IMajorRecord, ILoquiClass<IWeather, IWeatherGetter>, ILoquiClass<Weather, IWeatherGetter>
     {
-        new FilePath TextureLowerLayer { get; set; }
-        new INotifyingSetItem<FilePath> TextureLowerLayer_Property { get; }
+        new String TextureLowerLayer { get; set; }
+        new INotifyingSetItem<String> TextureLowerLayer_Property { get; }
 
-        new FilePath TextureUpperLayer { get; set; }
-        new INotifyingSetItem<FilePath> TextureUpperLayer_Property { get; }
+        new String TextureUpperLayer { get; set; }
+        new INotifyingSetItem<String> TextureUpperLayer_Property { get; }
 
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
@@ -2320,13 +2324,13 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWeatherGetter : IMajorRecordGetter
     {
         #region TextureLowerLayer
-        FilePath TextureLowerLayer { get; }
-        INotifyingSetItemGetter<FilePath> TextureLowerLayer_Property { get; }
+        String TextureLowerLayer { get; }
+        INotifyingSetItemGetter<String> TextureLowerLayer_Property { get; }
 
         #endregion
         #region TextureUpperLayer
-        FilePath TextureUpperLayer { get; }
-        INotifyingSetItemGetter<FilePath> TextureUpperLayer_Property { get; }
+        String TextureUpperLayer { get; }
+        INotifyingSetItemGetter<String> TextureUpperLayer_Property { get; }
 
         #endregion
         #region Model
@@ -2995,9 +2999,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Weather_FieldIndex.TextureLowerLayer:
-                    return typeof(FilePath);
+                    return typeof(String);
                 case Weather_FieldIndex.TextureUpperLayer:
-                    return typeof(FilePath);
+                    return typeof(String);
                 case Weather_FieldIndex.Model:
                     return typeof(Model);
                 case Weather_FieldIndex.WeatherTypes:
@@ -4500,7 +4504,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (item.TextureLowerLayer_Property.HasBeenSet)
                 {
-                    FilePathXmlTranslation.Instance.Write(
+                    StringXmlTranslation.Instance.Write(
                         node: elem,
                         name: nameof(item.TextureLowerLayer),
                         item: item.TextureLowerLayer_Property,
@@ -4509,7 +4513,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (item.TextureUpperLayer_Property.HasBeenSet)
                 {
-                    FilePathXmlTranslation.Instance.Write(
+                    StringXmlTranslation.Instance.Write(
                         node: elem,
                         name: nameof(item.TextureUpperLayer),
                         item: item.TextureUpperLayer_Property,
@@ -4821,14 +4825,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.TextureLowerLayer_Property,
                 fieldIndex: (int)Weather_FieldIndex.TextureLowerLayer,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Weather_Registration.CNAM_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.TextureUpperLayer_Property,
                 fieldIndex: (int)Weather_FieldIndex.TextureUpperLayer,

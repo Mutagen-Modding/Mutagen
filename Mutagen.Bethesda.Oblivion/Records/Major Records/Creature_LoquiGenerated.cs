@@ -693,33 +693,33 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region BloodSpray
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<FilePath> _BloodSpray = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingSetItem<FilePath> BloodSpray_Property => _BloodSpray;
+        protected INotifyingSetItem<String> _BloodSpray = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> BloodSpray_Property => _BloodSpray;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public FilePath BloodSpray
+        public String BloodSpray
         {
             get => this._BloodSpray.Item;
             set => this._BloodSpray.Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<FilePath> ICreature.BloodSpray_Property => this.BloodSpray_Property;
+        INotifyingSetItem<String> ICreature.BloodSpray_Property => this.BloodSpray_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<FilePath> ICreatureGetter.BloodSpray_Property => this.BloodSpray_Property;
+        INotifyingSetItemGetter<String> ICreatureGetter.BloodSpray_Property => this.BloodSpray_Property;
         #endregion
         #region BloodDecal
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<FilePath> _BloodDecal = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingSetItem<FilePath> BloodDecal_Property => _BloodDecal;
+        protected INotifyingSetItem<String> _BloodDecal = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> BloodDecal_Property => _BloodDecal;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public FilePath BloodDecal
+        public String BloodDecal
         {
             get => this._BloodDecal.Item;
             set => this._BloodDecal.Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<FilePath> ICreature.BloodDecal_Property => this.BloodDecal_Property;
+        INotifyingSetItem<String> ICreature.BloodDecal_Property => this.BloodDecal_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<FilePath> ICreatureGetter.BloodDecal_Property => this.BloodDecal_Property;
+        INotifyingSetItemGetter<String> ICreatureGetter.BloodDecal_Property => this.BloodDecal_Property;
         #endregion
         #region InheritsSoundFrom
         public FormIDSetLink<Creature> InheritsSoundFrom_Property { get; } = new FormIDSetLink<Creature>();
@@ -1657,13 +1657,13 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "BloodSpray":
-                    item._BloodSpray.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                    item._BloodSpray.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.BloodSpray,
                         errorMask: errorMask));
                     break;
                 case "BloodDecal":
-                    item._BloodDecal.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                    item._BloodDecal.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.BloodDecal,
                         errorMask: errorMask));
@@ -2237,17 +2237,21 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.FootWeight);
                 case "NAM0":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._BloodSpray.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    var BloodSpraytryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.BloodSpray,
-                        errorMask: errorMask));
+                        parseWhole: true,
+                        errorMask: errorMask);
+                    item._BloodSpray.SetIfSucceeded(BloodSpraytryGet);
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.BloodSpray);
                 case "NAM1":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._BloodDecal.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    var BloodDecaltryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.BloodDecal,
-                        errorMask: errorMask));
+                        parseWhole: true,
+                        errorMask: errorMask);
+                    item._BloodDecal.SetIfSucceeded(BloodDecaltryGet);
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.BloodDecal);
                 case "CSCR":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -2596,12 +2600,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case Creature_FieldIndex.BloodSpray:
                     this._BloodSpray.Set(
-                        (FilePath)obj,
+                        (String)obj,
                         cmds);
                     break;
                 case Creature_FieldIndex.BloodDecal:
                     this._BloodDecal.Set(
-                        (FilePath)obj,
+                        (String)obj,
                         cmds);
                     break;
                 case Creature_FieldIndex.InheritsSoundFrom:
@@ -2853,12 +2857,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case Creature_FieldIndex.BloodSpray:
                     obj._BloodSpray.Set(
-                        (FilePath)pair.Value,
+                        (String)pair.Value,
                         null);
                     break;
                 case Creature_FieldIndex.BloodDecal:
                     obj._BloodDecal.Set(
-                        (FilePath)pair.Value,
+                        (String)pair.Value,
                         null);
                     break;
                 case Creature_FieldIndex.InheritsSoundFrom:
@@ -2998,11 +3002,11 @@ namespace Mutagen.Bethesda.Oblivion
         new Single FootWeight { get; set; }
         new INotifyingSetItem<Single> FootWeight_Property { get; }
 
-        new FilePath BloodSpray { get; set; }
-        new INotifyingSetItem<FilePath> BloodSpray_Property { get; }
+        new String BloodSpray { get; set; }
+        new INotifyingSetItem<String> BloodSpray_Property { get; }
 
-        new FilePath BloodDecal { get; set; }
-        new INotifyingSetItem<FilePath> BloodDecal_Property { get; }
+        new String BloodDecal { get; set; }
+        new INotifyingSetItem<String> BloodDecal_Property { get; }
 
         new Creature InheritsSoundFrom { get; set; }
         new INotifyingList<CreatureSound> Sounds { get; }
@@ -3219,13 +3223,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region BloodSpray
-        FilePath BloodSpray { get; }
-        INotifyingSetItemGetter<FilePath> BloodSpray_Property { get; }
+        String BloodSpray { get; }
+        INotifyingSetItemGetter<String> BloodSpray_Property { get; }
 
         #endregion
         #region BloodDecal
-        FilePath BloodDecal { get; }
-        INotifyingSetItemGetter<FilePath> BloodDecal_Property { get; }
+        String BloodDecal { get; }
+        INotifyingSetItemGetter<String> BloodDecal_Property { get; }
 
         #endregion
         #region InheritsSoundFrom
@@ -3945,9 +3949,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.FootWeight:
                     return typeof(Single);
                 case Creature_FieldIndex.BloodSpray:
-                    return typeof(FilePath);
+                    return typeof(String);
                 case Creature_FieldIndex.BloodDecal:
-                    return typeof(FilePath);
+                    return typeof(String);
                 case Creature_FieldIndex.InheritsSoundFrom:
                     return typeof(FormIDSetLink<Creature>);
                 case Creature_FieldIndex.Sounds:
@@ -6385,7 +6389,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (item.BloodSpray_Property.HasBeenSet)
                 {
-                    FilePathXmlTranslation.Instance.Write(
+                    StringXmlTranslation.Instance.Write(
                         node: elem,
                         name: nameof(item.BloodSpray),
                         item: item.BloodSpray_Property,
@@ -6394,7 +6398,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (item.BloodDecal_Property.HasBeenSet)
                 {
-                    FilePathXmlTranslation.Instance.Write(
+                    StringXmlTranslation.Instance.Write(
                         node: elem,
                         name: nameof(item.BloodDecal),
                         item: item.BloodDecal_Property,
@@ -6812,14 +6816,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Creature_Registration.WNAM_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BloodSpray_Property,
                 fieldIndex: (int)Creature_FieldIndex.BloodSpray,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Creature_Registration.NAM0_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BloodDecal_Property,
                 fieldIndex: (int)Creature_FieldIndex.BloodDecal,

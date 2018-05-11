@@ -4,7 +4,7 @@
     <Fields>
       <Enum name="Skill" enumName="ActorValue" byteLength="4" recordType="INDX" />
       <String name="Description" recordType="DESC" hasBeenSet="True" />
-      <FilePath name="Icon" recordType="ICON" hasBeenSet="True" />
+      <String name="Icon" recordType="ICON" hasBeenSet="True" />
       <Data>
         <Fields>
           <Enum name="Action" enumName="ActorValue" byteLength="4" />

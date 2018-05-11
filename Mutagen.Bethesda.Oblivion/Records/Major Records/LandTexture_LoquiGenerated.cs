@@ -42,18 +42,18 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Icon
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingSetItem<FilePath> Icon_Property => _Icon;
+        protected INotifyingSetItem<String> _Icon = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> Icon_Property => _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public FilePath Icon
+        public String Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<FilePath> ILandTexture.Icon_Property => this.Icon_Property;
+        INotifyingSetItem<String> ILandTexture.Icon_Property => this.Icon_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<FilePath> ILandTextureGetter.Icon_Property => this.Icon_Property;
+        INotifyingSetItemGetter<String> ILandTextureGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Havok
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -488,7 +488,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Icon":
-                    item._Icon.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                    item._Icon.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)LandTexture_FieldIndex.Icon,
                         errorMask: errorMask));
@@ -740,10 +740,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    var IcontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)LandTexture_FieldIndex.Icon,
-                        errorMask: errorMask));
+                        parseWhole: true,
+                        errorMask: errorMask);
+                    item._Icon.SetIfSucceeded(IcontryGet);
                     return TryGet<LandTexture_FieldIndex?>.Succeed(LandTexture_FieldIndex.Icon);
                 case "HNAM":
                     item._Havok.SetIfSucceeded(LoquiBinaryTranslation<HavokData, HavokData_ErrorMask>.Instance.Parse(
@@ -889,7 +891,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case LandTexture_FieldIndex.Icon:
                     this._Icon.Set(
-                        (FilePath)obj,
+                        (String)obj,
                         cmds);
                     break;
                 case LandTexture_FieldIndex.Havok:
@@ -938,7 +940,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case LandTexture_FieldIndex.Icon:
                     obj._Icon.Set(
-                        (FilePath)pair.Value,
+                        (String)pair.Value,
                         null);
                     break;
                 case LandTexture_FieldIndex.Havok:
@@ -969,8 +971,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ILandTexture : ILandTextureGetter, IMajorRecord, ILoquiClass<ILandTexture, ILandTextureGetter>, ILoquiClass<LandTexture, ILandTextureGetter>
     {
-        new FilePath Icon { get; set; }
-        new INotifyingSetItem<FilePath> Icon_Property { get; }
+        new String Icon { get; set; }
+        new INotifyingSetItem<String> Icon_Property { get; }
 
         new HavokData Havok { get; set; }
         new INotifyingSetItem<HavokData> Havok_Property { get; }
@@ -984,8 +986,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILandTextureGetter : IMajorRecordGetter
     {
         #region Icon
-        FilePath Icon { get; }
-        INotifyingSetItemGetter<FilePath> Icon_Property { get; }
+        String Icon { get; }
+        INotifyingSetItemGetter<String> Icon_Property { get; }
 
         #endregion
         #region Havok
@@ -1181,7 +1183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LandTexture_FieldIndex.Icon:
-                    return typeof(FilePath);
+                    return typeof(String);
                 case LandTexture_FieldIndex.Havok:
                     return typeof(HavokData);
                 case LandTexture_FieldIndex.TextureSpecularExponent:
@@ -1634,7 +1636,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (item.Icon_Property.HasBeenSet)
                 {
-                    FilePathXmlTranslation.Instance.Write(
+                    StringXmlTranslation.Instance.Write(
                         node: elem,
                         name: nameof(item.Icon),
                         item: item.Icon_Property,
@@ -1750,7 +1752,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Icon_Property,
                 fieldIndex: (int)LandTexture_FieldIndex.Icon,

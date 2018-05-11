@@ -3,7 +3,7 @@
   <Object name="Key" baseClass="Bethesda.NamedMajorRecord" recordType="KEYM" objType="Record" GUID="1eca627f-f4df-487b-ad18-a02862d90658" ID="97">
     <Fields>
       <RefDirect name="Model" refName="Model" />
-      <FilePath name="Icon" recordType="ICON" />
+      <String name="Icon" recordType="ICON" />
       <FormIDLink name="Script" refName="Script" recordType="SCRI" />
       <Data>
         <Fields>

@@ -40,18 +40,18 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region File
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<FilePath> _File = NotifyingItem.Factory<FilePath>();
-        public INotifyingItem<FilePath> File_Property => _File;
+        protected INotifyingItem<String> _File = NotifyingItem.Factory<String>();
+        public INotifyingItem<String> File_Property => _File;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public FilePath File
+        public String File
         {
             get => this._File.Item;
             set => this._File.Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<FilePath> IModel.File_Property => this.File_Property;
+        INotifyingItem<String> IModel.File_Property => this.File_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<FilePath> IModelGetter.File_Property => this.File_Property;
+        INotifyingItemGetter<String> IModelGetter.File_Property => this.File_Property;
         #endregion
         #region BoundRadius
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -436,7 +436,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "File":
-                    item._File.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                    item._File.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Model_FieldIndex.File,
                         errorMask: errorMask));
@@ -687,10 +687,12 @@ namespace Mutagen.Bethesda.Oblivion
                 case "MODL":
                     if (lastParsed.HasValue && lastParsed.Value >= Model_FieldIndex.File) return TryGet<Model_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._File.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    var FiletryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Model_FieldIndex.File,
-                        errorMask: errorMask));
+                        parseWhole: true,
+                        errorMask: errorMask);
+                    item._File.SetIfSucceeded(FiletryGet);
                     return TryGet<Model_FieldIndex?>.Succeed(Model_FieldIndex.File);
                 case "MODB":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -830,7 +832,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case Model_FieldIndex.File:
                     this._File.Set(
-                        (FilePath)obj,
+                        (String)obj,
                         cmds);
                     break;
                 case Model_FieldIndex.BoundRadius:
@@ -882,7 +884,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case Model_FieldIndex.File:
                     obj._File.Set(
-                        (FilePath)pair.Value,
+                        (String)pair.Value,
                         null);
                     break;
                 case Model_FieldIndex.BoundRadius:
@@ -910,8 +912,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IModel : IModelGetter, ILoquiClass<IModel, IModelGetter>, ILoquiClass<Model, IModelGetter>
     {
-        new FilePath File { get; set; }
-        new INotifyingItem<FilePath> File_Property { get; }
+        new String File { get; set; }
+        new INotifyingItem<String> File_Property { get; }
 
         new Single BoundRadius { get; set; }
         new INotifyingItem<Single> BoundRadius_Property { get; }
@@ -924,8 +926,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IModelGetter : ILoquiObject
     {
         #region File
-        FilePath File { get; }
-        INotifyingItemGetter<FilePath> File_Property { get; }
+        String File { get; }
+        INotifyingItemGetter<String> File_Property { get; }
 
         #endregion
         #region BoundRadius
@@ -1101,7 +1103,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Model_FieldIndex.File:
-                    return typeof(FilePath);
+                    return typeof(String);
                 case Model_FieldIndex.BoundRadius:
                     return typeof(Single);
                 case Model_FieldIndex.Hashes:
@@ -1236,7 +1238,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Model_FieldIndex.File:
-                    obj.File = default(FilePath);
+                    obj.File = default(String);
                     break;
                 case Model_FieldIndex.BoundRadius:
                     obj.BoundRadius = default(Single);
@@ -1288,7 +1290,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IModel item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.File = default(FilePath);
+            item.File = default(String);
             item.BoundRadius = default(Single);
             item.Hashes_Property.Unset(cmds.ToUnsetParams());
         }
@@ -1405,7 +1407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Model");
                 }
-                FilePathXmlTranslation.Instance.Write(
+                StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.File),
                     item: item.File_Property,
@@ -1483,7 +1485,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             Func<Model_ErrorMask> errorMask)
         {
-            Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.File_Property,
                 fieldIndex: (int)Model_FieldIndex.File,

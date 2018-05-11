@@ -76,7 +76,7 @@
     <Fields>
       <Enum name="Index" enumName="Race.FaceIndex" recordType="INDX" byteLength="4" />
       <RefDirect name="Model" refName="Model" />
-      <FilePath name="Icon" recordType="ICON" />
+      <String name="Icon" recordType="ICON" />
     </Fields>
   </Object>
   <Object name="GenderedBodyData" objType="Subrecord" GUID="5b885494-7571-4e60-a255-76d26bbfd419" ID="35">
@@ -94,7 +94,7 @@
   <Object name="BodyPart" objType="Subrecord" GUID="c6005809-223f-4e4d-b995-a125a9887d53" ID="37">
     <Fields>
       <Enum name="Index" enumName="Race.BodyIndex" recordType="INDX" byteLength="4" />
-      <FilePath name="Icon" recordType="ICON" />
+      <String name="Icon" recordType="ICON" />
     </Fields>
   </Object>
   <Object name="FaceGenData" objType="Subrecord" GUID="e43c6320-1bd4-466d-b0c0-3e30495b7e41" ID="38">

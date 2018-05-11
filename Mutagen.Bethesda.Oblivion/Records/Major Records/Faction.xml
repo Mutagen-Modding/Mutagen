@@ -13,7 +13,7 @@
       <Int32 name="RankNumber" recordType="RNAM" />
       <String name="MaleName" recordType="MNAM" />
       <String name="FemaleName" recordType="FNAM" />
-      <FilePath name="Insignia" recordType="INAM" />
+      <String name="Insignia" recordType="INAM" />
     </Fields>
   </Object>
 </Loqui>

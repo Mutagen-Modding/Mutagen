@@ -16,8 +16,17 @@ namespace Mutagen.Bethesda.Tester
     {
         static void Main(string[] args)
         {
-            var tests = new Oblivion_Passthrough_Tests();
-            tests.OblivionESM_Binary_Internal(deleteAfter: false).Wait();
+            //var tests = new Oblivion_Passthrough_Tests();
+            //tests.OblivionESM_Binary_Internal(deleteAfter: false).Wait();
+
+            var mod = OblivionMod.Create_Binary(
+                @"C:\Games\Oblivion\Data\Oblivion.esm",
+                out var inputErrMask);
+            System.Console.WriteLine("DONE");
+            GC.Collect();
+            System.Console.ReadLine();
+            System.Console.WriteLine(mod.NPCs.Items.Count);
+            System.Console.ReadLine();
         }
     }
 }

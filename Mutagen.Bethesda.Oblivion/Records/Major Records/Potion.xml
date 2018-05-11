@@ -3,7 +3,7 @@
   <Object name="Potion" objType="Record" recordType="ALCH" baseClass="Bethesda.NamedMajorRecord" GUID="f28ef4d6-1e08-4aab-a73e-af679ad7a30f" ID="98">
     <Fields>
       <RefDirect name="Model" refName="Model" />
-      <FilePath name="Icon" recordType="ICON" />
+      <String name="Icon" recordType="ICON" />
       <FormIDLink name="Script" refName="Script" recordType="SCRI" />
       <Float name="Weight" recordType="DATA" />
       <Data recordType="ENIT">

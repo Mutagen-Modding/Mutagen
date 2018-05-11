@@ -3,7 +3,7 @@
   <Object name="Class" recordType="CLAS" baseClass="Bethesda.NamedMajorRecord" objType="Record" GUID="3f2e301a-e8f4-42db-875c-3e760e4eff31" ID="16">
     <Fields>
       <String name="Description" recordType="DESC" />
-      <FilePath name="Icon" recordType="ICON" />
+      <String name="Icon" recordType="ICON" />
       <Data>
         <Fields>
           <List name="PrimaryAttributes" maxSize="2">

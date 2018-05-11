@@ -60,33 +60,33 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SunTexture
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<FilePath> _SunTexture = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingSetItem<FilePath> SunTexture_Property => _SunTexture;
+        protected INotifyingSetItem<String> _SunTexture = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> SunTexture_Property => _SunTexture;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public FilePath SunTexture
+        public String SunTexture
         {
             get => this._SunTexture.Item;
             set => this._SunTexture.Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<FilePath> IClimate.SunTexture_Property => this.SunTexture_Property;
+        INotifyingSetItem<String> IClimate.SunTexture_Property => this.SunTexture_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<FilePath> IClimateGetter.SunTexture_Property => this.SunTexture_Property;
+        INotifyingSetItemGetter<String> IClimateGetter.SunTexture_Property => this.SunTexture_Property;
         #endregion
         #region SunGlareTexture
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<FilePath> _SunGlareTexture = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingSetItem<FilePath> SunGlareTexture_Property => _SunGlareTexture;
+        protected INotifyingSetItem<String> _SunGlareTexture = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> SunGlareTexture_Property => _SunGlareTexture;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public FilePath SunGlareTexture
+        public String SunGlareTexture
         {
             get => this._SunGlareTexture.Item;
             set => this._SunGlareTexture.Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<FilePath> IClimate.SunGlareTexture_Property => this.SunGlareTexture_Property;
+        INotifyingSetItem<String> IClimate.SunGlareTexture_Property => this.SunGlareTexture_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<FilePath> IClimateGetter.SunGlareTexture_Property => this.SunGlareTexture_Property;
+        INotifyingSetItemGetter<String> IClimateGetter.SunGlareTexture_Property => this.SunGlareTexture_Property;
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -618,13 +618,13 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "SunTexture":
-                    item._SunTexture.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                    item._SunTexture.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Climate_FieldIndex.SunTexture,
                         errorMask: errorMask));
                     break;
                 case "SunGlareTexture":
-                    item._SunGlareTexture.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                    item._SunGlareTexture.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Climate_FieldIndex.SunGlareTexture,
                         errorMask: errorMask));
@@ -1126,17 +1126,21 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Climate_FieldIndex?>.Succeed(Climate_FieldIndex.Weathers);
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._SunTexture.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    var SunTexturetryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Climate_FieldIndex.SunTexture,
-                        errorMask: errorMask));
+                        parseWhole: true,
+                        errorMask: errorMask);
+                    item._SunTexture.SetIfSucceeded(SunTexturetryGet);
                     return TryGet<Climate_FieldIndex?>.Succeed(Climate_FieldIndex.SunTexture);
                 case "GNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._SunGlareTexture.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    var SunGlareTexturetryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Climate_FieldIndex.SunGlareTexture,
-                        errorMask: errorMask));
+                        parseWhole: true,
+                        errorMask: errorMask);
+                    item._SunGlareTexture.SetIfSucceeded(SunGlareTexturetryGet);
                     return TryGet<Climate_FieldIndex?>.Succeed(Climate_FieldIndex.SunGlareTexture);
                 case "MODL":
                     item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
@@ -1348,12 +1352,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case Climate_FieldIndex.SunTexture:
                     this._SunTexture.Set(
-                        (FilePath)obj,
+                        (String)obj,
                         cmds);
                     break;
                 case Climate_FieldIndex.SunGlareTexture:
                     this._SunGlareTexture.Set(
-                        (FilePath)obj,
+                        (String)obj,
                         cmds);
                     break;
                 case Climate_FieldIndex.Model:
@@ -1432,12 +1436,12 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case Climate_FieldIndex.SunTexture:
                     obj._SunTexture.Set(
-                        (FilePath)pair.Value,
+                        (String)pair.Value,
                         null);
                     break;
                 case Climate_FieldIndex.SunGlareTexture:
                     obj._SunGlareTexture.Set(
-                        (FilePath)pair.Value,
+                        (String)pair.Value,
                         null);
                     break;
                 case Climate_FieldIndex.Model:
@@ -1496,11 +1500,11 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IClimate : IClimateGetter, IMajorRecord, ILoquiClass<IClimate, IClimateGetter>, ILoquiClass<Climate, IClimateGetter>
     {
         new INotifyingList<WeatherChance> Weathers { get; }
-        new FilePath SunTexture { get; set; }
-        new INotifyingSetItem<FilePath> SunTexture_Property { get; }
+        new String SunTexture { get; set; }
+        new INotifyingSetItem<String> SunTexture_Property { get; }
 
-        new FilePath SunGlareTexture { get; set; }
-        new INotifyingSetItem<FilePath> SunGlareTexture_Property { get; }
+        new String SunGlareTexture { get; set; }
+        new INotifyingSetItem<String> SunGlareTexture_Property { get; }
 
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
@@ -1534,13 +1538,13 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingListGetter<WeatherChance> Weathers { get; }
         #endregion
         #region SunTexture
-        FilePath SunTexture { get; }
-        INotifyingSetItemGetter<FilePath> SunTexture_Property { get; }
+        String SunTexture { get; }
+        INotifyingSetItemGetter<String> SunTexture_Property { get; }
 
         #endregion
         #region SunGlareTexture
-        FilePath SunGlareTexture { get; }
-        INotifyingSetItemGetter<FilePath> SunGlareTexture_Property { get; }
+        String SunGlareTexture { get; }
+        INotifyingSetItemGetter<String> SunGlareTexture_Property { get; }
 
         #endregion
         #region Model
@@ -1835,9 +1839,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Climate_FieldIndex.Weathers:
                     return typeof(NotifyingList<WeatherChance>);
                 case Climate_FieldIndex.SunTexture:
-                    return typeof(FilePath);
+                    return typeof(String);
                 case Climate_FieldIndex.SunGlareTexture:
-                    return typeof(FilePath);
+                    return typeof(String);
                 case Climate_FieldIndex.Model:
                     return typeof(Model);
                 case Climate_FieldIndex.SunriseBegin:
@@ -2544,7 +2548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (item.SunTexture_Property.HasBeenSet)
                 {
-                    FilePathXmlTranslation.Instance.Write(
+                    StringXmlTranslation.Instance.Write(
                         node: elem,
                         name: nameof(item.SunTexture),
                         item: item.SunTexture_Property,
@@ -2553,7 +2557,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (item.SunGlareTexture_Property.HasBeenSet)
                 {
-                    FilePathXmlTranslation.Instance.Write(
+                    StringXmlTranslation.Instance.Write(
                         node: elem,
                         name: nameof(item.SunGlareTexture),
                         item: item.SunGlareTexture_Property,
@@ -2698,14 +2702,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: out listSubMask);
                 }
                 );
-            Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SunTexture_Property,
                 fieldIndex: (int)Climate_FieldIndex.SunTexture,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Climate_Registration.FNAM_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SunGlareTexture_Property,
                 fieldIndex: (int)Climate_FieldIndex.SunGlareTexture,

@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RegionData.RegionDataType.Icon:
                     frame.Position += 6 + RDAT_LEN;
                     len = len - 6 - RDAT_LEN;
-                    item.Icon = FilePathBinaryTranslation.Instance.Parse(
+                    item.Icon = StringBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(len),
                         doMasks: false,
                         errorMask: out var ex).Value;

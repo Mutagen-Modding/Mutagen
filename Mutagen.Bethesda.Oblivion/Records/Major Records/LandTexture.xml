@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="LandTexture" objType="Record" baseClass="Bethesda.MajorRecord" recordType="LTEX" GUID="528c071e-b61d-4149-b96a-a28f0d96e87e" ID="51">
     <Fields>
-      <FilePath name="Icon" recordType="ICON" hasBeenSet="True" />
+      <String name="Icon" recordType="ICON" hasBeenSet="True" />
       <RefDirect name="Havok" refName="HavokData" />
       <UInt8 name="TextureSpecularExponent" recordType="SNAM" hasBeenSet="True" />
       <List name="PotentialGrass">

@@ -71,8 +71,8 @@
       <Float name="TurningSpeed" recordType="TNAM" />
       <Float name="BaseScale" recordType="BNAM" />
       <Float name="FootWeight" recordType="WNAM" />
-      <FilePath name="BloodSpray" recordType="NAM0" />
-      <FilePath name="BloodDecal" recordType="NAM1" />
+      <String name="BloodSpray" recordType="NAM0" />
+      <String name="BloodDecal" recordType="NAM1" />
       <FormIDLink name="InheritsSoundFrom" recordType="CSCR" refName="Creature" />
       <RefList name="Sounds" refName="CreatureSound" />
     </Fields>

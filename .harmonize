@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>760d3dce4f1cd6df2ce68f63648b16c71afe85d2</Sha>
+         <Sha>d392832fb617eb6f32bf94121e4b6d102d91fd97</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>05-08-2018 18:24:44</CommitDate>
-         <Description>Merge branch 'Laptop' into Desktop</Description>
+         <CommitDate>05-09-2018 21:24:09</CommitDate>
+         <Description>SubscriptionHandler lock removed</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

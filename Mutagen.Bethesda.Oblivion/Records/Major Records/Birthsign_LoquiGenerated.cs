@@ -41,18 +41,18 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Icon
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingSetItem<FilePath> Icon_Property => _Icon;
+        protected INotifyingSetItem<String> _Icon = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> Icon_Property => _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public FilePath Icon
+        public String Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<FilePath> IBirthsign.Icon_Property => this.Icon_Property;
+        INotifyingSetItem<String> IBirthsign.Icon_Property => this.Icon_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<FilePath> IBirthsignGetter.Icon_Property => this.Icon_Property;
+        INotifyingSetItemGetter<String> IBirthsignGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Description
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -477,7 +477,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Icon":
-                    item._Icon.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                    item._Icon.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Birthsign_FieldIndex.Icon,
                         errorMask: errorMask));
@@ -723,10 +723,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    var IcontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Birthsign_FieldIndex.Icon,
-                        errorMask: errorMask));
+                        parseWhole: true,
+                        errorMask: errorMask);
+                    item._Icon.SetIfSucceeded(IcontryGet);
                     return TryGet<Birthsign_FieldIndex?>.Succeed(Birthsign_FieldIndex.Icon);
                 case "DESC":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -868,7 +870,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case Birthsign_FieldIndex.Icon:
                     this._Icon.Set(
-                        (FilePath)obj,
+                        (String)obj,
                         cmds);
                     break;
                 case Birthsign_FieldIndex.Description:
@@ -912,7 +914,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case Birthsign_FieldIndex.Icon:
                     obj._Icon.Set(
-                        (FilePath)pair.Value,
+                        (String)pair.Value,
                         null);
                     break;
                 case Birthsign_FieldIndex.Description:
@@ -938,8 +940,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IBirthsign : IBirthsignGetter, INamedMajorRecord, ILoquiClass<IBirthsign, IBirthsignGetter>, ILoquiClass<Birthsign, IBirthsignGetter>
     {
-        new FilePath Icon { get; set; }
-        new INotifyingSetItem<FilePath> Icon_Property { get; }
+        new String Icon { get; set; }
+        new INotifyingSetItem<String> Icon_Property { get; }
 
         new String Description { get; set; }
         new INotifyingSetItem<String> Description_Property { get; }
@@ -950,8 +952,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IBirthsignGetter : INamedMajorRecordGetter
     {
         #region Icon
-        FilePath Icon { get; }
-        INotifyingSetItemGetter<FilePath> Icon_Property { get; }
+        String Icon { get; }
+        INotifyingSetItemGetter<String> Icon_Property { get; }
 
         #endregion
         #region Description
@@ -1132,7 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Birthsign_FieldIndex.Icon:
-                    return typeof(FilePath);
+                    return typeof(String);
                 case Birthsign_FieldIndex.Description:
                     return typeof(String);
                 case Birthsign_FieldIndex.Spells:
@@ -1541,7 +1543,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (item.Icon_Property.HasBeenSet)
                 {
-                    FilePathXmlTranslation.Instance.Write(
+                    StringXmlTranslation.Instance.Write(
                         node: elem,
                         name: nameof(item.Icon),
                         item: item.Icon_Property,
@@ -1648,7 +1650,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Icon_Property,
                 fieldIndex: (int)Birthsign_FieldIndex.Icon,

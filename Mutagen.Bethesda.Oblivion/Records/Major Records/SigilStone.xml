@@ -3,7 +3,7 @@
   <Object name="SigilStone" objType="Record" baseClass="Bethesda.NamedMajorRecord" recordType="SGST" GUID="d27f128d-626e-408b-8f0f-3a59bd8a588b" ID="100">
     <Fields>
       <RefDirect name="Model" refName="Model" />
-      <FilePath name="Icon" recordType="ICON" />
+      <String name="Icon" recordType="ICON" />
       <FormIDLink name="Script" refName="Script" recordType="SCRI" />
       <RefList name="Effects" refName="Effect" />
       <Data>

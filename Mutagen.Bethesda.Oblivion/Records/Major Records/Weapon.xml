@@ -3,7 +3,7 @@
   <Object name="Weapon" baseClass="Bethesda.NamedMajorRecord" objType="Record" recordType="WEAP" GUID="7251519c-a94a-44f1-a46c-c9a659b6e36c" ID="82">
     <Fields>
       <RefDirect name="Model" refName="Model" />
-      <FilePath name="Icon" recordType="ICON" />
+      <String name="Icon" recordType="ICON" />
       <FormIDLink name="Script" refName="Script" recordType="SCRI" />
       <FormIDLink name="Enchantment" refName="Enchantment" recordType="ENAM" />
       <UInt16 name="EnchantmentPoints" recordType="ANAM" />

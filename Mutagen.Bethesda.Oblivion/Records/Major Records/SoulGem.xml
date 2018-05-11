@@ -3,7 +3,7 @@
   <Object name="SoulGem" objType="Record" baseClass="Bethesda.NamedMajorRecord" recordType="SLGM" GUID="89d80e87-52e9-4c7c-8a27-bb4303d77edf" ID="96">
     <Fields>
       <RefDirect name="Model" refName="Model" />
-      <FilePath name="Icon" recordType="ICON" />
+      <String name="Icon" recordType="ICON" />
       <FormIDLink name="Script" refName="Script" recordType="SCRI" />
       <Data>
         <Fields>

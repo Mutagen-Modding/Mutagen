@@ -55,18 +55,18 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Icon
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingSetItem<FilePath> Icon_Property => _Icon;
+        protected INotifyingSetItem<String> _Icon = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> Icon_Property => _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public FilePath Icon
+        public String Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<FilePath> ISoulGem.Icon_Property => this.Icon_Property;
+        INotifyingSetItem<String> ISoulGem.Icon_Property => this.Icon_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<FilePath> ISoulGemGetter.Icon_Property => this.Icon_Property;
+        INotifyingSetItemGetter<String> ISoulGemGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Icon":
-                    item._Icon.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                    item._Icon.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)SoulGem_FieldIndex.Icon,
                         errorMask: errorMask));
@@ -826,10 +826,12 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<SoulGem_FieldIndex?>.Succeed(SoulGem_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    var IcontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SoulGem_FieldIndex.Icon,
-                        errorMask: errorMask));
+                        parseWhole: true,
+                        errorMask: errorMask);
+                    item._Icon.SetIfSucceeded(IcontryGet);
                     return TryGet<SoulGem_FieldIndex?>.Succeed(SoulGem_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -984,7 +986,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case SoulGem_FieldIndex.Icon:
                     this._Icon.Set(
-                        (FilePath)obj,
+                        (String)obj,
                         cmds);
                     break;
                 case SoulGem_FieldIndex.Script:
@@ -1050,7 +1052,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case SoulGem_FieldIndex.Icon:
                     obj._Icon.Set(
-                        (FilePath)pair.Value,
+                        (String)pair.Value,
                         null);
                     break;
                 case SoulGem_FieldIndex.Script:
@@ -1096,8 +1098,8 @@ namespace Mutagen.Bethesda.Oblivion
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
 
-        new FilePath Icon { get; set; }
-        new INotifyingSetItem<FilePath> Icon_Property { get; }
+        new String Icon { get; set; }
+        new INotifyingSetItem<String> Icon_Property { get; }
 
         new Script Script { get; set; }
         new UInt32 Value { get; set; }
@@ -1122,8 +1124,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Icon
-        FilePath Icon { get; }
-        INotifyingSetItemGetter<FilePath> Icon_Property { get; }
+        String Icon { get; }
+        INotifyingSetItemGetter<String> Icon_Property { get; }
 
         #endregion
         #region Script
@@ -1363,7 +1365,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SoulGem_FieldIndex.Model:
                     return typeof(Model);
                 case SoulGem_FieldIndex.Icon:
-                    return typeof(FilePath);
+                    return typeof(String);
                 case SoulGem_FieldIndex.Script:
                     return typeof(FormIDSetLink<Script>);
                 case SoulGem_FieldIndex.Value:
@@ -1918,7 +1920,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (item.Icon_Property.HasBeenSet)
                 {
-                    FilePathXmlTranslation.Instance.Write(
+                    StringXmlTranslation.Instance.Write(
                         node: elem,
                         name: nameof(item.Icon),
                         item: item.Icon_Property,
@@ -2041,7 +2043,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Model_Property,
                 fieldIndex: (int)SoulGem_FieldIndex.Model,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Icon_Property,
                 fieldIndex: (int)SoulGem_FieldIndex.Icon,

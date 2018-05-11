@@ -5,7 +5,7 @@
       <RefDirect name="Model" refName="Model" />
       <FormIDLink name="Script" refName="Script" recordType="SCRI" />
       <String name="Name" recordType="FULL" />
-      <FilePath name="Icon" recordType="ICON" />
+      <String name="Icon" recordType="ICON" />
       <Data>
         <Fields>
           <Int32 name="Time" default="-1" />

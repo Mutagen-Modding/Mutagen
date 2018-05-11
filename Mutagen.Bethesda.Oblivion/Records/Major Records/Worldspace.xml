@@ -4,7 +4,7 @@
     <Fields>
       <FormIDLink name="Climate" recordType="CNAM" refName="Climate" />
       <FormIDLink name="Water" recordType="NAM2" refName="Water" />
-      <FilePath name="Icon" recordType="ICON" />
+      <String name="Icon" recordType="ICON" />
       <Data recordType="MNAM">
         <Fields>
           <P2Int32 name="UsableDimensions" />

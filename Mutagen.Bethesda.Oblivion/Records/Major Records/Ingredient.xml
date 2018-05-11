@@ -3,7 +3,7 @@
   <Object name="Ingredient" baseClass="Bethesda.NamedMajorRecord" recordType="INGR" objType="Record" GUID="b617ece0-1ff6-475d-af9d-265d2f55af37" ID="76">
     <Fields>
       <RefDirect name="Model" refName="Model" />
-      <FilePath name="Icon" recordType="ICON" />
+      <String name="Icon" recordType="ICON" />
       <FormIDLink name="Script" refName="Script" recordType="SCRI" />
       <Float name="Weight" recordType="DATA" />
       <Data recordType="ENIT">

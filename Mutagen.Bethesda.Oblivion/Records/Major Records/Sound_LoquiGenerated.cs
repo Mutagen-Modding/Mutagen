@@ -42,18 +42,18 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region File
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<FilePath> _File = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingSetItem<FilePath> File_Property => _File;
+        protected INotifyingSetItem<String> _File = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> File_Property => _File;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public FilePath File
+        public String File
         {
             get => this._File.Item;
             set => this._File.Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<FilePath> ISound.File_Property => this.File_Property;
+        INotifyingSetItem<String> ISound.File_Property => this.File_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<FilePath> ISoundGetter.File_Property => this.File_Property;
+        INotifyingSetItemGetter<String> ISoundGetter.File_Property => this.File_Property;
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -437,7 +437,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "File":
-                    item._File.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                    item._File.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Sound_FieldIndex.File,
                         errorMask: errorMask));
@@ -668,10 +668,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._File.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    var FiletryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Sound_FieldIndex.File,
-                        errorMask: errorMask));
+                        parseWhole: true,
+                        errorMask: errorMask);
+                    item._File.SetIfSucceeded(FiletryGet);
                     return TryGet<Sound_FieldIndex?>.Succeed(Sound_FieldIndex.File);
                 case "SNDD":
                     item._Data.SetIfSucceeded(LoquiBinaryTranslation<SoundData, SoundData_ErrorMask>.Instance.Parse(
@@ -798,7 +800,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case Sound_FieldIndex.File:
                     this._File.Set(
-                        (FilePath)obj,
+                        (String)obj,
                         cmds);
                     break;
                 case Sound_FieldIndex.Data:
@@ -839,7 +841,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case Sound_FieldIndex.File:
                     obj._File.Set(
-                        (FilePath)pair.Value,
+                        (String)pair.Value,
                         null);
                     break;
                 case Sound_FieldIndex.Data:
@@ -862,8 +864,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ISound : ISoundGetter, IMajorRecord, ILoquiClass<ISound, ISoundGetter>, ILoquiClass<Sound, ISoundGetter>
     {
-        new FilePath File { get; set; }
-        new INotifyingSetItem<FilePath> File_Property { get; }
+        new String File { get; set; }
+        new INotifyingSetItem<String> File_Property { get; }
 
         new SoundData Data { get; set; }
         new INotifyingSetItem<SoundData> Data_Property { get; }
@@ -873,8 +875,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISoundGetter : IMajorRecordGetter
     {
         #region File
-        FilePath File { get; }
-        INotifyingSetItemGetter<FilePath> File_Property { get; }
+        String File { get; }
+        INotifyingSetItemGetter<String> File_Property { get; }
 
         #endregion
         #region Data
@@ -1041,7 +1043,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Sound_FieldIndex.File:
-                    return typeof(FilePath);
+                    return typeof(String);
                 case Sound_FieldIndex.Data:
                     return typeof(SoundData);
                 default:
@@ -1391,7 +1393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (item.File_Property.HasBeenSet)
                 {
-                    FilePathXmlTranslation.Instance.Write(
+                    StringXmlTranslation.Instance.Write(
                         node: elem,
                         name: nameof(item.File),
                         item: item.File_Property,
@@ -1479,7 +1481,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.File_Property,
                 fieldIndex: (int)Sound_FieldIndex.File,

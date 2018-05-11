@@ -55,18 +55,18 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Icon
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingSetItem<FilePath> Icon_Property => _Icon;
+        protected INotifyingSetItem<String> _Icon = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> Icon_Property => _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public FilePath Icon
+        public String Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<FilePath> IHair.Icon_Property => this.Icon_Property;
+        INotifyingSetItem<String> IHair.Icon_Property => this.Icon_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<FilePath> IHairGetter.Icon_Property => this.Icon_Property;
+        INotifyingSetItemGetter<String> IHairGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Icon":
-                    item._Icon.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                    item._Icon.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Hair_FieldIndex.Icon,
                         errorMask: errorMask));
@@ -717,10 +717,12 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Hair_FieldIndex?>.Succeed(Hair_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    var IcontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Hair_FieldIndex.Icon,
-                        errorMask: errorMask));
+                        parseWhole: true,
+                        errorMask: errorMask);
+                    item._Icon.SetIfSucceeded(IcontryGet);
                     return TryGet<Hair_FieldIndex?>.Succeed(Hair_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -847,7 +849,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case Hair_FieldIndex.Icon:
                     this._Icon.Set(
-                        (FilePath)obj,
+                        (String)obj,
                         cmds);
                     break;
                 case Hair_FieldIndex.Flags:
@@ -893,7 +895,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case Hair_FieldIndex.Icon:
                     obj._Icon.Set(
-                        (FilePath)pair.Value,
+                        (String)pair.Value,
                         null);
                     break;
                 case Hair_FieldIndex.Flags:
@@ -919,8 +921,8 @@ namespace Mutagen.Bethesda.Oblivion
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
 
-        new FilePath Icon { get; set; }
-        new INotifyingSetItem<FilePath> Icon_Property { get; }
+        new String Icon { get; set; }
+        new INotifyingSetItem<String> Icon_Property { get; }
 
         new Hair.HairFlag Flags { get; set; }
         new INotifyingSetItem<Hair.HairFlag> Flags_Property { get; }
@@ -935,8 +937,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Icon
-        FilePath Icon { get; }
-        INotifyingSetItemGetter<FilePath> Icon_Property { get; }
+        String Icon { get; }
+        INotifyingSetItemGetter<String> Icon_Property { get; }
 
         #endregion
         #region Flags
@@ -1116,7 +1118,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Hair_FieldIndex.Model:
                     return typeof(Model);
                 case Hair_FieldIndex.Icon:
-                    return typeof(FilePath);
+                    return typeof(String);
                 case Hair_FieldIndex.Flags:
                     return typeof(Hair.HairFlag);
                 default:
@@ -1535,7 +1537,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (item.Icon_Property.HasBeenSet)
                 {
-                    FilePathXmlTranslation.Instance.Write(
+                    StringXmlTranslation.Instance.Write(
                         node: elem,
                         name: nameof(item.Icon),
                         item: item.Icon_Property,
@@ -1628,7 +1630,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Model_Property,
                 fieldIndex: (int)Hair_FieldIndex.Model,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Icon_Property,
                 fieldIndex: (int)Hair_FieldIndex.Icon,

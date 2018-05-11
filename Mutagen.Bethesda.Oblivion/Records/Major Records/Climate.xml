@@ -5,8 +5,8 @@
       <List name="Weathers" recordType="WLST">
         <RefDirect refName="WeatherChance" />
       </List>
-      <FilePath name="SunTexture" recordType="FNAM" />
-      <FilePath name="SunGlareTexture" recordType="GNAM" />
+      <String name="SunTexture" recordType="FNAM" />
+      <String name="SunGlareTexture" recordType="GNAM" />
       <RefDirect name="Model" refName="Model" />
       <Data recordType="TNAM">
         <Fields>

@@ -3,7 +3,7 @@
   <Object name="AlchemicalApparatus" baseClass="Bethesda.NamedMajorRecord" objType="Record" recordType="APPA" GUID="731a9b97-8051-4d72-8008-3e53a96659cd" ID="66">
     <Fields>
       <RefDirect name="Model" refName="Model" />
-      <FilePath name="Icon" recordType="ICON" />
+      <String name="Icon" recordType="ICON" />
       <FormIDLink name="Script" refName="Script" recordType="SCRI" />
       <Data>
         <Fields>

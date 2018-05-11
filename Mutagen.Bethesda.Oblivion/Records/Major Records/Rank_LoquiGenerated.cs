@@ -85,18 +85,18 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Insignia
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<FilePath> _Insignia = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingSetItem<FilePath> Insignia_Property => _Insignia;
+        protected INotifyingSetItem<String> _Insignia = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> Insignia_Property => _Insignia;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public FilePath Insignia
+        public String Insignia
         {
             get => this._Insignia.Item;
             set => this._Insignia.Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<FilePath> IRank.Insignia_Property => this.Insignia_Property;
+        INotifyingSetItem<String> IRank.Insignia_Property => this.Insignia_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<FilePath> IRankGetter.Insignia_Property => this.Insignia_Property;
+        INotifyingSetItemGetter<String> IRankGetter.Insignia_Property => this.Insignia_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -493,7 +493,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Insignia":
-                    item._Insignia.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                    item._Insignia.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Rank_FieldIndex.Insignia,
                         errorMask: errorMask));
@@ -756,10 +756,12 @@ namespace Mutagen.Bethesda.Oblivion
                 case "INAM":
                     if (lastParsed.HasValue && lastParsed.Value >= Rank_FieldIndex.Insignia) return TryGet<Rank_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Insignia.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    var InsigniatryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Rank_FieldIndex.Insignia,
-                        errorMask: errorMask));
+                        parseWhole: true,
+                        errorMask: errorMask);
+                    item._Insignia.SetIfSucceeded(InsigniatryGet);
                     return TryGet<Rank_FieldIndex?>.Succeed(Rank_FieldIndex.Insignia);
                 default:
                     return TryGet<Rank_FieldIndex?>.Failure;
@@ -899,7 +901,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case Rank_FieldIndex.Insignia:
                     this._Insignia.Set(
-                        (FilePath)obj,
+                        (String)obj,
                         cmds);
                     break;
                 default:
@@ -956,7 +958,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case Rank_FieldIndex.Insignia:
                     obj._Insignia.Set(
-                        (FilePath)pair.Value,
+                        (String)pair.Value,
                         null);
                     break;
                 default:
@@ -983,8 +985,8 @@ namespace Mutagen.Bethesda.Oblivion
         new String FemaleName { get; set; }
         new INotifyingSetItem<String> FemaleName_Property { get; }
 
-        new FilePath Insignia { get; set; }
-        new INotifyingSetItem<FilePath> Insignia_Property { get; }
+        new String Insignia { get; set; }
+        new INotifyingSetItem<String> Insignia_Property { get; }
 
     }
 
@@ -1006,8 +1008,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Insignia
-        FilePath Insignia { get; }
-        INotifyingSetItemGetter<FilePath> Insignia_Property { get; }
+        String Insignia { get; }
+        INotifyingSetItemGetter<String> Insignia_Property { get; }
 
         #endregion
 
@@ -1189,7 +1191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Rank_FieldIndex.FemaleName:
                     return typeof(String);
                 case Rank_FieldIndex.Insignia:
-                    return typeof(FilePath);
+                    return typeof(String);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1572,7 +1574,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 if (item.Insignia_Property.HasBeenSet)
                 {
-                    FilePathXmlTranslation.Instance.Write(
+                    StringXmlTranslation.Instance.Write(
                         node: elem,
                         name: nameof(item.Insignia),
                         item: item.Insignia_Property,
@@ -1657,7 +1659,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Rank_Registration.FNAM_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Insignia_Property,
                 fieldIndex: (int)Rank_FieldIndex.Insignia,
