@@ -16,20 +16,17 @@ namespace Mutagen.Bethesda
         public EDIDSetLink()
             : base()
         {
-            this.Subscribe(HandleItemChange, cmds: NotifyingSubscribeParameters.NoFire);
         }
 
         public EDIDSetLink(RecordType unlinkedEDID)
             : this()
         {
             this.EDID = unlinkedEDID;
-            this.Subscribe(HandleItemChange, cmds: NotifyingSubscribeParameters.NoFire);
         }
 
         public EDIDSetLink(FormID unlinkedForm)
             : base(unlinkedForm)
         {
-            this.Subscribe(HandleItemChange, cmds: NotifyingSubscribeParameters.NoFire);
         }
 
         private void HandleItemChange(Change<T> change)
@@ -42,6 +39,12 @@ namespace Mutagen.Bethesda
         private void UpdateUnlinked(Change<string> change)
         {
             this.EDID = new RecordType(change.New);
+        }
+
+        public override void Set(T value, bool hasBeenSet, NotifyingFireParameters cmds = null)
+        {
+            HandleItemChange(new Change<T>(this.Item, value));
+            base.Set(value, hasBeenSet, cmds);
         }
 
         public void SetIfSucceeded(TryGet<RecordType> item)
