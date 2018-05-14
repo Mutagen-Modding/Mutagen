@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Generation
             if (loqui.TargetObjectGeneration?.GetObjectType() != ObjectType.Group) return;
             loqui.SingletonType = SingletonLevel.Singleton;
             loqui.HasBeenSetProperty.Set(false);
-            loqui.NotifyingProperty.Set(false);
+            loqui.NotifyingProperty.Set(NotifyingType.None);
         }
     }
 }

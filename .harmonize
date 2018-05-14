@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>89f9b14db08fb42cb48b9a98ab3ae4200298d196</Sha>
+         <Sha>40da53096fa5b33a80881b6456481612321b87a5</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>05-09-2018 18:13:16</CommitDate>
-         <Description>GenerateForEquals Accessor parameters.  Float/Double fields now use EqualsWithin when comparing.</Description>
+         <CommitDate>05-13-2018 23:47:17</CommitDate>
+         <Description>NotifyingType</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

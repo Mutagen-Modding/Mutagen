@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Generation
         public override async Task Load(XElement node, bool requireName = true)
         {
             await base.Load(node, requireName);
-            this.NotifyingProperty.Item = false;
+            this.NotifyingProperty.Item = Loqui.NotifyingType.None;
             this.HasBeenSetProperty.Item = false;
         }
     }

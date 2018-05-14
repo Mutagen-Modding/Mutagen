@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Generation
             await base.Load(node, requireName);
             this.IntegrateField = false;
             this.Static = node.GetAttribute<bool>("static");
-            this.NotifyingProperty.Item = false;
+            this.NotifyingProperty.Item = Loqui.NotifyingType.None;
             this.HasBeenSetProperty.Item = false;
         }
     }

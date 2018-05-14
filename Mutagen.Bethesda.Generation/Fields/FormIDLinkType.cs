@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Generation
         public override async Task Load(XElement node, bool requireName = true)
         {
             await base.Load(node, requireName);
-            this.NotifyingProperty.Set(true);
+            this.NotifyingProperty.Set(NotifyingType.NotifyingItem);
             loquiType.SetObjectGeneration(this.ObjectGen, setDefaults: true);
             await loquiType.Load(node, requireName: false);
             loquiType.Name = this.Name;
