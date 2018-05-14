@@ -85,10 +85,10 @@ namespace Mutagen.Bethesda.Generation
             }
             if (itemAccessor.PropertyAccess == null)
             {
-                fg.AppendLine("if (tryGet.Succeeded)");
+                fg.AppendLine($"if ({typeGen.Name}tryGet.Succeeded)");
                 using (new BraceWrapper(fg))
                 {
-                    fg.AppendLine($"{itemAccessor.DirectAccess} = tryGet.Value;");
+                    fg.AppendLine($"{itemAccessor.DirectAccess} = {typeGen.Name}tryGet.Value;");
                 }
             }
         }

@@ -73,6 +73,26 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write<M>(
             MutagenWriter writer,
+            Color item,
+            RecordType header,
+            int fieldIndex,
+            bool nullable,
+            bool extraByte,
+            Func<M> errorMask)
+            where M : IErrorMask
+        {
+            this.Write(
+                writer,
+                item,
+                header,
+                fieldIndex,
+                nullable,
+                errorMask,
+                write: GetWriter(extraByte));
+        }
+
+        public void Write<M>(
+            MutagenWriter writer,
             IHasBeenSetItemGetter<Color> item,
             int fieldIndex,
             bool extraByte,
@@ -99,6 +119,22 @@ namespace Mutagen.Bethesda.Binary
             this.Write(
                 writer,
                 item.Item,
+                fieldIndex,
+                errorMask,
+                write: GetWriter(extraByte));
+        }
+
+        public void Write<M>(
+            MutagenWriter writer,
+            Color item,
+            int fieldIndex,
+            bool extraByte,
+            Func<M> errorMask)
+            where M : IErrorMask
+        {
+            this.Write(
+                writer,
+                item,
                 fieldIndex,
                 errorMask,
                 write: GetWriter(extraByte));

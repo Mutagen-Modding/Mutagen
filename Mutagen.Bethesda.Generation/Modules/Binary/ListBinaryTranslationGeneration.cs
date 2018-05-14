@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"if ({typeGen.Name}tryGet.Succeeded)");
                 using (new BraceWrapper(fg))
                 {
-                    fg.AppendLine($"{itemAccessor.DirectAccess} = {typeGen.Name}tryGet.Value;");
+                    fg.AppendLine($"{itemAccessor.DirectAccess}.SetTo({typeGen.Name}tryGet.Value);");
                 }
             }
         }

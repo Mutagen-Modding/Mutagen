@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>d392832fb617eb6f32bf94121e4b6d102d91fd97</Sha>
+         <Sha>bb944f58f776ed704d4fc4abbe2827840c9a3b0f</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>05-09-2018 21:24:09</CommitDate>
-         <Description>SubscriptionHandler lock removed</Description>
+         <CommitDate>05-12-2018 01:20:28</CommitDate>
+         <Description>More NotifyingSetItem subclasses, to omit the default value member when unnecessary</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
