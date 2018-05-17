@@ -19,13 +19,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class LocalVariable : ILocalVariable, ILoquiObject<LocalVariable>, ILoquiObjectSetter, IEquatable<LocalVariable>
+    public partial class LocalVariable : 
+        ILocalVariable,
+        ILoquiObject<LocalVariable>,
+        ILoquiObjectSetter,
+        IEquatable<LocalVariable>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocalVariable_Registration.Instance;
@@ -1721,6 +1727,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
 

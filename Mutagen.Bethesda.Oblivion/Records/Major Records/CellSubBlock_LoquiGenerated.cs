@@ -19,13 +19,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class CellSubBlock : ICellSubBlock, ILoquiObject<CellSubBlock>, ILoquiObjectSetter, IEquatable<CellSubBlock>
+    public partial class CellSubBlock : 
+        ICellSubBlock,
+        ILoquiObject<CellSubBlock>,
+        ILoquiObjectSetter,
+        IEquatable<CellSubBlock>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellSubBlock_Registration.Instance;
@@ -2079,6 +2085,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
 

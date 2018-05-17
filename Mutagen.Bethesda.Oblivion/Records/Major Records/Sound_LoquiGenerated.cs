@@ -21,12 +21,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Sound : MajorRecord, ISound, ILoquiObject<Sound>, ILoquiObjectSetter, IEquatable<Sound>
+    public partial class Sound : 
+        MajorRecord,
+        ISound,
+        ILoquiObject<Sound>,
+        ILoquiObjectSetter,
+        IEquatable<Sound>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Sound_Registration.Instance;
@@ -1753,6 +1760,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
 

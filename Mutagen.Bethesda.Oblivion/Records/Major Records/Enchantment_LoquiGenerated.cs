@@ -21,12 +21,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Enchantment : NamedMajorRecord, IEnchantment, ILoquiObject<Enchantment>, ILoquiObjectSetter, IEquatable<Enchantment>
+    public partial class Enchantment : 
+        NamedMajorRecord,
+        IEnchantment,
+        ILoquiObject<Enchantment>,
+        ILoquiObjectSetter,
+        IEquatable<Enchantment>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Enchantment_Registration.Instance;
@@ -2271,6 +2278,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
 

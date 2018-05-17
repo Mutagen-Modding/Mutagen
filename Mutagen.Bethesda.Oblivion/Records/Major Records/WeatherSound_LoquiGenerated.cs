@@ -18,13 +18,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class WeatherSound : IWeatherSound, ILoquiObject<WeatherSound>, ILoquiObjectSetter, IEquatable<WeatherSound>
+    public partial class WeatherSound : 
+        IWeatherSound,
+        ILoquiObject<WeatherSound>,
+        ILoquiObjectSetter,
+        IEquatable<WeatherSound>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherSound_Registration.Instance;
@@ -1603,6 +1609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
 

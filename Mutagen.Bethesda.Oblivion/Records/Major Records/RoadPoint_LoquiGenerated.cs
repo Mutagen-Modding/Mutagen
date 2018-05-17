@@ -18,13 +18,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class RoadPoint : IRoadPoint, ILoquiObject<RoadPoint>, ILoquiObjectSetter, IEquatable<RoadPoint>
+    public partial class RoadPoint : 
+        IRoadPoint,
+        ILoquiObject<RoadPoint>,
+        ILoquiObjectSetter,
+        IEquatable<RoadPoint>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RoadPoint_Registration.Instance;
@@ -1829,6 +1835,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
 

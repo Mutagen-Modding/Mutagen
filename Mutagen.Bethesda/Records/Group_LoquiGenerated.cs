@@ -18,12 +18,18 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda
 {
     #region Class
-    public partial class Group<T> : IGroup<T>, ILoquiObject<Group<T>>, ILoquiObjectSetter, IEquatable<Group<T>>
+    public partial class Group<T> : 
+        IGroup<T>,
+        ILoquiObject<Group<T>>,
+        ILoquiObjectSetter,
+        IEquatable<Group<T>>
         where T : IFormID, ILoquiObject<T>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2066,6 +2072,7 @@ namespace Mutagen.Bethesda.Internals
 
     }
     #endregion
+
 
 
 

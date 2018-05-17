@@ -21,12 +21,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public abstract partial class NPCAbstract : NPCSpawn, INPCAbstract, ILoquiObject<NPCAbstract>, ILoquiObjectSetter, IEquatable<NPCAbstract>
+    public abstract partial class NPCAbstract : 
+        NPCSpawn,
+        INPCAbstract,
+        ILoquiObject<NPCAbstract>,
+        ILoquiObjectSetter,
+        IEquatable<NPCAbstract>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NPCAbstract_Registration.Instance;
@@ -1113,6 +1120,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
     }
     #endregion
+
 
 
 

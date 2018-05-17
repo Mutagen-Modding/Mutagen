@@ -19,11 +19,18 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 
 namespace Mutagen.Bethesda.Tests
 {
     #region Class
-    public partial class RecordInstruction : Instruction, IRecordInstruction, ILoquiObject<RecordInstruction>, ILoquiObjectSetter, IEquatable<RecordInstruction>
+    public partial class RecordInstruction : 
+        Instruction,
+        IRecordInstruction,
+        ILoquiObject<RecordInstruction>,
+        ILoquiObjectSetter,
+        IEquatable<RecordInstruction>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RecordInstruction_Registration.Instance;
@@ -1233,6 +1240,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
     }
     #endregion
+
 
 
     #endregion

@@ -18,13 +18,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class PointToReferenceMapping : IPointToReferenceMapping, ILoquiObject<PointToReferenceMapping>, ILoquiObjectSetter, IEquatable<PointToReferenceMapping>
+    public partial class PointToReferenceMapping : 
+        IPointToReferenceMapping,
+        ILoquiObject<PointToReferenceMapping>,
+        ILoquiObjectSetter,
+        IEquatable<PointToReferenceMapping>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PointToReferenceMapping_Registration.Instance;
@@ -1721,6 +1727,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
 

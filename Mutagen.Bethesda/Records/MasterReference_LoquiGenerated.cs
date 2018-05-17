@@ -18,12 +18,18 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda
 {
     #region Class
-    public partial class MasterReference : IMasterReference, ILoquiObject<MasterReference>, ILoquiObjectSetter, IEquatable<MasterReference>
+    public partial class MasterReference : 
+        IMasterReference,
+        ILoquiObject<MasterReference>,
+        ILoquiObjectSetter,
+        IEquatable<MasterReference>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MasterReference_Registration.Instance;
@@ -1676,6 +1682,7 @@ namespace Mutagen.Bethesda.Internals
 
     }
     #endregion
+
 
 
 

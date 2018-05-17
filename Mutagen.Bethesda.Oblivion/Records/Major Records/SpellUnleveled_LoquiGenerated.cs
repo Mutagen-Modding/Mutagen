@@ -21,12 +21,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class SpellUnleveled : Spell, ISpellUnleveled, ILoquiObject<SpellUnleveled>, ILoquiObjectSetter, IEquatable<SpellUnleveled>
+    public partial class SpellUnleveled : 
+        Spell,
+        ISpellUnleveled,
+        ILoquiObject<SpellUnleveled>,
+        ILoquiObjectSetter,
+        IEquatable<SpellUnleveled>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SpellUnleveled_Registration.Instance;
@@ -2312,6 +2319,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
 

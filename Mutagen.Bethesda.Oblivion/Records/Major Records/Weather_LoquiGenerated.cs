@@ -22,12 +22,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Weather : MajorRecord, IWeather, ILoquiObject<Weather>, ILoquiObjectSetter, IEquatable<Weather>
+    public partial class Weather : 
+        MajorRecord,
+        IWeather,
+        ILoquiObject<Weather>,
+        ILoquiObjectSetter,
+        IEquatable<Weather>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weather_Registration.Instance;
@@ -6234,6 +6241,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
 

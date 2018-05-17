@@ -19,13 +19,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class RaceStatsGendered : IRaceStatsGendered, ILoquiObject<RaceStatsGendered>, ILoquiObjectSetter, IEquatable<RaceStatsGendered>
+    public partial class RaceStatsGendered : 
+        IRaceStatsGendered,
+        ILoquiObject<RaceStatsGendered>,
+        ILoquiObjectSetter,
+        IEquatable<RaceStatsGendered>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceStatsGendered_Registration.Instance;
@@ -1694,6 +1700,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
 

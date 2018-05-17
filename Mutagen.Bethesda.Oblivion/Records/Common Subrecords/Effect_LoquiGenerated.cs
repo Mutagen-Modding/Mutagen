@@ -19,13 +19,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Effect : IEffect, ILoquiObject<Effect>, ILoquiObjectSetter, IEquatable<Effect>
+    public partial class Effect : 
+        IEffect,
+        ILoquiObject<Effect>,
+        ILoquiObjectSetter,
+        IEquatable<Effect>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Effect_Registration.Instance;
@@ -2334,6 +2340,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
 

@@ -21,12 +21,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Creature : NamedMajorRecord, ICreature, ILoquiObject<Creature>, ILoquiObjectSetter, IEquatable<Creature>
+    public partial class Creature : 
+        NamedMajorRecord,
+        ICreature,
+        ILoquiObject<Creature>,
+        ILoquiObjectSetter,
+        IEquatable<Creature>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Creature_Registration.Instance;
@@ -8672,6 +8679,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
 

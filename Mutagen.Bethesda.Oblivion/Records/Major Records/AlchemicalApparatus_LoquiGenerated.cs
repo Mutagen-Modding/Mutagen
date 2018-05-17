@@ -21,12 +21,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class AlchemicalApparatus : NamedMajorRecord, IAlchemicalApparatus, ILoquiObject<AlchemicalApparatus>, ILoquiObjectSetter, IEquatable<AlchemicalApparatus>
+    public partial class AlchemicalApparatus : 
+        NamedMajorRecord,
+        IAlchemicalApparatus,
+        ILoquiObject<AlchemicalApparatus>,
+        ILoquiObjectSetter,
+        IEquatable<AlchemicalApparatus>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlchemicalApparatus_Registration.Instance;
@@ -2414,6 +2421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
 

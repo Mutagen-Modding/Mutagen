@@ -21,12 +21,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Race : NamedMajorRecord, IRace, ILoquiObject<Race>, ILoquiObjectSetter, IEquatable<Race>
+    public partial class Race : 
+        NamedMajorRecord,
+        IRace,
+        ILoquiObject<Race>,
+        ILoquiObjectSetter,
+        IEquatable<Race>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
@@ -5540,6 +5547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
 

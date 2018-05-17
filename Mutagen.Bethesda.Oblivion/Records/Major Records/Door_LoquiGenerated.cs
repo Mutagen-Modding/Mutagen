@@ -21,12 +21,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Door : NamedMajorRecord, IDoor, ILoquiObject<Door>, ILoquiObjectSetter, IEquatable<Door>
+    public partial class Door : 
+        NamedMajorRecord,
+        IDoor,
+        ILoquiObject<Door>,
+        ILoquiObjectSetter,
+        IEquatable<Door>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Door_Registration.Instance;
@@ -2594,6 +2601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
 

@@ -21,12 +21,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Ingredient : NamedMajorRecord, IIngredient, ILoquiObject<Ingredient>, ILoquiObjectSetter, IEquatable<Ingredient>
+    public partial class Ingredient : 
+        NamedMajorRecord,
+        IIngredient,
+        ILoquiObject<Ingredient>,
+        ILoquiObjectSetter,
+        IEquatable<Ingredient>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ingredient_Registration.Instance;
@@ -2626,6 +2633,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
 

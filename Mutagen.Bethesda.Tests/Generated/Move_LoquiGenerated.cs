@@ -18,11 +18,17 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 
 namespace Mutagen.Bethesda.Tests
 {
     #region Class
-    public partial class Move : IMove, ILoquiObject<Move>, ILoquiObjectSetter, IEquatable<Move>
+    public partial class Move : 
+        IMove,
+        ILoquiObject<Move>,
+        ILoquiObjectSetter,
+        IEquatable<Move>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Move_Registration.Instance;
@@ -1267,6 +1273,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
     }
     #endregion
+
 
 
     #endregion

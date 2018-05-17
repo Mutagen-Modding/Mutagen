@@ -20,12 +20,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Subspace : MajorRecord, ISubspace, ILoquiObject<Subspace>, ILoquiObjectSetter, IEquatable<Subspace>
+    public partial class Subspace : 
+        MajorRecord,
+        ISubspace,
+        ILoquiObject<Subspace>,
+        ILoquiObjectSetter,
+        IEquatable<Subspace>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Subspace_Registration.Instance;
@@ -1790,6 +1797,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
 

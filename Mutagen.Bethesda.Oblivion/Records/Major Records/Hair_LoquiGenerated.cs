@@ -21,12 +21,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Hair : NamedMajorRecord, IHair, ILoquiObject<Hair>, ILoquiObjectSetter, IEquatable<Hair>
+    public partial class Hair : 
+        NamedMajorRecord,
+        IHair,
+        ILoquiObject<Hair>,
+        ILoquiObjectSetter,
+        IEquatable<Hair>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Hair_Registration.Instance;
@@ -1928,6 +1935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
 

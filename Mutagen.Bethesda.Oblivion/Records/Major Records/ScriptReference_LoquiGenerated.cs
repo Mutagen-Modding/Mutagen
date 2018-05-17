@@ -18,13 +18,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public abstract partial class ScriptReference : IScriptReference, ILoquiObject<ScriptReference>, ILoquiObjectSetter, IEquatable<ScriptReference>
+    public abstract partial class ScriptReference : 
+        IScriptReference,
+        ILoquiObject<ScriptReference>,
+        ILoquiObjectSetter,
+        IEquatable<ScriptReference>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptReference_Registration.Instance;
@@ -1065,6 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
     }
     #endregion
+
 
 
 

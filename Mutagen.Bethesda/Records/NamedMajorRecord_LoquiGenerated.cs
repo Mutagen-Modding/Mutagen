@@ -19,12 +19,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda
 {
     #region Class
-    public abstract partial class NamedMajorRecord : MajorRecord, INamedMajorRecord, ILoquiObject<NamedMajorRecord>, ILoquiObjectSetter, IEquatable<NamedMajorRecord>
+    public abstract partial class NamedMajorRecord : 
+        MajorRecord,
+        INamedMajorRecord,
+        ILoquiObject<NamedMajorRecord>,
+        ILoquiObjectSetter,
+        IEquatable<NamedMajorRecord>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NamedMajorRecord_Registration.Instance;
@@ -1335,6 +1342,7 @@ namespace Mutagen.Bethesda.Internals
 
     }
     #endregion
+
 
 
 

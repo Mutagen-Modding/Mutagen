@@ -21,13 +21,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class OblivionMod : IOblivionMod, ILoquiObject<OblivionMod>, ILoquiObjectSetter, IEquatable<OblivionMod>
+    public partial class OblivionMod : 
+        IOblivionMod,
+        ILoquiObject<OblivionMod>,
+        ILoquiObjectSetter,
+        IEquatable<OblivionMod>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionMod_Registration.Instance;
@@ -9753,6 +9759,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
     #region Mutagen

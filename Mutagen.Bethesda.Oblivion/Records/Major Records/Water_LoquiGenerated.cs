@@ -20,12 +20,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Water : MajorRecord, IWater, ILoquiObject<Water>, ILoquiObjectSetter, IEquatable<Water>
+    public partial class Water : 
+        MajorRecord,
+        IWater,
+        ILoquiObject<Water>,
+        ILoquiObjectSetter,
+        IEquatable<Water>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Water_Registration.Instance;
@@ -1372,6 +1379,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
     }
     #endregion
+
 
 
 

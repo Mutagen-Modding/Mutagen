@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>40da53096fa5b33a80881b6456481612321b87a5</Sha>
+         <Sha>e6d691cc8555c066c332fce2222f61ff4587c224</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>05-13-2018 23:47:17</CommitDate>
-         <Description>NotifyingType</Description>
+         <CommitDate>05-14-2018 00:20:33</CommitDate>
+         <Description>Interfaces for a class now print on separate lines</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

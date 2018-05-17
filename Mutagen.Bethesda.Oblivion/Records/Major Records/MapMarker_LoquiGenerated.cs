@@ -18,13 +18,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class MapMarker : IMapMarker, ILoquiObject<MapMarker>, ILoquiObjectSetter, IEquatable<MapMarker>
+    public partial class MapMarker : 
+        IMapMarker,
+        ILoquiObject<MapMarker>,
+        ILoquiObjectSetter,
+        IEquatable<MapMarker>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapMarker_Registration.Instance;
@@ -1954,6 +1960,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
 

@@ -21,12 +21,18 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class TES4 : ITES4, ILoquiObject<TES4>, ILoquiObjectSetter, IEquatable<TES4>
+    public partial class TES4 : 
+        ITES4,
+        ILoquiObject<TES4>,
+        ILoquiObjectSetter,
+        IEquatable<TES4>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TES4_Registration.Instance;
@@ -2591,6 +2597,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
 

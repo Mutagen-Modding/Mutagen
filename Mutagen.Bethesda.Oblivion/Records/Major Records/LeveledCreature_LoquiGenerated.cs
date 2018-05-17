@@ -21,12 +21,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class LeveledCreature : NPCSpawn, ILeveledCreature, ILoquiObject<LeveledCreature>, ILoquiObjectSetter, IEquatable<LeveledCreature>
+    public partial class LeveledCreature : 
+        NPCSpawn,
+        ILeveledCreature,
+        ILoquiObject<LeveledCreature>,
+        ILoquiObjectSetter,
+        IEquatable<LeveledCreature>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledCreature_Registration.Instance;
@@ -2319,6 +2326,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
 

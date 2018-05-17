@@ -19,11 +19,17 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 
 namespace Mutagen.Bethesda.Tests
 {
     #region Class
-    public partial class BinaryProcessorInstructions : IBinaryProcessorInstructions, ILoquiObject<BinaryProcessorInstructions>, ILoquiObjectSetter, IEquatable<BinaryProcessorInstructions>
+    public partial class BinaryProcessorInstructions : 
+        IBinaryProcessorInstructions,
+        ILoquiObject<BinaryProcessorInstructions>,
+        ILoquiObjectSetter,
+        IEquatable<BinaryProcessorInstructions>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BinaryProcessorInstructions_Registration.Instance;
@@ -1492,6 +1498,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
     }
     #endregion
+
 
 
     #endregion

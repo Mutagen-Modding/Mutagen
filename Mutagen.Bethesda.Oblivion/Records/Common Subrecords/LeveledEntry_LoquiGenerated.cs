@@ -18,13 +18,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class LeveledEntry<T> : ILeveledEntry<T>, ILoquiObject<LeveledEntry<T>>, ILoquiObjectSetter, IEquatable<LeveledEntry<T>>
+    public partial class LeveledEntry<T> : 
+        ILeveledEntry<T>,
+        ILoquiObject<LeveledEntry<T>>,
+        ILoquiObjectSetter,
+        IEquatable<LeveledEntry<T>>
         where T : Bethesda.MajorRecord, ILoquiObject<T>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2126,6 +2132,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
 

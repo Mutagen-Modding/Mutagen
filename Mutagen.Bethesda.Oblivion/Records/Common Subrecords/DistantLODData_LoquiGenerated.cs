@@ -18,13 +18,19 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
+using Loqui.Internal;
+using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class DistantLODData : IDistantLODData, ILoquiObject<DistantLODData>, ILoquiObjectSetter, IEquatable<DistantLODData>
+    public partial class DistantLODData : 
+        IDistantLODData,
+        ILoquiObject<DistantLODData>,
+        ILoquiObjectSetter,
+        IEquatable<DistantLODData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DistantLODData_Registration.Instance;
@@ -1724,6 +1730,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
     #endregion
+
 
 
 
