@@ -495,25 +495,25 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Icon":
-                    item._Icon.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)LandTexture_FieldIndex.Icon,
                         errorMask: errorMask));
                     break;
                 case "Havok":
-                    item._Havok.SetIfSucceeded(LoquiXmlTranslation<HavokData, HavokData_ErrorMask>.Instance.Parse(
+                    item._Havok.SetIfSucceededOrDefault(LoquiXmlTranslation<HavokData, HavokData_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)LandTexture_FieldIndex.Havok,
                         errorMask: errorMask));
                     break;
                 case "TextureSpecularExponent":
-                    item._TextureSpecularExponent.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._TextureSpecularExponent.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)LandTexture_FieldIndex.TextureSpecularExponent,
                         errorMask: errorMask));
                     break;
                 case "PotentialGrass":
-                    item._PotentialGrass.SetIfSucceeded(ListXmlTranslation<FormIDSetLink<Grass>, Exception>.Instance.Parse(
+                    item._PotentialGrass.SetIfSucceededOrDefault(ListXmlTranslation<FormIDSetLink<Grass>, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)LandTexture_FieldIndex.PotentialGrass,
                         errorMask: errorMask,
@@ -747,28 +747,27 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var IcontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)LandTexture_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Icon.SetIfSucceeded(IcontryGet);
+                        errorMask: errorMask));
                     return TryGet<LandTexture_FieldIndex?>.Succeed(LandTexture_FieldIndex.Icon);
                 case "HNAM":
-                    item._Havok.SetIfSucceeded(LoquiBinaryTranslation<HavokData, HavokData_ErrorMask>.Instance.Parse(
+                    item._Havok.SetIfSucceededOrDefault(LoquiBinaryTranslation<HavokData, HavokData_ErrorMask>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)LandTexture_FieldIndex.Havok,
                         errorMask: errorMask));
                     return TryGet<LandTexture_FieldIndex?>.Succeed(LandTexture_FieldIndex.Havok);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._TextureSpecularExponent.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                    item._TextureSpecularExponent.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)LandTexture_FieldIndex.TextureSpecularExponent,
                         errorMask: errorMask));
                     return TryGet<LandTexture_FieldIndex?>.Succeed(LandTexture_FieldIndex.TextureSpecularExponent);
                 case "GNAM":
-                    var PotentialGrasstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Grass>, Exception>.Instance.ParseRepeatedItem(
+                    item.PotentialGrass.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Grass>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: LandTexture_Registration.GNAM_HEADER,
                         fieldIndex: (int)LandTexture_FieldIndex.PotentialGrass,
@@ -782,8 +781,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<Grass>(o));
                         }
-                        );
-                    item._PotentialGrass.SetIfSucceeded(PotentialGrasstryGet);
+                        ));
                     return TryGet<LandTexture_FieldIndex?>.Succeed(LandTexture_FieldIndex.PotentialGrass);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(

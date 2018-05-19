@@ -442,19 +442,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "File":
-                    item._File.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._File.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Model_FieldIndex.File,
                         errorMask: errorMask));
                     break;
                 case "BoundRadius":
-                    item._BoundRadius.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._BoundRadius.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Model_FieldIndex.BoundRadius,
                         errorMask: errorMask));
                     break;
                 case "Hashes":
-                    item._Hashes.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._Hashes.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Model_FieldIndex.Hashes,
                         errorMask: errorMask));
@@ -693,27 +693,25 @@ namespace Mutagen.Bethesda.Oblivion
                 case "MODL":
                     if (lastParsed.HasValue && lastParsed.Value >= Model_FieldIndex.File) return TryGet<Model_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var FiletryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._File.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Model_FieldIndex.File,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._File.SetIfSucceeded(FiletryGet);
+                        errorMask: errorMask));
                     return TryGet<Model_FieldIndex?>.Succeed(Model_FieldIndex.File);
                 case "MODB":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._BoundRadius.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    item._BoundRadius.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Model_FieldIndex.BoundRadius,
                         errorMask: errorMask));
                     return TryGet<Model_FieldIndex?>.Succeed(Model_FieldIndex.BoundRadius);
                 case "MODT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var HashestryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    item._Hashes.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Model_FieldIndex.Hashes,
-                        errorMask: errorMask);
-                    item._Hashes.SetIfSucceeded(HashestryGet);
+                        errorMask: errorMask));
                     return TryGet<Model_FieldIndex?>.Succeed(Model_FieldIndex.Hashes);
                 default:
                     return TryGet<Model_FieldIndex?>.Failure;

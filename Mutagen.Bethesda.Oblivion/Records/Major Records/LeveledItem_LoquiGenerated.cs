@@ -473,20 +473,20 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "ChanceNone":
-                    item._ChanceNone.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._ChanceNone.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)LeveledItem_FieldIndex.ChanceNone,
                         errorMask: errorMask));
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<LeveledFlag>.Instance.Parse(
+                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<LeveledFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)LeveledItem_FieldIndex.Flags,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Entries":
-                    item._Entries.SetIfSucceeded(ListXmlTranslation<LeveledEntry<ItemAbstract>, MaskItem<Exception, LeveledEntry_ErrorMask<ItemAbstract_ErrorMask>>>.Instance.Parse(
+                    item._Entries.SetIfSucceededOrDefault(ListXmlTranslation<LeveledEntry<ItemAbstract>, MaskItem<Exception, LeveledEntry_ErrorMask<ItemAbstract_ErrorMask>>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)LeveledItem_FieldIndex.Entries,
                         errorMask: errorMask,
@@ -750,20 +750,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "LVLD":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._ChanceNone.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                    item._ChanceNone.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)LeveledItem_FieldIndex.ChanceNone,
                         errorMask: errorMask));
                     return TryGet<LeveledItem_FieldIndex?>.Succeed(LeveledItem_FieldIndex.ChanceNone);
                 case "LVLF":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<LeveledFlag>.Instance.Parse(
+                    item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<LeveledFlag>.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)LeveledItem_FieldIndex.Flags,
                         errorMask: errorMask));
                     return TryGet<LeveledItem_FieldIndex?>.Succeed(LeveledItem_FieldIndex.Flags);
                 case "LVLO":
-                    var EntriestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<ItemAbstract>, MaskItem<Exception, LeveledEntry_ErrorMask<ItemAbstract_ErrorMask>>>.Instance.ParseRepeatedItem(
+                    item.Entries.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<ItemAbstract>, MaskItem<Exception, LeveledEntry_ErrorMask<ItemAbstract_ErrorMask>>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: LeveledItem_Registration.LVLO_HEADER,
                         fieldIndex: (int)LeveledItem_FieldIndex.Entries,
@@ -776,8 +776,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._Entries.SetIfSucceeded(EntriestryGet);
+                        ));
                     return TryGet<LeveledItem_FieldIndex?>.Succeed(LeveledItem_FieldIndex.Entries);
                 case "DATA":
                     SpecialParse_Vestigial(

@@ -661,86 +661,86 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Light_FieldIndex.Model,
                         errorMask: errorMask));
                     break;
                 case "Script":
-                    item.Script_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Script_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Script,
                         errorMask: errorMask));
                     break;
                 case "Name":
-                    item._Name.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Name.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Name,
                         errorMask: errorMask));
                     break;
                 case "Icon":
-                    item._Icon.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Icon,
                         errorMask: errorMask));
                     break;
                 case "Time":
-                    item._Time.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                    item._Time.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Time,
                         errorMask: errorMask));
                     break;
                 case "Radius":
-                    item._Radius.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    item._Radius.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Radius,
                         errorMask: errorMask));
                     break;
                 case "Color":
-                    item._Color.SetIfSucceeded(ColorXmlTranslation.Instance.ParseNonNull(
+                    item._Color.SetIfSucceededOrDefault(ColorXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Color,
                         errorMask: errorMask));
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<Light.LightFlag>.Instance.Parse(
+                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<Light.LightFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Light_FieldIndex.Flags,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "FalloffExponent":
-                    item._FalloffExponent.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._FalloffExponent.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Light_FieldIndex.FalloffExponent,
                         errorMask: errorMask));
                     break;
                 case "FOV":
-                    item._FOV.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._FOV.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Light_FieldIndex.FOV,
                         errorMask: errorMask));
                     break;
                 case "Value":
-                    item._Value.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    item._Value.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Value,
                         errorMask: errorMask));
                     break;
                 case "Weight":
-                    item._Weight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Weight.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Weight,
                         errorMask: errorMask));
                     break;
                 case "Fade":
-                    item._Fade.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Fade.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Fade,
                         errorMask: errorMask));
                     break;
                 case "Sound":
-                    item.Sound_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Sound_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Sound,
                         errorMask: errorMask));
@@ -981,74 +981,72 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)Light_FieldIndex.Model,
                         errorMask: errorMask));
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Model);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Light_FieldIndex.Script,
                         errorMask: errorMask));
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Script);
                 case "FULL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var NametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Name.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Light_FieldIndex.Name,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Name.SetIfSucceeded(NametryGet);
+                        errorMask: errorMask));
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Name);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var IcontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Light_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Icon.SetIfSucceeded(IcontryGet);
+                        errorMask: errorMask));
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Time.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                        item._Time.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Light_FieldIndex.Time,
                             errorMask: errorMask));
-                        item._Radius.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        item._Radius.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Light_FieldIndex.Radius,
                             errorMask: errorMask));
-                        item._Color.SetIfSucceeded(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                        item._Color.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Light_FieldIndex.Color,
                             errorMask: errorMask,
                             extraByte: true));
-                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Light.LightFlag>.Instance.Parse(
+                        item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Light.LightFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Light_FieldIndex.Flags,
                             errorMask: errorMask));
                         if (dataFrame.TotalLength > 24)
                         {
                             item.DATADataTypeState |= DATADataType.Range0;
-                            item._FalloffExponent.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            item._FalloffExponent.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                                 frame: dataFrame,
                                 fieldIndex: (int)Light_FieldIndex.FalloffExponent,
                                 errorMask: errorMask));
-                            item._FOV.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            item._FOV.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                                 frame: dataFrame,
                                 fieldIndex: (int)Light_FieldIndex.FOV,
                                 errorMask: errorMask));
                         }
-                        item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        item._Value.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Light_FieldIndex.Value,
                             errorMask: errorMask));
-                        item._Weight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._Weight.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Light_FieldIndex.Weight,
                             errorMask: errorMask));
@@ -1056,14 +1054,14 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Weight);
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Fade.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    item._Fade.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Light_FieldIndex.Fade,
                         errorMask: errorMask));
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Fade);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Sound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Sound_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Light_FieldIndex.Sound,
                         errorMask: errorMask));

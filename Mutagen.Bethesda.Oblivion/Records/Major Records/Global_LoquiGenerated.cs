@@ -318,13 +318,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "TypeChar":
-                    item._TypeChar.SetIfSucceeded(CharXmlTranslation.Instance.ParseNonNull(
+                    item._TypeChar.SetIfSucceededOrDefault(CharXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Global_FieldIndex.TypeChar,
                         errorMask: errorMask));
                     break;
                 case "RawFloat":
-                    item._RawFloat.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._RawFloat.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Global_FieldIndex.RawFloat,
                         errorMask: errorMask));
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Global_FieldIndex?>.Succeed(Global_FieldIndex.TypeChar);
                 case "FLTV":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._RawFloat.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    item._RawFloat.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Global_FieldIndex.RawFloat,
                         errorMask: errorMask));

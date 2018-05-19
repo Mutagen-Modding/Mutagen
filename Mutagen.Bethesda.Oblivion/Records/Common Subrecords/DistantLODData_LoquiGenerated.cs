@@ -436,19 +436,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Unknown0":
-                    item._Unknown0.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Unknown0.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)DistantLODData_FieldIndex.Unknown0,
                         errorMask: errorMask));
                     break;
                 case "Unknown1":
-                    item._Unknown1.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Unknown1.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)DistantLODData_FieldIndex.Unknown1,
                         errorMask: errorMask));
                     break;
                 case "Unknown2":
-                    item._Unknown2.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Unknown2.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)DistantLODData_FieldIndex.Unknown2,
                         errorMask: errorMask));
@@ -660,15 +660,15 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<DistantLODData_ErrorMask> errorMask)
         {
-            item._Unknown0.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._Unknown0.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)DistantLODData_FieldIndex.Unknown0,
                 errorMask: errorMask));
-            item._Unknown1.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._Unknown1.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)DistantLODData_FieldIndex.Unknown1,
                 errorMask: errorMask));
-            item._Unknown2.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._Unknown2.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)DistantLODData_FieldIndex.Unknown2,
                 errorMask: errorMask));

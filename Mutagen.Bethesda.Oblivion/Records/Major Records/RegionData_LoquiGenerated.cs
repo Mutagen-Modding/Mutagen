@@ -319,21 +319,21 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "DataType":
-                    item._DataType.SetIfSucceeded(EnumXmlTranslation<RegionData.RegionDataType>.Instance.Parse(
+                    item._DataType.SetIfSucceededOrDefault(EnumXmlTranslation<RegionData.RegionDataType>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)RegionData_FieldIndex.DataType,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<RegionData.RegionDataFlag>.Instance.Parse(
+                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<RegionData.RegionDataFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)RegionData_FieldIndex.Flags,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Priority":
-                    item._Priority.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Priority.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RegionData_FieldIndex.Priority,
                         errorMask: errorMask));
@@ -425,15 +425,15 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._DataType.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Parse(
+                        item._DataType.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)RegionData_FieldIndex.DataType,
                             errorMask: errorMask));
-                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionData.RegionDataFlag>.Instance.Parse(
+                        item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionData.RegionDataFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(1),
                             fieldIndex: (int)RegionData_FieldIndex.Flags,
                             errorMask: errorMask));
-                        item._Priority.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Priority.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)RegionData_FieldIndex.Priority,
                             errorMask: errorMask));

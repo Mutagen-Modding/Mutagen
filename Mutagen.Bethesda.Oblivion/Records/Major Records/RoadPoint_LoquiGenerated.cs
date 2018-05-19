@@ -438,19 +438,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Point":
-                    item._Point.SetIfSucceeded(P3FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Point.SetIfSucceededOrDefault(P3FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RoadPoint_FieldIndex.Point,
                         errorMask: errorMask));
                     break;
                 case "NumConnectionsFluffBytes":
-                    item._NumConnectionsFluffBytes.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._NumConnectionsFluffBytes.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)RoadPoint_FieldIndex.NumConnectionsFluffBytes,
                         errorMask: errorMask));
                     break;
                 case "Connections":
-                    item._Connections.SetIfSucceeded(ListXmlTranslation<P3Float, Exception>.Instance.Parse(
+                    item._Connections.SetIfSucceededOrDefault(ListXmlTranslation<P3Float, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)RoadPoint_FieldIndex.Connections,
                         errorMask: errorMask,
@@ -664,16 +664,15 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<RoadPoint_ErrorMask> errorMask)
         {
-            item._Point.SetIfSucceeded(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+            item._Point.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RoadPoint_FieldIndex.Point,
                 errorMask: errorMask));
-            var NumConnectionsFluffBytestryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            item._NumConnectionsFluffBytes.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(3),
                 fieldIndex: (int)RoadPoint_FieldIndex.NumConnectionsFluffBytes,
-                errorMask: errorMask);
-            item._NumConnectionsFluffBytes.SetIfSucceeded(NumConnectionsFluffBytestryGet);
-            var ConnectionstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Float, Exception>.Instance.ParseRepeatedItem(
+                errorMask: errorMask));
+            item.Connections.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Float, Exception>.Instance.ParseRepeatedItem(
                 frame: frame,
                 fieldIndex: (int)RoadPoint_FieldIndex.Connections,
                 lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
@@ -685,8 +684,7 @@ namespace Mutagen.Bethesda.Oblivion
                         doMasks: listDoMasks,
                         errorMask: out listSubMask);
                 }
-                );
-            item._Connections.SetIfSucceeded(ConnectionstryGet);
+                ));
         }
 
         #endregion

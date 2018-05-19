@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Weathers":
-                    item._Weathers.SetIfSucceeded(ListXmlTranslation<WeatherChance, MaskItem<Exception, WeatherChance_ErrorMask>>.Instance.Parse(
+                    item._Weathers.SetIfSucceededOrDefault(ListXmlTranslation<WeatherChance, MaskItem<Exception, WeatherChance_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)RegionDataWeather_FieldIndex.Weathers,
                         errorMask: errorMask,
@@ -684,7 +684,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "RDWT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var WeatherstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherChance, MaskItem<Exception, WeatherChance_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.Weathers.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherChance, MaskItem<Exception, WeatherChance_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)RegionDataWeather_FieldIndex.Weathers,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
@@ -696,8 +696,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._Weathers.SetIfSucceeded(WeatherstryGet);
+                        ));
                     return TryGet<RegionDataWeather_FieldIndex?>.Succeed(RegionDataWeather_FieldIndex.Weathers);
                 default:
                     return RegionData.Fill_Binary_RecordTypes(

@@ -411,13 +411,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Weather":
-                    item.Weather_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Weather_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)WeatherChance_FieldIndex.Weather,
                         errorMask: errorMask));
                     break;
                 case "Chance":
-                    item._Chance.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                    item._Chance.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)WeatherChance_FieldIndex.Chance,
                         errorMask: errorMask));
@@ -631,11 +631,11 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<WeatherChance_ErrorMask> errorMask)
         {
-            item.Weather_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item.Weather_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)WeatherChance_FieldIndex.Weather,
                 errorMask: errorMask));
-            item._Chance.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+            item._Chance.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)WeatherChance_FieldIndex.Chance,
                 errorMask: errorMask));

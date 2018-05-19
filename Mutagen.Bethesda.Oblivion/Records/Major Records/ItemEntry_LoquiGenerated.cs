@@ -418,13 +418,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Item":
-                    item.Item_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Item_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)ItemEntry_FieldIndex.Item,
                         errorMask: errorMask));
                     break;
                 case "Count":
-                    item._Count.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                    item._Count.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)ItemEntry_FieldIndex.Count,
                         errorMask: errorMask));
@@ -656,12 +656,12 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<ItemEntry_ErrorMask> errorMask)
         {
-            item.Item_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item.Item_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)ItemEntry_FieldIndex.Item,
                 errorMask: errorMask));
             if (frame.Complete) return;
-            item._Count.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+            item._Count.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)ItemEntry_FieldIndex.Count,
                 errorMask: errorMask));

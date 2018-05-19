@@ -502,45 +502,45 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "MagicEffect":
-                    item.MagicEffect_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.MagicEffect_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Effect_FieldIndex.MagicEffect,
                         errorMask: errorMask));
                     break;
                 case "Magnitude":
-                    item._Magnitude.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    item._Magnitude.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Effect_FieldIndex.Magnitude,
                         errorMask: errorMask));
                     break;
                 case "Area":
-                    item._Area.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    item._Area.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Effect_FieldIndex.Area,
                         errorMask: errorMask));
                     break;
                 case "Duration":
-                    item._Duration.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    item._Duration.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Effect_FieldIndex.Duration,
                         errorMask: errorMask));
                     break;
                 case "Type":
-                    item._Type.SetIfSucceeded(EnumXmlTranslation<Effect.EffectType>.Instance.Parse(
+                    item._Type.SetIfSucceededOrDefault(EnumXmlTranslation<Effect.EffectType>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Effect_FieldIndex.Type,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "ActorValue":
-                    item._ActorValue.SetIfSucceeded(EnumXmlTranslation<ActorValueExtended>.Instance.Parse(
+                    item._ActorValue.SetIfSucceededOrDefault(EnumXmlTranslation<ActorValueExtended>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Effect_FieldIndex.ActorValue,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "ScriptEffect":
-                    item._ScriptEffect.SetIfSucceeded(LoquiXmlTranslation<ScriptEffect, ScriptEffect_ErrorMask>.Instance.Parse(
+                    item._ScriptEffect.SetIfSucceededOrDefault(LoquiXmlTranslation<ScriptEffect, ScriptEffect_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Effect_FieldIndex.ScriptEffect,
                         errorMask: errorMask));
@@ -818,34 +818,34 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item.MagicEffect_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
+                        item.MagicEffect_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Effect_FieldIndex.MagicEffect,
                             errorMask: errorMask));
-                        item._Magnitude.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        item._Magnitude.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Effect_FieldIndex.Magnitude,
                             errorMask: errorMask));
-                        item._Area.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        item._Area.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Effect_FieldIndex.Area,
                             errorMask: errorMask));
-                        item._Duration.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        item._Duration.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Effect_FieldIndex.Duration,
                             errorMask: errorMask));
-                        item._Type.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Effect.EffectType>.Instance.Parse(
+                        item._Type.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Effect.EffectType>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Effect_FieldIndex.Type,
                             errorMask: errorMask));
-                        item._ActorValue.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(
+                        item._ActorValue.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Effect_FieldIndex.ActorValue,
                             errorMask: errorMask));
                     }
                     return TryGet<Effect_FieldIndex?>.Succeed(Effect_FieldIndex.ActorValue);
                 case "SCIT":
-                    item._ScriptEffect.SetIfSucceeded(LoquiBinaryTranslation<ScriptEffect, ScriptEffect_ErrorMask>.Instance.Parse(
+                    item._ScriptEffect.SetIfSucceededOrDefault(LoquiBinaryTranslation<ScriptEffect, ScriptEffect_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)Effect_FieldIndex.ScriptEffect,
                         errorMask: errorMask));

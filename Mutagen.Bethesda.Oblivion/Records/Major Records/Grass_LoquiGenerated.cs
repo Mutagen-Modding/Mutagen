@@ -590,68 +590,68 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Grass_FieldIndex.Model,
                         errorMask: errorMask));
                     break;
                 case "Density":
-                    item._Density.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Density.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Grass_FieldIndex.Density,
                         errorMask: errorMask));
                     break;
                 case "MinSlope":
-                    item._MinSlope.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._MinSlope.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Grass_FieldIndex.MinSlope,
                         errorMask: errorMask));
                     break;
                 case "MaxSlope":
-                    item._MaxSlope.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._MaxSlope.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Grass_FieldIndex.MaxSlope,
                         errorMask: errorMask));
                     break;
                 case "UnitFromWaterAmount":
-                    item._UnitFromWaterAmount.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    item._UnitFromWaterAmount.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Grass_FieldIndex.UnitFromWaterAmount,
                         errorMask: errorMask));
                     break;
                 case "UnitFromWaterMode":
-                    item._UnitFromWaterMode.SetIfSucceeded(EnumXmlTranslation<Grass.UnitFromWaterType>.Instance.Parse(
+                    item._UnitFromWaterMode.SetIfSucceededOrDefault(EnumXmlTranslation<Grass.UnitFromWaterType>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Grass_FieldIndex.UnitFromWaterMode,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "PositionRange":
-                    item._PositionRange.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._PositionRange.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Grass_FieldIndex.PositionRange,
                         errorMask: errorMask));
                     break;
                 case "HeightRange":
-                    item._HeightRange.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._HeightRange.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Grass_FieldIndex.HeightRange,
                         errorMask: errorMask));
                     break;
                 case "ColorRange":
-                    item._ColorRange.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._ColorRange.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Grass_FieldIndex.ColorRange,
                         errorMask: errorMask));
                     break;
                 case "WavePeriod":
-                    item._WavePeriod.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._WavePeriod.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Grass_FieldIndex.WavePeriod,
                         errorMask: errorMask));
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<Grass.GrassFlag>.Instance.Parse(
+                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<Grass.GrassFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Grass_FieldIndex.Flags,
@@ -942,7 +942,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)Grass_FieldIndex.Model,
                         errorMask: errorMask));
@@ -951,11 +951,11 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Density.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Density.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Grass_FieldIndex.Density,
                             errorMask: errorMask));
-                        item._MinSlope.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._MinSlope.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Grass_FieldIndex.MinSlope,
                             errorMask: errorMask));
@@ -985,27 +985,27 @@ namespace Mutagen.Bethesda.Oblivion
                         {
                             errorMask().Overall = ex;
                         }
-                        item._UnitFromWaterMode.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Parse(
+                        item._UnitFromWaterMode.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Grass_FieldIndex.UnitFromWaterMode,
                             errorMask: errorMask));
-                        item._PositionRange.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._PositionRange.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Grass_FieldIndex.PositionRange,
                             errorMask: errorMask));
-                        item._HeightRange.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._HeightRange.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Grass_FieldIndex.HeightRange,
                             errorMask: errorMask));
-                        item._ColorRange.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._ColorRange.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Grass_FieldIndex.ColorRange,
                             errorMask: errorMask));
-                        item._WavePeriod.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._WavePeriod.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Grass_FieldIndex.WavePeriod,
                             errorMask: errorMask));
-                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.GrassFlag>.Instance.Parse(
+                        item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.GrassFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Grass_FieldIndex.Flags,
                             errorMask: errorMask));

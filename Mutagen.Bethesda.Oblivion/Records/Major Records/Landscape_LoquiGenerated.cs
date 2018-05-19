@@ -547,31 +547,31 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Unknown":
-                    item._Unknown.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._Unknown.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Landscape_FieldIndex.Unknown,
                         errorMask: errorMask));
                     break;
                 case "VertexNormals":
-                    item._VertexNormals.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._VertexNormals.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Landscape_FieldIndex.VertexNormals,
                         errorMask: errorMask));
                     break;
                 case "VertexHeightMap":
-                    item._VertexHeightMap.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._VertexHeightMap.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Landscape_FieldIndex.VertexHeightMap,
                         errorMask: errorMask));
                     break;
                 case "VertexColors":
-                    item._VertexColors.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._VertexColors.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Landscape_FieldIndex.VertexColors,
                         errorMask: errorMask));
                     break;
                 case "Layers":
-                    item._Layers.SetIfSucceeded(KeyedDictXmlTranslation<UInt16, BaseLayer, MaskItem<Exception, BaseLayer_ErrorMask>>.Instance.Parse(
+                    item._Layers.SetIfSucceededOrDefault(KeyedDictXmlTranslation<UInt16, BaseLayer, MaskItem<Exception, BaseLayer_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Landscape_FieldIndex.Layers,
                         errorMask: errorMask,
@@ -585,7 +585,7 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "Textures":
-                    item._Textures.SetIfSucceeded(ListXmlTranslation<FormIDLink<LandTexture>, Exception>.Instance.Parse(
+                    item._Textures.SetIfSucceededOrDefault(ListXmlTranslation<FormIDLink<LandTexture>, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Landscape_FieldIndex.Textures,
                         errorMask: errorMask,
@@ -832,39 +832,35 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var UnknowntryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    item._Unknown.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Landscape_FieldIndex.Unknown,
-                        errorMask: errorMask);
-                    item._Unknown.SetIfSucceeded(UnknowntryGet);
+                        errorMask: errorMask));
                     return TryGet<Landscape_FieldIndex?>.Succeed(Landscape_FieldIndex.Unknown);
                 case "VNML":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var VertexNormalstryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    item._VertexNormals.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Landscape_FieldIndex.VertexNormals,
-                        errorMask: errorMask);
-                    item._VertexNormals.SetIfSucceeded(VertexNormalstryGet);
+                        errorMask: errorMask));
                     return TryGet<Landscape_FieldIndex?>.Succeed(Landscape_FieldIndex.VertexNormals);
                 case "VHGT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var VertexHeightMaptryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    item._VertexHeightMap.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Landscape_FieldIndex.VertexHeightMap,
-                        errorMask: errorMask);
-                    item._VertexHeightMap.SetIfSucceeded(VertexHeightMaptryGet);
+                        errorMask: errorMask));
                     return TryGet<Landscape_FieldIndex?>.Succeed(Landscape_FieldIndex.VertexHeightMap);
                 case "VCLR":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var VertexColorstryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    item._VertexColors.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Landscape_FieldIndex.VertexColors,
-                        errorMask: errorMask);
-                    item._VertexColors.SetIfSucceeded(VertexColorstryGet);
+                        errorMask: errorMask));
                     return TryGet<Landscape_FieldIndex?>.Succeed(Landscape_FieldIndex.VertexColors);
                 case "BTXT":
                 case "ATXT":
-                    var LayerstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<BaseLayer, MaskItem<Exception, BaseLayer_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.Layers.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<BaseLayer, MaskItem<Exception, BaseLayer_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: BaseLayer_Registration.TriggeringRecordTypes,
                         fieldIndex: (int)Landscape_FieldIndex.Layers,
@@ -894,12 +890,11 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             return ret;
                         }
-                        );
-                    item._Layers.SetIfSucceeded(LayerstryGet);
+                        ));
                     return TryGet<Landscape_FieldIndex?>.Succeed(Landscape_FieldIndex.Layers);
                 case "VTEX":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var TexturestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<LandTexture>, Exception>.Instance.ParseRepeatedItem(
+                    item.Textures.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<LandTexture>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Landscape_FieldIndex.Textures,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
@@ -911,8 +906,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask).Bubble((o) => new FormIDLink<LandTexture>(o));
                         }
-                        );
-                    item._Textures.SetIfSucceeded(TexturestryGet);
+                        ));
                     return TryGet<Landscape_FieldIndex?>.Succeed(Landscape_FieldIndex.Textures);
                 default:
                     return Placed.Fill_Binary_RecordTypes(

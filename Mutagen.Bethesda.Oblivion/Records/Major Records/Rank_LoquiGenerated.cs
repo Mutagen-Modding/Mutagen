@@ -481,25 +481,25 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "RankNumber":
-                    item._RankNumber.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                    item._RankNumber.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Rank_FieldIndex.RankNumber,
                         errorMask: errorMask));
                     break;
                 case "MaleName":
-                    item._MaleName.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._MaleName.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Rank_FieldIndex.MaleName,
                         errorMask: errorMask));
                     break;
                 case "FemaleName":
-                    item._FemaleName.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._FemaleName.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Rank_FieldIndex.FemaleName,
                         errorMask: errorMask));
                     break;
                 case "Insignia":
-                    item._Insignia.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Insignia.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Rank_FieldIndex.Insignia,
                         errorMask: errorMask));
@@ -734,7 +734,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "RNAM":
                     if (lastParsed.HasValue && lastParsed.Value >= Rank_FieldIndex.RankNumber) return TryGet<Rank_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._RankNumber.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                    item._RankNumber.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Rank_FieldIndex.RankNumber,
                         errorMask: errorMask));
@@ -742,32 +742,29 @@ namespace Mutagen.Bethesda.Oblivion
                 case "MNAM":
                     if (lastParsed.HasValue && lastParsed.Value >= Rank_FieldIndex.MaleName) return TryGet<Rank_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var MaleNametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._MaleName.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Rank_FieldIndex.MaleName,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._MaleName.SetIfSucceeded(MaleNametryGet);
+                        errorMask: errorMask));
                     return TryGet<Rank_FieldIndex?>.Succeed(Rank_FieldIndex.MaleName);
                 case "FNAM":
                     if (lastParsed.HasValue && lastParsed.Value >= Rank_FieldIndex.FemaleName) return TryGet<Rank_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var FemaleNametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._FemaleName.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Rank_FieldIndex.FemaleName,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._FemaleName.SetIfSucceeded(FemaleNametryGet);
+                        errorMask: errorMask));
                     return TryGet<Rank_FieldIndex?>.Succeed(Rank_FieldIndex.FemaleName);
                 case "INAM":
                     if (lastParsed.HasValue && lastParsed.Value >= Rank_FieldIndex.Insignia) return TryGet<Rank_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var InsigniatryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Insignia.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Rank_FieldIndex.Insignia,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Insignia.SetIfSucceeded(InsigniatryGet);
+                        errorMask: errorMask));
                     return TryGet<Rank_FieldIndex?>.Succeed(Rank_FieldIndex.Insignia);
                 default:
                     return TryGet<Rank_FieldIndex?>.Failure;

@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Objects":
-                    item._Objects.SetIfSucceeded(ListXmlTranslation<RegionDataObject, MaskItem<Exception, RegionDataObject_ErrorMask>>.Instance.Parse(
+                    item._Objects.SetIfSucceededOrDefault(ListXmlTranslation<RegionDataObject, MaskItem<Exception, RegionDataObject_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)RegionDataObjects_FieldIndex.Objects,
                         errorMask: errorMask,
@@ -684,7 +684,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "RDOT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var ObjectstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionDataObject, MaskItem<Exception, RegionDataObject_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.Objects.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionDataObject, MaskItem<Exception, RegionDataObject_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)RegionDataObjects_FieldIndex.Objects,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
@@ -696,8 +696,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._Objects.SetIfSucceeded(ObjectstryGet);
+                        ));
                     return TryGet<RegionDataObjects_FieldIndex?>.Succeed(RegionDataObjects_FieldIndex.Objects);
                 default:
                     return RegionData.Fill_Binary_RecordTypes(

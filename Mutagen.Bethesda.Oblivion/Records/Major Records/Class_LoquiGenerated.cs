@@ -571,19 +571,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Description":
-                    item._Description.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Description.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Class_FieldIndex.Description,
                         errorMask: errorMask));
                     break;
                 case "Icon":
-                    item._Icon.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Class_FieldIndex.Icon,
                         errorMask: errorMask));
                     break;
                 case "PrimaryAttributes":
-                    item._PrimaryAttributes.SetIfSucceeded(ListXmlTranslation<ActorValue, Exception>.Instance.Parse(
+                    item._PrimaryAttributes.SetIfSucceededOrDefault(ListXmlTranslation<ActorValue, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Class_FieldIndex.PrimaryAttributes,
                         errorMask: errorMask,
@@ -597,14 +597,14 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "Specialization":
-                    item._Specialization.SetIfSucceeded(EnumXmlTranslation<Class.SpecializationFlag>.Instance.Parse(
+                    item._Specialization.SetIfSucceededOrDefault(EnumXmlTranslation<Class.SpecializationFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Class_FieldIndex.Specialization,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "SecondaryAttributes":
-                    item._SecondaryAttributes.SetIfSucceeded(ListXmlTranslation<ActorValue, Exception>.Instance.Parse(
+                    item._SecondaryAttributes.SetIfSucceededOrDefault(ListXmlTranslation<ActorValue, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Class_FieldIndex.SecondaryAttributes,
                         errorMask: errorMask,
@@ -618,21 +618,21 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<ClassFlag>.Instance.Parse(
+                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<ClassFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Class_FieldIndex.Flags,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "ClassServices":
-                    item._ClassServices.SetIfSucceeded(EnumXmlTranslation<ClassService>.Instance.Parse(
+                    item._ClassServices.SetIfSucceededOrDefault(EnumXmlTranslation<ClassService>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Class_FieldIndex.ClassServices,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Training":
-                    item._Training.SetIfSucceeded(LoquiXmlTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Parse(
+                    item._Training.SetIfSucceededOrDefault(LoquiXmlTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Class_FieldIndex.Training,
                         errorMask: errorMask));
@@ -863,27 +863,25 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "DESC":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var DescriptiontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Description.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Class_FieldIndex.Description,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Description.SetIfSucceeded(DescriptiontryGet);
+                        errorMask: errorMask));
                     return TryGet<Class_FieldIndex?>.Succeed(Class_FieldIndex.Description);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var IcontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Class_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Icon.SetIfSucceeded(IcontryGet);
+                        errorMask: errorMask));
                     return TryGet<Class_FieldIndex?>.Succeed(Class_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        var PrimaryAttributestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.ParseRepeatedItem(
+                        item.PrimaryAttributes.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.ParseRepeatedItem(
                             frame: frame,
                             amount: 2,
                             fieldIndex: (int)Class_FieldIndex.PrimaryAttributes,
@@ -895,13 +893,12 @@ namespace Mutagen.Bethesda.Oblivion
                                     doMasks: listDoMasks,
                                     errorMask: out listSubMask);
                             }
-                            );
-                        item._PrimaryAttributes.SetIfSucceeded(PrimaryAttributestryGet);
-                        item._Specialization.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(
+                            ));
+                        item._Specialization.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Class_FieldIndex.Specialization,
                             errorMask: errorMask));
-                        var SecondaryAttributestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.ParseRepeatedItem(
+                        item.SecondaryAttributes.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.ParseRepeatedItem(
                             frame: frame,
                             amount: 7,
                             fieldIndex: (int)Class_FieldIndex.SecondaryAttributes,
@@ -913,13 +910,12 @@ namespace Mutagen.Bethesda.Oblivion
                                     doMasks: listDoMasks,
                                     errorMask: out listSubMask);
                             }
-                            );
-                        item._SecondaryAttributes.SetIfSucceeded(SecondaryAttributestryGet);
-                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ClassFlag>.Instance.Parse(
+                            ));
+                        item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ClassFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Class_FieldIndex.Flags,
                             errorMask: errorMask));
-                        item._ClassServices.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ClassService>.Instance.Parse(
+                        item._ClassServices.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ClassService>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Class_FieldIndex.ClassServices,
                             errorMask: errorMask));
@@ -928,7 +924,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.DATADataTypeState |= DATADataType.Break0;
                             return TryGet<Class_FieldIndex?>.Succeed(Class_FieldIndex.ClassServices);
                         }
-                        item._Training.SetIfSucceeded(LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Parse(
+                        item._Training.SetIfSucceededOrDefault(LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Parse(
                             frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Class_FieldIndex.Training,
                             errorMask: errorMask));

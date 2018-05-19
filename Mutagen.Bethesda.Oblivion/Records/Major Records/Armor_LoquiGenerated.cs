@@ -490,25 +490,25 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "ArmorValue":
-                    item._ArmorValue.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._ArmorValue.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Armor_FieldIndex.ArmorValue,
                         errorMask: errorMask));
                     break;
                 case "Value":
-                    item._Value.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    item._Value.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Armor_FieldIndex.Value,
                         errorMask: errorMask));
                     break;
                 case "Health":
-                    item._Health.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    item._Health.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Armor_FieldIndex.Health,
                         errorMask: errorMask));
                     break;
                 case "Weight":
-                    item._Weight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Weight.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Armor_FieldIndex.Weight,
                         errorMask: errorMask));
@@ -781,15 +781,15 @@ namespace Mutagen.Bethesda.Oblivion
                         {
                             errorMask().Overall = ex;
                         }
-                        item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        item._Value.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Armor_FieldIndex.Value,
                             errorMask: errorMask));
-                        item._Health.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        item._Health.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Armor_FieldIndex.Health,
                             errorMask: errorMask));
-                        item._Weight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._Weight.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Armor_FieldIndex.Weight,
                             errorMask: errorMask));

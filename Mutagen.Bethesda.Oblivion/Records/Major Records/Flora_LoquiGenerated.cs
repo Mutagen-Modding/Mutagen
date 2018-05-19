@@ -532,43 +532,43 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Flora_FieldIndex.Model,
                         errorMask: errorMask));
                     break;
                 case "Script":
-                    item.Script_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Script_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Flora_FieldIndex.Script,
                         errorMask: errorMask));
                     break;
                 case "Ingredient":
-                    item.Ingredient_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Ingredient_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Flora_FieldIndex.Ingredient,
                         errorMask: errorMask));
                     break;
                 case "Spring":
-                    item._Spring.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Spring.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Flora_FieldIndex.Spring,
                         errorMask: errorMask));
                     break;
                 case "Summer":
-                    item._Summer.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Summer.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Flora_FieldIndex.Summer,
                         errorMask: errorMask));
                     break;
                 case "Fall":
-                    item._Fall.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Fall.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Flora_FieldIndex.Fall,
                         errorMask: errorMask));
                     break;
                 case "Winter":
-                    item._Winter.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Winter.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Flora_FieldIndex.Winter,
                         errorMask: errorMask));
@@ -803,21 +803,21 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)Flora_FieldIndex.Model,
                         errorMask: errorMask));
                     return TryGet<Flora_FieldIndex?>.Succeed(Flora_FieldIndex.Model);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Flora_FieldIndex.Script,
                         errorMask: errorMask));
                     return TryGet<Flora_FieldIndex?>.Succeed(Flora_FieldIndex.Script);
                 case "PFIG":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Ingredient_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Ingredient_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Flora_FieldIndex.Ingredient,
                         errorMask: errorMask));
@@ -826,19 +826,19 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Spring.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Spring.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Flora_FieldIndex.Spring,
                             errorMask: errorMask));
-                        item._Summer.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Summer.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Flora_FieldIndex.Summer,
                             errorMask: errorMask));
-                        item._Fall.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Fall.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Flora_FieldIndex.Fall,
                             errorMask: errorMask));
-                        item._Winter.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Winter.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Flora_FieldIndex.Winter,
                             errorMask: errorMask));

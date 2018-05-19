@@ -539,55 +539,55 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "AmbientColor":
-                    item._AmbientColor.SetIfSucceeded(ColorXmlTranslation.Instance.ParseNonNull(
+                    item._AmbientColor.SetIfSucceededOrDefault(ColorXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)CellLighting_FieldIndex.AmbientColor,
                         errorMask: errorMask));
                     break;
                 case "DirectionalColor":
-                    item._DirectionalColor.SetIfSucceeded(ColorXmlTranslation.Instance.ParseNonNull(
+                    item._DirectionalColor.SetIfSucceededOrDefault(ColorXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)CellLighting_FieldIndex.DirectionalColor,
                         errorMask: errorMask));
                     break;
                 case "FogColor":
-                    item._FogColor.SetIfSucceeded(ColorXmlTranslation.Instance.ParseNonNull(
+                    item._FogColor.SetIfSucceededOrDefault(ColorXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)CellLighting_FieldIndex.FogColor,
                         errorMask: errorMask));
                     break;
                 case "FogNear":
-                    item._FogNear.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._FogNear.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)CellLighting_FieldIndex.FogNear,
                         errorMask: errorMask));
                     break;
                 case "FogFar":
-                    item._FogFar.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._FogFar.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)CellLighting_FieldIndex.FogFar,
                         errorMask: errorMask));
                     break;
                 case "DirectionalRotationXY":
-                    item._DirectionalRotationXY.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                    item._DirectionalRotationXY.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationXY,
                         errorMask: errorMask));
                     break;
                 case "DirectionalRotationZ":
-                    item._DirectionalRotationZ.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                    item._DirectionalRotationZ.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationZ,
                         errorMask: errorMask));
                     break;
                 case "DirectionalFade":
-                    item._DirectionalFade.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._DirectionalFade.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)CellLighting_FieldIndex.DirectionalFade,
                         errorMask: errorMask));
                     break;
                 case "FogClipDistance":
-                    item._FogClipDistance.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._FogClipDistance.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)CellLighting_FieldIndex.FogClipDistance,
                         errorMask: errorMask));
@@ -799,42 +799,42 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<CellLighting_ErrorMask> errorMask)
         {
-            item._AmbientColor.SetIfSucceeded(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+            item._AmbientColor.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)CellLighting_FieldIndex.AmbientColor,
                 errorMask: errorMask,
                 extraByte: true));
-            item._DirectionalColor.SetIfSucceeded(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+            item._DirectionalColor.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)CellLighting_FieldIndex.DirectionalColor,
                 errorMask: errorMask,
                 extraByte: true));
-            item._FogColor.SetIfSucceeded(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+            item._FogColor.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)CellLighting_FieldIndex.FogColor,
                 errorMask: errorMask,
                 extraByte: true));
-            item._FogNear.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._FogNear.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)CellLighting_FieldIndex.FogNear,
                 errorMask: errorMask));
-            item._FogFar.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._FogFar.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)CellLighting_FieldIndex.FogFar,
                 errorMask: errorMask));
-            item._DirectionalRotationXY.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+            item._DirectionalRotationXY.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationXY,
                 errorMask: errorMask));
-            item._DirectionalRotationZ.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+            item._DirectionalRotationZ.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationZ,
                 errorMask: errorMask));
-            item._DirectionalFade.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._DirectionalFade.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)CellLighting_FieldIndex.DirectionalFade,
                 errorMask: errorMask));
-            item._FogClipDistance.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._FogClipDistance.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)CellLighting_FieldIndex.FogClipDistance,
                 errorMask: errorMask));

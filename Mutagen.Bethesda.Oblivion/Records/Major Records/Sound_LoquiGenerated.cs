@@ -444,13 +444,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "File":
-                    item._File.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._File.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Sound_FieldIndex.File,
                         errorMask: errorMask));
                     break;
                 case "Data":
-                    item._Data.SetIfSucceeded(LoquiXmlTranslation<SoundData, SoundData_ErrorMask>.Instance.Parse(
+                    item._Data.SetIfSucceededOrDefault(LoquiXmlTranslation<SoundData, SoundData_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Sound_FieldIndex.Data,
                         errorMask: errorMask));
@@ -675,21 +675,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var FiletryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._File.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Sound_FieldIndex.File,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._File.SetIfSucceeded(FiletryGet);
+                        errorMask: errorMask));
                     return TryGet<Sound_FieldIndex?>.Succeed(Sound_FieldIndex.File);
                 case "SNDD":
-                    item._Data.SetIfSucceeded(LoquiBinaryTranslation<SoundData, SoundData_ErrorMask>.Instance.Parse(
+                    item._Data.SetIfSucceededOrDefault(LoquiBinaryTranslation<SoundData, SoundData_ErrorMask>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)Sound_FieldIndex.Data,
                         errorMask: errorMask));
                     return TryGet<Sound_FieldIndex?>.Succeed(Sound_FieldIndex.Data);
                 case "SNDX":
-                    item._Data.SetIfSucceeded(LoquiBinaryTranslation<SoundDataExtended, SoundDataExtended_ErrorMask>.Instance.Parse(
+                    item._Data.SetIfSucceededOrDefault(LoquiBinaryTranslation<SoundDataExtended, SoundDataExtended_ErrorMask>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)Sound_FieldIndex.Data,
                         errorMask: errorMask));

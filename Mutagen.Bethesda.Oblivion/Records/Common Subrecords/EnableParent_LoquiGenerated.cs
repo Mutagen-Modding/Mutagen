@@ -411,13 +411,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Reference":
-                    item.Reference_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Reference_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)EnableParent_FieldIndex.Reference,
                         errorMask: errorMask));
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<EnableParent.Flag>.Instance.Parse(
+                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<EnableParent.Flag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)EnableParent_FieldIndex.Flags,
@@ -636,11 +636,11 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<EnableParent_ErrorMask> errorMask)
         {
-            item.Reference_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item.Reference_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)EnableParent_FieldIndex.Reference,
                 errorMask: errorMask));
-            item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<EnableParent.Flag>.Instance.Parse(
+            item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<EnableParent.Flag>.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)EnableParent_FieldIndex.Flags,
                 errorMask: errorMask));

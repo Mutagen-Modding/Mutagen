@@ -1050,25 +1050,25 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "TextureLowerLayer":
-                    item._TextureLowerLayer.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._TextureLowerLayer.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.TextureLowerLayer,
                         errorMask: errorMask));
                     break;
                 case "TextureUpperLayer":
-                    item._TextureUpperLayer.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._TextureUpperLayer.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.TextureUpperLayer,
                         errorMask: errorMask));
                     break;
                 case "Model":
-                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Weather_FieldIndex.Model,
                         errorMask: errorMask));
                     break;
                 case "WeatherTypes":
-                    item._WeatherTypes.SetIfSucceeded(ListXmlTranslation<WeatherType, MaskItem<Exception, WeatherType_ErrorMask>>.Instance.Parse(
+                    item._WeatherTypes.SetIfSucceededOrDefault(ListXmlTranslation<WeatherType, MaskItem<Exception, WeatherType_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Weather_FieldIndex.WeatherTypes,
                         errorMask: errorMask,
@@ -1082,194 +1082,194 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "FogDayNear":
-                    item._FogDayNear.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._FogDayNear.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.FogDayNear,
                         errorMask: errorMask));
                     break;
                 case "FogDayFar":
-                    item._FogDayFar.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._FogDayFar.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.FogDayFar,
                         errorMask: errorMask));
                     break;
                 case "FogNightNear":
-                    item._FogNightNear.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._FogNightNear.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.FogNightNear,
                         errorMask: errorMask));
                     break;
                 case "FogNightFar":
-                    item._FogNightFar.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._FogNightFar.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.FogNightFar,
                         errorMask: errorMask));
                     break;
                 case "HdrEyeAdaptSpeed":
-                    item._HdrEyeAdaptSpeed.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._HdrEyeAdaptSpeed.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrEyeAdaptSpeed,
                         errorMask: errorMask));
                     break;
                 case "HdrBlurRadius":
-                    item._HdrBlurRadius.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._HdrBlurRadius.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrBlurRadius,
                         errorMask: errorMask));
                     break;
                 case "HdrBlurPasses":
-                    item._HdrBlurPasses.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._HdrBlurPasses.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrBlurPasses,
                         errorMask: errorMask));
                     break;
                 case "HdrEmissiveMult":
-                    item._HdrEmissiveMult.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._HdrEmissiveMult.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrEmissiveMult,
                         errorMask: errorMask));
                     break;
                 case "HdrTargetLum":
-                    item._HdrTargetLum.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._HdrTargetLum.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrTargetLum,
                         errorMask: errorMask));
                     break;
                 case "HdrUpperLumClamp":
-                    item._HdrUpperLumClamp.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._HdrUpperLumClamp.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrUpperLumClamp,
                         errorMask: errorMask));
                     break;
                 case "HdrBrightScale":
-                    item._HdrBrightScale.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._HdrBrightScale.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrBrightScale,
                         errorMask: errorMask));
                     break;
                 case "HdrBrightClamp":
-                    item._HdrBrightClamp.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._HdrBrightClamp.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrBrightClamp,
                         errorMask: errorMask));
                     break;
                 case "HdrLumRampNoTex":
-                    item._HdrLumRampNoTex.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._HdrLumRampNoTex.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrLumRampNoTex,
                         errorMask: errorMask));
                     break;
                 case "HdrLumRampMin":
-                    item._HdrLumRampMin.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._HdrLumRampMin.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrLumRampMin,
                         errorMask: errorMask));
                     break;
                 case "HdrLumRampMax":
-                    item._HdrLumRampMax.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._HdrLumRampMax.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrLumRampMax,
                         errorMask: errorMask));
                     break;
                 case "HdrSunlightDimmer":
-                    item._HdrSunlightDimmer.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._HdrSunlightDimmer.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrSunlightDimmer,
                         errorMask: errorMask));
                     break;
                 case "HdrGrassDimmer":
-                    item._HdrGrassDimmer.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._HdrGrassDimmer.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrGrassDimmer,
                         errorMask: errorMask));
                     break;
                 case "HdrTreeDimmer":
-                    item._HdrTreeDimmer.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._HdrTreeDimmer.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrTreeDimmer,
                         errorMask: errorMask));
                     break;
                 case "WindSpeed":
-                    item._WindSpeed.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._WindSpeed.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.WindSpeed,
                         errorMask: errorMask));
                     break;
                 case "CloudSpeedLower":
-                    item._CloudSpeedLower.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._CloudSpeedLower.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.CloudSpeedLower,
                         errorMask: errorMask));
                     break;
                 case "CloudSpeedUpper":
-                    item._CloudSpeedUpper.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._CloudSpeedUpper.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.CloudSpeedUpper,
                         errorMask: errorMask));
                     break;
                 case "TransDelta":
-                    item._TransDelta.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._TransDelta.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.TransDelta,
                         errorMask: errorMask));
                     break;
                 case "SunGlare":
-                    item._SunGlare.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._SunGlare.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.SunGlare,
                         errorMask: errorMask));
                     break;
                 case "SunDamage":
-                    item._SunDamage.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._SunDamage.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.SunDamage,
                         errorMask: errorMask));
                     break;
                 case "PrecipitationBeginFadeIn":
-                    item._PrecipitationBeginFadeIn.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._PrecipitationBeginFadeIn.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.PrecipitationBeginFadeIn,
                         errorMask: errorMask));
                     break;
                 case "PrecipitationEndFadeOut":
-                    item._PrecipitationEndFadeOut.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._PrecipitationEndFadeOut.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.PrecipitationEndFadeOut,
                         errorMask: errorMask));
                     break;
                 case "ThunderLightningBeginFadeIn":
-                    item._ThunderLightningBeginFadeIn.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._ThunderLightningBeginFadeIn.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.ThunderLightningBeginFadeIn,
                         errorMask: errorMask));
                     break;
                 case "ThunderLightningEndFadeOut":
-                    item._ThunderLightningEndFadeOut.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._ThunderLightningEndFadeOut.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.ThunderLightningEndFadeOut,
                         errorMask: errorMask));
                     break;
                 case "ThunderLightningFrequency":
-                    item._ThunderLightningFrequency.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._ThunderLightningFrequency.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.ThunderLightningFrequency,
                         errorMask: errorMask));
                     break;
                 case "Classification":
-                    item._Classification.SetIfSucceeded(EnumXmlTranslation<Weather.WeatherClassification>.Instance.Parse(
+                    item._Classification.SetIfSucceededOrDefault(EnumXmlTranslation<Weather.WeatherClassification>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Weather_FieldIndex.Classification,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "LightningColor":
-                    item._LightningColor.SetIfSucceeded(ColorXmlTranslation.Instance.ParseNonNull(
+                    item._LightningColor.SetIfSucceededOrDefault(ColorXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.LightningColor,
                         errorMask: errorMask));
                     break;
                 case "Sounds":
-                    item._Sounds.SetIfSucceeded(ListXmlTranslation<WeatherSound, MaskItem<Exception, WeatherSound_ErrorMask>>.Instance.Parse(
+                    item._Sounds.SetIfSucceededOrDefault(ListXmlTranslation<WeatherSound, MaskItem<Exception, WeatherSound_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Weather_FieldIndex.Sounds,
                         errorMask: errorMask,
@@ -1515,31 +1515,29 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var TextureLowerLayertryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._TextureLowerLayer.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Weather_FieldIndex.TextureLowerLayer,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._TextureLowerLayer.SetIfSucceeded(TextureLowerLayertryGet);
+                        errorMask: errorMask));
                     return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.TextureLowerLayer);
                 case "DNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var TextureUpperLayertryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._TextureUpperLayer.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Weather_FieldIndex.TextureUpperLayer,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._TextureUpperLayer.SetIfSucceeded(TextureUpperLayertryGet);
+                        errorMask: errorMask));
                     return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.TextureUpperLayer);
                 case "MODL":
-                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)Weather_FieldIndex.Model,
                         errorMask: errorMask));
                     return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.Model);
                 case "NAM0":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var WeatherTypestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType, MaskItem<Exception, WeatherType_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.WeatherTypes.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType, MaskItem<Exception, WeatherType_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Weather_FieldIndex.WeatherTypes,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
@@ -1551,26 +1549,25 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._WeatherTypes.SetIfSucceeded(WeatherTypestryGet);
+                        ));
                     return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.WeatherTypes);
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._FogDayNear.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._FogDayNear.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.FogDayNear,
                             errorMask: errorMask));
-                        item._FogDayFar.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._FogDayFar.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.FogDayFar,
                             errorMask: errorMask));
-                        item._FogNightNear.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._FogNightNear.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.FogNightNear,
                             errorMask: errorMask));
-                        item._FogNightFar.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._FogNightFar.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.FogNightFar,
                             errorMask: errorMask));
@@ -1580,59 +1577,59 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._HdrEyeAdaptSpeed.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._HdrEyeAdaptSpeed.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrEyeAdaptSpeed,
                             errorMask: errorMask));
-                        item._HdrBlurRadius.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._HdrBlurRadius.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrBlurRadius,
                             errorMask: errorMask));
-                        item._HdrBlurPasses.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._HdrBlurPasses.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrBlurPasses,
                             errorMask: errorMask));
-                        item._HdrEmissiveMult.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._HdrEmissiveMult.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrEmissiveMult,
                             errorMask: errorMask));
-                        item._HdrTargetLum.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._HdrTargetLum.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrTargetLum,
                             errorMask: errorMask));
-                        item._HdrUpperLumClamp.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._HdrUpperLumClamp.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrUpperLumClamp,
                             errorMask: errorMask));
-                        item._HdrBrightScale.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._HdrBrightScale.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrBrightScale,
                             errorMask: errorMask));
-                        item._HdrBrightClamp.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._HdrBrightClamp.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrBrightClamp,
                             errorMask: errorMask));
-                        item._HdrLumRampNoTex.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._HdrLumRampNoTex.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrLumRampNoTex,
                             errorMask: errorMask));
-                        item._HdrLumRampMin.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._HdrLumRampMin.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrLumRampMin,
                             errorMask: errorMask));
-                        item._HdrLumRampMax.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._HdrLumRampMax.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrLumRampMax,
                             errorMask: errorMask));
-                        item._HdrSunlightDimmer.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._HdrSunlightDimmer.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrSunlightDimmer,
                             errorMask: errorMask));
-                        item._HdrGrassDimmer.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._HdrGrassDimmer.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrGrassDimmer,
                             errorMask: errorMask));
-                        item._HdrTreeDimmer.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._HdrTreeDimmer.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrTreeDimmer,
                             errorMask: errorMask));
@@ -1642,62 +1639,62 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._WindSpeed.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._WindSpeed.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.WindSpeed,
                             errorMask: errorMask));
-                        item._CloudSpeedLower.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._CloudSpeedLower.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.CloudSpeedLower,
                             errorMask: errorMask));
-                        item._CloudSpeedUpper.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._CloudSpeedUpper.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.CloudSpeedUpper,
                             errorMask: errorMask));
-                        item._TransDelta.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._TransDelta.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.TransDelta,
                             errorMask: errorMask));
-                        item._SunGlare.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._SunGlare.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.SunGlare,
                             errorMask: errorMask));
-                        item._SunDamage.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._SunDamage.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.SunDamage,
                             errorMask: errorMask));
-                        item._PrecipitationBeginFadeIn.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._PrecipitationBeginFadeIn.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.PrecipitationBeginFadeIn,
                             errorMask: errorMask));
-                        item._PrecipitationEndFadeOut.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._PrecipitationEndFadeOut.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.PrecipitationEndFadeOut,
                             errorMask: errorMask));
-                        item._ThunderLightningBeginFadeIn.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._ThunderLightningBeginFadeIn.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.ThunderLightningBeginFadeIn,
                             errorMask: errorMask));
-                        item._ThunderLightningEndFadeOut.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._ThunderLightningEndFadeOut.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.ThunderLightningEndFadeOut,
                             errorMask: errorMask));
-                        item._ThunderLightningFrequency.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._ThunderLightningFrequency.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.ThunderLightningFrequency,
                             errorMask: errorMask));
-                        item._Classification.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Parse(
+                        item._Classification.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(1),
                             fieldIndex: (int)Weather_FieldIndex.Classification,
                             errorMask: errorMask));
-                        item._LightningColor.SetIfSucceeded(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                        item._LightningColor.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.LightningColor,
                             errorMask: errorMask));
                     }
                     return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.LightningColor);
                 case "SNAM":
-                    var SoundstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherSound, MaskItem<Exception, WeatherSound_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.Sounds.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherSound, MaskItem<Exception, WeatherSound_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Weather_Registration.SNAM_HEADER,
                         fieldIndex: (int)Weather_FieldIndex.Sounds,
@@ -1710,8 +1707,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._Sounds.SetIfSucceeded(SoundstryGet);
+                        ));
                     return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.Sounds);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(

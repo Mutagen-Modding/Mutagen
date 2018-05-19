@@ -454,19 +454,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "SymmetricGeometry":
-                    item._SymmetricGeometry.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._SymmetricGeometry.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)FaceGenData_FieldIndex.SymmetricGeometry,
                         errorMask: errorMask));
                     break;
                 case "AsymmetricGeometry":
-                    item._AsymmetricGeometry.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._AsymmetricGeometry.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
                         errorMask: errorMask));
                     break;
                 case "SymmetricTexture":
-                    item._SymmetricTexture.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._SymmetricTexture.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,
                         errorMask: errorMask));
@@ -701,29 +701,26 @@ namespace Mutagen.Bethesda.Oblivion
                 case "FGGS":
                     if (lastParsed.HasValue && lastParsed.Value >= FaceGenData_FieldIndex.SymmetricGeometry) return TryGet<FaceGenData_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var SymmetricGeometrytryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    item._SymmetricGeometry.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)FaceGenData_FieldIndex.SymmetricGeometry,
-                        errorMask: errorMask);
-                    item._SymmetricGeometry.SetIfSucceeded(SymmetricGeometrytryGet);
+                        errorMask: errorMask));
                     return TryGet<FaceGenData_FieldIndex?>.Succeed(FaceGenData_FieldIndex.SymmetricGeometry);
                 case "FGGA":
                     if (lastParsed.HasValue && lastParsed.Value >= FaceGenData_FieldIndex.AsymmetricGeometry) return TryGet<FaceGenData_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var AsymmetricGeometrytryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    item._AsymmetricGeometry.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
-                        errorMask: errorMask);
-                    item._AsymmetricGeometry.SetIfSucceeded(AsymmetricGeometrytryGet);
+                        errorMask: errorMask));
                     return TryGet<FaceGenData_FieldIndex?>.Succeed(FaceGenData_FieldIndex.AsymmetricGeometry);
                 case "FGTS":
                     if (lastParsed.HasValue && lastParsed.Value >= FaceGenData_FieldIndex.SymmetricTexture) return TryGet<FaceGenData_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var SymmetricTexturetryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    item._SymmetricTexture.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,
-                        errorMask: errorMask);
-                    item._SymmetricTexture.SetIfSucceeded(SymmetricTexturetryGet);
+                        errorMask: errorMask));
                     return TryGet<FaceGenData_FieldIndex?>.Succeed(FaceGenData_FieldIndex.SymmetricTexture);
                 default:
                     return TryGet<FaceGenData_FieldIndex?>.Failure;

@@ -540,19 +540,19 @@ namespace Mutagen.Bethesda.Oblivion
                         errMaskObj: MaskItem<Exception, ScriptMetaSummary_ErrorMask>.WrapValue(ScriptMetaSummary_ErrorMask.Combine(MetadataSummarycreateMask, MetadataSummarycopyMask)));
                     break;
                 case "CompiledScript":
-                    item._CompiledScript.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._CompiledScript.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Script_FieldIndex.CompiledScript,
                         errorMask: errorMask));
                     break;
                 case "SourceCode":
-                    item._SourceCode.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._SourceCode.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Script_FieldIndex.SourceCode,
                         errorMask: errorMask));
                     break;
                 case "LocalVariables":
-                    item._LocalVariables.SetIfSucceeded(ListXmlTranslation<LocalVariable, MaskItem<Exception, LocalVariable_ErrorMask>>.Instance.Parse(
+                    item._LocalVariables.SetIfSucceededOrDefault(ListXmlTranslation<LocalVariable, MaskItem<Exception, LocalVariable_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Script_FieldIndex.LocalVariables,
                         errorMask: errorMask,
@@ -566,7 +566,7 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "References":
-                    item._References.SetIfSucceeded(ListXmlTranslation<ScriptReference, MaskItem<Exception, ScriptReference_ErrorMask>>.Instance.Parse(
+                    item._References.SetIfSucceededOrDefault(ListXmlTranslation<ScriptReference, MaskItem<Exception, ScriptReference_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Script_FieldIndex.References,
                         errorMask: errorMask,
@@ -817,24 +817,22 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Script_FieldIndex?>.Succeed(Script_FieldIndex.MetadataSummary);
                 case "SCDA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var CompiledScripttryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    item._CompiledScript.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Script_FieldIndex.CompiledScript,
-                        errorMask: errorMask);
-                    item._CompiledScript.SetIfSucceeded(CompiledScripttryGet);
+                        errorMask: errorMask));
                     return TryGet<Script_FieldIndex?>.Succeed(Script_FieldIndex.CompiledScript);
                 case "SCTX":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var SourceCodetryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._SourceCode.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Script_FieldIndex.SourceCode,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._SourceCode.SetIfSucceeded(SourceCodetryGet);
+                        errorMask: errorMask));
                     return TryGet<Script_FieldIndex?>.Succeed(Script_FieldIndex.SourceCode);
                 case "SLSD":
                 case "SCVR":
-                    var LocalVariablestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<LocalVariable, MaskItem<Exception, LocalVariable_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.LocalVariables.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<LocalVariable, MaskItem<Exception, LocalVariable_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: LocalVariable_Registration.TriggeringRecordTypes,
                         fieldIndex: (int)Script_FieldIndex.LocalVariables,
@@ -847,12 +845,11 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._LocalVariables.SetIfSucceeded(LocalVariablestryGet);
+                        ));
                     return TryGet<Script_FieldIndex?>.Succeed(Script_FieldIndex.LocalVariables);
                 case "SCRV":
                 case "SCRO":
-                    var ReferencestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptReference, MaskItem<Exception, ScriptReference_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.References.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptReference, MaskItem<Exception, ScriptReference_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: ScriptReference_Registration.TriggeringRecordTypes,
                         fieldIndex: (int)Script_FieldIndex.References,
@@ -882,8 +879,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             return ret;
                         }
-                        );
-                    item._References.SetIfSucceeded(ReferencestryGet);
+                        ));
                     return TryGet<Script_FieldIndex?>.Succeed(Script_FieldIndex.References);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(

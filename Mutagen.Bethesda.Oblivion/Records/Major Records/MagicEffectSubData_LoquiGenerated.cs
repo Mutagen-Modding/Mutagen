@@ -464,43 +464,43 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "EnchantEffect":
-                    item.EnchantEffect_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.EnchantEffect_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)MagicEffectSubData_FieldIndex.EnchantEffect,
                         errorMask: errorMask));
                     break;
                 case "CastingSound":
-                    item.CastingSound_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.CastingSound_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)MagicEffectSubData_FieldIndex.CastingSound,
                         errorMask: errorMask));
                     break;
                 case "BoltSound":
-                    item.BoltSound_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.BoltSound_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)MagicEffectSubData_FieldIndex.BoltSound,
                         errorMask: errorMask));
                     break;
                 case "HitSound":
-                    item.HitSound_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.HitSound_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)MagicEffectSubData_FieldIndex.HitSound,
                         errorMask: errorMask));
                     break;
                 case "AreaSound":
-                    item.AreaSound_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.AreaSound_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)MagicEffectSubData_FieldIndex.AreaSound,
                         errorMask: errorMask));
                     break;
                 case "ConstantEffectEnchantmentFactor":
-                    item._ConstantEffectEnchantmentFactor.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._ConstantEffectEnchantmentFactor.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor,
                         errorMask: errorMask));
                     break;
                 case "ConstantEffectBarterFactor":
-                    item._ConstantEffectBarterFactor.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._ConstantEffectBarterFactor.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor,
                         errorMask: errorMask));
@@ -718,31 +718,31 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<MagicEffectSubData_ErrorMask> errorMask)
         {
-            item.EnchantEffect_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item.EnchantEffect_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.EnchantEffect,
                 errorMask: errorMask));
-            item.CastingSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item.CastingSound_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.CastingSound,
                 errorMask: errorMask));
-            item.BoltSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item.BoltSound_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.BoltSound,
                 errorMask: errorMask));
-            item.HitSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item.HitSound_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.HitSound,
                 errorMask: errorMask));
-            item.AreaSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item.AreaSound_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.AreaSound,
                 errorMask: errorMask));
-            item._ConstantEffectEnchantmentFactor.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._ConstantEffectEnchantmentFactor.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor,
                 errorMask: errorMask));
-            item._ConstantEffectBarterFactor.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._ConstantEffectBarterFactor.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor,
                 errorMask: errorMask));

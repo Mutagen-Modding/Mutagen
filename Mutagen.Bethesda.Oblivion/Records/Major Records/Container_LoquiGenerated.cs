@@ -541,19 +541,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Container_FieldIndex.Model,
                         errorMask: errorMask));
                     break;
                 case "Script":
-                    item.Script_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Script_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Container_FieldIndex.Script,
                         errorMask: errorMask));
                     break;
                 case "Items":
-                    item._Items.SetIfSucceeded(ListXmlTranslation<ContainerItem, MaskItem<Exception, ContainerItem_ErrorMask>>.Instance.Parse(
+                    item._Items.SetIfSucceededOrDefault(ListXmlTranslation<ContainerItem, MaskItem<Exception, ContainerItem_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Container_FieldIndex.Items,
                         errorMask: errorMask,
@@ -567,26 +567,26 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<Container.ContainerFlag>.Instance.Parse(
+                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<Container.ContainerFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Container_FieldIndex.Flags,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Weight":
-                    item._Weight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Weight.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Container_FieldIndex.Weight,
                         errorMask: errorMask));
                     break;
                 case "OpenSound":
-                    item.OpenSound_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.OpenSound_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Container_FieldIndex.OpenSound,
                         errorMask: errorMask));
                     break;
                 case "CloseSound":
-                    item.CloseSound_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.CloseSound_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Container_FieldIndex.CloseSound,
                         errorMask: errorMask));
@@ -826,20 +826,20 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)Container_FieldIndex.Model,
                         errorMask: errorMask));
                     return TryGet<Container_FieldIndex?>.Succeed(Container_FieldIndex.Model);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Container_FieldIndex.Script,
                         errorMask: errorMask));
                     return TryGet<Container_FieldIndex?>.Succeed(Container_FieldIndex.Script);
                 case "CNTO":
-                    var ItemstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<ContainerItem, MaskItem<Exception, ContainerItem_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.Items.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<ContainerItem, MaskItem<Exception, ContainerItem_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Container_Registration.CNTO_HEADER,
                         fieldIndex: (int)Container_FieldIndex.Items,
@@ -852,18 +852,17 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._Items.SetIfSucceeded(ItemstryGet);
+                        ));
                     return TryGet<Container_FieldIndex?>.Succeed(Container_FieldIndex.Items);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Container.ContainerFlag>.Instance.Parse(
+                        item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Container.ContainerFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(1),
                             fieldIndex: (int)Container_FieldIndex.Flags,
                             errorMask: errorMask));
-                        item._Weight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._Weight.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Container_FieldIndex.Weight,
                             errorMask: errorMask));
@@ -871,14 +870,14 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Container_FieldIndex?>.Succeed(Container_FieldIndex.Weight);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.OpenSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.OpenSound_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Container_FieldIndex.OpenSound,
                         errorMask: errorMask));
                     return TryGet<Container_FieldIndex?>.Succeed(Container_FieldIndex.OpenSound);
                 case "QNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.CloseSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.CloseSound_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Container_FieldIndex.CloseSound,
                         errorMask: errorMask));

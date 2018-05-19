@@ -419,14 +419,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Skill":
-                    item._Skill.SetIfSucceeded(EnumXmlTranslation<ActorValue>.Instance.Parse(
+                    item._Skill.SetIfSucceededOrDefault(EnumXmlTranslation<ActorValue>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)SkillBoost_FieldIndex.Skill,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Boost":
-                    item._Boost.SetIfSucceeded(Int8XmlTranslation.Instance.ParseNonNull(
+                    item._Boost.SetIfSucceededOrDefault(Int8XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)SkillBoost_FieldIndex.Boost,
                         errorMask: errorMask));
@@ -631,11 +631,11 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<SkillBoost_ErrorMask> errorMask)
         {
-            item._Skill.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+            item._Skill.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
                 frame: frame.SpawnWithLength(1),
                 fieldIndex: (int)SkillBoost_FieldIndex.Skill,
                 errorMask: errorMask));
-            item._Boost.SetIfSucceeded(Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Parse(
+            item._Boost.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)SkillBoost_FieldIndex.Boost,
                 errorMask: errorMask));

@@ -410,13 +410,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Male":
-                    item._Male.SetIfSucceeded(LoquiXmlTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
+                    item._Male.SetIfSucceededOrDefault(LoquiXmlTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)RaceStatsGendered_FieldIndex.Male,
                         errorMask: errorMask));
                     break;
                 case "Female":
-                    item._Female.SetIfSucceeded(LoquiXmlTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
+                    item._Female.SetIfSucceededOrDefault(LoquiXmlTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)RaceStatsGendered_FieldIndex.Female,
                         errorMask: errorMask));
@@ -628,11 +628,11 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<RaceStatsGendered_ErrorMask> errorMask)
         {
-            item._Male.SetIfSucceeded(LoquiBinaryTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
+            item._Male.SetIfSucceededOrDefault(LoquiBinaryTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
                 frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RaceStatsGendered_FieldIndex.Male,
                 errorMask: errorMask));
-            item._Female.SetIfSucceeded(LoquiBinaryTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
+            item._Female.SetIfSucceededOrDefault(LoquiBinaryTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
                 frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RaceStatsGendered_FieldIndex.Female,
                 errorMask: errorMask));

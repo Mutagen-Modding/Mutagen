@@ -425,20 +425,20 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Sound":
-                    item.Sound_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Sound_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RegionSound_FieldIndex.Sound,
                         errorMask: errorMask));
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<RegionSound.Flag>.Instance.Parse(
+                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<RegionSound.Flag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)RegionSound_FieldIndex.Flags,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Chance":
-                    item._Chance.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Chance.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RegionSound_FieldIndex.Chance,
                         errorMask: errorMask));
@@ -652,15 +652,15 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<RegionSound_ErrorMask> errorMask)
         {
-            item.Sound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item.Sound_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RegionSound_FieldIndex.Sound,
                 errorMask: errorMask));
-            item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionSound.Flag>.Instance.Parse(
+            item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionSound.Flag>.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)RegionSound_FieldIndex.Flags,
                 errorMask: errorMask));
-            item._Chance.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._Chance.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RegionSound_FieldIndex.Chance,
                 errorMask: errorMask));

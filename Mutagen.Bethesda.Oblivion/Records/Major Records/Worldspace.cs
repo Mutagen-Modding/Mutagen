@@ -81,19 +81,19 @@ namespace Mutagen.Bethesda.Oblivion
                     switch (subType.Type)
                     {
                         case "ROAD":
-                            obj.Road_Property.SetIfSucceeded(LoquiBinaryTranslation<Road, Road_ErrorMask>.Instance.Parse(
+                            obj.Road_Property.SetIfSucceededOrDefault(LoquiBinaryTranslation<Road, Road_ErrorMask>.Instance.Parse(
                                 frame: subFrame,
                                 fieldIndex: (int)Worldspace_FieldIndex.Road,
                                 errorMask: errorMask));
                             break;
                         case "CELL":
-                            obj.TopCell_Property.SetIfSucceeded(LoquiBinaryTranslation<Cell, Cell_ErrorMask>.Instance.Parse(
+                            obj.TopCell_Property.SetIfSucceededOrDefault(LoquiBinaryTranslation<Cell, Cell_ErrorMask>.Instance.Parse(
                                 frame: subFrame,
                                 fieldIndex: (int)Worldspace_FieldIndex.TopCell,
                                 errorMask: errorMask));
                             break;
                         case "GRUP":
-                            obj._SubCells.SetIfSucceeded(Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock, MaskItem<Exception, WorldspaceBlock_ErrorMask>>.Instance.ParseRepeatedItem(
+                            obj._SubCells.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock, MaskItem<Exception, WorldspaceBlock_ErrorMask>>.Instance.ParseRepeatedItem(
                                 frame: frame,
                                 triggeringRecord: Worldspace_Registration.GRUP_HEADER,
                                 fieldIndex: (int)Worldspace_FieldIndex.SubCells,

@@ -882,140 +882,140 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Base":
-                    item.Base_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Base_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PlacedObject_FieldIndex.Base,
                         errorMask: errorMask));
                     break;
                 case "TeleportDestination":
-                    item._TeleportDestination.SetIfSucceeded(LoquiXmlTranslation<TeleportDestination, TeleportDestination_ErrorMask>.Instance.Parse(
+                    item._TeleportDestination.SetIfSucceededOrDefault(LoquiXmlTranslation<TeleportDestination, TeleportDestination_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)PlacedObject_FieldIndex.TeleportDestination,
                         errorMask: errorMask));
                     break;
                 case "Lock":
-                    item._Lock.SetIfSucceeded(LoquiXmlTranslation<LockInformation, LockInformation_ErrorMask>.Instance.Parse(
+                    item._Lock.SetIfSucceededOrDefault(LoquiXmlTranslation<LockInformation, LockInformation_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)PlacedObject_FieldIndex.Lock,
                         errorMask: errorMask));
                     break;
                 case "Owner":
-                    item.Owner_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Owner_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PlacedObject_FieldIndex.Owner,
                         errorMask: errorMask));
                     break;
                 case "FactionRank":
-                    item._FactionRank.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                    item._FactionRank.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PlacedObject_FieldIndex.FactionRank,
                         errorMask: errorMask));
                     break;
                 case "GlobalVariable":
-                    item.GlobalVariable_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.GlobalVariable_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PlacedObject_FieldIndex.GlobalVariable,
                         errorMask: errorMask));
                     break;
                 case "EnableParent":
-                    item._EnableParent.SetIfSucceeded(LoquiXmlTranslation<EnableParent, EnableParent_ErrorMask>.Instance.Parse(
+                    item._EnableParent.SetIfSucceededOrDefault(LoquiXmlTranslation<EnableParent, EnableParent_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)PlacedObject_FieldIndex.EnableParent,
                         errorMask: errorMask));
                     break;
                 case "Target":
-                    item.Target_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Target_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PlacedObject_FieldIndex.Target,
                         errorMask: errorMask));
                     break;
                 case "SpeedTreeSeed":
-                    item._SpeedTreeSeed.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._SpeedTreeSeed.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PlacedObject_FieldIndex.SpeedTreeSeed,
                         errorMask: errorMask));
                     break;
                 case "DistantLODData":
-                    item._DistantLODData.SetIfSucceeded(LoquiXmlTranslation<DistantLODData, DistantLODData_ErrorMask>.Instance.Parse(
+                    item._DistantLODData.SetIfSucceededOrDefault(LoquiXmlTranslation<DistantLODData, DistantLODData_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)PlacedObject_FieldIndex.DistantLODData,
                         errorMask: errorMask));
                     break;
                 case "Charge":
-                    item._Charge.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Charge.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PlacedObject_FieldIndex.Charge,
                         errorMask: errorMask));
                     break;
                 case "Health":
-                    item._Health.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                    item._Health.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PlacedObject_FieldIndex.Health,
                         errorMask: errorMask));
                     break;
                 case "LevelModifier":
-                    item._LevelModifier.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                    item._LevelModifier.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PlacedObject_FieldIndex.LevelModifier,
                         errorMask: errorMask));
                     break;
                 case "Unknown":
-                    item.Unknown_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Unknown_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
                         errorMask: errorMask));
                     break;
                 case "ActionFlags":
-                    item._ActionFlags.SetIfSucceeded(EnumXmlTranslation<PlacedObject.ActionFlag>.Instance.Parse(
+                    item._ActionFlags.SetIfSucceededOrDefault(EnumXmlTranslation<PlacedObject.ActionFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)PlacedObject_FieldIndex.ActionFlags,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Count":
-                    item._Count.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                    item._Count.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PlacedObject_FieldIndex.Count,
                         errorMask: errorMask));
                     break;
                 case "MapMarker":
-                    item._MapMarker.SetIfSucceeded(LoquiXmlTranslation<MapMarker, MapMarker_ErrorMask>.Instance.Parse(
+                    item._MapMarker.SetIfSucceededOrDefault(LoquiXmlTranslation<MapMarker, MapMarker_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)PlacedObject_FieldIndex.MapMarker,
                         errorMask: errorMask));
                     break;
                 case "OpenByDefault":
-                    item._OpenByDefault.SetIfSucceeded(BooleanXmlTranslation.Instance.ParseNonNull(
+                    item._OpenByDefault.SetIfSucceededOrDefault(BooleanXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PlacedObject_FieldIndex.OpenByDefault,
                         errorMask: errorMask));
                     break;
                 case "RagdollData":
-                    item._RagdollData.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._RagdollData.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)PlacedObject_FieldIndex.RagdollData,
                         errorMask: errorMask));
                     break;
                 case "Scale":
-                    item._Scale.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Scale.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PlacedObject_FieldIndex.Scale,
                         errorMask: errorMask));
                     break;
                 case "ContainedSoul":
-                    item.ContainedSoul_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.ContainedSoul_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PlacedObject_FieldIndex.ContainedSoul,
                         errorMask: errorMask));
                     break;
                 case "Position":
-                    item._Position.SetIfSucceeded(P3FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Position.SetIfSucceededOrDefault(P3FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PlacedObject_FieldIndex.Position,
                         errorMask: errorMask));
                     break;
                 case "Rotation":
-                    item._Rotation.SetIfSucceeded(P3FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Rotation.SetIfSucceededOrDefault(P3FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PlacedObject_FieldIndex.Rotation,
                         errorMask: errorMask));
@@ -1309,115 +1309,115 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "NAME":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Base_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Base_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedObject_FieldIndex.Base,
                         errorMask: errorMask));
                     return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.Base);
                 case "XTEL":
-                    item._TeleportDestination.SetIfSucceeded(LoquiBinaryTranslation<TeleportDestination, TeleportDestination_ErrorMask>.Instance.Parse(
+                    item._TeleportDestination.SetIfSucceededOrDefault(LoquiBinaryTranslation<TeleportDestination, TeleportDestination_ErrorMask>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)PlacedObject_FieldIndex.TeleportDestination,
                         errorMask: errorMask));
                     return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.TeleportDestination);
                 case "XLOC":
-                    item._Lock.SetIfSucceeded(LoquiBinaryTranslation<LockInformation, LockInformation_ErrorMask>.Instance.Parse(
+                    item._Lock.SetIfSucceededOrDefault(LoquiBinaryTranslation<LockInformation, LockInformation_ErrorMask>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)PlacedObject_FieldIndex.Lock,
                         errorMask: errorMask));
                     return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.Lock);
                 case "XOWN":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Owner_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Owner_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedObject_FieldIndex.Owner,
                         errorMask: errorMask));
                     return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.Owner);
                 case "XRNK":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._FactionRank.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                    item._FactionRank.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedObject_FieldIndex.FactionRank,
                         errorMask: errorMask));
                     return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.FactionRank);
                 case "XGLB":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.GlobalVariable_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.GlobalVariable_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedObject_FieldIndex.GlobalVariable,
                         errorMask: errorMask));
                     return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.GlobalVariable);
                 case "XESP":
-                    item._EnableParent.SetIfSucceeded(LoquiBinaryTranslation<EnableParent, EnableParent_ErrorMask>.Instance.Parse(
+                    item._EnableParent.SetIfSucceededOrDefault(LoquiBinaryTranslation<EnableParent, EnableParent_ErrorMask>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)PlacedObject_FieldIndex.EnableParent,
                         errorMask: errorMask));
                     return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.EnableParent);
                 case "XTRG":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Target_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Target_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedObject_FieldIndex.Target,
                         errorMask: errorMask));
                     return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.Target);
                 case "XSED":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._SpeedTreeSeed.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                    item._SpeedTreeSeed.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedObject_FieldIndex.SpeedTreeSeed,
                         errorMask: errorMask));
                     return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.SpeedTreeSeed);
                 case "XLOD":
-                    item._DistantLODData.SetIfSucceeded(LoquiBinaryTranslation<DistantLODData, DistantLODData_ErrorMask>.Instance.Parse(
+                    item._DistantLODData.SetIfSucceededOrDefault(LoquiBinaryTranslation<DistantLODData, DistantLODData_ErrorMask>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)PlacedObject_FieldIndex.DistantLODData,
                         errorMask: errorMask));
                     return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.DistantLODData);
                 case "XCHG":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Charge.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    item._Charge.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedObject_FieldIndex.Charge,
                         errorMask: errorMask));
                     return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.Charge);
                 case "XHLT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Health.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                    item._Health.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedObject_FieldIndex.Health,
                         errorMask: errorMask));
                     return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.Health);
                 case "XLCM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._LevelModifier.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                    item._LevelModifier.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedObject_FieldIndex.LevelModifier,
                         errorMask: errorMask));
                     return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.LevelModifier);
                 case "XRTM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Unknown_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Unknown_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
                         errorMask: errorMask));
                     return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.Unknown);
                 case "XACT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._ActionFlags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<PlacedObject.ActionFlag>.Instance.Parse(
+                    item._ActionFlags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<PlacedObject.ActionFlag>.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedObject_FieldIndex.ActionFlags,
                         errorMask: errorMask));
                     return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.ActionFlags);
                 case "XCNT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Count.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                    item._Count.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedObject_FieldIndex.Count,
                         errorMask: errorMask));
                     return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.Count);
                 case "XMRK":
                     frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
-                    item._MapMarker.SetIfSucceeded(LoquiBinaryTranslation<MapMarker, MapMarker_ErrorMask>.Instance.Parse(
+                    item._MapMarker.SetIfSucceededOrDefault(LoquiBinaryTranslation<MapMarker, MapMarker_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)PlacedObject_FieldIndex.MapMarker,
                         errorMask: errorMask));
@@ -1442,22 +1442,21 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.OpenByDefault);
                 case "XRGD":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var RagdollDatatryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    item._RagdollData.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedObject_FieldIndex.RagdollData,
-                        errorMask: errorMask);
-                    item._RagdollData.SetIfSucceeded(RagdollDatatryGet);
+                        errorMask: errorMask));
                     return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.RagdollData);
                 case "XSCL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Scale.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    item._Scale.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedObject_FieldIndex.Scale,
                         errorMask: errorMask));
                     return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.Scale);
                 case "XSOL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.ContainedSoul_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.ContainedSoul_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedObject_FieldIndex.ContainedSoul,
                         errorMask: errorMask));
@@ -1466,11 +1465,11 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Position.SetIfSucceeded(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+                        item._Position.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)PlacedObject_FieldIndex.Position,
                             errorMask: errorMask));
-                        item._Rotation.SetIfSucceeded(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+                        item._Rotation.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)PlacedObject_FieldIndex.Rotation,
                             errorMask: errorMask));

@@ -512,7 +512,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Relations":
-                    item._Relations.SetIfSucceeded(ListXmlTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.Parse(
+                    item._Relations.SetIfSucceededOrDefault(ListXmlTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Faction_FieldIndex.Relations,
                         errorMask: errorMask,
@@ -526,20 +526,20 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<Faction.FactionFlag>.Instance.Parse(
+                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<Faction.FactionFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Faction_FieldIndex.Flags,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "CrimeGoldMultiplier":
-                    item._CrimeGoldMultiplier.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._CrimeGoldMultiplier.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Faction_FieldIndex.CrimeGoldMultiplier,
                         errorMask: errorMask));
                     break;
                 case "Ranks":
-                    item._Ranks.SetIfSucceeded(ListXmlTranslation<Rank, MaskItem<Exception, Rank_ErrorMask>>.Instance.Parse(
+                    item._Ranks.SetIfSucceededOrDefault(ListXmlTranslation<Rank, MaskItem<Exception, Rank_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Faction_FieldIndex.Ranks,
                         errorMask: errorMask,
@@ -784,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "XNAM":
-                    var RelationstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.Relations.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Faction_Registration.XNAM_HEADER,
                         fieldIndex: (int)Faction_FieldIndex.Relations,
@@ -797,19 +797,18 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._Relations.SetIfSucceeded(RelationstryGet);
+                        ));
                     return TryGet<Faction_FieldIndex?>.Succeed(Faction_FieldIndex.Relations);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(
+                    item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Faction_FieldIndex.Flags,
                         errorMask: errorMask));
                     return TryGet<Faction_FieldIndex?>.Succeed(Faction_FieldIndex.Flags);
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._CrimeGoldMultiplier.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    item._CrimeGoldMultiplier.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Faction_FieldIndex.CrimeGoldMultiplier,
                         errorMask: errorMask));
@@ -818,7 +817,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "MNAM":
                 case "FNAM":
                 case "INAM":
-                    var RankstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Rank, MaskItem<Exception, Rank_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.Ranks.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<Rank, MaskItem<Exception, Rank_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Rank_Registration.TriggeringRecordTypes,
                         fieldIndex: (int)Faction_FieldIndex.Ranks,
@@ -831,8 +830,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._Ranks.SetIfSucceeded(RankstryGet);
+                        ));
                     return TryGet<Faction_FieldIndex?>.Succeed(Faction_FieldIndex.Ranks);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(

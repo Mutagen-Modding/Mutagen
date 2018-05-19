@@ -452,19 +452,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "StaticAttenuation":
-                    item._StaticAttenuation.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._StaticAttenuation.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)SoundDataExtended_FieldIndex.StaticAttenuation,
                         errorMask: errorMask));
                     break;
                 case "StopTime":
-                    item._StopTime.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._StopTime.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)SoundDataExtended_FieldIndex.StopTime,
                         errorMask: errorMask));
                     break;
                 case "StartTime":
-                    item._StartTime.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._StartTime.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)SoundDataExtended_FieldIndex.StartTime,
                         errorMask: errorMask));

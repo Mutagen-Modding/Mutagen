@@ -506,31 +506,31 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Key_FieldIndex.Model,
                         errorMask: errorMask));
                     break;
                 case "Icon":
-                    item._Icon.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Key_FieldIndex.Icon,
                         errorMask: errorMask));
                     break;
                 case "Script":
-                    item.Script_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Script_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Key_FieldIndex.Script,
                         errorMask: errorMask));
                     break;
                 case "Value":
-                    item._Value.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    item._Value.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Key_FieldIndex.Value,
                         errorMask: errorMask));
                     break;
                 case "Weight":
-                    item._Weight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Weight.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Key_FieldIndex.Weight,
                         errorMask: errorMask));
@@ -764,23 +764,22 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)Key_FieldIndex.Model,
                         errorMask: errorMask));
                     return TryGet<Key_FieldIndex?>.Succeed(Key_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var IcontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Key_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Icon.SetIfSucceeded(IcontryGet);
+                        errorMask: errorMask));
                     return TryGet<Key_FieldIndex?>.Succeed(Key_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Key_FieldIndex.Script,
                         errorMask: errorMask));
@@ -789,11 +788,11 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        item._Value.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Key_FieldIndex.Value,
                             errorMask: errorMask));
-                        item._Weight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._Weight.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Key_FieldIndex.Weight,
                             errorMask: errorMask));

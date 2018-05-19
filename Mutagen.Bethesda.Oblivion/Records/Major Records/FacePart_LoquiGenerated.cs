@@ -456,20 +456,20 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Index":
-                    item._Index.SetIfSucceeded(EnumXmlTranslation<Race.FaceIndex>.Instance.Parse(
+                    item._Index.SetIfSucceededOrDefault(EnumXmlTranslation<Race.FaceIndex>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)FacePart_FieldIndex.Index,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Model":
-                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)FacePart_FieldIndex.Model,
                         errorMask: errorMask));
                     break;
                 case "Icon":
-                    item._Icon.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)FacePart_FieldIndex.Icon,
                         errorMask: errorMask));
@@ -704,14 +704,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "INDX":
                     if (lastParsed.HasValue && lastParsed.Value >= FacePart_FieldIndex.Index) return TryGet<FacePart_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Index.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.FaceIndex>.Instance.Parse(
+                    item._Index.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.FaceIndex>.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)FacePart_FieldIndex.Index,
                         errorMask: errorMask));
                     return TryGet<FacePart_FieldIndex?>.Succeed(FacePart_FieldIndex.Index);
                 case "MODL":
                     if (lastParsed.HasValue && lastParsed.Value >= FacePart_FieldIndex.Model) return TryGet<FacePart_FieldIndex?>.Failure;
-                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)FacePart_FieldIndex.Model,
                         errorMask: errorMask));
@@ -719,12 +719,11 @@ namespace Mutagen.Bethesda.Oblivion
                 case "ICON":
                     if (lastParsed.HasValue && lastParsed.Value >= FacePart_FieldIndex.Icon) return TryGet<FacePart_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var IcontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)FacePart_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Icon.SetIfSucceeded(IcontryGet);
+                        errorMask: errorMask));
                     return TryGet<FacePart_FieldIndex?>.Succeed(FacePart_FieldIndex.Icon);
                 default:
                     return TryGet<FacePart_FieldIndex?>.Failure;

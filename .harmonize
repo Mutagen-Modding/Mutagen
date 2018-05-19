@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>bb944f58f776ed704d4fc4abbe2827840c9a3b0f</Sha>
+         <Sha>21e8cdda843729e1591ccad34c529a6a8bbfe570</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>05-12-2018 01:20:28</CommitDate>
-         <Description>More NotifyingSetItem subclasses, to omit the default value member when unnecessary</Description>
+         <CommitDate>05-18-2018 23:52:39</CommitDate>
+         <Description>DefaultValue and Unset moved to IHasItem.  SetCurrentAsDefault removed.   SetIfSucceededOrDefault</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>e6d691cc8555c066c332fce2222f61ff4587c224</Sha>
+         <Sha>1cebaa726956ae61818aa76b41e51988268cf64a</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>05-14-2018 00:20:33</CommitDate>
-         <Description>Interfaces for a class now print on separate lines</Description>
+         <CommitDate>05-18-2018 23:53:00</CommitDate>
+         <Description>SetIfSucceededOrDefault usage</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

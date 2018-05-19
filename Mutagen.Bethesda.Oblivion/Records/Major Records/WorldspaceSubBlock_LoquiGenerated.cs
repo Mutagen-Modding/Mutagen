@@ -462,26 +462,26 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "BlockNumber":
-                    item._BlockNumber.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._BlockNumber.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)WorldspaceSubBlock_FieldIndex.BlockNumber,
                         errorMask: errorMask));
                     break;
                 case "GroupType":
-                    item._GroupType.SetIfSucceeded(EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
+                    item._GroupType.SetIfSucceededOrDefault(EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)WorldspaceSubBlock_FieldIndex.GroupType,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "LastModified":
-                    item._LastModified.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._LastModified.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)WorldspaceSubBlock_FieldIndex.LastModified,
                         errorMask: errorMask));
                     break;
                 case "Items":
-                    item._Items.SetIfSucceeded(ListXmlTranslation<Cell, MaskItem<Exception, Cell_ErrorMask>>.Instance.Parse(
+                    item._Items.SetIfSucceededOrDefault(ListXmlTranslation<Cell, MaskItem<Exception, Cell_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)WorldspaceSubBlock_FieldIndex.Items,
                         errorMask: errorMask,
@@ -717,20 +717,18 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<WorldspaceSubBlock_ErrorMask> errorMask)
         {
-            var BlockNumbertryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            item._BlockNumber.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)WorldspaceSubBlock_FieldIndex.BlockNumber,
-                errorMask: errorMask);
-            item._BlockNumber.SetIfSucceeded(BlockNumbertryGet);
-            item._GroupType.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
+                errorMask: errorMask));
+            item._GroupType.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)WorldspaceSubBlock_FieldIndex.GroupType,
                 errorMask: errorMask));
-            var LastModifiedtryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            item._LastModified.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)WorldspaceSubBlock_FieldIndex.LastModified,
-                errorMask: errorMask);
-            item._LastModified.SetIfSucceeded(LastModifiedtryGet);
+                errorMask: errorMask));
         }
 
         protected static TryGet<WorldspaceSubBlock_FieldIndex?> Fill_Binary_RecordTypes(
@@ -746,7 +744,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "CELL":
-                    var ItemstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Cell, MaskItem<Exception, Cell_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.Items.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<Cell, MaskItem<Exception, Cell_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: WorldspaceSubBlock_Registration.CELL_HEADER,
                         fieldIndex: (int)WorldspaceSubBlock_FieldIndex.Items,
@@ -759,8 +757,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._Items.SetIfSucceeded(ItemstryGet);
+                        ));
                     return TryGet<WorldspaceSubBlock_FieldIndex?>.Succeed(WorldspaceSubBlock_FieldIndex.Items);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");

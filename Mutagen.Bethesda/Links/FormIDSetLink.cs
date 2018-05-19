@@ -43,6 +43,16 @@ namespace Mutagen.Bethesda
         {
             if (formID.Failed)
             {
+                return;
+            }
+            this.UnlinkedForm = formID.Value;
+            this.HasBeenSet = true;
+        }
+
+        public void SetIfSucceededOrDefault(TryGet<FormID> formID)
+        {
+            if (formID.Failed)
+            {
                 this.Unset();
                 return;
             }

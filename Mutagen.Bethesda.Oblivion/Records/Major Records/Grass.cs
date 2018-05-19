@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void FillBinary_MaxSlope_Custom(MutagenFrame frame, Grass item, int fieldIndex, Func<Grass_ErrorMask> errorMask)
         {
-            item.MaxSlope_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+            item.MaxSlope_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)Grass_FieldIndex.MaxSlope,
                 errorMask: errorMask));
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void FillBinary_UnitFromWaterAmount_Custom(MutagenFrame frame, Grass item, int fieldIndex, Func<Grass_ErrorMask> errorMask)
         {
-            item.UnitFromWaterAmount_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+            item.UnitFromWaterAmount_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)Grass_FieldIndex.UnitFromWaterAmount,
                 errorMask: errorMask));

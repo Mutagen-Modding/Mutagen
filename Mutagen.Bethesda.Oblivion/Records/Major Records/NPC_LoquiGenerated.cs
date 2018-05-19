@@ -1595,56 +1595,56 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)NPC_FieldIndex.Model,
                         errorMask: errorMask));
                     break;
                 case "NPCFlags":
-                    item._NPCFlags.SetIfSucceeded(EnumXmlTranslation<NPC.NPCFlag>.Instance.Parse(
+                    item._NPCFlags.SetIfSucceededOrDefault(EnumXmlTranslation<NPC.NPCFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)NPC_FieldIndex.NPCFlags,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "BaseSpellPoints":
-                    item._BaseSpellPoints.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    item._BaseSpellPoints.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.BaseSpellPoints,
                         errorMask: errorMask));
                     break;
                 case "Fatigue":
-                    item._Fatigue.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    item._Fatigue.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Fatigue,
                         errorMask: errorMask));
                     break;
                 case "BarterGold":
-                    item._BarterGold.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    item._BarterGold.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.BarterGold,
                         errorMask: errorMask));
                     break;
                 case "LevelOffset":
-                    item._LevelOffset.SetIfSucceeded(Int16XmlTranslation.Instance.ParseNonNull(
+                    item._LevelOffset.SetIfSucceededOrDefault(Int16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.LevelOffset,
                         errorMask: errorMask));
                     break;
                 case "CalcMin":
-                    item._CalcMin.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    item._CalcMin.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.CalcMin,
                         errorMask: errorMask));
                     break;
                 case "CalcMax":
-                    item._CalcMax.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    item._CalcMax.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.CalcMax,
                         errorMask: errorMask));
                     break;
                 case "Factions":
-                    item._Factions.SetIfSucceeded(ListXmlTranslation<RankPlacement, MaskItem<Exception, RankPlacement_ErrorMask>>.Instance.Parse(
+                    item._Factions.SetIfSucceededOrDefault(ListXmlTranslation<RankPlacement, MaskItem<Exception, RankPlacement_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)NPC_FieldIndex.Factions,
                         errorMask: errorMask,
@@ -1658,19 +1658,19 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "DeathItem":
-                    item.DeathItem_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.DeathItem_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.DeathItem,
                         errorMask: errorMask));
                     break;
                 case "Race":
-                    item.Race_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Race_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Race,
                         errorMask: errorMask));
                     break;
                 case "Spells":
-                    item._Spells.SetIfSucceeded(ListXmlTranslation<FormIDSetLink<Spell>, Exception>.Instance.Parse(
+                    item._Spells.SetIfSucceededOrDefault(ListXmlTranslation<FormIDSetLink<Spell>, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)NPC_FieldIndex.Spells,
                         errorMask: errorMask,
@@ -1685,13 +1685,13 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "Script":
-                    item.Script_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Script_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Script,
                         errorMask: errorMask));
                     break;
                 case "Items":
-                    item._Items.SetIfSucceeded(ListXmlTranslation<ItemEntry, MaskItem<Exception, ItemEntry_ErrorMask>>.Instance.Parse(
+                    item._Items.SetIfSucceededOrDefault(ListXmlTranslation<ItemEntry, MaskItem<Exception, ItemEntry_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)NPC_FieldIndex.Items,
                         errorMask: errorMask,
@@ -1705,57 +1705,57 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "Aggression":
-                    item._Aggression.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Aggression.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Aggression,
                         errorMask: errorMask));
                     break;
                 case "Confidence":
-                    item._Confidence.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Confidence.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Confidence,
                         errorMask: errorMask));
                     break;
                 case "EnergyLevel":
-                    item._EnergyLevel.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._EnergyLevel.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.EnergyLevel,
                         errorMask: errorMask));
                     break;
                 case "Responsibility":
-                    item._Responsibility.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Responsibility.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Responsibility,
                         errorMask: errorMask));
                     break;
                 case "BuySellServices":
-                    item._BuySellServices.SetIfSucceeded(EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
+                    item._BuySellServices.SetIfSucceededOrDefault(EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)NPC_FieldIndex.BuySellServices,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Teaches":
-                    item._Teaches.SetIfSucceeded(EnumXmlTranslation<Skill>.Instance.Parse(
+                    item._Teaches.SetIfSucceededOrDefault(EnumXmlTranslation<Skill>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)NPC_FieldIndex.Teaches,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "MaximumTrainingLevel":
-                    item._MaximumTrainingLevel.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._MaximumTrainingLevel.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.MaximumTrainingLevel,
                         errorMask: errorMask));
                     break;
                 case "Fluff":
-                    item._Fluff.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._Fluff.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Fluff,
                         errorMask: errorMask));
                     break;
                 case "AIPackages":
-                    item._AIPackages.SetIfSucceeded(ListXmlTranslation<FormIDSetLink<AIPackage>, Exception>.Instance.Parse(
+                    item._AIPackages.SetIfSucceededOrDefault(ListXmlTranslation<FormIDSetLink<AIPackage>, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)NPC_FieldIndex.AIPackages,
                         errorMask: errorMask,
@@ -1770,7 +1770,7 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "Animations":
-                    item._Animations.SetIfSucceeded(ListXmlTranslation<String, Exception>.Instance.Parse(
+                    item._Animations.SetIfSucceededOrDefault(ListXmlTranslation<String, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)NPC_FieldIndex.Animations,
                         errorMask: errorMask,
@@ -1784,205 +1784,205 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "Class":
-                    item.Class_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Class_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Class,
                         errorMask: errorMask));
                     break;
                 case "Armorer":
-                    item._Armorer.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Armorer.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Armorer,
                         errorMask: errorMask));
                     break;
                 case "Athletics":
-                    item._Athletics.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Athletics.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Athletics,
                         errorMask: errorMask));
                     break;
                 case "Blade":
-                    item._Blade.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Blade.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Blade,
                         errorMask: errorMask));
                     break;
                 case "Block":
-                    item._Block.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Block.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Block,
                         errorMask: errorMask));
                     break;
                 case "Blunt":
-                    item._Blunt.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Blunt.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Blunt,
                         errorMask: errorMask));
                     break;
                 case "HandToHand":
-                    item._HandToHand.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._HandToHand.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.HandToHand,
                         errorMask: errorMask));
                     break;
                 case "HeavyArmor":
-                    item._HeavyArmor.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._HeavyArmor.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.HeavyArmor,
                         errorMask: errorMask));
                     break;
                 case "Alchemy":
-                    item._Alchemy.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Alchemy.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Alchemy,
                         errorMask: errorMask));
                     break;
                 case "Alteration":
-                    item._Alteration.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Alteration.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Alteration,
                         errorMask: errorMask));
                     break;
                 case "Conjuration":
-                    item._Conjuration.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Conjuration.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Conjuration,
                         errorMask: errorMask));
                     break;
                 case "Destruction":
-                    item._Destruction.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Destruction.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Destruction,
                         errorMask: errorMask));
                     break;
                 case "Illusion":
-                    item._Illusion.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Illusion.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Illusion,
                         errorMask: errorMask));
                     break;
                 case "Mysticism":
-                    item._Mysticism.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Mysticism.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Mysticism,
                         errorMask: errorMask));
                     break;
                 case "Restoration":
-                    item._Restoration.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Restoration.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Restoration,
                         errorMask: errorMask));
                     break;
                 case "Acrobatics":
-                    item._Acrobatics.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Acrobatics.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Acrobatics,
                         errorMask: errorMask));
                     break;
                 case "LightArmor":
-                    item._LightArmor.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._LightArmor.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.LightArmor,
                         errorMask: errorMask));
                     break;
                 case "Marksman":
-                    item._Marksman.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Marksman.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Marksman,
                         errorMask: errorMask));
                     break;
                 case "Mercantile":
-                    item._Mercantile.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Mercantile.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Mercantile,
                         errorMask: errorMask));
                     break;
                 case "Security":
-                    item._Security.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Security.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Security,
                         errorMask: errorMask));
                     break;
                 case "Sneak":
-                    item._Sneak.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Sneak.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Sneak,
                         errorMask: errorMask));
                     break;
                 case "Speechcraft":
-                    item._Speechcraft.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Speechcraft.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Speechcraft,
                         errorMask: errorMask));
                     break;
                 case "Health":
-                    item._Health.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    item._Health.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Health,
                         errorMask: errorMask));
                     break;
                 case "Strength":
-                    item._Strength.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Strength.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Strength,
                         errorMask: errorMask));
                     break;
                 case "Intelligence":
-                    item._Intelligence.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Intelligence.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Intelligence,
                         errorMask: errorMask));
                     break;
                 case "Willpower":
-                    item._Willpower.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Willpower.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Willpower,
                         errorMask: errorMask));
                     break;
                 case "Agility":
-                    item._Agility.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Agility.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Agility,
                         errorMask: errorMask));
                     break;
                 case "Speed":
-                    item._Speed.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Speed.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Speed,
                         errorMask: errorMask));
                     break;
                 case "Endurance":
-                    item._Endurance.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Endurance.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Endurance,
                         errorMask: errorMask));
                     break;
                 case "Personality":
-                    item._Personality.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Personality.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Personality,
                         errorMask: errorMask));
                     break;
                 case "Luck":
-                    item._Luck.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Luck.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Luck,
                         errorMask: errorMask));
                     break;
                 case "Hair":
-                    item.Hair_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Hair_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Hair,
                         errorMask: errorMask));
                     break;
                 case "HairLength":
-                    item._HairLength.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._HairLength.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.HairLength,
                         errorMask: errorMask));
                     break;
                 case "Eyes":
-                    item._Eyes.SetIfSucceeded(ListXmlTranslation<FormIDLink<Eye>, Exception>.Instance.Parse(
+                    item._Eyes.SetIfSucceededOrDefault(ListXmlTranslation<FormIDLink<Eye>, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)NPC_FieldIndex.Eyes,
                         errorMask: errorMask,
@@ -1997,37 +1997,37 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "HairColor":
-                    item._HairColor.SetIfSucceeded(ColorXmlTranslation.Instance.ParseNonNull(
+                    item._HairColor.SetIfSucceededOrDefault(ColorXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.HairColor,
                         errorMask: errorMask));
                     break;
                 case "CombatStyle":
-                    item.CombatStyle_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.CombatStyle_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.CombatStyle,
                         errorMask: errorMask));
                     break;
                 case "FaceGenGeometrySymmetric":
-                    item._FaceGenGeometrySymmetric.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._FaceGenGeometrySymmetric.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.FaceGenGeometrySymmetric,
                         errorMask: errorMask));
                     break;
                 case "FaceGenGeometryAsymmetric":
-                    item._FaceGenGeometryAsymmetric.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._FaceGenGeometryAsymmetric.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.FaceGenGeometryAsymmetric,
                         errorMask: errorMask));
                     break;
                 case "FaceGenTextureSymmetric":
-                    item._FaceGenTextureSymmetric.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._FaceGenTextureSymmetric.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.FaceGenTextureSymmetric,
                         errorMask: errorMask));
                     break;
                 case "Unknown":
-                    item._Unknown.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._Unknown.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Unknown,
                         errorMask: errorMask));
@@ -2274,7 +2274,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)NPC_FieldIndex.Model,
                         errorMask: errorMask));
@@ -2283,38 +2283,38 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._NPCFlags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.NPCFlag>.Instance.Parse(
+                        item._NPCFlags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.NPCFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)NPC_FieldIndex.NPCFlags,
                             errorMask: errorMask));
-                        item._BaseSpellPoints.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                        item._BaseSpellPoints.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.BaseSpellPoints,
                             errorMask: errorMask));
-                        item._Fatigue.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                        item._Fatigue.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Fatigue,
                             errorMask: errorMask));
-                        item._BarterGold.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                        item._BarterGold.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.BarterGold,
                             errorMask: errorMask));
-                        item._LevelOffset.SetIfSucceeded(Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
+                        item._LevelOffset.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.LevelOffset,
                             errorMask: errorMask));
-                        item._CalcMin.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                        item._CalcMin.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.CalcMin,
                             errorMask: errorMask));
-                        item._CalcMax.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                        item._CalcMax.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.CalcMax,
                             errorMask: errorMask));
                     }
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.CalcMax);
                 case "SNAM":
-                    var FactionstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement, MaskItem<Exception, RankPlacement_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.Factions.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement, MaskItem<Exception, RankPlacement_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: NPC_Registration.SNAM_HEADER,
                         fieldIndex: (int)NPC_FieldIndex.Factions,
@@ -2327,25 +2327,24 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._Factions.SetIfSucceeded(FactionstryGet);
+                        ));
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Factions);
                 case "INAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.DeathItem_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.DeathItem_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.DeathItem,
                         errorMask: errorMask));
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.DeathItem);
                 case "RNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Race_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Race_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.Race,
                         errorMask: errorMask));
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Race);
                 case "SPLO":
-                    var SpellstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>, Exception>.Instance.ParseRepeatedItem(
+                    item.Spells.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: NPC_Registration.SPLO_HEADER,
                         fieldIndex: (int)NPC_FieldIndex.Spells,
@@ -2359,18 +2358,17 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<Spell>(o));
                         }
-                        );
-                    item._Spells.SetIfSucceeded(SpellstryGet);
+                        ));
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Spells);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.Script,
                         errorMask: errorMask));
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Script);
                 case "CNTO":
-                    var ItemstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry, MaskItem<Exception, ItemEntry_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.Items.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry, MaskItem<Exception, ItemEntry_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: NPC_Registration.CNTO_HEADER,
                         fieldIndex: (int)NPC_FieldIndex.Items,
@@ -2383,50 +2381,48 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._Items.SetIfSucceeded(ItemstryGet);
+                        ));
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Items);
                 case "AIDT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Aggression.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Aggression.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Aggression,
                             errorMask: errorMask));
-                        item._Confidence.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Confidence.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Confidence,
                             errorMask: errorMask));
-                        item._EnergyLevel.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._EnergyLevel.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.EnergyLevel,
                             errorMask: errorMask));
-                        item._Responsibility.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Responsibility.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Responsibility,
                             errorMask: errorMask));
-                        item._BuySellServices.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
+                        item._BuySellServices.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)NPC_FieldIndex.BuySellServices,
                             errorMask: errorMask));
-                        item._Teaches.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
+                        item._Teaches.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(1),
                             fieldIndex: (int)NPC_FieldIndex.Teaches,
                             errorMask: errorMask));
-                        item._MaximumTrainingLevel.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._MaximumTrainingLevel.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.MaximumTrainingLevel,
                             errorMask: errorMask));
-                        var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        item._Fluff.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(2),
                             fieldIndex: (int)NPC_FieldIndex.Fluff,
-                            errorMask: errorMask);
-                        item._Fluff.SetIfSucceeded(FlufftryGet);
+                            errorMask: errorMask));
                     }
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Fluff);
                 case "PKID":
-                    var AIPackagestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<AIPackage>, Exception>.Instance.ParseRepeatedItem(
+                    item.AIPackages.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<AIPackage>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: NPC_Registration.PKID_HEADER,
                         fieldIndex: (int)NPC_FieldIndex.AIPackages,
@@ -2440,12 +2436,11 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<AIPackage>(o));
                         }
-                        );
-                    item._AIPackages.SetIfSucceeded(AIPackagestryGet);
+                        ));
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.AIPackages);
                 case "KFFZ":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var AnimationstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<String, Exception>.Instance.ParseRepeatedItem(
+                    item.Animations.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<String, Exception>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.Animations,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
@@ -2458,12 +2453,11 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask,
                                 parseWhole: false);
                         }
-                        );
-                    item._Animations.SetIfSucceeded(AnimationstryGet);
+                        ));
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Animations);
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Class_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Class_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.Class,
                         errorMask: errorMask));
@@ -2472,123 +2466,123 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Armorer.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Armorer.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Armorer,
                             errorMask: errorMask));
-                        item._Athletics.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Athletics.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Athletics,
                             errorMask: errorMask));
-                        item._Blade.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Blade.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Blade,
                             errorMask: errorMask));
-                        item._Block.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Block.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Block,
                             errorMask: errorMask));
-                        item._Blunt.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Blunt.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Blunt,
                             errorMask: errorMask));
-                        item._HandToHand.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._HandToHand.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.HandToHand,
                             errorMask: errorMask));
-                        item._HeavyArmor.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._HeavyArmor.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.HeavyArmor,
                             errorMask: errorMask));
-                        item._Alchemy.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Alchemy.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Alchemy,
                             errorMask: errorMask));
-                        item._Alteration.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Alteration.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Alteration,
                             errorMask: errorMask));
-                        item._Conjuration.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Conjuration.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Conjuration,
                             errorMask: errorMask));
-                        item._Destruction.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Destruction.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Destruction,
                             errorMask: errorMask));
-                        item._Illusion.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Illusion.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Illusion,
                             errorMask: errorMask));
-                        item._Mysticism.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Mysticism.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Mysticism,
                             errorMask: errorMask));
-                        item._Restoration.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Restoration.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Restoration,
                             errorMask: errorMask));
-                        item._Acrobatics.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Acrobatics.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Acrobatics,
                             errorMask: errorMask));
-                        item._LightArmor.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._LightArmor.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.LightArmor,
                             errorMask: errorMask));
-                        item._Marksman.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Marksman.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Marksman,
                             errorMask: errorMask));
-                        item._Mercantile.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Mercantile.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Mercantile,
                             errorMask: errorMask));
-                        item._Security.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Security.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Security,
                             errorMask: errorMask));
-                        item._Sneak.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Sneak.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Sneak,
                             errorMask: errorMask));
-                        item._Speechcraft.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Speechcraft.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Speechcraft,
                             errorMask: errorMask));
-                        item._Health.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        item._Health.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Health,
                             errorMask: errorMask));
-                        item._Strength.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Strength.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Strength,
                             errorMask: errorMask));
-                        item._Intelligence.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Intelligence.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Intelligence,
                             errorMask: errorMask));
-                        item._Willpower.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Willpower.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Willpower,
                             errorMask: errorMask));
-                        item._Agility.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Agility.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Agility,
                             errorMask: errorMask));
-                        item._Speed.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Speed.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Speed,
                             errorMask: errorMask));
-                        item._Endurance.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Endurance.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Endurance,
                             errorMask: errorMask));
-                        item._Personality.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Personality.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Personality,
                             errorMask: errorMask));
-                        item._Luck.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Luck.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Luck,
                             errorMask: errorMask));
@@ -2596,21 +2590,21 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Luck);
                 case "HNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Hair_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Hair_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.Hair,
                         errorMask: errorMask));
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Hair);
                 case "LNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._HairLength.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    item._HairLength.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.HairLength,
                         errorMask: errorMask));
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.HairLength);
                 case "ENAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var EyestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Eye>, Exception>.Instance.ParseRepeatedItem(
+                    item.Eyes.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Eye>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.Eyes,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
@@ -2622,12 +2616,11 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask).Bubble((o) => new FormIDLink<Eye>(o));
                         }
-                        );
-                    item._Eyes.SetIfSucceeded(EyestryGet);
+                        ));
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Eyes);
                 case "HCLR":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._HairColor.SetIfSucceeded(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                    item._HairColor.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.HairColor,
                         errorMask: errorMask,
@@ -2635,42 +2628,38 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.HairColor);
                 case "ZNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.CombatStyle_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.CombatStyle_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.CombatStyle,
                         errorMask: errorMask));
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.CombatStyle);
                 case "FGGS":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var FaceGenGeometrySymmetrictryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    item._FaceGenGeometrySymmetric.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.FaceGenGeometrySymmetric,
-                        errorMask: errorMask);
-                    item._FaceGenGeometrySymmetric.SetIfSucceeded(FaceGenGeometrySymmetrictryGet);
+                        errorMask: errorMask));
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.FaceGenGeometrySymmetric);
                 case "FGGA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var FaceGenGeometryAsymmetrictryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    item._FaceGenGeometryAsymmetric.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.FaceGenGeometryAsymmetric,
-                        errorMask: errorMask);
-                    item._FaceGenGeometryAsymmetric.SetIfSucceeded(FaceGenGeometryAsymmetrictryGet);
+                        errorMask: errorMask));
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.FaceGenGeometryAsymmetric);
                 case "FGTS":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var FaceGenTextureSymmetrictryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    item._FaceGenTextureSymmetric.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.FaceGenTextureSymmetric,
-                        errorMask: errorMask);
-                    item._FaceGenTextureSymmetric.SetIfSucceeded(FaceGenTextureSymmetrictryGet);
+                        errorMask: errorMask));
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.FaceGenTextureSymmetric);
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var UnknowntryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    item._Unknown.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.Unknown,
-                        errorMask: errorMask);
-                    item._Unknown.SetIfSucceeded(UnknowntryGet);
+                        errorMask: errorMask));
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Unknown);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(

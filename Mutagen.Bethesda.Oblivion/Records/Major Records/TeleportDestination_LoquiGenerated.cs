@@ -428,19 +428,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Door":
-                    item.Door_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Door_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)TeleportDestination_FieldIndex.Door,
                         errorMask: errorMask));
                     break;
                 case "Position":
-                    item._Position.SetIfSucceeded(P3FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Position.SetIfSucceededOrDefault(P3FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)TeleportDestination_FieldIndex.Position,
                         errorMask: errorMask));
                     break;
                 case "Rotation":
-                    item._Rotation.SetIfSucceeded(P3FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Rotation.SetIfSucceededOrDefault(P3FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)TeleportDestination_FieldIndex.Rotation,
                         errorMask: errorMask));
@@ -658,15 +658,15 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<TeleportDestination_ErrorMask> errorMask)
         {
-            item.Door_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item.Door_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)TeleportDestination_FieldIndex.Door,
                 errorMask: errorMask));
-            item._Position.SetIfSucceeded(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+            item._Position.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)TeleportDestination_FieldIndex.Position,
                 errorMask: errorMask));
-            item._Rotation.SetIfSucceeded(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+            item._Rotation.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)TeleportDestination_FieldIndex.Rotation,
                 errorMask: errorMask));

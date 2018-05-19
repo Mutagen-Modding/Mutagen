@@ -517,34 +517,34 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Type":
-                    item._Type.SetIfSucceeded(EnumXmlTranslation<Spell.SpellType>.Instance.Parse(
+                    item._Type.SetIfSucceededOrDefault(EnumXmlTranslation<Spell.SpellType>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)SpellUnleveled_FieldIndex.Type,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Cost":
-                    item._Cost.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    item._Cost.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)SpellUnleveled_FieldIndex.Cost,
                         errorMask: errorMask));
                     break;
                 case "Level":
-                    item._Level.SetIfSucceeded(EnumXmlTranslation<Spell.SpellLevel>.Instance.Parse(
+                    item._Level.SetIfSucceededOrDefault(EnumXmlTranslation<Spell.SpellLevel>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)SpellUnleveled_FieldIndex.Level,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Flag":
-                    item._Flag.SetIfSucceeded(EnumXmlTranslation<Spell.SpellFlag>.Instance.Parse(
+                    item._Flag.SetIfSucceededOrDefault(EnumXmlTranslation<Spell.SpellFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)SpellUnleveled_FieldIndex.Flag,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Effects":
-                    item._Effects.SetIfSucceeded(ListXmlTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Parse(
+                    item._Effects.SetIfSucceededOrDefault(ListXmlTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)SpellUnleveled_FieldIndex.Effects,
                         errorMask: errorMask,
@@ -792,26 +792,26 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Type.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellType>.Instance.Parse(
+                        item._Type.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellType>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)SpellUnleveled_FieldIndex.Type,
                             errorMask: errorMask));
-                        item._Cost.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        item._Cost.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)SpellUnleveled_FieldIndex.Cost,
                             errorMask: errorMask));
-                        item._Level.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellLevel>.Instance.Parse(
+                        item._Level.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellLevel>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)SpellUnleveled_FieldIndex.Level,
                             errorMask: errorMask));
-                        item._Flag.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellFlag>.Instance.Parse(
+                        item._Flag.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)SpellUnleveled_FieldIndex.Flag,
                             errorMask: errorMask));
                     }
                     return TryGet<SpellUnleveled_FieldIndex?>.Succeed(SpellUnleveled_FieldIndex.Flag);
                 case "EFID":
-                    var EffectstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.Effects.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: SpellUnleveled_Registration.EFID_HEADER,
                         fieldIndex: (int)SpellUnleveled_FieldIndex.Effects,
@@ -824,8 +824,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._Effects.SetIfSucceeded(EffectstryGet);
+                        ));
                     return TryGet<SpellUnleveled_FieldIndex?>.Succeed(SpellUnleveled_FieldIndex.Effects);
                 default:
                     return Spell.Fill_Binary_RecordTypes(

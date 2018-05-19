@@ -68,13 +68,13 @@ namespace Mutagen.Bethesda.Oblivion
                         switch (type)
                         {
                             case GroupTypeEnum.CellPersistentChildren:
-                                obj.Persistent.SetIfSucceeded(ParseTypical(itemFrame, obj, errorMask, persistentParse: true));
+                                obj.Persistent.SetIfSucceededOrDefault(ParseTypical(itemFrame, obj, errorMask, persistentParse: true));
                                 break;
                             case GroupTypeEnum.CellTemporaryChildren:
                                 ParseTemporary(itemFrame, obj, errorMask);
                                 break;
                             case GroupTypeEnum.CellVisibleDistantChildren:
-                                obj.VisibleWhenDistant.SetIfSucceeded(ParseTypical(itemFrame, obj, errorMask, persistentParse: false));
+                                obj.VisibleWhenDistant.SetIfSucceededOrDefault(ParseTypical(itemFrame, obj, errorMask, persistentParse: false));
                                 break;
                             default:
                                 throw new NotImplementedException();
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                 }
                 );
-            obj.Temporary.SetIfSucceeded(persistentTryGet);
+            obj.Temporary.SetIfSucceededOrDefault(persistentTryGet);
         }
 
         static partial void CustomBinaryEnd_Export(MutagenWriter writer, Cell obj, Func<Cell_ErrorMask> errorMask)

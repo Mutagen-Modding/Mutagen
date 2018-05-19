@@ -411,13 +411,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Sound":
-                    item.Sound_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Sound_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)WeatherSound_FieldIndex.Sound,
                         errorMask: errorMask));
                     break;
                 case "Type":
-                    item._Type.SetIfSucceeded(EnumXmlTranslation<WeatherSound.SoundType>.Instance.Parse(
+                    item._Type.SetIfSucceededOrDefault(EnumXmlTranslation<WeatherSound.SoundType>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)WeatherSound_FieldIndex.Type,
@@ -636,11 +636,11 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<WeatherSound_ErrorMask> errorMask)
         {
-            item.Sound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item.Sound_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)WeatherSound_FieldIndex.Sound,
                 errorMask: errorMask));
-            item._Type.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<WeatherSound.SoundType>.Instance.Parse(
+            item._Type.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<WeatherSound.SoundType>.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)WeatherSound_FieldIndex.Type,
                 errorMask: errorMask));

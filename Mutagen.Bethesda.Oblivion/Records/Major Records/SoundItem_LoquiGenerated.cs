@@ -425,13 +425,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Sound":
-                    item.Sound_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Sound_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)SoundItem_FieldIndex.Sound,
                         errorMask: errorMask));
                     break;
                 case "Chance":
-                    item._Chance.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Chance.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)SoundItem_FieldIndex.Chance,
                         errorMask: errorMask));
@@ -675,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "CSDI":
                     if (lastParsed.HasValue && lastParsed.Value >= SoundItem_FieldIndex.Sound) return TryGet<SoundItem_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Sound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Sound_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SoundItem_FieldIndex.Sound,
                         errorMask: errorMask));
@@ -683,7 +683,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "CSDC":
                     if (lastParsed.HasValue && lastParsed.Value >= SoundItem_FieldIndex.Chance) return TryGet<SoundItem_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Chance.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                    item._Chance.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SoundItem_FieldIndex.Chance,
                         errorMask: errorMask));

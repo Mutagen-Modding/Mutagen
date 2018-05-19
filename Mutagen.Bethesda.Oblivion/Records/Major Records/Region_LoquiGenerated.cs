@@ -600,25 +600,25 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Icon":
-                    item._Icon.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Region_FieldIndex.Icon,
                         errorMask: errorMask));
                     break;
                 case "MapColor":
-                    item._MapColor.SetIfSucceeded(ColorXmlTranslation.Instance.ParseNonNull(
+                    item._MapColor.SetIfSucceededOrDefault(ColorXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Region_FieldIndex.MapColor,
                         errorMask: errorMask));
                     break;
                 case "Worldspace":
-                    item.Worldspace_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Worldspace_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Region_FieldIndex.Worldspace,
                         errorMask: errorMask));
                     break;
                 case "Areas":
-                    item._Areas.SetIfSucceeded(ListXmlTranslation<RegionArea, MaskItem<Exception, RegionArea_ErrorMask>>.Instance.Parse(
+                    item._Areas.SetIfSucceededOrDefault(ListXmlTranslation<RegionArea, MaskItem<Exception, RegionArea_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Region_FieldIndex.Areas,
                         errorMask: errorMask,
@@ -632,31 +632,31 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "Objects":
-                    item._Objects.SetIfSucceeded(LoquiXmlTranslation<RegionDataObjects, RegionDataObjects_ErrorMask>.Instance.Parse(
+                    item._Objects.SetIfSucceededOrDefault(LoquiXmlTranslation<RegionDataObjects, RegionDataObjects_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Region_FieldIndex.Objects,
                         errorMask: errorMask));
                     break;
                 case "Weather":
-                    item._Weather.SetIfSucceeded(LoquiXmlTranslation<RegionDataWeather, RegionDataWeather_ErrorMask>.Instance.Parse(
+                    item._Weather.SetIfSucceededOrDefault(LoquiXmlTranslation<RegionDataWeather, RegionDataWeather_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Region_FieldIndex.Weather,
                         errorMask: errorMask));
                     break;
                 case "MapName":
-                    item._MapName.SetIfSucceeded(LoquiXmlTranslation<RegionDataMapName, RegionDataMapName_ErrorMask>.Instance.Parse(
+                    item._MapName.SetIfSucceededOrDefault(LoquiXmlTranslation<RegionDataMapName, RegionDataMapName_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Region_FieldIndex.MapName,
                         errorMask: errorMask));
                     break;
                 case "Grasses":
-                    item._Grasses.SetIfSucceeded(LoquiXmlTranslation<RegionDataGrasses, RegionDataGrasses_ErrorMask>.Instance.Parse(
+                    item._Grasses.SetIfSucceededOrDefault(LoquiXmlTranslation<RegionDataGrasses, RegionDataGrasses_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Region_FieldIndex.Grasses,
                         errorMask: errorMask));
                     break;
                 case "Sounds":
-                    item._Sounds.SetIfSucceeded(LoquiXmlTranslation<RegionDataSounds, RegionDataSounds_ErrorMask>.Instance.Parse(
+                    item._Sounds.SetIfSucceededOrDefault(LoquiXmlTranslation<RegionDataSounds, RegionDataSounds_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Region_FieldIndex.Sounds,
                         errorMask: errorMask));
@@ -941,16 +941,15 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var IcontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Region_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Icon.SetIfSucceeded(IcontryGet);
+                        errorMask: errorMask));
                     return TryGet<Region_FieldIndex?>.Succeed(Region_FieldIndex.Icon);
                 case "RCLR":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._MapColor.SetIfSucceeded(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                    item._MapColor.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Region_FieldIndex.MapColor,
                         errorMask: errorMask,
@@ -958,14 +957,14 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Region_FieldIndex?>.Succeed(Region_FieldIndex.MapColor);
                 case "WNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Worldspace_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Worldspace_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Region_FieldIndex.Worldspace,
                         errorMask: errorMask));
                     return TryGet<Region_FieldIndex?>.Succeed(Region_FieldIndex.Worldspace);
                 case "RPLI":
                 case "RPLD":
-                    var AreastryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionArea, MaskItem<Exception, RegionArea_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.Areas.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionArea, MaskItem<Exception, RegionArea_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: RegionArea_Registration.TriggeringRecordTypes,
                         fieldIndex: (int)Region_FieldIndex.Areas,
@@ -978,8 +977,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._Areas.SetIfSucceeded(AreastryGet);
+                        ));
                     return TryGet<Region_FieldIndex?>.Succeed(Region_FieldIndex.Areas);
                 case "RDAT":
                     try

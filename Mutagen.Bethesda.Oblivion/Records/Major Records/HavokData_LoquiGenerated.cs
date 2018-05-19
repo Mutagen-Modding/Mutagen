@@ -436,20 +436,20 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Material":
-                    item._Material.SetIfSucceeded(EnumXmlTranslation<HavokData.MaterialType>.Instance.Parse(
+                    item._Material.SetIfSucceededOrDefault(EnumXmlTranslation<HavokData.MaterialType>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)HavokData_FieldIndex.Material,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Friction":
-                    item._Friction.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Friction.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)HavokData_FieldIndex.Friction,
                         errorMask: errorMask));
                     break;
                 case "Restitution":
-                    item._Restitution.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Restitution.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)HavokData_FieldIndex.Restitution,
                         errorMask: errorMask));
@@ -661,15 +661,15 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<HavokData_ErrorMask> errorMask)
         {
-            item._Material.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<HavokData.MaterialType>.Instance.Parse(
+            item._Material.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<HavokData.MaterialType>.Instance.Parse(
                 frame: frame.SpawnWithLength(1),
                 fieldIndex: (int)HavokData_FieldIndex.Material,
                 errorMask: errorMask));
-            item._Friction.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Friction.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)HavokData_FieldIndex.Friction,
                 errorMask: errorMask));
-            item._Restitution.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Restitution.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)HavokData_FieldIndex.Restitution,
                 errorMask: errorMask));

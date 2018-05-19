@@ -484,19 +484,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Icon":
-                    item._Icon.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Birthsign_FieldIndex.Icon,
                         errorMask: errorMask));
                     break;
                 case "Description":
-                    item._Description.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Description.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Birthsign_FieldIndex.Description,
                         errorMask: errorMask));
                     break;
                 case "Spells":
-                    item._Spells.SetIfSucceeded(ListXmlTranslation<FormIDSetLink<Spell>, Exception>.Instance.Parse(
+                    item._Spells.SetIfSucceededOrDefault(ListXmlTranslation<FormIDSetLink<Spell>, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Birthsign_FieldIndex.Spells,
                         errorMask: errorMask,
@@ -730,24 +730,22 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var IcontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Birthsign_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Icon.SetIfSucceeded(IcontryGet);
+                        errorMask: errorMask));
                     return TryGet<Birthsign_FieldIndex?>.Succeed(Birthsign_FieldIndex.Icon);
                 case "DESC":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var DescriptiontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Description.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Birthsign_FieldIndex.Description,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Description.SetIfSucceeded(DescriptiontryGet);
+                        errorMask: errorMask));
                     return TryGet<Birthsign_FieldIndex?>.Succeed(Birthsign_FieldIndex.Description);
                 case "SPLO":
-                    var SpellstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>, Exception>.Instance.ParseRepeatedItem(
+                    item.Spells.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Birthsign_Registration.SPLO_HEADER,
                         fieldIndex: (int)Birthsign_FieldIndex.Spells,
@@ -761,8 +759,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<Spell>(o));
                         }
-                        );
-                    item._Spells.SetIfSucceeded(SpellstryGet);
+                        ));
                     return TryGet<Birthsign_FieldIndex?>.Succeed(Birthsign_FieldIndex.Spells);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(

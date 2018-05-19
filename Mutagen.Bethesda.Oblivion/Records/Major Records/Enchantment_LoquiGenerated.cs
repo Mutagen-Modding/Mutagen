@@ -505,33 +505,33 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Type":
-                    item._Type.SetIfSucceeded(EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Parse(
+                    item._Type.SetIfSucceededOrDefault(EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Enchantment_FieldIndex.Type,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "ChargeAmount":
-                    item._ChargeAmount.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    item._ChargeAmount.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
                         errorMask: errorMask));
                     break;
                 case "EnchantCost":
-                    item._EnchantCost.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    item._EnchantCost.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
                         errorMask: errorMask));
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<Enchantment.Flag>.Instance.Parse(
+                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<Enchantment.Flag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Enchantment_FieldIndex.Flags,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Effects":
-                    item._Effects.SetIfSucceeded(ListXmlTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Parse(
+                    item._Effects.SetIfSucceededOrDefault(ListXmlTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Enchantment_FieldIndex.Effects,
                         errorMask: errorMask,
@@ -779,26 +779,26 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Type.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Parse(
+                        item._Type.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Enchantment_FieldIndex.Type,
                             errorMask: errorMask));
-                        item._ChargeAmount.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        item._ChargeAmount.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
                             errorMask: errorMask));
-                        item._EnchantCost.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        item._EnchantCost.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
                             errorMask: errorMask));
-                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.Flag>.Instance.Parse(
+                        item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.Flag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Enchantment_FieldIndex.Flags,
                             errorMask: errorMask));
                     }
                     return TryGet<Enchantment_FieldIndex?>.Succeed(Enchantment_FieldIndex.Flags);
                 case "EFID":
-                    var EffectstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.Effects.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Enchantment_Registration.EFID_HEADER,
                         fieldIndex: (int)Enchantment_FieldIndex.Effects,
@@ -811,8 +811,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._Effects.SetIfSucceeded(EffectstryGet);
+                        ));
                     return TryGet<Enchantment_FieldIndex?>.Succeed(Enchantment_FieldIndex.Effects);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(

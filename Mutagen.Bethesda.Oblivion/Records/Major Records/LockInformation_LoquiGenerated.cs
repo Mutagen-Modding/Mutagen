@@ -444,25 +444,25 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "LockLevel":
-                    item._LockLevel.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._LockLevel.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)LockInformation_FieldIndex.LockLevel,
                         errorMask: errorMask));
                     break;
                 case "Fluff":
-                    item._Fluff.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._Fluff.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)LockInformation_FieldIndex.Fluff,
                         errorMask: errorMask));
                     break;
                 case "Key":
-                    item.Key_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Key_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)LockInformation_FieldIndex.Key,
                         errorMask: errorMask));
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<LockInformation.Flag>.Instance.Parse(
+                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<LockInformation.Flag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)LockInformation_FieldIndex.Flags,
@@ -681,20 +681,19 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<LockInformation_ErrorMask> errorMask)
         {
-            item._LockLevel.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._LockLevel.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)LockInformation_FieldIndex.LockLevel,
                 errorMask: errorMask));
-            var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            item._Fluff.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(3),
                 fieldIndex: (int)LockInformation_FieldIndex.Fluff,
-                errorMask: errorMask);
-            item._Fluff.SetIfSucceeded(FlufftryGet);
-            item.Key_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                errorMask: errorMask));
+            item.Key_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)LockInformation_FieldIndex.Key,
                 errorMask: errorMask));
-            item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<LockInformation.Flag>.Instance.Parse(
+            item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<LockInformation.Flag>.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)LockInformation_FieldIndex.Flags,
                 errorMask: errorMask));

@@ -432,13 +432,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Data":
-                    item._Data.SetIfSucceeded(LoquiXmlTranslation<LocalVariableData, LocalVariableData_ErrorMask>.Instance.Parse(
+                    item._Data.SetIfSucceededOrDefault(LoquiXmlTranslation<LocalVariableData, LocalVariableData_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)LocalVariable_FieldIndex.Data,
                         errorMask: errorMask));
                     break;
                 case "Name":
-                    item._Name.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Name.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)LocalVariable_FieldIndex.Name,
                         errorMask: errorMask));
@@ -672,7 +672,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "SLSD":
                     if (lastParsed.HasValue && lastParsed.Value >= LocalVariable_FieldIndex.Data) return TryGet<LocalVariable_FieldIndex?>.Failure;
-                    item._Data.SetIfSucceeded(LoquiBinaryTranslation<LocalVariableData, LocalVariableData_ErrorMask>.Instance.Parse(
+                    item._Data.SetIfSucceededOrDefault(LoquiBinaryTranslation<LocalVariableData, LocalVariableData_ErrorMask>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)LocalVariable_FieldIndex.Data,
                         errorMask: errorMask));
@@ -680,12 +680,11 @@ namespace Mutagen.Bethesda.Oblivion
                 case "SCVR":
                     if (lastParsed.HasValue && lastParsed.Value >= LocalVariable_FieldIndex.Name) return TryGet<LocalVariable_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var NametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Name.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)LocalVariable_FieldIndex.Name,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Name.SetIfSucceeded(NametryGet);
+                        errorMask: errorMask));
                     return TryGet<LocalVariable_FieldIndex?>.Succeed(LocalVariable_FieldIndex.Name);
                 default:
                     return TryGet<LocalVariable_FieldIndex?>.Failure;

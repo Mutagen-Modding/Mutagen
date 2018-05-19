@@ -550,25 +550,25 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)SigilStone_FieldIndex.Model,
                         errorMask: errorMask));
                     break;
                 case "Icon":
-                    item._Icon.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)SigilStone_FieldIndex.Icon,
                         errorMask: errorMask));
                     break;
                 case "Script":
-                    item.Script_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Script_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)SigilStone_FieldIndex.Script,
                         errorMask: errorMask));
                     break;
                 case "Effects":
-                    item._Effects.SetIfSucceeded(ListXmlTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Parse(
+                    item._Effects.SetIfSucceededOrDefault(ListXmlTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)SigilStone_FieldIndex.Effects,
                         errorMask: errorMask,
@@ -582,19 +582,19 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "Uses":
-                    item._Uses.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Uses.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)SigilStone_FieldIndex.Uses,
                         errorMask: errorMask));
                     break;
                 case "Value":
-                    item._Value.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    item._Value.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)SigilStone_FieldIndex.Value,
                         errorMask: errorMask));
                     break;
                 case "Weight":
-                    item._Weight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Weight.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)SigilStone_FieldIndex.Weight,
                         errorMask: errorMask));
@@ -832,29 +832,28 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)SigilStone_FieldIndex.Model,
                         errorMask: errorMask));
                     return TryGet<SigilStone_FieldIndex?>.Succeed(SigilStone_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var IcontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SigilStone_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Icon.SetIfSucceeded(IcontryGet);
+                        errorMask: errorMask));
                     return TryGet<SigilStone_FieldIndex?>.Succeed(SigilStone_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SigilStone_FieldIndex.Script,
                         errorMask: errorMask));
                     return TryGet<SigilStone_FieldIndex?>.Succeed(SigilStone_FieldIndex.Script);
                 case "EFID":
-                    var EffectstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.Effects.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: SigilStone_Registration.EFID_HEADER,
                         fieldIndex: (int)SigilStone_FieldIndex.Effects,
@@ -867,22 +866,21 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._Effects.SetIfSucceeded(EffectstryGet);
+                        ));
                     return TryGet<SigilStone_FieldIndex?>.Succeed(SigilStone_FieldIndex.Effects);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Uses.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Uses.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)SigilStone_FieldIndex.Uses,
                             errorMask: errorMask));
-                        item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        item._Value.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)SigilStone_FieldIndex.Value,
                             errorMask: errorMask));
-                        item._Weight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._Weight.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)SigilStone_FieldIndex.Weight,
                             errorMask: errorMask));

@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Generation
             ArgsWrapper args;
             if (itemAccessor.PropertyAccess != null)
             {
-                args = new ArgsWrapper(fg, $"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}({this.Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse",
+                args = new ArgsWrapper(fg, $"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceededOrDefault)}({this.Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse",
                     suffixLine: ")");
             }
             else

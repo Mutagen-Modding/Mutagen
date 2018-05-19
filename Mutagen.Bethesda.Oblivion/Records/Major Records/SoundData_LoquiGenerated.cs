@@ -453,25 +453,25 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "MinimumAttenuationDistance":
-                    item._MinimumAttenuationDistance.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    item._MinimumAttenuationDistance.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)SoundData_FieldIndex.MinimumAttenuationDistance,
                         errorMask: errorMask));
                     break;
                 case "MaximumAttenuationDistance":
-                    item._MaximumAttenuationDistance.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    item._MaximumAttenuationDistance.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)SoundData_FieldIndex.MaximumAttenuationDistance,
                         errorMask: errorMask));
                     break;
                 case "FrequencyAdjustment":
-                    item._FrequencyAdjustment.SetIfSucceeded(Int8XmlTranslation.Instance.ParseNonNull(
+                    item._FrequencyAdjustment.SetIfSucceededOrDefault(Int8XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)SoundData_FieldIndex.FrequencyAdjustment,
                         errorMask: errorMask));
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<SoundData.Flag>.Instance.Parse(
+                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<SoundData.Flag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)SoundData_FieldIndex.Flags,
@@ -772,12 +772,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask().Overall = ex;
             }
-            item._FrequencyAdjustment.SetIfSucceeded(Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Parse(
+            item._FrequencyAdjustment.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)SoundData_FieldIndex.FrequencyAdjustment,
                 errorMask: errorMask));
             frame.Position += 1;
-            item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoundData.Flag>.Instance.Parse(
+            item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoundData.Flag>.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)SoundData_FieldIndex.Flags,
                 errorMask: errorMask));

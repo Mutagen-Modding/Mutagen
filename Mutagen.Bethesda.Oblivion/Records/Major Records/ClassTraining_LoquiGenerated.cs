@@ -432,20 +432,20 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "TrainedSkill":
-                    item._TrainedSkill.SetIfSucceeded(EnumXmlTranslation<Skill>.Instance.Parse(
+                    item._TrainedSkill.SetIfSucceededOrDefault(EnumXmlTranslation<Skill>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)ClassTraining_FieldIndex.TrainedSkill,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "MaximumTrainingLevel":
-                    item._MaximumTrainingLevel.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._MaximumTrainingLevel.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
                         errorMask: errorMask));
                     break;
                 case "Fluff":
-                    item._Fluff.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._Fluff.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)ClassTraining_FieldIndex.Fluff,
                         errorMask: errorMask));
@@ -650,19 +650,18 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<ClassTraining_ErrorMask> errorMask)
         {
-            item._TrainedSkill.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
+            item._TrainedSkill.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
                 frame: frame.SpawnWithLength(1),
                 fieldIndex: (int)ClassTraining_FieldIndex.TrainedSkill,
                 errorMask: errorMask));
-            item._MaximumTrainingLevel.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._MaximumTrainingLevel.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
                 errorMask: errorMask));
-            var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            item._Fluff.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(2),
                 fieldIndex: (int)ClassTraining_FieldIndex.Fluff,
-                errorMask: errorMask);
-            item._Fluff.SetIfSucceeded(FlufftryGet);
+                errorMask: errorMask));
         }
 
         #endregion

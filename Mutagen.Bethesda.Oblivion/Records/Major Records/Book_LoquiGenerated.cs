@@ -604,63 +604,63 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Book_FieldIndex.Model,
                         errorMask: errorMask));
                     break;
                 case "Icon":
-                    item._Icon.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Book_FieldIndex.Icon,
                         errorMask: errorMask));
                     break;
                 case "Script":
-                    item.Script_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Script_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Book_FieldIndex.Script,
                         errorMask: errorMask));
                     break;
                 case "Enchantment":
-                    item.Enchantment_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Enchantment_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Book_FieldIndex.Enchantment,
                         errorMask: errorMask));
                     break;
                 case "EnchantmentPoints":
-                    item._EnchantmentPoints.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    item._EnchantmentPoints.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Book_FieldIndex.EnchantmentPoints,
                         errorMask: errorMask));
                     break;
                 case "Description":
-                    item._Description.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Description.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Book_FieldIndex.Description,
                         errorMask: errorMask));
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<Book.BookFlag>.Instance.Parse(
+                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<Book.BookFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Book_FieldIndex.Flags,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Teaches":
-                    item._Teaches.SetIfSucceeded(EnumXmlTranslation<Skill>.Instance.Parse(
+                    item._Teaches.SetIfSucceededOrDefault(EnumXmlTranslation<Skill>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Book_FieldIndex.Teaches,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Value":
-                    item._Value.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Value.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Book_FieldIndex.Value,
                         errorMask: errorMask));
                     break;
                 case "Weight":
-                    item._Weight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Weight.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Book_FieldIndex.Weight,
                         errorMask: errorMask));
@@ -895,67 +895,65 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)Book_FieldIndex.Model,
                         errorMask: errorMask));
                     return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var IcontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Book_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Icon.SetIfSucceeded(IcontryGet);
+                        errorMask: errorMask));
                     return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Book_FieldIndex.Script,
                         errorMask: errorMask));
                     return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.Script);
                 case "ENAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Enchantment_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Enchantment_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Book_FieldIndex.Enchantment,
                         errorMask: errorMask));
                     return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.Enchantment);
                 case "ANAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._EnchantmentPoints.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                    item._EnchantmentPoints.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Book_FieldIndex.EnchantmentPoints,
                         errorMask: errorMask));
                     return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.EnchantmentPoints);
                 case "DESC":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var DescriptiontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Description.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Book_FieldIndex.Description,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Description.SetIfSucceeded(DescriptiontryGet);
+                        errorMask: errorMask));
                     return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.Description);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Book.BookFlag>.Instance.Parse(
+                        item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Book.BookFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(1),
                             fieldIndex: (int)Book_FieldIndex.Flags,
                             errorMask: errorMask));
-                        item._Teaches.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
+                        item._Teaches.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(1),
                             fieldIndex: (int)Book_FieldIndex.Teaches,
                             errorMask: errorMask));
-                        item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._Value.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Book_FieldIndex.Value,
                             errorMask: errorMask));
-                        item._Weight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._Weight.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Book_FieldIndex.Weight,
                             errorMask: errorMask));

@@ -432,13 +432,13 @@ namespace Mutagen.Bethesda
             switch (name)
             {
                 case "Master":
-                    item._Master.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Master.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)MasterReference_FieldIndex.Master,
                         errorMask: errorMask));
                     break;
                 case "FileSize":
-                    item._FileSize.SetIfSucceeded(UInt64XmlTranslation.Instance.ParseNonNull(
+                    item._FileSize.SetIfSucceededOrDefault(UInt64XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)MasterReference_FieldIndex.FileSize,
                         errorMask: errorMask));
@@ -673,17 +673,16 @@ namespace Mutagen.Bethesda
                 case "MAST":
                     if (lastParsed.HasValue && lastParsed.Value >= MasterReference_FieldIndex.Master) return TryGet<MasterReference_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var MastertryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Master.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)MasterReference_FieldIndex.Master,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Master.SetIfSucceeded(MastertryGet);
+                        errorMask: errorMask));
                     return TryGet<MasterReference_FieldIndex?>.Succeed(MasterReference_FieldIndex.Master);
                 case "DATA":
                     if (lastParsed.HasValue && lastParsed.Value >= MasterReference_FieldIndex.FileSize) return TryGet<MasterReference_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._FileSize.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Parse(
+                    item._FileSize.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)MasterReference_FieldIndex.FileSize,
                         errorMask: errorMask));

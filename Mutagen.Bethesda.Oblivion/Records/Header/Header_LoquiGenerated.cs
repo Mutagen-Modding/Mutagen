@@ -436,19 +436,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Version":
-                    item._Version.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Version.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Header_FieldIndex.Version,
                         errorMask: errorMask));
                     break;
                 case "NumRecords":
-                    item._NumRecords.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                    item._NumRecords.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Header_FieldIndex.NumRecords,
                         errorMask: errorMask));
                     break;
                 case "NextObjectID":
-                    item._NextObjectID.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    item._NextObjectID.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Header_FieldIndex.NextObjectID,
                         errorMask: errorMask));
@@ -660,15 +660,15 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<Header_ErrorMask> errorMask)
         {
-            item._Version.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._Version.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)Header_FieldIndex.Version,
                 errorMask: errorMask));
-            item._NumRecords.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+            item._NumRecords.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)Header_FieldIndex.NumRecords,
                 errorMask: errorMask));
-            item._NextObjectID.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+            item._NextObjectID.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)Header_FieldIndex.NextObjectID,
                 errorMask: errorMask));

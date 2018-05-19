@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Points":
-                    item._Points.SetIfSucceeded(ListXmlTranslation<RoadPoint, MaskItem<Exception, RoadPoint_ErrorMask>>.Instance.Parse(
+                    item._Points.SetIfSucceededOrDefault(ListXmlTranslation<RoadPoint, MaskItem<Exception, RoadPoint_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Road_FieldIndex.Points,
                         errorMask: errorMask,

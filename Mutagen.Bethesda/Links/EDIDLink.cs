@@ -60,6 +60,26 @@ namespace Mutagen.Bethesda
             this.EDID = new RecordType(item.Value);
         }
 
+        public void SetIfSucceededOrDefault(TryGet<RecordType> item)
+        {
+            if (item.Failed)
+            {
+                this.Unset();
+                return;
+            }
+            this.EDID = item.Value;
+        }
+
+        public void SetIfSuccessfulOrDefault(TryGet<string> item)
+        {
+            if (!item.Succeeded)
+            {
+                this.Unset();
+                return;
+            }
+            this.EDID = new RecordType(item.Value);
+        }
+
         private static bool TryLinkToMod<M>(
             IEDIDLink<T> link,
             M mod,

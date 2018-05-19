@@ -664,104 +664,104 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Object":
-                    item.Object_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Object_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.Object,
                         errorMask: errorMask));
                     break;
                 case "ParentIndex":
-                    item._ParentIndex.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    item._ParentIndex.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.ParentIndex,
                         errorMask: errorMask));
                     break;
                 case "Unknown1":
-                    item._Unknown1.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._Unknown1.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.Unknown1,
                         errorMask: errorMask));
                     break;
                 case "Density":
-                    item._Density.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Density.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.Density,
                         errorMask: errorMask));
                     break;
                 case "Clustering":
-                    item._Clustering.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Clustering.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.Clustering,
                         errorMask: errorMask));
                     break;
                 case "MinSlope":
-                    item._MinSlope.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._MinSlope.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.MinSlope,
                         errorMask: errorMask));
                     break;
                 case "MaxSlope":
-                    item._MaxSlope.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._MaxSlope.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.MaxSlope,
                         errorMask: errorMask));
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<RegionDataObject.Flag>.Instance.Parse(
+                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<RegionDataObject.Flag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)RegionDataObject_FieldIndex.Flags,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "RadiusWrtPercent":
-                    item._RadiusWrtPercent.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    item._RadiusWrtPercent.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.RadiusWrtPercent,
                         errorMask: errorMask));
                     break;
                 case "Radius":
-                    item._Radius.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    item._Radius.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.Radius,
                         errorMask: errorMask));
                     break;
                 case "MinHeight":
-                    item._MinHeight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._MinHeight.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.MinHeight,
                         errorMask: errorMask));
                     break;
                 case "MaxHeight":
-                    item._MaxHeight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._MaxHeight.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.MaxHeight,
                         errorMask: errorMask));
                     break;
                 case "Sink":
-                    item._Sink.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Sink.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.Sink,
                         errorMask: errorMask));
                     break;
                 case "SinkVariance":
-                    item._SinkVariance.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._SinkVariance.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.SinkVariance,
                         errorMask: errorMask));
                     break;
                 case "SizeVariance":
-                    item._SizeVariance.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._SizeVariance.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.SizeVariance,
                         errorMask: errorMask));
                     break;
                 case "AngleVariance":
-                    item._AngleVariance.SetIfSucceeded(P3UInt16XmlTranslation.Instance.ParseNonNull(
+                    item._AngleVariance.SetIfSucceededOrDefault(P3UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.AngleVariance,
                         errorMask: errorMask));
                     break;
                 case "Unknow2n":
-                    item._Unknow2n.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._Unknow2n.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.Unknow2n,
                         errorMask: errorMask));
@@ -975,76 +975,74 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<RegionDataObject_ErrorMask> errorMask)
         {
-            item.Object_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item.Object_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Object,
                 errorMask: errorMask));
-            item._ParentIndex.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+            item._ParentIndex.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RegionDataObject_FieldIndex.ParentIndex,
                 errorMask: errorMask));
-            var Unknown1tryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            item._Unknown1.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(2),
                 fieldIndex: (int)RegionDataObject_FieldIndex.Unknown1,
-                errorMask: errorMask);
-            item._Unknown1.SetIfSucceeded(Unknown1tryGet);
-            item._Density.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                errorMask: errorMask));
+            item._Density.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Density,
                 errorMask: errorMask));
-            item._Clustering.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Clustering.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Clustering,
                 errorMask: errorMask));
-            item._MinSlope.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._MinSlope.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RegionDataObject_FieldIndex.MinSlope,
                 errorMask: errorMask));
-            item._MaxSlope.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._MaxSlope.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RegionDataObject_FieldIndex.MaxSlope,
                 errorMask: errorMask));
-            item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionDataObject.Flag>.Instance.Parse(
+            item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionDataObject.Flag>.Instance.Parse(
                 frame: frame.SpawnWithLength(1),
                 fieldIndex: (int)RegionDataObject_FieldIndex.Flags,
                 errorMask: errorMask));
-            item._RadiusWrtPercent.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+            item._RadiusWrtPercent.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RegionDataObject_FieldIndex.RadiusWrtPercent,
                 errorMask: errorMask));
-            item._Radius.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+            item._Radius.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Radius,
                 errorMask: errorMask));
-            item._MinHeight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._MinHeight.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RegionDataObject_FieldIndex.MinHeight,
                 errorMask: errorMask));
-            item._MaxHeight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._MaxHeight.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RegionDataObject_FieldIndex.MaxHeight,
                 errorMask: errorMask));
-            item._Sink.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._Sink.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Sink,
                 errorMask: errorMask));
-            item._SinkVariance.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._SinkVariance.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RegionDataObject_FieldIndex.SinkVariance,
                 errorMask: errorMask));
-            item._SizeVariance.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._SizeVariance.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RegionDataObject_FieldIndex.SizeVariance,
                 errorMask: errorMask));
-            item._AngleVariance.SetIfSucceeded(Mutagen.Bethesda.Binary.P3UInt16BinaryTranslation.Instance.Parse(
+            item._AngleVariance.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.P3UInt16BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RegionDataObject_FieldIndex.AngleVariance,
                 errorMask: errorMask));
-            var Unknow2ntryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            item._Unknow2n.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(6),
                 fieldIndex: (int)RegionDataObject_FieldIndex.Unknow2n,
-                errorMask: errorMask);
-            item._Unknow2n.SetIfSucceeded(Unknow2ntryGet);
+                errorMask: errorMask));
         }
 
         #endregion

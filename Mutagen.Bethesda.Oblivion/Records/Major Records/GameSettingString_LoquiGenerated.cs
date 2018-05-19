@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Data":
-                    item._Data.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Data.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)GameSettingString_FieldIndex.Data,
                         errorMask: errorMask));
@@ -659,12 +659,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var DatatryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Data.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)GameSettingString_FieldIndex.Data,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Data.SetIfSucceeded(DatatryGet);
+                        errorMask: errorMask));
                     return TryGet<GameSettingString_FieldIndex?>.Succeed(GameSettingString_FieldIndex.Data);
                 default:
                     return GameSetting.Fill_Binary_RecordTypes(

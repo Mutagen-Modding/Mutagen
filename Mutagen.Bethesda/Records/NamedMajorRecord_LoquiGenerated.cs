@@ -295,7 +295,7 @@ namespace Mutagen.Bethesda
             switch (name)
             {
                 case "Name":
-                    item._Name.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Name.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
                         errorMask: errorMask));
@@ -382,12 +382,11 @@ namespace Mutagen.Bethesda
             {
                 case "FULL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var NametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Name.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Name.SetIfSucceeded(NametryGet);
+                        errorMask: errorMask));
                     return TryGet<NamedMajorRecord_FieldIndex?>.Succeed(NamedMajorRecord_FieldIndex.Name);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(

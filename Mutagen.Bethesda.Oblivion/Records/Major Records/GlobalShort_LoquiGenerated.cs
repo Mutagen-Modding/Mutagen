@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Data":
-                    item._Data.SetIfSucceeded(Int16XmlTranslation.Instance.ParseNonNull(
+                    item._Data.SetIfSucceededOrDefault(Int16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)GlobalShort_FieldIndex.Data,
                         errorMask: errorMask));

@@ -426,20 +426,20 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Texture":
-                    item.Texture_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Texture_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)BaseLayer_FieldIndex.Texture,
                         errorMask: errorMask));
                     break;
                 case "Quadrant":
-                    item._Quadrant.SetIfSucceeded(EnumXmlTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
+                    item._Quadrant.SetIfSucceededOrDefault(EnumXmlTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)BaseLayer_FieldIndex.Quadrant,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "LayerNumber":
-                    item._LayerNumber.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    item._LayerNumber.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)BaseLayer_FieldIndex.LayerNumber,
                         errorMask: errorMask));
@@ -685,15 +685,15 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item.Texture_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                        item.Texture_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)BaseLayer_FieldIndex.Texture,
                             errorMask: errorMask));
-                        item._Quadrant.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
+                        item._Quadrant.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(2),
                             fieldIndex: (int)BaseLayer_FieldIndex.Quadrant,
                             errorMask: errorMask));
-                        item._LayerNumber.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                        item._LayerNumber.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)BaseLayer_FieldIndex.LayerNumber,
                             errorMask: errorMask));

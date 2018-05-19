@@ -403,13 +403,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Male":
-                    item.Male_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Male_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RaceHair_FieldIndex.Male,
                         errorMask: errorMask));
                     break;
                 case "Female":
-                    item.Female_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Female_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RaceHair_FieldIndex.Female,
                         errorMask: errorMask));
@@ -628,11 +628,11 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<RaceHair_ErrorMask> errorMask)
         {
-            item.Male_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item.Male_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceHair_FieldIndex.Male,
                 errorMask: errorMask));
-            item.Female_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item.Female_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceHair_FieldIndex.Female,
                 errorMask: errorMask));

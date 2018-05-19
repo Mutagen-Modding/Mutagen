@@ -650,77 +650,77 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Skill":
-                    item._Skill.SetIfSucceeded(EnumXmlTranslation<ActorValue>.Instance.Parse(
+                    item._Skill.SetIfSucceededOrDefault(EnumXmlTranslation<ActorValue>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)SkillRecord_FieldIndex.Skill,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Description":
-                    item._Description.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Description.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)SkillRecord_FieldIndex.Description,
                         errorMask: errorMask));
                     break;
                 case "Icon":
-                    item._Icon.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)SkillRecord_FieldIndex.Icon,
                         errorMask: errorMask));
                     break;
                 case "Action":
-                    item._Action.SetIfSucceeded(EnumXmlTranslation<ActorValue>.Instance.Parse(
+                    item._Action.SetIfSucceededOrDefault(EnumXmlTranslation<ActorValue>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)SkillRecord_FieldIndex.Action,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Attribute":
-                    item._Attribute.SetIfSucceeded(EnumXmlTranslation<ActorValue>.Instance.Parse(
+                    item._Attribute.SetIfSucceededOrDefault(EnumXmlTranslation<ActorValue>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Specialization":
-                    item._Specialization.SetIfSucceeded(EnumXmlTranslation<Specialization>.Instance.Parse(
+                    item._Specialization.SetIfSucceededOrDefault(EnumXmlTranslation<Specialization>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "UseValueFirst":
-                    item._UseValueFirst.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._UseValueFirst.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
                         errorMask: errorMask));
                     break;
                 case "UseValueSecond":
-                    item._UseValueSecond.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._UseValueSecond.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
                         errorMask: errorMask));
                     break;
                 case "ApprenticeText":
-                    item._ApprenticeText.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._ApprenticeText.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)SkillRecord_FieldIndex.ApprenticeText,
                         errorMask: errorMask));
                     break;
                 case "JourneymanText":
-                    item._JourneymanText.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._JourneymanText.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)SkillRecord_FieldIndex.JourneymanText,
                         errorMask: errorMask));
                     break;
                 case "ExpertText":
-                    item._ExpertText.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._ExpertText.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)SkillRecord_FieldIndex.ExpertText,
                         errorMask: errorMask));
                     break;
                 case "MasterText":
-                    item._MasterText.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._MasterText.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)SkillRecord_FieldIndex.MasterText,
                         errorMask: errorMask));
@@ -945,50 +945,48 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "INDX":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Skill.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                    item._Skill.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.Skill,
                         errorMask: errorMask));
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.Skill);
                 case "DESC":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var DescriptiontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Description.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.Description,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Description.SetIfSucceeded(DescriptiontryGet);
+                        errorMask: errorMask));
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.Description);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var IcontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Icon.SetIfSucceeded(IcontryGet);
+                        errorMask: errorMask));
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Action.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                        item._Action.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)SkillRecord_FieldIndex.Action,
                             errorMask: errorMask));
-                        item._Attribute.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                        item._Attribute.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
                             errorMask: errorMask));
-                        item._Specialization.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Specialization>.Instance.Parse(
+                        item._Specialization.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Specialization>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
                             errorMask: errorMask));
-                        item._UseValueFirst.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._UseValueFirst.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
                             errorMask: errorMask));
-                        item._UseValueSecond.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._UseValueSecond.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
                             errorMask: errorMask));
@@ -996,39 +994,35 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.UseValueSecond);
                 case "ANAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var ApprenticeTexttryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._ApprenticeText.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.ApprenticeText,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._ApprenticeText.SetIfSucceeded(ApprenticeTexttryGet);
+                        errorMask: errorMask));
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.ApprenticeText);
                 case "JNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var JourneymanTexttryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._JourneymanText.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.JourneymanText,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._JourneymanText.SetIfSucceeded(JourneymanTexttryGet);
+                        errorMask: errorMask));
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.JourneymanText);
                 case "ENAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var ExpertTexttryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._ExpertText.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.ExpertText,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._ExpertText.SetIfSucceeded(ExpertTexttryGet);
+                        errorMask: errorMask));
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.ExpertText);
                 case "MNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var MasterTexttryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._MasterText.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.MasterText,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._MasterText.SetIfSucceeded(MasterTexttryGet);
+                        errorMask: errorMask));
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.MasterText);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(

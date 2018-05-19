@@ -419,26 +419,26 @@ namespace Mutagen.Bethesda
             switch (name)
             {
                 case "ContainedRecordType":
-                    item._ContainedRecordType.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._ContainedRecordType.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Group_FieldIndex.ContainedRecordType,
                         errorMask: errorMask));
                     break;
                 case "GroupType":
-                    item._GroupType.SetIfSucceeded(EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
+                    item._GroupType.SetIfSucceededOrDefault(EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Group_FieldIndex.GroupType,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "LastModified":
-                    item._LastModified.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._LastModified.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Group_FieldIndex.LastModified,
                         errorMask: errorMask));
                     break;
                 case "Items":
-                    item._Items.SetIfSucceeded(KeyedDictXmlTranslation<FormID, T, MaskItem<Exception, T_ErrMask>>.Instance.Parse(
+                    item._Items.SetIfSucceededOrDefault(KeyedDictXmlTranslation<FormID, T, MaskItem<Exception, T_ErrMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Group_FieldIndex.Items,
                         errorMask: errorMask,
@@ -711,15 +711,14 @@ namespace Mutagen.Bethesda
             {
                 errorMask().Overall = ex;
             }
-            item._GroupType.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
+            item._GroupType.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)Group_FieldIndex.GroupType,
                 errorMask: errorMask));
-            var LastModifiedtryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            item._LastModified.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)Group_FieldIndex.LastModified,
-                errorMask: errorMask);
-            item._LastModified.SetIfSucceeded(LastModifiedtryGet);
+                errorMask: errorMask));
         }
 
         protected static TryGet<Group_FieldIndex?> Fill_Binary_RecordTypes<T_ErrMask>(
@@ -738,7 +737,7 @@ namespace Mutagen.Bethesda
                 default:
                     if (nextRecordType.Equals(T_RecordType))
                     {
-                        var ItemstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.ParseRepeatedItem(
+                        item.Items.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: T_RecordType,
                             fieldIndex: (int)Group_FieldIndex.Items,
@@ -751,8 +750,7 @@ namespace Mutagen.Bethesda
                                     doMasks: listDoMasks,
                                     errorMask: out listSubMask);
                             }
-                            );
-                        item._Items.SetIfSucceeded(ItemstryGet);
+                            ));
                         return TryGet<Group_FieldIndex?>.Failure;
                     }
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");

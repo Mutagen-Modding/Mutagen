@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "AlphaLayerData":
-                    item._AlphaLayerData.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._AlphaLayerData.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)AlphaLayer_FieldIndex.AlphaLayerData,
                         errorMask: errorMask));
@@ -684,11 +684,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "VTXT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var AlphaLayerDatatryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    item._AlphaLayerData.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)AlphaLayer_FieldIndex.AlphaLayerData,
-                        errorMask: errorMask);
-                    item._AlphaLayerData.SetIfSucceeded(AlphaLayerDatatryGet);
+                        errorMask: errorMask));
                     return TryGet<AlphaLayer_FieldIndex?>.Succeed(AlphaLayer_FieldIndex.AlphaLayerData);
                 default:
                     return BaseLayer.Fill_Binary_RecordTypes(

@@ -427,19 +427,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Faction":
-                    item.Faction_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Faction_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RankPlacement_FieldIndex.Faction,
                         errorMask: errorMask));
                     break;
                 case "Rank":
-                    item._Rank.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Rank.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RankPlacement_FieldIndex.Rank,
                         errorMask: errorMask));
                     break;
                 case "Fluff":
-                    item._Fluff.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._Fluff.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)RankPlacement_FieldIndex.Fluff,
                         errorMask: errorMask));
@@ -657,19 +657,18 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<RankPlacement_ErrorMask> errorMask)
         {
-            item.Faction_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item.Faction_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RankPlacement_FieldIndex.Faction,
                 errorMask: errorMask));
-            item._Rank.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Rank.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RankPlacement_FieldIndex.Rank,
                 errorMask: errorMask));
-            var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            item._Fluff.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(3),
                 fieldIndex: (int)RankPlacement_FieldIndex.Fluff,
-                errorMask: errorMask);
-            item._Fluff.SetIfSucceeded(FlufftryGet);
+                errorMask: errorMask));
         }
 
         #endregion

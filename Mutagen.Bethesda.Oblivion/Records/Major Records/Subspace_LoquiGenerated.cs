@@ -448,19 +448,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "X":
-                    item._X.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._X.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Subspace_FieldIndex.X,
                         errorMask: errorMask));
                     break;
                 case "Y":
-                    item._Y.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Y.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Subspace_FieldIndex.Y,
                         errorMask: errorMask));
                     break;
                 case "Z":
-                    item._Z.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Z.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Subspace_FieldIndex.Z,
                         errorMask: errorMask));
@@ -687,15 +687,15 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._X.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._X.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Subspace_FieldIndex.X,
                             errorMask: errorMask));
-                        item._Y.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._Y.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Subspace_FieldIndex.Y,
                             errorMask: errorMask));
-                        item._Z.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._Z.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Subspace_FieldIndex.Z,
                             errorMask: errorMask));

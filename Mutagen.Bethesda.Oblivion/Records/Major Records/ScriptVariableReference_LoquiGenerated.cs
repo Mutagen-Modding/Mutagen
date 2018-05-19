@@ -414,7 +414,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "VariableIndex":
-                    item._VariableIndex.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                    item._VariableIndex.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)ScriptVariableReference_FieldIndex.VariableIndex,
                         errorMask: errorMask));
@@ -658,7 +658,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "SCRV":
                     if (lastParsed.HasValue && lastParsed.Value >= ScriptVariableReference_FieldIndex.VariableIndex) return TryGet<ScriptVariableReference_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._VariableIndex.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                    item._VariableIndex.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)ScriptVariableReference_FieldIndex.VariableIndex,
                         errorMask: errorMask));

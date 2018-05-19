@@ -473,19 +473,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Furnature_FieldIndex.Model,
                         errorMask: errorMask));
                     break;
                 case "Script":
-                    item.Script_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Script_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Furnature_FieldIndex.Script,
                         errorMask: errorMask));
                     break;
                 case "MarkerFlags":
-                    item._MarkerFlags.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._MarkerFlags.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Furnature_FieldIndex.MarkerFlags,
                         errorMask: errorMask));
@@ -719,25 +719,24 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)Furnature_FieldIndex.Model,
                         errorMask: errorMask));
                     return TryGet<Furnature_FieldIndex?>.Succeed(Furnature_FieldIndex.Model);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Furnature_FieldIndex.Script,
                         errorMask: errorMask));
                     return TryGet<Furnature_FieldIndex?>.Succeed(Furnature_FieldIndex.Script);
                 case "MNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var MarkerFlagstryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    item._MarkerFlags.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Furnature_FieldIndex.MarkerFlags,
-                        errorMask: errorMask);
-                    item._MarkerFlags.SetIfSucceeded(MarkerFlagstryGet);
+                        errorMask: errorMask));
                     return TryGet<Furnature_FieldIndex?>.Succeed(Furnature_FieldIndex.MarkerFlags);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(

@@ -521,49 +521,49 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Strength":
-                    item._Strength.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Strength.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RaceStats_FieldIndex.Strength,
                         errorMask: errorMask));
                     break;
                 case "Intelligence":
-                    item._Intelligence.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Intelligence.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RaceStats_FieldIndex.Intelligence,
                         errorMask: errorMask));
                     break;
                 case "Willpower":
-                    item._Willpower.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Willpower.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RaceStats_FieldIndex.Willpower,
                         errorMask: errorMask));
                     break;
                 case "Agility":
-                    item._Agility.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Agility.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RaceStats_FieldIndex.Agility,
                         errorMask: errorMask));
                     break;
                 case "Speed":
-                    item._Speed.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Speed.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RaceStats_FieldIndex.Speed,
                         errorMask: errorMask));
                     break;
                 case "Endurance":
-                    item._Endurance.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Endurance.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RaceStats_FieldIndex.Endurance,
                         errorMask: errorMask));
                     break;
                 case "Personality":
-                    item._Personality.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Personality.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RaceStats_FieldIndex.Personality,
                         errorMask: errorMask));
                     break;
                 case "Luck":
-                    item._Luck.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Luck.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RaceStats_FieldIndex.Luck,
                         errorMask: errorMask));
@@ -768,35 +768,35 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<RaceStats_ErrorMask> errorMask)
         {
-            item._Strength.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Strength.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceStats_FieldIndex.Strength,
                 errorMask: errorMask));
-            item._Intelligence.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Intelligence.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceStats_FieldIndex.Intelligence,
                 errorMask: errorMask));
-            item._Willpower.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Willpower.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceStats_FieldIndex.Willpower,
                 errorMask: errorMask));
-            item._Agility.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Agility.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceStats_FieldIndex.Agility,
                 errorMask: errorMask));
-            item._Speed.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Speed.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceStats_FieldIndex.Speed,
                 errorMask: errorMask));
-            item._Endurance.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Endurance.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceStats_FieldIndex.Endurance,
                 errorMask: errorMask));
-            item._Personality.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Personality.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceStats_FieldIndex.Personality,
                 errorMask: errorMask));
-            item._Luck.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Luck.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceStats_FieldIndex.Luck,
                 errorMask: errorMask));

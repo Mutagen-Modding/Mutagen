@@ -112,11 +112,11 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"if (!{accessor.PropertyAccess}.Equals({rhsAccessor.PropertyAccess})) return false;");
         }
 
-        public override void GenerateForCopy(FileGeneration fg, string accessorPrefix, string rhsAccessorPrefix, string copyMaskAccessor, string defaultFallbackAccessor, string cmdsAccessor, bool protectedMembers)
+        public override void GenerateForCopy(FileGeneration fg, Accessor accessor, string rhsAccessorPrefix, string copyMaskAccessor, string defaultFallbackAccessor, string cmdsAccessor, bool protectedMembers)
         {
             _rawFormID.GenerateForCopy(
-                fg: fg,
-                accessorPrefix: accessorPrefix,
+                fg: fg, 
+                accessor: accessor,
                 rhsAccessorPrefix: rhsAccessorPrefix,
                 copyMaskAccessor: copyMaskAccessor,
                 defaultFallbackAccessor: defaultFallbackAccessor,

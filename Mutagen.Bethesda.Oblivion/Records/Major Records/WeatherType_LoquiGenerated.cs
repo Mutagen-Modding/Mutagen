@@ -454,25 +454,25 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Sunrise":
-                    item._Sunrise.SetIfSucceeded(ColorXmlTranslation.Instance.ParseNonNull(
+                    item._Sunrise.SetIfSucceededOrDefault(ColorXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)WeatherType_FieldIndex.Sunrise,
                         errorMask: errorMask));
                     break;
                 case "Day":
-                    item._Day.SetIfSucceeded(ColorXmlTranslation.Instance.ParseNonNull(
+                    item._Day.SetIfSucceededOrDefault(ColorXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)WeatherType_FieldIndex.Day,
                         errorMask: errorMask));
                     break;
                 case "Sunset":
-                    item._Sunset.SetIfSucceeded(ColorXmlTranslation.Instance.ParseNonNull(
+                    item._Sunset.SetIfSucceededOrDefault(ColorXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)WeatherType_FieldIndex.Sunset,
                         errorMask: errorMask));
                     break;
                 case "Night":
-                    item._Night.SetIfSucceeded(ColorXmlTranslation.Instance.ParseNonNull(
+                    item._Night.SetIfSucceededOrDefault(ColorXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)WeatherType_FieldIndex.Night,
                         errorMask: errorMask));
@@ -677,22 +677,22 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<WeatherType_ErrorMask> errorMask)
         {
-            item._Sunrise.SetIfSucceeded(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+            item._Sunrise.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)WeatherType_FieldIndex.Sunrise,
                 errorMask: errorMask,
                 extraByte: true));
-            item._Day.SetIfSucceeded(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+            item._Day.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)WeatherType_FieldIndex.Day,
                 errorMask: errorMask,
                 extraByte: true));
-            item._Sunset.SetIfSucceeded(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+            item._Sunset.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)WeatherType_FieldIndex.Sunset,
                 errorMask: errorMask,
                 extraByte: true));
-            item._Night.SetIfSucceeded(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+            item._Night.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)WeatherType_FieldIndex.Night,
                 errorMask: errorMask,

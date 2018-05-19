@@ -406,7 +406,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Reference":
-                    item.Reference_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Reference_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)ScriptObjectReference_FieldIndex.Reference,
                         errorMask: errorMask));
@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "SCRO":
                     if (lastParsed.HasValue && lastParsed.Value >= ScriptObjectReference_FieldIndex.Reference) return TryGet<ScriptObjectReference_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Reference_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Reference_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)ScriptObjectReference_FieldIndex.Reference,
                         errorMask: errorMask));

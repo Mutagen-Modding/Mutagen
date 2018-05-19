@@ -104,14 +104,10 @@ namespace Mutagen.Bethesda.Generation
                 typeGen: typeGen,
                 nodeAccessor: nodeAccessor,
                 squashedRepeatedList: false,
-                retAccessor: new Accessor($"var {typeGen.Name}tryGet = "),
+                retAccessor: new Accessor(typeGen, "item."),
                 doMaskAccessor: doMaskAccessor,
                 maskAccessor: maskAccessor);
-            if (itemAccessor.PropertyAccess != null)
-            {
-                fg.AppendLine($"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}({typeGen.Name}tryGet);");
-            }
-            else
+            if (itemAccessor.PropertyAccess == null)
             {
                 fg.AppendLine($"if ({typeGen.Name}tryGet.Succeeded)");
                 using (new BraceWrapper(fg))
@@ -152,8 +148,17 @@ namespace Mutagen.Bethesda.Generation
             }
 
             var subMaskStr = subTransl.MaskModule.GetMaskModule(dict.ValueTypeGen.GetType()).GetErrorMaskTypeStr(dict.ValueTypeGen);
-            using (var args = new ArgsWrapper(fg,
-                $"{retAccessor.DirectAccess}{this.Namespace}ListBinaryTranslation<{dict.ValueTypeGen.TypeName}, {subMaskStr}>.Instance.ParseRepeatedItem"))
+            ArgsWrapper args;
+            if (retAccessor.PropertyAccess != null)
+            {
+                args = new ArgsWrapper(fg, $"{retAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceededOrDefault)}({this.Namespace}ListBinaryTranslation<{dict.ValueTypeGen.TypeName}, {subMaskStr}>.Instance.ParseRepeatedItem",
+                    suffixLine: ")");
+            }
+            else
+            {
+                args = new ArgsWrapper(fg, $"var {typeGen.Name}tryGet = {this.Namespace}ListBinaryTranslation<{dict.ValueTypeGen.TypeName}, {subMaskStr}>.Instance.ParseRepeatedItem");
+            }
+            using (args)
             {
                 if (listBinaryType == ListBinaryType.SubTrigger)
                 {

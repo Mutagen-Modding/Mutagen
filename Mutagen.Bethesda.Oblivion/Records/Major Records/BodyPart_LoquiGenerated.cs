@@ -433,14 +433,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Index":
-                    item._Index.SetIfSucceeded(EnumXmlTranslation<Race.BodyIndex>.Instance.Parse(
+                    item._Index.SetIfSucceededOrDefault(EnumXmlTranslation<Race.BodyIndex>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)BodyPart_FieldIndex.Index,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Icon":
-                    item._Icon.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)BodyPart_FieldIndex.Icon,
                         errorMask: errorMask));
@@ -675,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "INDX":
                     if (lastParsed.HasValue && lastParsed.Value >= BodyPart_FieldIndex.Index) return TryGet<BodyPart_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Index.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.BodyIndex>.Instance.Parse(
+                    item._Index.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.BodyIndex>.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)BodyPart_FieldIndex.Index,
                         errorMask: errorMask));
@@ -683,12 +683,11 @@ namespace Mutagen.Bethesda.Oblivion
                 case "ICON":
                     if (lastParsed.HasValue && lastParsed.Value >= BodyPart_FieldIndex.Icon) return TryGet<BodyPart_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var IcontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)BodyPart_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Icon.SetIfSucceeded(IcontryGet);
+                        errorMask: errorMask));
                     return TryGet<BodyPart_FieldIndex?>.Succeed(BodyPart_FieldIndex.Icon);
                 default:
                     return TryGet<BodyPart_FieldIndex?>.Failure;

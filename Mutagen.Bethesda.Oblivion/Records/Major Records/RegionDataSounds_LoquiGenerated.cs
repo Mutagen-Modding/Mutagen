@@ -448,14 +448,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "MusicType":
-                    item._MusicType.SetIfSucceeded(EnumXmlTranslation<MusicType>.Instance.Parse(
+                    item._MusicType.SetIfSucceededOrDefault(EnumXmlTranslation<MusicType>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)RegionDataSounds_FieldIndex.MusicType,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Sounds":
-                    item._Sounds.SetIfSucceeded(ListXmlTranslation<RegionSound, MaskItem<Exception, RegionSound_ErrorMask>>.Instance.Parse(
+                    item._Sounds.SetIfSucceededOrDefault(ListXmlTranslation<RegionSound, MaskItem<Exception, RegionSound_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)RegionDataSounds_FieldIndex.Sounds,
                         errorMask: errorMask,
@@ -715,14 +715,14 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "RDMD":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._MusicType.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.Parse(
+                    item._MusicType.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)RegionDataSounds_FieldIndex.MusicType,
                         errorMask: errorMask));
                     return TryGet<RegionDataSounds_FieldIndex?>.Succeed(RegionDataSounds_FieldIndex.MusicType);
                 case "RDSD":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var SoundstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionSound, MaskItem<Exception, RegionSound_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.Sounds.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionSound, MaskItem<Exception, RegionSound_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)RegionDataSounds_FieldIndex.Sounds,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
@@ -734,8 +734,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._Sounds.SetIfSucceeded(SoundstryGet);
+                        ));
                     return TryGet<RegionDataSounds_FieldIndex?>.Succeed(RegionDataSounds_FieldIndex.Sounds);
                 default:
                     return RegionData.Fill_Binary_RecordTypes(

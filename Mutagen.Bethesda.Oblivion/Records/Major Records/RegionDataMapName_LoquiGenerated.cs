@@ -421,7 +421,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "MapName":
-                    item._MapName.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._MapName.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)RegionDataMapName_FieldIndex.MapName,
                         errorMask: errorMask));
@@ -664,12 +664,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "RDMP":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var MapNametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._MapName.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)RegionDataMapName_FieldIndex.MapName,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._MapName.SetIfSucceeded(MapNametryGet);
+                        errorMask: errorMask));
                     return TryGet<RegionDataMapName_FieldIndex?>.Succeed(RegionDataMapName_FieldIndex.MapName);
                 default:
                     return RegionData.Fill_Binary_RecordTypes(

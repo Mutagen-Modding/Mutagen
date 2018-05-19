@@ -419,13 +419,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "PointID":
-                    item._PointID.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                    item._PointID.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)InterCellPoint_FieldIndex.PointID,
                         errorMask: errorMask));
                     break;
                 case "Point":
-                    item._Point.SetIfSucceeded(P3FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Point.SetIfSucceededOrDefault(P3FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)InterCellPoint_FieldIndex.Point,
                         errorMask: errorMask));
@@ -630,11 +630,11 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<InterCellPoint_ErrorMask> errorMask)
         {
-            item._PointID.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+            item._PointID.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)InterCellPoint_FieldIndex.PointID,
                 errorMask: errorMask));
-            item._Point.SetIfSucceeded(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+            item._Point.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)InterCellPoint_FieldIndex.Point,
                 errorMask: errorMask));

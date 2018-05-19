@@ -461,33 +461,33 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Script":
-                    item.Script_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Script_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)ScriptEffect_FieldIndex.Script,
                         errorMask: errorMask));
                     break;
                 case "MagicSchool":
-                    item._MagicSchool.SetIfSucceeded(EnumXmlTranslation<MagicSchool>.Instance.Parse(
+                    item._MagicSchool.SetIfSucceededOrDefault(EnumXmlTranslation<MagicSchool>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "VisualEffect":
-                    item.VisualEffect_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.VisualEffect_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
                         errorMask: errorMask));
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<ScriptEffect.Flag>.Instance.Parse(
+                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<ScriptEffect.Flag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Name":
-                    item._Name.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Name.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)ScriptEffect_FieldIndex.Name,
                         errorMask: errorMask));
@@ -765,7 +765,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                        item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)ScriptEffect_FieldIndex.Script,
                             errorMask: errorMask));
@@ -774,11 +774,11 @@ namespace Mutagen.Bethesda.Oblivion
                             item.SCITDataTypeState |= SCITDataType.Break0;
                             return TryGet<ScriptEffect_FieldIndex?>.Succeed(ScriptEffect_FieldIndex.Script);
                         }
-                        item._MagicSchool.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Parse(
+                        item._MagicSchool.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
                             errorMask: errorMask));
-                        item.VisualEffect_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
+                        item.VisualEffect_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
                             errorMask: errorMask));
@@ -787,7 +787,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.SCITDataTypeState |= SCITDataType.Break1;
                             return TryGet<ScriptEffect_FieldIndex?>.Succeed(ScriptEffect_FieldIndex.VisualEffect);
                         }
-                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Parse(
+                        item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
                             errorMask: errorMask));
@@ -795,12 +795,11 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<ScriptEffect_FieldIndex?>.Succeed(ScriptEffect_FieldIndex.Flags);
                 case "FULL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var NametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Name.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)ScriptEffect_FieldIndex.Name,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Name.SetIfSucceeded(NametryGet);
+                        errorMask: errorMask));
                     return TryGet<ScriptEffect_FieldIndex?>.Succeed(ScriptEffect_FieldIndex.Name);
                 default:
                     return TryGet<ScriptEffect_FieldIndex?>.Failure;

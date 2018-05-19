@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Data":
-                    item._Data.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._Data.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)LocalVariableData_FieldIndex.Data,
                         errorMask: errorMask));
@@ -613,11 +613,10 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<LocalVariableData_ErrorMask> errorMask)
         {
-            var DatatryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            item._Data.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(24),
                 fieldIndex: (int)LocalVariableData_FieldIndex.Data,
-                errorMask: errorMask);
-            item._Data.SetIfSucceeded(DatatryGet);
+                errorMask: errorMask));
         }
 
         #endregion

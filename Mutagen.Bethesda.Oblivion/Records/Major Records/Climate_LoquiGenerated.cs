@@ -611,7 +611,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Weathers":
-                    item._Weathers.SetIfSucceeded(ListXmlTranslation<WeatherChance, MaskItem<Exception, WeatherChance_ErrorMask>>.Instance.Parse(
+                    item._Weathers.SetIfSucceededOrDefault(ListXmlTranslation<WeatherChance, MaskItem<Exception, WeatherChance_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Climate_FieldIndex.Weathers,
                         errorMask: errorMask,
@@ -625,62 +625,62 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "SunTexture":
-                    item._SunTexture.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._SunTexture.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Climate_FieldIndex.SunTexture,
                         errorMask: errorMask));
                     break;
                 case "SunGlareTexture":
-                    item._SunGlareTexture.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._SunGlareTexture.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Climate_FieldIndex.SunGlareTexture,
                         errorMask: errorMask));
                     break;
                 case "Model":
-                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Climate_FieldIndex.Model,
                         errorMask: errorMask));
                     break;
                 case "SunriseBegin":
-                    item._SunriseBegin.SetIfSucceeded(DateTimeXmlTranslation.Instance.ParseNonNull(
+                    item._SunriseBegin.SetIfSucceededOrDefault(DateTimeXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Climate_FieldIndex.SunriseBegin,
                         errorMask: errorMask));
                     break;
                 case "SunriseEnd":
-                    item._SunriseEnd.SetIfSucceeded(DateTimeXmlTranslation.Instance.ParseNonNull(
+                    item._SunriseEnd.SetIfSucceededOrDefault(DateTimeXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Climate_FieldIndex.SunriseEnd,
                         errorMask: errorMask));
                     break;
                 case "SunsetBegin":
-                    item._SunsetBegin.SetIfSucceeded(DateTimeXmlTranslation.Instance.ParseNonNull(
+                    item._SunsetBegin.SetIfSucceededOrDefault(DateTimeXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Climate_FieldIndex.SunsetBegin,
                         errorMask: errorMask));
                     break;
                 case "SunsetEnd":
-                    item._SunsetEnd.SetIfSucceeded(DateTimeXmlTranslation.Instance.ParseNonNull(
+                    item._SunsetEnd.SetIfSucceededOrDefault(DateTimeXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Climate_FieldIndex.SunsetEnd,
                         errorMask: errorMask));
                     break;
                 case "Volatility":
-                    item._Volatility.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Volatility.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Climate_FieldIndex.Volatility,
                         errorMask: errorMask));
                     break;
                 case "Phase":
-                    item._Phase.SetIfSucceeded(EnumXmlTranslation<Climate.MoonPhase>.Instance.Parse(
+                    item._Phase.SetIfSucceededOrDefault(EnumXmlTranslation<Climate.MoonPhase>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Climate_FieldIndex.Phase,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "PhaseLength":
-                    item._PhaseLength.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._PhaseLength.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Climate_FieldIndex.PhaseLength,
                         errorMask: errorMask));
@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "WLST":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var WeatherstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherChance, MaskItem<Exception, WeatherChance_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.Weathers.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherChance, MaskItem<Exception, WeatherChance_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Climate_FieldIndex.Weathers,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
@@ -1128,29 +1128,26 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._Weathers.SetIfSucceeded(WeatherstryGet);
+                        ));
                     return TryGet<Climate_FieldIndex?>.Succeed(Climate_FieldIndex.Weathers);
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var SunTexturetryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._SunTexture.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Climate_FieldIndex.SunTexture,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._SunTexture.SetIfSucceeded(SunTexturetryGet);
+                        errorMask: errorMask));
                     return TryGet<Climate_FieldIndex?>.Succeed(Climate_FieldIndex.SunTexture);
                 case "GNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var SunGlareTexturetryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._SunGlareTexture.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Climate_FieldIndex.SunGlareTexture,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._SunGlareTexture.SetIfSucceeded(SunGlareTexturetryGet);
+                        errorMask: errorMask));
                     return TryGet<Climate_FieldIndex?>.Succeed(Climate_FieldIndex.SunGlareTexture);
                 case "MODL":
-                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)Climate_FieldIndex.Model,
                         errorMask: errorMask));
@@ -1211,7 +1208,7 @@ namespace Mutagen.Bethesda.Oblivion
                         {
                             errorMask().Overall = ex;
                         }
-                        item._Volatility.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Volatility.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Climate_FieldIndex.Volatility,
                             errorMask: errorMask));

@@ -585,55 +585,55 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Base":
-                    item.Base_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Base_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PlacedCreature_FieldIndex.Base,
                         errorMask: errorMask));
                     break;
                 case "Owner":
-                    item.Owner_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Owner_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PlacedCreature_FieldIndex.Owner,
                         errorMask: errorMask));
                     break;
                 case "FactionRank":
-                    item._FactionRank.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                    item._FactionRank.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PlacedCreature_FieldIndex.FactionRank,
                         errorMask: errorMask));
                     break;
                 case "GlobalVariable":
-                    item.GlobalVariable_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.GlobalVariable_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PlacedCreature_FieldIndex.GlobalVariable,
                         errorMask: errorMask));
                     break;
                 case "EnableParent":
-                    item._EnableParent.SetIfSucceeded(LoquiXmlTranslation<EnableParent, EnableParent_ErrorMask>.Instance.Parse(
+                    item._EnableParent.SetIfSucceededOrDefault(LoquiXmlTranslation<EnableParent, EnableParent_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)PlacedCreature_FieldIndex.EnableParent,
                         errorMask: errorMask));
                     break;
                 case "RagdollData":
-                    item._RagdollData.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._RagdollData.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)PlacedCreature_FieldIndex.RagdollData,
                         errorMask: errorMask));
                     break;
                 case "Scale":
-                    item._Scale.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Scale.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PlacedCreature_FieldIndex.Scale,
                         errorMask: errorMask));
                     break;
                 case "Position":
-                    item._Position.SetIfSucceeded(P3FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Position.SetIfSucceededOrDefault(P3FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PlacedCreature_FieldIndex.Position,
                         errorMask: errorMask));
                     break;
                 case "Rotation":
-                    item._Rotation.SetIfSucceeded(P3FloatXmlTranslation.Instance.ParseNonNull(
+                    item._Rotation.SetIfSucceededOrDefault(P3FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PlacedCreature_FieldIndex.Rotation,
                         errorMask: errorMask));
@@ -877,49 +877,48 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "NAME":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Base_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Base_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedCreature_FieldIndex.Base,
                         errorMask: errorMask));
                     return TryGet<PlacedCreature_FieldIndex?>.Succeed(PlacedCreature_FieldIndex.Base);
                 case "XOWN":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Owner_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Owner_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedCreature_FieldIndex.Owner,
                         errorMask: errorMask));
                     return TryGet<PlacedCreature_FieldIndex?>.Succeed(PlacedCreature_FieldIndex.Owner);
                 case "XRNK":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._FactionRank.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                    item._FactionRank.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedCreature_FieldIndex.FactionRank,
                         errorMask: errorMask));
                     return TryGet<PlacedCreature_FieldIndex?>.Succeed(PlacedCreature_FieldIndex.FactionRank);
                 case "XGLB":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.GlobalVariable_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.GlobalVariable_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedCreature_FieldIndex.GlobalVariable,
                         errorMask: errorMask));
                     return TryGet<PlacedCreature_FieldIndex?>.Succeed(PlacedCreature_FieldIndex.GlobalVariable);
                 case "XESP":
-                    item._EnableParent.SetIfSucceeded(LoquiBinaryTranslation<EnableParent, EnableParent_ErrorMask>.Instance.Parse(
+                    item._EnableParent.SetIfSucceededOrDefault(LoquiBinaryTranslation<EnableParent, EnableParent_ErrorMask>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)PlacedCreature_FieldIndex.EnableParent,
                         errorMask: errorMask));
                     return TryGet<PlacedCreature_FieldIndex?>.Succeed(PlacedCreature_FieldIndex.EnableParent);
                 case "XRGD":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var RagdollDatatryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    item._RagdollData.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedCreature_FieldIndex.RagdollData,
-                        errorMask: errorMask);
-                    item._RagdollData.SetIfSucceeded(RagdollDatatryGet);
+                        errorMask: errorMask));
                     return TryGet<PlacedCreature_FieldIndex?>.Succeed(PlacedCreature_FieldIndex.RagdollData);
                 case "XSCL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Scale.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    item._Scale.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedCreature_FieldIndex.Scale,
                         errorMask: errorMask));
@@ -928,11 +927,11 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Position.SetIfSucceeded(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+                        item._Position.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)PlacedCreature_FieldIndex.Position,
                             errorMask: errorMask));
-                        item._Rotation.SetIfSucceeded(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+                        item._Rotation.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)PlacedCreature_FieldIndex.Rotation,
                             errorMask: errorMask));

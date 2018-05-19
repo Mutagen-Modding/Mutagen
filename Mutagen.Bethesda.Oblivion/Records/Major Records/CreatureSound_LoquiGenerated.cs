@@ -437,14 +437,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "SoundType":
-                    item._SoundType.SetIfSucceeded(EnumXmlTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(
+                    item._SoundType.SetIfSucceededOrDefault(EnumXmlTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)CreatureSound_FieldIndex.SoundType,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Sounds":
-                    item._Sounds.SetIfSucceeded(ListXmlTranslation<SoundItem, MaskItem<Exception, SoundItem_ErrorMask>>.Instance.Parse(
+                    item._Sounds.SetIfSucceededOrDefault(ListXmlTranslation<SoundItem, MaskItem<Exception, SoundItem_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)CreatureSound_FieldIndex.Sounds,
                         errorMask: errorMask,
@@ -699,7 +699,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "CSDT":
                     if (lastParsed.HasValue && lastParsed.Value >= CreatureSound_FieldIndex.SoundType) return TryGet<CreatureSound_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._SoundType.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(
+                    item._SoundType.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)CreatureSound_FieldIndex.SoundType,
                         errorMask: errorMask));
@@ -707,7 +707,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "CSDI":
                 case "CSDC":
                     if (lastParsed.HasValue && lastParsed.Value >= CreatureSound_FieldIndex.Sounds) return TryGet<CreatureSound_FieldIndex?>.Failure;
-                    var SoundstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<SoundItem, MaskItem<Exception, SoundItem_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.Sounds.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<SoundItem, MaskItem<Exception, SoundItem_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: SoundItem_Registration.TriggeringRecordTypes,
                         fieldIndex: (int)CreatureSound_FieldIndex.Sounds,
@@ -720,8 +720,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._Sounds.SetIfSucceeded(SoundstryGet);
+                        ));
                     return TryGet<CreatureSound_FieldIndex?>.Succeed(CreatureSound_FieldIndex.Sounds);
                 default:
                     return TryGet<CreatureSound_FieldIndex?>.Failure;

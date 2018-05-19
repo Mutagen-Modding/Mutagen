@@ -430,13 +430,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Male":
-                    item._Male.SetIfSucceeded(LoquiXmlTranslation<BodyData, BodyData_ErrorMask>.Instance.Parse(
+                    item._Male.SetIfSucceededOrDefault(LoquiXmlTranslation<BodyData, BodyData_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
                         errorMask: errorMask));
                     break;
                 case "Female":
-                    item._Female.SetIfSucceeded(LoquiXmlTranslation<BodyData, BodyData_ErrorMask>.Instance.Parse(
+                    item._Female.SetIfSucceededOrDefault(LoquiXmlTranslation<BodyData, BodyData_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
                         errorMask: errorMask));
@@ -671,7 +671,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "MNAM":
                     if (lastParsed.HasValue && lastParsed.Value >= GenderedBodyData_FieldIndex.Male) return TryGet<GenderedBodyData_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
-                    item._Male.SetIfSucceeded(LoquiBinaryTranslation<BodyData, BodyData_ErrorMask>.Instance.Parse(
+                    item._Male.SetIfSucceededOrDefault(LoquiBinaryTranslation<BodyData, BodyData_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
                         errorMask: errorMask));
@@ -679,7 +679,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "FNAM":
                     if (lastParsed.HasValue && lastParsed.Value >= GenderedBodyData_FieldIndex.Female) return TryGet<GenderedBodyData_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
-                    item._Female.SetIfSucceeded(LoquiBinaryTranslation<BodyData, BodyData_ErrorMask>.Instance.Parse(
+                    item._Female.SetIfSucceededOrDefault(LoquiBinaryTranslation<BodyData, BodyData_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
                         errorMask: errorMask));

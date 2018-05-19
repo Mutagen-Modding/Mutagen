@@ -1345,13 +1345,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Creature_FieldIndex.Model,
                         errorMask: errorMask));
                     break;
                 case "Items":
-                    item._Items.SetIfSucceeded(ListXmlTranslation<ItemEntry, MaskItem<Exception, ItemEntry_ErrorMask>>.Instance.Parse(
+                    item._Items.SetIfSucceededOrDefault(ListXmlTranslation<ItemEntry, MaskItem<Exception, ItemEntry_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Creature_FieldIndex.Items,
                         errorMask: errorMask,
@@ -1365,7 +1365,7 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "Spells":
-                    item._Spells.SetIfSucceeded(ListXmlTranslation<FormIDSetLink<Spell>, Exception>.Instance.Parse(
+                    item._Spells.SetIfSucceededOrDefault(ListXmlTranslation<FormIDSetLink<Spell>, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Creature_FieldIndex.Spells,
                         errorMask: errorMask,
@@ -1380,7 +1380,7 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "Models":
-                    item._Models.SetIfSucceeded(ListXmlTranslation<String, Exception>.Instance.Parse(
+                    item._Models.SetIfSucceededOrDefault(ListXmlTranslation<String, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Creature_FieldIndex.Models,
                         errorMask: errorMask,
@@ -1394,56 +1394,56 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "NIFT":
-                    item._NIFT.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._NIFT.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.NIFT,
                         errorMask: errorMask));
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<Creature.CreatureFlag>.Instance.Parse(
+                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<Creature.CreatureFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Creature_FieldIndex.Flags,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "BaseSpellPoints":
-                    item._BaseSpellPoints.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    item._BaseSpellPoints.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.BaseSpellPoints,
                         errorMask: errorMask));
                     break;
                 case "Fatigue":
-                    item._Fatigue.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    item._Fatigue.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Fatigue,
                         errorMask: errorMask));
                     break;
                 case "BarterGold":
-                    item._BarterGold.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    item._BarterGold.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.BarterGold,
                         errorMask: errorMask));
                     break;
                 case "LevelOffset":
-                    item._LevelOffset.SetIfSucceeded(Int16XmlTranslation.Instance.ParseNonNull(
+                    item._LevelOffset.SetIfSucceededOrDefault(Int16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.LevelOffset,
                         errorMask: errorMask));
                     break;
                 case "CalcMin":
-                    item._CalcMin.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    item._CalcMin.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.CalcMin,
                         errorMask: errorMask));
                     break;
                 case "CalcMax":
-                    item._CalcMax.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    item._CalcMax.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.CalcMax,
                         errorMask: errorMask));
                     break;
                 case "Factions":
-                    item._Factions.SetIfSucceeded(ListXmlTranslation<RankPlacement, MaskItem<Exception, RankPlacement_ErrorMask>>.Instance.Parse(
+                    item._Factions.SetIfSucceededOrDefault(ListXmlTranslation<RankPlacement, MaskItem<Exception, RankPlacement_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Creature_FieldIndex.Factions,
                         errorMask: errorMask,
@@ -1457,63 +1457,63 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "DeathItem":
-                    item.DeathItem_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.DeathItem_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.DeathItem,
                         errorMask: errorMask));
                     break;
                 case "Script":
-                    item.Script_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Script_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Script,
                         errorMask: errorMask));
                     break;
                 case "Aggression":
-                    item._Aggression.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Aggression.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Aggression,
                         errorMask: errorMask));
                     break;
                 case "Confidence":
-                    item._Confidence.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Confidence.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Confidence,
                         errorMask: errorMask));
                     break;
                 case "EnergyLevel":
-                    item._EnergyLevel.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._EnergyLevel.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.EnergyLevel,
                         errorMask: errorMask));
                     break;
                 case "Responsibility":
-                    item._Responsibility.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Responsibility.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Responsibility,
                         errorMask: errorMask));
                     break;
                 case "BuySellServices":
-                    item._BuySellServices.SetIfSucceeded(EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
+                    item._BuySellServices.SetIfSucceededOrDefault(EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Creature_FieldIndex.BuySellServices,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Teaches":
-                    item._Teaches.SetIfSucceeded(EnumXmlTranslation<Skill>.Instance.Parse(
+                    item._Teaches.SetIfSucceededOrDefault(EnumXmlTranslation<Skill>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Creature_FieldIndex.Teaches,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "MaximumTrainingLevel":
-                    item._MaximumTrainingLevel.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._MaximumTrainingLevel.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.MaximumTrainingLevel,
                         errorMask: errorMask));
                     break;
                 case "AIPackages":
-                    item._AIPackages.SetIfSucceeded(ListXmlTranslation<FormIDSetLink<AIPackage>, Exception>.Instance.Parse(
+                    item._AIPackages.SetIfSucceededOrDefault(ListXmlTranslation<FormIDSetLink<AIPackage>, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Creature_FieldIndex.AIPackages,
                         errorMask: errorMask,
@@ -1528,7 +1528,7 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "Animations":
-                    item._Animations.SetIfSucceeded(ListXmlTranslation<String, Exception>.Instance.Parse(
+                    item._Animations.SetIfSucceededOrDefault(ListXmlTranslation<String, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Creature_FieldIndex.Animations,
                         errorMask: errorMask,
@@ -1542,147 +1542,147 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "CreatureType":
-                    item._CreatureType.SetIfSucceeded(EnumXmlTranslation<Creature.CreatureTypeEnum>.Instance.Parse(
+                    item._CreatureType.SetIfSucceededOrDefault(EnumXmlTranslation<Creature.CreatureTypeEnum>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Creature_FieldIndex.CreatureType,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "CombatSKill":
-                    item._CombatSKill.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._CombatSKill.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.CombatSKill,
                         errorMask: errorMask));
                     break;
                 case "MagicSKill":
-                    item._MagicSKill.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._MagicSKill.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.MagicSKill,
                         errorMask: errorMask));
                     break;
                 case "StealthSKill":
-                    item._StealthSKill.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._StealthSKill.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.StealthSKill,
                         errorMask: errorMask));
                     break;
                 case "SoulLevel":
-                    item._SoulLevel.SetIfSucceeded(EnumXmlTranslation<SoulLevel>.Instance.Parse(
+                    item._SoulLevel.SetIfSucceededOrDefault(EnumXmlTranslation<SoulLevel>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Creature_FieldIndex.SoulLevel,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Health":
-                    item._Health.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    item._Health.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Health,
                         errorMask: errorMask));
                     break;
                 case "AttackDamage":
-                    item._AttackDamage.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    item._AttackDamage.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.AttackDamage,
                         errorMask: errorMask));
                     break;
                 case "Strength":
-                    item._Strength.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Strength.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Strength,
                         errorMask: errorMask));
                     break;
                 case "Intelligence":
-                    item._Intelligence.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Intelligence.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Intelligence,
                         errorMask: errorMask));
                     break;
                 case "Willpower":
-                    item._Willpower.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Willpower.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Willpower,
                         errorMask: errorMask));
                     break;
                 case "Agility":
-                    item._Agility.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Agility.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Agility,
                         errorMask: errorMask));
                     break;
                 case "Speed":
-                    item._Speed.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Speed.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Speed,
                         errorMask: errorMask));
                     break;
                 case "Endurance":
-                    item._Endurance.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Endurance.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Endurance,
                         errorMask: errorMask));
                     break;
                 case "Personality":
-                    item._Personality.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Personality.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Personality,
                         errorMask: errorMask));
                     break;
                 case "Luck":
-                    item._Luck.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._Luck.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Luck,
                         errorMask: errorMask));
                     break;
                 case "AttackReach":
-                    item._AttackReach.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    item._AttackReach.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.AttackReach,
                         errorMask: errorMask));
                     break;
                 case "CombatStyle":
-                    item.CombatStyle_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.CombatStyle_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.CombatStyle,
                         errorMask: errorMask));
                     break;
                 case "TurningSpeed":
-                    item._TurningSpeed.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._TurningSpeed.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.TurningSpeed,
                         errorMask: errorMask));
                     break;
                 case "BaseScale":
-                    item._BaseScale.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._BaseScale.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.BaseScale,
                         errorMask: errorMask));
                     break;
                 case "FootWeight":
-                    item._FootWeight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._FootWeight.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.FootWeight,
                         errorMask: errorMask));
                     break;
                 case "BloodSpray":
-                    item._BloodSpray.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._BloodSpray.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.BloodSpray,
                         errorMask: errorMask));
                     break;
                 case "BloodDecal":
-                    item._BloodDecal.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._BloodDecal.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.BloodDecal,
                         errorMask: errorMask));
                     break;
                 case "InheritsSoundFrom":
-                    item.InheritsSoundFrom_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.InheritsSoundFrom_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.InheritsSoundFrom,
                         errorMask: errorMask));
                     break;
                 case "Sounds":
-                    item._Sounds.SetIfSucceeded(ListXmlTranslation<CreatureSound, MaskItem<Exception, CreatureSound_ErrorMask>>.Instance.Parse(
+                    item._Sounds.SetIfSucceededOrDefault(ListXmlTranslation<CreatureSound, MaskItem<Exception, CreatureSound_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Creature_FieldIndex.Sounds,
                         errorMask: errorMask,
@@ -1939,13 +1939,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)Creature_FieldIndex.Model,
                         errorMask: errorMask));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Model);
                 case "CNTO":
-                    var ItemstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry, MaskItem<Exception, ItemEntry_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.Items.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry, MaskItem<Exception, ItemEntry_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Creature_Registration.CNTO_HEADER,
                         fieldIndex: (int)Creature_FieldIndex.Items,
@@ -1958,11 +1958,10 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._Items.SetIfSucceeded(ItemstryGet);
+                        ));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Items);
                 case "SPLO":
-                    var SpellstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>, Exception>.Instance.ParseRepeatedItem(
+                    item.Spells.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Creature_Registration.SPLO_HEADER,
                         fieldIndex: (int)Creature_FieldIndex.Spells,
@@ -1976,12 +1975,11 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<Spell>(o));
                         }
-                        );
-                    item._Spells.SetIfSucceeded(SpellstryGet);
+                        ));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Spells);
                 case "NIFZ":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var ModelstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<String, Exception>.Instance.ParseRepeatedItem(
+                    item.Models.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<String, Exception>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.Models,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
@@ -1994,53 +1992,51 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask,
                                 parseWhole: false);
                         }
-                        );
-                    item._Models.SetIfSucceeded(ModelstryGet);
+                        ));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Models);
                 case "NIFT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var NIFTtryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    item._NIFT.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.NIFT,
-                        errorMask: errorMask);
-                    item._NIFT.SetIfSucceeded(NIFTtryGet);
+                        errorMask: errorMask));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.NIFT);
                 case "ACBS":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureFlag>.Instance.Parse(
+                        item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Creature_FieldIndex.Flags,
                             errorMask: errorMask));
-                        item._BaseSpellPoints.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                        item._BaseSpellPoints.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.BaseSpellPoints,
                             errorMask: errorMask));
-                        item._Fatigue.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                        item._Fatigue.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Fatigue,
                             errorMask: errorMask));
-                        item._BarterGold.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                        item._BarterGold.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.BarterGold,
                             errorMask: errorMask));
-                        item._LevelOffset.SetIfSucceeded(Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
+                        item._LevelOffset.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.LevelOffset,
                             errorMask: errorMask));
-                        item._CalcMin.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                        item._CalcMin.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.CalcMin,
                             errorMask: errorMask));
-                        item._CalcMax.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                        item._CalcMax.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.CalcMax,
                             errorMask: errorMask));
                     }
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.CalcMax);
                 case "SNAM":
-                    var FactionstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement, MaskItem<Exception, RankPlacement_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.Factions.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement, MaskItem<Exception, RankPlacement_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Creature_Registration.SNAM_HEADER,
                         fieldIndex: (int)Creature_FieldIndex.Factions,
@@ -2053,19 +2049,18 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._Factions.SetIfSucceeded(FactionstryGet);
+                        ));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Factions);
                 case "INAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.DeathItem_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.DeathItem_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.DeathItem,
                         errorMask: errorMask));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.DeathItem);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.Script,
                         errorMask: errorMask));
@@ -2074,31 +2069,31 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Aggression.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Aggression.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Aggression,
                             errorMask: errorMask));
-                        item._Confidence.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Confidence.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Confidence,
                             errorMask: errorMask));
-                        item._EnergyLevel.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._EnergyLevel.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.EnergyLevel,
                             errorMask: errorMask));
-                        item._Responsibility.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Responsibility.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Responsibility,
                             errorMask: errorMask));
-                        item._BuySellServices.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
+                        item._BuySellServices.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Creature_FieldIndex.BuySellServices,
                             errorMask: errorMask));
-                        item._Teaches.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
+                        item._Teaches.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(1),
                             fieldIndex: (int)Creature_FieldIndex.Teaches,
                             errorMask: errorMask));
-                        item._MaximumTrainingLevel.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._MaximumTrainingLevel.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.MaximumTrainingLevel,
                             errorMask: errorMask));
@@ -2106,7 +2101,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.MaximumTrainingLevel);
                 case "PKID":
-                    var AIPackagestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<AIPackage>, Exception>.Instance.ParseRepeatedItem(
+                    item.AIPackages.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<AIPackage>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Creature_Registration.PKID_HEADER,
                         fieldIndex: (int)Creature_FieldIndex.AIPackages,
@@ -2120,12 +2115,11 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<AIPackage>(o));
                         }
-                        );
-                    item._AIPackages.SetIfSucceeded(AIPackagestryGet);
+                        ));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.AIPackages);
                 case "KFFZ":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var AnimationstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<String, Exception>.Instance.ParseRepeatedItem(
+                    item.Animations.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<String, Exception>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.Animations,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
@@ -2138,70 +2132,69 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask,
                                 parseWhole: false);
                         }
-                        );
-                    item._Animations.SetIfSucceeded(AnimationstryGet);
+                        ));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Animations);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._CreatureType.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureTypeEnum>.Instance.Parse(
+                        item._CreatureType.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureTypeEnum>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(1),
                             fieldIndex: (int)Creature_FieldIndex.CreatureType,
                             errorMask: errorMask));
-                        item._CombatSKill.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._CombatSKill.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.CombatSKill,
                             errorMask: errorMask));
-                        item._MagicSKill.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._MagicSKill.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.MagicSKill,
                             errorMask: errorMask));
-                        item._StealthSKill.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._StealthSKill.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.StealthSKill,
                             errorMask: errorMask));
-                        item._SoulLevel.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.Parse(
+                        item._SoulLevel.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(2),
                             fieldIndex: (int)Creature_FieldIndex.SoulLevel,
                             errorMask: errorMask));
-                        item._Health.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        item._Health.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Health,
                             errorMask: errorMask));
-                        item._AttackDamage.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                        item._AttackDamage.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.AttackDamage,
                             errorMask: errorMask));
-                        item._Strength.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Strength.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Strength,
                             errorMask: errorMask));
-                        item._Intelligence.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Intelligence.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Intelligence,
                             errorMask: errorMask));
-                        item._Willpower.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Willpower.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Willpower,
                             errorMask: errorMask));
-                        item._Agility.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Agility.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Agility,
                             errorMask: errorMask));
-                        item._Speed.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Speed.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Speed,
                             errorMask: errorMask));
-                        item._Endurance.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Endurance.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Endurance,
                             errorMask: errorMask));
-                        item._Personality.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Personality.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Personality,
                             errorMask: errorMask));
-                        item._Luck.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        item._Luck.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Luck,
                             errorMask: errorMask));
@@ -2209,60 +2202,58 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Luck);
                 case "RNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._AttackReach.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                    item._AttackReach.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.AttackReach,
                         errorMask: errorMask));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.AttackReach);
                 case "ZNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.CombatStyle_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.CombatStyle_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.CombatStyle,
                         errorMask: errorMask));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.CombatStyle);
                 case "TNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._TurningSpeed.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    item._TurningSpeed.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.TurningSpeed,
                         errorMask: errorMask));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.TurningSpeed);
                 case "BNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._BaseScale.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    item._BaseScale.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.BaseScale,
                         errorMask: errorMask));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.BaseScale);
                 case "WNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._FootWeight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    item._FootWeight.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.FootWeight,
                         errorMask: errorMask));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.FootWeight);
                 case "NAM0":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var BloodSpraytryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._BloodSpray.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.BloodSpray,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._BloodSpray.SetIfSucceeded(BloodSpraytryGet);
+                        errorMask: errorMask));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.BloodSpray);
                 case "NAM1":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var BloodDecaltryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._BloodDecal.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.BloodDecal,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._BloodDecal.SetIfSucceeded(BloodDecaltryGet);
+                        errorMask: errorMask));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.BloodDecal);
                 case "CSCR":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.InheritsSoundFrom_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.InheritsSoundFrom_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.InheritsSoundFrom,
                         errorMask: errorMask));
@@ -2270,7 +2261,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "CSDT":
                 case "CSDI":
                 case "CSDC":
-                    var SoundstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<CreatureSound, MaskItem<Exception, CreatureSound_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.Sounds.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<CreatureSound, MaskItem<Exception, CreatureSound_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: CreatureSound_Registration.TriggeringRecordTypes,
                         fieldIndex: (int)Creature_FieldIndex.Sounds,
@@ -2283,8 +2274,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._Sounds.SetIfSucceeded(SoundstryGet);
+                        ));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Sounds);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(

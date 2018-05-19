@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Grasses":
-                    item._Grasses.SetIfSucceeded(ListXmlTranslation<FormIDLink<Grass>, Exception>.Instance.Parse(
+                    item._Grasses.SetIfSucceededOrDefault(ListXmlTranslation<FormIDLink<Grass>, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)RegionDataGrasses_FieldIndex.Grasses,
                         errorMask: errorMask,
@@ -676,7 +676,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "RDGS":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var GrassestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Grass>, Exception>.Instance.ParseRepeatedItem(
+                    item.Grasses.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Grass>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)RegionDataGrasses_FieldIndex.Grasses,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
@@ -688,8 +688,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask).Bubble((o) => new FormIDLink<Grass>(o));
                         }
-                        );
-                    item._Grasses.SetIfSucceeded(GrassestryGet);
+                        ));
                     return TryGet<RegionDataGrasses_FieldIndex?>.Succeed(RegionDataGrasses_FieldIndex.Grasses);
                 default:
                     return RegionData.Fill_Binary_RecordTypes(

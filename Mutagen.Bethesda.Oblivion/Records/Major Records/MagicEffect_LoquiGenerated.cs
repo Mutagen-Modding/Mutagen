@@ -665,88 +665,88 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Description":
-                    item._Description.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Description.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)MagicEffect_FieldIndex.Description,
                         errorMask: errorMask));
                     break;
                 case "Icon":
-                    item._Icon.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)MagicEffect_FieldIndex.Icon,
                         errorMask: errorMask));
                     break;
                 case "Model":
-                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)MagicEffect_FieldIndex.Model,
                         errorMask: errorMask));
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<MagicEffect.MagicFlag>.Instance.Parse(
+                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<MagicEffect.MagicFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)MagicEffect_FieldIndex.Flags,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "BaseCost":
-                    item._BaseCost.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._BaseCost.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)MagicEffect_FieldIndex.BaseCost,
                         errorMask: errorMask));
                     break;
                 case "Unused":
-                    item._Unused.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._Unused.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)MagicEffect_FieldIndex.Unused,
                         errorMask: errorMask));
                     break;
                 case "MagicSchool":
-                    item._MagicSchool.SetIfSucceeded(EnumXmlTranslation<MagicSchool>.Instance.Parse(
+                    item._MagicSchool.SetIfSucceededOrDefault(EnumXmlTranslation<MagicSchool>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)MagicEffect_FieldIndex.MagicSchool,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Resistance":
-                    item._Resistance.SetIfSucceeded(EnumXmlTranslation<Resistance>.Instance.Parse(
+                    item._Resistance.SetIfSucceededOrDefault(EnumXmlTranslation<Resistance>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)MagicEffect_FieldIndex.Resistance,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "CounterEffectCount":
-                    item._CounterEffectCount.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    item._CounterEffectCount.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)MagicEffect_FieldIndex.CounterEffectCount,
                         errorMask: errorMask));
                     break;
                 case "Light":
-                    item.Light_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Light_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)MagicEffect_FieldIndex.Light,
                         errorMask: errorMask));
                     break;
                 case "ProjectileSpeed":
-                    item._ProjectileSpeed.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._ProjectileSpeed.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)MagicEffect_FieldIndex.ProjectileSpeed,
                         errorMask: errorMask));
                     break;
                 case "EffectShader":
-                    item.EffectShader_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.EffectShader_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
                         errorMask: errorMask));
                     break;
                 case "SubData":
-                    item._SubData.SetIfSucceeded(LoquiXmlTranslation<MagicEffectSubData, MagicEffectSubData_ErrorMask>.Instance.Parse(
+                    item._SubData.SetIfSucceededOrDefault(LoquiXmlTranslation<MagicEffectSubData, MagicEffectSubData_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)MagicEffect_FieldIndex.SubData,
                         errorMask: errorMask));
                     break;
                 case "CounterEffects":
-                    item._CounterEffects.SetIfSucceeded(ListXmlTranslation<EDIDLink<MagicEffect>, Exception>.Instance.Parse(
+                    item._CounterEffects.SetIfSucceededOrDefault(ListXmlTranslation<EDIDLink<MagicEffect>, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
                         errorMask: errorMask,
@@ -1001,24 +1001,22 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "DESC":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var DescriptiontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Description.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)MagicEffect_FieldIndex.Description,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Description.SetIfSucceeded(DescriptiontryGet);
+                        errorMask: errorMask));
                     return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.Description);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var IcontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)MagicEffect_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Icon.SetIfSucceeded(IcontryGet);
+                        errorMask: errorMask));
                     return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.Icon);
                 case "MODL":
-                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)MagicEffect_FieldIndex.Model,
                         errorMask: errorMask));
@@ -1027,40 +1025,39 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicEffect.MagicFlag>.Instance.Parse(
+                        item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicEffect.MagicFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)MagicEffect_FieldIndex.Flags,
                             errorMask: errorMask));
-                        item._BaseCost.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._BaseCost.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)MagicEffect_FieldIndex.BaseCost,
                             errorMask: errorMask));
-                        var UnusedtryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        item._Unused.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)MagicEffect_FieldIndex.Unused,
-                            errorMask: errorMask);
-                        item._Unused.SetIfSucceeded(UnusedtryGet);
-                        item._MagicSchool.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Parse(
+                            errorMask: errorMask));
+                        item._MagicSchool.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)MagicEffect_FieldIndex.MagicSchool,
                             errorMask: errorMask));
-                        item._Resistance.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Resistance>.Instance.Parse(
+                        item._Resistance.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Resistance>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)MagicEffect_FieldIndex.Resistance,
                             errorMask: errorMask));
-                        item._CounterEffectCount.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        item._CounterEffectCount.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)MagicEffect_FieldIndex.CounterEffectCount,
                             errorMask: errorMask));
-                        item.Light_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                        item.Light_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)MagicEffect_FieldIndex.Light,
                             errorMask: errorMask));
-                        item._ProjectileSpeed.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._ProjectileSpeed.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)MagicEffect_FieldIndex.ProjectileSpeed,
                             errorMask: errorMask));
-                        item.EffectShader_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                        item.EffectShader_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
                             errorMask: errorMask));
@@ -1069,7 +1066,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.DATADataTypeState |= DATADataType.Break0;
                             return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.EffectShader);
                         }
-                        item._SubData.SetIfSucceeded(LoquiBinaryTranslation<MagicEffectSubData, MagicEffectSubData_ErrorMask>.Instance.Parse(
+                        item._SubData.SetIfSucceededOrDefault(LoquiBinaryTranslation<MagicEffectSubData, MagicEffectSubData_ErrorMask>.Instance.Parse(
                             frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)MagicEffect_FieldIndex.SubData,
                             errorMask: errorMask));
@@ -1077,7 +1074,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.SubData);
                 case "ESCE":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var CounterEffectstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<EDIDLink<MagicEffect>, Exception>.Instance.ParseRepeatedItem(
+                    item.CounterEffects.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<EDIDLink<MagicEffect>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
@@ -1087,8 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion
                             listSubMask = null;
                             return TryGet<EDIDLink<MagicEffect>>.Succeed(new EDIDLink<MagicEffect>(HeaderTranslation.ReadNextRecordType(r.Reader)));
                         }
-                        );
-                    item._CounterEffects.SetIfSucceeded(CounterEffectstryGet);
+                        ));
                     return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.CounterEffects);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(

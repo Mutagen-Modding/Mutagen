@@ -514,7 +514,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "PointToPointConnections":
-                    item._PointToPointConnections.SetIfSucceeded(ListXmlTranslation<PathGridPoint, MaskItem<Exception, PathGridPoint_ErrorMask>>.Instance.Parse(
+                    item._PointToPointConnections.SetIfSucceededOrDefault(ListXmlTranslation<PathGridPoint, MaskItem<Exception, PathGridPoint_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)PathGrid_FieldIndex.PointToPointConnections,
                         errorMask: errorMask,
@@ -528,13 +528,13 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "Unknown":
-                    item._Unknown.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._Unknown.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)PathGrid_FieldIndex.Unknown,
                         errorMask: errorMask));
                     break;
                 case "InterCellConnections":
-                    item._InterCellConnections.SetIfSucceeded(ListXmlTranslation<InterCellPoint, MaskItem<Exception, InterCellPoint_ErrorMask>>.Instance.Parse(
+                    item._InterCellConnections.SetIfSucceededOrDefault(ListXmlTranslation<InterCellPoint, MaskItem<Exception, InterCellPoint_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)PathGrid_FieldIndex.InterCellConnections,
                         errorMask: errorMask,
@@ -548,7 +548,7 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "PointToReferenceMappings":
-                    item._PointToReferenceMappings.SetIfSucceeded(ListXmlTranslation<PointToReferenceMapping, MaskItem<Exception, PointToReferenceMapping_ErrorMask>>.Instance.Parse(
+                    item._PointToReferenceMappings.SetIfSucceededOrDefault(ListXmlTranslation<PointToReferenceMapping, MaskItem<Exception, PointToReferenceMapping_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)PathGrid_FieldIndex.PointToReferenceMappings,
                         errorMask: errorMask,
@@ -896,7 +896,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<PathGrid_FieldIndex?>.Succeed(PathGrid_FieldIndex.Unknown);
                 case "PGRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var InterCellConnectionstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<InterCellPoint, MaskItem<Exception, InterCellPoint_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.InterCellConnections.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<InterCellPoint, MaskItem<Exception, InterCellPoint_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PathGrid_FieldIndex.InterCellConnections,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
@@ -908,11 +908,10 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._InterCellConnections.SetIfSucceeded(InterCellConnectionstryGet);
+                        ));
                     return TryGet<PathGrid_FieldIndex?>.Succeed(PathGrid_FieldIndex.InterCellConnections);
                 case "PGRL":
-                    var PointToReferenceMappingstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<PointToReferenceMapping, MaskItem<Exception, PointToReferenceMapping_ErrorMask>>.Instance.ParseRepeatedItem(
+                    item.PointToReferenceMappings.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<PointToReferenceMapping, MaskItem<Exception, PointToReferenceMapping_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: PathGrid_Registration.PGRL_HEADER,
                         fieldIndex: (int)PathGrid_FieldIndex.PointToReferenceMappings,
@@ -925,8 +924,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._PointToReferenceMappings.SetIfSucceeded(PointToReferenceMappingstryGet);
+                        ));
                     return TryGet<PathGrid_FieldIndex?>.Succeed(PathGrid_FieldIndex.PointToReferenceMappings);
                 default:
                     return Placed.Fill_Binary_RecordTypes(

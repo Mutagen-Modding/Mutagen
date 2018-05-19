@@ -467,31 +467,31 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Fluff":
-                    item._Fluff.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._Fluff.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)ScriptMetaSummary_FieldIndex.Fluff,
                         errorMask: errorMask));
                     break;
                 case "RefCount":
-                    item._RefCount.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    item._RefCount.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)ScriptMetaSummary_FieldIndex.RefCount,
                         errorMask: errorMask));
                     break;
                 case "CompiledSize":
-                    item._CompiledSize.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                    item._CompiledSize.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)ScriptMetaSummary_FieldIndex.CompiledSize,
                         errorMask: errorMask));
                     break;
                 case "VariableCount":
-                    item._VariableCount.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    item._VariableCount.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
                         errorMask: errorMask));
                     break;
                 case "Type":
-                    item._Type.SetIfSucceeded(EnumXmlTranslation<Script.ScriptType>.Instance.Parse(
+                    item._Type.SetIfSucceededOrDefault(EnumXmlTranslation<Script.ScriptType>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)ScriptMetaSummary_FieldIndex.Type,
@@ -737,12 +737,11 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<ScriptMetaSummary_ErrorMask> errorMask)
         {
-            var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            item._Fluff.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.Fluff,
-                errorMask: errorMask);
-            item._Fluff.SetIfSucceeded(FlufftryGet);
-            item._RefCount.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                errorMask: errorMask));
+            item._RefCount.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.RefCount,
                 errorMask: errorMask));
@@ -759,11 +758,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask().Overall = ex;
             }
-            item._VariableCount.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+            item._VariableCount.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
                 errorMask: errorMask));
-            item._Type.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Script.ScriptType>.Instance.Parse(
+            item._Type.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Script.ScriptType>.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.Type,
                 errorMask: errorMask));

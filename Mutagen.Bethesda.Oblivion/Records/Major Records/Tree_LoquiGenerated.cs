@@ -641,19 +641,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Tree_FieldIndex.Model,
                         errorMask: errorMask));
                     break;
                 case "Icon":
-                    item._Icon.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Tree_FieldIndex.Icon,
                         errorMask: errorMask));
                     break;
                 case "SpeedTreeSeeds":
-                    item._SpeedTreeSeeds.SetIfSucceeded(ListXmlTranslation<UInt32, Exception>.Instance.Parse(
+                    item._SpeedTreeSeeds.SetIfSucceededOrDefault(ListXmlTranslation<UInt32, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Tree_FieldIndex.SpeedTreeSeeds,
                         errorMask: errorMask,
@@ -668,61 +668,61 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "LeafCurvature":
-                    item._LeafCurvature.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._LeafCurvature.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
                         errorMask: errorMask));
                     break;
                 case "MinimumLeafAngle":
-                    item._MinimumLeafAngle.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._MinimumLeafAngle.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Tree_FieldIndex.MinimumLeafAngle,
                         errorMask: errorMask));
                     break;
                 case "MaximumLeafAngle":
-                    item._MaximumLeafAngle.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._MaximumLeafAngle.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Tree_FieldIndex.MaximumLeafAngle,
                         errorMask: errorMask));
                     break;
                 case "BranchDimmingValue":
-                    item._BranchDimmingValue.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._BranchDimmingValue.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Tree_FieldIndex.BranchDimmingValue,
                         errorMask: errorMask));
                     break;
                 case "LeafDimmingValue":
-                    item._LeafDimmingValue.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._LeafDimmingValue.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Tree_FieldIndex.LeafDimmingValue,
                         errorMask: errorMask));
                     break;
                 case "ShadowRadius":
-                    item._ShadowRadius.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                    item._ShadowRadius.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Tree_FieldIndex.ShadowRadius,
                         errorMask: errorMask));
                     break;
                 case "RockingSpeed":
-                    item._RockingSpeed.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._RockingSpeed.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Tree_FieldIndex.RockingSpeed,
                         errorMask: errorMask));
                     break;
                 case "RustleSpeed":
-                    item._RustleSpeed.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._RustleSpeed.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
                         errorMask: errorMask));
                     break;
                 case "BillboardWidth":
-                    item._BillboardWidth.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._BillboardWidth.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
                         errorMask: errorMask));
                     break;
                 case "BillboardHeight":
-                    item._BillboardHeight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    item._BillboardHeight.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Tree_FieldIndex.BillboardHeight,
                         errorMask: errorMask));
@@ -946,23 +946,22 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)Tree_FieldIndex.Model,
                         errorMask: errorMask));
                     return TryGet<Tree_FieldIndex?>.Succeed(Tree_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var IcontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Tree_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Icon.SetIfSucceeded(IcontryGet);
+                        errorMask: errorMask));
                     return TryGet<Tree_FieldIndex?>.Succeed(Tree_FieldIndex.Icon);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var SpeedTreeSeedstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32, Exception>.Instance.ParseRepeatedItem(
+                    item.SpeedTreeSeeds.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32, Exception>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Tree_FieldIndex.SpeedTreeSeeds,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
@@ -974,42 +973,41 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
-                        );
-                    item._SpeedTreeSeeds.SetIfSucceeded(SpeedTreeSeedstryGet);
+                        ));
                     return TryGet<Tree_FieldIndex?>.Succeed(Tree_FieldIndex.SpeedTreeSeeds);
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._LeafCurvature.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._LeafCurvature.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
                             errorMask: errorMask));
-                        item._MinimumLeafAngle.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._MinimumLeafAngle.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Tree_FieldIndex.MinimumLeafAngle,
                             errorMask: errorMask));
-                        item._MaximumLeafAngle.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._MaximumLeafAngle.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Tree_FieldIndex.MaximumLeafAngle,
                             errorMask: errorMask));
-                        item._BranchDimmingValue.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._BranchDimmingValue.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Tree_FieldIndex.BranchDimmingValue,
                             errorMask: errorMask));
-                        item._LeafDimmingValue.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._LeafDimmingValue.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Tree_FieldIndex.LeafDimmingValue,
                             errorMask: errorMask));
-                        item._ShadowRadius.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                        item._ShadowRadius.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Tree_FieldIndex.ShadowRadius,
                             errorMask: errorMask));
-                        item._RockingSpeed.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._RockingSpeed.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Tree_FieldIndex.RockingSpeed,
                             errorMask: errorMask));
-                        item._RustleSpeed.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._RustleSpeed.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
                             errorMask: errorMask));
@@ -1019,11 +1017,11 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._BillboardWidth.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._BillboardWidth.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
                             errorMask: errorMask));
-                        item._BillboardHeight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        item._BillboardHeight.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Tree_FieldIndex.BillboardHeight,
                             errorMask: errorMask));

@@ -520,31 +520,31 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Level":
-                    item._Level.SetIfSucceeded(Int16XmlTranslation.Instance.ParseNonNull(
+                    item._Level.SetIfSucceededOrDefault(Int16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)LeveledEntry_FieldIndex.Level,
                         errorMask: errorMask));
                     break;
                 case "Fluff":
-                    item._Fluff.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._Fluff.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)LeveledEntry_FieldIndex.Fluff,
                         errorMask: errorMask));
                     break;
                 case "Reference":
-                    item.Reference_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Reference_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)LeveledEntry_FieldIndex.Reference,
                         errorMask: errorMask));
                     break;
                 case "Count":
-                    item._Count.SetIfSucceeded(Int16XmlTranslation.Instance.ParseNonNull(
+                    item._Count.SetIfSucceededOrDefault(Int16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)LeveledEntry_FieldIndex.Count,
                         errorMask: errorMask));
                     break;
                 case "Fluff2":
-                    item._Fluff2.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._Fluff2.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)LeveledEntry_FieldIndex.Fluff2,
                         errorMask: errorMask));
@@ -809,30 +809,28 @@ namespace Mutagen.Bethesda.Oblivion
             Func<LeveledEntry_ErrorMask<T_ErrMask>> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
-            item._Level.SetIfSucceeded(Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
+            item._Level.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)LeveledEntry_FieldIndex.Level,
                 errorMask: errorMask));
-            var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            item._Fluff.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(2),
                 fieldIndex: (int)LeveledEntry_FieldIndex.Fluff,
-                errorMask: errorMask);
-            item._Fluff.SetIfSucceeded(FlufftryGet);
-            item.Reference_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                errorMask: errorMask));
+            item.Reference_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)LeveledEntry_FieldIndex.Reference,
                 errorMask: errorMask));
             if (frame.Complete) return;
-            item._Count.SetIfSucceeded(Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
+            item._Count.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)LeveledEntry_FieldIndex.Count,
                 errorMask: errorMask));
             if (frame.Complete) return;
-            var Fluff2tryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            item._Fluff2.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(2),
                 fieldIndex: (int)LeveledEntry_FieldIndex.Fluff2,
-                errorMask: errorMask);
-            item._Fluff2.SetIfSucceeded(Fluff2tryGet);
+                errorMask: errorMask));
         }
 
         #endregion

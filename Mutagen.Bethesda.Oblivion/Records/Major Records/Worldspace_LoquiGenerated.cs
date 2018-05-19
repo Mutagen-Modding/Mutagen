@@ -707,87 +707,87 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Climate":
-                    item.Climate_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Climate_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Worldspace_FieldIndex.Climate,
                         errorMask: errorMask));
                     break;
                 case "Water":
-                    item.Water_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Water_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Worldspace_FieldIndex.Water,
                         errorMask: errorMask));
                     break;
                 case "Icon":
-                    item._Icon.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Worldspace_FieldIndex.Icon,
                         errorMask: errorMask));
                     break;
                 case "UsableDimensions":
-                    item._UsableDimensions.SetIfSucceeded(P2IntXmlTranslation.Instance.ParseNonNull(
+                    item._UsableDimensions.SetIfSucceededOrDefault(P2IntXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Worldspace_FieldIndex.UsableDimensions,
                         errorMask: errorMask));
                     break;
                 case "CellCoordinatesNWCell":
-                    item._CellCoordinatesNWCell.SetIfSucceeded(P2Int16XmlTranslation.Instance.ParseNonNull(
+                    item._CellCoordinatesNWCell.SetIfSucceededOrDefault(P2Int16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Worldspace_FieldIndex.CellCoordinatesNWCell,
                         errorMask: errorMask));
                     break;
                 case "CellCoordinatesSECell":
-                    item._CellCoordinatesSECell.SetIfSucceeded(P2Int16XmlTranslation.Instance.ParseNonNull(
+                    item._CellCoordinatesSECell.SetIfSucceededOrDefault(P2Int16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Worldspace_FieldIndex.CellCoordinatesSECell,
                         errorMask: errorMask));
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<Worldspace.Flag>.Instance.Parse(
+                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<Worldspace.Flag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Worldspace_FieldIndex.Flags,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "ObjectBoundsMin":
-                    item._ObjectBoundsMin.SetIfSucceeded(P2FloatXmlTranslation.Instance.ParseNonNull(
+                    item._ObjectBoundsMin.SetIfSucceededOrDefault(P2FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMin,
                         errorMask: errorMask));
                     break;
                 case "ObjectBoundsMax":
-                    item._ObjectBoundsMax.SetIfSucceeded(P2FloatXmlTranslation.Instance.ParseNonNull(
+                    item._ObjectBoundsMax.SetIfSucceededOrDefault(P2FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMax,
                         errorMask: errorMask));
                     break;
                 case "Music":
-                    item._Music.SetIfSucceeded(EnumXmlTranslation<MusicType>.Instance.Parse(
+                    item._Music.SetIfSucceededOrDefault(EnumXmlTranslation<MusicType>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Worldspace_FieldIndex.Music,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "OffsetData":
-                    item._OffsetData.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._OffsetData.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Worldspace_FieldIndex.OffsetData,
                         errorMask: errorMask));
                     break;
                 case "Road":
-                    item._Road.SetIfSucceeded(LoquiXmlTranslation<Road, Road_ErrorMask>.Instance.Parse(
+                    item._Road.SetIfSucceededOrDefault(LoquiXmlTranslation<Road, Road_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Worldspace_FieldIndex.Road,
                         errorMask: errorMask));
                     break;
                 case "TopCell":
-                    item._TopCell.SetIfSucceeded(LoquiXmlTranslation<Cell, Cell_ErrorMask>.Instance.Parse(
+                    item._TopCell.SetIfSucceededOrDefault(LoquiXmlTranslation<Cell, Cell_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Worldspace_FieldIndex.TopCell,
                         errorMask: errorMask));
                     break;
                 case "SubCells":
-                    item._SubCells.SetIfSucceeded(ListXmlTranslation<WorldspaceBlock, MaskItem<Exception, WorldspaceBlock_ErrorMask>>.Instance.Parse(
+                    item._SubCells.SetIfSucceededOrDefault(ListXmlTranslation<WorldspaceBlock, MaskItem<Exception, WorldspaceBlock_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Worldspace_FieldIndex.SubCells,
                         errorMask: errorMask,
@@ -1084,40 +1084,39 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Climate_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Climate_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Worldspace_FieldIndex.Climate,
                         errorMask: errorMask));
                     return TryGet<Worldspace_FieldIndex?>.Succeed(Worldspace_FieldIndex.Climate);
                 case "NAM2":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Water_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Water_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Worldspace_FieldIndex.Water,
                         errorMask: errorMask));
                     return TryGet<Worldspace_FieldIndex?>.Succeed(Worldspace_FieldIndex.Water);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var IcontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Worldspace_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._Icon.SetIfSucceeded(IcontryGet);
+                        errorMask: errorMask));
                     return TryGet<Worldspace_FieldIndex?>.Succeed(Worldspace_FieldIndex.Icon);
                 case "MNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._UsableDimensions.SetIfSucceeded(Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Parse(
+                        item._UsableDimensions.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Worldspace_FieldIndex.UsableDimensions,
                             errorMask: errorMask));
-                        item._CellCoordinatesNWCell.SetIfSucceeded(Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
+                        item._CellCoordinatesNWCell.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Worldspace_FieldIndex.CellCoordinatesNWCell,
                             errorMask: errorMask));
-                        item._CellCoordinatesSECell.SetIfSucceeded(Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
+                        item._CellCoordinatesSECell.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Worldspace_FieldIndex.CellCoordinatesSECell,
                             errorMask: errorMask));
@@ -1125,28 +1124,28 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Worldspace_FieldIndex?>.Succeed(Worldspace_FieldIndex.CellCoordinatesSECell);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Worldspace.Flag>.Instance.Parse(
+                    item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Worldspace.Flag>.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Worldspace_FieldIndex.Flags,
                         errorMask: errorMask));
                     return TryGet<Worldspace_FieldIndex?>.Succeed(Worldspace_FieldIndex.Flags);
                 case "NAM0":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._ObjectBoundsMin.SetIfSucceeded(Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Parse(
+                    item._ObjectBoundsMin.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMin,
                         errorMask: errorMask));
                     return TryGet<Worldspace_FieldIndex?>.Succeed(Worldspace_FieldIndex.ObjectBoundsMin);
                 case "NAM9":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._ObjectBoundsMax.SetIfSucceeded(Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Parse(
+                    item._ObjectBoundsMax.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMax,
                         errorMask: errorMask));
                     return TryGet<Worldspace_FieldIndex?>.Succeed(Worldspace_FieldIndex.ObjectBoundsMax);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Music.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.Parse(
+                    item._Music.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Worldspace_FieldIndex.Music,
                         errorMask: errorMask));

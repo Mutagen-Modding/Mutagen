@@ -71,8 +71,17 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"{nodeAccessor}.Position += Constants.SUBRECORD_LENGTH;");
             }
-            using (var args = new ArgsWrapper(fg,
-                $"var {typeGen.Name}tryGet = {this.Namespace}StringBinaryTranslation.Instance.Parse"))
+            ArgsWrapper args;
+            if (itemAccessor.PropertyAccess != null)
+            {
+                args = new ArgsWrapper(fg, $"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceededOrDefault)}(StringBinaryTranslation.Instance.Parse",
+                    suffixLine: ")");
+            }
+            else
+            {
+                args = new ArgsWrapper(fg, $"var {typeGen.Name}tryGet = StringBinaryTranslation.Instance.Parse");
+            }
+            using (args)
             {
                 if (data.HasTrigger)
                 {
@@ -86,11 +95,7 @@ namespace Mutagen.Bethesda.Generation
                 args.Add($"parseWhole: true");
                 args.Add($"errorMask: {maskAccessor}");
             }
-            if (itemAccessor.PropertyAccess != null)
-            {
-                fg.AppendLine($"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}({typeGen.Name}tryGet);");
-            }
-            else
+            if (itemAccessor.PropertyAccess == null)
             {
                 fg.AppendLine($"if ({typeGen.Name}tryGet.Succeeded)");
                 using (new BraceWrapper(fg))

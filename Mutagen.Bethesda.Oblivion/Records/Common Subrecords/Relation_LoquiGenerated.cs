@@ -411,13 +411,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Faction":
-                    item.Faction_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Faction_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Relation_FieldIndex.Faction,
                         errorMask: errorMask));
                     break;
                 case "Modifier":
-                    item._Modifier.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                    item._Modifier.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Relation_FieldIndex.Modifier,
                         errorMask: errorMask));
@@ -635,11 +635,11 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<Relation_ErrorMask> errorMask)
         {
-            item.Faction_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item.Faction_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)Relation_FieldIndex.Faction,
                 errorMask: errorMask));
-            item._Modifier.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+            item._Modifier.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)Relation_FieldIndex.Modifier,
                 errorMask: errorMask));

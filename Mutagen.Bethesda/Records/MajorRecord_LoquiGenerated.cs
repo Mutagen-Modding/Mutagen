@@ -336,7 +336,7 @@ namespace Mutagen.Bethesda
             switch (name)
             {
                 case "MajorRecordFlags":
-                    item._MajorRecordFlags.SetIfSucceeded(EnumXmlTranslation<MajorRecord.MajorRecordFlag>.Instance.Parse(
+                    item._MajorRecordFlags.SetIfSucceededOrDefault(EnumXmlTranslation<MajorRecord.MajorRecordFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
@@ -349,13 +349,13 @@ namespace Mutagen.Bethesda
                         errorMask: errorMask).GetOrDefault(item.FormID);
                     break;
                 case "Version":
-                    item._Version.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._Version.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)MajorRecord_FieldIndex.Version,
                         errorMask: errorMask));
                     break;
                 case "EditorID":
-                    item._EditorID.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._EditorID.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
                         errorMask: errorMask));
@@ -446,7 +446,7 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             Func<MajorRecord_ErrorMask> errorMask)
         {
-            item._MajorRecordFlags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MajorRecord.MajorRecordFlag>.Instance.Parse(
+            item._MajorRecordFlags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MajorRecord.MajorRecordFlag>.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
                 errorMask: errorMask));
@@ -458,11 +458,10 @@ namespace Mutagen.Bethesda
             {
                 item.FormID = FormIDtryGet.Value;
             }
-            var VersiontryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            item._Version.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)MajorRecord_FieldIndex.Version,
-                errorMask: errorMask);
-            item._Version.SetIfSucceeded(VersiontryGet);
+                errorMask: errorMask));
         }
 
         protected static TryGet<MajorRecord_FieldIndex?> Fill_Binary_RecordTypes(
@@ -479,12 +478,11 @@ namespace Mutagen.Bethesda
             {
                 case "EDID":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var EditorIDtryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._EditorID.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
                         parseWhole: true,
-                        errorMask: errorMask);
-                    item._EditorID.SetIfSucceeded(EditorIDtryGet);
+                        errorMask: errorMask));
                     return TryGet<MajorRecord_FieldIndex?>.Succeed(MajorRecord_FieldIndex.EditorID);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");

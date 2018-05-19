@@ -547,44 +547,44 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Door_FieldIndex.Model,
                         errorMask: errorMask));
                     break;
                 case "Script":
-                    item.Script_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Script_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Door_FieldIndex.Script,
                         errorMask: errorMask));
                     break;
                 case "OpenSound":
-                    item.OpenSound_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.OpenSound_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Door_FieldIndex.OpenSound,
                         errorMask: errorMask));
                     break;
                 case "CloseSound":
-                    item.CloseSound_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.CloseSound_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Door_FieldIndex.CloseSound,
                         errorMask: errorMask));
                     break;
                 case "LoopSound":
-                    item.LoopSound_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.LoopSound_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Door_FieldIndex.LoopSound,
                         errorMask: errorMask));
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<Door.DoorFlag>.Instance.Parse(
+                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<Door.DoorFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Door_FieldIndex.Flags,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "RandomTeleportDestinations":
-                    item._RandomTeleportDestinations.SetIfSucceeded(ListXmlTranslation<FormIDSetLink<Worldspace>, Exception>.Instance.Parse(
+                    item._RandomTeleportDestinations.SetIfSucceededOrDefault(ListXmlTranslation<FormIDSetLink<Worldspace>, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Door_FieldIndex.RandomTeleportDestinations,
                         errorMask: errorMask,
@@ -830,48 +830,48 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)Door_FieldIndex.Model,
                         errorMask: errorMask));
                     return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.Model);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Door_FieldIndex.Script,
                         errorMask: errorMask));
                     return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.Script);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.OpenSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.OpenSound_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Door_FieldIndex.OpenSound,
                         errorMask: errorMask));
                     return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.OpenSound);
                 case "ANAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.CloseSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.CloseSound_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Door_FieldIndex.CloseSound,
                         errorMask: errorMask));
                     return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.CloseSound);
                 case "BNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.LoopSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.LoopSound_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Door_FieldIndex.LoopSound,
                         errorMask: errorMask));
                     return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.LoopSound);
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Door.DoorFlag>.Instance.Parse(
+                    item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Door.DoorFlag>.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Door_FieldIndex.Flags,
                         errorMask: errorMask));
                     return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.Flags);
                 case "TNAM":
-                    var RandomTeleportDestinationstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Worldspace>, Exception>.Instance.ParseRepeatedItem(
+                    item.RandomTeleportDestinations.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Worldspace>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Door_Registration.TNAM_HEADER,
                         fieldIndex: (int)Door_FieldIndex.RandomTeleportDestinations,
@@ -885,8 +885,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<Worldspace>(o));
                         }
-                        );
-                    item._RandomTeleportDestinations.SetIfSucceeded(RandomTeleportDestinationstryGet);
+                        ));
                     return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.RandomTeleportDestinations);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(

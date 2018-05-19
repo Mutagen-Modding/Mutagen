@@ -414,13 +414,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Reference":
-                    item.Reference_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Reference_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)PointToReferenceMapping_FieldIndex.Reference,
                         errorMask: errorMask));
                     break;
                 case "Points":
-                    item._Points.SetIfSucceeded(ListXmlTranslation<Int16, Exception>.Instance.Parse(
+                    item._Points.SetIfSucceededOrDefault(ListXmlTranslation<Int16, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)PointToReferenceMapping_FieldIndex.Points,
                         errorMask: errorMask,
@@ -647,11 +647,11 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<PointToReferenceMapping_ErrorMask> errorMask)
         {
-            item.Reference_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item.Reference_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)PointToReferenceMapping_FieldIndex.Reference,
                 errorMask: errorMask));
-            var PointstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16, Exception>.Instance.ParseRepeatedItem(
+            item.Points.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16, Exception>.Instance.ParseRepeatedItem(
                 frame: frame,
                 fieldIndex: (int)PointToReferenceMapping_FieldIndex.Points,
                 lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
@@ -663,8 +663,7 @@ namespace Mutagen.Bethesda.Oblivion
                         doMasks: listDoMasks,
                         errorMask: out listSubMask);
                 }
-                );
-            item._Points.SetIfSucceeded(PointstryGet);
+                ));
         }
 
         #endregion
