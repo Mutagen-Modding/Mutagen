@@ -886,6 +886,8 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const string GUID = "85d3bf63-316f-466e-98a8-35e8421b96a8";
 
+        public const ushort AdditionalFieldCount = 6;
+
         public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(Instruction_Mask<>);
@@ -1065,7 +1067,8 @@ namespace Mutagen.Bethesda.Tests.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

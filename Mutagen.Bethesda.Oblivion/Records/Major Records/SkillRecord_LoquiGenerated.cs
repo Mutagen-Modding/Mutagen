@@ -32,6 +32,10 @@ namespace Mutagen.Bethesda.Oblivion
         ISkillRecord,
         ILoquiObject<SkillRecord>,
         ILoquiObjectSetter,
+        IPropertySupporter<ActorValue>,
+        IPropertySupporter<String>,
+        IPropertySupporter<Specialization>,
+        IPropertySupporter<Single>,
         IEquatable<SkillRecord>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -47,14 +51,47 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Skill
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<ActorValue> _Skill = NotifyingSetItem.Factory<ActorValue>(markAsSet: false);
-        public INotifyingSetItem<ActorValue> Skill_Property => _Skill;
+        protected ActorValue _Skill;
+        protected PropertyForwarder<SkillRecord, ActorValue> _SkillForwarder;
+        public INotifyingSetItem<ActorValue> Skill_Property => _SkillForwarder ?? (_SkillForwarder = new PropertyForwarder<SkillRecord, ActorValue>(this, (int)SkillRecord_FieldIndex.Skill));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ActorValue Skill
         {
-            get => this._Skill.Item;
-            set => this._Skill.Set(value);
+            get => this._Skill;
+            set => this.SetSkill(value);
+        }
+        protected void SetSkill(
+            ActorValue item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Skill];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Skill == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Skill] = hasBeenSet;
+            }
+            if (_ActorValue_subscriptions != null)
+            {
+                var tmp = Skill;
+                _Skill = item;
+                _ActorValue_subscriptions.FireSubscriptions(
+                    index: (int)SkillRecord_FieldIndex.Skill,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Skill = item;
+            }
+        }
+        protected void UnsetSkill()
+        {
+            _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Skill] = false;
+            Skill = default(ActorValue);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<ActorValue> ISkillRecord.Skill_Property => this.Skill_Property;
@@ -62,14 +99,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<ActorValue> ISkillRecordGetter.Skill_Property => this.Skill_Property;
         #endregion
         #region Description
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Description_Property => _Description;
+        protected String _Description;
+        protected PropertyForwarder<SkillRecord, String> _DescriptionForwarder;
+        public INotifyingSetItem<String> Description_Property => _DescriptionForwarder ?? (_DescriptionForwarder = new PropertyForwarder<SkillRecord, String>(this, (int)SkillRecord_FieldIndex.Description));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Description
         {
-            get => this._Description.Item;
-            set => this._Description.Set(value);
+            get => this._Description;
+            set => this.SetDescription(value);
+        }
+        protected void SetDescription(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Description];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Description == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Description] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Description;
+                _Description = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)SkillRecord_FieldIndex.Description,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Description = item;
+            }
+        }
+        protected void UnsetDescription()
+        {
+            _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Description] = false;
+            Description = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ISkillRecord.Description_Property => this.Description_Property;
@@ -77,14 +147,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> ISkillRecordGetter.Description_Property => this.Description_Property;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _Icon = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Icon_Property => _Icon;
+        protected String _Icon;
+        protected PropertyForwarder<SkillRecord, String> _IconForwarder;
+        public INotifyingSetItem<String> Icon_Property => _IconForwarder ?? (_IconForwarder = new PropertyForwarder<SkillRecord, String>(this, (int)SkillRecord_FieldIndex.Icon));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Icon
         {
-            get => this._Icon.Item;
-            set => this._Icon.Set(value);
+            get => this._Icon;
+            set => this.SetIcon(value);
+        }
+        protected void SetIcon(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Icon];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Icon == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Icon] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Icon;
+                _Icon = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)SkillRecord_FieldIndex.Icon,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Icon = item;
+            }
+        }
+        protected void UnsetIcon()
+        {
+            _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Icon] = false;
+            Icon = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ISkillRecord.Icon_Property => this.Icon_Property;
@@ -92,14 +195,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> ISkillRecordGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Action
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<ActorValue> _Action = NotifyingItem.Factory<ActorValue>();
-        public INotifyingItem<ActorValue> Action_Property => _Action;
+        protected ActorValue _Action;
+        protected PropertyForwarder<SkillRecord, ActorValue> _ActionForwarder;
+        public INotifyingSetItem<ActorValue> Action_Property => _ActionForwarder ?? (_ActionForwarder = new PropertyForwarder<SkillRecord, ActorValue>(this, (int)SkillRecord_FieldIndex.Action));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ActorValue Action
         {
-            get => this._Action.Item;
-            set => this._Action.Set(value);
+            get => this._Action;
+            set => this.SetAction(value);
+        }
+        protected void SetAction(
+            ActorValue item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Action];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Action == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Action] = hasBeenSet;
+            }
+            if (_ActorValue_subscriptions != null)
+            {
+                var tmp = Action;
+                _Action = item;
+                _ActorValue_subscriptions.FireSubscriptions(
+                    index: (int)SkillRecord_FieldIndex.Action,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Action = item;
+            }
+        }
+        protected void UnsetAction()
+        {
+            _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Action] = false;
+            Action = default(ActorValue);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<ActorValue> ISkillRecord.Action_Property => this.Action_Property;
@@ -107,14 +243,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<ActorValue> ISkillRecordGetter.Action_Property => this.Action_Property;
         #endregion
         #region Attribute
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<ActorValue> _Attribute = NotifyingItem.Factory<ActorValue>();
-        public INotifyingItem<ActorValue> Attribute_Property => _Attribute;
+        protected ActorValue _Attribute;
+        protected PropertyForwarder<SkillRecord, ActorValue> _AttributeForwarder;
+        public INotifyingSetItem<ActorValue> Attribute_Property => _AttributeForwarder ?? (_AttributeForwarder = new PropertyForwarder<SkillRecord, ActorValue>(this, (int)SkillRecord_FieldIndex.Attribute));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ActorValue Attribute
         {
-            get => this._Attribute.Item;
-            set => this._Attribute.Set(value);
+            get => this._Attribute;
+            set => this.SetAttribute(value);
+        }
+        protected void SetAttribute(
+            ActorValue item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Attribute];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Attribute == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Attribute] = hasBeenSet;
+            }
+            if (_ActorValue_subscriptions != null)
+            {
+                var tmp = Attribute;
+                _Attribute = item;
+                _ActorValue_subscriptions.FireSubscriptions(
+                    index: (int)SkillRecord_FieldIndex.Attribute,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Attribute = item;
+            }
+        }
+        protected void UnsetAttribute()
+        {
+            _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Attribute] = false;
+            Attribute = default(ActorValue);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<ActorValue> ISkillRecord.Attribute_Property => this.Attribute_Property;
@@ -122,14 +291,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<ActorValue> ISkillRecordGetter.Attribute_Property => this.Attribute_Property;
         #endregion
         #region Specialization
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Specialization> _Specialization = NotifyingItem.Factory<Specialization>();
-        public INotifyingItem<Specialization> Specialization_Property => _Specialization;
+        protected Specialization _Specialization;
+        protected PropertyForwarder<SkillRecord, Specialization> _SpecializationForwarder;
+        public INotifyingSetItem<Specialization> Specialization_Property => _SpecializationForwarder ?? (_SpecializationForwarder = new PropertyForwarder<SkillRecord, Specialization>(this, (int)SkillRecord_FieldIndex.Specialization));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Specialization Specialization
         {
-            get => this._Specialization.Item;
-            set => this._Specialization.Set(value);
+            get => this._Specialization;
+            set => this.SetSpecialization(value);
+        }
+        protected void SetSpecialization(
+            Specialization item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Specialization];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Specialization == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Specialization] = hasBeenSet;
+            }
+            if (_Specialization_subscriptions != null)
+            {
+                var tmp = Specialization;
+                _Specialization = item;
+                _Specialization_subscriptions.FireSubscriptions(
+                    index: (int)SkillRecord_FieldIndex.Specialization,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Specialization = item;
+            }
+        }
+        protected void UnsetSpecialization()
+        {
+            _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Specialization] = false;
+            Specialization = default(Specialization);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Specialization> ISkillRecord.Specialization_Property => this.Specialization_Property;
@@ -137,14 +339,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Specialization> ISkillRecordGetter.Specialization_Property => this.Specialization_Property;
         #endregion
         #region UseValueFirst
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _UseValueFirst = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> UseValueFirst_Property => _UseValueFirst;
+        protected Single _UseValueFirst;
+        protected PropertyForwarder<SkillRecord, Single> _UseValueFirstForwarder;
+        public INotifyingSetItem<Single> UseValueFirst_Property => _UseValueFirstForwarder ?? (_UseValueFirstForwarder = new PropertyForwarder<SkillRecord, Single>(this, (int)SkillRecord_FieldIndex.UseValueFirst));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single UseValueFirst
         {
-            get => this._UseValueFirst.Item;
-            set => this._UseValueFirst.Set(value);
+            get => this._UseValueFirst;
+            set => this.SetUseValueFirst(value);
+        }
+        protected void SetUseValueFirst(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)SkillRecord_FieldIndex.UseValueFirst];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && UseValueFirst == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)SkillRecord_FieldIndex.UseValueFirst] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = UseValueFirst;
+                _UseValueFirst = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)SkillRecord_FieldIndex.UseValueFirst,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _UseValueFirst = item;
+            }
+        }
+        protected void UnsetUseValueFirst()
+        {
+            _hasBeenSetTracker[(int)SkillRecord_FieldIndex.UseValueFirst] = false;
+            UseValueFirst = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ISkillRecord.UseValueFirst_Property => this.UseValueFirst_Property;
@@ -152,14 +387,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ISkillRecordGetter.UseValueFirst_Property => this.UseValueFirst_Property;
         #endregion
         #region UseValueSecond
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _UseValueSecond = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> UseValueSecond_Property => _UseValueSecond;
+        protected Single _UseValueSecond;
+        protected PropertyForwarder<SkillRecord, Single> _UseValueSecondForwarder;
+        public INotifyingSetItem<Single> UseValueSecond_Property => _UseValueSecondForwarder ?? (_UseValueSecondForwarder = new PropertyForwarder<SkillRecord, Single>(this, (int)SkillRecord_FieldIndex.UseValueSecond));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single UseValueSecond
         {
-            get => this._UseValueSecond.Item;
-            set => this._UseValueSecond.Set(value);
+            get => this._UseValueSecond;
+            set => this.SetUseValueSecond(value);
+        }
+        protected void SetUseValueSecond(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)SkillRecord_FieldIndex.UseValueSecond];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && UseValueSecond == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)SkillRecord_FieldIndex.UseValueSecond] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = UseValueSecond;
+                _UseValueSecond = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)SkillRecord_FieldIndex.UseValueSecond,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _UseValueSecond = item;
+            }
+        }
+        protected void UnsetUseValueSecond()
+        {
+            _hasBeenSetTracker[(int)SkillRecord_FieldIndex.UseValueSecond] = false;
+            UseValueSecond = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ISkillRecord.UseValueSecond_Property => this.UseValueSecond_Property;
@@ -167,14 +435,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ISkillRecordGetter.UseValueSecond_Property => this.UseValueSecond_Property;
         #endregion
         #region ApprenticeText
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _ApprenticeText = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> ApprenticeText_Property => _ApprenticeText;
+        protected String _ApprenticeText;
+        protected PropertyForwarder<SkillRecord, String> _ApprenticeTextForwarder;
+        public INotifyingSetItem<String> ApprenticeText_Property => _ApprenticeTextForwarder ?? (_ApprenticeTextForwarder = new PropertyForwarder<SkillRecord, String>(this, (int)SkillRecord_FieldIndex.ApprenticeText));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String ApprenticeText
         {
-            get => this._ApprenticeText.Item;
-            set => this._ApprenticeText.Set(value);
+            get => this._ApprenticeText;
+            set => this.SetApprenticeText(value);
+        }
+        protected void SetApprenticeText(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)SkillRecord_FieldIndex.ApprenticeText];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ApprenticeText == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)SkillRecord_FieldIndex.ApprenticeText] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = ApprenticeText;
+                _ApprenticeText = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)SkillRecord_FieldIndex.ApprenticeText,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _ApprenticeText = item;
+            }
+        }
+        protected void UnsetApprenticeText()
+        {
+            _hasBeenSetTracker[(int)SkillRecord_FieldIndex.ApprenticeText] = false;
+            ApprenticeText = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ISkillRecord.ApprenticeText_Property => this.ApprenticeText_Property;
@@ -182,14 +483,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> ISkillRecordGetter.ApprenticeText_Property => this.ApprenticeText_Property;
         #endregion
         #region JourneymanText
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _JourneymanText = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> JourneymanText_Property => _JourneymanText;
+        protected String _JourneymanText;
+        protected PropertyForwarder<SkillRecord, String> _JourneymanTextForwarder;
+        public INotifyingSetItem<String> JourneymanText_Property => _JourneymanTextForwarder ?? (_JourneymanTextForwarder = new PropertyForwarder<SkillRecord, String>(this, (int)SkillRecord_FieldIndex.JourneymanText));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String JourneymanText
         {
-            get => this._JourneymanText.Item;
-            set => this._JourneymanText.Set(value);
+            get => this._JourneymanText;
+            set => this.SetJourneymanText(value);
+        }
+        protected void SetJourneymanText(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)SkillRecord_FieldIndex.JourneymanText];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && JourneymanText == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)SkillRecord_FieldIndex.JourneymanText] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = JourneymanText;
+                _JourneymanText = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)SkillRecord_FieldIndex.JourneymanText,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _JourneymanText = item;
+            }
+        }
+        protected void UnsetJourneymanText()
+        {
+            _hasBeenSetTracker[(int)SkillRecord_FieldIndex.JourneymanText] = false;
+            JourneymanText = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ISkillRecord.JourneymanText_Property => this.JourneymanText_Property;
@@ -197,14 +531,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> ISkillRecordGetter.JourneymanText_Property => this.JourneymanText_Property;
         #endregion
         #region ExpertText
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _ExpertText = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> ExpertText_Property => _ExpertText;
+        protected String _ExpertText;
+        protected PropertyForwarder<SkillRecord, String> _ExpertTextForwarder;
+        public INotifyingSetItem<String> ExpertText_Property => _ExpertTextForwarder ?? (_ExpertTextForwarder = new PropertyForwarder<SkillRecord, String>(this, (int)SkillRecord_FieldIndex.ExpertText));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String ExpertText
         {
-            get => this._ExpertText.Item;
-            set => this._ExpertText.Set(value);
+            get => this._ExpertText;
+            set => this.SetExpertText(value);
+        }
+        protected void SetExpertText(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)SkillRecord_FieldIndex.ExpertText];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ExpertText == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)SkillRecord_FieldIndex.ExpertText] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = ExpertText;
+                _ExpertText = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)SkillRecord_FieldIndex.ExpertText,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _ExpertText = item;
+            }
+        }
+        protected void UnsetExpertText()
+        {
+            _hasBeenSetTracker[(int)SkillRecord_FieldIndex.ExpertText] = false;
+            ExpertText = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ISkillRecord.ExpertText_Property => this.ExpertText_Property;
@@ -212,14 +579,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> ISkillRecordGetter.ExpertText_Property => this.ExpertText_Property;
         #endregion
         #region MasterText
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _MasterText = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> MasterText_Property => _MasterText;
+        protected String _MasterText;
+        protected PropertyForwarder<SkillRecord, String> _MasterTextForwarder;
+        public INotifyingSetItem<String> MasterText_Property => _MasterTextForwarder ?? (_MasterTextForwarder = new PropertyForwarder<SkillRecord, String>(this, (int)SkillRecord_FieldIndex.MasterText));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String MasterText
         {
-            get => this._MasterText.Item;
-            set => this._MasterText.Set(value);
+            get => this._MasterText;
+            set => this.SetMasterText(value);
+        }
+        protected void SetMasterText(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)SkillRecord_FieldIndex.MasterText];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MasterText == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)SkillRecord_FieldIndex.MasterText] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = MasterText;
+                _MasterText = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)SkillRecord_FieldIndex.MasterText,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _MasterText = item;
+            }
+        }
+        protected void UnsetMasterText()
+        {
+            _hasBeenSetTracker[(int)SkillRecord_FieldIndex.MasterText] = false;
+            MasterText = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ISkillRecord.MasterText_Property => this.MasterText_Property;
@@ -650,80 +1050,176 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Skill":
-                    item._Skill.SetIfSucceededOrDefault(EnumXmlTranslation<ActorValue>.Instance.Parse(
+                    var SkilltryGet = EnumXmlTranslation<ActorValue>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)SkillRecord_FieldIndex.Skill,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (SkilltryGet.Succeeded)
+                    {
+                        item.SetSkill(item: SkilltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetSkill();
+                    }
                     break;
                 case "Description":
-                    item._Description.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var DescriptiontryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)SkillRecord_FieldIndex.Description,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DescriptiontryGet.Succeeded)
+                    {
+                        item.SetDescription(item: DescriptiontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetDescription();
+                    }
                     break;
                 case "Icon":
-                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var IcontryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)SkillRecord_FieldIndex.Icon,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (IcontryGet.Succeeded)
+                    {
+                        item.SetIcon(item: IcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetIcon();
+                    }
                     break;
                 case "Action":
-                    item._Action.SetIfSucceededOrDefault(EnumXmlTranslation<ActorValue>.Instance.Parse(
+                    var ActiontryGet = EnumXmlTranslation<ActorValue>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)SkillRecord_FieldIndex.Action,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (ActiontryGet.Succeeded)
+                    {
+                        item.SetAction(item: ActiontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetAction();
+                    }
                     break;
                 case "Attribute":
-                    item._Attribute.SetIfSucceededOrDefault(EnumXmlTranslation<ActorValue>.Instance.Parse(
+                    var AttributetryGet = EnumXmlTranslation<ActorValue>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (AttributetryGet.Succeeded)
+                    {
+                        item.SetAttribute(item: AttributetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetAttribute();
+                    }
                     break;
                 case "Specialization":
-                    item._Specialization.SetIfSucceededOrDefault(EnumXmlTranslation<Specialization>.Instance.Parse(
+                    var SpecializationtryGet = EnumXmlTranslation<Specialization>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (SpecializationtryGet.Succeeded)
+                    {
+                        item.SetSpecialization(item: SpecializationtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetSpecialization();
+                    }
                     break;
                 case "UseValueFirst":
-                    item._UseValueFirst.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var UseValueFirsttryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (UseValueFirsttryGet.Succeeded)
+                    {
+                        item.SetUseValueFirst(item: UseValueFirsttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetUseValueFirst();
+                    }
                     break;
                 case "UseValueSecond":
-                    item._UseValueSecond.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var UseValueSecondtryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (UseValueSecondtryGet.Succeeded)
+                    {
+                        item.SetUseValueSecond(item: UseValueSecondtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetUseValueSecond();
+                    }
                     break;
                 case "ApprenticeText":
-                    item._ApprenticeText.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var ApprenticeTexttryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)SkillRecord_FieldIndex.ApprenticeText,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ApprenticeTexttryGet.Succeeded)
+                    {
+                        item.SetApprenticeText(item: ApprenticeTexttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetApprenticeText();
+                    }
                     break;
                 case "JourneymanText":
-                    item._JourneymanText.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var JourneymanTexttryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)SkillRecord_FieldIndex.JourneymanText,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (JourneymanTexttryGet.Succeeded)
+                    {
+                        item.SetJourneymanText(item: JourneymanTexttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetJourneymanText();
+                    }
                     break;
                 case "ExpertText":
-                    item._ExpertText.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var ExpertTexttryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)SkillRecord_FieldIndex.ExpertText,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ExpertTexttryGet.Succeeded)
+                    {
+                        item.SetExpertText(item: ExpertTexttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetExpertText();
+                    }
                     break;
                 case "MasterText":
-                    item._MasterText.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var MasterTexttryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)SkillRecord_FieldIndex.MasterText,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MasterTexttryGet.Succeeded)
+                    {
+                        item.SetMasterText(item: MasterTexttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMasterText();
+                    }
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(
@@ -732,6 +1228,625 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter ActorValue
+        protected ObjectCentralizationSubscriptions<ActorValue> _ActorValue_subscriptions;
+        ActorValue IPropertySupporter<ActorValue>.Get(int index)
+        {
+            return GetActorValue(index: index);
+        }
+
+        protected ActorValue GetActorValue(int index)
+        {
+            switch ((SkillRecord_FieldIndex)index)
+            {
+                case SkillRecord_FieldIndex.Skill:
+                    return Skill;
+                case SkillRecord_FieldIndex.Action:
+                    return Action;
+                case SkillRecord_FieldIndex.Attribute:
+                    return Attribute;
+                default:
+                    throw new ArgumentException($"Unknown index for field type ActorValue: {index}");
+            }
+        }
+
+        void IPropertySupporter<ActorValue>.Set(
+            int index,
+            ActorValue item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetActorValue(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetActorValue(
+            int index,
+            ActorValue item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((SkillRecord_FieldIndex)index)
+            {
+                case SkillRecord_FieldIndex.Skill:
+                    SetSkill(item, hasBeenSet, cmds);
+                    break;
+                case SkillRecord_FieldIndex.Action:
+                    SetAction(item, hasBeenSet, cmds);
+                    break;
+                case SkillRecord_FieldIndex.Attribute:
+                    SetAttribute(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type ActorValue: {index}");
+            }
+        }
+
+        bool IPropertySupporter<ActorValue>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<ActorValue>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<ActorValue>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetActorValue(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetActorValue(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((SkillRecord_FieldIndex)index)
+            {
+                case SkillRecord_FieldIndex.Skill:
+                    _hasBeenSetTracker[index] = false;
+                    Skill = default(ActorValue);
+                    break;
+                case SkillRecord_FieldIndex.Action:
+                    _hasBeenSetTracker[index] = false;
+                    Action = default(ActorValue);
+                    break;
+                case SkillRecord_FieldIndex.Attribute:
+                    _hasBeenSetTracker[index] = false;
+                    Attribute = default(ActorValue);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type ActorValue: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<ActorValue>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<ActorValue> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_ActorValue_subscriptions == null)
+            {
+                _ActorValue_subscriptions = new ObjectCentralizationSubscriptions<ActorValue>();
+            }
+            _ActorValue_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<ActorValue>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _ActorValue_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<ActorValue>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        ActorValue IPropertySupporter<ActorValue>.DefaultValue(int index)
+        {
+            return DefaultValueActorValue(index: index);
+        }
+
+        protected ActorValue DefaultValueActorValue(int index)
+        {
+            switch ((SkillRecord_FieldIndex)index)
+            {
+                case SkillRecord_FieldIndex.Skill:
+                case SkillRecord_FieldIndex.Action:
+                case SkillRecord_FieldIndex.Attribute:
+                    return default(ActorValue);
+                default:
+                    throw new ArgumentException($"Unknown index for field type ActorValue: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter String
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected override String GetString(int index)
+        {
+            switch ((SkillRecord_FieldIndex)index)
+            {
+                case SkillRecord_FieldIndex.Description:
+                    return Description;
+                case SkillRecord_FieldIndex.Icon:
+                    return Icon;
+                case SkillRecord_FieldIndex.ApprenticeText:
+                    return ApprenticeText;
+                case SkillRecord_FieldIndex.JourneymanText:
+                    return JourneymanText;
+                case SkillRecord_FieldIndex.ExpertText:
+                    return ExpertText;
+                case SkillRecord_FieldIndex.MasterText:
+                    return MasterText;
+                default:
+                    return base.GetString(index: index);
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((SkillRecord_FieldIndex)index)
+            {
+                case SkillRecord_FieldIndex.Description:
+                    SetDescription(item, hasBeenSet, cmds);
+                    break;
+                case SkillRecord_FieldIndex.Icon:
+                    SetIcon(item, hasBeenSet, cmds);
+                    break;
+                case SkillRecord_FieldIndex.ApprenticeText:
+                    SetApprenticeText(item, hasBeenSet, cmds);
+                    break;
+                case SkillRecord_FieldIndex.JourneymanText:
+                    SetJourneymanText(item, hasBeenSet, cmds);
+                    break;
+                case SkillRecord_FieldIndex.ExpertText:
+                    SetExpertText(item, hasBeenSet, cmds);
+                    break;
+                case SkillRecord_FieldIndex.MasterText:
+                    SetMasterText(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetString(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((SkillRecord_FieldIndex)index)
+            {
+                case SkillRecord_FieldIndex.Description:
+                    _hasBeenSetTracker[index] = false;
+                    Description = default(String);
+                    break;
+                case SkillRecord_FieldIndex.Icon:
+                    _hasBeenSetTracker[index] = false;
+                    Icon = default(String);
+                    break;
+                case SkillRecord_FieldIndex.ApprenticeText:
+                    _hasBeenSetTracker[index] = false;
+                    ApprenticeText = default(String);
+                    break;
+                case SkillRecord_FieldIndex.JourneymanText:
+                    _hasBeenSetTracker[index] = false;
+                    JourneymanText = default(String);
+                    break;
+                case SkillRecord_FieldIndex.ExpertText:
+                    _hasBeenSetTracker[index] = false;
+                    ExpertText = default(String);
+                    break;
+                case SkillRecord_FieldIndex.MasterText:
+                    _hasBeenSetTracker[index] = false;
+                    MasterText = default(String);
+                    break;
+                default:
+                    base.UnsetString(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected override String DefaultValueString(int index)
+        {
+            switch ((SkillRecord_FieldIndex)index)
+            {
+                case SkillRecord_FieldIndex.Description:
+                case SkillRecord_FieldIndex.Icon:
+                case SkillRecord_FieldIndex.ApprenticeText:
+                case SkillRecord_FieldIndex.JourneymanText:
+                case SkillRecord_FieldIndex.ExpertText:
+                case SkillRecord_FieldIndex.MasterText:
+                    return default(String);
+                default:
+                    return base.DefaultValueString(index: index);
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Specialization
+        protected ObjectCentralizationSubscriptions<Specialization> _Specialization_subscriptions;
+        Specialization IPropertySupporter<Specialization>.Get(int index)
+        {
+            return GetSpecialization(index: index);
+        }
+
+        protected Specialization GetSpecialization(int index)
+        {
+            switch ((SkillRecord_FieldIndex)index)
+            {
+                case SkillRecord_FieldIndex.Specialization:
+                    return Specialization;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Specialization: {index}");
+            }
+        }
+
+        void IPropertySupporter<Specialization>.Set(
+            int index,
+            Specialization item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSpecialization(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetSpecialization(
+            int index,
+            Specialization item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((SkillRecord_FieldIndex)index)
+            {
+                case SkillRecord_FieldIndex.Specialization:
+                    SetSpecialization(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Specialization: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Specialization>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Specialization>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Specialization>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSpecialization(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetSpecialization(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((SkillRecord_FieldIndex)index)
+            {
+                case SkillRecord_FieldIndex.Specialization:
+                    _hasBeenSetTracker[index] = false;
+                    Specialization = default(Specialization);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Specialization: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Specialization>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Specialization> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Specialization_subscriptions == null)
+            {
+                _Specialization_subscriptions = new ObjectCentralizationSubscriptions<Specialization>();
+            }
+            _Specialization_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Specialization>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Specialization_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Specialization>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Specialization IPropertySupporter<Specialization>.DefaultValue(int index)
+        {
+            return DefaultValueSpecialization(index: index);
+        }
+
+        protected Specialization DefaultValueSpecialization(int index)
+        {
+            switch ((SkillRecord_FieldIndex)index)
+            {
+                case SkillRecord_FieldIndex.Specialization:
+                    return default(Specialization);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Specialization: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Single
+        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
+        Single IPropertySupporter<Single>.Get(int index)
+        {
+            return GetSingle(index: index);
+        }
+
+        protected Single GetSingle(int index)
+        {
+            switch ((SkillRecord_FieldIndex)index)
+            {
+                case SkillRecord_FieldIndex.UseValueFirst:
+                    return UseValueFirst;
+                case SkillRecord_FieldIndex.UseValueSecond:
+                    return UseValueSecond;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        void IPropertySupporter<Single>.Set(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSingle(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetSingle(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((SkillRecord_FieldIndex)index)
+            {
+                case SkillRecord_FieldIndex.UseValueFirst:
+                    SetUseValueFirst(item, hasBeenSet, cmds);
+                    break;
+                case SkillRecord_FieldIndex.UseValueSecond:
+                    SetUseValueSecond(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Single>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Single>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSingle(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetSingle(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((SkillRecord_FieldIndex)index)
+            {
+                case SkillRecord_FieldIndex.UseValueFirst:
+                    _hasBeenSetTracker[index] = false;
+                    UseValueFirst = default(Single);
+                    break;
+                case SkillRecord_FieldIndex.UseValueSecond:
+                    _hasBeenSetTracker[index] = false;
+                    UseValueSecond = default(Single);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Single> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Single_subscriptions == null)
+            {
+                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
+            }
+            _Single_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Single_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Single IPropertySupporter<Single>.DefaultValue(int index)
+        {
+            return DefaultValueSingle(index: index);
+        }
+
+        protected Single DefaultValueSingle(int index)
+        {
+            switch ((SkillRecord_FieldIndex)index)
+            {
+                case SkillRecord_FieldIndex.UseValueFirst:
+                case SkillRecord_FieldIndex.UseValueSecond:
+                    return default(Single);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
             }
         }
 
@@ -945,84 +2060,180 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "INDX":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Skill.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                    var SkilltryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.Skill,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (SkilltryGet.Succeeded)
+                    {
+                        item.SetSkill(item: SkilltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetSkill();
+                    }
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.Skill);
                 case "DESC":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Description.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var DescriptiontryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.Description,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DescriptiontryGet.Succeeded)
+                    {
+                        item.SetDescription(item: DescriptiontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetDescription();
+                    }
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.Description);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var IcontryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (IcontryGet.Succeeded)
+                    {
+                        item.SetIcon(item: IcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetIcon();
+                    }
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Action.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                        var ActiontryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)SkillRecord_FieldIndex.Action,
-                            errorMask: errorMask));
-                        item._Attribute.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                            errorMask: errorMask);
+                        if (ActiontryGet.Succeeded)
+                        {
+                            item.SetAction(item: ActiontryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetAction();
+                        }
+                        var AttributetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
-                            errorMask: errorMask));
-                        item._Specialization.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Specialization>.Instance.Parse(
+                            errorMask: errorMask);
+                        if (AttributetryGet.Succeeded)
+                        {
+                            item.SetAttribute(item: AttributetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetAttribute();
+                        }
+                        var SpecializationtryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Specialization>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
-                            errorMask: errorMask));
-                        item._UseValueFirst.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (SpecializationtryGet.Succeeded)
+                        {
+                            item.SetSpecialization(item: SpecializationtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetSpecialization();
+                        }
+                        var UseValueFirsttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
-                            errorMask: errorMask));
-                        item._UseValueSecond.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (UseValueFirsttryGet.Succeeded)
+                        {
+                            item.SetUseValueFirst(item: UseValueFirsttryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetUseValueFirst();
+                        }
+                        var UseValueSecondtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (UseValueSecondtryGet.Succeeded)
+                        {
+                            item.SetUseValueSecond(item: UseValueSecondtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetUseValueSecond();
+                        }
                     }
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.UseValueSecond);
                 case "ANAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._ApprenticeText.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var ApprenticeTexttryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.ApprenticeText,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ApprenticeTexttryGet.Succeeded)
+                    {
+                        item.SetApprenticeText(item: ApprenticeTexttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetApprenticeText();
+                    }
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.ApprenticeText);
                 case "JNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._JourneymanText.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var JourneymanTexttryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.JourneymanText,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (JourneymanTexttryGet.Succeeded)
+                    {
+                        item.SetJourneymanText(item: JourneymanTexttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetJourneymanText();
+                    }
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.JourneymanText);
                 case "ENAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._ExpertText.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var ExpertTexttryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.ExpertText,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ExpertTexttryGet.Succeeded)
+                    {
+                        item.SetExpertText(item: ExpertTexttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetExpertText();
+                    }
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.ExpertText);
                 case "MNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._MasterText.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var MasterTexttryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.MasterText,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MasterTexttryGet.Succeeded)
+                    {
+                        item.SetMasterText(item: MasterTexttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMasterText();
+                    }
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.MasterText);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
@@ -1136,64 +2347,64 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case SkillRecord_FieldIndex.Skill:
-                    this._Skill.Set(
+                    this.SetSkill(
                         (ActorValue)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case SkillRecord_FieldIndex.Description:
-                    this._Description.Set(
+                    this.SetDescription(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case SkillRecord_FieldIndex.Icon:
-                    this._Icon.Set(
+                    this.SetIcon(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case SkillRecord_FieldIndex.Action:
-                    this._Action.Set(
+                    this.SetAction(
                         (ActorValue)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case SkillRecord_FieldIndex.Attribute:
-                    this._Attribute.Set(
+                    this.SetAttribute(
                         (ActorValue)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case SkillRecord_FieldIndex.Specialization:
-                    this._Specialization.Set(
+                    this.SetSpecialization(
                         (Specialization)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case SkillRecord_FieldIndex.UseValueFirst:
-                    this._UseValueFirst.Set(
+                    this.SetUseValueFirst(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case SkillRecord_FieldIndex.UseValueSecond:
-                    this._UseValueSecond.Set(
+                    this.SetUseValueSecond(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case SkillRecord_FieldIndex.ApprenticeText:
-                    this._ApprenticeText.Set(
+                    this.SetApprenticeText(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case SkillRecord_FieldIndex.JourneymanText:
-                    this._JourneymanText.Set(
+                    this.SetJourneymanText(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case SkillRecord_FieldIndex.ExpertText:
-                    this._ExpertText.Set(
+                    this.SetExpertText(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case SkillRecord_FieldIndex.MasterText:
-                    this._MasterText.Set(
+                    this.SetMasterText(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1227,64 +2438,64 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case SkillRecord_FieldIndex.Skill:
-                    obj._Skill.Set(
+                    obj.SetSkill(
                         (ActorValue)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case SkillRecord_FieldIndex.Description:
-                    obj._Description.Set(
+                    obj.SetDescription(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case SkillRecord_FieldIndex.Icon:
-                    obj._Icon.Set(
+                    obj.SetIcon(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case SkillRecord_FieldIndex.Action:
-                    obj._Action.Set(
+                    obj.SetAction(
                         (ActorValue)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case SkillRecord_FieldIndex.Attribute:
-                    obj._Attribute.Set(
+                    obj.SetAttribute(
                         (ActorValue)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case SkillRecord_FieldIndex.Specialization:
-                    obj._Specialization.Set(
+                    obj.SetSpecialization(
                         (Specialization)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case SkillRecord_FieldIndex.UseValueFirst:
-                    obj._UseValueFirst.Set(
+                    obj.SetUseValueFirst(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case SkillRecord_FieldIndex.UseValueSecond:
-                    obj._UseValueSecond.Set(
+                    obj.SetUseValueSecond(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case SkillRecord_FieldIndex.ApprenticeText:
-                    obj._ApprenticeText.Set(
+                    obj.SetApprenticeText(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case SkillRecord_FieldIndex.JourneymanText:
-                    obj._JourneymanText.Set(
+                    obj.SetJourneymanText(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case SkillRecord_FieldIndex.ExpertText:
-                    obj._ExpertText.Set(
+                    obj.SetExpertText(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case SkillRecord_FieldIndex.MasterText:
-                    obj._MasterText.Set(
+                    obj.SetMasterText(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1447,7 +2658,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "d6afa219-e0d6-4f44-83d4-2d0298897f4d";
 
-        public const ushort FieldCount = 12;
+        public const ushort AdditionalFieldCount = 12;
+
+        public const ushort FieldCount = 17;
 
         public static readonly Type MaskType = typeof(SkillRecord_Mask<>);
 
@@ -1703,7 +2916,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1755,8 +2969,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Skill_Property.SetToWithDefault(
                         rhs: rhs.Skill_Property,
-                        def: def?.Skill_Property,
-                        cmds: cmds);
+                        def: def?.Skill_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1770,8 +2983,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Description_Property.SetToWithDefault(
                         rhs: rhs.Description_Property,
-                        def: def?.Description_Property,
-                        cmds: cmds);
+                        def: def?.Description_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1785,8 +2997,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Icon_Property.SetToWithDefault(
                         rhs: rhs.Icon_Property,
-                        def: def?.Icon_Property,
-                        cmds: cmds);
+                        def: def?.Icon_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1870,8 +3081,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.ApprenticeText_Property.SetToWithDefault(
                         rhs: rhs.ApprenticeText_Property,
-                        def: def?.ApprenticeText_Property,
-                        cmds: cmds);
+                        def: def?.ApprenticeText_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1885,8 +3095,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.JourneymanText_Property.SetToWithDefault(
                         rhs: rhs.JourneymanText_Property,
-                        def: def?.JourneymanText_Property,
-                        cmds: cmds);
+                        def: def?.JourneymanText_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1900,8 +3109,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.ExpertText_Property.SetToWithDefault(
                         rhs: rhs.ExpertText_Property,
-                        def: def?.ExpertText_Property,
-                        cmds: cmds);
+                        def: def?.ExpertText_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1915,8 +3123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.MasterText_Property.SetToWithDefault(
                         rhs: rhs.MasterText_Property,
-                        def: def?.MasterText_Property,
-                        cmds: cmds);
+                        def: def?.MasterText_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

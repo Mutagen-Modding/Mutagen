@@ -32,6 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         ISoundDataExtended,
         ILoquiObject<SoundDataExtended>,
         ILoquiObjectSetter,
+        IPropertySupporter<Single>,
         IEquatable<SoundDataExtended>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -47,38 +48,152 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region StaticAttenuation
-        protected INotifyingItem<Single> _StaticAttenuation = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> StaticAttenuation_Property => _StaticAttenuation;
+        protected Single _StaticAttenuation;
+        protected PropertyForwarder<SoundDataExtended, Single> _StaticAttenuationForwarder;
+        public INotifyingSetItem<Single> StaticAttenuation_Property => _StaticAttenuationForwarder ?? (_StaticAttenuationForwarder = new PropertyForwarder<SoundDataExtended, Single>(this, (int)SoundDataExtended_FieldIndex.StaticAttenuation));
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single StaticAttenuation
         {
-            get => this._StaticAttenuation.Item;
-            set => this._StaticAttenuation.Set(value.PutInRange(StaticAttenuation_Range.Min, StaticAttenuation_Range.Max));
+            get => this._StaticAttenuation;
+            set => this.SetStaticAttenuation(value);
         }
+        protected void SetStaticAttenuation(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            item = item.PutInRange(StaticAttenuation_Range.Min, StaticAttenuation_Range.Max);
+            var oldHasBeenSet = _hasBeenSetTracker[(int)SoundDataExtended_FieldIndex.StaticAttenuation];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && StaticAttenuation == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)SoundDataExtended_FieldIndex.StaticAttenuation] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = StaticAttenuation;
+                _StaticAttenuation = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)SoundDataExtended_FieldIndex.StaticAttenuation,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _StaticAttenuation = item;
+            }
+        }
+        protected void UnsetStaticAttenuation()
+        {
+            _hasBeenSetTracker[(int)SoundDataExtended_FieldIndex.StaticAttenuation] = false;
+            StaticAttenuation = default(Single);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ISoundDataExtended.StaticAttenuation_Property => this.StaticAttenuation_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> ISoundDataExtendedGetter.StaticAttenuation_Property => this.StaticAttenuation_Property;
         public static RangeFloat StaticAttenuation_Range = new RangeFloat(0f, 655.35f);
         #endregion
         #region StopTime
-        protected INotifyingItem<Single> _StopTime = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> StopTime_Property => _StopTime;
+        protected Single _StopTime;
+        protected PropertyForwarder<SoundDataExtended, Single> _StopTimeForwarder;
+        public INotifyingSetItem<Single> StopTime_Property => _StopTimeForwarder ?? (_StopTimeForwarder = new PropertyForwarder<SoundDataExtended, Single>(this, (int)SoundDataExtended_FieldIndex.StopTime));
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single StopTime
         {
-            get => this._StopTime.Item;
-            set => this._StopTime.Set(value.PutInRange(StopTime_Range.Min, StopTime_Range.Max));
+            get => this._StopTime;
+            set => this.SetStopTime(value);
         }
+        protected void SetStopTime(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            item = item.PutInRange(StopTime_Range.Min, StopTime_Range.Max);
+            var oldHasBeenSet = _hasBeenSetTracker[(int)SoundDataExtended_FieldIndex.StopTime];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && StopTime == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)SoundDataExtended_FieldIndex.StopTime] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = StopTime;
+                _StopTime = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)SoundDataExtended_FieldIndex.StopTime,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _StopTime = item;
+            }
+        }
+        protected void UnsetStopTime()
+        {
+            _hasBeenSetTracker[(int)SoundDataExtended_FieldIndex.StopTime] = false;
+            StopTime = default(Single);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ISoundDataExtended.StopTime_Property => this.StopTime_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> ISoundDataExtendedGetter.StopTime_Property => this.StopTime_Property;
         public static RangeFloat StopTime_Range = new RangeFloat(0f, 1434.375f);
         #endregion
         #region StartTime
-        protected INotifyingItem<Single> _StartTime = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> StartTime_Property => _StartTime;
+        protected Single _StartTime;
+        protected PropertyForwarder<SoundDataExtended, Single> _StartTimeForwarder;
+        public INotifyingSetItem<Single> StartTime_Property => _StartTimeForwarder ?? (_StartTimeForwarder = new PropertyForwarder<SoundDataExtended, Single>(this, (int)SoundDataExtended_FieldIndex.StartTime));
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single StartTime
         {
-            get => this._StartTime.Item;
-            set => this._StartTime.Set(value.PutInRange(StartTime_Range.Min, StartTime_Range.Max));
+            get => this._StartTime;
+            set => this.SetStartTime(value);
         }
+        protected void SetStartTime(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            item = item.PutInRange(StartTime_Range.Min, StartTime_Range.Max);
+            var oldHasBeenSet = _hasBeenSetTracker[(int)SoundDataExtended_FieldIndex.StartTime];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && StartTime == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)SoundDataExtended_FieldIndex.StartTime] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = StartTime;
+                _StartTime = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)SoundDataExtended_FieldIndex.StartTime,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _StartTime = item;
+            }
+        }
+        protected void UnsetStartTime()
+        {
+            _hasBeenSetTracker[(int)SoundDataExtended_FieldIndex.StartTime] = false;
+            StartTime = default(Single);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ISoundDataExtended.StartTime_Property => this.StartTime_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> ISoundDataExtendedGetter.StartTime_Property => this.StartTime_Property;
         public static RangeFloat StartTime_Range = new RangeFloat(0f, 1434.375f);
         #endregion
@@ -452,22 +567,46 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "StaticAttenuation":
-                    item._StaticAttenuation.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var StaticAttenuationtryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)SoundDataExtended_FieldIndex.StaticAttenuation,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (StaticAttenuationtryGet.Succeeded)
+                    {
+                        item.SetStaticAttenuation(item: StaticAttenuationtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetStaticAttenuation();
+                    }
                     break;
                 case "StopTime":
-                    item._StopTime.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var StopTimetryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)SoundDataExtended_FieldIndex.StopTime,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (StopTimetryGet.Succeeded)
+                    {
+                        item.SetStopTime(item: StopTimetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetStopTime();
+                    }
                     break;
                 case "StartTime":
-                    item._StartTime.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var StartTimetryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)SoundDataExtended_FieldIndex.StartTime,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (StartTimetryGet.Succeeded)
+                    {
+                        item.SetStartTime(item: StartTimetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetStartTime();
+                    }
                     break;
                 default:
                     SoundData.Fill_XML_Internal(
@@ -476,6 +615,159 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Single
+        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
+        Single IPropertySupporter<Single>.Get(int index)
+        {
+            return GetSingle(index: index);
+        }
+
+        protected Single GetSingle(int index)
+        {
+            switch ((SoundDataExtended_FieldIndex)index)
+            {
+                case SoundDataExtended_FieldIndex.StaticAttenuation:
+                    return StaticAttenuation;
+                case SoundDataExtended_FieldIndex.StopTime:
+                    return StopTime;
+                case SoundDataExtended_FieldIndex.StartTime:
+                    return StartTime;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        void IPropertySupporter<Single>.Set(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSingle(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetSingle(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((SoundDataExtended_FieldIndex)index)
+            {
+                case SoundDataExtended_FieldIndex.StaticAttenuation:
+                    SetStaticAttenuation(item, hasBeenSet, cmds);
+                    break;
+                case SoundDataExtended_FieldIndex.StopTime:
+                    SetStopTime(item, hasBeenSet, cmds);
+                    break;
+                case SoundDataExtended_FieldIndex.StartTime:
+                    SetStartTime(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Single>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Single>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSingle(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetSingle(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((SoundDataExtended_FieldIndex)index)
+            {
+                case SoundDataExtended_FieldIndex.StaticAttenuation:
+                    _hasBeenSetTracker[index] = false;
+                    StaticAttenuation = default(Single);
+                    break;
+                case SoundDataExtended_FieldIndex.StopTime:
+                    _hasBeenSetTracker[index] = false;
+                    StopTime = default(Single);
+                    break;
+                case SoundDataExtended_FieldIndex.StartTime:
+                    _hasBeenSetTracker[index] = false;
+                    StartTime = default(Single);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Single> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Single_subscriptions == null)
+            {
+                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
+            }
+            _Single_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Single_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Single IPropertySupporter<Single>.DefaultValue(int index)
+        {
+            return DefaultValueSingle(index: index);
+        }
+
+        protected Single DefaultValueSingle(int index)
+        {
+            switch ((SoundDataExtended_FieldIndex)index)
+            {
+                case SoundDataExtended_FieldIndex.StaticAttenuation:
+                case SoundDataExtended_FieldIndex.StopTime:
+                case SoundDataExtended_FieldIndex.StartTime:
+                    return default(Single);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
             }
         }
 
@@ -943,19 +1235,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case SoundDataExtended_FieldIndex.StaticAttenuation:
-                    this._StaticAttenuation.Set(
+                    this.SetStaticAttenuation(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case SoundDataExtended_FieldIndex.StopTime:
-                    this._StopTime.Set(
+                    this.SetStopTime(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case SoundDataExtended_FieldIndex.StartTime:
-                    this._StartTime.Set(
+                    this.SetStartTime(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -989,19 +1281,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case SoundDataExtended_FieldIndex.StaticAttenuation:
-                    obj._StaticAttenuation.Set(
+                    obj.SetStaticAttenuation(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case SoundDataExtended_FieldIndex.StopTime:
-                    obj._StopTime.Set(
+                    obj.SetStopTime(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case SoundDataExtended_FieldIndex.StartTime:
-                    obj._StartTime.Set(
+                    obj.SetStartTime(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1082,7 +1374,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "3af22aab-9cdf-4fac-a210-9c06331d2180";
 
-        public const ushort FieldCount = 3;
+        public const ushort AdditionalFieldCount = 3;
+
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(SoundDataExtended_Mask<>);
 
@@ -1231,7 +1525,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

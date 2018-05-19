@@ -30,6 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
         IHeader,
         ILoquiObject<Header>,
         ILoquiObjectSetter,
+        IPropertySupporter<Single>,
+        IPropertySupporter<Int32>,
+        IPropertySupporter<UInt32>,
         IEquatable<Header>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -39,20 +42,54 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public Header()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Version
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _Version = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> Version_Property => _Version;
+        protected Single _Version;
+        protected PropertyForwarder<Header, Single> _VersionForwarder;
+        public INotifyingSetItem<Single> Version_Property => _VersionForwarder ?? (_VersionForwarder = new PropertyForwarder<Header, Single>(this, (int)Header_FieldIndex.Version));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Version
         {
-            get => this._Version.Item;
-            set => this._Version.Set(value);
+            get => this._Version;
+            set => this.SetVersion(value);
+        }
+        protected void SetVersion(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Header_FieldIndex.Version];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Version == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Header_FieldIndex.Version] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = Version;
+                _Version = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Header_FieldIndex.Version,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Version = item;
+            }
+        }
+        protected void UnsetVersion()
+        {
+            _hasBeenSetTracker[(int)Header_FieldIndex.Version] = false;
+            Version = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IHeader.Version_Property => this.Version_Property;
@@ -60,14 +97,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IHeaderGetter.Version_Property => this.Version_Property;
         #endregion
         #region NumRecords
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Int32> _NumRecords = NotifyingItem.Factory<Int32>();
-        public INotifyingItem<Int32> NumRecords_Property => _NumRecords;
+        protected Int32 _NumRecords;
+        protected PropertyForwarder<Header, Int32> _NumRecordsForwarder;
+        public INotifyingSetItem<Int32> NumRecords_Property => _NumRecordsForwarder ?? (_NumRecordsForwarder = new PropertyForwarder<Header, Int32>(this, (int)Header_FieldIndex.NumRecords));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 NumRecords
         {
-            get => this._NumRecords.Item;
-            set => this._NumRecords.Set(value);
+            get => this._NumRecords;
+            set => this.SetNumRecords(value);
+        }
+        protected void SetNumRecords(
+            Int32 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Header_FieldIndex.NumRecords];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && NumRecords == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Header_FieldIndex.NumRecords] = hasBeenSet;
+            }
+            if (_Int32_subscriptions != null)
+            {
+                var tmp = NumRecords;
+                _NumRecords = item;
+                _Int32_subscriptions.FireSubscriptions(
+                    index: (int)Header_FieldIndex.NumRecords,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _NumRecords = item;
+            }
+        }
+        protected void UnsetNumRecords()
+        {
+            _hasBeenSetTracker[(int)Header_FieldIndex.NumRecords] = false;
+            NumRecords = default(Int32);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Int32> IHeader.NumRecords_Property => this.NumRecords_Property;
@@ -75,14 +145,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Int32> IHeaderGetter.NumRecords_Property => this.NumRecords_Property;
         #endregion
         #region NextObjectID
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt32> _NextObjectID = NotifyingItem.Factory<UInt32>();
-        public INotifyingItem<UInt32> NextObjectID_Property => _NextObjectID;
+        protected UInt32 _NextObjectID;
+        protected PropertyForwarder<Header, UInt32> _NextObjectIDForwarder;
+        public INotifyingSetItem<UInt32> NextObjectID_Property => _NextObjectIDForwarder ?? (_NextObjectIDForwarder = new PropertyForwarder<Header, UInt32>(this, (int)Header_FieldIndex.NextObjectID));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 NextObjectID
         {
-            get => this._NextObjectID.Item;
-            set => this._NextObjectID.Set(value);
+            get => this._NextObjectID;
+            set => this.SetNextObjectID(value);
+        }
+        protected void SetNextObjectID(
+            UInt32 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Header_FieldIndex.NextObjectID];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && NextObjectID == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Header_FieldIndex.NextObjectID] = hasBeenSet;
+            }
+            if (_UInt32_subscriptions != null)
+            {
+                var tmp = NextObjectID;
+                _NextObjectID = item;
+                _UInt32_subscriptions.FireSubscriptions(
+                    index: (int)Header_FieldIndex.NextObjectID,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _NextObjectID = item;
+            }
+        }
+        protected void UnsetNextObjectID()
+        {
+            _hasBeenSetTracker[(int)Header_FieldIndex.NextObjectID] = false;
+            NextObjectID = default(UInt32);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> IHeader.NextObjectID_Property => this.NextObjectID_Property;
@@ -436,25 +539,449 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Version":
-                    item._Version.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var VersiontryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Header_FieldIndex.Version,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (VersiontryGet.Succeeded)
+                    {
+                        item.SetVersion(item: VersiontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetVersion();
+                    }
                     break;
                 case "NumRecords":
-                    item._NumRecords.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
+                    var NumRecordstryGet = Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Header_FieldIndex.NumRecords,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (NumRecordstryGet.Succeeded)
+                    {
+                        item.SetNumRecords(item: NumRecordstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetNumRecords();
+                    }
                     break;
                 case "NextObjectID":
-                    item._NextObjectID.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
+                    var NextObjectIDtryGet = UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Header_FieldIndex.NextObjectID,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (NextObjectIDtryGet.Succeeded)
+                    {
+                        item.SetNextObjectID(item: NextObjectIDtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetNextObjectID();
+                    }
                     break;
                 default:
                     break;
+            }
+        }
+
+        #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        #region IPropertySupporter Single
+        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
+        Single IPropertySupporter<Single>.Get(int index)
+        {
+            return GetSingle(index: index);
+        }
+
+        protected Single GetSingle(int index)
+        {
+            switch ((Header_FieldIndex)index)
+            {
+                case Header_FieldIndex.Version:
+                    return Version;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        void IPropertySupporter<Single>.Set(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSingle(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetSingle(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Header_FieldIndex)index)
+            {
+                case Header_FieldIndex.Version:
+                    SetVersion(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Single>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Single>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSingle(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetSingle(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Header_FieldIndex)index)
+            {
+                case Header_FieldIndex.Version:
+                    _hasBeenSetTracker[index] = false;
+                    Version = default(Single);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Single> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Single_subscriptions == null)
+            {
+                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
+            }
+            _Single_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Single_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Single IPropertySupporter<Single>.DefaultValue(int index)
+        {
+            return DefaultValueSingle(index: index);
+        }
+
+        protected Single DefaultValueSingle(int index)
+        {
+            switch ((Header_FieldIndex)index)
+            {
+                case Header_FieldIndex.Version:
+                    return default(Single);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Int32
+        protected ObjectCentralizationSubscriptions<Int32> _Int32_subscriptions;
+        Int32 IPropertySupporter<Int32>.Get(int index)
+        {
+            return GetInt32(index: index);
+        }
+
+        protected Int32 GetInt32(int index)
+        {
+            switch ((Header_FieldIndex)index)
+            {
+                case Header_FieldIndex.NumRecords:
+                    return NumRecords;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
+            }
+        }
+
+        void IPropertySupporter<Int32>.Set(
+            int index,
+            Int32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetInt32(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetInt32(
+            int index,
+            Int32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Header_FieldIndex)index)
+            {
+                case Header_FieldIndex.NumRecords:
+                    SetNumRecords(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Int32>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Int32>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetInt32(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetInt32(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Header_FieldIndex)index)
+            {
+                case Header_FieldIndex.NumRecords:
+                    _hasBeenSetTracker[index] = false;
+                    NumRecords = default(Int32);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Int32>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Int32> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Int32_subscriptions == null)
+            {
+                _Int32_subscriptions = new ObjectCentralizationSubscriptions<Int32>();
+            }
+            _Int32_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Int32>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Int32_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Int32>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Int32 IPropertySupporter<Int32>.DefaultValue(int index)
+        {
+            return DefaultValueInt32(index: index);
+        }
+
+        protected Int32 DefaultValueInt32(int index)
+        {
+            switch ((Header_FieldIndex)index)
+            {
+                case Header_FieldIndex.NumRecords:
+                    return default(Int32);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter UInt32
+        protected ObjectCentralizationSubscriptions<UInt32> _UInt32_subscriptions;
+        UInt32 IPropertySupporter<UInt32>.Get(int index)
+        {
+            return GetUInt32(index: index);
+        }
+
+        protected UInt32 GetUInt32(int index)
+        {
+            switch ((Header_FieldIndex)index)
+            {
+                case Header_FieldIndex.NextObjectID:
+                    return NextObjectID;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        void IPropertySupporter<UInt32>.Set(
+            int index,
+            UInt32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetUInt32(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetUInt32(
+            int index,
+            UInt32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Header_FieldIndex)index)
+            {
+                case Header_FieldIndex.NextObjectID:
+                    SetNextObjectID(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<UInt32>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<UInt32>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetUInt32(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetUInt32(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Header_FieldIndex)index)
+            {
+                case Header_FieldIndex.NextObjectID:
+                    _hasBeenSetTracker[index] = false;
+                    NextObjectID = default(UInt32);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt32>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<UInt32> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_UInt32_subscriptions == null)
+            {
+                _UInt32_subscriptions = new ObjectCentralizationSubscriptions<UInt32>();
+            }
+            _UInt32_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt32>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _UInt32_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<UInt32>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        UInt32 IPropertySupporter<UInt32>.DefaultValue(int index)
+        {
+            return DefaultValueUInt32(index: index);
+        }
+
+        protected UInt32 DefaultValueUInt32(int index)
+        {
+            switch ((Header_FieldIndex)index)
+            {
+                case Header_FieldIndex.NextObjectID:
+                    return default(UInt32);
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
             }
         }
 
@@ -660,18 +1187,42 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<Header_ErrorMask> errorMask)
         {
-            item._Version.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+            var VersiontryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)Header_FieldIndex.Version,
-                errorMask: errorMask));
-            item._NumRecords.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            if (VersiontryGet.Succeeded)
+            {
+                item.SetVersion(item: VersiontryGet.Value);
+            }
+            else
+            {
+                item.UnsetVersion();
+            }
+            var NumRecordstryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)Header_FieldIndex.NumRecords,
-                errorMask: errorMask));
-            item._NextObjectID.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            if (NumRecordstryGet.Succeeded)
+            {
+                item.SetNumRecords(item: NumRecordstryGet.Value);
+            }
+            else
+            {
+                item.UnsetNumRecords();
+            }
+            var NextObjectIDtryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)Header_FieldIndex.NextObjectID,
-                errorMask: errorMask));
+                errorMask: errorMask);
+            if (NextObjectIDtryGet.Succeeded)
+            {
+                item.SetNextObjectID(item: NextObjectIDtryGet.Value);
+            }
+            else
+            {
+                item.UnsetNextObjectID();
+            }
         }
 
         #endregion
@@ -791,19 +1342,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Header_FieldIndex.Version:
-                    this._Version.Set(
+                    this.SetVersion(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Header_FieldIndex.NumRecords:
-                    this._NumRecords.Set(
+                    this.SetNumRecords(
                         (Int32)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Header_FieldIndex.NextObjectID:
-                    this._NextObjectID.Set(
+                    this.SetNextObjectID(
                         (UInt32)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -843,19 +1394,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Header_FieldIndex.Version:
-                    obj._Version.Set(
+                    obj.SetVersion(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Header_FieldIndex.NumRecords:
-                    obj._NumRecords.Set(
+                    obj.SetNumRecords(
                         (Int32)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Header_FieldIndex.NextObjectID:
-                    obj._NextObjectID.Set(
+                    obj.SetNextObjectID(
                         (UInt32)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -931,6 +1482,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             version: 0);
 
         public const string GUID = "88a14b36-530f-42a1-aa1f-b8ee1852e625";
+
+        public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
 
@@ -1081,7 +1634,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
         IGlobalFloat,
         ILoquiObject<GlobalFloat>,
         ILoquiObjectSetter,
+        IPropertySupporter<Single>,
         IEquatable<GlobalFloat>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -48,14 +49,47 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _Data = NotifyingItem.Factory<Single>();
-        public INotifyingItemGetter<Single> Data_Property => _Data;
+        protected Single _Data;
+        protected PropertyForwarder<GlobalFloat, Single> _DataForwarder;
+        public INotifyingSetItemGetter<Single> Data_Property => _DataForwarder ?? (_DataForwarder = new PropertyForwarder<GlobalFloat, Single>(this, (int)GlobalFloat_FieldIndex.Data));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Data
         {
-            get => this._Data.Item;
-            protected set => this._Data.Set(value);
+            get => this._Data;
+            protected set => this.SetData(value);
+        }
+        protected void SetData(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)GlobalFloat_FieldIndex.Data];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Data == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)GlobalFloat_FieldIndex.Data] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = Data;
+                _Data = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)GlobalFloat_FieldIndex.Data,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Data = item;
+            }
+        }
+        protected void UnsetData()
+        {
+            _hasBeenSetTracker[(int)GlobalFloat_FieldIndex.Data] = false;
+            Data = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> IGlobalFloatGetter.Data_Property => this.Data_Property;
@@ -425,10 +459,18 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Data":
-                    item._Data.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var DatatryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)GlobalFloat_FieldIndex.Data,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DatatryGet.Succeeded)
+                    {
+                        item.SetData(item: DatatryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetData();
+                    }
                     break;
                 default:
                     Global.Fill_XML_Internal(
@@ -437,6 +479,146 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Single
+        Single IPropertySupporter<Single>.Get(int index)
+        {
+            return GetSingle(index: index);
+        }
+
+        protected override Single GetSingle(int index)
+        {
+            switch ((GlobalFloat_FieldIndex)index)
+            {
+                case GlobalFloat_FieldIndex.Data:
+                    return Data;
+                default:
+                    return base.GetSingle(index: index);
+            }
+        }
+
+        void IPropertySupporter<Single>.Set(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSingle(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetSingle(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((GlobalFloat_FieldIndex)index)
+            {
+                case GlobalFloat_FieldIndex.Data:
+                    SetData(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetSingle(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Single>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Single>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSingle(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetSingle(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((GlobalFloat_FieldIndex)index)
+            {
+                case GlobalFloat_FieldIndex.Data:
+                    _hasBeenSetTracker[index] = false;
+                    Data = default(Single);
+                    break;
+                default:
+                    base.UnsetSingle(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Single> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Single_subscriptions == null)
+            {
+                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
+            }
+            _Single_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Single_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Single IPropertySupporter<Single>.DefaultValue(int index)
+        {
+            return DefaultValueSingle(index: index);
+        }
+
+        protected override Single DefaultValueSingle(int index)
+        {
+            switch ((GlobalFloat_FieldIndex)index)
+            {
+                case GlobalFloat_FieldIndex.Data:
+                    return default(Single);
+                default:
+                    return base.DefaultValueSingle(index: index);
             }
         }
 
@@ -832,7 +1014,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "e7bd631f-d97b-4b8b-a44e-2bae41f32674";
 
-        public const ushort FieldCount = 1;
+        public const ushort AdditionalFieldCount = 1;
+
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(GlobalFloat_Mask<>);
 
@@ -959,7 +1143,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

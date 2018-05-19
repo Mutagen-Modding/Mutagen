@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>21e8cdda843729e1591ccad34c529a6a8bbfe570</Sha>
+         <Sha>e1f369f56034dc402ce325e7d86c79033887cbd2</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>05-18-2018 23:52:39</CommitDate>
-         <Description>DefaultValue and Unset moved to IHasItem.  SetCurrentAsDefault removed.   SetIfSucceededOrDefault</Description>
+         <CommitDate>05-26-2018 17:14:51</CommitDate>
+         <Description>Removed markAsSet from NotifyingFireParameters.  Removed Bind from NotifyingItem interface, in favor of extension functions.  Ownerless subsccribs made into extension functions</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>1cebaa726956ae61818aa76b41e51988268cf64a</Sha>
+         <Sha>12c0db61c34af1ab45f04adc778c3ed39e0d462d</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>05-18-2018 23:53:00</CommitDate>
-         <Description>SetIfSucceededOrDefault usage</Description>
+         <CommitDate>05-26-2018 18:11:01</CommitDate>
+         <Description>Initial object centralization refactor complete</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

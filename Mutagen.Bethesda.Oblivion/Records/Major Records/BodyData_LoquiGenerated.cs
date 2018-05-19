@@ -31,6 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBodyData,
         ILoquiObject<BodyData>,
         ILoquiObjectSetter,
+        IPropertySupporter<Model>,
         IEquatable<BodyData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -40,19 +41,55 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public BodyData()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Model
+        protected Model _Model;
+        protected PropertyForwarder<BodyData, Model> _ModelForwarder;
+        public INotifyingSetItem<Model> Model_Property => _ModelForwarder ?? (_ModelForwarder = new PropertyForwarder<BodyData, Model>(this, (int)BodyData_FieldIndex.Model));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
-        public INotifyingSetItem<Model> Model_Property => this._Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IBodyDataGetter.Model => this.Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        public Model Model
+        {
+            get => this._Model;
+            set => this.SetModel(value);
+        }
+        protected void SetModel(
+            Model item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)BodyData_FieldIndex.Model];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Model, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)BodyData_FieldIndex.Model] = hasBeenSet;
+            }
+            if (_Model_subscriptions != null)
+            {
+                var tmp = Model;
+                _Model = item;
+                _Model_subscriptions.FireSubscriptions(
+                    index: (int)BodyData_FieldIndex.Model,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Model = item;
+            }
+        }
+        protected void UnsetModel()
+        {
+            _hasBeenSetTracker[(int)BodyData_FieldIndex.Model] = false;
+            Model = default(Model);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IBodyData.Model_Property => this.Model_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -435,10 +472,18 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    var ModeltryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)BodyData_FieldIndex.Model,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ModeltryGet.Succeeded)
+                    {
+                        item.SetModel(item: ModeltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetModel();
+                    }
                     break;
                 case "BodyParts":
                     item._BodyParts.SetIfSucceededOrDefault(ListXmlTranslation<BodyPart, MaskItem<Exception, BodyPart_ErrorMask>>.Instance.Parse(
@@ -456,6 +501,140 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 default:
                     break;
+            }
+        }
+
+        #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        #region IPropertySupporter Model
+        protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
+        Model IPropertySupporter<Model>.Get(int index)
+        {
+            return GetModel(index: index);
+        }
+
+        protected Model GetModel(int index)
+        {
+            switch ((BodyData_FieldIndex)index)
+            {
+                case BodyData_FieldIndex.Model:
+                    return Model;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        void IPropertySupporter<Model>.Set(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetModel(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetModel(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((BodyData_FieldIndex)index)
+            {
+                case BodyData_FieldIndex.Model:
+                    SetModel(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Model>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Model>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Model>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetModel(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetModel(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((BodyData_FieldIndex)index)
+            {
+                case BodyData_FieldIndex.Model:
+                    _hasBeenSetTracker[index] = false;
+                    Model = default(Model);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Model> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Model_subscriptions == null)
+            {
+                _Model_subscriptions = new ObjectCentralizationSubscriptions<Model>();
+            }
+            _Model_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Model_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Model>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Model IPropertySupporter<Model>.DefaultValue(int index)
+        {
+            return DefaultValueModel(index: index);
+        }
+
+        protected Model DefaultValueModel(int index)
+        {
+            switch ((BodyData_FieldIndex)index)
+            {
+                case BodyData_FieldIndex.Model:
+                    return default(Model);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
             }
         }
 
@@ -683,10 +862,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "MODL":
                     if (lastParsed.HasValue && lastParsed.Value >= BodyData_FieldIndex.Model) return TryGet<BodyData_FieldIndex?>.Failure;
-                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)BodyData_FieldIndex.Model,
-                        errorMask: errorMask));
+                    {
+                        var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                            frame: frame.Spawn(snapToFinalPosition: false),
+                            fieldIndex: (int)BodyData_FieldIndex.Model,
+                            errorMask: errorMask);
+                        if (ModeltryGet.Succeeded)
+                        {
+                            item.SetModel(item: ModeltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetModel();
+                        }
+                    }
                     return TryGet<BodyData_FieldIndex?>.Succeed(BodyData_FieldIndex.Model);
                 case "INDX":
                 case "ICON":
@@ -828,9 +1017,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case BodyData_FieldIndex.Model:
-                    this._Model.Set(
+                    this.SetModel(
                         (Model)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case BodyData_FieldIndex.BodyParts:
                     this._BodyParts.SetTo((IEnumerable<BodyPart>)obj, cmds);
@@ -873,9 +1062,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case BodyData_FieldIndex.Model:
-                    obj._Model.Set(
+                    obj.SetModel(
                         (Model)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case BodyData_FieldIndex.BodyParts:
                     obj._BodyParts.SetTo((IEnumerable<BodyPart>)pair.Value, null);
@@ -941,6 +1130,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             version: 0);
 
         public const string GUID = "c54b8db9-9671-471b-8f85-8ee30c93b2ed";
+
+        public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
 
@@ -1095,7 +1286,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

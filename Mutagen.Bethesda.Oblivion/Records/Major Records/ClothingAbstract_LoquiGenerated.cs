@@ -33,6 +33,11 @@ namespace Mutagen.Bethesda.Oblivion
         IClothingAbstract,
         ILoquiObject<ClothingAbstract>,
         ILoquiObjectSetter,
+        IPropertySupporter<UInt16>,
+        IPropertySupporter<BipedFlag>,
+        IPropertySupporter<EquipmentFlag>,
+        IPropertySupporter<Model>,
+        IPropertySupporter<String>,
         IEquatable<ClothingAbstract>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -62,14 +67,47 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Enchantment> IClothingAbstractGetter.Enchantment_Property => this.Enchantment_Property;
         #endregion
         #region EnchantmentPoints
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<UInt16> _EnchantmentPoints = NotifyingSetItem.Factory<UInt16>(markAsSet: false);
-        public INotifyingSetItem<UInt16> EnchantmentPoints_Property => _EnchantmentPoints;
+        protected UInt16 _EnchantmentPoints;
+        protected PropertyForwarder<ClothingAbstract, UInt16> _EnchantmentPointsForwarder;
+        public INotifyingSetItem<UInt16> EnchantmentPoints_Property => _EnchantmentPointsForwarder ?? (_EnchantmentPointsForwarder = new PropertyForwarder<ClothingAbstract, UInt16>(this, (int)ClothingAbstract_FieldIndex.EnchantmentPoints));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 EnchantmentPoints
         {
-            get => this._EnchantmentPoints.Item;
-            set => this._EnchantmentPoints.Set(value);
+            get => this._EnchantmentPoints;
+            set => this.SetEnchantmentPoints(value);
+        }
+        protected void SetEnchantmentPoints(
+            UInt16 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.EnchantmentPoints];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && EnchantmentPoints == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.EnchantmentPoints] = hasBeenSet;
+            }
+            if (_UInt16_subscriptions != null)
+            {
+                var tmp = EnchantmentPoints;
+                _EnchantmentPoints = item;
+                _UInt16_subscriptions.FireSubscriptions(
+                    index: (int)ClothingAbstract_FieldIndex.EnchantmentPoints,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _EnchantmentPoints = item;
+            }
+        }
+        protected void UnsetEnchantmentPoints()
+        {
+            _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.EnchantmentPoints] = false;
+            EnchantmentPoints = default(UInt16);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<UInt16> IClothingAbstract.EnchantmentPoints_Property => this.EnchantmentPoints_Property;
@@ -77,14 +115,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<UInt16> IClothingAbstractGetter.EnchantmentPoints_Property => this.EnchantmentPoints_Property;
         #endregion
         #region BipedFlags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<BipedFlag> _BipedFlags = NotifyingItem.Factory<BipedFlag>();
-        public INotifyingItem<BipedFlag> BipedFlags_Property => _BipedFlags;
+        protected BipedFlag _BipedFlags;
+        protected PropertyForwarder<ClothingAbstract, BipedFlag> _BipedFlagsForwarder;
+        public INotifyingSetItem<BipedFlag> BipedFlags_Property => _BipedFlagsForwarder ?? (_BipedFlagsForwarder = new PropertyForwarder<ClothingAbstract, BipedFlag>(this, (int)ClothingAbstract_FieldIndex.BipedFlags));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public BipedFlag BipedFlags
         {
-            get => this._BipedFlags.Item;
-            set => this._BipedFlags.Set(value);
+            get => this._BipedFlags;
+            set => this.SetBipedFlags(value);
+        }
+        protected void SetBipedFlags(
+            BipedFlag item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.BipedFlags];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && BipedFlags == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.BipedFlags] = hasBeenSet;
+            }
+            if (_BipedFlag_subscriptions != null)
+            {
+                var tmp = BipedFlags;
+                _BipedFlags = item;
+                _BipedFlag_subscriptions.FireSubscriptions(
+                    index: (int)ClothingAbstract_FieldIndex.BipedFlags,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _BipedFlags = item;
+            }
+        }
+        protected void UnsetBipedFlags()
+        {
+            _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.BipedFlags] = false;
+            BipedFlags = default(BipedFlag);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<BipedFlag> IClothingAbstract.BipedFlags_Property => this.BipedFlags_Property;
@@ -92,14 +163,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<BipedFlag> IClothingAbstractGetter.BipedFlags_Property => this.BipedFlags_Property;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<EquipmentFlag> _Flags = NotifyingItem.Factory<EquipmentFlag>();
-        public INotifyingItem<EquipmentFlag> Flags_Property => _Flags;
+        protected EquipmentFlag _Flags;
+        protected PropertyForwarder<ClothingAbstract, EquipmentFlag> _FlagsForwarder;
+        public INotifyingSetItem<EquipmentFlag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<ClothingAbstract, EquipmentFlag>(this, (int)ClothingAbstract_FieldIndex.Flags));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public EquipmentFlag Flags
         {
-            get => this._Flags.Item;
-            set => this._Flags.Set(value);
+            get => this._Flags;
+            set => this.SetFlags(value);
+        }
+        protected void SetFlags(
+            EquipmentFlag item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.Flags];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.Flags] = hasBeenSet;
+            }
+            if (_EquipmentFlag_subscriptions != null)
+            {
+                var tmp = Flags;
+                _Flags = item;
+                _EquipmentFlag_subscriptions.FireSubscriptions(
+                    index: (int)ClothingAbstract_FieldIndex.Flags,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Flags = item;
+            }
+        }
+        protected void UnsetFlags()
+        {
+            _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.Flags] = false;
+            Flags = default(EquipmentFlag);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<EquipmentFlag> IClothingAbstract.Flags_Property => this.Flags_Property;
@@ -107,40 +211,143 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<EquipmentFlag> IClothingAbstractGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region MaleBipedModel
+        protected Model _MaleBipedModel;
+        protected PropertyForwarder<ClothingAbstract, Model> _MaleBipedModelForwarder;
+        public INotifyingSetItem<Model> MaleBipedModel_Property => _MaleBipedModelForwarder ?? (_MaleBipedModelForwarder = new PropertyForwarder<ClothingAbstract, Model>(this, (int)ClothingAbstract_FieldIndex.MaleBipedModel));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<Model> _MaleBipedModel = new NotifyingSetItem<Model>();
-        public INotifyingSetItem<Model> MaleBipedModel_Property => this._MaleBipedModel;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IClothingAbstractGetter.MaleBipedModel => this.MaleBipedModel;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Model MaleBipedModel { get => _MaleBipedModel.Item; set => _MaleBipedModel.Item = value; }
+        public Model MaleBipedModel
+        {
+            get => this._MaleBipedModel;
+            set => this.SetMaleBipedModel(value);
+        }
+        protected void SetMaleBipedModel(
+            Model item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleBipedModel];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(MaleBipedModel, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleBipedModel] = hasBeenSet;
+            }
+            if (_Model_subscriptions != null)
+            {
+                var tmp = MaleBipedModel;
+                _MaleBipedModel = item;
+                _Model_subscriptions.FireSubscriptions(
+                    index: (int)ClothingAbstract_FieldIndex.MaleBipedModel,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _MaleBipedModel = item;
+            }
+        }
+        protected void UnsetMaleBipedModel()
+        {
+            _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleBipedModel] = false;
+            MaleBipedModel = default(Model);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IClothingAbstract.MaleBipedModel_Property => this.MaleBipedModel_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> IClothingAbstractGetter.MaleBipedModel_Property => this.MaleBipedModel_Property;
         #endregion
         #region MaleWorldModel
+        protected Model _MaleWorldModel;
+        protected PropertyForwarder<ClothingAbstract, Model> _MaleWorldModelForwarder;
+        public INotifyingSetItem<Model> MaleWorldModel_Property => _MaleWorldModelForwarder ?? (_MaleWorldModelForwarder = new PropertyForwarder<ClothingAbstract, Model>(this, (int)ClothingAbstract_FieldIndex.MaleWorldModel));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<Model> _MaleWorldModel = new NotifyingSetItem<Model>();
-        public INotifyingSetItem<Model> MaleWorldModel_Property => this._MaleWorldModel;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IClothingAbstractGetter.MaleWorldModel => this.MaleWorldModel;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Model MaleWorldModel { get => _MaleWorldModel.Item; set => _MaleWorldModel.Item = value; }
+        public Model MaleWorldModel
+        {
+            get => this._MaleWorldModel;
+            set => this.SetMaleWorldModel(value);
+        }
+        protected void SetMaleWorldModel(
+            Model item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleWorldModel];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(MaleWorldModel, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleWorldModel] = hasBeenSet;
+            }
+            if (_Model_subscriptions != null)
+            {
+                var tmp = MaleWorldModel;
+                _MaleWorldModel = item;
+                _Model_subscriptions.FireSubscriptions(
+                    index: (int)ClothingAbstract_FieldIndex.MaleWorldModel,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _MaleWorldModel = item;
+            }
+        }
+        protected void UnsetMaleWorldModel()
+        {
+            _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleWorldModel] = false;
+            MaleWorldModel = default(Model);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IClothingAbstract.MaleWorldModel_Property => this.MaleWorldModel_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> IClothingAbstractGetter.MaleWorldModel_Property => this.MaleWorldModel_Property;
         #endregion
         #region MaleIcon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _MaleIcon = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> MaleIcon_Property => _MaleIcon;
+        protected String _MaleIcon;
+        protected PropertyForwarder<ClothingAbstract, String> _MaleIconForwarder;
+        public INotifyingSetItem<String> MaleIcon_Property => _MaleIconForwarder ?? (_MaleIconForwarder = new PropertyForwarder<ClothingAbstract, String>(this, (int)ClothingAbstract_FieldIndex.MaleIcon));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String MaleIcon
         {
-            get => this._MaleIcon.Item;
-            set => this._MaleIcon.Set(value);
+            get => this._MaleIcon;
+            set => this.SetMaleIcon(value);
+        }
+        protected void SetMaleIcon(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleIcon];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MaleIcon == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleIcon] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = MaleIcon;
+                _MaleIcon = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)ClothingAbstract_FieldIndex.MaleIcon,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _MaleIcon = item;
+            }
+        }
+        protected void UnsetMaleIcon()
+        {
+            _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleIcon] = false;
+            MaleIcon = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IClothingAbstract.MaleIcon_Property => this.MaleIcon_Property;
@@ -148,40 +355,143 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> IClothingAbstractGetter.MaleIcon_Property => this.MaleIcon_Property;
         #endregion
         #region FemaleBipedModel
+        protected Model _FemaleBipedModel;
+        protected PropertyForwarder<ClothingAbstract, Model> _FemaleBipedModelForwarder;
+        public INotifyingSetItem<Model> FemaleBipedModel_Property => _FemaleBipedModelForwarder ?? (_FemaleBipedModelForwarder = new PropertyForwarder<ClothingAbstract, Model>(this, (int)ClothingAbstract_FieldIndex.FemaleBipedModel));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<Model> _FemaleBipedModel = new NotifyingSetItem<Model>();
-        public INotifyingSetItem<Model> FemaleBipedModel_Property => this._FemaleBipedModel;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IClothingAbstractGetter.FemaleBipedModel => this.FemaleBipedModel;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Model FemaleBipedModel { get => _FemaleBipedModel.Item; set => _FemaleBipedModel.Item = value; }
+        public Model FemaleBipedModel
+        {
+            get => this._FemaleBipedModel;
+            set => this.SetFemaleBipedModel(value);
+        }
+        protected void SetFemaleBipedModel(
+            Model item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleBipedModel];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(FemaleBipedModel, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleBipedModel] = hasBeenSet;
+            }
+            if (_Model_subscriptions != null)
+            {
+                var tmp = FemaleBipedModel;
+                _FemaleBipedModel = item;
+                _Model_subscriptions.FireSubscriptions(
+                    index: (int)ClothingAbstract_FieldIndex.FemaleBipedModel,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _FemaleBipedModel = item;
+            }
+        }
+        protected void UnsetFemaleBipedModel()
+        {
+            _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleBipedModel] = false;
+            FemaleBipedModel = default(Model);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IClothingAbstract.FemaleBipedModel_Property => this.FemaleBipedModel_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> IClothingAbstractGetter.FemaleBipedModel_Property => this.FemaleBipedModel_Property;
         #endregion
         #region FemaleWorldModel
+        protected Model _FemaleWorldModel;
+        protected PropertyForwarder<ClothingAbstract, Model> _FemaleWorldModelForwarder;
+        public INotifyingSetItem<Model> FemaleWorldModel_Property => _FemaleWorldModelForwarder ?? (_FemaleWorldModelForwarder = new PropertyForwarder<ClothingAbstract, Model>(this, (int)ClothingAbstract_FieldIndex.FemaleWorldModel));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<Model> _FemaleWorldModel = new NotifyingSetItem<Model>();
-        public INotifyingSetItem<Model> FemaleWorldModel_Property => this._FemaleWorldModel;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IClothingAbstractGetter.FemaleWorldModel => this.FemaleWorldModel;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Model FemaleWorldModel { get => _FemaleWorldModel.Item; set => _FemaleWorldModel.Item = value; }
+        public Model FemaleWorldModel
+        {
+            get => this._FemaleWorldModel;
+            set => this.SetFemaleWorldModel(value);
+        }
+        protected void SetFemaleWorldModel(
+            Model item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleWorldModel];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(FemaleWorldModel, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleWorldModel] = hasBeenSet;
+            }
+            if (_Model_subscriptions != null)
+            {
+                var tmp = FemaleWorldModel;
+                _FemaleWorldModel = item;
+                _Model_subscriptions.FireSubscriptions(
+                    index: (int)ClothingAbstract_FieldIndex.FemaleWorldModel,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _FemaleWorldModel = item;
+            }
+        }
+        protected void UnsetFemaleWorldModel()
+        {
+            _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleWorldModel] = false;
+            FemaleWorldModel = default(Model);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IClothingAbstract.FemaleWorldModel_Property => this.FemaleWorldModel_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> IClothingAbstractGetter.FemaleWorldModel_Property => this.FemaleWorldModel_Property;
         #endregion
         #region FemaleIcon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _FemaleIcon = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> FemaleIcon_Property => _FemaleIcon;
+        protected String _FemaleIcon;
+        protected PropertyForwarder<ClothingAbstract, String> _FemaleIconForwarder;
+        public INotifyingSetItem<String> FemaleIcon_Property => _FemaleIconForwarder ?? (_FemaleIconForwarder = new PropertyForwarder<ClothingAbstract, String>(this, (int)ClothingAbstract_FieldIndex.FemaleIcon));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String FemaleIcon
         {
-            get => this._FemaleIcon.Item;
-            set => this._FemaleIcon.Set(value);
+            get => this._FemaleIcon;
+            set => this.SetFemaleIcon(value);
+        }
+        protected void SetFemaleIcon(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleIcon];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FemaleIcon == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleIcon] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = FemaleIcon;
+                _FemaleIcon = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)ClothingAbstract_FieldIndex.FemaleIcon,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _FemaleIcon = item;
+            }
+        }
+        protected void UnsetFemaleIcon()
+        {
+            _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleIcon] = false;
+            FemaleIcon = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IClothingAbstract.FemaleIcon_Property => this.FemaleIcon_Property;
@@ -523,60 +833,132 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "EnchantmentPoints":
-                    item._EnchantmentPoints.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
+                    var EnchantmentPointstryGet = UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.EnchantmentPoints,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (EnchantmentPointstryGet.Succeeded)
+                    {
+                        item.SetEnchantmentPoints(item: EnchantmentPointstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetEnchantmentPoints();
+                    }
                     break;
                 case "BipedFlags":
-                    item._BipedFlags.SetIfSucceededOrDefault(EnumXmlTranslation<BipedFlag>.Instance.Parse(
+                    var BipedFlagstryGet = EnumXmlTranslation<BipedFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (BipedFlagstryGet.Succeeded)
+                    {
+                        item.SetBipedFlags(item: BipedFlagstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetBipedFlags();
+                    }
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<EquipmentFlag>.Instance.Parse(
+                    var FlagstryGet = EnumXmlTranslation<EquipmentFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (FlagstryGet.Succeeded)
+                    {
+                        item.SetFlags(item: FlagstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFlags();
+                    }
                     break;
                 case "MaleBipedModel":
-                    item._MaleBipedModel.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    var MaleBipedModeltryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.MaleBipedModel,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MaleBipedModeltryGet.Succeeded)
+                    {
+                        item.SetMaleBipedModel(item: MaleBipedModeltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMaleBipedModel();
+                    }
                     break;
                 case "MaleWorldModel":
-                    item._MaleWorldModel.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    var MaleWorldModeltryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.MaleWorldModel,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MaleWorldModeltryGet.Succeeded)
+                    {
+                        item.SetMaleWorldModel(item: MaleWorldModeltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMaleWorldModel();
+                    }
                     break;
                 case "MaleIcon":
-                    item._MaleIcon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var MaleIcontryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.MaleIcon,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MaleIcontryGet.Succeeded)
+                    {
+                        item.SetMaleIcon(item: MaleIcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMaleIcon();
+                    }
                     break;
                 case "FemaleBipedModel":
-                    item._FemaleBipedModel.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    var FemaleBipedModeltryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleBipedModel,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FemaleBipedModeltryGet.Succeeded)
+                    {
+                        item.SetFemaleBipedModel(item: FemaleBipedModeltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFemaleBipedModel();
+                    }
                     break;
                 case "FemaleWorldModel":
-                    item._FemaleWorldModel.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    var FemaleWorldModeltryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleWorldModel,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FemaleWorldModeltryGet.Succeeded)
+                    {
+                        item.SetFemaleWorldModel(item: FemaleWorldModeltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFemaleWorldModel();
+                    }
                     break;
                 case "FemaleIcon":
-                    item._FemaleIcon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var FemaleIcontryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleIcon,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FemaleIcontryGet.Succeeded)
+                    {
+                        item.SetFemaleIcon(item: FemaleIcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFemaleIcon();
+                    }
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -585,6 +967,718 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter UInt16
+        protected ObjectCentralizationSubscriptions<UInt16> _UInt16_subscriptions;
+        UInt16 IPropertySupporter<UInt16>.Get(int index)
+        {
+            return GetUInt16(index: index);
+        }
+
+        protected UInt16 GetUInt16(int index)
+        {
+            switch ((ClothingAbstract_FieldIndex)index)
+            {
+                case ClothingAbstract_FieldIndex.EnchantmentPoints:
+                    return EnchantmentPoints;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        void IPropertySupporter<UInt16>.Set(
+            int index,
+            UInt16 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetUInt16(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetUInt16(
+            int index,
+            UInt16 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((ClothingAbstract_FieldIndex)index)
+            {
+                case ClothingAbstract_FieldIndex.EnchantmentPoints:
+                    SetEnchantmentPoints(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        bool IPropertySupporter<UInt16>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<UInt16>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<UInt16>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetUInt16(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetUInt16(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((ClothingAbstract_FieldIndex)index)
+            {
+                case ClothingAbstract_FieldIndex.EnchantmentPoints:
+                    _hasBeenSetTracker[index] = false;
+                    EnchantmentPoints = default(UInt16);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt16>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<UInt16> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_UInt16_subscriptions == null)
+            {
+                _UInt16_subscriptions = new ObjectCentralizationSubscriptions<UInt16>();
+            }
+            _UInt16_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt16>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _UInt16_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<UInt16>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        UInt16 IPropertySupporter<UInt16>.DefaultValue(int index)
+        {
+            return DefaultValueUInt16(index: index);
+        }
+
+        protected UInt16 DefaultValueUInt16(int index)
+        {
+            switch ((ClothingAbstract_FieldIndex)index)
+            {
+                case ClothingAbstract_FieldIndex.EnchantmentPoints:
+                    return default(UInt16);
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter BipedFlag
+        protected ObjectCentralizationSubscriptions<BipedFlag> _BipedFlag_subscriptions;
+        BipedFlag IPropertySupporter<BipedFlag>.Get(int index)
+        {
+            return GetBipedFlag(index: index);
+        }
+
+        protected BipedFlag GetBipedFlag(int index)
+        {
+            switch ((ClothingAbstract_FieldIndex)index)
+            {
+                case ClothingAbstract_FieldIndex.BipedFlags:
+                    return BipedFlags;
+                default:
+                    throw new ArgumentException($"Unknown index for field type BipedFlag: {index}");
+            }
+        }
+
+        void IPropertySupporter<BipedFlag>.Set(
+            int index,
+            BipedFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetBipedFlag(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetBipedFlag(
+            int index,
+            BipedFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((ClothingAbstract_FieldIndex)index)
+            {
+                case ClothingAbstract_FieldIndex.BipedFlags:
+                    SetBipedFlags(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type BipedFlag: {index}");
+            }
+        }
+
+        bool IPropertySupporter<BipedFlag>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<BipedFlag>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<BipedFlag>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetBipedFlag(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetBipedFlag(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((ClothingAbstract_FieldIndex)index)
+            {
+                case ClothingAbstract_FieldIndex.BipedFlags:
+                    _hasBeenSetTracker[index] = false;
+                    BipedFlags = default(BipedFlag);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type BipedFlag: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<BipedFlag>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<BipedFlag> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_BipedFlag_subscriptions == null)
+            {
+                _BipedFlag_subscriptions = new ObjectCentralizationSubscriptions<BipedFlag>();
+            }
+            _BipedFlag_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<BipedFlag>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _BipedFlag_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<BipedFlag>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        BipedFlag IPropertySupporter<BipedFlag>.DefaultValue(int index)
+        {
+            return DefaultValueBipedFlag(index: index);
+        }
+
+        protected BipedFlag DefaultValueBipedFlag(int index)
+        {
+            switch ((ClothingAbstract_FieldIndex)index)
+            {
+                case ClothingAbstract_FieldIndex.BipedFlags:
+                    return default(BipedFlag);
+                default:
+                    throw new ArgumentException($"Unknown index for field type BipedFlag: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter EquipmentFlag
+        protected ObjectCentralizationSubscriptions<EquipmentFlag> _EquipmentFlag_subscriptions;
+        EquipmentFlag IPropertySupporter<EquipmentFlag>.Get(int index)
+        {
+            return GetEquipmentFlag(index: index);
+        }
+
+        protected EquipmentFlag GetEquipmentFlag(int index)
+        {
+            switch ((ClothingAbstract_FieldIndex)index)
+            {
+                case ClothingAbstract_FieldIndex.Flags:
+                    return Flags;
+                default:
+                    throw new ArgumentException($"Unknown index for field type EquipmentFlag: {index}");
+            }
+        }
+
+        void IPropertySupporter<EquipmentFlag>.Set(
+            int index,
+            EquipmentFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetEquipmentFlag(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetEquipmentFlag(
+            int index,
+            EquipmentFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((ClothingAbstract_FieldIndex)index)
+            {
+                case ClothingAbstract_FieldIndex.Flags:
+                    SetFlags(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type EquipmentFlag: {index}");
+            }
+        }
+
+        bool IPropertySupporter<EquipmentFlag>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<EquipmentFlag>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<EquipmentFlag>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetEquipmentFlag(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetEquipmentFlag(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((ClothingAbstract_FieldIndex)index)
+            {
+                case ClothingAbstract_FieldIndex.Flags:
+                    _hasBeenSetTracker[index] = false;
+                    Flags = default(EquipmentFlag);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type EquipmentFlag: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<EquipmentFlag>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<EquipmentFlag> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_EquipmentFlag_subscriptions == null)
+            {
+                _EquipmentFlag_subscriptions = new ObjectCentralizationSubscriptions<EquipmentFlag>();
+            }
+            _EquipmentFlag_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<EquipmentFlag>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _EquipmentFlag_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<EquipmentFlag>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        EquipmentFlag IPropertySupporter<EquipmentFlag>.DefaultValue(int index)
+        {
+            return DefaultValueEquipmentFlag(index: index);
+        }
+
+        protected EquipmentFlag DefaultValueEquipmentFlag(int index)
+        {
+            switch ((ClothingAbstract_FieldIndex)index)
+            {
+                case ClothingAbstract_FieldIndex.Flags:
+                    return default(EquipmentFlag);
+                default:
+                    throw new ArgumentException($"Unknown index for field type EquipmentFlag: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Model
+        protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
+        Model IPropertySupporter<Model>.Get(int index)
+        {
+            return GetModel(index: index);
+        }
+
+        protected Model GetModel(int index)
+        {
+            switch ((ClothingAbstract_FieldIndex)index)
+            {
+                case ClothingAbstract_FieldIndex.MaleBipedModel:
+                    return MaleBipedModel;
+                case ClothingAbstract_FieldIndex.MaleWorldModel:
+                    return MaleWorldModel;
+                case ClothingAbstract_FieldIndex.FemaleBipedModel:
+                    return FemaleBipedModel;
+                case ClothingAbstract_FieldIndex.FemaleWorldModel:
+                    return FemaleWorldModel;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        void IPropertySupporter<Model>.Set(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetModel(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetModel(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((ClothingAbstract_FieldIndex)index)
+            {
+                case ClothingAbstract_FieldIndex.MaleBipedModel:
+                    SetMaleBipedModel(item, hasBeenSet, cmds);
+                    break;
+                case ClothingAbstract_FieldIndex.MaleWorldModel:
+                    SetMaleWorldModel(item, hasBeenSet, cmds);
+                    break;
+                case ClothingAbstract_FieldIndex.FemaleBipedModel:
+                    SetFemaleBipedModel(item, hasBeenSet, cmds);
+                    break;
+                case ClothingAbstract_FieldIndex.FemaleWorldModel:
+                    SetFemaleWorldModel(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Model>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Model>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Model>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetModel(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetModel(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((ClothingAbstract_FieldIndex)index)
+            {
+                case ClothingAbstract_FieldIndex.MaleBipedModel:
+                    _hasBeenSetTracker[index] = false;
+                    MaleBipedModel = default(Model);
+                    break;
+                case ClothingAbstract_FieldIndex.MaleWorldModel:
+                    _hasBeenSetTracker[index] = false;
+                    MaleWorldModel = default(Model);
+                    break;
+                case ClothingAbstract_FieldIndex.FemaleBipedModel:
+                    _hasBeenSetTracker[index] = false;
+                    FemaleBipedModel = default(Model);
+                    break;
+                case ClothingAbstract_FieldIndex.FemaleWorldModel:
+                    _hasBeenSetTracker[index] = false;
+                    FemaleWorldModel = default(Model);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Model> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Model_subscriptions == null)
+            {
+                _Model_subscriptions = new ObjectCentralizationSubscriptions<Model>();
+            }
+            _Model_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Model_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Model>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Model IPropertySupporter<Model>.DefaultValue(int index)
+        {
+            return DefaultValueModel(index: index);
+        }
+
+        protected Model DefaultValueModel(int index)
+        {
+            switch ((ClothingAbstract_FieldIndex)index)
+            {
+                case ClothingAbstract_FieldIndex.MaleBipedModel:
+                case ClothingAbstract_FieldIndex.MaleWorldModel:
+                case ClothingAbstract_FieldIndex.FemaleBipedModel:
+                case ClothingAbstract_FieldIndex.FemaleWorldModel:
+                    return default(Model);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter String
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected override String GetString(int index)
+        {
+            switch ((ClothingAbstract_FieldIndex)index)
+            {
+                case ClothingAbstract_FieldIndex.MaleIcon:
+                    return MaleIcon;
+                case ClothingAbstract_FieldIndex.FemaleIcon:
+                    return FemaleIcon;
+                default:
+                    return base.GetString(index: index);
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((ClothingAbstract_FieldIndex)index)
+            {
+                case ClothingAbstract_FieldIndex.MaleIcon:
+                    SetMaleIcon(item, hasBeenSet, cmds);
+                    break;
+                case ClothingAbstract_FieldIndex.FemaleIcon:
+                    SetFemaleIcon(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetString(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((ClothingAbstract_FieldIndex)index)
+            {
+                case ClothingAbstract_FieldIndex.MaleIcon:
+                    _hasBeenSetTracker[index] = false;
+                    MaleIcon = default(String);
+                    break;
+                case ClothingAbstract_FieldIndex.FemaleIcon:
+                    _hasBeenSetTracker[index] = false;
+                    FemaleIcon = default(String);
+                    break;
+                default:
+                    base.UnsetString(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected override String DefaultValueString(int index)
+        {
+            switch ((ClothingAbstract_FieldIndex)index)
+            {
+                case ClothingAbstract_FieldIndex.MaleIcon:
+                case ClothingAbstract_FieldIndex.FemaleIcon:
+                    return default(String);
+                default:
+                    return base.DefaultValueString(index: index);
             }
         }
 
@@ -688,67 +1782,147 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.Enchantment);
                 case "ANAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._EnchantmentPoints.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                    var EnchantmentPointstryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)ClothingAbstract_FieldIndex.EnchantmentPoints,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (EnchantmentPointstryGet.Succeeded)
+                    {
+                        item.SetEnchantmentPoints(item: EnchantmentPointstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetEnchantmentPoints();
+                    }
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.EnchantmentPoints);
                 case "BMDT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._BipedFlags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedFlag>.Instance.Parse(
+                        var BipedFlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(2),
                             fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
-                            errorMask: errorMask));
-                        item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<EquipmentFlag>.Instance.Parse(
+                            errorMask: errorMask);
+                        if (BipedFlagstryGet.Succeeded)
+                        {
+                            item.SetBipedFlags(item: BipedFlagstryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetBipedFlags();
+                        }
+                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<EquipmentFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(2),
                             fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (FlagstryGet.Succeeded)
+                        {
+                            item.SetFlags(item: FlagstryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetFlags();
+                        }
                     }
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.Flags);
                 case "MODL":
-                    item._MaleBipedModel.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.MaleBipedModel,
-                        errorMask: errorMask));
+                    {
+                        var MaleBipedModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                            frame: frame.Spawn(snapToFinalPosition: false),
+                            fieldIndex: (int)ClothingAbstract_FieldIndex.MaleBipedModel,
+                            errorMask: errorMask);
+                        if (MaleBipedModeltryGet.Succeeded)
+                        {
+                            item.SetMaleBipedModel(item: MaleBipedModeltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetMaleBipedModel();
+                        }
+                    }
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.MaleBipedModel);
                 case "MOD2":
-                    item._MaleWorldModel.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.MaleWorldModel,
-                        errorMask: errorMask,
-                        recordTypeConverter: ClothingAbstract_Registration.MaleWorldModelConverter));
+                    {
+                        var MaleWorldModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                            frame: frame.Spawn(snapToFinalPosition: false),
+                            fieldIndex: (int)ClothingAbstract_FieldIndex.MaleWorldModel,
+                            errorMask: errorMask,
+                            recordTypeConverter: ClothingAbstract_Registration.MaleWorldModelConverter);
+                        if (MaleWorldModeltryGet.Succeeded)
+                        {
+                            item.SetMaleWorldModel(item: MaleWorldModeltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetMaleWorldModel();
+                        }
+                    }
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.MaleWorldModel);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._MaleIcon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var MaleIcontryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)ClothingAbstract_FieldIndex.MaleIcon,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MaleIcontryGet.Succeeded)
+                    {
+                        item.SetMaleIcon(item: MaleIcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMaleIcon();
+                    }
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.MaleIcon);
                 case "MOD3":
-                    item._FemaleBipedModel.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleBipedModel,
-                        errorMask: errorMask,
-                        recordTypeConverter: ClothingAbstract_Registration.FemaleBipedModelConverter));
+                    {
+                        var FemaleBipedModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                            frame: frame.Spawn(snapToFinalPosition: false),
+                            fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleBipedModel,
+                            errorMask: errorMask,
+                            recordTypeConverter: ClothingAbstract_Registration.FemaleBipedModelConverter);
+                        if (FemaleBipedModeltryGet.Succeeded)
+                        {
+                            item.SetFemaleBipedModel(item: FemaleBipedModeltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetFemaleBipedModel();
+                        }
+                    }
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.FemaleBipedModel);
                 case "MOD4":
-                    item._FemaleWorldModel.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleWorldModel,
-                        errorMask: errorMask,
-                        recordTypeConverter: ClothingAbstract_Registration.FemaleWorldModelConverter));
+                    {
+                        var FemaleWorldModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                            frame: frame.Spawn(snapToFinalPosition: false),
+                            fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleWorldModel,
+                            errorMask: errorMask,
+                            recordTypeConverter: ClothingAbstract_Registration.FemaleWorldModelConverter);
+                        if (FemaleWorldModeltryGet.Succeeded)
+                        {
+                            item.SetFemaleWorldModel(item: FemaleWorldModeltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetFemaleWorldModel();
+                        }
+                    }
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.FemaleWorldModel);
                 case "ICO2":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._FemaleIcon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var FemaleIcontryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleIcon,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FemaleIcontryGet.Succeeded)
+                    {
+                        item.SetFemaleIcon(item: FemaleIcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFemaleIcon();
+                    }
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.FemaleIcon);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
@@ -856,49 +2030,49 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case ClothingAbstract_FieldIndex.EnchantmentPoints:
-                    this._EnchantmentPoints.Set(
+                    this.SetEnchantmentPoints(
                         (UInt16)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case ClothingAbstract_FieldIndex.BipedFlags:
-                    this._BipedFlags.Set(
+                    this.SetBipedFlags(
                         (BipedFlag)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case ClothingAbstract_FieldIndex.Flags:
-                    this._Flags.Set(
+                    this.SetFlags(
                         (EquipmentFlag)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case ClothingAbstract_FieldIndex.MaleBipedModel:
-                    this._MaleBipedModel.Set(
+                    this.SetMaleBipedModel(
                         (Model)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case ClothingAbstract_FieldIndex.MaleWorldModel:
-                    this._MaleWorldModel.Set(
+                    this.SetMaleWorldModel(
                         (Model)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case ClothingAbstract_FieldIndex.MaleIcon:
-                    this._MaleIcon.Set(
+                    this.SetMaleIcon(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case ClothingAbstract_FieldIndex.FemaleBipedModel:
-                    this._FemaleBipedModel.Set(
+                    this.SetFemaleBipedModel(
                         (Model)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case ClothingAbstract_FieldIndex.FemaleWorldModel:
-                    this._FemaleWorldModel.Set(
+                    this.SetFemaleWorldModel(
                         (Model)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case ClothingAbstract_FieldIndex.FemaleIcon:
-                    this._FemaleIcon.Set(
+                    this.SetFemaleIcon(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -932,49 +2106,49 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case ClothingAbstract_FieldIndex.EnchantmentPoints:
-                    obj._EnchantmentPoints.Set(
+                    obj.SetEnchantmentPoints(
                         (UInt16)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case ClothingAbstract_FieldIndex.BipedFlags:
-                    obj._BipedFlags.Set(
+                    obj.SetBipedFlags(
                         (BipedFlag)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case ClothingAbstract_FieldIndex.Flags:
-                    obj._Flags.Set(
+                    obj.SetFlags(
                         (EquipmentFlag)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case ClothingAbstract_FieldIndex.MaleBipedModel:
-                    obj._MaleBipedModel.Set(
+                    obj.SetMaleBipedModel(
                         (Model)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case ClothingAbstract_FieldIndex.MaleWorldModel:
-                    obj._MaleWorldModel.Set(
+                    obj.SetMaleWorldModel(
                         (Model)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case ClothingAbstract_FieldIndex.MaleIcon:
-                    obj._MaleIcon.Set(
+                    obj.SetMaleIcon(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case ClothingAbstract_FieldIndex.FemaleBipedModel:
-                    obj._FemaleBipedModel.Set(
+                    obj.SetFemaleBipedModel(
                         (Model)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case ClothingAbstract_FieldIndex.FemaleWorldModel:
-                    obj._FemaleWorldModel.Set(
+                    obj.SetFemaleWorldModel(
                         (Model)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case ClothingAbstract_FieldIndex.FemaleIcon:
-                    obj._FemaleIcon.Set(
+                    obj.SetFemaleIcon(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1125,7 +2299,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "45098216-a539-4788-84f5-ece76ab7abf2";
 
-        public const ushort FieldCount = 11;
+        public const ushort AdditionalFieldCount = 11;
+
+        public const ushort FieldCount = 17;
 
         public static readonly Type MaskType = typeof(ClothingAbstract_Mask<>);
 
@@ -1426,7 +2602,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1508,8 +2685,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.EnchantmentPoints_Property.SetToWithDefault(
                         rhs: rhs.EnchantmentPoints_Property,
-                        def: def?.EnchantmentPoints_Property,
-                        cmds: cmds);
+                        def: def?.EnchantmentPoints_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1649,8 +2825,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.MaleIcon_Property.SetToWithDefault(
                         rhs: rhs.MaleIcon_Property,
-                        def: def?.MaleIcon_Property,
-                        cmds: cmds);
+                        def: def?.MaleIcon_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1762,8 +2937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.FemaleIcon_Property.SetToWithDefault(
                         rhs: rhs.FemaleIcon_Property,
-                        def: def?.FemaleIcon_Property,
-                        cmds: cmds);
+                        def: def?.FemaleIcon_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

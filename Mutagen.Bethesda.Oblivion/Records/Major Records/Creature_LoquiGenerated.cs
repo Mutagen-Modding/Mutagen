@@ -33,6 +33,19 @@ namespace Mutagen.Bethesda.Oblivion
         ICreature,
         ILoquiObject<Creature>,
         ILoquiObjectSetter,
+        IPropertySupporter<Model>,
+        IPropertySupporter<Byte[]>,
+        IPropertySupporter<Creature.CreatureFlag>,
+        IPropertySupporter<UInt16>,
+        IPropertySupporter<Int16>,
+        IPropertySupporter<Byte>,
+        IPropertySupporter<NPC.BuySellServiceFlag>,
+        IPropertySupporter<Skill>,
+        IPropertySupporter<Creature.CreatureTypeEnum>,
+        IPropertySupporter<SoulLevel>,
+        IPropertySupporter<UInt32>,
+        IPropertySupporter<Single>,
+        IPropertySupporter<String>,
         IEquatable<Creature>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -48,13 +61,48 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
+        protected Model _Model;
+        protected PropertyForwarder<Creature, Model> _ModelForwarder;
+        public INotifyingSetItem<Model> Model_Property => _ModelForwarder ?? (_ModelForwarder = new PropertyForwarder<Creature, Model>(this, (int)Creature_FieldIndex.Model));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
-        public INotifyingSetItem<Model> Model_Property => this._Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model ICreatureGetter.Model => this.Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        public Model Model
+        {
+            get => this._Model;
+            set => this.SetModel(value);
+        }
+        protected void SetModel(
+            Model item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.Model];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Model, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.Model] = hasBeenSet;
+            }
+            if (_Model_subscriptions != null)
+            {
+                var tmp = Model;
+                _Model = item;
+                _Model_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.Model,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Model = item;
+            }
+        }
+        protected void UnsetModel()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.Model] = false;
+            Model = default(Model);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> ICreature.Model_Property => this.Model_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -115,13 +163,47 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region NIFT
-        protected INotifyingSetItem<Byte[]> _NIFT = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
-        public INotifyingSetItem<Byte[]> NIFT_Property => _NIFT;
+        protected Byte[] _NIFT;
+        protected PropertyForwarder<Creature, Byte[]> _NIFTForwarder;
+        public INotifyingSetItem<Byte[]> NIFT_Property => _NIFTForwarder ?? (_NIFTForwarder = new PropertyForwarder<Creature, Byte[]>(this, (int)Creature_FieldIndex.NIFT));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] NIFT
         {
-            get => this._NIFT.Item;
-            set => this._NIFT.Set(value);
+            get => this._NIFT;
+            set => this.SetNIFT(value);
+        }
+        protected void SetNIFT(
+            Byte[] item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.NIFT];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(NIFT, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.NIFT] = hasBeenSet;
+            }
+            if (_ByteArr_subscriptions != null)
+            {
+                var tmp = NIFT;
+                _NIFT = item;
+                _ByteArr_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.NIFT,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _NIFT = item;
+            }
+        }
+        protected void UnsetNIFT()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.NIFT] = false;
+            NIFT = default(Byte[]);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> ICreature.NIFT_Property => this.NIFT_Property;
@@ -129,14 +211,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Byte[]> ICreatureGetter.NIFT_Property => this.NIFT_Property;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Creature.CreatureFlag> _Flags = NotifyingItem.Factory<Creature.CreatureFlag>();
-        public INotifyingItem<Creature.CreatureFlag> Flags_Property => _Flags;
+        protected Creature.CreatureFlag _Flags;
+        protected PropertyForwarder<Creature, Creature.CreatureFlag> _FlagsForwarder;
+        public INotifyingSetItem<Creature.CreatureFlag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<Creature, Creature.CreatureFlag>(this, (int)Creature_FieldIndex.Flags));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Creature.CreatureFlag Flags
         {
-            get => this._Flags.Item;
-            set => this._Flags.Set(value);
+            get => this._Flags;
+            set => this.SetFlags(value);
+        }
+        protected void SetFlags(
+            Creature.CreatureFlag item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.Flags];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.Flags] = hasBeenSet;
+            }
+            if (_CreatureCreatureFlag_subscriptions != null)
+            {
+                var tmp = Flags;
+                _Flags = item;
+                _CreatureCreatureFlag_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.Flags,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Flags = item;
+            }
+        }
+        protected void UnsetFlags()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.Flags] = false;
+            Flags = default(Creature.CreatureFlag);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Creature.CreatureFlag> ICreature.Flags_Property => this.Flags_Property;
@@ -144,14 +259,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Creature.CreatureFlag> ICreatureGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region BaseSpellPoints
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt16> _BaseSpellPoints = NotifyingItem.Factory<UInt16>();
-        public INotifyingItem<UInt16> BaseSpellPoints_Property => _BaseSpellPoints;
+        protected UInt16 _BaseSpellPoints;
+        protected PropertyForwarder<Creature, UInt16> _BaseSpellPointsForwarder;
+        public INotifyingSetItem<UInt16> BaseSpellPoints_Property => _BaseSpellPointsForwarder ?? (_BaseSpellPointsForwarder = new PropertyForwarder<Creature, UInt16>(this, (int)Creature_FieldIndex.BaseSpellPoints));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 BaseSpellPoints
         {
-            get => this._BaseSpellPoints.Item;
-            set => this._BaseSpellPoints.Set(value);
+            get => this._BaseSpellPoints;
+            set => this.SetBaseSpellPoints(value);
+        }
+        protected void SetBaseSpellPoints(
+            UInt16 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.BaseSpellPoints];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && BaseSpellPoints == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.BaseSpellPoints] = hasBeenSet;
+            }
+            if (_UInt16_subscriptions != null)
+            {
+                var tmp = BaseSpellPoints;
+                _BaseSpellPoints = item;
+                _UInt16_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.BaseSpellPoints,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _BaseSpellPoints = item;
+            }
+        }
+        protected void UnsetBaseSpellPoints()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.BaseSpellPoints] = false;
+            BaseSpellPoints = default(UInt16);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> ICreature.BaseSpellPoints_Property => this.BaseSpellPoints_Property;
@@ -159,14 +307,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt16> ICreatureGetter.BaseSpellPoints_Property => this.BaseSpellPoints_Property;
         #endregion
         #region Fatigue
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt16> _Fatigue = NotifyingItem.Factory<UInt16>();
-        public INotifyingItem<UInt16> Fatigue_Property => _Fatigue;
+        protected UInt16 _Fatigue;
+        protected PropertyForwarder<Creature, UInt16> _FatigueForwarder;
+        public INotifyingSetItem<UInt16> Fatigue_Property => _FatigueForwarder ?? (_FatigueForwarder = new PropertyForwarder<Creature, UInt16>(this, (int)Creature_FieldIndex.Fatigue));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 Fatigue
         {
-            get => this._Fatigue.Item;
-            set => this._Fatigue.Set(value);
+            get => this._Fatigue;
+            set => this.SetFatigue(value);
+        }
+        protected void SetFatigue(
+            UInt16 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.Fatigue];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Fatigue == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.Fatigue] = hasBeenSet;
+            }
+            if (_UInt16_subscriptions != null)
+            {
+                var tmp = Fatigue;
+                _Fatigue = item;
+                _UInt16_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.Fatigue,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Fatigue = item;
+            }
+        }
+        protected void UnsetFatigue()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.Fatigue] = false;
+            Fatigue = default(UInt16);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> ICreature.Fatigue_Property => this.Fatigue_Property;
@@ -174,14 +355,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt16> ICreatureGetter.Fatigue_Property => this.Fatigue_Property;
         #endregion
         #region BarterGold
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt16> _BarterGold = NotifyingItem.Factory<UInt16>();
-        public INotifyingItem<UInt16> BarterGold_Property => _BarterGold;
+        protected UInt16 _BarterGold;
+        protected PropertyForwarder<Creature, UInt16> _BarterGoldForwarder;
+        public INotifyingSetItem<UInt16> BarterGold_Property => _BarterGoldForwarder ?? (_BarterGoldForwarder = new PropertyForwarder<Creature, UInt16>(this, (int)Creature_FieldIndex.BarterGold));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 BarterGold
         {
-            get => this._BarterGold.Item;
-            set => this._BarterGold.Set(value);
+            get => this._BarterGold;
+            set => this.SetBarterGold(value);
+        }
+        protected void SetBarterGold(
+            UInt16 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.BarterGold];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && BarterGold == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.BarterGold] = hasBeenSet;
+            }
+            if (_UInt16_subscriptions != null)
+            {
+                var tmp = BarterGold;
+                _BarterGold = item;
+                _UInt16_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.BarterGold,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _BarterGold = item;
+            }
+        }
+        protected void UnsetBarterGold()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.BarterGold] = false;
+            BarterGold = default(UInt16);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> ICreature.BarterGold_Property => this.BarterGold_Property;
@@ -189,14 +403,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt16> ICreatureGetter.BarterGold_Property => this.BarterGold_Property;
         #endregion
         #region LevelOffset
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Int16> _LevelOffset = NotifyingItem.Factory<Int16>();
-        public INotifyingItem<Int16> LevelOffset_Property => _LevelOffset;
+        protected Int16 _LevelOffset;
+        protected PropertyForwarder<Creature, Int16> _LevelOffsetForwarder;
+        public INotifyingSetItem<Int16> LevelOffset_Property => _LevelOffsetForwarder ?? (_LevelOffsetForwarder = new PropertyForwarder<Creature, Int16>(this, (int)Creature_FieldIndex.LevelOffset));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int16 LevelOffset
         {
-            get => this._LevelOffset.Item;
-            set => this._LevelOffset.Set(value);
+            get => this._LevelOffset;
+            set => this.SetLevelOffset(value);
+        }
+        protected void SetLevelOffset(
+            Int16 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.LevelOffset];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && LevelOffset == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.LevelOffset] = hasBeenSet;
+            }
+            if (_Int16_subscriptions != null)
+            {
+                var tmp = LevelOffset;
+                _LevelOffset = item;
+                _Int16_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.LevelOffset,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _LevelOffset = item;
+            }
+        }
+        protected void UnsetLevelOffset()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.LevelOffset] = false;
+            LevelOffset = default(Int16);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Int16> ICreature.LevelOffset_Property => this.LevelOffset_Property;
@@ -204,14 +451,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Int16> ICreatureGetter.LevelOffset_Property => this.LevelOffset_Property;
         #endregion
         #region CalcMin
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt16> _CalcMin = NotifyingItem.Factory<UInt16>();
-        public INotifyingItem<UInt16> CalcMin_Property => _CalcMin;
+        protected UInt16 _CalcMin;
+        protected PropertyForwarder<Creature, UInt16> _CalcMinForwarder;
+        public INotifyingSetItem<UInt16> CalcMin_Property => _CalcMinForwarder ?? (_CalcMinForwarder = new PropertyForwarder<Creature, UInt16>(this, (int)Creature_FieldIndex.CalcMin));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 CalcMin
         {
-            get => this._CalcMin.Item;
-            set => this._CalcMin.Set(value);
+            get => this._CalcMin;
+            set => this.SetCalcMin(value);
+        }
+        protected void SetCalcMin(
+            UInt16 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.CalcMin];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && CalcMin == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.CalcMin] = hasBeenSet;
+            }
+            if (_UInt16_subscriptions != null)
+            {
+                var tmp = CalcMin;
+                _CalcMin = item;
+                _UInt16_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.CalcMin,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _CalcMin = item;
+            }
+        }
+        protected void UnsetCalcMin()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.CalcMin] = false;
+            CalcMin = default(UInt16);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> ICreature.CalcMin_Property => this.CalcMin_Property;
@@ -219,14 +499,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt16> ICreatureGetter.CalcMin_Property => this.CalcMin_Property;
         #endregion
         #region CalcMax
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt16> _CalcMax = NotifyingItem.Factory<UInt16>();
-        public INotifyingItem<UInt16> CalcMax_Property => _CalcMax;
+        protected UInt16 _CalcMax;
+        protected PropertyForwarder<Creature, UInt16> _CalcMaxForwarder;
+        public INotifyingSetItem<UInt16> CalcMax_Property => _CalcMaxForwarder ?? (_CalcMaxForwarder = new PropertyForwarder<Creature, UInt16>(this, (int)Creature_FieldIndex.CalcMax));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 CalcMax
         {
-            get => this._CalcMax.Item;
-            set => this._CalcMax.Set(value);
+            get => this._CalcMax;
+            set => this.SetCalcMax(value);
+        }
+        protected void SetCalcMax(
+            UInt16 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.CalcMax];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && CalcMax == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.CalcMax] = hasBeenSet;
+            }
+            if (_UInt16_subscriptions != null)
+            {
+                var tmp = CalcMax;
+                _CalcMax = item;
+                _UInt16_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.CalcMax,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _CalcMax = item;
+            }
+        }
+        protected void UnsetCalcMax()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.CalcMax] = false;
+            CalcMax = default(UInt16);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> ICreature.CalcMax_Property => this.CalcMax_Property;
@@ -266,14 +579,47 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Script> ICreatureGetter.Script_Property => this.Script_Property;
         #endregion
         #region Aggression
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Aggression = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Aggression_Property => _Aggression;
+        protected Byte _Aggression;
+        protected PropertyForwarder<Creature, Byte> _AggressionForwarder;
+        public INotifyingSetItem<Byte> Aggression_Property => _AggressionForwarder ?? (_AggressionForwarder = new PropertyForwarder<Creature, Byte>(this, (int)Creature_FieldIndex.Aggression));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Aggression
         {
-            get => this._Aggression.Item;
-            set => this._Aggression.Set(value);
+            get => this._Aggression;
+            set => this.SetAggression(value);
+        }
+        protected void SetAggression(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.Aggression];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Aggression == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.Aggression] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Aggression;
+                _Aggression = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.Aggression,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Aggression = item;
+            }
+        }
+        protected void UnsetAggression()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.Aggression] = false;
+            Aggression = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.Aggression_Property => this.Aggression_Property;
@@ -281,14 +627,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> ICreatureGetter.Aggression_Property => this.Aggression_Property;
         #endregion
         #region Confidence
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Confidence = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Confidence_Property => _Confidence;
+        protected Byte _Confidence;
+        protected PropertyForwarder<Creature, Byte> _ConfidenceForwarder;
+        public INotifyingSetItem<Byte> Confidence_Property => _ConfidenceForwarder ?? (_ConfidenceForwarder = new PropertyForwarder<Creature, Byte>(this, (int)Creature_FieldIndex.Confidence));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Confidence
         {
-            get => this._Confidence.Item;
-            set => this._Confidence.Set(value);
+            get => this._Confidence;
+            set => this.SetConfidence(value);
+        }
+        protected void SetConfidence(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.Confidence];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Confidence == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.Confidence] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Confidence;
+                _Confidence = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.Confidence,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Confidence = item;
+            }
+        }
+        protected void UnsetConfidence()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.Confidence] = false;
+            Confidence = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.Confidence_Property => this.Confidence_Property;
@@ -296,14 +675,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> ICreatureGetter.Confidence_Property => this.Confidence_Property;
         #endregion
         #region EnergyLevel
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _EnergyLevel = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> EnergyLevel_Property => _EnergyLevel;
+        protected Byte _EnergyLevel;
+        protected PropertyForwarder<Creature, Byte> _EnergyLevelForwarder;
+        public INotifyingSetItem<Byte> EnergyLevel_Property => _EnergyLevelForwarder ?? (_EnergyLevelForwarder = new PropertyForwarder<Creature, Byte>(this, (int)Creature_FieldIndex.EnergyLevel));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte EnergyLevel
         {
-            get => this._EnergyLevel.Item;
-            set => this._EnergyLevel.Set(value);
+            get => this._EnergyLevel;
+            set => this.SetEnergyLevel(value);
+        }
+        protected void SetEnergyLevel(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.EnergyLevel];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && EnergyLevel == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.EnergyLevel] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = EnergyLevel;
+                _EnergyLevel = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.EnergyLevel,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _EnergyLevel = item;
+            }
+        }
+        protected void UnsetEnergyLevel()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.EnergyLevel] = false;
+            EnergyLevel = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.EnergyLevel_Property => this.EnergyLevel_Property;
@@ -311,14 +723,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> ICreatureGetter.EnergyLevel_Property => this.EnergyLevel_Property;
         #endregion
         #region Responsibility
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Responsibility = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Responsibility_Property => _Responsibility;
+        protected Byte _Responsibility;
+        protected PropertyForwarder<Creature, Byte> _ResponsibilityForwarder;
+        public INotifyingSetItem<Byte> Responsibility_Property => _ResponsibilityForwarder ?? (_ResponsibilityForwarder = new PropertyForwarder<Creature, Byte>(this, (int)Creature_FieldIndex.Responsibility));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Responsibility
         {
-            get => this._Responsibility.Item;
-            set => this._Responsibility.Set(value);
+            get => this._Responsibility;
+            set => this.SetResponsibility(value);
+        }
+        protected void SetResponsibility(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.Responsibility];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Responsibility == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.Responsibility] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Responsibility;
+                _Responsibility = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.Responsibility,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Responsibility = item;
+            }
+        }
+        protected void UnsetResponsibility()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.Responsibility] = false;
+            Responsibility = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.Responsibility_Property => this.Responsibility_Property;
@@ -326,14 +771,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> ICreatureGetter.Responsibility_Property => this.Responsibility_Property;
         #endregion
         #region BuySellServices
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<NPC.BuySellServiceFlag> _BuySellServices = NotifyingItem.Factory<NPC.BuySellServiceFlag>();
-        public INotifyingItem<NPC.BuySellServiceFlag> BuySellServices_Property => _BuySellServices;
+        protected NPC.BuySellServiceFlag _BuySellServices;
+        protected PropertyForwarder<Creature, NPC.BuySellServiceFlag> _BuySellServicesForwarder;
+        public INotifyingSetItem<NPC.BuySellServiceFlag> BuySellServices_Property => _BuySellServicesForwarder ?? (_BuySellServicesForwarder = new PropertyForwarder<Creature, NPC.BuySellServiceFlag>(this, (int)Creature_FieldIndex.BuySellServices));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public NPC.BuySellServiceFlag BuySellServices
         {
-            get => this._BuySellServices.Item;
-            set => this._BuySellServices.Set(value);
+            get => this._BuySellServices;
+            set => this.SetBuySellServices(value);
+        }
+        protected void SetBuySellServices(
+            NPC.BuySellServiceFlag item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.BuySellServices];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && BuySellServices == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.BuySellServices] = hasBeenSet;
+            }
+            if (_NPCBuySellServiceFlag_subscriptions != null)
+            {
+                var tmp = BuySellServices;
+                _BuySellServices = item;
+                _NPCBuySellServiceFlag_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.BuySellServices,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _BuySellServices = item;
+            }
+        }
+        protected void UnsetBuySellServices()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.BuySellServices] = false;
+            BuySellServices = default(NPC.BuySellServiceFlag);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<NPC.BuySellServiceFlag> ICreature.BuySellServices_Property => this.BuySellServices_Property;
@@ -341,14 +819,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<NPC.BuySellServiceFlag> ICreatureGetter.BuySellServices_Property => this.BuySellServices_Property;
         #endregion
         #region Teaches
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Skill> _Teaches = NotifyingItem.Factory<Skill>();
-        public INotifyingItem<Skill> Teaches_Property => _Teaches;
+        protected Skill _Teaches;
+        protected PropertyForwarder<Creature, Skill> _TeachesForwarder;
+        public INotifyingSetItem<Skill> Teaches_Property => _TeachesForwarder ?? (_TeachesForwarder = new PropertyForwarder<Creature, Skill>(this, (int)Creature_FieldIndex.Teaches));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Skill Teaches
         {
-            get => this._Teaches.Item;
-            set => this._Teaches.Set(value);
+            get => this._Teaches;
+            set => this.SetTeaches(value);
+        }
+        protected void SetTeaches(
+            Skill item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.Teaches];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Teaches == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.Teaches] = hasBeenSet;
+            }
+            if (_Skill_subscriptions != null)
+            {
+                var tmp = Teaches;
+                _Teaches = item;
+                _Skill_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.Teaches,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Teaches = item;
+            }
+        }
+        protected void UnsetTeaches()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.Teaches] = false;
+            Teaches = default(Skill);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Skill> ICreature.Teaches_Property => this.Teaches_Property;
@@ -356,14 +867,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Skill> ICreatureGetter.Teaches_Property => this.Teaches_Property;
         #endregion
         #region MaximumTrainingLevel
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _MaximumTrainingLevel = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> MaximumTrainingLevel_Property => _MaximumTrainingLevel;
+        protected Byte _MaximumTrainingLevel;
+        protected PropertyForwarder<Creature, Byte> _MaximumTrainingLevelForwarder;
+        public INotifyingSetItem<Byte> MaximumTrainingLevel_Property => _MaximumTrainingLevelForwarder ?? (_MaximumTrainingLevelForwarder = new PropertyForwarder<Creature, Byte>(this, (int)Creature_FieldIndex.MaximumTrainingLevel));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte MaximumTrainingLevel
         {
-            get => this._MaximumTrainingLevel.Item;
-            set => this._MaximumTrainingLevel.Set(value);
+            get => this._MaximumTrainingLevel;
+            set => this.SetMaximumTrainingLevel(value);
+        }
+        protected void SetMaximumTrainingLevel(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.MaximumTrainingLevel];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MaximumTrainingLevel == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.MaximumTrainingLevel] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = MaximumTrainingLevel;
+                _MaximumTrainingLevel = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.MaximumTrainingLevel,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _MaximumTrainingLevel = item;
+            }
+        }
+        protected void UnsetMaximumTrainingLevel()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.MaximumTrainingLevel] = false;
+            MaximumTrainingLevel = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.MaximumTrainingLevel_Property => this.MaximumTrainingLevel_Property;
@@ -407,14 +951,47 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region CreatureType
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Creature.CreatureTypeEnum> _CreatureType = NotifyingItem.Factory<Creature.CreatureTypeEnum>();
-        public INotifyingItem<Creature.CreatureTypeEnum> CreatureType_Property => _CreatureType;
+        protected Creature.CreatureTypeEnum _CreatureType;
+        protected PropertyForwarder<Creature, Creature.CreatureTypeEnum> _CreatureTypeForwarder;
+        public INotifyingSetItem<Creature.CreatureTypeEnum> CreatureType_Property => _CreatureTypeForwarder ?? (_CreatureTypeForwarder = new PropertyForwarder<Creature, Creature.CreatureTypeEnum>(this, (int)Creature_FieldIndex.CreatureType));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Creature.CreatureTypeEnum CreatureType
         {
-            get => this._CreatureType.Item;
-            set => this._CreatureType.Set(value);
+            get => this._CreatureType;
+            set => this.SetCreatureType(value);
+        }
+        protected void SetCreatureType(
+            Creature.CreatureTypeEnum item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.CreatureType];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && CreatureType == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.CreatureType] = hasBeenSet;
+            }
+            if (_CreatureCreatureTypeEnum_subscriptions != null)
+            {
+                var tmp = CreatureType;
+                _CreatureType = item;
+                _CreatureCreatureTypeEnum_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.CreatureType,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _CreatureType = item;
+            }
+        }
+        protected void UnsetCreatureType()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.CreatureType] = false;
+            CreatureType = default(Creature.CreatureTypeEnum);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Creature.CreatureTypeEnum> ICreature.CreatureType_Property => this.CreatureType_Property;
@@ -422,14 +999,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Creature.CreatureTypeEnum> ICreatureGetter.CreatureType_Property => this.CreatureType_Property;
         #endregion
         #region CombatSKill
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _CombatSKill = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> CombatSKill_Property => _CombatSKill;
+        protected Byte _CombatSKill;
+        protected PropertyForwarder<Creature, Byte> _CombatSKillForwarder;
+        public INotifyingSetItem<Byte> CombatSKill_Property => _CombatSKillForwarder ?? (_CombatSKillForwarder = new PropertyForwarder<Creature, Byte>(this, (int)Creature_FieldIndex.CombatSKill));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte CombatSKill
         {
-            get => this._CombatSKill.Item;
-            set => this._CombatSKill.Set(value);
+            get => this._CombatSKill;
+            set => this.SetCombatSKill(value);
+        }
+        protected void SetCombatSKill(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.CombatSKill];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && CombatSKill == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.CombatSKill] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = CombatSKill;
+                _CombatSKill = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.CombatSKill,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _CombatSKill = item;
+            }
+        }
+        protected void UnsetCombatSKill()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.CombatSKill] = false;
+            CombatSKill = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.CombatSKill_Property => this.CombatSKill_Property;
@@ -437,14 +1047,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> ICreatureGetter.CombatSKill_Property => this.CombatSKill_Property;
         #endregion
         #region MagicSKill
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _MagicSKill = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> MagicSKill_Property => _MagicSKill;
+        protected Byte _MagicSKill;
+        protected PropertyForwarder<Creature, Byte> _MagicSKillForwarder;
+        public INotifyingSetItem<Byte> MagicSKill_Property => _MagicSKillForwarder ?? (_MagicSKillForwarder = new PropertyForwarder<Creature, Byte>(this, (int)Creature_FieldIndex.MagicSKill));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte MagicSKill
         {
-            get => this._MagicSKill.Item;
-            set => this._MagicSKill.Set(value);
+            get => this._MagicSKill;
+            set => this.SetMagicSKill(value);
+        }
+        protected void SetMagicSKill(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.MagicSKill];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MagicSKill == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.MagicSKill] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = MagicSKill;
+                _MagicSKill = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.MagicSKill,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _MagicSKill = item;
+            }
+        }
+        protected void UnsetMagicSKill()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.MagicSKill] = false;
+            MagicSKill = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.MagicSKill_Property => this.MagicSKill_Property;
@@ -452,14 +1095,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> ICreatureGetter.MagicSKill_Property => this.MagicSKill_Property;
         #endregion
         #region StealthSKill
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _StealthSKill = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> StealthSKill_Property => _StealthSKill;
+        protected Byte _StealthSKill;
+        protected PropertyForwarder<Creature, Byte> _StealthSKillForwarder;
+        public INotifyingSetItem<Byte> StealthSKill_Property => _StealthSKillForwarder ?? (_StealthSKillForwarder = new PropertyForwarder<Creature, Byte>(this, (int)Creature_FieldIndex.StealthSKill));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte StealthSKill
         {
-            get => this._StealthSKill.Item;
-            set => this._StealthSKill.Set(value);
+            get => this._StealthSKill;
+            set => this.SetStealthSKill(value);
+        }
+        protected void SetStealthSKill(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.StealthSKill];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && StealthSKill == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.StealthSKill] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = StealthSKill;
+                _StealthSKill = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.StealthSKill,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _StealthSKill = item;
+            }
+        }
+        protected void UnsetStealthSKill()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.StealthSKill] = false;
+            StealthSKill = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.StealthSKill_Property => this.StealthSKill_Property;
@@ -467,14 +1143,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> ICreatureGetter.StealthSKill_Property => this.StealthSKill_Property;
         #endregion
         #region SoulLevel
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<SoulLevel> _SoulLevel = NotifyingItem.Factory<SoulLevel>();
-        public INotifyingItem<SoulLevel> SoulLevel_Property => _SoulLevel;
+        protected SoulLevel _SoulLevel;
+        protected PropertyForwarder<Creature, SoulLevel> _SoulLevelForwarder;
+        public INotifyingSetItem<SoulLevel> SoulLevel_Property => _SoulLevelForwarder ?? (_SoulLevelForwarder = new PropertyForwarder<Creature, SoulLevel>(this, (int)Creature_FieldIndex.SoulLevel));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public SoulLevel SoulLevel
         {
-            get => this._SoulLevel.Item;
-            set => this._SoulLevel.Set(value);
+            get => this._SoulLevel;
+            set => this.SetSoulLevel(value);
+        }
+        protected void SetSoulLevel(
+            SoulLevel item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.SoulLevel];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && SoulLevel == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.SoulLevel] = hasBeenSet;
+            }
+            if (_SoulLevel_subscriptions != null)
+            {
+                var tmp = SoulLevel;
+                _SoulLevel = item;
+                _SoulLevel_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.SoulLevel,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _SoulLevel = item;
+            }
+        }
+        protected void UnsetSoulLevel()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.SoulLevel] = false;
+            SoulLevel = default(SoulLevel);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<SoulLevel> ICreature.SoulLevel_Property => this.SoulLevel_Property;
@@ -482,14 +1191,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<SoulLevel> ICreatureGetter.SoulLevel_Property => this.SoulLevel_Property;
         #endregion
         #region Health
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt32> _Health = NotifyingItem.Factory<UInt32>();
-        public INotifyingItem<UInt32> Health_Property => _Health;
+        protected UInt32 _Health;
+        protected PropertyForwarder<Creature, UInt32> _HealthForwarder;
+        public INotifyingSetItem<UInt32> Health_Property => _HealthForwarder ?? (_HealthForwarder = new PropertyForwarder<Creature, UInt32>(this, (int)Creature_FieldIndex.Health));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Health
         {
-            get => this._Health.Item;
-            set => this._Health.Set(value);
+            get => this._Health;
+            set => this.SetHealth(value);
+        }
+        protected void SetHealth(
+            UInt32 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.Health];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Health == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.Health] = hasBeenSet;
+            }
+            if (_UInt32_subscriptions != null)
+            {
+                var tmp = Health;
+                _Health = item;
+                _UInt32_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.Health,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Health = item;
+            }
+        }
+        protected void UnsetHealth()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.Health] = false;
+            Health = default(UInt32);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> ICreature.Health_Property => this.Health_Property;
@@ -497,14 +1239,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt32> ICreatureGetter.Health_Property => this.Health_Property;
         #endregion
         #region AttackDamage
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt16> _AttackDamage = NotifyingItem.Factory<UInt16>();
-        public INotifyingItem<UInt16> AttackDamage_Property => _AttackDamage;
+        protected UInt16 _AttackDamage;
+        protected PropertyForwarder<Creature, UInt16> _AttackDamageForwarder;
+        public INotifyingSetItem<UInt16> AttackDamage_Property => _AttackDamageForwarder ?? (_AttackDamageForwarder = new PropertyForwarder<Creature, UInt16>(this, (int)Creature_FieldIndex.AttackDamage));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 AttackDamage
         {
-            get => this._AttackDamage.Item;
-            set => this._AttackDamage.Set(value);
+            get => this._AttackDamage;
+            set => this.SetAttackDamage(value);
+        }
+        protected void SetAttackDamage(
+            UInt16 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.AttackDamage];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && AttackDamage == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.AttackDamage] = hasBeenSet;
+            }
+            if (_UInt16_subscriptions != null)
+            {
+                var tmp = AttackDamage;
+                _AttackDamage = item;
+                _UInt16_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.AttackDamage,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _AttackDamage = item;
+            }
+        }
+        protected void UnsetAttackDamage()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.AttackDamage] = false;
+            AttackDamage = default(UInt16);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> ICreature.AttackDamage_Property => this.AttackDamage_Property;
@@ -512,14 +1287,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt16> ICreatureGetter.AttackDamage_Property => this.AttackDamage_Property;
         #endregion
         #region Strength
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Strength = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Strength_Property => _Strength;
+        protected Byte _Strength;
+        protected PropertyForwarder<Creature, Byte> _StrengthForwarder;
+        public INotifyingSetItem<Byte> Strength_Property => _StrengthForwarder ?? (_StrengthForwarder = new PropertyForwarder<Creature, Byte>(this, (int)Creature_FieldIndex.Strength));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Strength
         {
-            get => this._Strength.Item;
-            set => this._Strength.Set(value);
+            get => this._Strength;
+            set => this.SetStrength(value);
+        }
+        protected void SetStrength(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.Strength];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Strength == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.Strength] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Strength;
+                _Strength = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.Strength,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Strength = item;
+            }
+        }
+        protected void UnsetStrength()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.Strength] = false;
+            Strength = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.Strength_Property => this.Strength_Property;
@@ -527,14 +1335,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> ICreatureGetter.Strength_Property => this.Strength_Property;
         #endregion
         #region Intelligence
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Intelligence = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Intelligence_Property => _Intelligence;
+        protected Byte _Intelligence;
+        protected PropertyForwarder<Creature, Byte> _IntelligenceForwarder;
+        public INotifyingSetItem<Byte> Intelligence_Property => _IntelligenceForwarder ?? (_IntelligenceForwarder = new PropertyForwarder<Creature, Byte>(this, (int)Creature_FieldIndex.Intelligence));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Intelligence
         {
-            get => this._Intelligence.Item;
-            set => this._Intelligence.Set(value);
+            get => this._Intelligence;
+            set => this.SetIntelligence(value);
+        }
+        protected void SetIntelligence(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.Intelligence];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Intelligence == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.Intelligence] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Intelligence;
+                _Intelligence = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.Intelligence,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Intelligence = item;
+            }
+        }
+        protected void UnsetIntelligence()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.Intelligence] = false;
+            Intelligence = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.Intelligence_Property => this.Intelligence_Property;
@@ -542,14 +1383,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> ICreatureGetter.Intelligence_Property => this.Intelligence_Property;
         #endregion
         #region Willpower
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Willpower = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Willpower_Property => _Willpower;
+        protected Byte _Willpower;
+        protected PropertyForwarder<Creature, Byte> _WillpowerForwarder;
+        public INotifyingSetItem<Byte> Willpower_Property => _WillpowerForwarder ?? (_WillpowerForwarder = new PropertyForwarder<Creature, Byte>(this, (int)Creature_FieldIndex.Willpower));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Willpower
         {
-            get => this._Willpower.Item;
-            set => this._Willpower.Set(value);
+            get => this._Willpower;
+            set => this.SetWillpower(value);
+        }
+        protected void SetWillpower(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.Willpower];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Willpower == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.Willpower] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Willpower;
+                _Willpower = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.Willpower,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Willpower = item;
+            }
+        }
+        protected void UnsetWillpower()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.Willpower] = false;
+            Willpower = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.Willpower_Property => this.Willpower_Property;
@@ -557,14 +1431,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> ICreatureGetter.Willpower_Property => this.Willpower_Property;
         #endregion
         #region Agility
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Agility = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Agility_Property => _Agility;
+        protected Byte _Agility;
+        protected PropertyForwarder<Creature, Byte> _AgilityForwarder;
+        public INotifyingSetItem<Byte> Agility_Property => _AgilityForwarder ?? (_AgilityForwarder = new PropertyForwarder<Creature, Byte>(this, (int)Creature_FieldIndex.Agility));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Agility
         {
-            get => this._Agility.Item;
-            set => this._Agility.Set(value);
+            get => this._Agility;
+            set => this.SetAgility(value);
+        }
+        protected void SetAgility(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.Agility];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Agility == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.Agility] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Agility;
+                _Agility = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.Agility,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Agility = item;
+            }
+        }
+        protected void UnsetAgility()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.Agility] = false;
+            Agility = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.Agility_Property => this.Agility_Property;
@@ -572,14 +1479,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> ICreatureGetter.Agility_Property => this.Agility_Property;
         #endregion
         #region Speed
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Speed = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Speed_Property => _Speed;
+        protected Byte _Speed;
+        protected PropertyForwarder<Creature, Byte> _SpeedForwarder;
+        public INotifyingSetItem<Byte> Speed_Property => _SpeedForwarder ?? (_SpeedForwarder = new PropertyForwarder<Creature, Byte>(this, (int)Creature_FieldIndex.Speed));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Speed
         {
-            get => this._Speed.Item;
-            set => this._Speed.Set(value);
+            get => this._Speed;
+            set => this.SetSpeed(value);
+        }
+        protected void SetSpeed(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.Speed];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Speed == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.Speed] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Speed;
+                _Speed = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.Speed,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Speed = item;
+            }
+        }
+        protected void UnsetSpeed()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.Speed] = false;
+            Speed = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.Speed_Property => this.Speed_Property;
@@ -587,14 +1527,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> ICreatureGetter.Speed_Property => this.Speed_Property;
         #endregion
         #region Endurance
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Endurance = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Endurance_Property => _Endurance;
+        protected Byte _Endurance;
+        protected PropertyForwarder<Creature, Byte> _EnduranceForwarder;
+        public INotifyingSetItem<Byte> Endurance_Property => _EnduranceForwarder ?? (_EnduranceForwarder = new PropertyForwarder<Creature, Byte>(this, (int)Creature_FieldIndex.Endurance));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Endurance
         {
-            get => this._Endurance.Item;
-            set => this._Endurance.Set(value);
+            get => this._Endurance;
+            set => this.SetEndurance(value);
+        }
+        protected void SetEndurance(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.Endurance];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Endurance == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.Endurance] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Endurance;
+                _Endurance = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.Endurance,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Endurance = item;
+            }
+        }
+        protected void UnsetEndurance()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.Endurance] = false;
+            Endurance = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.Endurance_Property => this.Endurance_Property;
@@ -602,14 +1575,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> ICreatureGetter.Endurance_Property => this.Endurance_Property;
         #endregion
         #region Personality
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Personality = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Personality_Property => _Personality;
+        protected Byte _Personality;
+        protected PropertyForwarder<Creature, Byte> _PersonalityForwarder;
+        public INotifyingSetItem<Byte> Personality_Property => _PersonalityForwarder ?? (_PersonalityForwarder = new PropertyForwarder<Creature, Byte>(this, (int)Creature_FieldIndex.Personality));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Personality
         {
-            get => this._Personality.Item;
-            set => this._Personality.Set(value);
+            get => this._Personality;
+            set => this.SetPersonality(value);
+        }
+        protected void SetPersonality(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.Personality];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Personality == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.Personality] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Personality;
+                _Personality = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.Personality,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Personality = item;
+            }
+        }
+        protected void UnsetPersonality()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.Personality] = false;
+            Personality = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.Personality_Property => this.Personality_Property;
@@ -617,14 +1623,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> ICreatureGetter.Personality_Property => this.Personality_Property;
         #endregion
         #region Luck
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Luck = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Luck_Property => _Luck;
+        protected Byte _Luck;
+        protected PropertyForwarder<Creature, Byte> _LuckForwarder;
+        public INotifyingSetItem<Byte> Luck_Property => _LuckForwarder ?? (_LuckForwarder = new PropertyForwarder<Creature, Byte>(this, (int)Creature_FieldIndex.Luck));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Luck
         {
-            get => this._Luck.Item;
-            set => this._Luck.Set(value);
+            get => this._Luck;
+            set => this.SetLuck(value);
+        }
+        protected void SetLuck(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.Luck];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Luck == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.Luck] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Luck;
+                _Luck = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.Luck,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Luck = item;
+            }
+        }
+        protected void UnsetLuck()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.Luck] = false;
+            Luck = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.Luck_Property => this.Luck_Property;
@@ -632,14 +1671,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> ICreatureGetter.Luck_Property => this.Luck_Property;
         #endregion
         #region AttackReach
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<Byte> _AttackReach = NotifyingSetItem.Factory<Byte>(markAsSet: false);
-        public INotifyingSetItem<Byte> AttackReach_Property => _AttackReach;
+        protected Byte _AttackReach;
+        protected PropertyForwarder<Creature, Byte> _AttackReachForwarder;
+        public INotifyingSetItem<Byte> AttackReach_Property => _AttackReachForwarder ?? (_AttackReachForwarder = new PropertyForwarder<Creature, Byte>(this, (int)Creature_FieldIndex.AttackReach));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte AttackReach
         {
-            get => this._AttackReach.Item;
-            set => this._AttackReach.Set(value);
+            get => this._AttackReach;
+            set => this.SetAttackReach(value);
+        }
+        protected void SetAttackReach(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.AttackReach];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && AttackReach == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.AttackReach] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = AttackReach;
+                _AttackReach = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.AttackReach,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _AttackReach = item;
+            }
+        }
+        protected void UnsetAttackReach()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.AttackReach] = false;
+            AttackReach = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte> ICreature.AttackReach_Property => this.AttackReach_Property;
@@ -654,14 +1726,47 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<CombatStyle> ICreatureGetter.CombatStyle_Property => this.CombatStyle_Property;
         #endregion
         #region TurningSpeed
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<Single> _TurningSpeed = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> TurningSpeed_Property => _TurningSpeed;
+        protected Single _TurningSpeed;
+        protected PropertyForwarder<Creature, Single> _TurningSpeedForwarder;
+        public INotifyingSetItem<Single> TurningSpeed_Property => _TurningSpeedForwarder ?? (_TurningSpeedForwarder = new PropertyForwarder<Creature, Single>(this, (int)Creature_FieldIndex.TurningSpeed));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single TurningSpeed
         {
-            get => this._TurningSpeed.Item;
-            set => this._TurningSpeed.Set(value);
+            get => this._TurningSpeed;
+            set => this.SetTurningSpeed(value);
+        }
+        protected void SetTurningSpeed(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.TurningSpeed];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && TurningSpeed == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.TurningSpeed] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = TurningSpeed;
+                _TurningSpeed = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.TurningSpeed,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _TurningSpeed = item;
+            }
+        }
+        protected void UnsetTurningSpeed()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.TurningSpeed] = false;
+            TurningSpeed = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Single> ICreature.TurningSpeed_Property => this.TurningSpeed_Property;
@@ -669,14 +1774,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Single> ICreatureGetter.TurningSpeed_Property => this.TurningSpeed_Property;
         #endregion
         #region BaseScale
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<Single> _BaseScale = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> BaseScale_Property => _BaseScale;
+        protected Single _BaseScale;
+        protected PropertyForwarder<Creature, Single> _BaseScaleForwarder;
+        public INotifyingSetItem<Single> BaseScale_Property => _BaseScaleForwarder ?? (_BaseScaleForwarder = new PropertyForwarder<Creature, Single>(this, (int)Creature_FieldIndex.BaseScale));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single BaseScale
         {
-            get => this._BaseScale.Item;
-            set => this._BaseScale.Set(value);
+            get => this._BaseScale;
+            set => this.SetBaseScale(value);
+        }
+        protected void SetBaseScale(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.BaseScale];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && BaseScale == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.BaseScale] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = BaseScale;
+                _BaseScale = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.BaseScale,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _BaseScale = item;
+            }
+        }
+        protected void UnsetBaseScale()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.BaseScale] = false;
+            BaseScale = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Single> ICreature.BaseScale_Property => this.BaseScale_Property;
@@ -684,14 +1822,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Single> ICreatureGetter.BaseScale_Property => this.BaseScale_Property;
         #endregion
         #region FootWeight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<Single> _FootWeight = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> FootWeight_Property => _FootWeight;
+        protected Single _FootWeight;
+        protected PropertyForwarder<Creature, Single> _FootWeightForwarder;
+        public INotifyingSetItem<Single> FootWeight_Property => _FootWeightForwarder ?? (_FootWeightForwarder = new PropertyForwarder<Creature, Single>(this, (int)Creature_FieldIndex.FootWeight));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FootWeight
         {
-            get => this._FootWeight.Item;
-            set => this._FootWeight.Set(value);
+            get => this._FootWeight;
+            set => this.SetFootWeight(value);
+        }
+        protected void SetFootWeight(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.FootWeight];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FootWeight == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.FootWeight] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = FootWeight;
+                _FootWeight = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.FootWeight,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _FootWeight = item;
+            }
+        }
+        protected void UnsetFootWeight()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.FootWeight] = false;
+            FootWeight = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Single> ICreature.FootWeight_Property => this.FootWeight_Property;
@@ -699,14 +1870,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Single> ICreatureGetter.FootWeight_Property => this.FootWeight_Property;
         #endregion
         #region BloodSpray
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _BloodSpray = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> BloodSpray_Property => _BloodSpray;
+        protected String _BloodSpray;
+        protected PropertyForwarder<Creature, String> _BloodSprayForwarder;
+        public INotifyingSetItem<String> BloodSpray_Property => _BloodSprayForwarder ?? (_BloodSprayForwarder = new PropertyForwarder<Creature, String>(this, (int)Creature_FieldIndex.BloodSpray));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String BloodSpray
         {
-            get => this._BloodSpray.Item;
-            set => this._BloodSpray.Set(value);
+            get => this._BloodSpray;
+            set => this.SetBloodSpray(value);
+        }
+        protected void SetBloodSpray(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.BloodSpray];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && BloodSpray == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.BloodSpray] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = BloodSpray;
+                _BloodSpray = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.BloodSpray,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _BloodSpray = item;
+            }
+        }
+        protected void UnsetBloodSpray()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.BloodSpray] = false;
+            BloodSpray = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ICreature.BloodSpray_Property => this.BloodSpray_Property;
@@ -714,14 +1918,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> ICreatureGetter.BloodSpray_Property => this.BloodSpray_Property;
         #endregion
         #region BloodDecal
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _BloodDecal = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> BloodDecal_Property => _BloodDecal;
+        protected String _BloodDecal;
+        protected PropertyForwarder<Creature, String> _BloodDecalForwarder;
+        public INotifyingSetItem<String> BloodDecal_Property => _BloodDecalForwarder ?? (_BloodDecalForwarder = new PropertyForwarder<Creature, String>(this, (int)Creature_FieldIndex.BloodDecal));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String BloodDecal
         {
-            get => this._BloodDecal.Item;
-            set => this._BloodDecal.Set(value);
+            get => this._BloodDecal;
+            set => this.SetBloodDecal(value);
+        }
+        protected void SetBloodDecal(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Creature_FieldIndex.BloodDecal];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && BloodDecal == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Creature_FieldIndex.BloodDecal] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = BloodDecal;
+                _BloodDecal = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Creature_FieldIndex.BloodDecal,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _BloodDecal = item;
+            }
+        }
+        protected void UnsetBloodDecal()
+        {
+            _hasBeenSetTracker[(int)Creature_FieldIndex.BloodDecal] = false;
+            BloodDecal = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ICreature.BloodDecal_Property => this.BloodDecal_Property;
@@ -1345,10 +2582,18 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    var ModeltryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Creature_FieldIndex.Model,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ModeltryGet.Succeeded)
+                    {
+                        item.SetModel(item: ModeltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetModel();
+                    }
                     break;
                 case "Items":
                     item._Items.SetIfSucceededOrDefault(ListXmlTranslation<ItemEntry, MaskItem<Exception, ItemEntry_ErrorMask>>.Instance.Parse(
@@ -1394,53 +2639,117 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "NIFT":
-                    item._NIFT.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
+                    var NIFTtryGet = ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.NIFT,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (NIFTtryGet.Succeeded)
+                    {
+                        item.SetNIFT(item: NIFTtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetNIFT();
+                    }
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<Creature.CreatureFlag>.Instance.Parse(
+                    var FlagstryGet = EnumXmlTranslation<Creature.CreatureFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Creature_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (FlagstryGet.Succeeded)
+                    {
+                        item.SetFlags(item: FlagstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFlags();
+                    }
                     break;
                 case "BaseSpellPoints":
-                    item._BaseSpellPoints.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
+                    var BaseSpellPointstryGet = UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.BaseSpellPoints,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (BaseSpellPointstryGet.Succeeded)
+                    {
+                        item.SetBaseSpellPoints(item: BaseSpellPointstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetBaseSpellPoints();
+                    }
                     break;
                 case "Fatigue":
-                    item._Fatigue.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
+                    var FatiguetryGet = UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Fatigue,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FatiguetryGet.Succeeded)
+                    {
+                        item.SetFatigue(item: FatiguetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFatigue();
+                    }
                     break;
                 case "BarterGold":
-                    item._BarterGold.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
+                    var BarterGoldtryGet = UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.BarterGold,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (BarterGoldtryGet.Succeeded)
+                    {
+                        item.SetBarterGold(item: BarterGoldtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetBarterGold();
+                    }
                     break;
                 case "LevelOffset":
-                    item._LevelOffset.SetIfSucceededOrDefault(Int16XmlTranslation.Instance.ParseNonNull(
+                    var LevelOffsettryGet = Int16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.LevelOffset,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (LevelOffsettryGet.Succeeded)
+                    {
+                        item.SetLevelOffset(item: LevelOffsettryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetLevelOffset();
+                    }
                     break;
                 case "CalcMin":
-                    item._CalcMin.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
+                    var CalcMintryGet = UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.CalcMin,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (CalcMintryGet.Succeeded)
+                    {
+                        item.SetCalcMin(item: CalcMintryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetCalcMin();
+                    }
                     break;
                 case "CalcMax":
-                    item._CalcMax.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
+                    var CalcMaxtryGet = UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.CalcMax,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (CalcMaxtryGet.Succeeded)
+                    {
+                        item.SetCalcMax(item: CalcMaxtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetCalcMax();
+                    }
                     break;
                 case "Factions":
                     item._Factions.SetIfSucceededOrDefault(ListXmlTranslation<RankPlacement, MaskItem<Exception, RankPlacement_ErrorMask>>.Instance.Parse(
@@ -1469,48 +2778,104 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Aggression":
-                    item._Aggression.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var AggressiontryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Aggression,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (AggressiontryGet.Succeeded)
+                    {
+                        item.SetAggression(item: AggressiontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetAggression();
+                    }
                     break;
                 case "Confidence":
-                    item._Confidence.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var ConfidencetryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Confidence,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ConfidencetryGet.Succeeded)
+                    {
+                        item.SetConfidence(item: ConfidencetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetConfidence();
+                    }
                     break;
                 case "EnergyLevel":
-                    item._EnergyLevel.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var EnergyLeveltryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.EnergyLevel,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (EnergyLeveltryGet.Succeeded)
+                    {
+                        item.SetEnergyLevel(item: EnergyLeveltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetEnergyLevel();
+                    }
                     break;
                 case "Responsibility":
-                    item._Responsibility.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var ResponsibilitytryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Responsibility,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ResponsibilitytryGet.Succeeded)
+                    {
+                        item.SetResponsibility(item: ResponsibilitytryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetResponsibility();
+                    }
                     break;
                 case "BuySellServices":
-                    item._BuySellServices.SetIfSucceededOrDefault(EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
+                    var BuySellServicestryGet = EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Creature_FieldIndex.BuySellServices,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (BuySellServicestryGet.Succeeded)
+                    {
+                        item.SetBuySellServices(item: BuySellServicestryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetBuySellServices();
+                    }
                     break;
                 case "Teaches":
-                    item._Teaches.SetIfSucceededOrDefault(EnumXmlTranslation<Skill>.Instance.Parse(
+                    var TeachestryGet = EnumXmlTranslation<Skill>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Creature_FieldIndex.Teaches,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (TeachestryGet.Succeeded)
+                    {
+                        item.SetTeaches(item: TeachestryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetTeaches();
+                    }
                     break;
                 case "MaximumTrainingLevel":
-                    item._MaximumTrainingLevel.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var MaximumTrainingLeveltryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.MaximumTrainingLevel,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MaximumTrainingLeveltryGet.Succeeded)
+                    {
+                        item.SetMaximumTrainingLevel(item: MaximumTrainingLeveltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMaximumTrainingLevel();
+                    }
                     break;
                 case "AIPackages":
                     item._AIPackages.SetIfSucceededOrDefault(ListXmlTranslation<FormIDSetLink<AIPackage>, Exception>.Instance.Parse(
@@ -1542,102 +2907,230 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "CreatureType":
-                    item._CreatureType.SetIfSucceededOrDefault(EnumXmlTranslation<Creature.CreatureTypeEnum>.Instance.Parse(
+                    var CreatureTypetryGet = EnumXmlTranslation<Creature.CreatureTypeEnum>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Creature_FieldIndex.CreatureType,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (CreatureTypetryGet.Succeeded)
+                    {
+                        item.SetCreatureType(item: CreatureTypetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetCreatureType();
+                    }
                     break;
                 case "CombatSKill":
-                    item._CombatSKill.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var CombatSKilltryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.CombatSKill,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (CombatSKilltryGet.Succeeded)
+                    {
+                        item.SetCombatSKill(item: CombatSKilltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetCombatSKill();
+                    }
                     break;
                 case "MagicSKill":
-                    item._MagicSKill.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var MagicSKilltryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.MagicSKill,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MagicSKilltryGet.Succeeded)
+                    {
+                        item.SetMagicSKill(item: MagicSKilltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMagicSKill();
+                    }
                     break;
                 case "StealthSKill":
-                    item._StealthSKill.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var StealthSKilltryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.StealthSKill,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (StealthSKilltryGet.Succeeded)
+                    {
+                        item.SetStealthSKill(item: StealthSKilltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetStealthSKill();
+                    }
                     break;
                 case "SoulLevel":
-                    item._SoulLevel.SetIfSucceededOrDefault(EnumXmlTranslation<SoulLevel>.Instance.Parse(
+                    var SoulLeveltryGet = EnumXmlTranslation<SoulLevel>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Creature_FieldIndex.SoulLevel,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (SoulLeveltryGet.Succeeded)
+                    {
+                        item.SetSoulLevel(item: SoulLeveltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetSoulLevel();
+                    }
                     break;
                 case "Health":
-                    item._Health.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
+                    var HealthtryGet = UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Health,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HealthtryGet.Succeeded)
+                    {
+                        item.SetHealth(item: HealthtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHealth();
+                    }
                     break;
                 case "AttackDamage":
-                    item._AttackDamage.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
+                    var AttackDamagetryGet = UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.AttackDamage,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (AttackDamagetryGet.Succeeded)
+                    {
+                        item.SetAttackDamage(item: AttackDamagetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetAttackDamage();
+                    }
                     break;
                 case "Strength":
-                    item._Strength.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var StrengthtryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Strength,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (StrengthtryGet.Succeeded)
+                    {
+                        item.SetStrength(item: StrengthtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetStrength();
+                    }
                     break;
                 case "Intelligence":
-                    item._Intelligence.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var IntelligencetryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Intelligence,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (IntelligencetryGet.Succeeded)
+                    {
+                        item.SetIntelligence(item: IntelligencetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetIntelligence();
+                    }
                     break;
                 case "Willpower":
-                    item._Willpower.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var WillpowertryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Willpower,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (WillpowertryGet.Succeeded)
+                    {
+                        item.SetWillpower(item: WillpowertryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetWillpower();
+                    }
                     break;
                 case "Agility":
-                    item._Agility.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var AgilitytryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Agility,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (AgilitytryGet.Succeeded)
+                    {
+                        item.SetAgility(item: AgilitytryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetAgility();
+                    }
                     break;
                 case "Speed":
-                    item._Speed.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var SpeedtryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Speed,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (SpeedtryGet.Succeeded)
+                    {
+                        item.SetSpeed(item: SpeedtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetSpeed();
+                    }
                     break;
                 case "Endurance":
-                    item._Endurance.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var EndurancetryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Endurance,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (EndurancetryGet.Succeeded)
+                    {
+                        item.SetEndurance(item: EndurancetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetEndurance();
+                    }
                     break;
                 case "Personality":
-                    item._Personality.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var PersonalitytryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Personality,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (PersonalitytryGet.Succeeded)
+                    {
+                        item.SetPersonality(item: PersonalitytryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetPersonality();
+                    }
                     break;
                 case "Luck":
-                    item._Luck.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var LucktryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Luck,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (LucktryGet.Succeeded)
+                    {
+                        item.SetLuck(item: LucktryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetLuck();
+                    }
                     break;
                 case "AttackReach":
-                    item._AttackReach.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var AttackReachtryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.AttackReach,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (AttackReachtryGet.Succeeded)
+                    {
+                        item.SetAttackReach(item: AttackReachtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetAttackReach();
+                    }
                     break;
                 case "CombatStyle":
                     item.CombatStyle_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
@@ -1646,34 +3139,74 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "TurningSpeed":
-                    item._TurningSpeed.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var TurningSpeedtryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.TurningSpeed,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (TurningSpeedtryGet.Succeeded)
+                    {
+                        item.SetTurningSpeed(item: TurningSpeedtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetTurningSpeed();
+                    }
                     break;
                 case "BaseScale":
-                    item._BaseScale.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var BaseScaletryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.BaseScale,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (BaseScaletryGet.Succeeded)
+                    {
+                        item.SetBaseScale(item: BaseScaletryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetBaseScale();
+                    }
                     break;
                 case "FootWeight":
-                    item._FootWeight.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var FootWeighttryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.FootWeight,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FootWeighttryGet.Succeeded)
+                    {
+                        item.SetFootWeight(item: FootWeighttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFootWeight();
+                    }
                     break;
                 case "BloodSpray":
-                    item._BloodSpray.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var BloodSpraytryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.BloodSpray,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (BloodSpraytryGet.Succeeded)
+                    {
+                        item.SetBloodSpray(item: BloodSpraytryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetBloodSpray();
+                    }
                     break;
                 case "BloodDecal":
-                    item._BloodDecal.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var BloodDecaltryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.BloodDecal,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (BloodDecaltryGet.Succeeded)
+                    {
+                        item.SetBloodDecal(item: BloodDecaltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetBloodDecal();
+                    }
                     break;
                 case "InheritsSoundFrom":
                     item.InheritsSoundFrom_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
@@ -1702,6 +3235,1989 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Model
+        protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
+        Model IPropertySupporter<Model>.Get(int index)
+        {
+            return GetModel(index: index);
+        }
+
+        protected Model GetModel(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.Model:
+                    return Model;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        void IPropertySupporter<Model>.Set(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetModel(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetModel(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.Model:
+                    SetModel(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Model>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Model>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Model>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetModel(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetModel(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.Model:
+                    _hasBeenSetTracker[index] = false;
+                    Model = default(Model);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Model> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Model_subscriptions == null)
+            {
+                _Model_subscriptions = new ObjectCentralizationSubscriptions<Model>();
+            }
+            _Model_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Model_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Model>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Model IPropertySupporter<Model>.DefaultValue(int index)
+        {
+            return DefaultValueModel(index: index);
+        }
+
+        protected Model DefaultValueModel(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.Model:
+                    return default(Model);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Byte[]
+        Byte[] IPropertySupporter<Byte[]>.Get(int index)
+        {
+            return GetByteArr(index: index);
+        }
+
+        protected override Byte[] GetByteArr(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.NIFT:
+                    return NIFT;
+                default:
+                    return base.GetByteArr(index: index);
+            }
+        }
+
+        void IPropertySupporter<Byte[]>.Set(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByteArr(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetByteArr(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.NIFT:
+                    SetNIFT(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetByteArr(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte[]>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte[]>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByteArr(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetByteArr(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.NIFT:
+                    _hasBeenSetTracker[index] = false;
+                    NIFT = default(Byte[]);
+                    break;
+                default:
+                    base.UnsetByteArr(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte[]> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_ByteArr_subscriptions == null)
+            {
+                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
+            }
+            _ByteArr_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _ByteArr_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
+        {
+            return DefaultValueByteArr(index: index);
+        }
+
+        protected override Byte[] DefaultValueByteArr(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.NIFT:
+                    return default(Byte[]);
+                default:
+                    return base.DefaultValueByteArr(index: index);
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Creature.CreatureFlag
+        protected ObjectCentralizationSubscriptions<Creature.CreatureFlag> _CreatureCreatureFlag_subscriptions;
+        Creature.CreatureFlag IPropertySupporter<Creature.CreatureFlag>.Get(int index)
+        {
+            return GetCreatureCreatureFlag(index: index);
+        }
+
+        protected Creature.CreatureFlag GetCreatureCreatureFlag(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.Flags:
+                    return Flags;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Creature.CreatureFlag: {index}");
+            }
+        }
+
+        void IPropertySupporter<Creature.CreatureFlag>.Set(
+            int index,
+            Creature.CreatureFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetCreatureCreatureFlag(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetCreatureCreatureFlag(
+            int index,
+            Creature.CreatureFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.Flags:
+                    SetFlags(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Creature.CreatureFlag: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Creature.CreatureFlag>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Creature.CreatureFlag>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Creature.CreatureFlag>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetCreatureCreatureFlag(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetCreatureCreatureFlag(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.Flags:
+                    _hasBeenSetTracker[index] = false;
+                    Flags = default(Creature.CreatureFlag);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Creature.CreatureFlag: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Creature.CreatureFlag>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Creature.CreatureFlag> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_CreatureCreatureFlag_subscriptions == null)
+            {
+                _CreatureCreatureFlag_subscriptions = new ObjectCentralizationSubscriptions<Creature.CreatureFlag>();
+            }
+            _CreatureCreatureFlag_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Creature.CreatureFlag>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _CreatureCreatureFlag_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Creature.CreatureFlag>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Creature.CreatureFlag IPropertySupporter<Creature.CreatureFlag>.DefaultValue(int index)
+        {
+            return DefaultValueCreatureCreatureFlag(index: index);
+        }
+
+        protected Creature.CreatureFlag DefaultValueCreatureCreatureFlag(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.Flags:
+                    return default(Creature.CreatureFlag);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Creature.CreatureFlag: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter UInt16
+        protected ObjectCentralizationSubscriptions<UInt16> _UInt16_subscriptions;
+        UInt16 IPropertySupporter<UInt16>.Get(int index)
+        {
+            return GetUInt16(index: index);
+        }
+
+        protected UInt16 GetUInt16(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.BaseSpellPoints:
+                    return BaseSpellPoints;
+                case Creature_FieldIndex.Fatigue:
+                    return Fatigue;
+                case Creature_FieldIndex.BarterGold:
+                    return BarterGold;
+                case Creature_FieldIndex.CalcMin:
+                    return CalcMin;
+                case Creature_FieldIndex.CalcMax:
+                    return CalcMax;
+                case Creature_FieldIndex.AttackDamage:
+                    return AttackDamage;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        void IPropertySupporter<UInt16>.Set(
+            int index,
+            UInt16 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetUInt16(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetUInt16(
+            int index,
+            UInt16 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.BaseSpellPoints:
+                    SetBaseSpellPoints(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.Fatigue:
+                    SetFatigue(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.BarterGold:
+                    SetBarterGold(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.CalcMin:
+                    SetCalcMin(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.CalcMax:
+                    SetCalcMax(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.AttackDamage:
+                    SetAttackDamage(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        bool IPropertySupporter<UInt16>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<UInt16>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<UInt16>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetUInt16(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetUInt16(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.BaseSpellPoints:
+                    _hasBeenSetTracker[index] = false;
+                    BaseSpellPoints = default(UInt16);
+                    break;
+                case Creature_FieldIndex.Fatigue:
+                    _hasBeenSetTracker[index] = false;
+                    Fatigue = default(UInt16);
+                    break;
+                case Creature_FieldIndex.BarterGold:
+                    _hasBeenSetTracker[index] = false;
+                    BarterGold = default(UInt16);
+                    break;
+                case Creature_FieldIndex.CalcMin:
+                    _hasBeenSetTracker[index] = false;
+                    CalcMin = default(UInt16);
+                    break;
+                case Creature_FieldIndex.CalcMax:
+                    _hasBeenSetTracker[index] = false;
+                    CalcMax = default(UInt16);
+                    break;
+                case Creature_FieldIndex.AttackDamage:
+                    _hasBeenSetTracker[index] = false;
+                    AttackDamage = default(UInt16);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt16>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<UInt16> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_UInt16_subscriptions == null)
+            {
+                _UInt16_subscriptions = new ObjectCentralizationSubscriptions<UInt16>();
+            }
+            _UInt16_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt16>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _UInt16_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<UInt16>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        UInt16 IPropertySupporter<UInt16>.DefaultValue(int index)
+        {
+            return DefaultValueUInt16(index: index);
+        }
+
+        protected UInt16 DefaultValueUInt16(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.BaseSpellPoints:
+                case Creature_FieldIndex.Fatigue:
+                case Creature_FieldIndex.BarterGold:
+                case Creature_FieldIndex.CalcMin:
+                case Creature_FieldIndex.CalcMax:
+                case Creature_FieldIndex.AttackDamage:
+                    return default(UInt16);
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Int16
+        protected ObjectCentralizationSubscriptions<Int16> _Int16_subscriptions;
+        Int16 IPropertySupporter<Int16>.Get(int index)
+        {
+            return GetInt16(index: index);
+        }
+
+        protected Int16 GetInt16(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.LevelOffset:
+                    return LevelOffset;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int16: {index}");
+            }
+        }
+
+        void IPropertySupporter<Int16>.Set(
+            int index,
+            Int16 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetInt16(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetInt16(
+            int index,
+            Int16 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.LevelOffset:
+                    SetLevelOffset(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int16: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Int16>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Int16>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Int16>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetInt16(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetInt16(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.LevelOffset:
+                    _hasBeenSetTracker[index] = false;
+                    LevelOffset = default(Int16);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int16: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Int16>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Int16> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Int16_subscriptions == null)
+            {
+                _Int16_subscriptions = new ObjectCentralizationSubscriptions<Int16>();
+            }
+            _Int16_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Int16>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Int16_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Int16>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Int16 IPropertySupporter<Int16>.DefaultValue(int index)
+        {
+            return DefaultValueInt16(index: index);
+        }
+
+        protected Int16 DefaultValueInt16(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.LevelOffset:
+                    return default(Int16);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int16: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Byte
+        protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
+        Byte IPropertySupporter<Byte>.Get(int index)
+        {
+            return GetByte(index: index);
+        }
+
+        protected Byte GetByte(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.Aggression:
+                    return Aggression;
+                case Creature_FieldIndex.Confidence:
+                    return Confidence;
+                case Creature_FieldIndex.EnergyLevel:
+                    return EnergyLevel;
+                case Creature_FieldIndex.Responsibility:
+                    return Responsibility;
+                case Creature_FieldIndex.MaximumTrainingLevel:
+                    return MaximumTrainingLevel;
+                case Creature_FieldIndex.CombatSKill:
+                    return CombatSKill;
+                case Creature_FieldIndex.MagicSKill:
+                    return MagicSKill;
+                case Creature_FieldIndex.StealthSKill:
+                    return StealthSKill;
+                case Creature_FieldIndex.Strength:
+                    return Strength;
+                case Creature_FieldIndex.Intelligence:
+                    return Intelligence;
+                case Creature_FieldIndex.Willpower:
+                    return Willpower;
+                case Creature_FieldIndex.Agility:
+                    return Agility;
+                case Creature_FieldIndex.Speed:
+                    return Speed;
+                case Creature_FieldIndex.Endurance:
+                    return Endurance;
+                case Creature_FieldIndex.Personality:
+                    return Personality;
+                case Creature_FieldIndex.Luck:
+                    return Luck;
+                case Creature_FieldIndex.AttackReach:
+                    return AttackReach;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        void IPropertySupporter<Byte>.Set(
+            int index,
+            Byte item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByte(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetByte(
+            int index,
+            Byte item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.Aggression:
+                    SetAggression(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.Confidence:
+                    SetConfidence(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.EnergyLevel:
+                    SetEnergyLevel(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.Responsibility:
+                    SetResponsibility(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.MaximumTrainingLevel:
+                    SetMaximumTrainingLevel(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.CombatSKill:
+                    SetCombatSKill(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.MagicSKill:
+                    SetMagicSKill(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.StealthSKill:
+                    SetStealthSKill(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.Strength:
+                    SetStrength(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.Intelligence:
+                    SetIntelligence(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.Willpower:
+                    SetWillpower(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.Agility:
+                    SetAgility(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.Speed:
+                    SetSpeed(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.Endurance:
+                    SetEndurance(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.Personality:
+                    SetPersonality(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.Luck:
+                    SetLuck(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.AttackReach:
+                    SetAttackReach(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByte(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetByte(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.Aggression:
+                    _hasBeenSetTracker[index] = false;
+                    Aggression = default(Byte);
+                    break;
+                case Creature_FieldIndex.Confidence:
+                    _hasBeenSetTracker[index] = false;
+                    Confidence = default(Byte);
+                    break;
+                case Creature_FieldIndex.EnergyLevel:
+                    _hasBeenSetTracker[index] = false;
+                    EnergyLevel = default(Byte);
+                    break;
+                case Creature_FieldIndex.Responsibility:
+                    _hasBeenSetTracker[index] = false;
+                    Responsibility = default(Byte);
+                    break;
+                case Creature_FieldIndex.MaximumTrainingLevel:
+                    _hasBeenSetTracker[index] = false;
+                    MaximumTrainingLevel = default(Byte);
+                    break;
+                case Creature_FieldIndex.CombatSKill:
+                    _hasBeenSetTracker[index] = false;
+                    CombatSKill = default(Byte);
+                    break;
+                case Creature_FieldIndex.MagicSKill:
+                    _hasBeenSetTracker[index] = false;
+                    MagicSKill = default(Byte);
+                    break;
+                case Creature_FieldIndex.StealthSKill:
+                    _hasBeenSetTracker[index] = false;
+                    StealthSKill = default(Byte);
+                    break;
+                case Creature_FieldIndex.Strength:
+                    _hasBeenSetTracker[index] = false;
+                    Strength = default(Byte);
+                    break;
+                case Creature_FieldIndex.Intelligence:
+                    _hasBeenSetTracker[index] = false;
+                    Intelligence = default(Byte);
+                    break;
+                case Creature_FieldIndex.Willpower:
+                    _hasBeenSetTracker[index] = false;
+                    Willpower = default(Byte);
+                    break;
+                case Creature_FieldIndex.Agility:
+                    _hasBeenSetTracker[index] = false;
+                    Agility = default(Byte);
+                    break;
+                case Creature_FieldIndex.Speed:
+                    _hasBeenSetTracker[index] = false;
+                    Speed = default(Byte);
+                    break;
+                case Creature_FieldIndex.Endurance:
+                    _hasBeenSetTracker[index] = false;
+                    Endurance = default(Byte);
+                    break;
+                case Creature_FieldIndex.Personality:
+                    _hasBeenSetTracker[index] = false;
+                    Personality = default(Byte);
+                    break;
+                case Creature_FieldIndex.Luck:
+                    _hasBeenSetTracker[index] = false;
+                    Luck = default(Byte);
+                    break;
+                case Creature_FieldIndex.AttackReach:
+                    _hasBeenSetTracker[index] = false;
+                    AttackReach = default(Byte);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Byte_subscriptions == null)
+            {
+                _Byte_subscriptions = new ObjectCentralizationSubscriptions<Byte>();
+            }
+            _Byte_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Byte_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte IPropertySupporter<Byte>.DefaultValue(int index)
+        {
+            return DefaultValueByte(index: index);
+        }
+
+        protected Byte DefaultValueByte(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.Aggression:
+                case Creature_FieldIndex.Confidence:
+                case Creature_FieldIndex.EnergyLevel:
+                case Creature_FieldIndex.Responsibility:
+                case Creature_FieldIndex.MaximumTrainingLevel:
+                case Creature_FieldIndex.CombatSKill:
+                case Creature_FieldIndex.MagicSKill:
+                case Creature_FieldIndex.StealthSKill:
+                case Creature_FieldIndex.Strength:
+                case Creature_FieldIndex.Intelligence:
+                case Creature_FieldIndex.Willpower:
+                case Creature_FieldIndex.Agility:
+                case Creature_FieldIndex.Speed:
+                case Creature_FieldIndex.Endurance:
+                case Creature_FieldIndex.Personality:
+                case Creature_FieldIndex.Luck:
+                case Creature_FieldIndex.AttackReach:
+                    return default(Byte);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter NPC.BuySellServiceFlag
+        protected ObjectCentralizationSubscriptions<NPC.BuySellServiceFlag> _NPCBuySellServiceFlag_subscriptions;
+        NPC.BuySellServiceFlag IPropertySupporter<NPC.BuySellServiceFlag>.Get(int index)
+        {
+            return GetNPCBuySellServiceFlag(index: index);
+        }
+
+        protected NPC.BuySellServiceFlag GetNPCBuySellServiceFlag(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.BuySellServices:
+                    return BuySellServices;
+                default:
+                    throw new ArgumentException($"Unknown index for field type NPC.BuySellServiceFlag: {index}");
+            }
+        }
+
+        void IPropertySupporter<NPC.BuySellServiceFlag>.Set(
+            int index,
+            NPC.BuySellServiceFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetNPCBuySellServiceFlag(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetNPCBuySellServiceFlag(
+            int index,
+            NPC.BuySellServiceFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.BuySellServices:
+                    SetBuySellServices(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type NPC.BuySellServiceFlag: {index}");
+            }
+        }
+
+        bool IPropertySupporter<NPC.BuySellServiceFlag>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<NPC.BuySellServiceFlag>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<NPC.BuySellServiceFlag>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetNPCBuySellServiceFlag(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetNPCBuySellServiceFlag(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.BuySellServices:
+                    _hasBeenSetTracker[index] = false;
+                    BuySellServices = default(NPC.BuySellServiceFlag);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type NPC.BuySellServiceFlag: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<NPC.BuySellServiceFlag>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<NPC.BuySellServiceFlag> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_NPCBuySellServiceFlag_subscriptions == null)
+            {
+                _NPCBuySellServiceFlag_subscriptions = new ObjectCentralizationSubscriptions<NPC.BuySellServiceFlag>();
+            }
+            _NPCBuySellServiceFlag_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<NPC.BuySellServiceFlag>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _NPCBuySellServiceFlag_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<NPC.BuySellServiceFlag>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        NPC.BuySellServiceFlag IPropertySupporter<NPC.BuySellServiceFlag>.DefaultValue(int index)
+        {
+            return DefaultValueNPCBuySellServiceFlag(index: index);
+        }
+
+        protected NPC.BuySellServiceFlag DefaultValueNPCBuySellServiceFlag(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.BuySellServices:
+                    return default(NPC.BuySellServiceFlag);
+                default:
+                    throw new ArgumentException($"Unknown index for field type NPC.BuySellServiceFlag: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Skill
+        protected ObjectCentralizationSubscriptions<Skill> _Skill_subscriptions;
+        Skill IPropertySupporter<Skill>.Get(int index)
+        {
+            return GetSkill(index: index);
+        }
+
+        protected Skill GetSkill(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.Teaches:
+                    return Teaches;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Skill: {index}");
+            }
+        }
+
+        void IPropertySupporter<Skill>.Set(
+            int index,
+            Skill item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSkill(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetSkill(
+            int index,
+            Skill item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.Teaches:
+                    SetTeaches(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Skill: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Skill>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Skill>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Skill>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSkill(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetSkill(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.Teaches:
+                    _hasBeenSetTracker[index] = false;
+                    Teaches = default(Skill);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Skill: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Skill>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Skill> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Skill_subscriptions == null)
+            {
+                _Skill_subscriptions = new ObjectCentralizationSubscriptions<Skill>();
+            }
+            _Skill_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Skill>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Skill_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Skill>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Skill IPropertySupporter<Skill>.DefaultValue(int index)
+        {
+            return DefaultValueSkill(index: index);
+        }
+
+        protected Skill DefaultValueSkill(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.Teaches:
+                    return default(Skill);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Skill: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Creature.CreatureTypeEnum
+        protected ObjectCentralizationSubscriptions<Creature.CreatureTypeEnum> _CreatureCreatureTypeEnum_subscriptions;
+        Creature.CreatureTypeEnum IPropertySupporter<Creature.CreatureTypeEnum>.Get(int index)
+        {
+            return GetCreatureCreatureTypeEnum(index: index);
+        }
+
+        protected Creature.CreatureTypeEnum GetCreatureCreatureTypeEnum(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.CreatureType:
+                    return CreatureType;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Creature.CreatureTypeEnum: {index}");
+            }
+        }
+
+        void IPropertySupporter<Creature.CreatureTypeEnum>.Set(
+            int index,
+            Creature.CreatureTypeEnum item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetCreatureCreatureTypeEnum(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetCreatureCreatureTypeEnum(
+            int index,
+            Creature.CreatureTypeEnum item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.CreatureType:
+                    SetCreatureType(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Creature.CreatureTypeEnum: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Creature.CreatureTypeEnum>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Creature.CreatureTypeEnum>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Creature.CreatureTypeEnum>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetCreatureCreatureTypeEnum(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetCreatureCreatureTypeEnum(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.CreatureType:
+                    _hasBeenSetTracker[index] = false;
+                    CreatureType = default(Creature.CreatureTypeEnum);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Creature.CreatureTypeEnum: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Creature.CreatureTypeEnum>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Creature.CreatureTypeEnum> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_CreatureCreatureTypeEnum_subscriptions == null)
+            {
+                _CreatureCreatureTypeEnum_subscriptions = new ObjectCentralizationSubscriptions<Creature.CreatureTypeEnum>();
+            }
+            _CreatureCreatureTypeEnum_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Creature.CreatureTypeEnum>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _CreatureCreatureTypeEnum_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Creature.CreatureTypeEnum>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Creature.CreatureTypeEnum IPropertySupporter<Creature.CreatureTypeEnum>.DefaultValue(int index)
+        {
+            return DefaultValueCreatureCreatureTypeEnum(index: index);
+        }
+
+        protected Creature.CreatureTypeEnum DefaultValueCreatureCreatureTypeEnum(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.CreatureType:
+                    return default(Creature.CreatureTypeEnum);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Creature.CreatureTypeEnum: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter SoulLevel
+        protected ObjectCentralizationSubscriptions<SoulLevel> _SoulLevel_subscriptions;
+        SoulLevel IPropertySupporter<SoulLevel>.Get(int index)
+        {
+            return GetSoulLevel(index: index);
+        }
+
+        protected SoulLevel GetSoulLevel(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.SoulLevel:
+                    return SoulLevel;
+                default:
+                    throw new ArgumentException($"Unknown index for field type SoulLevel: {index}");
+            }
+        }
+
+        void IPropertySupporter<SoulLevel>.Set(
+            int index,
+            SoulLevel item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSoulLevel(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetSoulLevel(
+            int index,
+            SoulLevel item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.SoulLevel:
+                    SetSoulLevel(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type SoulLevel: {index}");
+            }
+        }
+
+        bool IPropertySupporter<SoulLevel>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<SoulLevel>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<SoulLevel>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSoulLevel(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetSoulLevel(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.SoulLevel:
+                    _hasBeenSetTracker[index] = false;
+                    SoulLevel = default(SoulLevel);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type SoulLevel: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<SoulLevel>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<SoulLevel> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_SoulLevel_subscriptions == null)
+            {
+                _SoulLevel_subscriptions = new ObjectCentralizationSubscriptions<SoulLevel>();
+            }
+            _SoulLevel_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<SoulLevel>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _SoulLevel_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<SoulLevel>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        SoulLevel IPropertySupporter<SoulLevel>.DefaultValue(int index)
+        {
+            return DefaultValueSoulLevel(index: index);
+        }
+
+        protected SoulLevel DefaultValueSoulLevel(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.SoulLevel:
+                    return default(SoulLevel);
+                default:
+                    throw new ArgumentException($"Unknown index for field type SoulLevel: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter UInt32
+        protected ObjectCentralizationSubscriptions<UInt32> _UInt32_subscriptions;
+        UInt32 IPropertySupporter<UInt32>.Get(int index)
+        {
+            return GetUInt32(index: index);
+        }
+
+        protected UInt32 GetUInt32(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.Health:
+                    return Health;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        void IPropertySupporter<UInt32>.Set(
+            int index,
+            UInt32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetUInt32(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetUInt32(
+            int index,
+            UInt32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.Health:
+                    SetHealth(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<UInt32>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<UInt32>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetUInt32(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetUInt32(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.Health:
+                    _hasBeenSetTracker[index] = false;
+                    Health = default(UInt32);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt32>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<UInt32> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_UInt32_subscriptions == null)
+            {
+                _UInt32_subscriptions = new ObjectCentralizationSubscriptions<UInt32>();
+            }
+            _UInt32_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt32>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _UInt32_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<UInt32>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        UInt32 IPropertySupporter<UInt32>.DefaultValue(int index)
+        {
+            return DefaultValueUInt32(index: index);
+        }
+
+        protected UInt32 DefaultValueUInt32(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.Health:
+                    return default(UInt32);
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Single
+        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
+        Single IPropertySupporter<Single>.Get(int index)
+        {
+            return GetSingle(index: index);
+        }
+
+        protected Single GetSingle(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.TurningSpeed:
+                    return TurningSpeed;
+                case Creature_FieldIndex.BaseScale:
+                    return BaseScale;
+                case Creature_FieldIndex.FootWeight:
+                    return FootWeight;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        void IPropertySupporter<Single>.Set(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSingle(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetSingle(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.TurningSpeed:
+                    SetTurningSpeed(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.BaseScale:
+                    SetBaseScale(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.FootWeight:
+                    SetFootWeight(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Single>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Single>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSingle(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetSingle(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.TurningSpeed:
+                    _hasBeenSetTracker[index] = false;
+                    TurningSpeed = default(Single);
+                    break;
+                case Creature_FieldIndex.BaseScale:
+                    _hasBeenSetTracker[index] = false;
+                    BaseScale = default(Single);
+                    break;
+                case Creature_FieldIndex.FootWeight:
+                    _hasBeenSetTracker[index] = false;
+                    FootWeight = default(Single);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Single> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Single_subscriptions == null)
+            {
+                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
+            }
+            _Single_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Single_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Single IPropertySupporter<Single>.DefaultValue(int index)
+        {
+            return DefaultValueSingle(index: index);
+        }
+
+        protected Single DefaultValueSingle(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.TurningSpeed:
+                case Creature_FieldIndex.BaseScale:
+                case Creature_FieldIndex.FootWeight:
+                    return default(Single);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter String
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected override String GetString(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.BloodSpray:
+                    return BloodSpray;
+                case Creature_FieldIndex.BloodDecal:
+                    return BloodDecal;
+                default:
+                    return base.GetString(index: index);
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.BloodSpray:
+                    SetBloodSpray(item, hasBeenSet, cmds);
+                    break;
+                case Creature_FieldIndex.BloodDecal:
+                    SetBloodDecal(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetString(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.BloodSpray:
+                    _hasBeenSetTracker[index] = false;
+                    BloodSpray = default(String);
+                    break;
+                case Creature_FieldIndex.BloodDecal:
+                    _hasBeenSetTracker[index] = false;
+                    BloodDecal = default(String);
+                    break;
+                default:
+                    base.UnsetString(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected override String DefaultValueString(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.BloodSpray:
+                case Creature_FieldIndex.BloodDecal:
+                    return default(String);
+                default:
+                    return base.DefaultValueString(index: index);
             }
         }
 
@@ -1939,10 +5455,20 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)Creature_FieldIndex.Model,
-                        errorMask: errorMask));
+                    {
+                        var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                            frame: frame.Spawn(snapToFinalPosition: false),
+                            fieldIndex: (int)Creature_FieldIndex.Model,
+                            errorMask: errorMask);
+                        if (ModeltryGet.Succeeded)
+                        {
+                            item.SetModel(item: ModeltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetModel();
+                        }
+                    }
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Model);
                 case "CNTO":
                     item.Items.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry, MaskItem<Exception, ItemEntry_ErrorMask>>.Instance.ParseRepeatedItem(
@@ -1996,43 +5522,107 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Models);
                 case "NIFT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._NIFT.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
+                    var NIFTtryGet = ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.NIFT,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (NIFTtryGet.Succeeded)
+                    {
+                        item.SetNIFT(item: NIFTtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetNIFT();
+                    }
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.NIFT);
                 case "ACBS":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureFlag>.Instance.Parse(
+                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Creature_FieldIndex.Flags,
-                            errorMask: errorMask));
-                        item._BaseSpellPoints.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (FlagstryGet.Succeeded)
+                        {
+                            item.SetFlags(item: FlagstryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetFlags();
+                        }
+                        var BaseSpellPointstryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.BaseSpellPoints,
-                            errorMask: errorMask));
-                        item._Fatigue.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (BaseSpellPointstryGet.Succeeded)
+                        {
+                            item.SetBaseSpellPoints(item: BaseSpellPointstryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetBaseSpellPoints();
+                        }
+                        var FatiguetryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Fatigue,
-                            errorMask: errorMask));
-                        item._BarterGold.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (FatiguetryGet.Succeeded)
+                        {
+                            item.SetFatigue(item: FatiguetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetFatigue();
+                        }
+                        var BarterGoldtryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.BarterGold,
-                            errorMask: errorMask));
-                        item._LevelOffset.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (BarterGoldtryGet.Succeeded)
+                        {
+                            item.SetBarterGold(item: BarterGoldtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetBarterGold();
+                        }
+                        var LevelOffsettryGet = Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.LevelOffset,
-                            errorMask: errorMask));
-                        item._CalcMin.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (LevelOffsettryGet.Succeeded)
+                        {
+                            item.SetLevelOffset(item: LevelOffsettryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetLevelOffset();
+                        }
+                        var CalcMintryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.CalcMin,
-                            errorMask: errorMask));
-                        item._CalcMax.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (CalcMintryGet.Succeeded)
+                        {
+                            item.SetCalcMin(item: CalcMintryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetCalcMin();
+                        }
+                        var CalcMaxtryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.CalcMax,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (CalcMaxtryGet.Succeeded)
+                        {
+                            item.SetCalcMax(item: CalcMaxtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetCalcMax();
+                        }
                     }
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.CalcMax);
                 case "SNAM":
@@ -2069,34 +5659,90 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Aggression.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        var AggressiontryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Aggression,
-                            errorMask: errorMask));
-                        item._Confidence.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (AggressiontryGet.Succeeded)
+                        {
+                            item.SetAggression(item: AggressiontryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetAggression();
+                        }
+                        var ConfidencetryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Confidence,
-                            errorMask: errorMask));
-                        item._EnergyLevel.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (ConfidencetryGet.Succeeded)
+                        {
+                            item.SetConfidence(item: ConfidencetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetConfidence();
+                        }
+                        var EnergyLeveltryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.EnergyLevel,
-                            errorMask: errorMask));
-                        item._Responsibility.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (EnergyLeveltryGet.Succeeded)
+                        {
+                            item.SetEnergyLevel(item: EnergyLeveltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetEnergyLevel();
+                        }
+                        var ResponsibilitytryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Responsibility,
-                            errorMask: errorMask));
-                        item._BuySellServices.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
+                            errorMask: errorMask);
+                        if (ResponsibilitytryGet.Succeeded)
+                        {
+                            item.SetResponsibility(item: ResponsibilitytryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetResponsibility();
+                        }
+                        var BuySellServicestryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Creature_FieldIndex.BuySellServices,
-                            errorMask: errorMask));
-                        item._Teaches.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
+                            errorMask: errorMask);
+                        if (BuySellServicestryGet.Succeeded)
+                        {
+                            item.SetBuySellServices(item: BuySellServicestryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetBuySellServices();
+                        }
+                        var TeachestryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(1),
                             fieldIndex: (int)Creature_FieldIndex.Teaches,
-                            errorMask: errorMask));
-                        item._MaximumTrainingLevel.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (TeachestryGet.Succeeded)
+                        {
+                            item.SetTeaches(item: TeachestryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetTeaches();
+                        }
+                        var MaximumTrainingLeveltryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.MaximumTrainingLevel,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (MaximumTrainingLeveltryGet.Succeeded)
+                        {
+                            item.SetMaximumTrainingLevel(item: MaximumTrainingLeveltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetMaximumTrainingLevel();
+                        }
                         dataFrame.SetPosition(dataFrame.Position + 2);
                     }
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.MaximumTrainingLevel);
@@ -2138,74 +5784,202 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._CreatureType.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureTypeEnum>.Instance.Parse(
+                        var CreatureTypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureTypeEnum>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(1),
                             fieldIndex: (int)Creature_FieldIndex.CreatureType,
-                            errorMask: errorMask));
-                        item._CombatSKill.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (CreatureTypetryGet.Succeeded)
+                        {
+                            item.SetCreatureType(item: CreatureTypetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetCreatureType();
+                        }
+                        var CombatSKilltryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.CombatSKill,
-                            errorMask: errorMask));
-                        item._MagicSKill.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (CombatSKilltryGet.Succeeded)
+                        {
+                            item.SetCombatSKill(item: CombatSKilltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetCombatSKill();
+                        }
+                        var MagicSKilltryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.MagicSKill,
-                            errorMask: errorMask));
-                        item._StealthSKill.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (MagicSKilltryGet.Succeeded)
+                        {
+                            item.SetMagicSKill(item: MagicSKilltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetMagicSKill();
+                        }
+                        var StealthSKilltryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.StealthSKill,
-                            errorMask: errorMask));
-                        item._SoulLevel.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.Parse(
+                            errorMask: errorMask);
+                        if (StealthSKilltryGet.Succeeded)
+                        {
+                            item.SetStealthSKill(item: StealthSKilltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetStealthSKill();
+                        }
+                        var SoulLeveltryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(2),
                             fieldIndex: (int)Creature_FieldIndex.SoulLevel,
-                            errorMask: errorMask));
-                        item._Health.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (SoulLeveltryGet.Succeeded)
+                        {
+                            item.SetSoulLevel(item: SoulLeveltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetSoulLevel();
+                        }
+                        var HealthtryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Health,
-                            errorMask: errorMask));
-                        item._AttackDamage.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (HealthtryGet.Succeeded)
+                        {
+                            item.SetHealth(item: HealthtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetHealth();
+                        }
+                        var AttackDamagetryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.AttackDamage,
-                            errorMask: errorMask));
-                        item._Strength.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (AttackDamagetryGet.Succeeded)
+                        {
+                            item.SetAttackDamage(item: AttackDamagetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetAttackDamage();
+                        }
+                        var StrengthtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Strength,
-                            errorMask: errorMask));
-                        item._Intelligence.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (StrengthtryGet.Succeeded)
+                        {
+                            item.SetStrength(item: StrengthtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetStrength();
+                        }
+                        var IntelligencetryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Intelligence,
-                            errorMask: errorMask));
-                        item._Willpower.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (IntelligencetryGet.Succeeded)
+                        {
+                            item.SetIntelligence(item: IntelligencetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetIntelligence();
+                        }
+                        var WillpowertryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Willpower,
-                            errorMask: errorMask));
-                        item._Agility.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (WillpowertryGet.Succeeded)
+                        {
+                            item.SetWillpower(item: WillpowertryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetWillpower();
+                        }
+                        var AgilitytryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Agility,
-                            errorMask: errorMask));
-                        item._Speed.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (AgilitytryGet.Succeeded)
+                        {
+                            item.SetAgility(item: AgilitytryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetAgility();
+                        }
+                        var SpeedtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Speed,
-                            errorMask: errorMask));
-                        item._Endurance.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (SpeedtryGet.Succeeded)
+                        {
+                            item.SetSpeed(item: SpeedtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetSpeed();
+                        }
+                        var EndurancetryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Endurance,
-                            errorMask: errorMask));
-                        item._Personality.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (EndurancetryGet.Succeeded)
+                        {
+                            item.SetEndurance(item: EndurancetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetEndurance();
+                        }
+                        var PersonalitytryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Personality,
-                            errorMask: errorMask));
-                        item._Luck.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (PersonalitytryGet.Succeeded)
+                        {
+                            item.SetPersonality(item: PersonalitytryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetPersonality();
+                        }
+                        var LucktryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Luck,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (LucktryGet.Succeeded)
+                        {
+                            item.SetLuck(item: LucktryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetLuck();
+                        }
                     }
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Luck);
                 case "RNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._AttackReach.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                    var AttackReachtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.AttackReach,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (AttackReachtryGet.Succeeded)
+                    {
+                        item.SetAttackReach(item: AttackReachtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetAttackReach();
+                    }
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.AttackReach);
                 case "ZNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -2216,40 +5990,80 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.CombatStyle);
                 case "TNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._TurningSpeed.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    var TurningSpeedtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.TurningSpeed,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (TurningSpeedtryGet.Succeeded)
+                    {
+                        item.SetTurningSpeed(item: TurningSpeedtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetTurningSpeed();
+                    }
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.TurningSpeed);
                 case "BNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._BaseScale.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    var BaseScaletryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.BaseScale,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (BaseScaletryGet.Succeeded)
+                    {
+                        item.SetBaseScale(item: BaseScaletryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetBaseScale();
+                    }
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.BaseScale);
                 case "WNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._FootWeight.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    var FootWeighttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.FootWeight,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FootWeighttryGet.Succeeded)
+                    {
+                        item.SetFootWeight(item: FootWeighttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFootWeight();
+                    }
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.FootWeight);
                 case "NAM0":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._BloodSpray.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var BloodSpraytryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.BloodSpray,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (BloodSpraytryGet.Succeeded)
+                    {
+                        item.SetBloodSpray(item: BloodSpraytryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetBloodSpray();
+                    }
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.BloodSpray);
                 case "NAM1":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._BloodDecal.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var BloodDecaltryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Creature_FieldIndex.BloodDecal,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (BloodDecaltryGet.Succeeded)
+                    {
+                        item.SetBloodDecal(item: BloodDecaltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetBloodDecal();
+                    }
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.BloodDecal);
                 case "CSCR":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -2388,9 +6202,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Creature_FieldIndex.Model:
-                    this._Model.Set(
+                    this.SetModel(
                         (Model)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.Items:
                     this._Items.SetTo((IEnumerable<ItemEntry>)obj, cmds);
@@ -2402,44 +6216,44 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Models.SetTo((IEnumerable<String>)obj, cmds);
                     break;
                 case Creature_FieldIndex.NIFT:
-                    this._NIFT.Set(
+                    this.SetNIFT(
                         (Byte[])obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.Flags:
-                    this._Flags.Set(
+                    this.SetFlags(
                         (Creature.CreatureFlag)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.BaseSpellPoints:
-                    this._BaseSpellPoints.Set(
+                    this.SetBaseSpellPoints(
                         (UInt16)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.Fatigue:
-                    this._Fatigue.Set(
+                    this.SetFatigue(
                         (UInt16)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.BarterGold:
-                    this._BarterGold.Set(
+                    this.SetBarterGold(
                         (UInt16)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.LevelOffset:
-                    this._LevelOffset.Set(
+                    this.SetLevelOffset(
                         (Int16)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.CalcMin:
-                    this._CalcMin.Set(
+                    this.SetCalcMin(
                         (UInt16)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.CalcMax:
-                    this._CalcMax.Set(
+                    this.SetCalcMax(
                         (UInt16)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.Factions:
                     this._Factions.SetTo((IEnumerable<RankPlacement>)obj, cmds);
@@ -2455,39 +6269,39 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Creature_FieldIndex.Aggression:
-                    this._Aggression.Set(
+                    this.SetAggression(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.Confidence:
-                    this._Confidence.Set(
+                    this.SetConfidence(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.EnergyLevel:
-                    this._EnergyLevel.Set(
+                    this.SetEnergyLevel(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.Responsibility:
-                    this._Responsibility.Set(
+                    this.SetResponsibility(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.BuySellServices:
-                    this._BuySellServices.Set(
+                    this.SetBuySellServices(
                         (NPC.BuySellServiceFlag)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.Teaches:
-                    this._Teaches.Set(
+                    this.SetTeaches(
                         (Skill)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.MaximumTrainingLevel:
-                    this._MaximumTrainingLevel.Set(
+                    this.SetMaximumTrainingLevel(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.AIPackages:
                     this._AIPackages.SetTo((IEnumerable<FormIDSetLink<AIPackage>>)obj, cmds);
@@ -2496,84 +6310,84 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Animations.SetTo((IEnumerable<String>)obj, cmds);
                     break;
                 case Creature_FieldIndex.CreatureType:
-                    this._CreatureType.Set(
+                    this.SetCreatureType(
                         (Creature.CreatureTypeEnum)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.CombatSKill:
-                    this._CombatSKill.Set(
+                    this.SetCombatSKill(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.MagicSKill:
-                    this._MagicSKill.Set(
+                    this.SetMagicSKill(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.StealthSKill:
-                    this._StealthSKill.Set(
+                    this.SetStealthSKill(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.SoulLevel:
-                    this._SoulLevel.Set(
+                    this.SetSoulLevel(
                         (SoulLevel)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.Health:
-                    this._Health.Set(
+                    this.SetHealth(
                         (UInt32)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.AttackDamage:
-                    this._AttackDamage.Set(
+                    this.SetAttackDamage(
                         (UInt16)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.Strength:
-                    this._Strength.Set(
+                    this.SetStrength(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.Intelligence:
-                    this._Intelligence.Set(
+                    this.SetIntelligence(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.Willpower:
-                    this._Willpower.Set(
+                    this.SetWillpower(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.Agility:
-                    this._Agility.Set(
+                    this.SetAgility(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.Speed:
-                    this._Speed.Set(
+                    this.SetSpeed(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.Endurance:
-                    this._Endurance.Set(
+                    this.SetEndurance(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.Personality:
-                    this._Personality.Set(
+                    this.SetPersonality(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.Luck:
-                    this._Luck.Set(
+                    this.SetLuck(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.AttackReach:
-                    this._AttackReach.Set(
+                    this.SetAttackReach(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.CombatStyle:
                     this.CombatStyle_Property.Set(
@@ -2581,29 +6395,29 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Creature_FieldIndex.TurningSpeed:
-                    this._TurningSpeed.Set(
+                    this.SetTurningSpeed(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.BaseScale:
-                    this._BaseScale.Set(
+                    this.SetBaseScale(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.FootWeight:
-                    this._FootWeight.Set(
+                    this.SetFootWeight(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.BloodSpray:
-                    this._BloodSpray.Set(
+                    this.SetBloodSpray(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.BloodDecal:
-                    this._BloodDecal.Set(
+                    this.SetBloodDecal(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Creature_FieldIndex.InheritsSoundFrom:
                     this.InheritsSoundFrom_Property.Set(
@@ -2645,9 +6459,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Creature_FieldIndex.Model:
-                    obj._Model.Set(
+                    obj.SetModel(
                         (Model)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.Items:
                     obj._Items.SetTo((IEnumerable<ItemEntry>)pair.Value, null);
@@ -2659,44 +6473,44 @@ namespace Mutagen.Bethesda.Oblivion
                     obj._Models.SetTo((IEnumerable<String>)pair.Value, null);
                     break;
                 case Creature_FieldIndex.NIFT:
-                    obj._NIFT.Set(
+                    obj.SetNIFT(
                         (Byte[])pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.Flags:
-                    obj._Flags.Set(
+                    obj.SetFlags(
                         (Creature.CreatureFlag)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.BaseSpellPoints:
-                    obj._BaseSpellPoints.Set(
+                    obj.SetBaseSpellPoints(
                         (UInt16)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.Fatigue:
-                    obj._Fatigue.Set(
+                    obj.SetFatigue(
                         (UInt16)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.BarterGold:
-                    obj._BarterGold.Set(
+                    obj.SetBarterGold(
                         (UInt16)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.LevelOffset:
-                    obj._LevelOffset.Set(
+                    obj.SetLevelOffset(
                         (Int16)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.CalcMin:
-                    obj._CalcMin.Set(
+                    obj.SetCalcMin(
                         (UInt16)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.CalcMax:
-                    obj._CalcMax.Set(
+                    obj.SetCalcMax(
                         (UInt16)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.Factions:
                     obj._Factions.SetTo((IEnumerable<RankPlacement>)pair.Value, null);
@@ -2712,39 +6526,39 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Creature_FieldIndex.Aggression:
-                    obj._Aggression.Set(
+                    obj.SetAggression(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.Confidence:
-                    obj._Confidence.Set(
+                    obj.SetConfidence(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.EnergyLevel:
-                    obj._EnergyLevel.Set(
+                    obj.SetEnergyLevel(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.Responsibility:
-                    obj._Responsibility.Set(
+                    obj.SetResponsibility(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.BuySellServices:
-                    obj._BuySellServices.Set(
+                    obj.SetBuySellServices(
                         (NPC.BuySellServiceFlag)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.Teaches:
-                    obj._Teaches.Set(
+                    obj.SetTeaches(
                         (Skill)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.MaximumTrainingLevel:
-                    obj._MaximumTrainingLevel.Set(
+                    obj.SetMaximumTrainingLevel(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.AIPackages:
                     obj._AIPackages.SetTo((IEnumerable<FormIDSetLink<AIPackage>>)pair.Value, null);
@@ -2753,84 +6567,84 @@ namespace Mutagen.Bethesda.Oblivion
                     obj._Animations.SetTo((IEnumerable<String>)pair.Value, null);
                     break;
                 case Creature_FieldIndex.CreatureType:
-                    obj._CreatureType.Set(
+                    obj.SetCreatureType(
                         (Creature.CreatureTypeEnum)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.CombatSKill:
-                    obj._CombatSKill.Set(
+                    obj.SetCombatSKill(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.MagicSKill:
-                    obj._MagicSKill.Set(
+                    obj.SetMagicSKill(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.StealthSKill:
-                    obj._StealthSKill.Set(
+                    obj.SetStealthSKill(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.SoulLevel:
-                    obj._SoulLevel.Set(
+                    obj.SetSoulLevel(
                         (SoulLevel)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.Health:
-                    obj._Health.Set(
+                    obj.SetHealth(
                         (UInt32)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.AttackDamage:
-                    obj._AttackDamage.Set(
+                    obj.SetAttackDamage(
                         (UInt16)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.Strength:
-                    obj._Strength.Set(
+                    obj.SetStrength(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.Intelligence:
-                    obj._Intelligence.Set(
+                    obj.SetIntelligence(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.Willpower:
-                    obj._Willpower.Set(
+                    obj.SetWillpower(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.Agility:
-                    obj._Agility.Set(
+                    obj.SetAgility(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.Speed:
-                    obj._Speed.Set(
+                    obj.SetSpeed(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.Endurance:
-                    obj._Endurance.Set(
+                    obj.SetEndurance(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.Personality:
-                    obj._Personality.Set(
+                    obj.SetPersonality(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.Luck:
-                    obj._Luck.Set(
+                    obj.SetLuck(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.AttackReach:
-                    obj._AttackReach.Set(
+                    obj.SetAttackReach(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.CombatStyle:
                     obj.CombatStyle_Property.Set(
@@ -2838,29 +6652,29 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Creature_FieldIndex.TurningSpeed:
-                    obj._TurningSpeed.Set(
+                    obj.SetTurningSpeed(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.BaseScale:
-                    obj._BaseScale.Set(
+                    obj.SetBaseScale(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.FootWeight:
-                    obj._FootWeight.Set(
+                    obj.SetFootWeight(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.BloodSpray:
-                    obj._BloodSpray.Set(
+                    obj.SetBloodSpray(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.BloodDecal:
-                    obj._BloodDecal.Set(
+                    obj.SetBloodDecal(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Creature_FieldIndex.InheritsSoundFrom:
                     obj.InheritsSoundFrom_Property.Set(
@@ -3320,7 +7134,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "9859ec12-21c5-4de8-9caa-404330da8b79";
 
-        public const ushort FieldCount = 48;
+        public const ushort AdditionalFieldCount = 48;
+
+        public const ushort FieldCount = 54;
 
         public static readonly Type MaskType = typeof(Creature_Mask<>);
 
@@ -3990,7 +7806,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -4153,8 +7970,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.NIFT_Property.SetToWithDefault(
                         rhs: rhs.NIFT_Property,
-                        def: def?.NIFT_Property,
-                        cmds: cmds);
+                        def: def?.NIFT_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -4666,8 +8482,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.AttackReach_Property.SetToWithDefault(
                         rhs: rhs.AttackReach_Property,
-                        def: def?.AttackReach_Property,
-                        cmds: cmds);
+                        def: def?.AttackReach_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -4696,8 +8511,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.TurningSpeed_Property.SetToWithDefault(
                         rhs: rhs.TurningSpeed_Property,
-                        def: def?.TurningSpeed_Property,
-                        cmds: cmds);
+                        def: def?.TurningSpeed_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -4711,8 +8525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.BaseScale_Property.SetToWithDefault(
                         rhs: rhs.BaseScale_Property,
-                        def: def?.BaseScale_Property,
-                        cmds: cmds);
+                        def: def?.BaseScale_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -4726,8 +8539,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.FootWeight_Property.SetToWithDefault(
                         rhs: rhs.FootWeight_Property,
-                        def: def?.FootWeight_Property,
-                        cmds: cmds);
+                        def: def?.FootWeight_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -4741,8 +8553,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.BloodSpray_Property.SetToWithDefault(
                         rhs: rhs.BloodSpray_Property,
-                        def: def?.BloodSpray_Property,
-                        cmds: cmds);
+                        def: def?.BloodSpray_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -4756,8 +8567,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.BloodDecal_Property.SetToWithDefault(
                         rhs: rhs.BloodDecal_Property,
-                        def: def?.BloodDecal_Property,
-                        cmds: cmds);
+                        def: def?.BloodDecal_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

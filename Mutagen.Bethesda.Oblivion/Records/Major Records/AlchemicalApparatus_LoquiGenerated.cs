@@ -33,6 +33,11 @@ namespace Mutagen.Bethesda.Oblivion
         IAlchemicalApparatus,
         ILoquiObject<AlchemicalApparatus>,
         ILoquiObjectSetter,
+        IPropertySupporter<Model>,
+        IPropertySupporter<String>,
+        IPropertySupporter<AlchemicalApparatus.ApparatusType>,
+        IPropertySupporter<UInt32>,
+        IPropertySupporter<Single>,
         IEquatable<AlchemicalApparatus>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -48,27 +53,95 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
+        protected Model _Model;
+        protected PropertyForwarder<AlchemicalApparatus, Model> _ModelForwarder;
+        public INotifyingSetItem<Model> Model_Property => _ModelForwarder ?? (_ModelForwarder = new PropertyForwarder<AlchemicalApparatus, Model>(this, (int)AlchemicalApparatus_FieldIndex.Model));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
-        public INotifyingSetItem<Model> Model_Property => this._Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IAlchemicalApparatusGetter.Model => this.Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        public Model Model
+        {
+            get => this._Model;
+            set => this.SetModel(value);
+        }
+        protected void SetModel(
+            Model item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Model];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Model, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Model] = hasBeenSet;
+            }
+            if (_Model_subscriptions != null)
+            {
+                var tmp = Model;
+                _Model = item;
+                _Model_subscriptions.FireSubscriptions(
+                    index: (int)AlchemicalApparatus_FieldIndex.Model,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Model = item;
+            }
+        }
+        protected void UnsetModel()
+        {
+            _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Model] = false;
+            Model = default(Model);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IAlchemicalApparatus.Model_Property => this.Model_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> IAlchemicalApparatusGetter.Model_Property => this.Model_Property;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _Icon = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Icon_Property => _Icon;
+        protected String _Icon;
+        protected PropertyForwarder<AlchemicalApparatus, String> _IconForwarder;
+        public INotifyingSetItem<String> Icon_Property => _IconForwarder ?? (_IconForwarder = new PropertyForwarder<AlchemicalApparatus, String>(this, (int)AlchemicalApparatus_FieldIndex.Icon));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Icon
         {
-            get => this._Icon.Item;
-            set => this._Icon.Set(value);
+            get => this._Icon;
+            set => this.SetIcon(value);
+        }
+        protected void SetIcon(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Icon];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Icon == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Icon] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Icon;
+                _Icon = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)AlchemicalApparatus_FieldIndex.Icon,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Icon = item;
+            }
+        }
+        protected void UnsetIcon()
+        {
+            _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Icon] = false;
+            Icon = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IAlchemicalApparatus.Icon_Property => this.Icon_Property;
@@ -83,14 +156,47 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Script> IAlchemicalApparatusGetter.Script_Property => this.Script_Property;
         #endregion
         #region Type
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<AlchemicalApparatus.ApparatusType> _Type = NotifyingItem.Factory<AlchemicalApparatus.ApparatusType>();
-        public INotifyingItem<AlchemicalApparatus.ApparatusType> Type_Property => _Type;
+        protected AlchemicalApparatus.ApparatusType _Type;
+        protected PropertyForwarder<AlchemicalApparatus, AlchemicalApparatus.ApparatusType> _TypeForwarder;
+        public INotifyingSetItem<AlchemicalApparatus.ApparatusType> Type_Property => _TypeForwarder ?? (_TypeForwarder = new PropertyForwarder<AlchemicalApparatus, AlchemicalApparatus.ApparatusType>(this, (int)AlchemicalApparatus_FieldIndex.Type));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public AlchemicalApparatus.ApparatusType Type
         {
-            get => this._Type.Item;
-            set => this._Type.Set(value);
+            get => this._Type;
+            set => this.SetType(value);
+        }
+        protected void SetType(
+            AlchemicalApparatus.ApparatusType item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Type];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Type == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Type] = hasBeenSet;
+            }
+            if (_AlchemicalApparatusApparatusType_subscriptions != null)
+            {
+                var tmp = Type;
+                _Type = item;
+                _AlchemicalApparatusApparatusType_subscriptions.FireSubscriptions(
+                    index: (int)AlchemicalApparatus_FieldIndex.Type,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Type = item;
+            }
+        }
+        protected void UnsetType()
+        {
+            _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Type] = false;
+            Type = default(AlchemicalApparatus.ApparatusType);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<AlchemicalApparatus.ApparatusType> IAlchemicalApparatus.Type_Property => this.Type_Property;
@@ -98,14 +204,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<AlchemicalApparatus.ApparatusType> IAlchemicalApparatusGetter.Type_Property => this.Type_Property;
         #endregion
         #region Value
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
-        public INotifyingItem<UInt32> Value_Property => _Value;
+        protected UInt32 _Value;
+        protected PropertyForwarder<AlchemicalApparatus, UInt32> _ValueForwarder;
+        public INotifyingSetItem<UInt32> Value_Property => _ValueForwarder ?? (_ValueForwarder = new PropertyForwarder<AlchemicalApparatus, UInt32>(this, (int)AlchemicalApparatus_FieldIndex.Value));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Value
         {
-            get => this._Value.Item;
-            set => this._Value.Set(value);
+            get => this._Value;
+            set => this.SetValue(value);
+        }
+        protected void SetValue(
+            UInt32 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Value];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Value == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Value] = hasBeenSet;
+            }
+            if (_UInt32_subscriptions != null)
+            {
+                var tmp = Value;
+                _Value = item;
+                _UInt32_subscriptions.FireSubscriptions(
+                    index: (int)AlchemicalApparatus_FieldIndex.Value,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Value = item;
+            }
+        }
+        protected void UnsetValue()
+        {
+            _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Value] = false;
+            Value = default(UInt32);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> IAlchemicalApparatus.Value_Property => this.Value_Property;
@@ -113,14 +252,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt32> IAlchemicalApparatusGetter.Value_Property => this.Value_Property;
         #endregion
         #region Weight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> Weight_Property => _Weight;
+        protected Single _Weight;
+        protected PropertyForwarder<AlchemicalApparatus, Single> _WeightForwarder;
+        public INotifyingSetItem<Single> Weight_Property => _WeightForwarder ?? (_WeightForwarder = new PropertyForwarder<AlchemicalApparatus, Single>(this, (int)AlchemicalApparatus_FieldIndex.Weight));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Weight
         {
-            get => this._Weight.Item;
-            set => this._Weight.Set(value);
+            get => this._Weight;
+            set => this.SetWeight(value);
+        }
+        protected void SetWeight(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Weight];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Weight == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Weight] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = Weight;
+                _Weight = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)AlchemicalApparatus_FieldIndex.Weight,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Weight = item;
+            }
+        }
+        protected void UnsetWeight()
+        {
+            _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Weight] = false;
+            Weight = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IAlchemicalApparatus.Weight_Property => this.Weight_Property;
@@ -128,14 +300,52 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IAlchemicalApparatusGetter.Weight_Property => this.Weight_Property;
         #endregion
         #region Quality
-        protected INotifyingItem<Single> _Quality = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> Quality_Property => _Quality;
+        protected Single _Quality;
+        protected PropertyForwarder<AlchemicalApparatus, Single> _QualityForwarder;
+        public INotifyingSetItem<Single> Quality_Property => _QualityForwarder ?? (_QualityForwarder = new PropertyForwarder<AlchemicalApparatus, Single>(this, (int)AlchemicalApparatus_FieldIndex.Quality));
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Quality
         {
-            get => this._Quality.Item;
-            set => this._Quality.Set(value.PutInRange(Quality_Range.Min, Quality_Range.Max));
+            get => this._Quality;
+            set => this.SetQuality(value);
         }
+        protected void SetQuality(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            item = item.PutInRange(Quality_Range.Min, Quality_Range.Max);
+            var oldHasBeenSet = _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Quality];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Quality == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Quality] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = Quality;
+                _Quality = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)AlchemicalApparatus_FieldIndex.Quality,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Quality = item;
+            }
+        }
+        protected void UnsetQuality()
+        {
+            _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Quality] = false;
+            Quality = default(Single);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IAlchemicalApparatus.Quality_Property => this.Quality_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> IAlchemicalApparatusGetter.Quality_Property => this.Quality_Property;
         public static RangeFloat Quality_Range = new RangeFloat(0f, 255f);
         #endregion
@@ -537,16 +747,32 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    var ModeltryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)AlchemicalApparatus_FieldIndex.Model,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ModeltryGet.Succeeded)
+                    {
+                        item.SetModel(item: ModeltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetModel();
+                    }
                     break;
                 case "Icon":
-                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var IcontryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)AlchemicalApparatus_FieldIndex.Icon,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (IcontryGet.Succeeded)
+                    {
+                        item.SetIcon(item: IcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetIcon();
+                    }
                     break;
                 case "Script":
                     item.Script_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
@@ -555,29 +781,61 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Type":
-                    item._Type.SetIfSucceededOrDefault(EnumXmlTranslation<AlchemicalApparatus.ApparatusType>.Instance.Parse(
+                    var TypetryGet = EnumXmlTranslation<AlchemicalApparatus.ApparatusType>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)AlchemicalApparatus_FieldIndex.Type,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (TypetryGet.Succeeded)
+                    {
+                        item.SetType(item: TypetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetType();
+                    }
                     break;
                 case "Value":
-                    item._Value.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
+                    var ValuetryGet = UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)AlchemicalApparatus_FieldIndex.Value,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ValuetryGet.Succeeded)
+                    {
+                        item.SetValue(item: ValuetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetValue();
+                    }
                     break;
                 case "Weight":
-                    item._Weight.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var WeighttryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)AlchemicalApparatus_FieldIndex.Weight,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (WeighttryGet.Succeeded)
+                    {
+                        item.SetWeight(item: WeighttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetWeight();
+                    }
                     break;
                 case "Quality":
-                    item._Quality.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var QualitytryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)AlchemicalApparatus_FieldIndex.Quality,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (QualitytryGet.Succeeded)
+                    {
+                        item.SetQuality(item: QualitytryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetQuality();
+                    }
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -586,6 +844,688 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Model
+        protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
+        Model IPropertySupporter<Model>.Get(int index)
+        {
+            return GetModel(index: index);
+        }
+
+        protected Model GetModel(int index)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Model:
+                    return Model;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        void IPropertySupporter<Model>.Set(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetModel(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetModel(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Model:
+                    SetModel(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Model>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Model>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Model>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetModel(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetModel(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Model:
+                    _hasBeenSetTracker[index] = false;
+                    Model = default(Model);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Model> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Model_subscriptions == null)
+            {
+                _Model_subscriptions = new ObjectCentralizationSubscriptions<Model>();
+            }
+            _Model_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Model_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Model>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Model IPropertySupporter<Model>.DefaultValue(int index)
+        {
+            return DefaultValueModel(index: index);
+        }
+
+        protected Model DefaultValueModel(int index)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Model:
+                    return default(Model);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter String
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected override String GetString(int index)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Icon:
+                    return Icon;
+                default:
+                    return base.GetString(index: index);
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Icon:
+                    SetIcon(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetString(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Icon:
+                    _hasBeenSetTracker[index] = false;
+                    Icon = default(String);
+                    break;
+                default:
+                    base.UnsetString(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected override String DefaultValueString(int index)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Icon:
+                    return default(String);
+                default:
+                    return base.DefaultValueString(index: index);
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter AlchemicalApparatus.ApparatusType
+        protected ObjectCentralizationSubscriptions<AlchemicalApparatus.ApparatusType> _AlchemicalApparatusApparatusType_subscriptions;
+        AlchemicalApparatus.ApparatusType IPropertySupporter<AlchemicalApparatus.ApparatusType>.Get(int index)
+        {
+            return GetAlchemicalApparatusApparatusType(index: index);
+        }
+
+        protected AlchemicalApparatus.ApparatusType GetAlchemicalApparatusApparatusType(int index)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Type:
+                    return Type;
+                default:
+                    throw new ArgumentException($"Unknown index for field type AlchemicalApparatus.ApparatusType: {index}");
+            }
+        }
+
+        void IPropertySupporter<AlchemicalApparatus.ApparatusType>.Set(
+            int index,
+            AlchemicalApparatus.ApparatusType item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetAlchemicalApparatusApparatusType(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetAlchemicalApparatusApparatusType(
+            int index,
+            AlchemicalApparatus.ApparatusType item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Type:
+                    SetType(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type AlchemicalApparatus.ApparatusType: {index}");
+            }
+        }
+
+        bool IPropertySupporter<AlchemicalApparatus.ApparatusType>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<AlchemicalApparatus.ApparatusType>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<AlchemicalApparatus.ApparatusType>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetAlchemicalApparatusApparatusType(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetAlchemicalApparatusApparatusType(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Type:
+                    _hasBeenSetTracker[index] = false;
+                    Type = default(AlchemicalApparatus.ApparatusType);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type AlchemicalApparatus.ApparatusType: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<AlchemicalApparatus.ApparatusType>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<AlchemicalApparatus.ApparatusType> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_AlchemicalApparatusApparatusType_subscriptions == null)
+            {
+                _AlchemicalApparatusApparatusType_subscriptions = new ObjectCentralizationSubscriptions<AlchemicalApparatus.ApparatusType>();
+            }
+            _AlchemicalApparatusApparatusType_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<AlchemicalApparatus.ApparatusType>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _AlchemicalApparatusApparatusType_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<AlchemicalApparatus.ApparatusType>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        AlchemicalApparatus.ApparatusType IPropertySupporter<AlchemicalApparatus.ApparatusType>.DefaultValue(int index)
+        {
+            return DefaultValueAlchemicalApparatusApparatusType(index: index);
+        }
+
+        protected AlchemicalApparatus.ApparatusType DefaultValueAlchemicalApparatusApparatusType(int index)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Type:
+                    return default(AlchemicalApparatus.ApparatusType);
+                default:
+                    throw new ArgumentException($"Unknown index for field type AlchemicalApparatus.ApparatusType: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter UInt32
+        protected ObjectCentralizationSubscriptions<UInt32> _UInt32_subscriptions;
+        UInt32 IPropertySupporter<UInt32>.Get(int index)
+        {
+            return GetUInt32(index: index);
+        }
+
+        protected UInt32 GetUInt32(int index)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Value:
+                    return Value;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        void IPropertySupporter<UInt32>.Set(
+            int index,
+            UInt32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetUInt32(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetUInt32(
+            int index,
+            UInt32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Value:
+                    SetValue(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<UInt32>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<UInt32>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetUInt32(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetUInt32(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Value:
+                    _hasBeenSetTracker[index] = false;
+                    Value = default(UInt32);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt32>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<UInt32> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_UInt32_subscriptions == null)
+            {
+                _UInt32_subscriptions = new ObjectCentralizationSubscriptions<UInt32>();
+            }
+            _UInt32_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt32>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _UInt32_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<UInt32>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        UInt32 IPropertySupporter<UInt32>.DefaultValue(int index)
+        {
+            return DefaultValueUInt32(index: index);
+        }
+
+        protected UInt32 DefaultValueUInt32(int index)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Value:
+                    return default(UInt32);
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Single
+        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
+        Single IPropertySupporter<Single>.Get(int index)
+        {
+            return GetSingle(index: index);
+        }
+
+        protected Single GetSingle(int index)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Weight:
+                    return Weight;
+                case AlchemicalApparatus_FieldIndex.Quality:
+                    return Quality;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        void IPropertySupporter<Single>.Set(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSingle(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetSingle(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Weight:
+                    SetWeight(item, hasBeenSet, cmds);
+                    break;
+                case AlchemicalApparatus_FieldIndex.Quality:
+                    SetQuality(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Single>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Single>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSingle(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetSingle(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Weight:
+                    _hasBeenSetTracker[index] = false;
+                    Weight = default(Single);
+                    break;
+                case AlchemicalApparatus_FieldIndex.Quality:
+                    _hasBeenSetTracker[index] = false;
+                    Quality = default(Single);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Single> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Single_subscriptions == null)
+            {
+                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
+            }
+            _Single_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Single_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Single IPropertySupporter<Single>.DefaultValue(int index)
+        {
+            return DefaultValueSingle(index: index);
+        }
+
+        protected Single DefaultValueSingle(int index)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Weight:
+                case AlchemicalApparatus_FieldIndex.Quality:
+                    return default(Single);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
             }
         }
 
@@ -808,18 +1748,36 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Model,
-                        errorMask: errorMask));
+                    {
+                        var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                            frame: frame.Spawn(snapToFinalPosition: false),
+                            fieldIndex: (int)AlchemicalApparatus_FieldIndex.Model,
+                            errorMask: errorMask);
+                        if (ModeltryGet.Succeeded)
+                        {
+                            item.SetModel(item: ModeltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetModel();
+                        }
+                    }
                     return TryGet<AlchemicalApparatus_FieldIndex?>.Succeed(AlchemicalApparatus_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var IcontryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)AlchemicalApparatus_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (IcontryGet.Succeeded)
+                    {
+                        item.SetIcon(item: IcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetIcon();
+                    }
                     return TryGet<AlchemicalApparatus_FieldIndex?>.Succeed(AlchemicalApparatus_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -832,22 +1790,54 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Type.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlchemicalApparatus.ApparatusType>.Instance.Parse(
+                        var TypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlchemicalApparatus.ApparatusType>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(1),
                             fieldIndex: (int)AlchemicalApparatus_FieldIndex.Type,
-                            errorMask: errorMask));
-                        item._Value.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (TypetryGet.Succeeded)
+                        {
+                            item.SetType(item: TypetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetType();
+                        }
+                        var ValuetryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)AlchemicalApparatus_FieldIndex.Value,
-                            errorMask: errorMask));
-                        item._Weight.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (ValuetryGet.Succeeded)
+                        {
+                            item.SetValue(item: ValuetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetValue();
+                        }
+                        var WeighttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)AlchemicalApparatus_FieldIndex.Weight,
-                            errorMask: errorMask));
-                        item._Quality.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (WeighttryGet.Succeeded)
+                        {
+                            item.SetWeight(item: WeighttryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetWeight();
+                        }
+                        var QualitytryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)AlchemicalApparatus_FieldIndex.Quality,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (QualitytryGet.Succeeded)
+                        {
+                            item.SetQuality(item: QualitytryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetQuality();
+                        }
                     }
                     return TryGet<AlchemicalApparatus_FieldIndex?>.Succeed(AlchemicalApparatus_FieldIndex.Quality);
                 default:
@@ -962,14 +1952,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case AlchemicalApparatus_FieldIndex.Model:
-                    this._Model.Set(
+                    this.SetModel(
                         (Model)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case AlchemicalApparatus_FieldIndex.Icon:
-                    this._Icon.Set(
+                    this.SetIcon(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case AlchemicalApparatus_FieldIndex.Script:
                     this.Script_Property.Set(
@@ -977,24 +1967,24 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case AlchemicalApparatus_FieldIndex.Type:
-                    this._Type.Set(
+                    this.SetType(
                         (AlchemicalApparatus.ApparatusType)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case AlchemicalApparatus_FieldIndex.Value:
-                    this._Value.Set(
+                    this.SetValue(
                         (UInt32)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case AlchemicalApparatus_FieldIndex.Weight:
-                    this._Weight.Set(
+                    this.SetWeight(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case AlchemicalApparatus_FieldIndex.Quality:
-                    this._Quality.Set(
+                    this.SetQuality(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1028,14 +2018,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case AlchemicalApparatus_FieldIndex.Model:
-                    obj._Model.Set(
+                    obj.SetModel(
                         (Model)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case AlchemicalApparatus_FieldIndex.Icon:
-                    obj._Icon.Set(
+                    obj.SetIcon(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case AlchemicalApparatus_FieldIndex.Script:
                     obj.Script_Property.Set(
@@ -1043,24 +2033,24 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case AlchemicalApparatus_FieldIndex.Type:
-                    obj._Type.Set(
+                    obj.SetType(
                         (AlchemicalApparatus.ApparatusType)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case AlchemicalApparatus_FieldIndex.Value:
-                    obj._Value.Set(
+                    obj.SetValue(
                         (UInt32)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case AlchemicalApparatus_FieldIndex.Weight:
-                    obj._Weight.Set(
+                    obj.SetWeight(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case AlchemicalApparatus_FieldIndex.Quality:
-                    obj._Quality.Set(
+                    obj.SetQuality(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1177,7 +2167,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "731a9b97-8051-4d72-8008-3e53a96659cd";
 
-        public const ushort FieldCount = 7;
+        public const ushort AdditionalFieldCount = 7;
+
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(AlchemicalApparatus_Mask<>);
 
@@ -1375,7 +2367,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1476,8 +2469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Icon_Property.SetToWithDefault(
                         rhs: rhs.Icon_Property,
-                        def: def?.Icon_Property,
-                        cmds: cmds);
+                        def: def?.Icon_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

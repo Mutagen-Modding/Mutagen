@@ -33,6 +33,12 @@ namespace Mutagen.Bethesda.Oblivion
         IAmmo,
         ILoquiObject<Ammo>,
         ILoquiObjectSetter,
+        IPropertySupporter<String>,
+        IPropertySupporter<Model>,
+        IPropertySupporter<UInt16>,
+        IPropertySupporter<Single>,
+        IPropertySupporter<Ammo.AmmoFlag>,
+        IPropertySupporter<UInt32>,
         IEquatable<Ammo>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -48,14 +54,47 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _Name = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Name_Property => _Name;
+        protected String _Name;
+        protected PropertyForwarder<Ammo, String> _NameForwarder;
+        public INotifyingSetItem<String> Name_Property => _NameForwarder ?? (_NameForwarder = new PropertyForwarder<Ammo, String>(this, (int)Ammo_FieldIndex.Name));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Name
         {
-            get => this._Name.Item;
-            set => this._Name.Set(value);
+            get => this._Name;
+            set => this.SetName(value);
+        }
+        protected void SetName(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Ammo_FieldIndex.Name];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Name == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Ammo_FieldIndex.Name] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Name;
+                _Name = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Ammo_FieldIndex.Name,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Name = item;
+            }
+        }
+        protected void UnsetName()
+        {
+            _hasBeenSetTracker[(int)Ammo_FieldIndex.Name] = false;
+            Name = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IAmmo.Name_Property => this.Name_Property;
@@ -63,27 +102,95 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> IAmmoGetter.Name_Property => this.Name_Property;
         #endregion
         #region Model
+        protected Model _Model;
+        protected PropertyForwarder<Ammo, Model> _ModelForwarder;
+        public INotifyingSetItem<Model> Model_Property => _ModelForwarder ?? (_ModelForwarder = new PropertyForwarder<Ammo, Model>(this, (int)Ammo_FieldIndex.Model));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
-        public INotifyingSetItem<Model> Model_Property => this._Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IAmmoGetter.Model => this.Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        public Model Model
+        {
+            get => this._Model;
+            set => this.SetModel(value);
+        }
+        protected void SetModel(
+            Model item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Ammo_FieldIndex.Model];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Model, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Ammo_FieldIndex.Model] = hasBeenSet;
+            }
+            if (_Model_subscriptions != null)
+            {
+                var tmp = Model;
+                _Model = item;
+                _Model_subscriptions.FireSubscriptions(
+                    index: (int)Ammo_FieldIndex.Model,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Model = item;
+            }
+        }
+        protected void UnsetModel()
+        {
+            _hasBeenSetTracker[(int)Ammo_FieldIndex.Model] = false;
+            Model = default(Model);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IAmmo.Model_Property => this.Model_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> IAmmoGetter.Model_Property => this.Model_Property;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _Icon = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Icon_Property => _Icon;
+        protected String _Icon;
+        protected PropertyForwarder<Ammo, String> _IconForwarder;
+        public INotifyingSetItem<String> Icon_Property => _IconForwarder ?? (_IconForwarder = new PropertyForwarder<Ammo, String>(this, (int)Ammo_FieldIndex.Icon));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Icon
         {
-            get => this._Icon.Item;
-            set => this._Icon.Set(value);
+            get => this._Icon;
+            set => this.SetIcon(value);
+        }
+        protected void SetIcon(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Ammo_FieldIndex.Icon];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Icon == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Ammo_FieldIndex.Icon] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Icon;
+                _Icon = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Ammo_FieldIndex.Icon,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Icon = item;
+            }
+        }
+        protected void UnsetIcon()
+        {
+            _hasBeenSetTracker[(int)Ammo_FieldIndex.Icon] = false;
+            Icon = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IAmmo.Icon_Property => this.Icon_Property;
@@ -98,14 +205,47 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Enchantment> IAmmoGetter.Enchantment_Property => this.Enchantment_Property;
         #endregion
         #region EnchantmentPoints
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<UInt16> _EnchantmentPoints = NotifyingSetItem.Factory<UInt16>(markAsSet: false);
-        public INotifyingSetItem<UInt16> EnchantmentPoints_Property => _EnchantmentPoints;
+        protected UInt16 _EnchantmentPoints;
+        protected PropertyForwarder<Ammo, UInt16> _EnchantmentPointsForwarder;
+        public INotifyingSetItem<UInt16> EnchantmentPoints_Property => _EnchantmentPointsForwarder ?? (_EnchantmentPointsForwarder = new PropertyForwarder<Ammo, UInt16>(this, (int)Ammo_FieldIndex.EnchantmentPoints));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 EnchantmentPoints
         {
-            get => this._EnchantmentPoints.Item;
-            set => this._EnchantmentPoints.Set(value);
+            get => this._EnchantmentPoints;
+            set => this.SetEnchantmentPoints(value);
+        }
+        protected void SetEnchantmentPoints(
+            UInt16 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Ammo_FieldIndex.EnchantmentPoints];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && EnchantmentPoints == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Ammo_FieldIndex.EnchantmentPoints] = hasBeenSet;
+            }
+            if (_UInt16_subscriptions != null)
+            {
+                var tmp = EnchantmentPoints;
+                _EnchantmentPoints = item;
+                _UInt16_subscriptions.FireSubscriptions(
+                    index: (int)Ammo_FieldIndex.EnchantmentPoints,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _EnchantmentPoints = item;
+            }
+        }
+        protected void UnsetEnchantmentPoints()
+        {
+            _hasBeenSetTracker[(int)Ammo_FieldIndex.EnchantmentPoints] = false;
+            EnchantmentPoints = default(UInt16);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<UInt16> IAmmo.EnchantmentPoints_Property => this.EnchantmentPoints_Property;
@@ -113,14 +253,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<UInt16> IAmmoGetter.EnchantmentPoints_Property => this.EnchantmentPoints_Property;
         #endregion
         #region Speed
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _Speed = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> Speed_Property => _Speed;
+        protected Single _Speed;
+        protected PropertyForwarder<Ammo, Single> _SpeedForwarder;
+        public INotifyingSetItem<Single> Speed_Property => _SpeedForwarder ?? (_SpeedForwarder = new PropertyForwarder<Ammo, Single>(this, (int)Ammo_FieldIndex.Speed));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Speed
         {
-            get => this._Speed.Item;
-            set => this._Speed.Set(value);
+            get => this._Speed;
+            set => this.SetSpeed(value);
+        }
+        protected void SetSpeed(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Ammo_FieldIndex.Speed];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Speed == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Ammo_FieldIndex.Speed] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = Speed;
+                _Speed = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Ammo_FieldIndex.Speed,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Speed = item;
+            }
+        }
+        protected void UnsetSpeed()
+        {
+            _hasBeenSetTracker[(int)Ammo_FieldIndex.Speed] = false;
+            Speed = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IAmmo.Speed_Property => this.Speed_Property;
@@ -128,14 +301,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IAmmoGetter.Speed_Property => this.Speed_Property;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Ammo.AmmoFlag> _Flags = NotifyingItem.Factory<Ammo.AmmoFlag>();
-        public INotifyingItem<Ammo.AmmoFlag> Flags_Property => _Flags;
+        protected Ammo.AmmoFlag _Flags;
+        protected PropertyForwarder<Ammo, Ammo.AmmoFlag> _FlagsForwarder;
+        public INotifyingSetItem<Ammo.AmmoFlag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<Ammo, Ammo.AmmoFlag>(this, (int)Ammo_FieldIndex.Flags));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Ammo.AmmoFlag Flags
         {
-            get => this._Flags.Item;
-            set => this._Flags.Set(value);
+            get => this._Flags;
+            set => this.SetFlags(value);
+        }
+        protected void SetFlags(
+            Ammo.AmmoFlag item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Ammo_FieldIndex.Flags];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Ammo_FieldIndex.Flags] = hasBeenSet;
+            }
+            if (_AmmoAmmoFlag_subscriptions != null)
+            {
+                var tmp = Flags;
+                _Flags = item;
+                _AmmoAmmoFlag_subscriptions.FireSubscriptions(
+                    index: (int)Ammo_FieldIndex.Flags,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Flags = item;
+            }
+        }
+        protected void UnsetFlags()
+        {
+            _hasBeenSetTracker[(int)Ammo_FieldIndex.Flags] = false;
+            Flags = default(Ammo.AmmoFlag);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Ammo.AmmoFlag> IAmmo.Flags_Property => this.Flags_Property;
@@ -143,14 +349,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Ammo.AmmoFlag> IAmmoGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Value
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
-        public INotifyingItem<UInt32> Value_Property => _Value;
+        protected UInt32 _Value;
+        protected PropertyForwarder<Ammo, UInt32> _ValueForwarder;
+        public INotifyingSetItem<UInt32> Value_Property => _ValueForwarder ?? (_ValueForwarder = new PropertyForwarder<Ammo, UInt32>(this, (int)Ammo_FieldIndex.Value));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Value
         {
-            get => this._Value.Item;
-            set => this._Value.Set(value);
+            get => this._Value;
+            set => this.SetValue(value);
+        }
+        protected void SetValue(
+            UInt32 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Ammo_FieldIndex.Value];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Value == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Ammo_FieldIndex.Value] = hasBeenSet;
+            }
+            if (_UInt32_subscriptions != null)
+            {
+                var tmp = Value;
+                _Value = item;
+                _UInt32_subscriptions.FireSubscriptions(
+                    index: (int)Ammo_FieldIndex.Value,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Value = item;
+            }
+        }
+        protected void UnsetValue()
+        {
+            _hasBeenSetTracker[(int)Ammo_FieldIndex.Value] = false;
+            Value = default(UInt32);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> IAmmo.Value_Property => this.Value_Property;
@@ -158,14 +397,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt32> IAmmoGetter.Value_Property => this.Value_Property;
         #endregion
         #region Weight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> Weight_Property => _Weight;
+        protected Single _Weight;
+        protected PropertyForwarder<Ammo, Single> _WeightForwarder;
+        public INotifyingSetItem<Single> Weight_Property => _WeightForwarder ?? (_WeightForwarder = new PropertyForwarder<Ammo, Single>(this, (int)Ammo_FieldIndex.Weight));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Weight
         {
-            get => this._Weight.Item;
-            set => this._Weight.Set(value);
+            get => this._Weight;
+            set => this.SetWeight(value);
+        }
+        protected void SetWeight(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Ammo_FieldIndex.Weight];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Weight == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Ammo_FieldIndex.Weight] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = Weight;
+                _Weight = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Ammo_FieldIndex.Weight,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Weight = item;
+            }
+        }
+        protected void UnsetWeight()
+        {
+            _hasBeenSetTracker[(int)Ammo_FieldIndex.Weight] = false;
+            Weight = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IAmmo.Weight_Property => this.Weight_Property;
@@ -173,14 +445,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IAmmoGetter.Weight_Property => this.Weight_Property;
         #endregion
         #region Damage
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt16> _Damage = NotifyingItem.Factory<UInt16>();
-        public INotifyingItem<UInt16> Damage_Property => _Damage;
+        protected UInt16 _Damage;
+        protected PropertyForwarder<Ammo, UInt16> _DamageForwarder;
+        public INotifyingSetItem<UInt16> Damage_Property => _DamageForwarder ?? (_DamageForwarder = new PropertyForwarder<Ammo, UInt16>(this, (int)Ammo_FieldIndex.Damage));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 Damage
         {
-            get => this._Damage.Item;
-            set => this._Damage.Set(value);
+            get => this._Damage;
+            set => this.SetDamage(value);
+        }
+        protected void SetDamage(
+            UInt16 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Ammo_FieldIndex.Damage];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Damage == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Ammo_FieldIndex.Damage] = hasBeenSet;
+            }
+            if (_UInt16_subscriptions != null)
+            {
+                var tmp = Damage;
+                _Damage = item;
+                _UInt16_subscriptions.FireSubscriptions(
+                    index: (int)Ammo_FieldIndex.Damage,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Damage = item;
+            }
+        }
+        protected void UnsetDamage()
+        {
+            _hasBeenSetTracker[(int)Ammo_FieldIndex.Damage] = false;
+            Damage = default(UInt16);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> IAmmo.Damage_Property => this.Damage_Property;
@@ -605,22 +910,46 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Name":
-                    item._Name.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var NametryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Ammo_FieldIndex.Name,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (NametryGet.Succeeded)
+                    {
+                        item.SetName(item: NametryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetName();
+                    }
                     break;
                 case "Model":
-                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    var ModeltryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Ammo_FieldIndex.Model,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ModeltryGet.Succeeded)
+                    {
+                        item.SetModel(item: ModeltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetModel();
+                    }
                     break;
                 case "Icon":
-                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var IcontryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Ammo_FieldIndex.Icon,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (IcontryGet.Succeeded)
+                    {
+                        item.SetIcon(item: IcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetIcon();
+                    }
                     break;
                 case "Enchantment":
                     item.Enchantment_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
@@ -629,41 +958,89 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "EnchantmentPoints":
-                    item._EnchantmentPoints.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
+                    var EnchantmentPointstryGet = UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Ammo_FieldIndex.EnchantmentPoints,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (EnchantmentPointstryGet.Succeeded)
+                    {
+                        item.SetEnchantmentPoints(item: EnchantmentPointstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetEnchantmentPoints();
+                    }
                     break;
                 case "Speed":
-                    item._Speed.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var SpeedtryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Ammo_FieldIndex.Speed,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (SpeedtryGet.Succeeded)
+                    {
+                        item.SetSpeed(item: SpeedtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetSpeed();
+                    }
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<Ammo.AmmoFlag>.Instance.Parse(
+                    var FlagstryGet = EnumXmlTranslation<Ammo.AmmoFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Ammo_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (FlagstryGet.Succeeded)
+                    {
+                        item.SetFlags(item: FlagstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFlags();
+                    }
                     break;
                 case "Value":
-                    item._Value.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
+                    var ValuetryGet = UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Ammo_FieldIndex.Value,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ValuetryGet.Succeeded)
+                    {
+                        item.SetValue(item: ValuetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetValue();
+                    }
                     break;
                 case "Weight":
-                    item._Weight.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var WeighttryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Ammo_FieldIndex.Weight,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (WeighttryGet.Succeeded)
+                    {
+                        item.SetWeight(item: WeighttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetWeight();
+                    }
                     break;
                 case "Damage":
-                    item._Damage.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
+                    var DamagetryGet = UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Ammo_FieldIndex.Damage,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DamagetryGet.Succeeded)
+                    {
+                        item.SetDamage(item: DamagetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetDamage();
+                    }
                     break;
                 default:
                     ItemAbstract.Fill_XML_Internal(
@@ -672,6 +1049,841 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter String
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected override String GetString(int index)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.Name:
+                    return Name;
+                case Ammo_FieldIndex.Icon:
+                    return Icon;
+                default:
+                    return base.GetString(index: index);
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.Name:
+                    SetName(item, hasBeenSet, cmds);
+                    break;
+                case Ammo_FieldIndex.Icon:
+                    SetIcon(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetString(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.Name:
+                    _hasBeenSetTracker[index] = false;
+                    Name = default(String);
+                    break;
+                case Ammo_FieldIndex.Icon:
+                    _hasBeenSetTracker[index] = false;
+                    Icon = default(String);
+                    break;
+                default:
+                    base.UnsetString(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected override String DefaultValueString(int index)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.Name:
+                case Ammo_FieldIndex.Icon:
+                    return default(String);
+                default:
+                    return base.DefaultValueString(index: index);
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Model
+        protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
+        Model IPropertySupporter<Model>.Get(int index)
+        {
+            return GetModel(index: index);
+        }
+
+        protected Model GetModel(int index)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.Model:
+                    return Model;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        void IPropertySupporter<Model>.Set(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetModel(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetModel(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.Model:
+                    SetModel(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Model>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Model>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Model>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetModel(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetModel(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.Model:
+                    _hasBeenSetTracker[index] = false;
+                    Model = default(Model);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Model> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Model_subscriptions == null)
+            {
+                _Model_subscriptions = new ObjectCentralizationSubscriptions<Model>();
+            }
+            _Model_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Model_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Model>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Model IPropertySupporter<Model>.DefaultValue(int index)
+        {
+            return DefaultValueModel(index: index);
+        }
+
+        protected Model DefaultValueModel(int index)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.Model:
+                    return default(Model);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter UInt16
+        protected ObjectCentralizationSubscriptions<UInt16> _UInt16_subscriptions;
+        UInt16 IPropertySupporter<UInt16>.Get(int index)
+        {
+            return GetUInt16(index: index);
+        }
+
+        protected UInt16 GetUInt16(int index)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.EnchantmentPoints:
+                    return EnchantmentPoints;
+                case Ammo_FieldIndex.Damage:
+                    return Damage;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        void IPropertySupporter<UInt16>.Set(
+            int index,
+            UInt16 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetUInt16(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetUInt16(
+            int index,
+            UInt16 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.EnchantmentPoints:
+                    SetEnchantmentPoints(item, hasBeenSet, cmds);
+                    break;
+                case Ammo_FieldIndex.Damage:
+                    SetDamage(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        bool IPropertySupporter<UInt16>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<UInt16>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<UInt16>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetUInt16(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetUInt16(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.EnchantmentPoints:
+                    _hasBeenSetTracker[index] = false;
+                    EnchantmentPoints = default(UInt16);
+                    break;
+                case Ammo_FieldIndex.Damage:
+                    _hasBeenSetTracker[index] = false;
+                    Damage = default(UInt16);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt16>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<UInt16> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_UInt16_subscriptions == null)
+            {
+                _UInt16_subscriptions = new ObjectCentralizationSubscriptions<UInt16>();
+            }
+            _UInt16_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt16>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _UInt16_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<UInt16>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        UInt16 IPropertySupporter<UInt16>.DefaultValue(int index)
+        {
+            return DefaultValueUInt16(index: index);
+        }
+
+        protected UInt16 DefaultValueUInt16(int index)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.EnchantmentPoints:
+                case Ammo_FieldIndex.Damage:
+                    return default(UInt16);
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Single
+        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
+        Single IPropertySupporter<Single>.Get(int index)
+        {
+            return GetSingle(index: index);
+        }
+
+        protected Single GetSingle(int index)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.Speed:
+                    return Speed;
+                case Ammo_FieldIndex.Weight:
+                    return Weight;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        void IPropertySupporter<Single>.Set(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSingle(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetSingle(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.Speed:
+                    SetSpeed(item, hasBeenSet, cmds);
+                    break;
+                case Ammo_FieldIndex.Weight:
+                    SetWeight(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Single>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Single>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSingle(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetSingle(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.Speed:
+                    _hasBeenSetTracker[index] = false;
+                    Speed = default(Single);
+                    break;
+                case Ammo_FieldIndex.Weight:
+                    _hasBeenSetTracker[index] = false;
+                    Weight = default(Single);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Single> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Single_subscriptions == null)
+            {
+                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
+            }
+            _Single_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Single_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Single IPropertySupporter<Single>.DefaultValue(int index)
+        {
+            return DefaultValueSingle(index: index);
+        }
+
+        protected Single DefaultValueSingle(int index)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.Speed:
+                case Ammo_FieldIndex.Weight:
+                    return default(Single);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Ammo.AmmoFlag
+        protected ObjectCentralizationSubscriptions<Ammo.AmmoFlag> _AmmoAmmoFlag_subscriptions;
+        Ammo.AmmoFlag IPropertySupporter<Ammo.AmmoFlag>.Get(int index)
+        {
+            return GetAmmoAmmoFlag(index: index);
+        }
+
+        protected Ammo.AmmoFlag GetAmmoAmmoFlag(int index)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.Flags:
+                    return Flags;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Ammo.AmmoFlag: {index}");
+            }
+        }
+
+        void IPropertySupporter<Ammo.AmmoFlag>.Set(
+            int index,
+            Ammo.AmmoFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetAmmoAmmoFlag(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetAmmoAmmoFlag(
+            int index,
+            Ammo.AmmoFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.Flags:
+                    SetFlags(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Ammo.AmmoFlag: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Ammo.AmmoFlag>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Ammo.AmmoFlag>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Ammo.AmmoFlag>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetAmmoAmmoFlag(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetAmmoAmmoFlag(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.Flags:
+                    _hasBeenSetTracker[index] = false;
+                    Flags = default(Ammo.AmmoFlag);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Ammo.AmmoFlag: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Ammo.AmmoFlag>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Ammo.AmmoFlag> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_AmmoAmmoFlag_subscriptions == null)
+            {
+                _AmmoAmmoFlag_subscriptions = new ObjectCentralizationSubscriptions<Ammo.AmmoFlag>();
+            }
+            _AmmoAmmoFlag_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Ammo.AmmoFlag>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _AmmoAmmoFlag_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Ammo.AmmoFlag>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Ammo.AmmoFlag IPropertySupporter<Ammo.AmmoFlag>.DefaultValue(int index)
+        {
+            return DefaultValueAmmoAmmoFlag(index: index);
+        }
+
+        protected Ammo.AmmoFlag DefaultValueAmmoAmmoFlag(int index)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.Flags:
+                    return default(Ammo.AmmoFlag);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Ammo.AmmoFlag: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter UInt32
+        protected ObjectCentralizationSubscriptions<UInt32> _UInt32_subscriptions;
+        UInt32 IPropertySupporter<UInt32>.Get(int index)
+        {
+            return GetUInt32(index: index);
+        }
+
+        protected UInt32 GetUInt32(int index)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.Value:
+                    return Value;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        void IPropertySupporter<UInt32>.Set(
+            int index,
+            UInt32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetUInt32(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetUInt32(
+            int index,
+            UInt32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.Value:
+                    SetValue(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<UInt32>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<UInt32>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetUInt32(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetUInt32(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.Value:
+                    _hasBeenSetTracker[index] = false;
+                    Value = default(UInt32);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt32>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<UInt32> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_UInt32_subscriptions == null)
+            {
+                _UInt32_subscriptions = new ObjectCentralizationSubscriptions<UInt32>();
+            }
+            _UInt32_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt32>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _UInt32_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<UInt32>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        UInt32 IPropertySupporter<UInt32>.DefaultValue(int index)
+        {
+            return DefaultValueUInt32(index: index);
+        }
+
+        protected UInt32 DefaultValueUInt32(int index)
+        {
+            switch ((Ammo_FieldIndex)index)
+            {
+                case Ammo_FieldIndex.Value:
+                    return default(UInt32);
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
             }
         }
 
@@ -895,25 +2107,51 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "FULL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Name.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var NametryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Ammo_FieldIndex.Name,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (NametryGet.Succeeded)
+                    {
+                        item.SetName(item: NametryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetName();
+                    }
                     return TryGet<Ammo_FieldIndex?>.Succeed(Ammo_FieldIndex.Name);
                 case "MODL":
-                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)Ammo_FieldIndex.Model,
-                        errorMask: errorMask));
+                    {
+                        var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                            frame: frame.Spawn(snapToFinalPosition: false),
+                            fieldIndex: (int)Ammo_FieldIndex.Model,
+                            errorMask: errorMask);
+                        if (ModeltryGet.Succeeded)
+                        {
+                            item.SetModel(item: ModeltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetModel();
+                        }
+                    }
                     return TryGet<Ammo_FieldIndex?>.Succeed(Ammo_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var IcontryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Ammo_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (IcontryGet.Succeeded)
+                    {
+                        item.SetIcon(item: IcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetIcon();
+                    }
                     return TryGet<Ammo_FieldIndex?>.Succeed(Ammo_FieldIndex.Icon);
                 case "ENAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -924,35 +2162,83 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Ammo_FieldIndex?>.Succeed(Ammo_FieldIndex.Enchantment);
                 case "ANAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._EnchantmentPoints.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                    var EnchantmentPointstryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Ammo_FieldIndex.EnchantmentPoints,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (EnchantmentPointstryGet.Succeeded)
+                    {
+                        item.SetEnchantmentPoints(item: EnchantmentPointstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetEnchantmentPoints();
+                    }
                     return TryGet<Ammo_FieldIndex?>.Succeed(Ammo_FieldIndex.EnchantmentPoints);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Speed.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        var SpeedtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Ammo_FieldIndex.Speed,
-                            errorMask: errorMask));
-                        item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Ammo.AmmoFlag>.Instance.Parse(
+                            errorMask: errorMask);
+                        if (SpeedtryGet.Succeeded)
+                        {
+                            item.SetSpeed(item: SpeedtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetSpeed();
+                        }
+                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Ammo.AmmoFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Ammo_FieldIndex.Flags,
-                            errorMask: errorMask));
-                        item._Value.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (FlagstryGet.Succeeded)
+                        {
+                            item.SetFlags(item: FlagstryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetFlags();
+                        }
+                        var ValuetryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Ammo_FieldIndex.Value,
-                            errorMask: errorMask));
-                        item._Weight.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (ValuetryGet.Succeeded)
+                        {
+                            item.SetValue(item: ValuetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetValue();
+                        }
+                        var WeighttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Ammo_FieldIndex.Weight,
-                            errorMask: errorMask));
-                        item._Damage.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (WeighttryGet.Succeeded)
+                        {
+                            item.SetWeight(item: WeighttryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetWeight();
+                        }
+                        var DamagetryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Ammo_FieldIndex.Damage,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (DamagetryGet.Succeeded)
+                        {
+                            item.SetDamage(item: DamagetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetDamage();
+                        }
                     }
                     return TryGet<Ammo_FieldIndex?>.Succeed(Ammo_FieldIndex.Damage);
                 default:
@@ -1067,19 +2353,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Ammo_FieldIndex.Name:
-                    this._Name.Set(
+                    this.SetName(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Ammo_FieldIndex.Model:
-                    this._Model.Set(
+                    this.SetModel(
                         (Model)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Ammo_FieldIndex.Icon:
-                    this._Icon.Set(
+                    this.SetIcon(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Ammo_FieldIndex.Enchantment:
                     this.Enchantment_Property.Set(
@@ -1087,34 +2373,34 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Ammo_FieldIndex.EnchantmentPoints:
-                    this._EnchantmentPoints.Set(
+                    this.SetEnchantmentPoints(
                         (UInt16)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Ammo_FieldIndex.Speed:
-                    this._Speed.Set(
+                    this.SetSpeed(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Ammo_FieldIndex.Flags:
-                    this._Flags.Set(
+                    this.SetFlags(
                         (Ammo.AmmoFlag)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Ammo_FieldIndex.Value:
-                    this._Value.Set(
+                    this.SetValue(
                         (UInt32)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Ammo_FieldIndex.Weight:
-                    this._Weight.Set(
+                    this.SetWeight(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Ammo_FieldIndex.Damage:
-                    this._Damage.Set(
+                    this.SetDamage(
                         (UInt16)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1148,19 +2434,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Ammo_FieldIndex.Name:
-                    obj._Name.Set(
+                    obj.SetName(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Ammo_FieldIndex.Model:
-                    obj._Model.Set(
+                    obj.SetModel(
                         (Model)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Ammo_FieldIndex.Icon:
-                    obj._Icon.Set(
+                    obj.SetIcon(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Ammo_FieldIndex.Enchantment:
                     obj.Enchantment_Property.Set(
@@ -1168,34 +2454,34 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Ammo_FieldIndex.EnchantmentPoints:
-                    obj._EnchantmentPoints.Set(
+                    obj.SetEnchantmentPoints(
                         (UInt16)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Ammo_FieldIndex.Speed:
-                    obj._Speed.Set(
+                    obj.SetSpeed(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Ammo_FieldIndex.Flags:
-                    obj._Flags.Set(
+                    obj.SetFlags(
                         (Ammo.AmmoFlag)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Ammo_FieldIndex.Value:
-                    obj._Value.Set(
+                    obj.SetValue(
                         (UInt32)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Ammo_FieldIndex.Weight:
-                    obj._Weight.Set(
+                    obj.SetWeight(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Ammo_FieldIndex.Damage:
-                    obj._Damage.Set(
+                    obj.SetDamage(
                         (UInt16)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1338,7 +2624,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "b9883ff5-be2f-44d5-acf7-69751cd6e87f";
 
-        public const ushort FieldCount = 10;
+        public const ushort AdditionalFieldCount = 10;
+
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(Ammo_Mask<>);
 
@@ -1571,7 +2859,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1623,8 +2912,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Name_Property.SetToWithDefault(
                         rhs: rhs.Name_Property,
-                        def: def?.Name_Property,
-                        cmds: cmds);
+                        def: def?.Name_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1687,8 +2975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Icon_Property.SetToWithDefault(
                         rhs: rhs.Icon_Property,
-                        def: def?.Icon_Property,
-                        cmds: cmds);
+                        def: def?.Icon_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1717,8 +3004,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.EnchantmentPoints_Property.SetToWithDefault(
                         rhs: rhs.EnchantmentPoints_Property,
-                        def: def?.EnchantmentPoints_Property,
-                        cmds: cmds);
+                        def: def?.EnchantmentPoints_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

@@ -30,6 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
         ISoundItem,
         ILoquiObject<SoundItem>,
         ILoquiObjectSetter,
+        IPropertySupporter<Byte>,
         IEquatable<SoundItem>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -39,6 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public SoundItem()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -52,14 +54,47 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Sound> ISoundItemGetter.Sound_Property => this.Sound_Property;
         #endregion
         #region Chance
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<Byte> _Chance = NotifyingSetItem.Factory<Byte>(markAsSet: false);
-        public INotifyingSetItem<Byte> Chance_Property => _Chance;
+        protected Byte _Chance;
+        protected PropertyForwarder<SoundItem, Byte> _ChanceForwarder;
+        public INotifyingSetItem<Byte> Chance_Property => _ChanceForwarder ?? (_ChanceForwarder = new PropertyForwarder<SoundItem, Byte>(this, (int)SoundItem_FieldIndex.Chance));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Chance
         {
-            get => this._Chance.Item;
-            set => this._Chance.Set(value);
+            get => this._Chance;
+            set => this.SetChance(value);
+        }
+        protected void SetChance(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)SoundItem_FieldIndex.Chance];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Chance == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)SoundItem_FieldIndex.Chance] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Chance;
+                _Chance = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)SoundItem_FieldIndex.Chance,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Chance = item;
+            }
+        }
+        protected void UnsetChance()
+        {
+            _hasBeenSetTracker[(int)SoundItem_FieldIndex.Chance] = false;
+            Chance = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte> ISoundItem.Chance_Property => this.Chance_Property;
@@ -431,13 +466,155 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Chance":
-                    item._Chance.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var ChancetryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)SoundItem_FieldIndex.Chance,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ChancetryGet.Succeeded)
+                    {
+                        item.SetChance(item: ChancetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetChance();
+                    }
                     break;
                 default:
                     break;
+            }
+        }
+
+        #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        #region IPropertySupporter Byte
+        protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
+        Byte IPropertySupporter<Byte>.Get(int index)
+        {
+            return GetByte(index: index);
+        }
+
+        protected Byte GetByte(int index)
+        {
+            switch ((SoundItem_FieldIndex)index)
+            {
+                case SoundItem_FieldIndex.Chance:
+                    return Chance;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        void IPropertySupporter<Byte>.Set(
+            int index,
+            Byte item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByte(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetByte(
+            int index,
+            Byte item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((SoundItem_FieldIndex)index)
+            {
+                case SoundItem_FieldIndex.Chance:
+                    SetChance(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByte(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetByte(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((SoundItem_FieldIndex)index)
+            {
+                case SoundItem_FieldIndex.Chance:
+                    _hasBeenSetTracker[index] = false;
+                    Chance = default(Byte);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Byte_subscriptions == null)
+            {
+                _Byte_subscriptions = new ObjectCentralizationSubscriptions<Byte>();
+            }
+            _Byte_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Byte_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte IPropertySupporter<Byte>.DefaultValue(int index)
+        {
+            return DefaultValueByte(index: index);
+        }
+
+        protected Byte DefaultValueByte(int index)
+        {
+            switch ((SoundItem_FieldIndex)index)
+            {
+                case SoundItem_FieldIndex.Chance:
+                    return default(Byte);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
             }
         }
 
@@ -683,10 +860,18 @@ namespace Mutagen.Bethesda.Oblivion
                 case "CSDC":
                     if (lastParsed.HasValue && lastParsed.Value >= SoundItem_FieldIndex.Chance) return TryGet<SoundItem_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Chance.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                    var ChancetryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SoundItem_FieldIndex.Chance,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ChancetryGet.Succeeded)
+                    {
+                        item.SetChance(item: ChancetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetChance();
+                    }
                     return TryGet<SoundItem_FieldIndex?>.Succeed(SoundItem_FieldIndex.Chance);
                 default:
                     return TryGet<SoundItem_FieldIndex?>.Failure;
@@ -815,9 +1000,9 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case SoundItem_FieldIndex.Chance:
-                    this._Chance.Set(
+                    this.SetChance(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -862,9 +1047,9 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case SoundItem_FieldIndex.Chance:
-                    obj._Chance.Set(
+                    obj.SetChance(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -929,6 +1114,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             version: 0);
 
         public const string GUID = "bed98725-1f58-4853-aba1-311221e7aa4e";
+
+        public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
 
@@ -1080,7 +1267,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1139,8 +1327,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Chance_Property.SetToWithDefault(
                         rhs: rhs.Chance_Property,
-                        def: def?.Chance_Property,
-                        cmds: cmds);
+                        def: def?.Chance_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

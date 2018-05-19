@@ -30,6 +30,8 @@ namespace Mutagen.Bethesda.Oblivion
         IRoadPoint,
         ILoquiObject<RoadPoint>,
         ILoquiObjectSetter,
+        IPropertySupporter<P3Float>,
+        IPropertySupporter<Byte[]>,
         IEquatable<RoadPoint>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -39,20 +41,54 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public RoadPoint()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Point
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<P3Float> _Point = NotifyingItem.Factory<P3Float>();
-        public INotifyingItem<P3Float> Point_Property => _Point;
+        protected P3Float _Point;
+        protected PropertyForwarder<RoadPoint, P3Float> _PointForwarder;
+        public INotifyingSetItem<P3Float> Point_Property => _PointForwarder ?? (_PointForwarder = new PropertyForwarder<RoadPoint, P3Float>(this, (int)RoadPoint_FieldIndex.Point));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public P3Float Point
         {
-            get => this._Point.Item;
-            set => this._Point.Set(value);
+            get => this._Point;
+            set => this.SetPoint(value);
+        }
+        protected void SetPoint(
+            P3Float item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)RoadPoint_FieldIndex.Point];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Point == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)RoadPoint_FieldIndex.Point] = hasBeenSet;
+            }
+            if (_P3Float_subscriptions != null)
+            {
+                var tmp = Point;
+                _Point = item;
+                _P3Float_subscriptions.FireSubscriptions(
+                    index: (int)RoadPoint_FieldIndex.Point,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Point = item;
+            }
+        }
+        protected void UnsetPoint()
+        {
+            _hasBeenSetTracker[(int)RoadPoint_FieldIndex.Point] = false;
+            Point = default(P3Float);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<P3Float> IRoadPoint.Point_Property => this.Point_Property;
@@ -60,13 +96,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<P3Float> IRoadPointGetter.Point_Property => this.Point_Property;
         #endregion
         #region NumConnectionsFluffBytes
-        protected INotifyingItem<Byte[]> _NumConnectionsFluffBytes = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[3]);
-        public INotifyingItem<Byte[]> NumConnectionsFluffBytes_Property => _NumConnectionsFluffBytes;
+        protected Byte[] _NumConnectionsFluffBytes;
+        protected PropertyForwarder<RoadPoint, Byte[]> _NumConnectionsFluffBytesForwarder;
+        public INotifyingSetItem<Byte[]> NumConnectionsFluffBytes_Property => _NumConnectionsFluffBytesForwarder ?? (_NumConnectionsFluffBytesForwarder = new PropertyForwarder<RoadPoint, Byte[]>(this, (int)RoadPoint_FieldIndex.NumConnectionsFluffBytes));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] NumConnectionsFluffBytes
         {
-            get => this._NumConnectionsFluffBytes.Item;
-            set => this._NumConnectionsFluffBytes.Set(value);
+            get => this._NumConnectionsFluffBytes;
+            set => this.SetNumConnectionsFluffBytes(value);
+        }
+        protected void SetNumConnectionsFluffBytes(
+            Byte[] item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)RoadPoint_FieldIndex.NumConnectionsFluffBytes];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(NumConnectionsFluffBytes, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)RoadPoint_FieldIndex.NumConnectionsFluffBytes] = hasBeenSet;
+            }
+            if (_ByteArr_subscriptions != null)
+            {
+                var tmp = NumConnectionsFluffBytes;
+                _NumConnectionsFluffBytes = item;
+                _ByteArr_subscriptions.FireSubscriptions(
+                    index: (int)RoadPoint_FieldIndex.NumConnectionsFluffBytes,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _NumConnectionsFluffBytes = item;
+            }
+        }
+        protected void UnsetNumConnectionsFluffBytes()
+        {
+            _hasBeenSetTracker[(int)RoadPoint_FieldIndex.NumConnectionsFluffBytes] = false;
+            NumConnectionsFluffBytes = default(Byte[]);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> IRoadPoint.NumConnectionsFluffBytes_Property => this.NumConnectionsFluffBytes_Property;
@@ -438,16 +508,32 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Point":
-                    item._Point.SetIfSucceededOrDefault(P3FloatXmlTranslation.Instance.ParseNonNull(
+                    var PointtryGet = P3FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RoadPoint_FieldIndex.Point,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (PointtryGet.Succeeded)
+                    {
+                        item.SetPoint(item: PointtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetPoint();
+                    }
                     break;
                 case "NumConnectionsFluffBytes":
-                    item._NumConnectionsFluffBytes.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
+                    var NumConnectionsFluffBytestryGet = ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)RoadPoint_FieldIndex.NumConnectionsFluffBytes,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (NumConnectionsFluffBytestryGet.Succeeded)
+                    {
+                        item.SetNumConnectionsFluffBytes(item: NumConnectionsFluffBytestryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetNumConnectionsFluffBytes();
+                    }
                     break;
                 case "Connections":
                     item._Connections.SetIfSucceededOrDefault(ListXmlTranslation<P3Float, Exception>.Instance.Parse(
@@ -466,6 +552,273 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 default:
                     break;
+            }
+        }
+
+        #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        #region IPropertySupporter P3Float
+        protected ObjectCentralizationSubscriptions<P3Float> _P3Float_subscriptions;
+        P3Float IPropertySupporter<P3Float>.Get(int index)
+        {
+            return GetP3Float(index: index);
+        }
+
+        protected P3Float GetP3Float(int index)
+        {
+            switch ((RoadPoint_FieldIndex)index)
+            {
+                case RoadPoint_FieldIndex.Point:
+                    return Point;
+                default:
+                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
+            }
+        }
+
+        void IPropertySupporter<P3Float>.Set(
+            int index,
+            P3Float item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetP3Float(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetP3Float(
+            int index,
+            P3Float item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((RoadPoint_FieldIndex)index)
+            {
+                case RoadPoint_FieldIndex.Point:
+                    SetPoint(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
+            }
+        }
+
+        bool IPropertySupporter<P3Float>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<P3Float>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<P3Float>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetP3Float(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetP3Float(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((RoadPoint_FieldIndex)index)
+            {
+                case RoadPoint_FieldIndex.Point:
+                    _hasBeenSetTracker[index] = false;
+                    Point = default(P3Float);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<P3Float>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<P3Float> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_P3Float_subscriptions == null)
+            {
+                _P3Float_subscriptions = new ObjectCentralizationSubscriptions<P3Float>();
+            }
+            _P3Float_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<P3Float>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _P3Float_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<P3Float>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        P3Float IPropertySupporter<P3Float>.DefaultValue(int index)
+        {
+            return DefaultValueP3Float(index: index);
+        }
+
+        protected P3Float DefaultValueP3Float(int index)
+        {
+            switch ((RoadPoint_FieldIndex)index)
+            {
+                case RoadPoint_FieldIndex.Point:
+                    return default(P3Float);
+                default:
+                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Byte[]
+        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
+        Byte[] IPropertySupporter<Byte[]>.Get(int index)
+        {
+            return GetByteArr(index: index);
+        }
+
+        protected Byte[] GetByteArr(int index)
+        {
+            switch ((RoadPoint_FieldIndex)index)
+            {
+                case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
+                    return NumConnectionsFluffBytes;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        void IPropertySupporter<Byte[]>.Set(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByteArr(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetByteArr(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((RoadPoint_FieldIndex)index)
+            {
+                case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
+                    SetNumConnectionsFluffBytes(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte[]>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte[]>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByteArr(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetByteArr(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((RoadPoint_FieldIndex)index)
+            {
+                case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
+                    _hasBeenSetTracker[index] = false;
+                    NumConnectionsFluffBytes = default(Byte[]);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte[]> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_ByteArr_subscriptions == null)
+            {
+                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
+            }
+            _ByteArr_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _ByteArr_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
+        {
+            return DefaultValueByteArr(index: index);
+        }
+
+        protected Byte[] DefaultValueByteArr(int index)
+        {
+            switch ((RoadPoint_FieldIndex)index)
+            {
+                case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
+                    return default(Byte[]);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
             }
         }
 
@@ -664,14 +1017,30 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<RoadPoint_ErrorMask> errorMask)
         {
-            item._Point.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+            var PointtryGet = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RoadPoint_FieldIndex.Point,
-                errorMask: errorMask));
-            item._NumConnectionsFluffBytes.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            if (PointtryGet.Succeeded)
+            {
+                item.SetPoint(item: PointtryGet.Value);
+            }
+            else
+            {
+                item.UnsetPoint();
+            }
+            var NumConnectionsFluffBytestryGet = ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(3),
                 fieldIndex: (int)RoadPoint_FieldIndex.NumConnectionsFluffBytes,
-                errorMask: errorMask));
+                errorMask: errorMask);
+            if (NumConnectionsFluffBytestryGet.Succeeded)
+            {
+                item.SetNumConnectionsFluffBytes(item: NumConnectionsFluffBytestryGet.Value);
+            }
+            else
+            {
+                item.UnsetNumConnectionsFluffBytes();
+            }
             item.Connections.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Float, Exception>.Instance.ParseRepeatedItem(
                 frame: frame,
                 fieldIndex: (int)RoadPoint_FieldIndex.Connections,
@@ -804,14 +1173,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RoadPoint_FieldIndex.Point:
-                    this._Point.Set(
+                    this.SetPoint(
                         (P3Float)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
-                    this._NumConnectionsFluffBytes.Set(
+                    this.SetNumConnectionsFluffBytes(
                         (Byte[])obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case RoadPoint_FieldIndex.Connections:
                     this._Connections.SetTo((IEnumerable<P3Float>)obj, cmds);
@@ -854,14 +1223,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RoadPoint_FieldIndex.Point:
-                    obj._Point.Set(
+                    obj.SetPoint(
                         (P3Float)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
-                    obj._NumConnectionsFluffBytes.Set(
+                    obj.SetNumConnectionsFluffBytes(
                         (Byte[])pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case RoadPoint_FieldIndex.Connections:
                     obj._Connections.SetTo((IEnumerable<P3Float>)pair.Value, null);
@@ -936,6 +1305,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             version: 0);
 
         public const string GUID = "40edd2d1-a707-454b-93c4-d833df08a2dd";
+
+        public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
 
@@ -1085,7 +1456,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

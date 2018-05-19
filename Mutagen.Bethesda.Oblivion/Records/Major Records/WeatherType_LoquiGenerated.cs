@@ -31,6 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
         IWeatherType,
         ILoquiObject<WeatherType>,
         ILoquiObjectSetter,
+        IPropertySupporter<Color>,
         IEquatable<WeatherType>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -40,20 +41,54 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public WeatherType()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Sunrise
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Color> _Sunrise = NotifyingItem.Factory<Color>();
-        public INotifyingItem<Color> Sunrise_Property => _Sunrise;
+        protected Color _Sunrise;
+        protected PropertyForwarder<WeatherType, Color> _SunriseForwarder;
+        public INotifyingSetItem<Color> Sunrise_Property => _SunriseForwarder ?? (_SunriseForwarder = new PropertyForwarder<WeatherType, Color>(this, (int)WeatherType_FieldIndex.Sunrise));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Color Sunrise
         {
-            get => this._Sunrise.Item;
-            set => this._Sunrise.Set(value);
+            get => this._Sunrise;
+            set => this.SetSunrise(value);
+        }
+        protected void SetSunrise(
+            Color item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)WeatherType_FieldIndex.Sunrise];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Sunrise == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)WeatherType_FieldIndex.Sunrise] = hasBeenSet;
+            }
+            if (_Color_subscriptions != null)
+            {
+                var tmp = Sunrise;
+                _Sunrise = item;
+                _Color_subscriptions.FireSubscriptions(
+                    index: (int)WeatherType_FieldIndex.Sunrise,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Sunrise = item;
+            }
+        }
+        protected void UnsetSunrise()
+        {
+            _hasBeenSetTracker[(int)WeatherType_FieldIndex.Sunrise] = false;
+            Sunrise = default(Color);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Color> IWeatherType.Sunrise_Property => this.Sunrise_Property;
@@ -61,14 +96,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Color> IWeatherTypeGetter.Sunrise_Property => this.Sunrise_Property;
         #endregion
         #region Day
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Color> _Day = NotifyingItem.Factory<Color>();
-        public INotifyingItem<Color> Day_Property => _Day;
+        protected Color _Day;
+        protected PropertyForwarder<WeatherType, Color> _DayForwarder;
+        public INotifyingSetItem<Color> Day_Property => _DayForwarder ?? (_DayForwarder = new PropertyForwarder<WeatherType, Color>(this, (int)WeatherType_FieldIndex.Day));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Color Day
         {
-            get => this._Day.Item;
-            set => this._Day.Set(value);
+            get => this._Day;
+            set => this.SetDay(value);
+        }
+        protected void SetDay(
+            Color item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)WeatherType_FieldIndex.Day];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Day == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)WeatherType_FieldIndex.Day] = hasBeenSet;
+            }
+            if (_Color_subscriptions != null)
+            {
+                var tmp = Day;
+                _Day = item;
+                _Color_subscriptions.FireSubscriptions(
+                    index: (int)WeatherType_FieldIndex.Day,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Day = item;
+            }
+        }
+        protected void UnsetDay()
+        {
+            _hasBeenSetTracker[(int)WeatherType_FieldIndex.Day] = false;
+            Day = default(Color);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Color> IWeatherType.Day_Property => this.Day_Property;
@@ -76,14 +144,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Color> IWeatherTypeGetter.Day_Property => this.Day_Property;
         #endregion
         #region Sunset
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Color> _Sunset = NotifyingItem.Factory<Color>();
-        public INotifyingItem<Color> Sunset_Property => _Sunset;
+        protected Color _Sunset;
+        protected PropertyForwarder<WeatherType, Color> _SunsetForwarder;
+        public INotifyingSetItem<Color> Sunset_Property => _SunsetForwarder ?? (_SunsetForwarder = new PropertyForwarder<WeatherType, Color>(this, (int)WeatherType_FieldIndex.Sunset));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Color Sunset
         {
-            get => this._Sunset.Item;
-            set => this._Sunset.Set(value);
+            get => this._Sunset;
+            set => this.SetSunset(value);
+        }
+        protected void SetSunset(
+            Color item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)WeatherType_FieldIndex.Sunset];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Sunset == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)WeatherType_FieldIndex.Sunset] = hasBeenSet;
+            }
+            if (_Color_subscriptions != null)
+            {
+                var tmp = Sunset;
+                _Sunset = item;
+                _Color_subscriptions.FireSubscriptions(
+                    index: (int)WeatherType_FieldIndex.Sunset,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Sunset = item;
+            }
+        }
+        protected void UnsetSunset()
+        {
+            _hasBeenSetTracker[(int)WeatherType_FieldIndex.Sunset] = false;
+            Sunset = default(Color);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Color> IWeatherType.Sunset_Property => this.Sunset_Property;
@@ -91,14 +192,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Color> IWeatherTypeGetter.Sunset_Property => this.Sunset_Property;
         #endregion
         #region Night
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Color> _Night = NotifyingItem.Factory<Color>();
-        public INotifyingItem<Color> Night_Property => _Night;
+        protected Color _Night;
+        protected PropertyForwarder<WeatherType, Color> _NightForwarder;
+        public INotifyingSetItem<Color> Night_Property => _NightForwarder ?? (_NightForwarder = new PropertyForwarder<WeatherType, Color>(this, (int)WeatherType_FieldIndex.Night));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Color Night
         {
-            get => this._Night.Item;
-            set => this._Night.Set(value);
+            get => this._Night;
+            set => this.SetNight(value);
+        }
+        protected void SetNight(
+            Color item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)WeatherType_FieldIndex.Night];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Night == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)WeatherType_FieldIndex.Night] = hasBeenSet;
+            }
+            if (_Color_subscriptions != null)
+            {
+                var tmp = Night;
+                _Night = item;
+                _Color_subscriptions.FireSubscriptions(
+                    index: (int)WeatherType_FieldIndex.Night,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Night = item;
+            }
+        }
+        protected void UnsetNight()
+        {
+            _hasBeenSetTracker[(int)WeatherType_FieldIndex.Night] = false;
+            Night = default(Color);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Color> IWeatherType.Night_Property => this.Night_Property;
@@ -454,31 +588,227 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Sunrise":
-                    item._Sunrise.SetIfSucceededOrDefault(ColorXmlTranslation.Instance.ParseNonNull(
+                    var SunrisetryGet = ColorXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)WeatherType_FieldIndex.Sunrise,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (SunrisetryGet.Succeeded)
+                    {
+                        item.SetSunrise(item: SunrisetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetSunrise();
+                    }
                     break;
                 case "Day":
-                    item._Day.SetIfSucceededOrDefault(ColorXmlTranslation.Instance.ParseNonNull(
+                    var DaytryGet = ColorXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)WeatherType_FieldIndex.Day,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DaytryGet.Succeeded)
+                    {
+                        item.SetDay(item: DaytryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetDay();
+                    }
                     break;
                 case "Sunset":
-                    item._Sunset.SetIfSucceededOrDefault(ColorXmlTranslation.Instance.ParseNonNull(
+                    var SunsettryGet = ColorXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)WeatherType_FieldIndex.Sunset,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (SunsettryGet.Succeeded)
+                    {
+                        item.SetSunset(item: SunsettryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetSunset();
+                    }
                     break;
                 case "Night":
-                    item._Night.SetIfSucceededOrDefault(ColorXmlTranslation.Instance.ParseNonNull(
+                    var NighttryGet = ColorXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)WeatherType_FieldIndex.Night,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (NighttryGet.Succeeded)
+                    {
+                        item.SetNight(item: NighttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetNight();
+                    }
                     break;
                 default:
                     break;
+            }
+        }
+
+        #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        #region IPropertySupporter Color
+        protected ObjectCentralizationSubscriptions<Color> _Color_subscriptions;
+        Color IPropertySupporter<Color>.Get(int index)
+        {
+            return GetColor(index: index);
+        }
+
+        protected Color GetColor(int index)
+        {
+            switch ((WeatherType_FieldIndex)index)
+            {
+                case WeatherType_FieldIndex.Sunrise:
+                    return Sunrise;
+                case WeatherType_FieldIndex.Day:
+                    return Day;
+                case WeatherType_FieldIndex.Sunset:
+                    return Sunset;
+                case WeatherType_FieldIndex.Night:
+                    return Night;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
+            }
+        }
+
+        void IPropertySupporter<Color>.Set(
+            int index,
+            Color item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetColor(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetColor(
+            int index,
+            Color item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((WeatherType_FieldIndex)index)
+            {
+                case WeatherType_FieldIndex.Sunrise:
+                    SetSunrise(item, hasBeenSet, cmds);
+                    break;
+                case WeatherType_FieldIndex.Day:
+                    SetDay(item, hasBeenSet, cmds);
+                    break;
+                case WeatherType_FieldIndex.Sunset:
+                    SetSunset(item, hasBeenSet, cmds);
+                    break;
+                case WeatherType_FieldIndex.Night:
+                    SetNight(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Color>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Color>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Color>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetColor(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetColor(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((WeatherType_FieldIndex)index)
+            {
+                case WeatherType_FieldIndex.Sunrise:
+                    _hasBeenSetTracker[index] = false;
+                    Sunrise = default(Color);
+                    break;
+                case WeatherType_FieldIndex.Day:
+                    _hasBeenSetTracker[index] = false;
+                    Day = default(Color);
+                    break;
+                case WeatherType_FieldIndex.Sunset:
+                    _hasBeenSetTracker[index] = false;
+                    Sunset = default(Color);
+                    break;
+                case WeatherType_FieldIndex.Night:
+                    _hasBeenSetTracker[index] = false;
+                    Night = default(Color);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Color>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Color> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Color_subscriptions == null)
+            {
+                _Color_subscriptions = new ObjectCentralizationSubscriptions<Color>();
+            }
+            _Color_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Color>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Color_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Color>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Color IPropertySupporter<Color>.DefaultValue(int index)
+        {
+            return DefaultValueColor(index: index);
+        }
+
+        protected Color DefaultValueColor(int index)
+        {
+            switch ((WeatherType_FieldIndex)index)
+            {
+                case WeatherType_FieldIndex.Sunrise:
+                case WeatherType_FieldIndex.Day:
+                case WeatherType_FieldIndex.Sunset:
+                case WeatherType_FieldIndex.Night:
+                    return default(Color);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
             }
         }
 
@@ -677,26 +1007,58 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<WeatherType_ErrorMask> errorMask)
         {
-            item._Sunrise.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+            var SunrisetryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)WeatherType_FieldIndex.Sunrise,
                 errorMask: errorMask,
-                extraByte: true));
-            item._Day.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                extraByte: true);
+            if (SunrisetryGet.Succeeded)
+            {
+                item.SetSunrise(item: SunrisetryGet.Value);
+            }
+            else
+            {
+                item.UnsetSunrise();
+            }
+            var DaytryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)WeatherType_FieldIndex.Day,
                 errorMask: errorMask,
-                extraByte: true));
-            item._Sunset.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                extraByte: true);
+            if (DaytryGet.Succeeded)
+            {
+                item.SetDay(item: DaytryGet.Value);
+            }
+            else
+            {
+                item.UnsetDay();
+            }
+            var SunsettryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)WeatherType_FieldIndex.Sunset,
                 errorMask: errorMask,
-                extraByte: true));
-            item._Night.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                extraByte: true);
+            if (SunsettryGet.Succeeded)
+            {
+                item.SetSunset(item: SunsettryGet.Value);
+            }
+            else
+            {
+                item.UnsetSunset();
+            }
+            var NighttryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)WeatherType_FieldIndex.Night,
                 errorMask: errorMask,
-                extraByte: true));
+                extraByte: true);
+            if (NighttryGet.Succeeded)
+            {
+                item.SetNight(item: NighttryGet.Value);
+            }
+            else
+            {
+                item.UnsetNight();
+            }
         }
 
         #endregion
@@ -816,24 +1178,24 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case WeatherType_FieldIndex.Sunrise:
-                    this._Sunrise.Set(
+                    this.SetSunrise(
                         (Color)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case WeatherType_FieldIndex.Day:
-                    this._Day.Set(
+                    this.SetDay(
                         (Color)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case WeatherType_FieldIndex.Sunset:
-                    this._Sunset.Set(
+                    this.SetSunset(
                         (Color)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case WeatherType_FieldIndex.Night:
-                    this._Night.Set(
+                    this.SetNight(
                         (Color)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -873,24 +1235,24 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case WeatherType_FieldIndex.Sunrise:
-                    obj._Sunrise.Set(
+                    obj.SetSunrise(
                         (Color)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case WeatherType_FieldIndex.Day:
-                    obj._Day.Set(
+                    obj.SetDay(
                         (Color)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case WeatherType_FieldIndex.Sunset:
-                    obj._Sunset.Set(
+                    obj.SetSunset(
                         (Color)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case WeatherType_FieldIndex.Night:
-                    obj._Night.Set(
+                    obj.SetNight(
                         (Color)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -975,6 +1337,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             version: 0);
 
         public const string GUID = "8a3ac7e7-7e81-4f9c-b318-c1c40ed00f8c";
+
+        public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
 
@@ -1134,7 +1498,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

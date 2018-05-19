@@ -32,6 +32,8 @@ namespace Mutagen.Bethesda.Oblivion
         IGlobal,
         ILoquiObject<Global>,
         ILoquiObjectSetter,
+        IPropertySupporter<Char>,
+        IPropertySupporter<Single>,
         IEquatable<Global>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -47,27 +49,93 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region TypeChar
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<Char> _TypeChar = NotifyingSetItem.Factory<Char>(markAsSet: false);
-        public INotifyingSetItemGetter<Char> TypeChar_Property => _TypeChar;
+        protected Char _TypeChar;
+        protected PropertyForwarder<Global, Char> _TypeCharForwarder;
+        public INotifyingSetItemGetter<Char> TypeChar_Property => _TypeCharForwarder ?? (_TypeCharForwarder = new PropertyForwarder<Global, Char>(this, (int)Global_FieldIndex.TypeChar));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Char TypeChar
         {
-            get => this._TypeChar.Item;
-            protected set => this._TypeChar.Set(value);
+            get => this._TypeChar;
+            protected set => this.SetTypeChar(value);
+        }
+        protected void SetTypeChar(
+            Char item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Global_FieldIndex.TypeChar];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && TypeChar == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Global_FieldIndex.TypeChar] = hasBeenSet;
+            }
+            if (_Char_subscriptions != null)
+            {
+                var tmp = TypeChar;
+                _TypeChar = item;
+                _Char_subscriptions.FireSubscriptions(
+                    index: (int)Global_FieldIndex.TypeChar,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _TypeChar = item;
+            }
+        }
+        protected void UnsetTypeChar()
+        {
+            _hasBeenSetTracker[(int)Global_FieldIndex.TypeChar] = false;
+            TypeChar = default(Char);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Char> IGlobalGetter.TypeChar_Property => this.TypeChar_Property;
         #endregion
         #region RawFloat
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<Single> _RawFloat = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> RawFloat_Property => _RawFloat;
+        protected Single _RawFloat;
+        protected PropertyForwarder<Global, Single> _RawFloatForwarder;
+        public INotifyingSetItem<Single> RawFloat_Property => _RawFloatForwarder ?? (_RawFloatForwarder = new PropertyForwarder<Global, Single>(this, (int)Global_FieldIndex.RawFloat));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single RawFloat
         {
-            get => this._RawFloat.Item;
-            set => this._RawFloat.Set(value);
+            get => this._RawFloat;
+            set => this.SetRawFloat(value);
+        }
+        protected void SetRawFloat(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Global_FieldIndex.RawFloat];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && RawFloat == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Global_FieldIndex.RawFloat] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = RawFloat;
+                _RawFloat = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Global_FieldIndex.RawFloat,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _RawFloat = item;
+            }
+        }
+        protected void UnsetRawFloat()
+        {
+            _hasBeenSetTracker[(int)Global_FieldIndex.RawFloat] = false;
+            RawFloat = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Single> IGlobal.RawFloat_Property => this.RawFloat_Property;
@@ -318,16 +386,32 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "TypeChar":
-                    item._TypeChar.SetIfSucceededOrDefault(CharXmlTranslation.Instance.ParseNonNull(
+                    var TypeChartryGet = CharXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Global_FieldIndex.TypeChar,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (TypeChartryGet.Succeeded)
+                    {
+                        item.SetTypeChar(item: TypeChartryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetTypeChar();
+                    }
                     break;
                 case "RawFloat":
-                    item._RawFloat.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var RawFloattryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Global_FieldIndex.RawFloat,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (RawFloattryGet.Succeeded)
+                    {
+                        item.SetRawFloat(item: RawFloattryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetRawFloat();
+                    }
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(
@@ -336,6 +420,272 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Char
+        protected ObjectCentralizationSubscriptions<Char> _Char_subscriptions;
+        Char IPropertySupporter<Char>.Get(int index)
+        {
+            return GetChar(index: index);
+        }
+
+        protected Char GetChar(int index)
+        {
+            switch ((Global_FieldIndex)index)
+            {
+                case Global_FieldIndex.TypeChar:
+                    return TypeChar;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Char: {index}");
+            }
+        }
+
+        void IPropertySupporter<Char>.Set(
+            int index,
+            Char item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetChar(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetChar(
+            int index,
+            Char item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Global_FieldIndex)index)
+            {
+                case Global_FieldIndex.TypeChar:
+                    SetTypeChar(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Char: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Char>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Char>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Char>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetChar(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetChar(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Global_FieldIndex)index)
+            {
+                case Global_FieldIndex.TypeChar:
+                    _hasBeenSetTracker[index] = false;
+                    TypeChar = default(Char);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Char: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Char>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Char> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Char_subscriptions == null)
+            {
+                _Char_subscriptions = new ObjectCentralizationSubscriptions<Char>();
+            }
+            _Char_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Char>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Char_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Char>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Char IPropertySupporter<Char>.DefaultValue(int index)
+        {
+            return DefaultValueChar(index: index);
+        }
+
+        protected Char DefaultValueChar(int index)
+        {
+            switch ((Global_FieldIndex)index)
+            {
+                case Global_FieldIndex.TypeChar:
+                    return default(Char);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Char: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Single
+        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
+        Single IPropertySupporter<Single>.Get(int index)
+        {
+            return GetSingle(index: index);
+        }
+
+        protected virtual Single GetSingle(int index)
+        {
+            switch ((Global_FieldIndex)index)
+            {
+                case Global_FieldIndex.RawFloat:
+                    return RawFloat;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        void IPropertySupporter<Single>.Set(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSingle(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected virtual void SetSingle(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Global_FieldIndex)index)
+            {
+                case Global_FieldIndex.RawFloat:
+                    SetRawFloat(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Single>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Single>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSingle(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected virtual void UnsetSingle(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Global_FieldIndex)index)
+            {
+                case Global_FieldIndex.RawFloat:
+                    _hasBeenSetTracker[index] = false;
+                    RawFloat = default(Single);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Single> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Single_subscriptions == null)
+            {
+                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
+            }
+            _Single_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Single_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Single IPropertySupporter<Single>.DefaultValue(int index)
+        {
+            return DefaultValueSingle(index: index);
+        }
+
+        protected virtual Single DefaultValueSingle(int index)
+        {
+            switch ((Global_FieldIndex)index)
+            {
+                case Global_FieldIndex.RawFloat:
+                    return default(Single);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
             }
         }
 
@@ -466,10 +816,18 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Global_FieldIndex?>.Succeed(Global_FieldIndex.TypeChar);
                 case "FLTV":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._RawFloat.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    var RawFloattryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Global_FieldIndex.RawFloat,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (RawFloattryGet.Succeeded)
+                    {
+                        item.SetRawFloat(item: RawFloattryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetRawFloat();
+                    }
                     return TryGet<Global_FieldIndex?>.Succeed(Global_FieldIndex.RawFloat);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
@@ -569,9 +927,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case Global_FieldIndex.TypeChar:
                     throw new ArgumentException($"Tried to set at a derivative index {index}");
                 case Global_FieldIndex.RawFloat:
-                    this._RawFloat.Set(
+                    this.SetRawFloat(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -595,9 +953,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Global_FieldIndex.RawFloat:
-                    obj._RawFloat.Set(
+                    obj.SetRawFloat(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -667,7 +1025,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "072ceda7-3182-4314-a4e3-927e68f39c3f";
 
-        public const ushort FieldCount = 2;
+        public const ushort AdditionalFieldCount = 2;
+
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(Global_Mask<>);
 
@@ -809,7 +1169,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -861,8 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.RawFloat_Property.SetToWithDefault(
                         rhs: rhs.RawFloat_Property,
-                        def: def?.RawFloat_Property,
-                        cmds: cmds);
+                        def: def?.RawFloat_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

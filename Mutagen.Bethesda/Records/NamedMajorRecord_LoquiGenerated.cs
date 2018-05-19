@@ -31,6 +31,7 @@ namespace Mutagen.Bethesda
         INamedMajorRecord,
         ILoquiObject<NamedMajorRecord>,
         ILoquiObjectSetter,
+        IPropertySupporter<String>,
         IEquatable<NamedMajorRecord>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -46,14 +47,47 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _Name = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Name_Property => _Name;
+        protected String _Name;
+        protected PropertyForwarder<NamedMajorRecord, String> _NameForwarder;
+        public INotifyingSetItem<String> Name_Property => _NameForwarder ?? (_NameForwarder = new PropertyForwarder<NamedMajorRecord, String>(this, (int)NamedMajorRecord_FieldIndex.Name));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Name
         {
-            get => this._Name.Item;
-            set => this._Name.Set(value);
+            get => this._Name;
+            set => this.SetName(value);
+        }
+        protected void SetName(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NamedMajorRecord_FieldIndex.Name];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Name == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NamedMajorRecord_FieldIndex.Name] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Name;
+                _Name = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)NamedMajorRecord_FieldIndex.Name,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Name = item;
+            }
+        }
+        protected void UnsetName()
+        {
+            _hasBeenSetTracker[(int)NamedMajorRecord_FieldIndex.Name] = false;
+            Name = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> INamedMajorRecord.Name_Property => this.Name_Property;
@@ -295,10 +329,18 @@ namespace Mutagen.Bethesda
             switch (name)
             {
                 case "Name":
-                    item._Name.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var NametryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (NametryGet.Succeeded)
+                    {
+                        item.SetName(item: NametryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetName();
+                    }
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(
@@ -307,6 +349,146 @@ namespace Mutagen.Bethesda
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter String
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected override String GetString(int index)
+        {
+            switch ((NamedMajorRecord_FieldIndex)index)
+            {
+                case NamedMajorRecord_FieldIndex.Name:
+                    return Name;
+                default:
+                    return base.GetString(index: index);
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((NamedMajorRecord_FieldIndex)index)
+            {
+                case NamedMajorRecord_FieldIndex.Name:
+                    SetName(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetString(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((NamedMajorRecord_FieldIndex)index)
+            {
+                case NamedMajorRecord_FieldIndex.Name:
+                    _hasBeenSetTracker[index] = false;
+                    Name = default(String);
+                    break;
+                default:
+                    base.UnsetString(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected override String DefaultValueString(int index)
+        {
+            switch ((NamedMajorRecord_FieldIndex)index)
+            {
+                case NamedMajorRecord_FieldIndex.Name:
+                    return default(String);
+                default:
+                    return base.DefaultValueString(index: index);
             }
         }
 
@@ -382,11 +564,19 @@ namespace Mutagen.Bethesda
             {
                 case "FULL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Name.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var NametryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (NametryGet.Succeeded)
+                    {
+                        item.SetName(item: NametryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetName();
+                    }
                     return TryGet<NamedMajorRecord_FieldIndex?>.Succeed(NamedMajorRecord_FieldIndex.Name);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
@@ -484,9 +674,9 @@ namespace Mutagen.Bethesda
             switch (enu)
             {
                 case NamedMajorRecord_FieldIndex.Name:
-                    this._Name.Set(
+                    this.SetName(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -510,9 +700,9 @@ namespace Mutagen.Bethesda
             switch (enu)
             {
                 case NamedMajorRecord_FieldIndex.Name:
-                    obj._Name.Set(
+                    obj.SetName(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -576,7 +766,9 @@ namespace Mutagen.Bethesda.Internals
 
         public const string GUID = "492d4810-c631-49fc-8358-a68f4d1af93d";
 
-        public const ushort FieldCount = 1;
+        public const ushort AdditionalFieldCount = 1;
+
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(NamedMajorRecord_Mask<>);
 
@@ -773,7 +965,8 @@ namespace Mutagen.Bethesda.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -825,8 +1018,7 @@ namespace Mutagen.Bethesda.Internals
                 {
                     item.Name_Property.SetToWithDefault(
                         rhs: rhs.Name_Property,
-                        def: def?.Name_Property,
-                        cmds: cmds);
+                        def: def?.Name_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

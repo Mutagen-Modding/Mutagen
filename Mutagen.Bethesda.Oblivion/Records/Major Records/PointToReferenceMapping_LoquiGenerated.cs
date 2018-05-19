@@ -895,6 +895,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "4d524dea-fd8a-4f29-bd85-50c3db4b81e0";
 
+        public const ushort AdditionalFieldCount = 2;
+
         public const ushort FieldCount = 2;
 
         public static readonly Type MaskType = typeof(PointToReferenceMapping_Mask<>);
@@ -1034,7 +1036,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

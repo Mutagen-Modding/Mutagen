@@ -31,6 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
         ICreatureSound,
         ILoquiObject<CreatureSound>,
         ILoquiObjectSetter,
+        IPropertySupporter<CreatureSound.CreatureSoundType>,
         IEquatable<CreatureSound>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -40,20 +41,54 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public CreatureSound()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region SoundType
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<CreatureSound.CreatureSoundType> _SoundType = NotifyingSetItem.Factory<CreatureSound.CreatureSoundType>(markAsSet: false);
-        public INotifyingSetItem<CreatureSound.CreatureSoundType> SoundType_Property => _SoundType;
+        protected CreatureSound.CreatureSoundType _SoundType;
+        protected PropertyForwarder<CreatureSound, CreatureSound.CreatureSoundType> _SoundTypeForwarder;
+        public INotifyingSetItem<CreatureSound.CreatureSoundType> SoundType_Property => _SoundTypeForwarder ?? (_SoundTypeForwarder = new PropertyForwarder<CreatureSound, CreatureSound.CreatureSoundType>(this, (int)CreatureSound_FieldIndex.SoundType));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public CreatureSound.CreatureSoundType SoundType
         {
-            get => this._SoundType.Item;
-            set => this._SoundType.Set(value);
+            get => this._SoundType;
+            set => this.SetSoundType(value);
+        }
+        protected void SetSoundType(
+            CreatureSound.CreatureSoundType item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)CreatureSound_FieldIndex.SoundType];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && SoundType == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)CreatureSound_FieldIndex.SoundType] = hasBeenSet;
+            }
+            if (_CreatureSoundCreatureSoundType_subscriptions != null)
+            {
+                var tmp = SoundType;
+                _SoundType = item;
+                _CreatureSoundCreatureSoundType_subscriptions.FireSubscriptions(
+                    index: (int)CreatureSound_FieldIndex.SoundType,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _SoundType = item;
+            }
+        }
+        protected void UnsetSoundType()
+        {
+            _hasBeenSetTracker[(int)CreatureSound_FieldIndex.SoundType] = false;
+            SoundType = default(CreatureSound.CreatureSoundType);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<CreatureSound.CreatureSoundType> ICreatureSound.SoundType_Property => this.SoundType_Property;
@@ -437,11 +472,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "SoundType":
-                    item._SoundType.SetIfSucceededOrDefault(EnumXmlTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(
+                    var SoundTypetryGet = EnumXmlTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)CreatureSound_FieldIndex.SoundType,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (SoundTypetryGet.Succeeded)
+                    {
+                        item.SetSoundType(item: SoundTypetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetSoundType();
+                    }
                     break;
                 case "Sounds":
                     item._Sounds.SetIfSucceededOrDefault(ListXmlTranslation<SoundItem, MaskItem<Exception, SoundItem_ErrorMask>>.Instance.Parse(
@@ -459,6 +502,140 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 default:
                     break;
+            }
+        }
+
+        #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        #region IPropertySupporter CreatureSound.CreatureSoundType
+        protected ObjectCentralizationSubscriptions<CreatureSound.CreatureSoundType> _CreatureSoundCreatureSoundType_subscriptions;
+        CreatureSound.CreatureSoundType IPropertySupporter<CreatureSound.CreatureSoundType>.Get(int index)
+        {
+            return GetCreatureSoundCreatureSoundType(index: index);
+        }
+
+        protected CreatureSound.CreatureSoundType GetCreatureSoundCreatureSoundType(int index)
+        {
+            switch ((CreatureSound_FieldIndex)index)
+            {
+                case CreatureSound_FieldIndex.SoundType:
+                    return SoundType;
+                default:
+                    throw new ArgumentException($"Unknown index for field type CreatureSound.CreatureSoundType: {index}");
+            }
+        }
+
+        void IPropertySupporter<CreatureSound.CreatureSoundType>.Set(
+            int index,
+            CreatureSound.CreatureSoundType item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetCreatureSoundCreatureSoundType(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetCreatureSoundCreatureSoundType(
+            int index,
+            CreatureSound.CreatureSoundType item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((CreatureSound_FieldIndex)index)
+            {
+                case CreatureSound_FieldIndex.SoundType:
+                    SetSoundType(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type CreatureSound.CreatureSoundType: {index}");
+            }
+        }
+
+        bool IPropertySupporter<CreatureSound.CreatureSoundType>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<CreatureSound.CreatureSoundType>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<CreatureSound.CreatureSoundType>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetCreatureSoundCreatureSoundType(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetCreatureSoundCreatureSoundType(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((CreatureSound_FieldIndex)index)
+            {
+                case CreatureSound_FieldIndex.SoundType:
+                    _hasBeenSetTracker[index] = false;
+                    SoundType = default(CreatureSound.CreatureSoundType);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type CreatureSound.CreatureSoundType: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<CreatureSound.CreatureSoundType>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<CreatureSound.CreatureSoundType> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_CreatureSoundCreatureSoundType_subscriptions == null)
+            {
+                _CreatureSoundCreatureSoundType_subscriptions = new ObjectCentralizationSubscriptions<CreatureSound.CreatureSoundType>();
+            }
+            _CreatureSoundCreatureSoundType_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<CreatureSound.CreatureSoundType>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _CreatureSoundCreatureSoundType_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<CreatureSound.CreatureSoundType>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        CreatureSound.CreatureSoundType IPropertySupporter<CreatureSound.CreatureSoundType>.DefaultValue(int index)
+        {
+            return DefaultValueCreatureSoundCreatureSoundType(index: index);
+        }
+
+        protected CreatureSound.CreatureSoundType DefaultValueCreatureSoundCreatureSoundType(int index)
+        {
+            switch ((CreatureSound_FieldIndex)index)
+            {
+                case CreatureSound_FieldIndex.SoundType:
+                    return default(CreatureSound.CreatureSoundType);
+                default:
+                    throw new ArgumentException($"Unknown index for field type CreatureSound.CreatureSoundType: {index}");
             }
         }
 
@@ -699,10 +876,18 @@ namespace Mutagen.Bethesda.Oblivion
                 case "CSDT":
                     if (lastParsed.HasValue && lastParsed.Value >= CreatureSound_FieldIndex.SoundType) return TryGet<CreatureSound_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._SoundType.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(
+                    var SoundTypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)CreatureSound_FieldIndex.SoundType,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (SoundTypetryGet.Succeeded)
+                    {
+                        item.SetSoundType(item: SoundTypetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetSoundType();
+                    }
                     return TryGet<CreatureSound_FieldIndex?>.Succeed(CreatureSound_FieldIndex.SoundType);
                 case "CSDI":
                 case "CSDC":
@@ -844,9 +1029,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case CreatureSound_FieldIndex.SoundType:
-                    this._SoundType.Set(
+                    this.SetSoundType(
                         (CreatureSound.CreatureSoundType)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case CreatureSound_FieldIndex.Sounds:
                     this._Sounds.SetTo((IEnumerable<SoundItem>)obj, cmds);
@@ -889,9 +1074,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case CreatureSound_FieldIndex.SoundType:
-                    obj._SoundType.Set(
+                    obj.SetSoundType(
                         (CreatureSound.CreatureSoundType)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case CreatureSound_FieldIndex.Sounds:
                     obj._Sounds.SetTo((IEnumerable<SoundItem>)pair.Value, null);
@@ -957,6 +1142,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             version: 0);
 
         public const string GUID = "f3d5081c-a137-4a9e-8dd9-c79a8bf94fc3";
+
+        public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
 
@@ -1112,7 +1299,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1156,8 +1344,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.SoundType_Property.SetToWithDefault(
                         rhs: rhs.SoundType_Property,
-                        def: def?.SoundType_Property,
-                        cmds: cmds);
+                        def: def?.SoundType_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

@@ -34,6 +34,12 @@ namespace Mutagen.Bethesda.Oblivion
         IWeather,
         ILoquiObject<Weather>,
         ILoquiObjectSetter,
+        IPropertySupporter<String>,
+        IPropertySupporter<Model>,
+        IPropertySupporter<Single>,
+        IPropertySupporter<Byte>,
+        IPropertySupporter<Weather.WeatherClassification>,
+        IPropertySupporter<Color>,
         IEquatable<Weather>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -49,14 +55,47 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region TextureLowerLayer
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _TextureLowerLayer = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> TextureLowerLayer_Property => _TextureLowerLayer;
+        protected String _TextureLowerLayer;
+        protected PropertyForwarder<Weather, String> _TextureLowerLayerForwarder;
+        public INotifyingSetItem<String> TextureLowerLayer_Property => _TextureLowerLayerForwarder ?? (_TextureLowerLayerForwarder = new PropertyForwarder<Weather, String>(this, (int)Weather_FieldIndex.TextureLowerLayer));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String TextureLowerLayer
         {
-            get => this._TextureLowerLayer.Item;
-            set => this._TextureLowerLayer.Set(value);
+            get => this._TextureLowerLayer;
+            set => this.SetTextureLowerLayer(value);
+        }
+        protected void SetTextureLowerLayer(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.TextureLowerLayer];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && TextureLowerLayer == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.TextureLowerLayer] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = TextureLowerLayer;
+                _TextureLowerLayer = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.TextureLowerLayer,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _TextureLowerLayer = item;
+            }
+        }
+        protected void UnsetTextureLowerLayer()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.TextureLowerLayer] = false;
+            TextureLowerLayer = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IWeather.TextureLowerLayer_Property => this.TextureLowerLayer_Property;
@@ -64,14 +103,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> IWeatherGetter.TextureLowerLayer_Property => this.TextureLowerLayer_Property;
         #endregion
         #region TextureUpperLayer
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _TextureUpperLayer = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> TextureUpperLayer_Property => _TextureUpperLayer;
+        protected String _TextureUpperLayer;
+        protected PropertyForwarder<Weather, String> _TextureUpperLayerForwarder;
+        public INotifyingSetItem<String> TextureUpperLayer_Property => _TextureUpperLayerForwarder ?? (_TextureUpperLayerForwarder = new PropertyForwarder<Weather, String>(this, (int)Weather_FieldIndex.TextureUpperLayer));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String TextureUpperLayer
         {
-            get => this._TextureUpperLayer.Item;
-            set => this._TextureUpperLayer.Set(value);
+            get => this._TextureUpperLayer;
+            set => this.SetTextureUpperLayer(value);
+        }
+        protected void SetTextureUpperLayer(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.TextureUpperLayer];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && TextureUpperLayer == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.TextureUpperLayer] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = TextureUpperLayer;
+                _TextureUpperLayer = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.TextureUpperLayer,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _TextureUpperLayer = item;
+            }
+        }
+        protected void UnsetTextureUpperLayer()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.TextureUpperLayer] = false;
+            TextureUpperLayer = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IWeather.TextureUpperLayer_Property => this.TextureUpperLayer_Property;
@@ -79,13 +151,48 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> IWeatherGetter.TextureUpperLayer_Property => this.TextureUpperLayer_Property;
         #endregion
         #region Model
+        protected Model _Model;
+        protected PropertyForwarder<Weather, Model> _ModelForwarder;
+        public INotifyingSetItem<Model> Model_Property => _ModelForwarder ?? (_ModelForwarder = new PropertyForwarder<Weather, Model>(this, (int)Weather_FieldIndex.Model));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
-        public INotifyingSetItem<Model> Model_Property => this._Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IWeatherGetter.Model => this.Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        public Model Model
+        {
+            get => this._Model;
+            set => this.SetModel(value);
+        }
+        protected void SetModel(
+            Model item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.Model];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Model, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.Model] = hasBeenSet;
+            }
+            if (_Model_subscriptions != null)
+            {
+                var tmp = Model;
+                _Model = item;
+                _Model_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.Model,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Model = item;
+            }
+        }
+        protected void UnsetModel()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.Model] = false;
+            Model = default(Model);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IWeather.Model_Property => this.Model_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -110,14 +217,47 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region FogDayNear
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _FogDayNear = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> FogDayNear_Property => _FogDayNear;
+        protected Single _FogDayNear;
+        protected PropertyForwarder<Weather, Single> _FogDayNearForwarder;
+        public INotifyingSetItem<Single> FogDayNear_Property => _FogDayNearForwarder ?? (_FogDayNearForwarder = new PropertyForwarder<Weather, Single>(this, (int)Weather_FieldIndex.FogDayNear));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FogDayNear
         {
-            get => this._FogDayNear.Item;
-            set => this._FogDayNear.Set(value);
+            get => this._FogDayNear;
+            set => this.SetFogDayNear(value);
+        }
+        protected void SetFogDayNear(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.FogDayNear];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FogDayNear == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.FogDayNear] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = FogDayNear;
+                _FogDayNear = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.FogDayNear,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _FogDayNear = item;
+            }
+        }
+        protected void UnsetFogDayNear()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.FogDayNear] = false;
+            FogDayNear = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IWeather.FogDayNear_Property => this.FogDayNear_Property;
@@ -125,14 +265,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IWeatherGetter.FogDayNear_Property => this.FogDayNear_Property;
         #endregion
         #region FogDayFar
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _FogDayFar = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> FogDayFar_Property => _FogDayFar;
+        protected Single _FogDayFar;
+        protected PropertyForwarder<Weather, Single> _FogDayFarForwarder;
+        public INotifyingSetItem<Single> FogDayFar_Property => _FogDayFarForwarder ?? (_FogDayFarForwarder = new PropertyForwarder<Weather, Single>(this, (int)Weather_FieldIndex.FogDayFar));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FogDayFar
         {
-            get => this._FogDayFar.Item;
-            set => this._FogDayFar.Set(value);
+            get => this._FogDayFar;
+            set => this.SetFogDayFar(value);
+        }
+        protected void SetFogDayFar(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.FogDayFar];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FogDayFar == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.FogDayFar] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = FogDayFar;
+                _FogDayFar = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.FogDayFar,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _FogDayFar = item;
+            }
+        }
+        protected void UnsetFogDayFar()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.FogDayFar] = false;
+            FogDayFar = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IWeather.FogDayFar_Property => this.FogDayFar_Property;
@@ -140,14 +313,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IWeatherGetter.FogDayFar_Property => this.FogDayFar_Property;
         #endregion
         #region FogNightNear
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _FogNightNear = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> FogNightNear_Property => _FogNightNear;
+        protected Single _FogNightNear;
+        protected PropertyForwarder<Weather, Single> _FogNightNearForwarder;
+        public INotifyingSetItem<Single> FogNightNear_Property => _FogNightNearForwarder ?? (_FogNightNearForwarder = new PropertyForwarder<Weather, Single>(this, (int)Weather_FieldIndex.FogNightNear));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FogNightNear
         {
-            get => this._FogNightNear.Item;
-            set => this._FogNightNear.Set(value);
+            get => this._FogNightNear;
+            set => this.SetFogNightNear(value);
+        }
+        protected void SetFogNightNear(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.FogNightNear];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FogNightNear == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.FogNightNear] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = FogNightNear;
+                _FogNightNear = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.FogNightNear,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _FogNightNear = item;
+            }
+        }
+        protected void UnsetFogNightNear()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.FogNightNear] = false;
+            FogNightNear = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IWeather.FogNightNear_Property => this.FogNightNear_Property;
@@ -155,14 +361,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IWeatherGetter.FogNightNear_Property => this.FogNightNear_Property;
         #endregion
         #region FogNightFar
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _FogNightFar = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> FogNightFar_Property => _FogNightFar;
+        protected Single _FogNightFar;
+        protected PropertyForwarder<Weather, Single> _FogNightFarForwarder;
+        public INotifyingSetItem<Single> FogNightFar_Property => _FogNightFarForwarder ?? (_FogNightFarForwarder = new PropertyForwarder<Weather, Single>(this, (int)Weather_FieldIndex.FogNightFar));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FogNightFar
         {
-            get => this._FogNightFar.Item;
-            set => this._FogNightFar.Set(value);
+            get => this._FogNightFar;
+            set => this.SetFogNightFar(value);
+        }
+        protected void SetFogNightFar(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.FogNightFar];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FogNightFar == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.FogNightFar] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = FogNightFar;
+                _FogNightFar = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.FogNightFar,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _FogNightFar = item;
+            }
+        }
+        protected void UnsetFogNightFar()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.FogNightFar] = false;
+            FogNightFar = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IWeather.FogNightFar_Property => this.FogNightFar_Property;
@@ -170,14 +409,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IWeatherGetter.FogNightFar_Property => this.FogNightFar_Property;
         #endregion
         #region HdrEyeAdaptSpeed
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _HdrEyeAdaptSpeed = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> HdrEyeAdaptSpeed_Property => _HdrEyeAdaptSpeed;
+        protected Single _HdrEyeAdaptSpeed;
+        protected PropertyForwarder<Weather, Single> _HdrEyeAdaptSpeedForwarder;
+        public INotifyingSetItem<Single> HdrEyeAdaptSpeed_Property => _HdrEyeAdaptSpeedForwarder ?? (_HdrEyeAdaptSpeedForwarder = new PropertyForwarder<Weather, Single>(this, (int)Weather_FieldIndex.HdrEyeAdaptSpeed));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrEyeAdaptSpeed
         {
-            get => this._HdrEyeAdaptSpeed.Item;
-            set => this._HdrEyeAdaptSpeed.Set(value);
+            get => this._HdrEyeAdaptSpeed;
+            set => this.SetHdrEyeAdaptSpeed(value);
+        }
+        protected void SetHdrEyeAdaptSpeed(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.HdrEyeAdaptSpeed];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && HdrEyeAdaptSpeed == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.HdrEyeAdaptSpeed] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = HdrEyeAdaptSpeed;
+                _HdrEyeAdaptSpeed = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.HdrEyeAdaptSpeed,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _HdrEyeAdaptSpeed = item;
+            }
+        }
+        protected void UnsetHdrEyeAdaptSpeed()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.HdrEyeAdaptSpeed] = false;
+            HdrEyeAdaptSpeed = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IWeather.HdrEyeAdaptSpeed_Property => this.HdrEyeAdaptSpeed_Property;
@@ -185,14 +457,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IWeatherGetter.HdrEyeAdaptSpeed_Property => this.HdrEyeAdaptSpeed_Property;
         #endregion
         #region HdrBlurRadius
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _HdrBlurRadius = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> HdrBlurRadius_Property => _HdrBlurRadius;
+        protected Single _HdrBlurRadius;
+        protected PropertyForwarder<Weather, Single> _HdrBlurRadiusForwarder;
+        public INotifyingSetItem<Single> HdrBlurRadius_Property => _HdrBlurRadiusForwarder ?? (_HdrBlurRadiusForwarder = new PropertyForwarder<Weather, Single>(this, (int)Weather_FieldIndex.HdrBlurRadius));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrBlurRadius
         {
-            get => this._HdrBlurRadius.Item;
-            set => this._HdrBlurRadius.Set(value);
+            get => this._HdrBlurRadius;
+            set => this.SetHdrBlurRadius(value);
+        }
+        protected void SetHdrBlurRadius(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.HdrBlurRadius];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && HdrBlurRadius == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.HdrBlurRadius] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = HdrBlurRadius;
+                _HdrBlurRadius = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.HdrBlurRadius,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _HdrBlurRadius = item;
+            }
+        }
+        protected void UnsetHdrBlurRadius()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.HdrBlurRadius] = false;
+            HdrBlurRadius = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IWeather.HdrBlurRadius_Property => this.HdrBlurRadius_Property;
@@ -200,14 +505,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IWeatherGetter.HdrBlurRadius_Property => this.HdrBlurRadius_Property;
         #endregion
         #region HdrBlurPasses
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _HdrBlurPasses = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> HdrBlurPasses_Property => _HdrBlurPasses;
+        protected Single _HdrBlurPasses;
+        protected PropertyForwarder<Weather, Single> _HdrBlurPassesForwarder;
+        public INotifyingSetItem<Single> HdrBlurPasses_Property => _HdrBlurPassesForwarder ?? (_HdrBlurPassesForwarder = new PropertyForwarder<Weather, Single>(this, (int)Weather_FieldIndex.HdrBlurPasses));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrBlurPasses
         {
-            get => this._HdrBlurPasses.Item;
-            set => this._HdrBlurPasses.Set(value);
+            get => this._HdrBlurPasses;
+            set => this.SetHdrBlurPasses(value);
+        }
+        protected void SetHdrBlurPasses(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.HdrBlurPasses];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && HdrBlurPasses == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.HdrBlurPasses] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = HdrBlurPasses;
+                _HdrBlurPasses = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.HdrBlurPasses,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _HdrBlurPasses = item;
+            }
+        }
+        protected void UnsetHdrBlurPasses()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.HdrBlurPasses] = false;
+            HdrBlurPasses = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IWeather.HdrBlurPasses_Property => this.HdrBlurPasses_Property;
@@ -215,14 +553,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IWeatherGetter.HdrBlurPasses_Property => this.HdrBlurPasses_Property;
         #endregion
         #region HdrEmissiveMult
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _HdrEmissiveMult = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> HdrEmissiveMult_Property => _HdrEmissiveMult;
+        protected Single _HdrEmissiveMult;
+        protected PropertyForwarder<Weather, Single> _HdrEmissiveMultForwarder;
+        public INotifyingSetItem<Single> HdrEmissiveMult_Property => _HdrEmissiveMultForwarder ?? (_HdrEmissiveMultForwarder = new PropertyForwarder<Weather, Single>(this, (int)Weather_FieldIndex.HdrEmissiveMult));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrEmissiveMult
         {
-            get => this._HdrEmissiveMult.Item;
-            set => this._HdrEmissiveMult.Set(value);
+            get => this._HdrEmissiveMult;
+            set => this.SetHdrEmissiveMult(value);
+        }
+        protected void SetHdrEmissiveMult(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.HdrEmissiveMult];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && HdrEmissiveMult == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.HdrEmissiveMult] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = HdrEmissiveMult;
+                _HdrEmissiveMult = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.HdrEmissiveMult,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _HdrEmissiveMult = item;
+            }
+        }
+        protected void UnsetHdrEmissiveMult()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.HdrEmissiveMult] = false;
+            HdrEmissiveMult = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IWeather.HdrEmissiveMult_Property => this.HdrEmissiveMult_Property;
@@ -230,14 +601,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IWeatherGetter.HdrEmissiveMult_Property => this.HdrEmissiveMult_Property;
         #endregion
         #region HdrTargetLum
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _HdrTargetLum = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> HdrTargetLum_Property => _HdrTargetLum;
+        protected Single _HdrTargetLum;
+        protected PropertyForwarder<Weather, Single> _HdrTargetLumForwarder;
+        public INotifyingSetItem<Single> HdrTargetLum_Property => _HdrTargetLumForwarder ?? (_HdrTargetLumForwarder = new PropertyForwarder<Weather, Single>(this, (int)Weather_FieldIndex.HdrTargetLum));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrTargetLum
         {
-            get => this._HdrTargetLum.Item;
-            set => this._HdrTargetLum.Set(value);
+            get => this._HdrTargetLum;
+            set => this.SetHdrTargetLum(value);
+        }
+        protected void SetHdrTargetLum(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.HdrTargetLum];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && HdrTargetLum == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.HdrTargetLum] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = HdrTargetLum;
+                _HdrTargetLum = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.HdrTargetLum,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _HdrTargetLum = item;
+            }
+        }
+        protected void UnsetHdrTargetLum()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.HdrTargetLum] = false;
+            HdrTargetLum = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IWeather.HdrTargetLum_Property => this.HdrTargetLum_Property;
@@ -245,14 +649,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IWeatherGetter.HdrTargetLum_Property => this.HdrTargetLum_Property;
         #endregion
         #region HdrUpperLumClamp
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _HdrUpperLumClamp = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> HdrUpperLumClamp_Property => _HdrUpperLumClamp;
+        protected Single _HdrUpperLumClamp;
+        protected PropertyForwarder<Weather, Single> _HdrUpperLumClampForwarder;
+        public INotifyingSetItem<Single> HdrUpperLumClamp_Property => _HdrUpperLumClampForwarder ?? (_HdrUpperLumClampForwarder = new PropertyForwarder<Weather, Single>(this, (int)Weather_FieldIndex.HdrUpperLumClamp));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrUpperLumClamp
         {
-            get => this._HdrUpperLumClamp.Item;
-            set => this._HdrUpperLumClamp.Set(value);
+            get => this._HdrUpperLumClamp;
+            set => this.SetHdrUpperLumClamp(value);
+        }
+        protected void SetHdrUpperLumClamp(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.HdrUpperLumClamp];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && HdrUpperLumClamp == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.HdrUpperLumClamp] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = HdrUpperLumClamp;
+                _HdrUpperLumClamp = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.HdrUpperLumClamp,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _HdrUpperLumClamp = item;
+            }
+        }
+        protected void UnsetHdrUpperLumClamp()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.HdrUpperLumClamp] = false;
+            HdrUpperLumClamp = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IWeather.HdrUpperLumClamp_Property => this.HdrUpperLumClamp_Property;
@@ -260,14 +697,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IWeatherGetter.HdrUpperLumClamp_Property => this.HdrUpperLumClamp_Property;
         #endregion
         #region HdrBrightScale
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _HdrBrightScale = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> HdrBrightScale_Property => _HdrBrightScale;
+        protected Single _HdrBrightScale;
+        protected PropertyForwarder<Weather, Single> _HdrBrightScaleForwarder;
+        public INotifyingSetItem<Single> HdrBrightScale_Property => _HdrBrightScaleForwarder ?? (_HdrBrightScaleForwarder = new PropertyForwarder<Weather, Single>(this, (int)Weather_FieldIndex.HdrBrightScale));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrBrightScale
         {
-            get => this._HdrBrightScale.Item;
-            set => this._HdrBrightScale.Set(value);
+            get => this._HdrBrightScale;
+            set => this.SetHdrBrightScale(value);
+        }
+        protected void SetHdrBrightScale(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.HdrBrightScale];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && HdrBrightScale == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.HdrBrightScale] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = HdrBrightScale;
+                _HdrBrightScale = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.HdrBrightScale,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _HdrBrightScale = item;
+            }
+        }
+        protected void UnsetHdrBrightScale()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.HdrBrightScale] = false;
+            HdrBrightScale = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IWeather.HdrBrightScale_Property => this.HdrBrightScale_Property;
@@ -275,14 +745,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IWeatherGetter.HdrBrightScale_Property => this.HdrBrightScale_Property;
         #endregion
         #region HdrBrightClamp
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _HdrBrightClamp = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> HdrBrightClamp_Property => _HdrBrightClamp;
+        protected Single _HdrBrightClamp;
+        protected PropertyForwarder<Weather, Single> _HdrBrightClampForwarder;
+        public INotifyingSetItem<Single> HdrBrightClamp_Property => _HdrBrightClampForwarder ?? (_HdrBrightClampForwarder = new PropertyForwarder<Weather, Single>(this, (int)Weather_FieldIndex.HdrBrightClamp));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrBrightClamp
         {
-            get => this._HdrBrightClamp.Item;
-            set => this._HdrBrightClamp.Set(value);
+            get => this._HdrBrightClamp;
+            set => this.SetHdrBrightClamp(value);
+        }
+        protected void SetHdrBrightClamp(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.HdrBrightClamp];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && HdrBrightClamp == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.HdrBrightClamp] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = HdrBrightClamp;
+                _HdrBrightClamp = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.HdrBrightClamp,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _HdrBrightClamp = item;
+            }
+        }
+        protected void UnsetHdrBrightClamp()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.HdrBrightClamp] = false;
+            HdrBrightClamp = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IWeather.HdrBrightClamp_Property => this.HdrBrightClamp_Property;
@@ -290,14 +793,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IWeatherGetter.HdrBrightClamp_Property => this.HdrBrightClamp_Property;
         #endregion
         #region HdrLumRampNoTex
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _HdrLumRampNoTex = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> HdrLumRampNoTex_Property => _HdrLumRampNoTex;
+        protected Single _HdrLumRampNoTex;
+        protected PropertyForwarder<Weather, Single> _HdrLumRampNoTexForwarder;
+        public INotifyingSetItem<Single> HdrLumRampNoTex_Property => _HdrLumRampNoTexForwarder ?? (_HdrLumRampNoTexForwarder = new PropertyForwarder<Weather, Single>(this, (int)Weather_FieldIndex.HdrLumRampNoTex));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrLumRampNoTex
         {
-            get => this._HdrLumRampNoTex.Item;
-            set => this._HdrLumRampNoTex.Set(value);
+            get => this._HdrLumRampNoTex;
+            set => this.SetHdrLumRampNoTex(value);
+        }
+        protected void SetHdrLumRampNoTex(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.HdrLumRampNoTex];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && HdrLumRampNoTex == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.HdrLumRampNoTex] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = HdrLumRampNoTex;
+                _HdrLumRampNoTex = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.HdrLumRampNoTex,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _HdrLumRampNoTex = item;
+            }
+        }
+        protected void UnsetHdrLumRampNoTex()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.HdrLumRampNoTex] = false;
+            HdrLumRampNoTex = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IWeather.HdrLumRampNoTex_Property => this.HdrLumRampNoTex_Property;
@@ -305,14 +841,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IWeatherGetter.HdrLumRampNoTex_Property => this.HdrLumRampNoTex_Property;
         #endregion
         #region HdrLumRampMin
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _HdrLumRampMin = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> HdrLumRampMin_Property => _HdrLumRampMin;
+        protected Single _HdrLumRampMin;
+        protected PropertyForwarder<Weather, Single> _HdrLumRampMinForwarder;
+        public INotifyingSetItem<Single> HdrLumRampMin_Property => _HdrLumRampMinForwarder ?? (_HdrLumRampMinForwarder = new PropertyForwarder<Weather, Single>(this, (int)Weather_FieldIndex.HdrLumRampMin));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrLumRampMin
         {
-            get => this._HdrLumRampMin.Item;
-            set => this._HdrLumRampMin.Set(value);
+            get => this._HdrLumRampMin;
+            set => this.SetHdrLumRampMin(value);
+        }
+        protected void SetHdrLumRampMin(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.HdrLumRampMin];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && HdrLumRampMin == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.HdrLumRampMin] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = HdrLumRampMin;
+                _HdrLumRampMin = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.HdrLumRampMin,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _HdrLumRampMin = item;
+            }
+        }
+        protected void UnsetHdrLumRampMin()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.HdrLumRampMin] = false;
+            HdrLumRampMin = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IWeather.HdrLumRampMin_Property => this.HdrLumRampMin_Property;
@@ -320,14 +889,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IWeatherGetter.HdrLumRampMin_Property => this.HdrLumRampMin_Property;
         #endregion
         #region HdrLumRampMax
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _HdrLumRampMax = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> HdrLumRampMax_Property => _HdrLumRampMax;
+        protected Single _HdrLumRampMax;
+        protected PropertyForwarder<Weather, Single> _HdrLumRampMaxForwarder;
+        public INotifyingSetItem<Single> HdrLumRampMax_Property => _HdrLumRampMaxForwarder ?? (_HdrLumRampMaxForwarder = new PropertyForwarder<Weather, Single>(this, (int)Weather_FieldIndex.HdrLumRampMax));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrLumRampMax
         {
-            get => this._HdrLumRampMax.Item;
-            set => this._HdrLumRampMax.Set(value);
+            get => this._HdrLumRampMax;
+            set => this.SetHdrLumRampMax(value);
+        }
+        protected void SetHdrLumRampMax(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.HdrLumRampMax];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && HdrLumRampMax == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.HdrLumRampMax] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = HdrLumRampMax;
+                _HdrLumRampMax = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.HdrLumRampMax,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _HdrLumRampMax = item;
+            }
+        }
+        protected void UnsetHdrLumRampMax()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.HdrLumRampMax] = false;
+            HdrLumRampMax = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IWeather.HdrLumRampMax_Property => this.HdrLumRampMax_Property;
@@ -335,14 +937,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IWeatherGetter.HdrLumRampMax_Property => this.HdrLumRampMax_Property;
         #endregion
         #region HdrSunlightDimmer
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _HdrSunlightDimmer = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> HdrSunlightDimmer_Property => _HdrSunlightDimmer;
+        protected Single _HdrSunlightDimmer;
+        protected PropertyForwarder<Weather, Single> _HdrSunlightDimmerForwarder;
+        public INotifyingSetItem<Single> HdrSunlightDimmer_Property => _HdrSunlightDimmerForwarder ?? (_HdrSunlightDimmerForwarder = new PropertyForwarder<Weather, Single>(this, (int)Weather_FieldIndex.HdrSunlightDimmer));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrSunlightDimmer
         {
-            get => this._HdrSunlightDimmer.Item;
-            set => this._HdrSunlightDimmer.Set(value);
+            get => this._HdrSunlightDimmer;
+            set => this.SetHdrSunlightDimmer(value);
+        }
+        protected void SetHdrSunlightDimmer(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.HdrSunlightDimmer];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && HdrSunlightDimmer == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.HdrSunlightDimmer] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = HdrSunlightDimmer;
+                _HdrSunlightDimmer = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.HdrSunlightDimmer,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _HdrSunlightDimmer = item;
+            }
+        }
+        protected void UnsetHdrSunlightDimmer()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.HdrSunlightDimmer] = false;
+            HdrSunlightDimmer = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IWeather.HdrSunlightDimmer_Property => this.HdrSunlightDimmer_Property;
@@ -350,14 +985,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IWeatherGetter.HdrSunlightDimmer_Property => this.HdrSunlightDimmer_Property;
         #endregion
         #region HdrGrassDimmer
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _HdrGrassDimmer = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> HdrGrassDimmer_Property => _HdrGrassDimmer;
+        protected Single _HdrGrassDimmer;
+        protected PropertyForwarder<Weather, Single> _HdrGrassDimmerForwarder;
+        public INotifyingSetItem<Single> HdrGrassDimmer_Property => _HdrGrassDimmerForwarder ?? (_HdrGrassDimmerForwarder = new PropertyForwarder<Weather, Single>(this, (int)Weather_FieldIndex.HdrGrassDimmer));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrGrassDimmer
         {
-            get => this._HdrGrassDimmer.Item;
-            set => this._HdrGrassDimmer.Set(value);
+            get => this._HdrGrassDimmer;
+            set => this.SetHdrGrassDimmer(value);
+        }
+        protected void SetHdrGrassDimmer(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.HdrGrassDimmer];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && HdrGrassDimmer == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.HdrGrassDimmer] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = HdrGrassDimmer;
+                _HdrGrassDimmer = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.HdrGrassDimmer,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _HdrGrassDimmer = item;
+            }
+        }
+        protected void UnsetHdrGrassDimmer()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.HdrGrassDimmer] = false;
+            HdrGrassDimmer = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IWeather.HdrGrassDimmer_Property => this.HdrGrassDimmer_Property;
@@ -365,14 +1033,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IWeatherGetter.HdrGrassDimmer_Property => this.HdrGrassDimmer_Property;
         #endregion
         #region HdrTreeDimmer
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _HdrTreeDimmer = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> HdrTreeDimmer_Property => _HdrTreeDimmer;
+        protected Single _HdrTreeDimmer;
+        protected PropertyForwarder<Weather, Single> _HdrTreeDimmerForwarder;
+        public INotifyingSetItem<Single> HdrTreeDimmer_Property => _HdrTreeDimmerForwarder ?? (_HdrTreeDimmerForwarder = new PropertyForwarder<Weather, Single>(this, (int)Weather_FieldIndex.HdrTreeDimmer));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrTreeDimmer
         {
-            get => this._HdrTreeDimmer.Item;
-            set => this._HdrTreeDimmer.Set(value);
+            get => this._HdrTreeDimmer;
+            set => this.SetHdrTreeDimmer(value);
+        }
+        protected void SetHdrTreeDimmer(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.HdrTreeDimmer];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && HdrTreeDimmer == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.HdrTreeDimmer] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = HdrTreeDimmer;
+                _HdrTreeDimmer = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.HdrTreeDimmer,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _HdrTreeDimmer = item;
+            }
+        }
+        protected void UnsetHdrTreeDimmer()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.HdrTreeDimmer] = false;
+            HdrTreeDimmer = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IWeather.HdrTreeDimmer_Property => this.HdrTreeDimmer_Property;
@@ -380,14 +1081,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IWeatherGetter.HdrTreeDimmer_Property => this.HdrTreeDimmer_Property;
         #endregion
         #region WindSpeed
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _WindSpeed = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> WindSpeed_Property => _WindSpeed;
+        protected Byte _WindSpeed;
+        protected PropertyForwarder<Weather, Byte> _WindSpeedForwarder;
+        public INotifyingSetItem<Byte> WindSpeed_Property => _WindSpeedForwarder ?? (_WindSpeedForwarder = new PropertyForwarder<Weather, Byte>(this, (int)Weather_FieldIndex.WindSpeed));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte WindSpeed
         {
-            get => this._WindSpeed.Item;
-            set => this._WindSpeed.Set(value);
+            get => this._WindSpeed;
+            set => this.SetWindSpeed(value);
+        }
+        protected void SetWindSpeed(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.WindSpeed];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && WindSpeed == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.WindSpeed] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = WindSpeed;
+                _WindSpeed = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.WindSpeed,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _WindSpeed = item;
+            }
+        }
+        protected void UnsetWindSpeed()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.WindSpeed] = false;
+            WindSpeed = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IWeather.WindSpeed_Property => this.WindSpeed_Property;
@@ -395,14 +1129,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IWeatherGetter.WindSpeed_Property => this.WindSpeed_Property;
         #endregion
         #region CloudSpeedLower
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _CloudSpeedLower = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> CloudSpeedLower_Property => _CloudSpeedLower;
+        protected Byte _CloudSpeedLower;
+        protected PropertyForwarder<Weather, Byte> _CloudSpeedLowerForwarder;
+        public INotifyingSetItem<Byte> CloudSpeedLower_Property => _CloudSpeedLowerForwarder ?? (_CloudSpeedLowerForwarder = new PropertyForwarder<Weather, Byte>(this, (int)Weather_FieldIndex.CloudSpeedLower));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte CloudSpeedLower
         {
-            get => this._CloudSpeedLower.Item;
-            set => this._CloudSpeedLower.Set(value);
+            get => this._CloudSpeedLower;
+            set => this.SetCloudSpeedLower(value);
+        }
+        protected void SetCloudSpeedLower(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.CloudSpeedLower];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && CloudSpeedLower == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.CloudSpeedLower] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = CloudSpeedLower;
+                _CloudSpeedLower = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.CloudSpeedLower,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _CloudSpeedLower = item;
+            }
+        }
+        protected void UnsetCloudSpeedLower()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.CloudSpeedLower] = false;
+            CloudSpeedLower = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IWeather.CloudSpeedLower_Property => this.CloudSpeedLower_Property;
@@ -410,14 +1177,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IWeatherGetter.CloudSpeedLower_Property => this.CloudSpeedLower_Property;
         #endregion
         #region CloudSpeedUpper
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _CloudSpeedUpper = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> CloudSpeedUpper_Property => _CloudSpeedUpper;
+        protected Byte _CloudSpeedUpper;
+        protected PropertyForwarder<Weather, Byte> _CloudSpeedUpperForwarder;
+        public INotifyingSetItem<Byte> CloudSpeedUpper_Property => _CloudSpeedUpperForwarder ?? (_CloudSpeedUpperForwarder = new PropertyForwarder<Weather, Byte>(this, (int)Weather_FieldIndex.CloudSpeedUpper));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte CloudSpeedUpper
         {
-            get => this._CloudSpeedUpper.Item;
-            set => this._CloudSpeedUpper.Set(value);
+            get => this._CloudSpeedUpper;
+            set => this.SetCloudSpeedUpper(value);
+        }
+        protected void SetCloudSpeedUpper(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.CloudSpeedUpper];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && CloudSpeedUpper == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.CloudSpeedUpper] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = CloudSpeedUpper;
+                _CloudSpeedUpper = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.CloudSpeedUpper,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _CloudSpeedUpper = item;
+            }
+        }
+        protected void UnsetCloudSpeedUpper()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.CloudSpeedUpper] = false;
+            CloudSpeedUpper = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IWeather.CloudSpeedUpper_Property => this.CloudSpeedUpper_Property;
@@ -425,14 +1225,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IWeatherGetter.CloudSpeedUpper_Property => this.CloudSpeedUpper_Property;
         #endregion
         #region TransDelta
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _TransDelta = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> TransDelta_Property => _TransDelta;
+        protected Byte _TransDelta;
+        protected PropertyForwarder<Weather, Byte> _TransDeltaForwarder;
+        public INotifyingSetItem<Byte> TransDelta_Property => _TransDeltaForwarder ?? (_TransDeltaForwarder = new PropertyForwarder<Weather, Byte>(this, (int)Weather_FieldIndex.TransDelta));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte TransDelta
         {
-            get => this._TransDelta.Item;
-            set => this._TransDelta.Set(value);
+            get => this._TransDelta;
+            set => this.SetTransDelta(value);
+        }
+        protected void SetTransDelta(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.TransDelta];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && TransDelta == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.TransDelta] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = TransDelta;
+                _TransDelta = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.TransDelta,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _TransDelta = item;
+            }
+        }
+        protected void UnsetTransDelta()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.TransDelta] = false;
+            TransDelta = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IWeather.TransDelta_Property => this.TransDelta_Property;
@@ -440,14 +1273,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IWeatherGetter.TransDelta_Property => this.TransDelta_Property;
         #endregion
         #region SunGlare
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _SunGlare = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> SunGlare_Property => _SunGlare;
+        protected Byte _SunGlare;
+        protected PropertyForwarder<Weather, Byte> _SunGlareForwarder;
+        public INotifyingSetItem<Byte> SunGlare_Property => _SunGlareForwarder ?? (_SunGlareForwarder = new PropertyForwarder<Weather, Byte>(this, (int)Weather_FieldIndex.SunGlare));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte SunGlare
         {
-            get => this._SunGlare.Item;
-            set => this._SunGlare.Set(value);
+            get => this._SunGlare;
+            set => this.SetSunGlare(value);
+        }
+        protected void SetSunGlare(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.SunGlare];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && SunGlare == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.SunGlare] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = SunGlare;
+                _SunGlare = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.SunGlare,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _SunGlare = item;
+            }
+        }
+        protected void UnsetSunGlare()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.SunGlare] = false;
+            SunGlare = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IWeather.SunGlare_Property => this.SunGlare_Property;
@@ -455,14 +1321,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IWeatherGetter.SunGlare_Property => this.SunGlare_Property;
         #endregion
         #region SunDamage
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _SunDamage = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> SunDamage_Property => _SunDamage;
+        protected Byte _SunDamage;
+        protected PropertyForwarder<Weather, Byte> _SunDamageForwarder;
+        public INotifyingSetItem<Byte> SunDamage_Property => _SunDamageForwarder ?? (_SunDamageForwarder = new PropertyForwarder<Weather, Byte>(this, (int)Weather_FieldIndex.SunDamage));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte SunDamage
         {
-            get => this._SunDamage.Item;
-            set => this._SunDamage.Set(value);
+            get => this._SunDamage;
+            set => this.SetSunDamage(value);
+        }
+        protected void SetSunDamage(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.SunDamage];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && SunDamage == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.SunDamage] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = SunDamage;
+                _SunDamage = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.SunDamage,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _SunDamage = item;
+            }
+        }
+        protected void UnsetSunDamage()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.SunDamage] = false;
+            SunDamage = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IWeather.SunDamage_Property => this.SunDamage_Property;
@@ -470,14 +1369,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IWeatherGetter.SunDamage_Property => this.SunDamage_Property;
         #endregion
         #region PrecipitationBeginFadeIn
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _PrecipitationBeginFadeIn = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> PrecipitationBeginFadeIn_Property => _PrecipitationBeginFadeIn;
+        protected Byte _PrecipitationBeginFadeIn;
+        protected PropertyForwarder<Weather, Byte> _PrecipitationBeginFadeInForwarder;
+        public INotifyingSetItem<Byte> PrecipitationBeginFadeIn_Property => _PrecipitationBeginFadeInForwarder ?? (_PrecipitationBeginFadeInForwarder = new PropertyForwarder<Weather, Byte>(this, (int)Weather_FieldIndex.PrecipitationBeginFadeIn));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte PrecipitationBeginFadeIn
         {
-            get => this._PrecipitationBeginFadeIn.Item;
-            set => this._PrecipitationBeginFadeIn.Set(value);
+            get => this._PrecipitationBeginFadeIn;
+            set => this.SetPrecipitationBeginFadeIn(value);
+        }
+        protected void SetPrecipitationBeginFadeIn(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.PrecipitationBeginFadeIn];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && PrecipitationBeginFadeIn == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.PrecipitationBeginFadeIn] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = PrecipitationBeginFadeIn;
+                _PrecipitationBeginFadeIn = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.PrecipitationBeginFadeIn,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _PrecipitationBeginFadeIn = item;
+            }
+        }
+        protected void UnsetPrecipitationBeginFadeIn()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.PrecipitationBeginFadeIn] = false;
+            PrecipitationBeginFadeIn = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IWeather.PrecipitationBeginFadeIn_Property => this.PrecipitationBeginFadeIn_Property;
@@ -485,14 +1417,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IWeatherGetter.PrecipitationBeginFadeIn_Property => this.PrecipitationBeginFadeIn_Property;
         #endregion
         #region PrecipitationEndFadeOut
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _PrecipitationEndFadeOut = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> PrecipitationEndFadeOut_Property => _PrecipitationEndFadeOut;
+        protected Byte _PrecipitationEndFadeOut;
+        protected PropertyForwarder<Weather, Byte> _PrecipitationEndFadeOutForwarder;
+        public INotifyingSetItem<Byte> PrecipitationEndFadeOut_Property => _PrecipitationEndFadeOutForwarder ?? (_PrecipitationEndFadeOutForwarder = new PropertyForwarder<Weather, Byte>(this, (int)Weather_FieldIndex.PrecipitationEndFadeOut));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte PrecipitationEndFadeOut
         {
-            get => this._PrecipitationEndFadeOut.Item;
-            set => this._PrecipitationEndFadeOut.Set(value);
+            get => this._PrecipitationEndFadeOut;
+            set => this.SetPrecipitationEndFadeOut(value);
+        }
+        protected void SetPrecipitationEndFadeOut(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.PrecipitationEndFadeOut];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && PrecipitationEndFadeOut == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.PrecipitationEndFadeOut] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = PrecipitationEndFadeOut;
+                _PrecipitationEndFadeOut = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.PrecipitationEndFadeOut,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _PrecipitationEndFadeOut = item;
+            }
+        }
+        protected void UnsetPrecipitationEndFadeOut()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.PrecipitationEndFadeOut] = false;
+            PrecipitationEndFadeOut = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IWeather.PrecipitationEndFadeOut_Property => this.PrecipitationEndFadeOut_Property;
@@ -500,14 +1465,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IWeatherGetter.PrecipitationEndFadeOut_Property => this.PrecipitationEndFadeOut_Property;
         #endregion
         #region ThunderLightningBeginFadeIn
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _ThunderLightningBeginFadeIn = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> ThunderLightningBeginFadeIn_Property => _ThunderLightningBeginFadeIn;
+        protected Byte _ThunderLightningBeginFadeIn;
+        protected PropertyForwarder<Weather, Byte> _ThunderLightningBeginFadeInForwarder;
+        public INotifyingSetItem<Byte> ThunderLightningBeginFadeIn_Property => _ThunderLightningBeginFadeInForwarder ?? (_ThunderLightningBeginFadeInForwarder = new PropertyForwarder<Weather, Byte>(this, (int)Weather_FieldIndex.ThunderLightningBeginFadeIn));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte ThunderLightningBeginFadeIn
         {
-            get => this._ThunderLightningBeginFadeIn.Item;
-            set => this._ThunderLightningBeginFadeIn.Set(value);
+            get => this._ThunderLightningBeginFadeIn;
+            set => this.SetThunderLightningBeginFadeIn(value);
+        }
+        protected void SetThunderLightningBeginFadeIn(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.ThunderLightningBeginFadeIn];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ThunderLightningBeginFadeIn == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.ThunderLightningBeginFadeIn] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = ThunderLightningBeginFadeIn;
+                _ThunderLightningBeginFadeIn = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.ThunderLightningBeginFadeIn,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _ThunderLightningBeginFadeIn = item;
+            }
+        }
+        protected void UnsetThunderLightningBeginFadeIn()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.ThunderLightningBeginFadeIn] = false;
+            ThunderLightningBeginFadeIn = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IWeather.ThunderLightningBeginFadeIn_Property => this.ThunderLightningBeginFadeIn_Property;
@@ -515,14 +1513,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IWeatherGetter.ThunderLightningBeginFadeIn_Property => this.ThunderLightningBeginFadeIn_Property;
         #endregion
         #region ThunderLightningEndFadeOut
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _ThunderLightningEndFadeOut = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> ThunderLightningEndFadeOut_Property => _ThunderLightningEndFadeOut;
+        protected Byte _ThunderLightningEndFadeOut;
+        protected PropertyForwarder<Weather, Byte> _ThunderLightningEndFadeOutForwarder;
+        public INotifyingSetItem<Byte> ThunderLightningEndFadeOut_Property => _ThunderLightningEndFadeOutForwarder ?? (_ThunderLightningEndFadeOutForwarder = new PropertyForwarder<Weather, Byte>(this, (int)Weather_FieldIndex.ThunderLightningEndFadeOut));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte ThunderLightningEndFadeOut
         {
-            get => this._ThunderLightningEndFadeOut.Item;
-            set => this._ThunderLightningEndFadeOut.Set(value);
+            get => this._ThunderLightningEndFadeOut;
+            set => this.SetThunderLightningEndFadeOut(value);
+        }
+        protected void SetThunderLightningEndFadeOut(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.ThunderLightningEndFadeOut];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ThunderLightningEndFadeOut == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.ThunderLightningEndFadeOut] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = ThunderLightningEndFadeOut;
+                _ThunderLightningEndFadeOut = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.ThunderLightningEndFadeOut,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _ThunderLightningEndFadeOut = item;
+            }
+        }
+        protected void UnsetThunderLightningEndFadeOut()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.ThunderLightningEndFadeOut] = false;
+            ThunderLightningEndFadeOut = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IWeather.ThunderLightningEndFadeOut_Property => this.ThunderLightningEndFadeOut_Property;
@@ -530,14 +1561,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IWeatherGetter.ThunderLightningEndFadeOut_Property => this.ThunderLightningEndFadeOut_Property;
         #endregion
         #region ThunderLightningFrequency
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _ThunderLightningFrequency = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> ThunderLightningFrequency_Property => _ThunderLightningFrequency;
+        protected Byte _ThunderLightningFrequency;
+        protected PropertyForwarder<Weather, Byte> _ThunderLightningFrequencyForwarder;
+        public INotifyingSetItem<Byte> ThunderLightningFrequency_Property => _ThunderLightningFrequencyForwarder ?? (_ThunderLightningFrequencyForwarder = new PropertyForwarder<Weather, Byte>(this, (int)Weather_FieldIndex.ThunderLightningFrequency));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte ThunderLightningFrequency
         {
-            get => this._ThunderLightningFrequency.Item;
-            set => this._ThunderLightningFrequency.Set(value);
+            get => this._ThunderLightningFrequency;
+            set => this.SetThunderLightningFrequency(value);
+        }
+        protected void SetThunderLightningFrequency(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.ThunderLightningFrequency];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ThunderLightningFrequency == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.ThunderLightningFrequency] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = ThunderLightningFrequency;
+                _ThunderLightningFrequency = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.ThunderLightningFrequency,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _ThunderLightningFrequency = item;
+            }
+        }
+        protected void UnsetThunderLightningFrequency()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.ThunderLightningFrequency] = false;
+            ThunderLightningFrequency = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IWeather.ThunderLightningFrequency_Property => this.ThunderLightningFrequency_Property;
@@ -545,14 +1609,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IWeatherGetter.ThunderLightningFrequency_Property => this.ThunderLightningFrequency_Property;
         #endregion
         #region Classification
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Weather.WeatherClassification> _Classification = NotifyingItem.Factory<Weather.WeatherClassification>();
-        public INotifyingItem<Weather.WeatherClassification> Classification_Property => _Classification;
+        protected Weather.WeatherClassification _Classification;
+        protected PropertyForwarder<Weather, Weather.WeatherClassification> _ClassificationForwarder;
+        public INotifyingSetItem<Weather.WeatherClassification> Classification_Property => _ClassificationForwarder ?? (_ClassificationForwarder = new PropertyForwarder<Weather, Weather.WeatherClassification>(this, (int)Weather_FieldIndex.Classification));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Weather.WeatherClassification Classification
         {
-            get => this._Classification.Item;
-            set => this._Classification.Set(value);
+            get => this._Classification;
+            set => this.SetClassification(value);
+        }
+        protected void SetClassification(
+            Weather.WeatherClassification item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.Classification];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Classification == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.Classification] = hasBeenSet;
+            }
+            if (_WeatherWeatherClassification_subscriptions != null)
+            {
+                var tmp = Classification;
+                _Classification = item;
+                _WeatherWeatherClassification_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.Classification,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Classification = item;
+            }
+        }
+        protected void UnsetClassification()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.Classification] = false;
+            Classification = default(Weather.WeatherClassification);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Weather.WeatherClassification> IWeather.Classification_Property => this.Classification_Property;
@@ -560,14 +1657,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Weather.WeatherClassification> IWeatherGetter.Classification_Property => this.Classification_Property;
         #endregion
         #region LightningColor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Color> _LightningColor = NotifyingItem.Factory<Color>();
-        public INotifyingItem<Color> LightningColor_Property => _LightningColor;
+        protected Color _LightningColor;
+        protected PropertyForwarder<Weather, Color> _LightningColorForwarder;
+        public INotifyingSetItem<Color> LightningColor_Property => _LightningColorForwarder ?? (_LightningColorForwarder = new PropertyForwarder<Weather, Color>(this, (int)Weather_FieldIndex.LightningColor));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Color LightningColor
         {
-            get => this._LightningColor.Item;
-            set => this._LightningColor.Set(value);
+            get => this._LightningColor;
+            set => this.SetLightningColor(value);
+        }
+        protected void SetLightningColor(
+            Color item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Weather_FieldIndex.LightningColor];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && LightningColor == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Weather_FieldIndex.LightningColor] = hasBeenSet;
+            }
+            if (_Color_subscriptions != null)
+            {
+                var tmp = LightningColor;
+                _LightningColor = item;
+                _Color_subscriptions.FireSubscriptions(
+                    index: (int)Weather_FieldIndex.LightningColor,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _LightningColor = item;
+            }
+        }
+        protected void UnsetLightningColor()
+        {
+            _hasBeenSetTracker[(int)Weather_FieldIndex.LightningColor] = false;
+            LightningColor = default(Color);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Color> IWeather.LightningColor_Property => this.LightningColor_Property;
@@ -1050,22 +2180,46 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "TextureLowerLayer":
-                    item._TextureLowerLayer.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var TextureLowerLayertryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.TextureLowerLayer,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (TextureLowerLayertryGet.Succeeded)
+                    {
+                        item.SetTextureLowerLayer(item: TextureLowerLayertryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetTextureLowerLayer();
+                    }
                     break;
                 case "TextureUpperLayer":
-                    item._TextureUpperLayer.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var TextureUpperLayertryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.TextureUpperLayer,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (TextureUpperLayertryGet.Succeeded)
+                    {
+                        item.SetTextureUpperLayer(item: TextureUpperLayertryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetTextureUpperLayer();
+                    }
                     break;
                 case "Model":
-                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    var ModeltryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Weather_FieldIndex.Model,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ModeltryGet.Succeeded)
+                    {
+                        item.SetModel(item: ModeltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetModel();
+                    }
                     break;
                 case "WeatherTypes":
                     item._WeatherTypes.SetIfSucceededOrDefault(ListXmlTranslation<WeatherType, MaskItem<Exception, WeatherType_ErrorMask>>.Instance.Parse(
@@ -1082,191 +2236,439 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "FogDayNear":
-                    item._FogDayNear.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var FogDayNeartryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.FogDayNear,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FogDayNeartryGet.Succeeded)
+                    {
+                        item.SetFogDayNear(item: FogDayNeartryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFogDayNear();
+                    }
                     break;
                 case "FogDayFar":
-                    item._FogDayFar.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var FogDayFartryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.FogDayFar,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FogDayFartryGet.Succeeded)
+                    {
+                        item.SetFogDayFar(item: FogDayFartryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFogDayFar();
+                    }
                     break;
                 case "FogNightNear":
-                    item._FogNightNear.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var FogNightNeartryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.FogNightNear,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FogNightNeartryGet.Succeeded)
+                    {
+                        item.SetFogNightNear(item: FogNightNeartryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFogNightNear();
+                    }
                     break;
                 case "FogNightFar":
-                    item._FogNightFar.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var FogNightFartryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.FogNightFar,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FogNightFartryGet.Succeeded)
+                    {
+                        item.SetFogNightFar(item: FogNightFartryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFogNightFar();
+                    }
                     break;
                 case "HdrEyeAdaptSpeed":
-                    item._HdrEyeAdaptSpeed.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var HdrEyeAdaptSpeedtryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrEyeAdaptSpeed,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HdrEyeAdaptSpeedtryGet.Succeeded)
+                    {
+                        item.SetHdrEyeAdaptSpeed(item: HdrEyeAdaptSpeedtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHdrEyeAdaptSpeed();
+                    }
                     break;
                 case "HdrBlurRadius":
-                    item._HdrBlurRadius.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var HdrBlurRadiustryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrBlurRadius,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HdrBlurRadiustryGet.Succeeded)
+                    {
+                        item.SetHdrBlurRadius(item: HdrBlurRadiustryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHdrBlurRadius();
+                    }
                     break;
                 case "HdrBlurPasses":
-                    item._HdrBlurPasses.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var HdrBlurPassestryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrBlurPasses,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HdrBlurPassestryGet.Succeeded)
+                    {
+                        item.SetHdrBlurPasses(item: HdrBlurPassestryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHdrBlurPasses();
+                    }
                     break;
                 case "HdrEmissiveMult":
-                    item._HdrEmissiveMult.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var HdrEmissiveMulttryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrEmissiveMult,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HdrEmissiveMulttryGet.Succeeded)
+                    {
+                        item.SetHdrEmissiveMult(item: HdrEmissiveMulttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHdrEmissiveMult();
+                    }
                     break;
                 case "HdrTargetLum":
-                    item._HdrTargetLum.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var HdrTargetLumtryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrTargetLum,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HdrTargetLumtryGet.Succeeded)
+                    {
+                        item.SetHdrTargetLum(item: HdrTargetLumtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHdrTargetLum();
+                    }
                     break;
                 case "HdrUpperLumClamp":
-                    item._HdrUpperLumClamp.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var HdrUpperLumClamptryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrUpperLumClamp,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HdrUpperLumClamptryGet.Succeeded)
+                    {
+                        item.SetHdrUpperLumClamp(item: HdrUpperLumClamptryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHdrUpperLumClamp();
+                    }
                     break;
                 case "HdrBrightScale":
-                    item._HdrBrightScale.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var HdrBrightScaletryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrBrightScale,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HdrBrightScaletryGet.Succeeded)
+                    {
+                        item.SetHdrBrightScale(item: HdrBrightScaletryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHdrBrightScale();
+                    }
                     break;
                 case "HdrBrightClamp":
-                    item._HdrBrightClamp.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var HdrBrightClamptryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrBrightClamp,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HdrBrightClamptryGet.Succeeded)
+                    {
+                        item.SetHdrBrightClamp(item: HdrBrightClamptryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHdrBrightClamp();
+                    }
                     break;
                 case "HdrLumRampNoTex":
-                    item._HdrLumRampNoTex.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var HdrLumRampNoTextryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrLumRampNoTex,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HdrLumRampNoTextryGet.Succeeded)
+                    {
+                        item.SetHdrLumRampNoTex(item: HdrLumRampNoTextryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHdrLumRampNoTex();
+                    }
                     break;
                 case "HdrLumRampMin":
-                    item._HdrLumRampMin.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var HdrLumRampMintryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrLumRampMin,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HdrLumRampMintryGet.Succeeded)
+                    {
+                        item.SetHdrLumRampMin(item: HdrLumRampMintryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHdrLumRampMin();
+                    }
                     break;
                 case "HdrLumRampMax":
-                    item._HdrLumRampMax.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var HdrLumRampMaxtryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrLumRampMax,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HdrLumRampMaxtryGet.Succeeded)
+                    {
+                        item.SetHdrLumRampMax(item: HdrLumRampMaxtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHdrLumRampMax();
+                    }
                     break;
                 case "HdrSunlightDimmer":
-                    item._HdrSunlightDimmer.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var HdrSunlightDimmertryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrSunlightDimmer,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HdrSunlightDimmertryGet.Succeeded)
+                    {
+                        item.SetHdrSunlightDimmer(item: HdrSunlightDimmertryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHdrSunlightDimmer();
+                    }
                     break;
                 case "HdrGrassDimmer":
-                    item._HdrGrassDimmer.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var HdrGrassDimmertryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrGrassDimmer,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HdrGrassDimmertryGet.Succeeded)
+                    {
+                        item.SetHdrGrassDimmer(item: HdrGrassDimmertryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHdrGrassDimmer();
+                    }
                     break;
                 case "HdrTreeDimmer":
-                    item._HdrTreeDimmer.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var HdrTreeDimmertryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.HdrTreeDimmer,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HdrTreeDimmertryGet.Succeeded)
+                    {
+                        item.SetHdrTreeDimmer(item: HdrTreeDimmertryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHdrTreeDimmer();
+                    }
                     break;
                 case "WindSpeed":
-                    item._WindSpeed.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var WindSpeedtryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.WindSpeed,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (WindSpeedtryGet.Succeeded)
+                    {
+                        item.SetWindSpeed(item: WindSpeedtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetWindSpeed();
+                    }
                     break;
                 case "CloudSpeedLower":
-                    item._CloudSpeedLower.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var CloudSpeedLowertryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.CloudSpeedLower,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (CloudSpeedLowertryGet.Succeeded)
+                    {
+                        item.SetCloudSpeedLower(item: CloudSpeedLowertryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetCloudSpeedLower();
+                    }
                     break;
                 case "CloudSpeedUpper":
-                    item._CloudSpeedUpper.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var CloudSpeedUppertryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.CloudSpeedUpper,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (CloudSpeedUppertryGet.Succeeded)
+                    {
+                        item.SetCloudSpeedUpper(item: CloudSpeedUppertryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetCloudSpeedUpper();
+                    }
                     break;
                 case "TransDelta":
-                    item._TransDelta.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var TransDeltatryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.TransDelta,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (TransDeltatryGet.Succeeded)
+                    {
+                        item.SetTransDelta(item: TransDeltatryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetTransDelta();
+                    }
                     break;
                 case "SunGlare":
-                    item._SunGlare.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var SunGlaretryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.SunGlare,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (SunGlaretryGet.Succeeded)
+                    {
+                        item.SetSunGlare(item: SunGlaretryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetSunGlare();
+                    }
                     break;
                 case "SunDamage":
-                    item._SunDamage.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var SunDamagetryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.SunDamage,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (SunDamagetryGet.Succeeded)
+                    {
+                        item.SetSunDamage(item: SunDamagetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetSunDamage();
+                    }
                     break;
                 case "PrecipitationBeginFadeIn":
-                    item._PrecipitationBeginFadeIn.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var PrecipitationBeginFadeIntryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.PrecipitationBeginFadeIn,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (PrecipitationBeginFadeIntryGet.Succeeded)
+                    {
+                        item.SetPrecipitationBeginFadeIn(item: PrecipitationBeginFadeIntryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetPrecipitationBeginFadeIn();
+                    }
                     break;
                 case "PrecipitationEndFadeOut":
-                    item._PrecipitationEndFadeOut.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var PrecipitationEndFadeOuttryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.PrecipitationEndFadeOut,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (PrecipitationEndFadeOuttryGet.Succeeded)
+                    {
+                        item.SetPrecipitationEndFadeOut(item: PrecipitationEndFadeOuttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetPrecipitationEndFadeOut();
+                    }
                     break;
                 case "ThunderLightningBeginFadeIn":
-                    item._ThunderLightningBeginFadeIn.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var ThunderLightningBeginFadeIntryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.ThunderLightningBeginFadeIn,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ThunderLightningBeginFadeIntryGet.Succeeded)
+                    {
+                        item.SetThunderLightningBeginFadeIn(item: ThunderLightningBeginFadeIntryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetThunderLightningBeginFadeIn();
+                    }
                     break;
                 case "ThunderLightningEndFadeOut":
-                    item._ThunderLightningEndFadeOut.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var ThunderLightningEndFadeOuttryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.ThunderLightningEndFadeOut,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ThunderLightningEndFadeOuttryGet.Succeeded)
+                    {
+                        item.SetThunderLightningEndFadeOut(item: ThunderLightningEndFadeOuttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetThunderLightningEndFadeOut();
+                    }
                     break;
                 case "ThunderLightningFrequency":
-                    item._ThunderLightningFrequency.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var ThunderLightningFrequencytryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.ThunderLightningFrequency,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ThunderLightningFrequencytryGet.Succeeded)
+                    {
+                        item.SetThunderLightningFrequency(item: ThunderLightningFrequencytryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetThunderLightningFrequency();
+                    }
                     break;
                 case "Classification":
-                    item._Classification.SetIfSucceededOrDefault(EnumXmlTranslation<Weather.WeatherClassification>.Instance.Parse(
+                    var ClassificationtryGet = EnumXmlTranslation<Weather.WeatherClassification>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Weather_FieldIndex.Classification,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (ClassificationtryGet.Succeeded)
+                    {
+                        item.SetClassification(item: ClassificationtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetClassification();
+                    }
                     break;
                 case "LightningColor":
-                    item._LightningColor.SetIfSucceededOrDefault(ColorXmlTranslation.Instance.ParseNonNull(
+                    var LightningColortryGet = ColorXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Weather_FieldIndex.LightningColor,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (LightningColortryGet.Succeeded)
+                    {
+                        item.SetLightningColor(item: LightningColortryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetLightningColor();
+                    }
                     break;
                 case "Sounds":
                     item._Sounds.SetIfSucceededOrDefault(ListXmlTranslation<WeatherSound, MaskItem<Exception, WeatherSound_ErrorMask>>.Instance.Parse(
@@ -1289,6 +2691,1091 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter String
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected override String GetString(int index)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.TextureLowerLayer:
+                    return TextureLowerLayer;
+                case Weather_FieldIndex.TextureUpperLayer:
+                    return TextureUpperLayer;
+                default:
+                    return base.GetString(index: index);
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.TextureLowerLayer:
+                    SetTextureLowerLayer(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.TextureUpperLayer:
+                    SetTextureUpperLayer(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetString(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.TextureLowerLayer:
+                    _hasBeenSetTracker[index] = false;
+                    TextureLowerLayer = default(String);
+                    break;
+                case Weather_FieldIndex.TextureUpperLayer:
+                    _hasBeenSetTracker[index] = false;
+                    TextureUpperLayer = default(String);
+                    break;
+                default:
+                    base.UnsetString(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected override String DefaultValueString(int index)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.TextureLowerLayer:
+                case Weather_FieldIndex.TextureUpperLayer:
+                    return default(String);
+                default:
+                    return base.DefaultValueString(index: index);
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Model
+        protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
+        Model IPropertySupporter<Model>.Get(int index)
+        {
+            return GetModel(index: index);
+        }
+
+        protected Model GetModel(int index)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.Model:
+                    return Model;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        void IPropertySupporter<Model>.Set(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetModel(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetModel(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.Model:
+                    SetModel(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Model>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Model>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Model>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetModel(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetModel(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.Model:
+                    _hasBeenSetTracker[index] = false;
+                    Model = default(Model);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Model> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Model_subscriptions == null)
+            {
+                _Model_subscriptions = new ObjectCentralizationSubscriptions<Model>();
+            }
+            _Model_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Model_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Model>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Model IPropertySupporter<Model>.DefaultValue(int index)
+        {
+            return DefaultValueModel(index: index);
+        }
+
+        protected Model DefaultValueModel(int index)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.Model:
+                    return default(Model);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Single
+        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
+        Single IPropertySupporter<Single>.Get(int index)
+        {
+            return GetSingle(index: index);
+        }
+
+        protected Single GetSingle(int index)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.FogDayNear:
+                    return FogDayNear;
+                case Weather_FieldIndex.FogDayFar:
+                    return FogDayFar;
+                case Weather_FieldIndex.FogNightNear:
+                    return FogNightNear;
+                case Weather_FieldIndex.FogNightFar:
+                    return FogNightFar;
+                case Weather_FieldIndex.HdrEyeAdaptSpeed:
+                    return HdrEyeAdaptSpeed;
+                case Weather_FieldIndex.HdrBlurRadius:
+                    return HdrBlurRadius;
+                case Weather_FieldIndex.HdrBlurPasses:
+                    return HdrBlurPasses;
+                case Weather_FieldIndex.HdrEmissiveMult:
+                    return HdrEmissiveMult;
+                case Weather_FieldIndex.HdrTargetLum:
+                    return HdrTargetLum;
+                case Weather_FieldIndex.HdrUpperLumClamp:
+                    return HdrUpperLumClamp;
+                case Weather_FieldIndex.HdrBrightScale:
+                    return HdrBrightScale;
+                case Weather_FieldIndex.HdrBrightClamp:
+                    return HdrBrightClamp;
+                case Weather_FieldIndex.HdrLumRampNoTex:
+                    return HdrLumRampNoTex;
+                case Weather_FieldIndex.HdrLumRampMin:
+                    return HdrLumRampMin;
+                case Weather_FieldIndex.HdrLumRampMax:
+                    return HdrLumRampMax;
+                case Weather_FieldIndex.HdrSunlightDimmer:
+                    return HdrSunlightDimmer;
+                case Weather_FieldIndex.HdrGrassDimmer:
+                    return HdrGrassDimmer;
+                case Weather_FieldIndex.HdrTreeDimmer:
+                    return HdrTreeDimmer;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        void IPropertySupporter<Single>.Set(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSingle(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetSingle(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.FogDayNear:
+                    SetFogDayNear(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.FogDayFar:
+                    SetFogDayFar(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.FogNightNear:
+                    SetFogNightNear(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.FogNightFar:
+                    SetFogNightFar(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.HdrEyeAdaptSpeed:
+                    SetHdrEyeAdaptSpeed(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.HdrBlurRadius:
+                    SetHdrBlurRadius(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.HdrBlurPasses:
+                    SetHdrBlurPasses(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.HdrEmissiveMult:
+                    SetHdrEmissiveMult(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.HdrTargetLum:
+                    SetHdrTargetLum(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.HdrUpperLumClamp:
+                    SetHdrUpperLumClamp(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.HdrBrightScale:
+                    SetHdrBrightScale(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.HdrBrightClamp:
+                    SetHdrBrightClamp(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.HdrLumRampNoTex:
+                    SetHdrLumRampNoTex(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.HdrLumRampMin:
+                    SetHdrLumRampMin(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.HdrLumRampMax:
+                    SetHdrLumRampMax(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.HdrSunlightDimmer:
+                    SetHdrSunlightDimmer(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.HdrGrassDimmer:
+                    SetHdrGrassDimmer(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.HdrTreeDimmer:
+                    SetHdrTreeDimmer(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Single>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Single>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSingle(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetSingle(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.FogDayNear:
+                    _hasBeenSetTracker[index] = false;
+                    FogDayNear = default(Single);
+                    break;
+                case Weather_FieldIndex.FogDayFar:
+                    _hasBeenSetTracker[index] = false;
+                    FogDayFar = default(Single);
+                    break;
+                case Weather_FieldIndex.FogNightNear:
+                    _hasBeenSetTracker[index] = false;
+                    FogNightNear = default(Single);
+                    break;
+                case Weather_FieldIndex.FogNightFar:
+                    _hasBeenSetTracker[index] = false;
+                    FogNightFar = default(Single);
+                    break;
+                case Weather_FieldIndex.HdrEyeAdaptSpeed:
+                    _hasBeenSetTracker[index] = false;
+                    HdrEyeAdaptSpeed = default(Single);
+                    break;
+                case Weather_FieldIndex.HdrBlurRadius:
+                    _hasBeenSetTracker[index] = false;
+                    HdrBlurRadius = default(Single);
+                    break;
+                case Weather_FieldIndex.HdrBlurPasses:
+                    _hasBeenSetTracker[index] = false;
+                    HdrBlurPasses = default(Single);
+                    break;
+                case Weather_FieldIndex.HdrEmissiveMult:
+                    _hasBeenSetTracker[index] = false;
+                    HdrEmissiveMult = default(Single);
+                    break;
+                case Weather_FieldIndex.HdrTargetLum:
+                    _hasBeenSetTracker[index] = false;
+                    HdrTargetLum = default(Single);
+                    break;
+                case Weather_FieldIndex.HdrUpperLumClamp:
+                    _hasBeenSetTracker[index] = false;
+                    HdrUpperLumClamp = default(Single);
+                    break;
+                case Weather_FieldIndex.HdrBrightScale:
+                    _hasBeenSetTracker[index] = false;
+                    HdrBrightScale = default(Single);
+                    break;
+                case Weather_FieldIndex.HdrBrightClamp:
+                    _hasBeenSetTracker[index] = false;
+                    HdrBrightClamp = default(Single);
+                    break;
+                case Weather_FieldIndex.HdrLumRampNoTex:
+                    _hasBeenSetTracker[index] = false;
+                    HdrLumRampNoTex = default(Single);
+                    break;
+                case Weather_FieldIndex.HdrLumRampMin:
+                    _hasBeenSetTracker[index] = false;
+                    HdrLumRampMin = default(Single);
+                    break;
+                case Weather_FieldIndex.HdrLumRampMax:
+                    _hasBeenSetTracker[index] = false;
+                    HdrLumRampMax = default(Single);
+                    break;
+                case Weather_FieldIndex.HdrSunlightDimmer:
+                    _hasBeenSetTracker[index] = false;
+                    HdrSunlightDimmer = default(Single);
+                    break;
+                case Weather_FieldIndex.HdrGrassDimmer:
+                    _hasBeenSetTracker[index] = false;
+                    HdrGrassDimmer = default(Single);
+                    break;
+                case Weather_FieldIndex.HdrTreeDimmer:
+                    _hasBeenSetTracker[index] = false;
+                    HdrTreeDimmer = default(Single);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Single> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Single_subscriptions == null)
+            {
+                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
+            }
+            _Single_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Single_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Single IPropertySupporter<Single>.DefaultValue(int index)
+        {
+            return DefaultValueSingle(index: index);
+        }
+
+        protected Single DefaultValueSingle(int index)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.FogDayNear:
+                case Weather_FieldIndex.FogDayFar:
+                case Weather_FieldIndex.FogNightNear:
+                case Weather_FieldIndex.FogNightFar:
+                case Weather_FieldIndex.HdrEyeAdaptSpeed:
+                case Weather_FieldIndex.HdrBlurRadius:
+                case Weather_FieldIndex.HdrBlurPasses:
+                case Weather_FieldIndex.HdrEmissiveMult:
+                case Weather_FieldIndex.HdrTargetLum:
+                case Weather_FieldIndex.HdrUpperLumClamp:
+                case Weather_FieldIndex.HdrBrightScale:
+                case Weather_FieldIndex.HdrBrightClamp:
+                case Weather_FieldIndex.HdrLumRampNoTex:
+                case Weather_FieldIndex.HdrLumRampMin:
+                case Weather_FieldIndex.HdrLumRampMax:
+                case Weather_FieldIndex.HdrSunlightDimmer:
+                case Weather_FieldIndex.HdrGrassDimmer:
+                case Weather_FieldIndex.HdrTreeDimmer:
+                    return default(Single);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Byte
+        protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
+        Byte IPropertySupporter<Byte>.Get(int index)
+        {
+            return GetByte(index: index);
+        }
+
+        protected Byte GetByte(int index)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.WindSpeed:
+                    return WindSpeed;
+                case Weather_FieldIndex.CloudSpeedLower:
+                    return CloudSpeedLower;
+                case Weather_FieldIndex.CloudSpeedUpper:
+                    return CloudSpeedUpper;
+                case Weather_FieldIndex.TransDelta:
+                    return TransDelta;
+                case Weather_FieldIndex.SunGlare:
+                    return SunGlare;
+                case Weather_FieldIndex.SunDamage:
+                    return SunDamage;
+                case Weather_FieldIndex.PrecipitationBeginFadeIn:
+                    return PrecipitationBeginFadeIn;
+                case Weather_FieldIndex.PrecipitationEndFadeOut:
+                    return PrecipitationEndFadeOut;
+                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
+                    return ThunderLightningBeginFadeIn;
+                case Weather_FieldIndex.ThunderLightningEndFadeOut:
+                    return ThunderLightningEndFadeOut;
+                case Weather_FieldIndex.ThunderLightningFrequency:
+                    return ThunderLightningFrequency;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        void IPropertySupporter<Byte>.Set(
+            int index,
+            Byte item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByte(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetByte(
+            int index,
+            Byte item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.WindSpeed:
+                    SetWindSpeed(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.CloudSpeedLower:
+                    SetCloudSpeedLower(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.CloudSpeedUpper:
+                    SetCloudSpeedUpper(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.TransDelta:
+                    SetTransDelta(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.SunGlare:
+                    SetSunGlare(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.SunDamage:
+                    SetSunDamage(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.PrecipitationBeginFadeIn:
+                    SetPrecipitationBeginFadeIn(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.PrecipitationEndFadeOut:
+                    SetPrecipitationEndFadeOut(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
+                    SetThunderLightningBeginFadeIn(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.ThunderLightningEndFadeOut:
+                    SetThunderLightningEndFadeOut(item, hasBeenSet, cmds);
+                    break;
+                case Weather_FieldIndex.ThunderLightningFrequency:
+                    SetThunderLightningFrequency(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByte(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetByte(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.WindSpeed:
+                    _hasBeenSetTracker[index] = false;
+                    WindSpeed = default(Byte);
+                    break;
+                case Weather_FieldIndex.CloudSpeedLower:
+                    _hasBeenSetTracker[index] = false;
+                    CloudSpeedLower = default(Byte);
+                    break;
+                case Weather_FieldIndex.CloudSpeedUpper:
+                    _hasBeenSetTracker[index] = false;
+                    CloudSpeedUpper = default(Byte);
+                    break;
+                case Weather_FieldIndex.TransDelta:
+                    _hasBeenSetTracker[index] = false;
+                    TransDelta = default(Byte);
+                    break;
+                case Weather_FieldIndex.SunGlare:
+                    _hasBeenSetTracker[index] = false;
+                    SunGlare = default(Byte);
+                    break;
+                case Weather_FieldIndex.SunDamage:
+                    _hasBeenSetTracker[index] = false;
+                    SunDamage = default(Byte);
+                    break;
+                case Weather_FieldIndex.PrecipitationBeginFadeIn:
+                    _hasBeenSetTracker[index] = false;
+                    PrecipitationBeginFadeIn = default(Byte);
+                    break;
+                case Weather_FieldIndex.PrecipitationEndFadeOut:
+                    _hasBeenSetTracker[index] = false;
+                    PrecipitationEndFadeOut = default(Byte);
+                    break;
+                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
+                    _hasBeenSetTracker[index] = false;
+                    ThunderLightningBeginFadeIn = default(Byte);
+                    break;
+                case Weather_FieldIndex.ThunderLightningEndFadeOut:
+                    _hasBeenSetTracker[index] = false;
+                    ThunderLightningEndFadeOut = default(Byte);
+                    break;
+                case Weather_FieldIndex.ThunderLightningFrequency:
+                    _hasBeenSetTracker[index] = false;
+                    ThunderLightningFrequency = default(Byte);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Byte_subscriptions == null)
+            {
+                _Byte_subscriptions = new ObjectCentralizationSubscriptions<Byte>();
+            }
+            _Byte_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Byte_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte IPropertySupporter<Byte>.DefaultValue(int index)
+        {
+            return DefaultValueByte(index: index);
+        }
+
+        protected Byte DefaultValueByte(int index)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.WindSpeed:
+                case Weather_FieldIndex.CloudSpeedLower:
+                case Weather_FieldIndex.CloudSpeedUpper:
+                case Weather_FieldIndex.TransDelta:
+                case Weather_FieldIndex.SunGlare:
+                case Weather_FieldIndex.SunDamage:
+                case Weather_FieldIndex.PrecipitationBeginFadeIn:
+                case Weather_FieldIndex.PrecipitationEndFadeOut:
+                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
+                case Weather_FieldIndex.ThunderLightningEndFadeOut:
+                case Weather_FieldIndex.ThunderLightningFrequency:
+                    return default(Byte);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Weather.WeatherClassification
+        protected ObjectCentralizationSubscriptions<Weather.WeatherClassification> _WeatherWeatherClassification_subscriptions;
+        Weather.WeatherClassification IPropertySupporter<Weather.WeatherClassification>.Get(int index)
+        {
+            return GetWeatherWeatherClassification(index: index);
+        }
+
+        protected Weather.WeatherClassification GetWeatherWeatherClassification(int index)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.Classification:
+                    return Classification;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Weather.WeatherClassification: {index}");
+            }
+        }
+
+        void IPropertySupporter<Weather.WeatherClassification>.Set(
+            int index,
+            Weather.WeatherClassification item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetWeatherWeatherClassification(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetWeatherWeatherClassification(
+            int index,
+            Weather.WeatherClassification item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.Classification:
+                    SetClassification(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Weather.WeatherClassification: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Weather.WeatherClassification>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Weather.WeatherClassification>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Weather.WeatherClassification>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetWeatherWeatherClassification(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetWeatherWeatherClassification(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.Classification:
+                    _hasBeenSetTracker[index] = false;
+                    Classification = default(Weather.WeatherClassification);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Weather.WeatherClassification: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Weather.WeatherClassification>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Weather.WeatherClassification> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_WeatherWeatherClassification_subscriptions == null)
+            {
+                _WeatherWeatherClassification_subscriptions = new ObjectCentralizationSubscriptions<Weather.WeatherClassification>();
+            }
+            _WeatherWeatherClassification_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Weather.WeatherClassification>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _WeatherWeatherClassification_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Weather.WeatherClassification>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Weather.WeatherClassification IPropertySupporter<Weather.WeatherClassification>.DefaultValue(int index)
+        {
+            return DefaultValueWeatherWeatherClassification(index: index);
+        }
+
+        protected Weather.WeatherClassification DefaultValueWeatherWeatherClassification(int index)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.Classification:
+                    return default(Weather.WeatherClassification);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Weather.WeatherClassification: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Color
+        protected ObjectCentralizationSubscriptions<Color> _Color_subscriptions;
+        Color IPropertySupporter<Color>.Get(int index)
+        {
+            return GetColor(index: index);
+        }
+
+        protected Color GetColor(int index)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.LightningColor:
+                    return LightningColor;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
+            }
+        }
+
+        void IPropertySupporter<Color>.Set(
+            int index,
+            Color item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetColor(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetColor(
+            int index,
+            Color item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.LightningColor:
+                    SetLightningColor(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Color>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Color>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Color>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetColor(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetColor(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.LightningColor:
+                    _hasBeenSetTracker[index] = false;
+                    LightningColor = default(Color);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Color>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Color> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Color_subscriptions == null)
+            {
+                _Color_subscriptions = new ObjectCentralizationSubscriptions<Color>();
+            }
+            _Color_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Color>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Color_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Color>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Color IPropertySupporter<Color>.DefaultValue(int index)
+        {
+            return DefaultValueColor(index: index);
+        }
+
+        protected Color DefaultValueColor(int index)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.LightningColor:
+                    return default(Color);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
             }
         }
 
@@ -1515,25 +4002,51 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._TextureLowerLayer.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var TextureLowerLayertryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Weather_FieldIndex.TextureLowerLayer,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (TextureLowerLayertryGet.Succeeded)
+                    {
+                        item.SetTextureLowerLayer(item: TextureLowerLayertryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetTextureLowerLayer();
+                    }
                     return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.TextureLowerLayer);
                 case "DNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._TextureUpperLayer.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var TextureUpperLayertryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Weather_FieldIndex.TextureUpperLayer,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (TextureUpperLayertryGet.Succeeded)
+                    {
+                        item.SetTextureUpperLayer(item: TextureUpperLayertryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetTextureUpperLayer();
+                    }
                     return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.TextureUpperLayer);
                 case "MODL":
-                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)Weather_FieldIndex.Model,
-                        errorMask: errorMask));
+                    {
+                        var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                            frame: frame.Spawn(snapToFinalPosition: false),
+                            fieldIndex: (int)Weather_FieldIndex.Model,
+                            errorMask: errorMask);
+                        if (ModeltryGet.Succeeded)
+                        {
+                            item.SetModel(item: ModeltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetModel();
+                        }
+                    }
                     return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.Model);
                 case "NAM0":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -1555,142 +4068,390 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._FogDayNear.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        var FogDayNeartryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.FogDayNear,
-                            errorMask: errorMask));
-                        item._FogDayFar.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (FogDayNeartryGet.Succeeded)
+                        {
+                            item.SetFogDayNear(item: FogDayNeartryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetFogDayNear();
+                        }
+                        var FogDayFartryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.FogDayFar,
-                            errorMask: errorMask));
-                        item._FogNightNear.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (FogDayFartryGet.Succeeded)
+                        {
+                            item.SetFogDayFar(item: FogDayFartryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetFogDayFar();
+                        }
+                        var FogNightNeartryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.FogNightNear,
-                            errorMask: errorMask));
-                        item._FogNightFar.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (FogNightNeartryGet.Succeeded)
+                        {
+                            item.SetFogNightNear(item: FogNightNeartryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetFogNightNear();
+                        }
+                        var FogNightFartryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.FogNightFar,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (FogNightFartryGet.Succeeded)
+                        {
+                            item.SetFogNightFar(item: FogNightFartryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetFogNightFar();
+                        }
                     }
                     return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.FogNightFar);
                 case "HNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._HdrEyeAdaptSpeed.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        var HdrEyeAdaptSpeedtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrEyeAdaptSpeed,
-                            errorMask: errorMask));
-                        item._HdrBlurRadius.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (HdrEyeAdaptSpeedtryGet.Succeeded)
+                        {
+                            item.SetHdrEyeAdaptSpeed(item: HdrEyeAdaptSpeedtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetHdrEyeAdaptSpeed();
+                        }
+                        var HdrBlurRadiustryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrBlurRadius,
-                            errorMask: errorMask));
-                        item._HdrBlurPasses.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (HdrBlurRadiustryGet.Succeeded)
+                        {
+                            item.SetHdrBlurRadius(item: HdrBlurRadiustryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetHdrBlurRadius();
+                        }
+                        var HdrBlurPassestryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrBlurPasses,
-                            errorMask: errorMask));
-                        item._HdrEmissiveMult.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (HdrBlurPassestryGet.Succeeded)
+                        {
+                            item.SetHdrBlurPasses(item: HdrBlurPassestryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetHdrBlurPasses();
+                        }
+                        var HdrEmissiveMulttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrEmissiveMult,
-                            errorMask: errorMask));
-                        item._HdrTargetLum.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (HdrEmissiveMulttryGet.Succeeded)
+                        {
+                            item.SetHdrEmissiveMult(item: HdrEmissiveMulttryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetHdrEmissiveMult();
+                        }
+                        var HdrTargetLumtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrTargetLum,
-                            errorMask: errorMask));
-                        item._HdrUpperLumClamp.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (HdrTargetLumtryGet.Succeeded)
+                        {
+                            item.SetHdrTargetLum(item: HdrTargetLumtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetHdrTargetLum();
+                        }
+                        var HdrUpperLumClamptryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrUpperLumClamp,
-                            errorMask: errorMask));
-                        item._HdrBrightScale.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (HdrUpperLumClamptryGet.Succeeded)
+                        {
+                            item.SetHdrUpperLumClamp(item: HdrUpperLumClamptryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetHdrUpperLumClamp();
+                        }
+                        var HdrBrightScaletryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrBrightScale,
-                            errorMask: errorMask));
-                        item._HdrBrightClamp.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (HdrBrightScaletryGet.Succeeded)
+                        {
+                            item.SetHdrBrightScale(item: HdrBrightScaletryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetHdrBrightScale();
+                        }
+                        var HdrBrightClamptryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrBrightClamp,
-                            errorMask: errorMask));
-                        item._HdrLumRampNoTex.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (HdrBrightClamptryGet.Succeeded)
+                        {
+                            item.SetHdrBrightClamp(item: HdrBrightClamptryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetHdrBrightClamp();
+                        }
+                        var HdrLumRampNoTextryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrLumRampNoTex,
-                            errorMask: errorMask));
-                        item._HdrLumRampMin.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (HdrLumRampNoTextryGet.Succeeded)
+                        {
+                            item.SetHdrLumRampNoTex(item: HdrLumRampNoTextryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetHdrLumRampNoTex();
+                        }
+                        var HdrLumRampMintryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrLumRampMin,
-                            errorMask: errorMask));
-                        item._HdrLumRampMax.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (HdrLumRampMintryGet.Succeeded)
+                        {
+                            item.SetHdrLumRampMin(item: HdrLumRampMintryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetHdrLumRampMin();
+                        }
+                        var HdrLumRampMaxtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrLumRampMax,
-                            errorMask: errorMask));
-                        item._HdrSunlightDimmer.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (HdrLumRampMaxtryGet.Succeeded)
+                        {
+                            item.SetHdrLumRampMax(item: HdrLumRampMaxtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetHdrLumRampMax();
+                        }
+                        var HdrSunlightDimmertryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrSunlightDimmer,
-                            errorMask: errorMask));
-                        item._HdrGrassDimmer.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (HdrSunlightDimmertryGet.Succeeded)
+                        {
+                            item.SetHdrSunlightDimmer(item: HdrSunlightDimmertryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetHdrSunlightDimmer();
+                        }
+                        var HdrGrassDimmertryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrGrassDimmer,
-                            errorMask: errorMask));
-                        item._HdrTreeDimmer.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (HdrGrassDimmertryGet.Succeeded)
+                        {
+                            item.SetHdrGrassDimmer(item: HdrGrassDimmertryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetHdrGrassDimmer();
+                        }
+                        var HdrTreeDimmertryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.HdrTreeDimmer,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (HdrTreeDimmertryGet.Succeeded)
+                        {
+                            item.SetHdrTreeDimmer(item: HdrTreeDimmertryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetHdrTreeDimmer();
+                        }
                     }
                     return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.HdrTreeDimmer);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._WindSpeed.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        var WindSpeedtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.WindSpeed,
-                            errorMask: errorMask));
-                        item._CloudSpeedLower.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (WindSpeedtryGet.Succeeded)
+                        {
+                            item.SetWindSpeed(item: WindSpeedtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetWindSpeed();
+                        }
+                        var CloudSpeedLowertryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.CloudSpeedLower,
-                            errorMask: errorMask));
-                        item._CloudSpeedUpper.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (CloudSpeedLowertryGet.Succeeded)
+                        {
+                            item.SetCloudSpeedLower(item: CloudSpeedLowertryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetCloudSpeedLower();
+                        }
+                        var CloudSpeedUppertryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.CloudSpeedUpper,
-                            errorMask: errorMask));
-                        item._TransDelta.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (CloudSpeedUppertryGet.Succeeded)
+                        {
+                            item.SetCloudSpeedUpper(item: CloudSpeedUppertryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetCloudSpeedUpper();
+                        }
+                        var TransDeltatryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.TransDelta,
-                            errorMask: errorMask));
-                        item._SunGlare.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (TransDeltatryGet.Succeeded)
+                        {
+                            item.SetTransDelta(item: TransDeltatryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetTransDelta();
+                        }
+                        var SunGlaretryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.SunGlare,
-                            errorMask: errorMask));
-                        item._SunDamage.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (SunGlaretryGet.Succeeded)
+                        {
+                            item.SetSunGlare(item: SunGlaretryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetSunGlare();
+                        }
+                        var SunDamagetryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.SunDamage,
-                            errorMask: errorMask));
-                        item._PrecipitationBeginFadeIn.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (SunDamagetryGet.Succeeded)
+                        {
+                            item.SetSunDamage(item: SunDamagetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetSunDamage();
+                        }
+                        var PrecipitationBeginFadeIntryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.PrecipitationBeginFadeIn,
-                            errorMask: errorMask));
-                        item._PrecipitationEndFadeOut.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (PrecipitationBeginFadeIntryGet.Succeeded)
+                        {
+                            item.SetPrecipitationBeginFadeIn(item: PrecipitationBeginFadeIntryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetPrecipitationBeginFadeIn();
+                        }
+                        var PrecipitationEndFadeOuttryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.PrecipitationEndFadeOut,
-                            errorMask: errorMask));
-                        item._ThunderLightningBeginFadeIn.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (PrecipitationEndFadeOuttryGet.Succeeded)
+                        {
+                            item.SetPrecipitationEndFadeOut(item: PrecipitationEndFadeOuttryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetPrecipitationEndFadeOut();
+                        }
+                        var ThunderLightningBeginFadeIntryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.ThunderLightningBeginFadeIn,
-                            errorMask: errorMask));
-                        item._ThunderLightningEndFadeOut.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (ThunderLightningBeginFadeIntryGet.Succeeded)
+                        {
+                            item.SetThunderLightningBeginFadeIn(item: ThunderLightningBeginFadeIntryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetThunderLightningBeginFadeIn();
+                        }
+                        var ThunderLightningEndFadeOuttryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.ThunderLightningEndFadeOut,
-                            errorMask: errorMask));
-                        item._ThunderLightningFrequency.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (ThunderLightningEndFadeOuttryGet.Succeeded)
+                        {
+                            item.SetThunderLightningEndFadeOut(item: ThunderLightningEndFadeOuttryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetThunderLightningEndFadeOut();
+                        }
+                        var ThunderLightningFrequencytryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.ThunderLightningFrequency,
-                            errorMask: errorMask));
-                        item._Classification.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Parse(
+                            errorMask: errorMask);
+                        if (ThunderLightningFrequencytryGet.Succeeded)
+                        {
+                            item.SetThunderLightningFrequency(item: ThunderLightningFrequencytryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetThunderLightningFrequency();
+                        }
+                        var ClassificationtryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(1),
                             fieldIndex: (int)Weather_FieldIndex.Classification,
-                            errorMask: errorMask));
-                        item._LightningColor.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (ClassificationtryGet.Succeeded)
+                        {
+                            item.SetClassification(item: ClassificationtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetClassification();
+                        }
+                        var LightningColortryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Weather_FieldIndex.LightningColor,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (LightningColortryGet.Succeeded)
+                        {
+                            item.SetLightningColor(item: LightningColortryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetLightningColor();
+                        }
                     }
                     return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.LightningColor);
                 case "SNAM":
@@ -1821,177 +4582,177 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Weather_FieldIndex.TextureLowerLayer:
-                    this._TextureLowerLayer.Set(
+                    this.SetTextureLowerLayer(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.TextureUpperLayer:
-                    this._TextureUpperLayer.Set(
+                    this.SetTextureUpperLayer(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.Model:
-                    this._Model.Set(
+                    this.SetModel(
                         (Model)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.WeatherTypes:
                     this._WeatherTypes.SetTo((IEnumerable<WeatherType>)obj, cmds);
                     break;
                 case Weather_FieldIndex.FogDayNear:
-                    this._FogDayNear.Set(
+                    this.SetFogDayNear(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.FogDayFar:
-                    this._FogDayFar.Set(
+                    this.SetFogDayFar(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.FogNightNear:
-                    this._FogNightNear.Set(
+                    this.SetFogNightNear(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.FogNightFar:
-                    this._FogNightFar.Set(
+                    this.SetFogNightFar(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.HdrEyeAdaptSpeed:
-                    this._HdrEyeAdaptSpeed.Set(
+                    this.SetHdrEyeAdaptSpeed(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.HdrBlurRadius:
-                    this._HdrBlurRadius.Set(
+                    this.SetHdrBlurRadius(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.HdrBlurPasses:
-                    this._HdrBlurPasses.Set(
+                    this.SetHdrBlurPasses(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.HdrEmissiveMult:
-                    this._HdrEmissiveMult.Set(
+                    this.SetHdrEmissiveMult(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.HdrTargetLum:
-                    this._HdrTargetLum.Set(
+                    this.SetHdrTargetLum(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.HdrUpperLumClamp:
-                    this._HdrUpperLumClamp.Set(
+                    this.SetHdrUpperLumClamp(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.HdrBrightScale:
-                    this._HdrBrightScale.Set(
+                    this.SetHdrBrightScale(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.HdrBrightClamp:
-                    this._HdrBrightClamp.Set(
+                    this.SetHdrBrightClamp(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.HdrLumRampNoTex:
-                    this._HdrLumRampNoTex.Set(
+                    this.SetHdrLumRampNoTex(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.HdrLumRampMin:
-                    this._HdrLumRampMin.Set(
+                    this.SetHdrLumRampMin(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.HdrLumRampMax:
-                    this._HdrLumRampMax.Set(
+                    this.SetHdrLumRampMax(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.HdrSunlightDimmer:
-                    this._HdrSunlightDimmer.Set(
+                    this.SetHdrSunlightDimmer(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.HdrGrassDimmer:
-                    this._HdrGrassDimmer.Set(
+                    this.SetHdrGrassDimmer(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.HdrTreeDimmer:
-                    this._HdrTreeDimmer.Set(
+                    this.SetHdrTreeDimmer(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.WindSpeed:
-                    this._WindSpeed.Set(
+                    this.SetWindSpeed(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.CloudSpeedLower:
-                    this._CloudSpeedLower.Set(
+                    this.SetCloudSpeedLower(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.CloudSpeedUpper:
-                    this._CloudSpeedUpper.Set(
+                    this.SetCloudSpeedUpper(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.TransDelta:
-                    this._TransDelta.Set(
+                    this.SetTransDelta(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.SunGlare:
-                    this._SunGlare.Set(
+                    this.SetSunGlare(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.SunDamage:
-                    this._SunDamage.Set(
+                    this.SetSunDamage(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                    this._PrecipitationBeginFadeIn.Set(
+                    this.SetPrecipitationBeginFadeIn(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.PrecipitationEndFadeOut:
-                    this._PrecipitationEndFadeOut.Set(
+                    this.SetPrecipitationEndFadeOut(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                    this._ThunderLightningBeginFadeIn.Set(
+                    this.SetThunderLightningBeginFadeIn(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                    this._ThunderLightningEndFadeOut.Set(
+                    this.SetThunderLightningEndFadeOut(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.ThunderLightningFrequency:
-                    this._ThunderLightningFrequency.Set(
+                    this.SetThunderLightningFrequency(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.Classification:
-                    this._Classification.Set(
+                    this.SetClassification(
                         (Weather.WeatherClassification)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.LightningColor:
-                    this._LightningColor.Set(
+                    this.SetLightningColor(
                         (Color)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Weather_FieldIndex.Sounds:
                     this._Sounds.SetTo((IEnumerable<WeatherSound>)obj, cmds);
@@ -2028,177 +4789,177 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Weather_FieldIndex.TextureLowerLayer:
-                    obj._TextureLowerLayer.Set(
+                    obj.SetTextureLowerLayer(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.TextureUpperLayer:
-                    obj._TextureUpperLayer.Set(
+                    obj.SetTextureUpperLayer(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.Model:
-                    obj._Model.Set(
+                    obj.SetModel(
                         (Model)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.WeatherTypes:
                     obj._WeatherTypes.SetTo((IEnumerable<WeatherType>)pair.Value, null);
                     break;
                 case Weather_FieldIndex.FogDayNear:
-                    obj._FogDayNear.Set(
+                    obj.SetFogDayNear(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.FogDayFar:
-                    obj._FogDayFar.Set(
+                    obj.SetFogDayFar(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.FogNightNear:
-                    obj._FogNightNear.Set(
+                    obj.SetFogNightNear(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.FogNightFar:
-                    obj._FogNightFar.Set(
+                    obj.SetFogNightFar(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.HdrEyeAdaptSpeed:
-                    obj._HdrEyeAdaptSpeed.Set(
+                    obj.SetHdrEyeAdaptSpeed(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.HdrBlurRadius:
-                    obj._HdrBlurRadius.Set(
+                    obj.SetHdrBlurRadius(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.HdrBlurPasses:
-                    obj._HdrBlurPasses.Set(
+                    obj.SetHdrBlurPasses(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.HdrEmissiveMult:
-                    obj._HdrEmissiveMult.Set(
+                    obj.SetHdrEmissiveMult(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.HdrTargetLum:
-                    obj._HdrTargetLum.Set(
+                    obj.SetHdrTargetLum(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.HdrUpperLumClamp:
-                    obj._HdrUpperLumClamp.Set(
+                    obj.SetHdrUpperLumClamp(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.HdrBrightScale:
-                    obj._HdrBrightScale.Set(
+                    obj.SetHdrBrightScale(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.HdrBrightClamp:
-                    obj._HdrBrightClamp.Set(
+                    obj.SetHdrBrightClamp(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.HdrLumRampNoTex:
-                    obj._HdrLumRampNoTex.Set(
+                    obj.SetHdrLumRampNoTex(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.HdrLumRampMin:
-                    obj._HdrLumRampMin.Set(
+                    obj.SetHdrLumRampMin(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.HdrLumRampMax:
-                    obj._HdrLumRampMax.Set(
+                    obj.SetHdrLumRampMax(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.HdrSunlightDimmer:
-                    obj._HdrSunlightDimmer.Set(
+                    obj.SetHdrSunlightDimmer(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.HdrGrassDimmer:
-                    obj._HdrGrassDimmer.Set(
+                    obj.SetHdrGrassDimmer(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.HdrTreeDimmer:
-                    obj._HdrTreeDimmer.Set(
+                    obj.SetHdrTreeDimmer(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.WindSpeed:
-                    obj._WindSpeed.Set(
+                    obj.SetWindSpeed(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.CloudSpeedLower:
-                    obj._CloudSpeedLower.Set(
+                    obj.SetCloudSpeedLower(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.CloudSpeedUpper:
-                    obj._CloudSpeedUpper.Set(
+                    obj.SetCloudSpeedUpper(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.TransDelta:
-                    obj._TransDelta.Set(
+                    obj.SetTransDelta(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.SunGlare:
-                    obj._SunGlare.Set(
+                    obj.SetSunGlare(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.SunDamage:
-                    obj._SunDamage.Set(
+                    obj.SetSunDamage(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                    obj._PrecipitationBeginFadeIn.Set(
+                    obj.SetPrecipitationBeginFadeIn(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.PrecipitationEndFadeOut:
-                    obj._PrecipitationEndFadeOut.Set(
+                    obj.SetPrecipitationEndFadeOut(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                    obj._ThunderLightningBeginFadeIn.Set(
+                    obj.SetThunderLightningBeginFadeIn(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                    obj._ThunderLightningEndFadeOut.Set(
+                    obj.SetThunderLightningEndFadeOut(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.ThunderLightningFrequency:
-                    obj._ThunderLightningFrequency.Set(
+                    obj.SetThunderLightningFrequency(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.Classification:
-                    obj._Classification.Set(
+                    obj.SetClassification(
                         (Weather.WeatherClassification)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.LightningColor:
-                    obj._LightningColor.Set(
+                    obj.SetLightningColor(
                         (Color)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Weather_FieldIndex.Sounds:
                     obj._Sounds.SetTo((IEnumerable<WeatherSound>)pair.Value, null);
@@ -2572,7 +5333,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "c7183e23-4f2c-43f7-adcf-6c56458c94af";
 
-        public const ushort FieldCount = 36;
+        public const ushort AdditionalFieldCount = 36;
+
+        public const ushort FieldCount = 41;
 
         public static readonly Type MaskType = typeof(Weather_Mask<>);
 
@@ -3094,7 +5857,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -3146,8 +5910,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.TextureLowerLayer_Property.SetToWithDefault(
                         rhs: rhs.TextureLowerLayer_Property,
-                        def: def?.TextureLowerLayer_Property,
-                        cmds: cmds);
+                        def: def?.TextureLowerLayer_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -3161,8 +5924,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.TextureUpperLayer_Property.SetToWithDefault(
                         rhs: rhs.TextureUpperLayer_Property,
-                        def: def?.TextureUpperLayer_Property,
-                        cmds: cmds);
+                        def: def?.TextureUpperLayer_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

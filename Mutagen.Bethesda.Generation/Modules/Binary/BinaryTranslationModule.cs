@@ -868,11 +868,7 @@ namespace Mutagen.Bethesda.Generation
                 objGen: obj,
                 typeGen: field,
                 readerAccessor: frameAccessor,
-                itemAccessor: new Accessor()
-                {
-                    DirectAccess = $"item.{field.ProtectedName}",
-                    PropertyAccess = field.Bare ? null : $"item.{field.ProtectedProperty}"
-                },
+                itemAccessor: new Accessor(field, "item.", protectedAccess: true),
                 doMaskAccessor: "doMasks",
                 maskAccessor: $"errorMask");
         }

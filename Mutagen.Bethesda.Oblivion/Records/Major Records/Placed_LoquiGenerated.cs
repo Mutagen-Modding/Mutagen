@@ -499,7 +499,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "6be49f7d-548b-4fdc-b2a9-f7290f1811fb";
 
-        public const ushort FieldCount = 0;
+        public const ushort AdditionalFieldCount = 0;
+
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(Placed_Mask<>);
 
@@ -628,7 +630,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

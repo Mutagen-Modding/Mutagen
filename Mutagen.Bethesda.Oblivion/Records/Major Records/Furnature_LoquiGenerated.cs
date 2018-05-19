@@ -33,6 +33,8 @@ namespace Mutagen.Bethesda.Oblivion
         IFurnature,
         ILoquiObject<Furnature>,
         ILoquiObjectSetter,
+        IPropertySupporter<Model>,
+        IPropertySupporter<Byte[]>,
         IEquatable<Furnature>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -48,13 +50,48 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
+        protected Model _Model;
+        protected PropertyForwarder<Furnature, Model> _ModelForwarder;
+        public INotifyingSetItem<Model> Model_Property => _ModelForwarder ?? (_ModelForwarder = new PropertyForwarder<Furnature, Model>(this, (int)Furnature_FieldIndex.Model));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
-        public INotifyingSetItem<Model> Model_Property => this._Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IFurnatureGetter.Model => this.Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        public Model Model
+        {
+            get => this._Model;
+            set => this.SetModel(value);
+        }
+        protected void SetModel(
+            Model item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Furnature_FieldIndex.Model];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Model, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Furnature_FieldIndex.Model] = hasBeenSet;
+            }
+            if (_Model_subscriptions != null)
+            {
+                var tmp = Model;
+                _Model = item;
+                _Model_subscriptions.FireSubscriptions(
+                    index: (int)Furnature_FieldIndex.Model,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Model = item;
+            }
+        }
+        protected void UnsetModel()
+        {
+            _hasBeenSetTracker[(int)Furnature_FieldIndex.Model] = false;
+            Model = default(Model);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IFurnature.Model_Property => this.Model_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -68,15 +105,47 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Script> IFurnatureGetter.Script_Property => this.Script_Property;
         #endregion
         #region MarkerFlags
-        protected INotifyingSetItem<Byte[]> _MarkerFlags = NotifyingSetItem.Factory<Byte[]>(
-            markAsSet: false,
-            noNullFallback: () => new byte[4]);
-        public INotifyingSetItem<Byte[]> MarkerFlags_Property => _MarkerFlags;
+        protected Byte[] _MarkerFlags;
+        protected PropertyForwarder<Furnature, Byte[]> _MarkerFlagsForwarder;
+        public INotifyingSetItem<Byte[]> MarkerFlags_Property => _MarkerFlagsForwarder ?? (_MarkerFlagsForwarder = new PropertyForwarder<Furnature, Byte[]>(this, (int)Furnature_FieldIndex.MarkerFlags));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] MarkerFlags
         {
-            get => this._MarkerFlags.Item;
-            set => this._MarkerFlags.Set(value);
+            get => this._MarkerFlags;
+            set => this.SetMarkerFlags(value);
+        }
+        protected void SetMarkerFlags(
+            Byte[] item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Furnature_FieldIndex.MarkerFlags];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(MarkerFlags, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Furnature_FieldIndex.MarkerFlags] = hasBeenSet;
+            }
+            if (_ByteArr_subscriptions != null)
+            {
+                var tmp = MarkerFlags;
+                _MarkerFlags = item;
+                _ByteArr_subscriptions.FireSubscriptions(
+                    index: (int)Furnature_FieldIndex.MarkerFlags,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _MarkerFlags = item;
+            }
+        }
+        protected void UnsetMarkerFlags()
+        {
+            _hasBeenSetTracker[(int)Furnature_FieldIndex.MarkerFlags] = false;
+            MarkerFlags = default(Byte[]);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IFurnature.MarkerFlags_Property => this.MarkerFlags_Property;
@@ -473,10 +542,18 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    var ModeltryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Furnature_FieldIndex.Model,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ModeltryGet.Succeeded)
+                    {
+                        item.SetModel(item: ModeltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetModel();
+                    }
                     break;
                 case "Script":
                     item.Script_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
@@ -485,10 +562,18 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "MarkerFlags":
-                    item._MarkerFlags.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
+                    var MarkerFlagstryGet = ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Furnature_FieldIndex.MarkerFlags,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MarkerFlagstryGet.Succeeded)
+                    {
+                        item.SetMarkerFlags(item: MarkerFlagstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMarkerFlags();
+                    }
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -497,6 +582,279 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Model
+        protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
+        Model IPropertySupporter<Model>.Get(int index)
+        {
+            return GetModel(index: index);
+        }
+
+        protected Model GetModel(int index)
+        {
+            switch ((Furnature_FieldIndex)index)
+            {
+                case Furnature_FieldIndex.Model:
+                    return Model;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        void IPropertySupporter<Model>.Set(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetModel(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetModel(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Furnature_FieldIndex)index)
+            {
+                case Furnature_FieldIndex.Model:
+                    SetModel(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Model>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Model>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Model>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetModel(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetModel(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Furnature_FieldIndex)index)
+            {
+                case Furnature_FieldIndex.Model:
+                    _hasBeenSetTracker[index] = false;
+                    Model = default(Model);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Model> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Model_subscriptions == null)
+            {
+                _Model_subscriptions = new ObjectCentralizationSubscriptions<Model>();
+            }
+            _Model_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Model_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Model>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Model IPropertySupporter<Model>.DefaultValue(int index)
+        {
+            return DefaultValueModel(index: index);
+        }
+
+        protected Model DefaultValueModel(int index)
+        {
+            switch ((Furnature_FieldIndex)index)
+            {
+                case Furnature_FieldIndex.Model:
+                    return default(Model);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Byte[]
+        Byte[] IPropertySupporter<Byte[]>.Get(int index)
+        {
+            return GetByteArr(index: index);
+        }
+
+        protected override Byte[] GetByteArr(int index)
+        {
+            switch ((Furnature_FieldIndex)index)
+            {
+                case Furnature_FieldIndex.MarkerFlags:
+                    return MarkerFlags;
+                default:
+                    return base.GetByteArr(index: index);
+            }
+        }
+
+        void IPropertySupporter<Byte[]>.Set(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByteArr(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetByteArr(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Furnature_FieldIndex)index)
+            {
+                case Furnature_FieldIndex.MarkerFlags:
+                    SetMarkerFlags(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetByteArr(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte[]>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte[]>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByteArr(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetByteArr(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Furnature_FieldIndex)index)
+            {
+                case Furnature_FieldIndex.MarkerFlags:
+                    _hasBeenSetTracker[index] = false;
+                    MarkerFlags = default(Byte[]);
+                    break;
+                default:
+                    base.UnsetByteArr(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte[]> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_ByteArr_subscriptions == null)
+            {
+                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
+            }
+            _ByteArr_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _ByteArr_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
+        {
+            return DefaultValueByteArr(index: index);
+        }
+
+        protected override Byte[] DefaultValueByteArr(int index)
+        {
+            switch ((Furnature_FieldIndex)index)
+            {
+                case Furnature_FieldIndex.MarkerFlags:
+                    return default(Byte[]);
+                default:
+                    return base.DefaultValueByteArr(index: index);
             }
         }
 
@@ -719,10 +1077,20 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)Furnature_FieldIndex.Model,
-                        errorMask: errorMask));
+                    {
+                        var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                            frame: frame.Spawn(snapToFinalPosition: false),
+                            fieldIndex: (int)Furnature_FieldIndex.Model,
+                            errorMask: errorMask);
+                        if (ModeltryGet.Succeeded)
+                        {
+                            item.SetModel(item: ModeltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetModel();
+                        }
+                    }
                     return TryGet<Furnature_FieldIndex?>.Succeed(Furnature_FieldIndex.Model);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -733,10 +1101,18 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Furnature_FieldIndex?>.Succeed(Furnature_FieldIndex.Script);
                 case "MNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._MarkerFlags.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
+                    var MarkerFlagstryGet = ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Furnature_FieldIndex.MarkerFlags,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MarkerFlagstryGet.Succeeded)
+                    {
+                        item.SetMarkerFlags(item: MarkerFlagstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMarkerFlags();
+                    }
                     return TryGet<Furnature_FieldIndex?>.Succeed(Furnature_FieldIndex.MarkerFlags);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
@@ -850,9 +1226,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Furnature_FieldIndex.Model:
-                    this._Model.Set(
+                    this.SetModel(
                         (Model)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Furnature_FieldIndex.Script:
                     this.Script_Property.Set(
@@ -860,9 +1236,9 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Furnature_FieldIndex.MarkerFlags:
-                    this._MarkerFlags.Set(
+                    this.SetMarkerFlags(
                         (Byte[])obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -896,9 +1272,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Furnature_FieldIndex.Model:
-                    obj._Model.Set(
+                    obj.SetModel(
                         (Model)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Furnature_FieldIndex.Script:
                     obj.Script_Property.Set(
@@ -906,9 +1282,9 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Furnature_FieldIndex.MarkerFlags:
-                    obj._MarkerFlags.Set(
+                    obj.SetMarkerFlags(
                         (Byte[])pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -989,7 +1365,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "05555eb3-61f6-4609-a88f-6f61f0bf001a";
 
-        public const ushort FieldCount = 3;
+        public const ushort AdditionalFieldCount = 3;
+
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(Furnature_Mask<>);
 
@@ -1142,7 +1520,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1258,8 +1637,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.MarkerFlags_Property.SetToWithDefault(
                         rhs: rhs.MarkerFlags_Property,
-                        def: def?.MarkerFlags_Property,
-                        cmds: cmds);
+                        def: def?.MarkerFlags_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

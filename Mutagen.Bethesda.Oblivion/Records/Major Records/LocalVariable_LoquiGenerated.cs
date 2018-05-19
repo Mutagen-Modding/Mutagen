@@ -31,6 +31,8 @@ namespace Mutagen.Bethesda.Oblivion
         ILocalVariable,
         ILoquiObject<LocalVariable>,
         ILoquiObjectSetter,
+        IPropertySupporter<LocalVariableData>,
+        IPropertySupporter<String>,
         IEquatable<LocalVariable>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -40,33 +42,102 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public LocalVariable()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Data
+        protected LocalVariableData _Data;
+        protected PropertyForwarder<LocalVariable, LocalVariableData> _DataForwarder;
+        public INotifyingSetItem<LocalVariableData> Data_Property => _DataForwarder ?? (_DataForwarder = new PropertyForwarder<LocalVariable, LocalVariableData>(this, (int)LocalVariable_FieldIndex.Data));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<LocalVariableData> _Data = new NotifyingSetItem<LocalVariableData>();
-        public INotifyingSetItem<LocalVariableData> Data_Property => this._Data;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        LocalVariableData ILocalVariableGetter.Data => this.Data;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public LocalVariableData Data { get => _Data.Item; set => _Data.Item = value; }
+        public LocalVariableData Data
+        {
+            get => this._Data;
+            set => this.SetData(value);
+        }
+        protected void SetData(
+            LocalVariableData item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)LocalVariable_FieldIndex.Data];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Data, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)LocalVariable_FieldIndex.Data] = hasBeenSet;
+            }
+            if (_LocalVariableData_subscriptions != null)
+            {
+                var tmp = Data;
+                _Data = item;
+                _LocalVariableData_subscriptions.FireSubscriptions(
+                    index: (int)LocalVariable_FieldIndex.Data,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Data = item;
+            }
+        }
+        protected void UnsetData()
+        {
+            _hasBeenSetTracker[(int)LocalVariable_FieldIndex.Data] = false;
+            Data = default(LocalVariableData);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<LocalVariableData> ILocalVariable.Data_Property => this.Data_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<LocalVariableData> ILocalVariableGetter.Data_Property => this.Data_Property;
         #endregion
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _Name = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Name_Property => _Name;
+        protected String _Name;
+        protected PropertyForwarder<LocalVariable, String> _NameForwarder;
+        public INotifyingSetItem<String> Name_Property => _NameForwarder ?? (_NameForwarder = new PropertyForwarder<LocalVariable, String>(this, (int)LocalVariable_FieldIndex.Name));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Name
         {
-            get => this._Name.Item;
-            set => this._Name.Set(value);
+            get => this._Name;
+            set => this.SetName(value);
+        }
+        protected void SetName(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)LocalVariable_FieldIndex.Name];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Name == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)LocalVariable_FieldIndex.Name] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Name;
+                _Name = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)LocalVariable_FieldIndex.Name,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Name = item;
+            }
+        }
+        protected void UnsetName()
+        {
+            _hasBeenSetTracker[(int)LocalVariable_FieldIndex.Name] = false;
+            Name = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ILocalVariable.Name_Property => this.Name_Property;
@@ -432,19 +503,302 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Data":
-                    item._Data.SetIfSucceededOrDefault(LoquiXmlTranslation<LocalVariableData, LocalVariableData_ErrorMask>.Instance.Parse(
+                    var DatatryGet = LoquiXmlTranslation<LocalVariableData, LocalVariableData_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)LocalVariable_FieldIndex.Data,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DatatryGet.Succeeded)
+                    {
+                        item.SetData(item: DatatryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetData();
+                    }
                     break;
                 case "Name":
-                    item._Name.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var NametryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)LocalVariable_FieldIndex.Name,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (NametryGet.Succeeded)
+                    {
+                        item.SetName(item: NametryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetName();
+                    }
                     break;
                 default:
                     break;
+            }
+        }
+
+        #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        #region IPropertySupporter LocalVariableData
+        protected ObjectCentralizationSubscriptions<LocalVariableData> _LocalVariableData_subscriptions;
+        LocalVariableData IPropertySupporter<LocalVariableData>.Get(int index)
+        {
+            return GetLocalVariableData(index: index);
+        }
+
+        protected LocalVariableData GetLocalVariableData(int index)
+        {
+            switch ((LocalVariable_FieldIndex)index)
+            {
+                case LocalVariable_FieldIndex.Data:
+                    return Data;
+                default:
+                    throw new ArgumentException($"Unknown index for field type LocalVariableData: {index}");
+            }
+        }
+
+        void IPropertySupporter<LocalVariableData>.Set(
+            int index,
+            LocalVariableData item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetLocalVariableData(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetLocalVariableData(
+            int index,
+            LocalVariableData item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((LocalVariable_FieldIndex)index)
+            {
+                case LocalVariable_FieldIndex.Data:
+                    SetData(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type LocalVariableData: {index}");
+            }
+        }
+
+        bool IPropertySupporter<LocalVariableData>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<LocalVariableData>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<LocalVariableData>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetLocalVariableData(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetLocalVariableData(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((LocalVariable_FieldIndex)index)
+            {
+                case LocalVariable_FieldIndex.Data:
+                    _hasBeenSetTracker[index] = false;
+                    Data = default(LocalVariableData);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type LocalVariableData: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<LocalVariableData>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<LocalVariableData> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_LocalVariableData_subscriptions == null)
+            {
+                _LocalVariableData_subscriptions = new ObjectCentralizationSubscriptions<LocalVariableData>();
+            }
+            _LocalVariableData_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<LocalVariableData>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _LocalVariableData_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<LocalVariableData>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        LocalVariableData IPropertySupporter<LocalVariableData>.DefaultValue(int index)
+        {
+            return DefaultValueLocalVariableData(index: index);
+        }
+
+        protected LocalVariableData DefaultValueLocalVariableData(int index)
+        {
+            switch ((LocalVariable_FieldIndex)index)
+            {
+                case LocalVariable_FieldIndex.Data:
+                    return default(LocalVariableData);
+                default:
+                    throw new ArgumentException($"Unknown index for field type LocalVariableData: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter String
+        protected ObjectCentralizationSubscriptions<String> _String_subscriptions;
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected String GetString(int index)
+        {
+            switch ((LocalVariable_FieldIndex)index)
+            {
+                case LocalVariable_FieldIndex.Name:
+                    return Name;
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((LocalVariable_FieldIndex)index)
+            {
+                case LocalVariable_FieldIndex.Name:
+                    SetName(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((LocalVariable_FieldIndex)index)
+            {
+                case LocalVariable_FieldIndex.Name:
+                    _hasBeenSetTracker[index] = false;
+                    Name = default(String);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected String DefaultValueString(int index)
+        {
+            switch ((LocalVariable_FieldIndex)index)
+            {
+                case LocalVariable_FieldIndex.Name:
+                    return default(String);
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
             }
         }
 
@@ -672,19 +1026,37 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "SLSD":
                     if (lastParsed.HasValue && lastParsed.Value >= LocalVariable_FieldIndex.Data) return TryGet<LocalVariable_FieldIndex?>.Failure;
-                    item._Data.SetIfSucceededOrDefault(LoquiBinaryTranslation<LocalVariableData, LocalVariableData_ErrorMask>.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)LocalVariable_FieldIndex.Data,
-                        errorMask: errorMask));
+                    {
+                        var DatatryGet = LoquiBinaryTranslation<LocalVariableData, LocalVariableData_ErrorMask>.Instance.Parse(
+                            frame: frame,
+                            fieldIndex: (int)LocalVariable_FieldIndex.Data,
+                            errorMask: errorMask);
+                        if (DatatryGet.Succeeded)
+                        {
+                            item.SetData(item: DatatryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetData();
+                        }
+                    }
                     return TryGet<LocalVariable_FieldIndex?>.Succeed(LocalVariable_FieldIndex.Data);
                 case "SCVR":
                     if (lastParsed.HasValue && lastParsed.Value >= LocalVariable_FieldIndex.Name) return TryGet<LocalVariable_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Name.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var NametryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)LocalVariable_FieldIndex.Name,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (NametryGet.Succeeded)
+                    {
+                        item.SetName(item: NametryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetName();
+                    }
                     return TryGet<LocalVariable_FieldIndex?>.Succeed(LocalVariable_FieldIndex.Name);
                 default:
                     return TryGet<LocalVariable_FieldIndex?>.Failure;
@@ -808,14 +1180,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case LocalVariable_FieldIndex.Data:
-                    this._Data.Set(
+                    this.SetData(
                         (LocalVariableData)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case LocalVariable_FieldIndex.Name:
-                    this._Name.Set(
+                    this.SetName(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -855,14 +1227,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case LocalVariable_FieldIndex.Data:
-                    obj._Data.Set(
+                    obj.SetData(
                         (LocalVariableData)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case LocalVariable_FieldIndex.Name:
-                    obj._Name.Set(
+                    obj.SetName(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -929,6 +1301,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             version: 0);
 
         public const string GUID = "b77aa416-b182-4265-8276-44b34bace18f";
+
+        public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
 
@@ -1081,7 +1455,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1174,8 +1549,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Name_Property.SetToWithDefault(
                         rhs: rhs.Name_Property,
-                        def: def?.Name_Property,
-                        cmds: cmds);
+                        def: def?.Name_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
         IGameSettingString,
         ILoquiObject<GameSettingString>,
         ILoquiObjectSetter,
+        IPropertySupporter<String>,
         IEquatable<GameSettingString>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -48,14 +49,47 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _Data = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Data_Property => _Data;
+        protected String _Data;
+        protected PropertyForwarder<GameSettingString, String> _DataForwarder;
+        public INotifyingSetItem<String> Data_Property => _DataForwarder ?? (_DataForwarder = new PropertyForwarder<GameSettingString, String>(this, (int)GameSettingString_FieldIndex.Data));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Data
         {
-            get => this._Data.Item;
-            set => this._Data.Set(value);
+            get => this._Data;
+            set => this.SetData(value);
+        }
+        protected void SetData(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)GameSettingString_FieldIndex.Data];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Data == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)GameSettingString_FieldIndex.Data] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Data;
+                _Data = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)GameSettingString_FieldIndex.Data,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Data = item;
+            }
+        }
+        protected void UnsetData()
+        {
+            _hasBeenSetTracker[(int)GameSettingString_FieldIndex.Data] = false;
+            Data = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IGameSettingString.Data_Property => this.Data_Property;
@@ -434,10 +468,18 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Data":
-                    item._Data.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var DatatryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)GameSettingString_FieldIndex.Data,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DatatryGet.Succeeded)
+                    {
+                        item.SetData(item: DatatryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetData();
+                    }
                     break;
                 default:
                     GameSetting.Fill_XML_Internal(
@@ -446,6 +488,146 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter String
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected override String GetString(int index)
+        {
+            switch ((GameSettingString_FieldIndex)index)
+            {
+                case GameSettingString_FieldIndex.Data:
+                    return Data;
+                default:
+                    return base.GetString(index: index);
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((GameSettingString_FieldIndex)index)
+            {
+                case GameSettingString_FieldIndex.Data:
+                    SetData(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetString(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((GameSettingString_FieldIndex)index)
+            {
+                case GameSettingString_FieldIndex.Data:
+                    _hasBeenSetTracker[index] = false;
+                    Data = default(String);
+                    break;
+                default:
+                    base.UnsetString(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected override String DefaultValueString(int index)
+        {
+            switch ((GameSettingString_FieldIndex)index)
+            {
+                case GameSettingString_FieldIndex.Data:
+                    return default(String);
+                default:
+                    return base.DefaultValueString(index: index);
             }
         }
 
@@ -659,11 +841,19 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Data.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var DatatryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)GameSettingString_FieldIndex.Data,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DatatryGet.Succeeded)
+                    {
+                        item.SetData(item: DatatryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetData();
+                    }
                     return TryGet<GameSettingString_FieldIndex?>.Succeed(GameSettingString_FieldIndex.Data);
                 default:
                     return GameSetting.Fill_Binary_RecordTypes(
@@ -777,9 +967,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case GameSettingString_FieldIndex.Data:
-                    this._Data.Set(
+                    this.SetData(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -813,9 +1003,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case GameSettingString_FieldIndex.Data:
-                    obj._Data.Set(
+                    obj.SetData(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -879,7 +1069,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "aa9c63ce-a122-4644-8610-646ebc7d4f13";
 
-        public const ushort FieldCount = 1;
+        public const ushort AdditionalFieldCount = 1;
+
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(GameSettingString_Mask<>);
 
@@ -1007,7 +1199,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1059,8 +1252,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Data_Property.SetToWithDefault(
                         rhs: rhs.Data_Property,
-                        def: def?.Data_Property,
-                        cmds: cmds);
+                        def: def?.Data_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

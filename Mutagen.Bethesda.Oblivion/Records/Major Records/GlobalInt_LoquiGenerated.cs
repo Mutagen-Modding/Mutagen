@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
         IGlobalInt,
         ILoquiObject<GlobalInt>,
         ILoquiObjectSetter,
+        IPropertySupporter<Int32>,
         IEquatable<GlobalInt>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -48,14 +49,47 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Int32> _Data = NotifyingItem.Factory<Int32>();
-        public INotifyingItemGetter<Int32> Data_Property => _Data;
+        protected Int32 _Data;
+        protected PropertyForwarder<GlobalInt, Int32> _DataForwarder;
+        public INotifyingSetItemGetter<Int32> Data_Property => _DataForwarder ?? (_DataForwarder = new PropertyForwarder<GlobalInt, Int32>(this, (int)GlobalInt_FieldIndex.Data));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 Data
         {
-            get => this._Data.Item;
-            protected set => this._Data.Set(value);
+            get => this._Data;
+            protected set => this.SetData(value);
+        }
+        protected void SetData(
+            Int32 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)GlobalInt_FieldIndex.Data];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Data == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)GlobalInt_FieldIndex.Data] = hasBeenSet;
+            }
+            if (_Int32_subscriptions != null)
+            {
+                var tmp = Data;
+                _Data = item;
+                _Int32_subscriptions.FireSubscriptions(
+                    index: (int)GlobalInt_FieldIndex.Data,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Data = item;
+            }
+        }
+        protected void UnsetData()
+        {
+            _hasBeenSetTracker[(int)GlobalInt_FieldIndex.Data] = false;
+            Data = default(Int32);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Int32> IGlobalIntGetter.Data_Property => this.Data_Property;
@@ -425,10 +459,18 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Data":
-                    item._Data.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
+                    var DatatryGet = Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)GlobalInt_FieldIndex.Data,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DatatryGet.Succeeded)
+                    {
+                        item.SetData(item: DatatryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetData();
+                    }
                     break;
                 default:
                     Global.Fill_XML_Internal(
@@ -437,6 +479,139 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Int32
+        protected ObjectCentralizationSubscriptions<Int32> _Int32_subscriptions;
+        Int32 IPropertySupporter<Int32>.Get(int index)
+        {
+            return GetInt32(index: index);
+        }
+
+        protected Int32 GetInt32(int index)
+        {
+            switch ((GlobalInt_FieldIndex)index)
+            {
+                case GlobalInt_FieldIndex.Data:
+                    return Data;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
+            }
+        }
+
+        void IPropertySupporter<Int32>.Set(
+            int index,
+            Int32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetInt32(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetInt32(
+            int index,
+            Int32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((GlobalInt_FieldIndex)index)
+            {
+                case GlobalInt_FieldIndex.Data:
+                    SetData(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Int32>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Int32>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetInt32(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetInt32(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((GlobalInt_FieldIndex)index)
+            {
+                case GlobalInt_FieldIndex.Data:
+                    _hasBeenSetTracker[index] = false;
+                    Data = default(Int32);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Int32>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Int32> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Int32_subscriptions == null)
+            {
+                _Int32_subscriptions = new ObjectCentralizationSubscriptions<Int32>();
+            }
+            _Int32_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Int32>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Int32_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Int32>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Int32 IPropertySupporter<Int32>.DefaultValue(int index)
+        {
+            return DefaultValueInt32(index: index);
+        }
+
+        protected Int32 DefaultValueInt32(int index)
+        {
+            switch ((GlobalInt_FieldIndex)index)
+            {
+                case GlobalInt_FieldIndex.Data:
+                    return default(Int32);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
             }
         }
 
@@ -832,7 +1007,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "fcf8c0ba-4933-42bc-8499-168c84bb2f4e";
 
-        public const ushort FieldCount = 1;
+        public const ushort AdditionalFieldCount = 1;
+
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(GlobalInt_Mask<>);
 
@@ -959,7 +1136,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

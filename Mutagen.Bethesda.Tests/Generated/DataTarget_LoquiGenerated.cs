@@ -398,16 +398,32 @@ namespace Mutagen.Bethesda.Tests
             switch (name)
             {
                 case "Location":
-                    item.Location = Int64XmlTranslation.Instance.ParseNonNull(
+                    var LocationtryGet = Int64XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)DataTarget_FieldIndex.Location,
-                        errorMask: errorMask).GetOrDefault(item.Location);
+                        errorMask: errorMask);
+                    if (LocationtryGet.Succeeded)
+                    {
+                        item.Location = LocationtryGet.Value;
+                    }
+                    else
+                    {
+                        item.Location = default(Int64);
+                    }
                     break;
                 case "Data":
-                    item._Data = ByteArrayXmlTranslation.Instance.Parse(
+                    var DatatryGet = ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)DataTarget_FieldIndex.Data,
-                        errorMask: errorMask).GetOrDefault(item._Data);
+                        errorMask: errorMask);
+                    if (DatatryGet.Succeeded)
+                    {
+                        item._Data = DatatryGet.Value;
+                    }
+                    else
+                    {
+                        item._Data = default(Byte[]);
+                    }
                     break;
                 default:
                     break;
@@ -641,6 +657,8 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const string GUID = "501872cd-0ed9-4e48-a622-f5d43cbf8d4b";
 
+        public const ushort AdditionalFieldCount = 2;
+
         public const ushort FieldCount = 2;
 
         public static readonly Type MaskType = typeof(DataTarget_Mask<>);
@@ -775,7 +793,8 @@ namespace Mutagen.Bethesda.Tests.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

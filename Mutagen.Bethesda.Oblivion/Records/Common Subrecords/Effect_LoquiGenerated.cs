@@ -31,6 +31,10 @@ namespace Mutagen.Bethesda.Oblivion
         IEffect,
         ILoquiObject<Effect>,
         ILoquiObjectSetter,
+        IPropertySupporter<UInt32>,
+        IPropertySupporter<Effect.EffectType>,
+        IPropertySupporter<ActorValueExtended>,
+        IPropertySupporter<ScriptEffect>,
         IEquatable<Effect>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -40,6 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public Effect()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -53,14 +58,47 @@ namespace Mutagen.Bethesda.Oblivion
         EDIDLink<MagicEffect> IEffectGetter.MagicEffect_Property => this.MagicEffect_Property;
         #endregion
         #region Magnitude
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt32> _Magnitude = NotifyingItem.Factory<UInt32>();
-        public INotifyingItem<UInt32> Magnitude_Property => _Magnitude;
+        protected UInt32 _Magnitude;
+        protected PropertyForwarder<Effect, UInt32> _MagnitudeForwarder;
+        public INotifyingSetItem<UInt32> Magnitude_Property => _MagnitudeForwarder ?? (_MagnitudeForwarder = new PropertyForwarder<Effect, UInt32>(this, (int)Effect_FieldIndex.Magnitude));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Magnitude
         {
-            get => this._Magnitude.Item;
-            set => this._Magnitude.Set(value);
+            get => this._Magnitude;
+            set => this.SetMagnitude(value);
+        }
+        protected void SetMagnitude(
+            UInt32 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Effect_FieldIndex.Magnitude];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Magnitude == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Effect_FieldIndex.Magnitude] = hasBeenSet;
+            }
+            if (_UInt32_subscriptions != null)
+            {
+                var tmp = Magnitude;
+                _Magnitude = item;
+                _UInt32_subscriptions.FireSubscriptions(
+                    index: (int)Effect_FieldIndex.Magnitude,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Magnitude = item;
+            }
+        }
+        protected void UnsetMagnitude()
+        {
+            _hasBeenSetTracker[(int)Effect_FieldIndex.Magnitude] = false;
+            Magnitude = default(UInt32);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> IEffect.Magnitude_Property => this.Magnitude_Property;
@@ -68,14 +106,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt32> IEffectGetter.Magnitude_Property => this.Magnitude_Property;
         #endregion
         #region Area
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt32> _Area = NotifyingItem.Factory<UInt32>();
-        public INotifyingItem<UInt32> Area_Property => _Area;
+        protected UInt32 _Area;
+        protected PropertyForwarder<Effect, UInt32> _AreaForwarder;
+        public INotifyingSetItem<UInt32> Area_Property => _AreaForwarder ?? (_AreaForwarder = new PropertyForwarder<Effect, UInt32>(this, (int)Effect_FieldIndex.Area));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Area
         {
-            get => this._Area.Item;
-            set => this._Area.Set(value);
+            get => this._Area;
+            set => this.SetArea(value);
+        }
+        protected void SetArea(
+            UInt32 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Effect_FieldIndex.Area];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Area == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Effect_FieldIndex.Area] = hasBeenSet;
+            }
+            if (_UInt32_subscriptions != null)
+            {
+                var tmp = Area;
+                _Area = item;
+                _UInt32_subscriptions.FireSubscriptions(
+                    index: (int)Effect_FieldIndex.Area,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Area = item;
+            }
+        }
+        protected void UnsetArea()
+        {
+            _hasBeenSetTracker[(int)Effect_FieldIndex.Area] = false;
+            Area = default(UInt32);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> IEffect.Area_Property => this.Area_Property;
@@ -83,14 +154,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt32> IEffectGetter.Area_Property => this.Area_Property;
         #endregion
         #region Duration
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt32> _Duration = NotifyingItem.Factory<UInt32>();
-        public INotifyingItem<UInt32> Duration_Property => _Duration;
+        protected UInt32 _Duration;
+        protected PropertyForwarder<Effect, UInt32> _DurationForwarder;
+        public INotifyingSetItem<UInt32> Duration_Property => _DurationForwarder ?? (_DurationForwarder = new PropertyForwarder<Effect, UInt32>(this, (int)Effect_FieldIndex.Duration));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Duration
         {
-            get => this._Duration.Item;
-            set => this._Duration.Set(value);
+            get => this._Duration;
+            set => this.SetDuration(value);
+        }
+        protected void SetDuration(
+            UInt32 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Effect_FieldIndex.Duration];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Duration == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Effect_FieldIndex.Duration] = hasBeenSet;
+            }
+            if (_UInt32_subscriptions != null)
+            {
+                var tmp = Duration;
+                _Duration = item;
+                _UInt32_subscriptions.FireSubscriptions(
+                    index: (int)Effect_FieldIndex.Duration,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Duration = item;
+            }
+        }
+        protected void UnsetDuration()
+        {
+            _hasBeenSetTracker[(int)Effect_FieldIndex.Duration] = false;
+            Duration = default(UInt32);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> IEffect.Duration_Property => this.Duration_Property;
@@ -98,14 +202,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt32> IEffectGetter.Duration_Property => this.Duration_Property;
         #endregion
         #region Type
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Effect.EffectType> _Type = NotifyingItem.Factory<Effect.EffectType>();
-        public INotifyingItem<Effect.EffectType> Type_Property => _Type;
+        protected Effect.EffectType _Type;
+        protected PropertyForwarder<Effect, Effect.EffectType> _TypeForwarder;
+        public INotifyingSetItem<Effect.EffectType> Type_Property => _TypeForwarder ?? (_TypeForwarder = new PropertyForwarder<Effect, Effect.EffectType>(this, (int)Effect_FieldIndex.Type));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Effect.EffectType Type
         {
-            get => this._Type.Item;
-            set => this._Type.Set(value);
+            get => this._Type;
+            set => this.SetType(value);
+        }
+        protected void SetType(
+            Effect.EffectType item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Effect_FieldIndex.Type];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Type == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Effect_FieldIndex.Type] = hasBeenSet;
+            }
+            if (_EffectEffectType_subscriptions != null)
+            {
+                var tmp = Type;
+                _Type = item;
+                _EffectEffectType_subscriptions.FireSubscriptions(
+                    index: (int)Effect_FieldIndex.Type,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Type = item;
+            }
+        }
+        protected void UnsetType()
+        {
+            _hasBeenSetTracker[(int)Effect_FieldIndex.Type] = false;
+            Type = default(Effect.EffectType);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Effect.EffectType> IEffect.Type_Property => this.Type_Property;
@@ -113,14 +250,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Effect.EffectType> IEffectGetter.Type_Property => this.Type_Property;
         #endregion
         #region ActorValue
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<ActorValueExtended> _ActorValue = NotifyingItem.Factory<ActorValueExtended>();
-        public INotifyingItem<ActorValueExtended> ActorValue_Property => _ActorValue;
+        protected ActorValueExtended _ActorValue;
+        protected PropertyForwarder<Effect, ActorValueExtended> _ActorValueForwarder;
+        public INotifyingSetItem<ActorValueExtended> ActorValue_Property => _ActorValueForwarder ?? (_ActorValueForwarder = new PropertyForwarder<Effect, ActorValueExtended>(this, (int)Effect_FieldIndex.ActorValue));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ActorValueExtended ActorValue
         {
-            get => this._ActorValue.Item;
-            set => this._ActorValue.Set(value);
+            get => this._ActorValue;
+            set => this.SetActorValue(value);
+        }
+        protected void SetActorValue(
+            ActorValueExtended item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Effect_FieldIndex.ActorValue];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ActorValue == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Effect_FieldIndex.ActorValue] = hasBeenSet;
+            }
+            if (_ActorValueExtended_subscriptions != null)
+            {
+                var tmp = ActorValue;
+                _ActorValue = item;
+                _ActorValueExtended_subscriptions.FireSubscriptions(
+                    index: (int)Effect_FieldIndex.ActorValue,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _ActorValue = item;
+            }
+        }
+        protected void UnsetActorValue()
+        {
+            _hasBeenSetTracker[(int)Effect_FieldIndex.ActorValue] = false;
+            ActorValue = default(ActorValueExtended);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<ActorValueExtended> IEffect.ActorValue_Property => this.ActorValue_Property;
@@ -128,13 +298,48 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<ActorValueExtended> IEffectGetter.ActorValue_Property => this.ActorValue_Property;
         #endregion
         #region ScriptEffect
+        protected ScriptEffect _ScriptEffect;
+        protected PropertyForwarder<Effect, ScriptEffect> _ScriptEffectForwarder;
+        public INotifyingSetItem<ScriptEffect> ScriptEffect_Property => _ScriptEffectForwarder ?? (_ScriptEffectForwarder = new PropertyForwarder<Effect, ScriptEffect>(this, (int)Effect_FieldIndex.ScriptEffect));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<ScriptEffect> _ScriptEffect = new NotifyingSetItem<ScriptEffect>();
-        public INotifyingSetItem<ScriptEffect> ScriptEffect_Property => this._ScriptEffect;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ScriptEffect IEffectGetter.ScriptEffect => this.ScriptEffect;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public ScriptEffect ScriptEffect { get => _ScriptEffect.Item; set => _ScriptEffect.Item = value; }
+        public ScriptEffect ScriptEffect
+        {
+            get => this._ScriptEffect;
+            set => this.SetScriptEffect(value);
+        }
+        protected void SetScriptEffect(
+            ScriptEffect item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Effect_FieldIndex.ScriptEffect];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(ScriptEffect, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Effect_FieldIndex.ScriptEffect] = hasBeenSet;
+            }
+            if (_ScriptEffect_subscriptions != null)
+            {
+                var tmp = ScriptEffect;
+                _ScriptEffect = item;
+                _ScriptEffect_subscriptions.FireSubscriptions(
+                    index: (int)Effect_FieldIndex.ScriptEffect,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _ScriptEffect = item;
+            }
+        }
+        protected void UnsetScriptEffect()
+        {
+            _hasBeenSetTracker[(int)Effect_FieldIndex.ScriptEffect] = false;
+            ScriptEffect = default(ScriptEffect);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<ScriptEffect> IEffect.ScriptEffect_Property => this.ScriptEffect_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -508,45 +713,646 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Magnitude":
-                    item._Magnitude.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
+                    var MagnitudetryGet = UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Effect_FieldIndex.Magnitude,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MagnitudetryGet.Succeeded)
+                    {
+                        item.SetMagnitude(item: MagnitudetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMagnitude();
+                    }
                     break;
                 case "Area":
-                    item._Area.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
+                    var AreatryGet = UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Effect_FieldIndex.Area,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (AreatryGet.Succeeded)
+                    {
+                        item.SetArea(item: AreatryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetArea();
+                    }
                     break;
                 case "Duration":
-                    item._Duration.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
+                    var DurationtryGet = UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Effect_FieldIndex.Duration,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DurationtryGet.Succeeded)
+                    {
+                        item.SetDuration(item: DurationtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetDuration();
+                    }
                     break;
                 case "Type":
-                    item._Type.SetIfSucceededOrDefault(EnumXmlTranslation<Effect.EffectType>.Instance.Parse(
+                    var TypetryGet = EnumXmlTranslation<Effect.EffectType>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Effect_FieldIndex.Type,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (TypetryGet.Succeeded)
+                    {
+                        item.SetType(item: TypetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetType();
+                    }
                     break;
                 case "ActorValue":
-                    item._ActorValue.SetIfSucceededOrDefault(EnumXmlTranslation<ActorValueExtended>.Instance.Parse(
+                    var ActorValuetryGet = EnumXmlTranslation<ActorValueExtended>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Effect_FieldIndex.ActorValue,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (ActorValuetryGet.Succeeded)
+                    {
+                        item.SetActorValue(item: ActorValuetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetActorValue();
+                    }
                     break;
                 case "ScriptEffect":
-                    item._ScriptEffect.SetIfSucceededOrDefault(LoquiXmlTranslation<ScriptEffect, ScriptEffect_ErrorMask>.Instance.Parse(
+                    var ScriptEffecttryGet = LoquiXmlTranslation<ScriptEffect, ScriptEffect_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Effect_FieldIndex.ScriptEffect,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ScriptEffecttryGet.Succeeded)
+                    {
+                        item.SetScriptEffect(item: ScriptEffecttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetScriptEffect();
+                    }
                     break;
                 default:
                     break;
+            }
+        }
+
+        #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        #region IPropertySupporter UInt32
+        protected ObjectCentralizationSubscriptions<UInt32> _UInt32_subscriptions;
+        UInt32 IPropertySupporter<UInt32>.Get(int index)
+        {
+            return GetUInt32(index: index);
+        }
+
+        protected UInt32 GetUInt32(int index)
+        {
+            switch ((Effect_FieldIndex)index)
+            {
+                case Effect_FieldIndex.Magnitude:
+                    return Magnitude;
+                case Effect_FieldIndex.Area:
+                    return Area;
+                case Effect_FieldIndex.Duration:
+                    return Duration;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        void IPropertySupporter<UInt32>.Set(
+            int index,
+            UInt32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetUInt32(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetUInt32(
+            int index,
+            UInt32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Effect_FieldIndex)index)
+            {
+                case Effect_FieldIndex.Magnitude:
+                    SetMagnitude(item, hasBeenSet, cmds);
+                    break;
+                case Effect_FieldIndex.Area:
+                    SetArea(item, hasBeenSet, cmds);
+                    break;
+                case Effect_FieldIndex.Duration:
+                    SetDuration(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<UInt32>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<UInt32>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetUInt32(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetUInt32(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Effect_FieldIndex)index)
+            {
+                case Effect_FieldIndex.Magnitude:
+                    _hasBeenSetTracker[index] = false;
+                    Magnitude = default(UInt32);
+                    break;
+                case Effect_FieldIndex.Area:
+                    _hasBeenSetTracker[index] = false;
+                    Area = default(UInt32);
+                    break;
+                case Effect_FieldIndex.Duration:
+                    _hasBeenSetTracker[index] = false;
+                    Duration = default(UInt32);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt32>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<UInt32> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_UInt32_subscriptions == null)
+            {
+                _UInt32_subscriptions = new ObjectCentralizationSubscriptions<UInt32>();
+            }
+            _UInt32_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt32>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _UInt32_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<UInt32>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        UInt32 IPropertySupporter<UInt32>.DefaultValue(int index)
+        {
+            return DefaultValueUInt32(index: index);
+        }
+
+        protected UInt32 DefaultValueUInt32(int index)
+        {
+            switch ((Effect_FieldIndex)index)
+            {
+                case Effect_FieldIndex.Magnitude:
+                case Effect_FieldIndex.Area:
+                case Effect_FieldIndex.Duration:
+                    return default(UInt32);
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Effect.EffectType
+        protected ObjectCentralizationSubscriptions<Effect.EffectType> _EffectEffectType_subscriptions;
+        Effect.EffectType IPropertySupporter<Effect.EffectType>.Get(int index)
+        {
+            return GetEffectEffectType(index: index);
+        }
+
+        protected Effect.EffectType GetEffectEffectType(int index)
+        {
+            switch ((Effect_FieldIndex)index)
+            {
+                case Effect_FieldIndex.Type:
+                    return Type;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Effect.EffectType: {index}");
+            }
+        }
+
+        void IPropertySupporter<Effect.EffectType>.Set(
+            int index,
+            Effect.EffectType item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetEffectEffectType(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetEffectEffectType(
+            int index,
+            Effect.EffectType item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Effect_FieldIndex)index)
+            {
+                case Effect_FieldIndex.Type:
+                    SetType(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Effect.EffectType: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Effect.EffectType>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Effect.EffectType>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Effect.EffectType>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetEffectEffectType(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetEffectEffectType(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Effect_FieldIndex)index)
+            {
+                case Effect_FieldIndex.Type:
+                    _hasBeenSetTracker[index] = false;
+                    Type = default(Effect.EffectType);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Effect.EffectType: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Effect.EffectType>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Effect.EffectType> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_EffectEffectType_subscriptions == null)
+            {
+                _EffectEffectType_subscriptions = new ObjectCentralizationSubscriptions<Effect.EffectType>();
+            }
+            _EffectEffectType_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Effect.EffectType>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _EffectEffectType_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Effect.EffectType>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Effect.EffectType IPropertySupporter<Effect.EffectType>.DefaultValue(int index)
+        {
+            return DefaultValueEffectEffectType(index: index);
+        }
+
+        protected Effect.EffectType DefaultValueEffectEffectType(int index)
+        {
+            switch ((Effect_FieldIndex)index)
+            {
+                case Effect_FieldIndex.Type:
+                    return default(Effect.EffectType);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Effect.EffectType: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter ActorValueExtended
+        protected ObjectCentralizationSubscriptions<ActorValueExtended> _ActorValueExtended_subscriptions;
+        ActorValueExtended IPropertySupporter<ActorValueExtended>.Get(int index)
+        {
+            return GetActorValueExtended(index: index);
+        }
+
+        protected ActorValueExtended GetActorValueExtended(int index)
+        {
+            switch ((Effect_FieldIndex)index)
+            {
+                case Effect_FieldIndex.ActorValue:
+                    return ActorValue;
+                default:
+                    throw new ArgumentException($"Unknown index for field type ActorValueExtended: {index}");
+            }
+        }
+
+        void IPropertySupporter<ActorValueExtended>.Set(
+            int index,
+            ActorValueExtended item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetActorValueExtended(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetActorValueExtended(
+            int index,
+            ActorValueExtended item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Effect_FieldIndex)index)
+            {
+                case Effect_FieldIndex.ActorValue:
+                    SetActorValue(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type ActorValueExtended: {index}");
+            }
+        }
+
+        bool IPropertySupporter<ActorValueExtended>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<ActorValueExtended>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<ActorValueExtended>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetActorValueExtended(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetActorValueExtended(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Effect_FieldIndex)index)
+            {
+                case Effect_FieldIndex.ActorValue:
+                    _hasBeenSetTracker[index] = false;
+                    ActorValue = default(ActorValueExtended);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type ActorValueExtended: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<ActorValueExtended>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<ActorValueExtended> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_ActorValueExtended_subscriptions == null)
+            {
+                _ActorValueExtended_subscriptions = new ObjectCentralizationSubscriptions<ActorValueExtended>();
+            }
+            _ActorValueExtended_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<ActorValueExtended>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _ActorValueExtended_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<ActorValueExtended>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        ActorValueExtended IPropertySupporter<ActorValueExtended>.DefaultValue(int index)
+        {
+            return DefaultValueActorValueExtended(index: index);
+        }
+
+        protected ActorValueExtended DefaultValueActorValueExtended(int index)
+        {
+            switch ((Effect_FieldIndex)index)
+            {
+                case Effect_FieldIndex.ActorValue:
+                    return default(ActorValueExtended);
+                default:
+                    throw new ArgumentException($"Unknown index for field type ActorValueExtended: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter ScriptEffect
+        protected ObjectCentralizationSubscriptions<ScriptEffect> _ScriptEffect_subscriptions;
+        ScriptEffect IPropertySupporter<ScriptEffect>.Get(int index)
+        {
+            return GetScriptEffect(index: index);
+        }
+
+        protected ScriptEffect GetScriptEffect(int index)
+        {
+            switch ((Effect_FieldIndex)index)
+            {
+                case Effect_FieldIndex.ScriptEffect:
+                    return ScriptEffect;
+                default:
+                    throw new ArgumentException($"Unknown index for field type ScriptEffect: {index}");
+            }
+        }
+
+        void IPropertySupporter<ScriptEffect>.Set(
+            int index,
+            ScriptEffect item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetScriptEffect(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetScriptEffect(
+            int index,
+            ScriptEffect item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Effect_FieldIndex)index)
+            {
+                case Effect_FieldIndex.ScriptEffect:
+                    SetScriptEffect(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type ScriptEffect: {index}");
+            }
+        }
+
+        bool IPropertySupporter<ScriptEffect>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<ScriptEffect>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<ScriptEffect>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetScriptEffect(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetScriptEffect(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Effect_FieldIndex)index)
+            {
+                case Effect_FieldIndex.ScriptEffect:
+                    _hasBeenSetTracker[index] = false;
+                    ScriptEffect = default(ScriptEffect);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type ScriptEffect: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<ScriptEffect>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<ScriptEffect> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_ScriptEffect_subscriptions == null)
+            {
+                _ScriptEffect_subscriptions = new ObjectCentralizationSubscriptions<ScriptEffect>();
+            }
+            _ScriptEffect_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<ScriptEffect>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _ScriptEffect_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<ScriptEffect>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        ScriptEffect IPropertySupporter<ScriptEffect>.DefaultValue(int index)
+        {
+            return DefaultValueScriptEffect(index: index);
+        }
+
+        protected ScriptEffect DefaultValueScriptEffect(int index)
+        {
+            switch ((Effect_FieldIndex)index)
+            {
+                case Effect_FieldIndex.ScriptEffect:
+                    return default(ScriptEffect);
+                default:
+                    throw new ArgumentException($"Unknown index for field type ScriptEffect: {index}");
             }
         }
 
@@ -822,33 +1628,83 @@ namespace Mutagen.Bethesda.Oblivion
                             frame: dataFrame,
                             fieldIndex: (int)Effect_FieldIndex.MagicEffect,
                             errorMask: errorMask));
-                        item._Magnitude.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        var MagnitudetryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Effect_FieldIndex.Magnitude,
-                            errorMask: errorMask));
-                        item._Area.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (MagnitudetryGet.Succeeded)
+                        {
+                            item.SetMagnitude(item: MagnitudetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetMagnitude();
+                        }
+                        var AreatryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Effect_FieldIndex.Area,
-                            errorMask: errorMask));
-                        item._Duration.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (AreatryGet.Succeeded)
+                        {
+                            item.SetArea(item: AreatryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetArea();
+                        }
+                        var DurationtryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Effect_FieldIndex.Duration,
-                            errorMask: errorMask));
-                        item._Type.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Effect.EffectType>.Instance.Parse(
+                            errorMask: errorMask);
+                        if (DurationtryGet.Succeeded)
+                        {
+                            item.SetDuration(item: DurationtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetDuration();
+                        }
+                        var TypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Effect.EffectType>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Effect_FieldIndex.Type,
-                            errorMask: errorMask));
-                        item._ActorValue.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(
+                            errorMask: errorMask);
+                        if (TypetryGet.Succeeded)
+                        {
+                            item.SetType(item: TypetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetType();
+                        }
+                        var ActorValuetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Effect_FieldIndex.ActorValue,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (ActorValuetryGet.Succeeded)
+                        {
+                            item.SetActorValue(item: ActorValuetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetActorValue();
+                        }
                     }
                     return TryGet<Effect_FieldIndex?>.Succeed(Effect_FieldIndex.ActorValue);
                 case "SCIT":
-                    item._ScriptEffect.SetIfSucceededOrDefault(LoquiBinaryTranslation<ScriptEffect, ScriptEffect_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)Effect_FieldIndex.ScriptEffect,
-                        errorMask: errorMask));
+                    {
+                        var ScriptEffecttryGet = LoquiBinaryTranslation<ScriptEffect, ScriptEffect_ErrorMask>.Instance.Parse(
+                            frame: frame.Spawn(snapToFinalPosition: false),
+                            fieldIndex: (int)Effect_FieldIndex.ScriptEffect,
+                            errorMask: errorMask);
+                        if (ScriptEffecttryGet.Succeeded)
+                        {
+                            item.SetScriptEffect(item: ScriptEffecttryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetScriptEffect();
+                        }
+                    }
                     return TryGet<Effect_FieldIndex?>.Succeed(Effect_FieldIndex.ScriptEffect);
                 default:
                     return TryGet<Effect_FieldIndex?>.Failure;
@@ -977,34 +1833,34 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Effect_FieldIndex.Magnitude:
-                    this._Magnitude.Set(
+                    this.SetMagnitude(
                         (UInt32)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Effect_FieldIndex.Area:
-                    this._Area.Set(
+                    this.SetArea(
                         (UInt32)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Effect_FieldIndex.Duration:
-                    this._Duration.Set(
+                    this.SetDuration(
                         (UInt32)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Effect_FieldIndex.Type:
-                    this._Type.Set(
+                    this.SetType(
                         (Effect.EffectType)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Effect_FieldIndex.ActorValue:
-                    this._ActorValue.Set(
+                    this.SetActorValue(
                         (ActorValueExtended)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Effect_FieldIndex.ScriptEffect:
-                    this._ScriptEffect.Set(
+                    this.SetScriptEffect(
                         (ScriptEffect)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1049,34 +1905,34 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Effect_FieldIndex.Magnitude:
-                    obj._Magnitude.Set(
+                    obj.SetMagnitude(
                         (UInt32)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Effect_FieldIndex.Area:
-                    obj._Area.Set(
+                    obj.SetArea(
                         (UInt32)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Effect_FieldIndex.Duration:
-                    obj._Duration.Set(
+                    obj.SetDuration(
                         (UInt32)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Effect_FieldIndex.Type:
-                    obj._Type.Set(
+                    obj.SetType(
                         (Effect.EffectType)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Effect_FieldIndex.ActorValue:
-                    obj._ActorValue.Set(
+                    obj.SetActorValue(
                         (ActorValueExtended)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Effect_FieldIndex.ScriptEffect:
-                    obj._ScriptEffect.Set(
+                    obj.SetScriptEffect(
                         (ScriptEffect)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1186,6 +2042,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             version: 0);
 
         public const string GUID = "85ccb56e-7055-4f2a-894d-f998f0ac9ab8";
+
+        public const ushort AdditionalFieldCount = 7;
 
         public const ushort FieldCount = 7;
 
@@ -1383,7 +2241,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

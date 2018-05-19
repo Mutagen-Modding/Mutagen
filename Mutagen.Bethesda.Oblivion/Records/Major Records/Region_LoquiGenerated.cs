@@ -34,6 +34,13 @@ namespace Mutagen.Bethesda.Oblivion
         IRegion,
         ILoquiObject<Region>,
         ILoquiObjectSetter,
+        IPropertySupporter<String>,
+        IPropertySupporter<Color>,
+        IPropertySupporter<RegionDataObjects>,
+        IPropertySupporter<RegionDataWeather>,
+        IPropertySupporter<RegionDataMapName>,
+        IPropertySupporter<RegionDataGrasses>,
+        IPropertySupporter<RegionDataSounds>,
         IEquatable<Region>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -49,14 +56,47 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _Icon = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Icon_Property => _Icon;
+        protected String _Icon;
+        protected PropertyForwarder<Region, String> _IconForwarder;
+        public INotifyingSetItem<String> Icon_Property => _IconForwarder ?? (_IconForwarder = new PropertyForwarder<Region, String>(this, (int)Region_FieldIndex.Icon));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Icon
         {
-            get => this._Icon.Item;
-            set => this._Icon.Set(value);
+            get => this._Icon;
+            set => this.SetIcon(value);
+        }
+        protected void SetIcon(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Region_FieldIndex.Icon];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Icon == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Region_FieldIndex.Icon] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Icon;
+                _Icon = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Region_FieldIndex.Icon,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Icon = item;
+            }
+        }
+        protected void UnsetIcon()
+        {
+            _hasBeenSetTracker[(int)Region_FieldIndex.Icon] = false;
+            Icon = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IRegion.Icon_Property => this.Icon_Property;
@@ -64,14 +104,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> IRegionGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region MapColor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<Color> _MapColor = NotifyingSetItem.Factory<Color>(markAsSet: false);
-        public INotifyingSetItem<Color> MapColor_Property => _MapColor;
+        protected Color _MapColor;
+        protected PropertyForwarder<Region, Color> _MapColorForwarder;
+        public INotifyingSetItem<Color> MapColor_Property => _MapColorForwarder ?? (_MapColorForwarder = new PropertyForwarder<Region, Color>(this, (int)Region_FieldIndex.MapColor));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Color MapColor
         {
-            get => this._MapColor.Item;
-            set => this._MapColor.Set(value);
+            get => this._MapColor;
+            set => this.SetMapColor(value);
+        }
+        protected void SetMapColor(
+            Color item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Region_FieldIndex.MapColor];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MapColor == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Region_FieldIndex.MapColor] = hasBeenSet;
+            }
+            if (_Color_subscriptions != null)
+            {
+                var tmp = MapColor;
+                _MapColor = item;
+                _Color_subscriptions.FireSubscriptions(
+                    index: (int)Region_FieldIndex.MapColor,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _MapColor = item;
+            }
+        }
+        protected void UnsetMapColor()
+        {
+            _hasBeenSetTracker[(int)Region_FieldIndex.MapColor] = false;
+            MapColor = default(Color);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Color> IRegion.MapColor_Property => this.MapColor_Property;
@@ -104,65 +177,240 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Objects
+        protected RegionDataObjects _Objects;
+        protected PropertyForwarder<Region, RegionDataObjects> _ObjectsForwarder;
+        public INotifyingSetItem<RegionDataObjects> Objects_Property => _ObjectsForwarder ?? (_ObjectsForwarder = new PropertyForwarder<Region, RegionDataObjects>(this, (int)Region_FieldIndex.Objects));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<RegionDataObjects> _Objects = new NotifyingSetItem<RegionDataObjects>();
-        public INotifyingSetItem<RegionDataObjects> Objects_Property => this._Objects;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        RegionDataObjects IRegionGetter.Objects => this.Objects;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public RegionDataObjects Objects { get => _Objects.Item; set => _Objects.Item = value; }
+        public RegionDataObjects Objects
+        {
+            get => this._Objects;
+            set => this.SetObjects(value);
+        }
+        protected void SetObjects(
+            RegionDataObjects item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Region_FieldIndex.Objects];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Objects, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Region_FieldIndex.Objects] = hasBeenSet;
+            }
+            if (_RegionDataObjects_subscriptions != null)
+            {
+                var tmp = Objects;
+                _Objects = item;
+                _RegionDataObjects_subscriptions.FireSubscriptions(
+                    index: (int)Region_FieldIndex.Objects,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Objects = item;
+            }
+        }
+        protected void UnsetObjects()
+        {
+            _hasBeenSetTracker[(int)Region_FieldIndex.Objects] = false;
+            Objects = default(RegionDataObjects);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<RegionDataObjects> IRegion.Objects_Property => this.Objects_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<RegionDataObjects> IRegionGetter.Objects_Property => this.Objects_Property;
         #endregion
         #region Weather
+        protected RegionDataWeather _Weather;
+        protected PropertyForwarder<Region, RegionDataWeather> _WeatherForwarder;
+        public INotifyingSetItem<RegionDataWeather> Weather_Property => _WeatherForwarder ?? (_WeatherForwarder = new PropertyForwarder<Region, RegionDataWeather>(this, (int)Region_FieldIndex.Weather));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<RegionDataWeather> _Weather = new NotifyingSetItem<RegionDataWeather>();
-        public INotifyingSetItem<RegionDataWeather> Weather_Property => this._Weather;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        RegionDataWeather IRegionGetter.Weather => this.Weather;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public RegionDataWeather Weather { get => _Weather.Item; set => _Weather.Item = value; }
+        public RegionDataWeather Weather
+        {
+            get => this._Weather;
+            set => this.SetWeather(value);
+        }
+        protected void SetWeather(
+            RegionDataWeather item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Region_FieldIndex.Weather];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Weather, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Region_FieldIndex.Weather] = hasBeenSet;
+            }
+            if (_RegionDataWeather_subscriptions != null)
+            {
+                var tmp = Weather;
+                _Weather = item;
+                _RegionDataWeather_subscriptions.FireSubscriptions(
+                    index: (int)Region_FieldIndex.Weather,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Weather = item;
+            }
+        }
+        protected void UnsetWeather()
+        {
+            _hasBeenSetTracker[(int)Region_FieldIndex.Weather] = false;
+            Weather = default(RegionDataWeather);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<RegionDataWeather> IRegion.Weather_Property => this.Weather_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<RegionDataWeather> IRegionGetter.Weather_Property => this.Weather_Property;
         #endregion
         #region MapName
+        protected RegionDataMapName _MapName;
+        protected PropertyForwarder<Region, RegionDataMapName> _MapNameForwarder;
+        public INotifyingSetItem<RegionDataMapName> MapName_Property => _MapNameForwarder ?? (_MapNameForwarder = new PropertyForwarder<Region, RegionDataMapName>(this, (int)Region_FieldIndex.MapName));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<RegionDataMapName> _MapName = new NotifyingSetItem<RegionDataMapName>();
-        public INotifyingSetItem<RegionDataMapName> MapName_Property => this._MapName;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        RegionDataMapName IRegionGetter.MapName => this.MapName;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public RegionDataMapName MapName { get => _MapName.Item; set => _MapName.Item = value; }
+        public RegionDataMapName MapName
+        {
+            get => this._MapName;
+            set => this.SetMapName(value);
+        }
+        protected void SetMapName(
+            RegionDataMapName item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Region_FieldIndex.MapName];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(MapName, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Region_FieldIndex.MapName] = hasBeenSet;
+            }
+            if (_RegionDataMapName_subscriptions != null)
+            {
+                var tmp = MapName;
+                _MapName = item;
+                _RegionDataMapName_subscriptions.FireSubscriptions(
+                    index: (int)Region_FieldIndex.MapName,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _MapName = item;
+            }
+        }
+        protected void UnsetMapName()
+        {
+            _hasBeenSetTracker[(int)Region_FieldIndex.MapName] = false;
+            MapName = default(RegionDataMapName);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<RegionDataMapName> IRegion.MapName_Property => this.MapName_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<RegionDataMapName> IRegionGetter.MapName_Property => this.MapName_Property;
         #endregion
         #region Grasses
+        protected RegionDataGrasses _Grasses;
+        protected PropertyForwarder<Region, RegionDataGrasses> _GrassesForwarder;
+        public INotifyingSetItem<RegionDataGrasses> Grasses_Property => _GrassesForwarder ?? (_GrassesForwarder = new PropertyForwarder<Region, RegionDataGrasses>(this, (int)Region_FieldIndex.Grasses));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<RegionDataGrasses> _Grasses = new NotifyingSetItem<RegionDataGrasses>();
-        public INotifyingSetItem<RegionDataGrasses> Grasses_Property => this._Grasses;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        RegionDataGrasses IRegionGetter.Grasses => this.Grasses;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public RegionDataGrasses Grasses { get => _Grasses.Item; set => _Grasses.Item = value; }
+        public RegionDataGrasses Grasses
+        {
+            get => this._Grasses;
+            set => this.SetGrasses(value);
+        }
+        protected void SetGrasses(
+            RegionDataGrasses item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Region_FieldIndex.Grasses];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Grasses, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Region_FieldIndex.Grasses] = hasBeenSet;
+            }
+            if (_RegionDataGrasses_subscriptions != null)
+            {
+                var tmp = Grasses;
+                _Grasses = item;
+                _RegionDataGrasses_subscriptions.FireSubscriptions(
+                    index: (int)Region_FieldIndex.Grasses,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Grasses = item;
+            }
+        }
+        protected void UnsetGrasses()
+        {
+            _hasBeenSetTracker[(int)Region_FieldIndex.Grasses] = false;
+            Grasses = default(RegionDataGrasses);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<RegionDataGrasses> IRegion.Grasses_Property => this.Grasses_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<RegionDataGrasses> IRegionGetter.Grasses_Property => this.Grasses_Property;
         #endregion
         #region Sounds
+        protected RegionDataSounds _Sounds;
+        protected PropertyForwarder<Region, RegionDataSounds> _SoundsForwarder;
+        public INotifyingSetItem<RegionDataSounds> Sounds_Property => _SoundsForwarder ?? (_SoundsForwarder = new PropertyForwarder<Region, RegionDataSounds>(this, (int)Region_FieldIndex.Sounds));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<RegionDataSounds> _Sounds = new NotifyingSetItem<RegionDataSounds>();
-        public INotifyingSetItem<RegionDataSounds> Sounds_Property => this._Sounds;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        RegionDataSounds IRegionGetter.Sounds => this.Sounds;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public RegionDataSounds Sounds { get => _Sounds.Item; set => _Sounds.Item = value; }
+        public RegionDataSounds Sounds
+        {
+            get => this._Sounds;
+            set => this.SetSounds(value);
+        }
+        protected void SetSounds(
+            RegionDataSounds item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Region_FieldIndex.Sounds];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Sounds, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Region_FieldIndex.Sounds] = hasBeenSet;
+            }
+            if (_RegionDataSounds_subscriptions != null)
+            {
+                var tmp = Sounds;
+                _Sounds = item;
+                _RegionDataSounds_subscriptions.FireSubscriptions(
+                    index: (int)Region_FieldIndex.Sounds,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Sounds = item;
+            }
+        }
+        protected void UnsetSounds()
+        {
+            _hasBeenSetTracker[(int)Region_FieldIndex.Sounds] = false;
+            Sounds = default(RegionDataSounds);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<RegionDataSounds> IRegion.Sounds_Property => this.Sounds_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -600,16 +848,32 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Icon":
-                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var IcontryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Region_FieldIndex.Icon,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (IcontryGet.Succeeded)
+                    {
+                        item.SetIcon(item: IcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetIcon();
+                    }
                     break;
                 case "MapColor":
-                    item._MapColor.SetIfSucceededOrDefault(ColorXmlTranslation.Instance.ParseNonNull(
+                    var MapColortryGet = ColorXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Region_FieldIndex.MapColor,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MapColortryGet.Succeeded)
+                    {
+                        item.SetMapColor(item: MapColortryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMapColor();
+                    }
                     break;
                 case "Worldspace":
                     item.Worldspace_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
@@ -632,34 +896,74 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "Objects":
-                    item._Objects.SetIfSucceededOrDefault(LoquiXmlTranslation<RegionDataObjects, RegionDataObjects_ErrorMask>.Instance.Parse(
+                    var ObjectstryGet = LoquiXmlTranslation<RegionDataObjects, RegionDataObjects_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Region_FieldIndex.Objects,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ObjectstryGet.Succeeded)
+                    {
+                        item.SetObjects(item: ObjectstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetObjects();
+                    }
                     break;
                 case "Weather":
-                    item._Weather.SetIfSucceededOrDefault(LoquiXmlTranslation<RegionDataWeather, RegionDataWeather_ErrorMask>.Instance.Parse(
+                    var WeathertryGet = LoquiXmlTranslation<RegionDataWeather, RegionDataWeather_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Region_FieldIndex.Weather,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (WeathertryGet.Succeeded)
+                    {
+                        item.SetWeather(item: WeathertryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetWeather();
+                    }
                     break;
                 case "MapName":
-                    item._MapName.SetIfSucceededOrDefault(LoquiXmlTranslation<RegionDataMapName, RegionDataMapName_ErrorMask>.Instance.Parse(
+                    var MapNametryGet = LoquiXmlTranslation<RegionDataMapName, RegionDataMapName_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Region_FieldIndex.MapName,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MapNametryGet.Succeeded)
+                    {
+                        item.SetMapName(item: MapNametryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMapName();
+                    }
                     break;
                 case "Grasses":
-                    item._Grasses.SetIfSucceededOrDefault(LoquiXmlTranslation<RegionDataGrasses, RegionDataGrasses_ErrorMask>.Instance.Parse(
+                    var GrassestryGet = LoquiXmlTranslation<RegionDataGrasses, RegionDataGrasses_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Region_FieldIndex.Grasses,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (GrassestryGet.Succeeded)
+                    {
+                        item.SetGrasses(item: GrassestryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetGrasses();
+                    }
                     break;
                 case "Sounds":
-                    item._Sounds.SetIfSucceededOrDefault(LoquiXmlTranslation<RegionDataSounds, RegionDataSounds_ErrorMask>.Instance.Parse(
+                    var SoundstryGet = LoquiXmlTranslation<RegionDataSounds, RegionDataSounds_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Region_FieldIndex.Sounds,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (SoundstryGet.Succeeded)
+                    {
+                        item.SetSounds(item: SoundstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetSounds();
+                    }
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(
@@ -668,6 +972,944 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter String
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected override String GetString(int index)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.Icon:
+                    return Icon;
+                default:
+                    return base.GetString(index: index);
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.Icon:
+                    SetIcon(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetString(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.Icon:
+                    _hasBeenSetTracker[index] = false;
+                    Icon = default(String);
+                    break;
+                default:
+                    base.UnsetString(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected override String DefaultValueString(int index)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.Icon:
+                    return default(String);
+                default:
+                    return base.DefaultValueString(index: index);
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Color
+        protected ObjectCentralizationSubscriptions<Color> _Color_subscriptions;
+        Color IPropertySupporter<Color>.Get(int index)
+        {
+            return GetColor(index: index);
+        }
+
+        protected Color GetColor(int index)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.MapColor:
+                    return MapColor;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
+            }
+        }
+
+        void IPropertySupporter<Color>.Set(
+            int index,
+            Color item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetColor(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetColor(
+            int index,
+            Color item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.MapColor:
+                    SetMapColor(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Color>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Color>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Color>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetColor(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetColor(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.MapColor:
+                    _hasBeenSetTracker[index] = false;
+                    MapColor = default(Color);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Color>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Color> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Color_subscriptions == null)
+            {
+                _Color_subscriptions = new ObjectCentralizationSubscriptions<Color>();
+            }
+            _Color_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Color>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Color_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Color>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Color IPropertySupporter<Color>.DefaultValue(int index)
+        {
+            return DefaultValueColor(index: index);
+        }
+
+        protected Color DefaultValueColor(int index)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.MapColor:
+                    return default(Color);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter RegionDataObjects
+        protected ObjectCentralizationSubscriptions<RegionDataObjects> _RegionDataObjects_subscriptions;
+        RegionDataObjects IPropertySupporter<RegionDataObjects>.Get(int index)
+        {
+            return GetRegionDataObjects(index: index);
+        }
+
+        protected RegionDataObjects GetRegionDataObjects(int index)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.Objects:
+                    return Objects;
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionDataObjects: {index}");
+            }
+        }
+
+        void IPropertySupporter<RegionDataObjects>.Set(
+            int index,
+            RegionDataObjects item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetRegionDataObjects(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetRegionDataObjects(
+            int index,
+            RegionDataObjects item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.Objects:
+                    SetObjects(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionDataObjects: {index}");
+            }
+        }
+
+        bool IPropertySupporter<RegionDataObjects>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<RegionDataObjects>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<RegionDataObjects>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetRegionDataObjects(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetRegionDataObjects(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.Objects:
+                    _hasBeenSetTracker[index] = false;
+                    Objects = default(RegionDataObjects);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionDataObjects: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<RegionDataObjects>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<RegionDataObjects> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_RegionDataObjects_subscriptions == null)
+            {
+                _RegionDataObjects_subscriptions = new ObjectCentralizationSubscriptions<RegionDataObjects>();
+            }
+            _RegionDataObjects_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<RegionDataObjects>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _RegionDataObjects_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<RegionDataObjects>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        RegionDataObjects IPropertySupporter<RegionDataObjects>.DefaultValue(int index)
+        {
+            return DefaultValueRegionDataObjects(index: index);
+        }
+
+        protected RegionDataObjects DefaultValueRegionDataObjects(int index)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.Objects:
+                    return default(RegionDataObjects);
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionDataObjects: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter RegionDataWeather
+        protected ObjectCentralizationSubscriptions<RegionDataWeather> _RegionDataWeather_subscriptions;
+        RegionDataWeather IPropertySupporter<RegionDataWeather>.Get(int index)
+        {
+            return GetRegionDataWeather(index: index);
+        }
+
+        protected RegionDataWeather GetRegionDataWeather(int index)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.Weather:
+                    return Weather;
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionDataWeather: {index}");
+            }
+        }
+
+        void IPropertySupporter<RegionDataWeather>.Set(
+            int index,
+            RegionDataWeather item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetRegionDataWeather(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetRegionDataWeather(
+            int index,
+            RegionDataWeather item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.Weather:
+                    SetWeather(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionDataWeather: {index}");
+            }
+        }
+
+        bool IPropertySupporter<RegionDataWeather>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<RegionDataWeather>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<RegionDataWeather>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetRegionDataWeather(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetRegionDataWeather(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.Weather:
+                    _hasBeenSetTracker[index] = false;
+                    Weather = default(RegionDataWeather);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionDataWeather: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<RegionDataWeather>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<RegionDataWeather> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_RegionDataWeather_subscriptions == null)
+            {
+                _RegionDataWeather_subscriptions = new ObjectCentralizationSubscriptions<RegionDataWeather>();
+            }
+            _RegionDataWeather_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<RegionDataWeather>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _RegionDataWeather_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<RegionDataWeather>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        RegionDataWeather IPropertySupporter<RegionDataWeather>.DefaultValue(int index)
+        {
+            return DefaultValueRegionDataWeather(index: index);
+        }
+
+        protected RegionDataWeather DefaultValueRegionDataWeather(int index)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.Weather:
+                    return default(RegionDataWeather);
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionDataWeather: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter RegionDataMapName
+        protected ObjectCentralizationSubscriptions<RegionDataMapName> _RegionDataMapName_subscriptions;
+        RegionDataMapName IPropertySupporter<RegionDataMapName>.Get(int index)
+        {
+            return GetRegionDataMapName(index: index);
+        }
+
+        protected RegionDataMapName GetRegionDataMapName(int index)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.MapName:
+                    return MapName;
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionDataMapName: {index}");
+            }
+        }
+
+        void IPropertySupporter<RegionDataMapName>.Set(
+            int index,
+            RegionDataMapName item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetRegionDataMapName(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetRegionDataMapName(
+            int index,
+            RegionDataMapName item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.MapName:
+                    SetMapName(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionDataMapName: {index}");
+            }
+        }
+
+        bool IPropertySupporter<RegionDataMapName>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<RegionDataMapName>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<RegionDataMapName>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetRegionDataMapName(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetRegionDataMapName(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.MapName:
+                    _hasBeenSetTracker[index] = false;
+                    MapName = default(RegionDataMapName);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionDataMapName: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<RegionDataMapName>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<RegionDataMapName> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_RegionDataMapName_subscriptions == null)
+            {
+                _RegionDataMapName_subscriptions = new ObjectCentralizationSubscriptions<RegionDataMapName>();
+            }
+            _RegionDataMapName_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<RegionDataMapName>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _RegionDataMapName_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<RegionDataMapName>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        RegionDataMapName IPropertySupporter<RegionDataMapName>.DefaultValue(int index)
+        {
+            return DefaultValueRegionDataMapName(index: index);
+        }
+
+        protected RegionDataMapName DefaultValueRegionDataMapName(int index)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.MapName:
+                    return default(RegionDataMapName);
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionDataMapName: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter RegionDataGrasses
+        protected ObjectCentralizationSubscriptions<RegionDataGrasses> _RegionDataGrasses_subscriptions;
+        RegionDataGrasses IPropertySupporter<RegionDataGrasses>.Get(int index)
+        {
+            return GetRegionDataGrasses(index: index);
+        }
+
+        protected RegionDataGrasses GetRegionDataGrasses(int index)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.Grasses:
+                    return Grasses;
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionDataGrasses: {index}");
+            }
+        }
+
+        void IPropertySupporter<RegionDataGrasses>.Set(
+            int index,
+            RegionDataGrasses item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetRegionDataGrasses(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetRegionDataGrasses(
+            int index,
+            RegionDataGrasses item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.Grasses:
+                    SetGrasses(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionDataGrasses: {index}");
+            }
+        }
+
+        bool IPropertySupporter<RegionDataGrasses>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<RegionDataGrasses>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<RegionDataGrasses>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetRegionDataGrasses(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetRegionDataGrasses(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.Grasses:
+                    _hasBeenSetTracker[index] = false;
+                    Grasses = default(RegionDataGrasses);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionDataGrasses: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<RegionDataGrasses>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<RegionDataGrasses> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_RegionDataGrasses_subscriptions == null)
+            {
+                _RegionDataGrasses_subscriptions = new ObjectCentralizationSubscriptions<RegionDataGrasses>();
+            }
+            _RegionDataGrasses_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<RegionDataGrasses>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _RegionDataGrasses_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<RegionDataGrasses>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        RegionDataGrasses IPropertySupporter<RegionDataGrasses>.DefaultValue(int index)
+        {
+            return DefaultValueRegionDataGrasses(index: index);
+        }
+
+        protected RegionDataGrasses DefaultValueRegionDataGrasses(int index)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.Grasses:
+                    return default(RegionDataGrasses);
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionDataGrasses: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter RegionDataSounds
+        protected ObjectCentralizationSubscriptions<RegionDataSounds> _RegionDataSounds_subscriptions;
+        RegionDataSounds IPropertySupporter<RegionDataSounds>.Get(int index)
+        {
+            return GetRegionDataSounds(index: index);
+        }
+
+        protected RegionDataSounds GetRegionDataSounds(int index)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.Sounds:
+                    return Sounds;
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionDataSounds: {index}");
+            }
+        }
+
+        void IPropertySupporter<RegionDataSounds>.Set(
+            int index,
+            RegionDataSounds item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetRegionDataSounds(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetRegionDataSounds(
+            int index,
+            RegionDataSounds item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.Sounds:
+                    SetSounds(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionDataSounds: {index}");
+            }
+        }
+
+        bool IPropertySupporter<RegionDataSounds>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<RegionDataSounds>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<RegionDataSounds>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetRegionDataSounds(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetRegionDataSounds(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.Sounds:
+                    _hasBeenSetTracker[index] = false;
+                    Sounds = default(RegionDataSounds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionDataSounds: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<RegionDataSounds>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<RegionDataSounds> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_RegionDataSounds_subscriptions == null)
+            {
+                _RegionDataSounds_subscriptions = new ObjectCentralizationSubscriptions<RegionDataSounds>();
+            }
+            _RegionDataSounds_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<RegionDataSounds>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _RegionDataSounds_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<RegionDataSounds>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        RegionDataSounds IPropertySupporter<RegionDataSounds>.DefaultValue(int index)
+        {
+            return DefaultValueRegionDataSounds(index: index);
+        }
+
+        protected RegionDataSounds DefaultValueRegionDataSounds(int index)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.Sounds:
+                    return default(RegionDataSounds);
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionDataSounds: {index}");
             }
         }
 
@@ -941,19 +2183,35 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var IcontryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Region_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (IcontryGet.Succeeded)
+                    {
+                        item.SetIcon(item: IcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetIcon();
+                    }
                     return TryGet<Region_FieldIndex?>.Succeed(Region_FieldIndex.Icon);
                 case "RCLR":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._MapColor.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                    var MapColortryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Region_FieldIndex.MapColor,
                         errorMask: errorMask,
-                        extraByte: true));
+                        extraByte: true);
+                    if (MapColortryGet.Succeeded)
+                    {
+                        item.SetMapColor(item: MapColortryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMapColor();
+                    }
                     return TryGet<Region_FieldIndex?>.Succeed(Region_FieldIndex.MapColor);
                 case "WNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -1108,14 +2366,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Region_FieldIndex.Icon:
-                    this._Icon.Set(
+                    this.SetIcon(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Region_FieldIndex.MapColor:
-                    this._MapColor.Set(
+                    this.SetMapColor(
                         (Color)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Region_FieldIndex.Worldspace:
                     this.Worldspace_Property.Set(
@@ -1126,29 +2384,29 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Areas.SetTo((IEnumerable<RegionArea>)obj, cmds);
                     break;
                 case Region_FieldIndex.Objects:
-                    this._Objects.Set(
+                    this.SetObjects(
                         (RegionDataObjects)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Region_FieldIndex.Weather:
-                    this._Weather.Set(
+                    this.SetWeather(
                         (RegionDataWeather)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Region_FieldIndex.MapName:
-                    this._MapName.Set(
+                    this.SetMapName(
                         (RegionDataMapName)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Region_FieldIndex.Grasses:
-                    this._Grasses.Set(
+                    this.SetGrasses(
                         (RegionDataGrasses)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Region_FieldIndex.Sounds:
-                    this._Sounds.Set(
+                    this.SetSounds(
                         (RegionDataSounds)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1182,14 +2440,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Region_FieldIndex.Icon:
-                    obj._Icon.Set(
+                    obj.SetIcon(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Region_FieldIndex.MapColor:
-                    obj._MapColor.Set(
+                    obj.SetMapColor(
                         (Color)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Region_FieldIndex.Worldspace:
                     obj.Worldspace_Property.Set(
@@ -1200,29 +2458,29 @@ namespace Mutagen.Bethesda.Oblivion
                     obj._Areas.SetTo((IEnumerable<RegionArea>)pair.Value, null);
                     break;
                 case Region_FieldIndex.Objects:
-                    obj._Objects.Set(
+                    obj.SetObjects(
                         (RegionDataObjects)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Region_FieldIndex.Weather:
-                    obj._Weather.Set(
+                    obj.SetWeather(
                         (RegionDataWeather)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Region_FieldIndex.MapName:
-                    obj._MapName.Set(
+                    obj.SetMapName(
                         (RegionDataMapName)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Region_FieldIndex.Grasses:
-                    obj._Grasses.Set(
+                    obj.SetGrasses(
                         (RegionDataGrasses)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Region_FieldIndex.Sounds:
-                    obj._Sounds.Set(
+                    obj.SetSounds(
                         (RegionDataSounds)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1352,7 +2610,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "638d02e0-687a-49ad-a934-6f2ed1e05c3a";
 
-        public const ushort FieldCount = 9;
+        public const ushort AdditionalFieldCount = 9;
+
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(Region_Mask<>);
 
@@ -1575,7 +2835,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1627,8 +2888,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Icon_Property.SetToWithDefault(
                         rhs: rhs.Icon_Property,
-                        def: def?.Icon_Property,
-                        cmds: cmds);
+                        def: def?.Icon_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1642,8 +2902,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.MapColor_Property.SetToWithDefault(
                         rhs: rhs.MapColor_Property,
-                        def: def?.MapColor_Property,
-                        cmds: cmds);
+                        def: def?.MapColor_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

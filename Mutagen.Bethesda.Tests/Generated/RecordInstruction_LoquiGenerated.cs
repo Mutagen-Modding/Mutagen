@@ -413,10 +413,18 @@ namespace Mutagen.Bethesda.Tests
             switch (name)
             {
                 case "Record":
-                    item.Record = FormIDXmlTranslation.Instance.ParseNonNull(
+                    var RecordtryGet = FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RecordInstruction_FieldIndex.Record,
-                        errorMask: errorMask).GetOrDefault(item.Record);
+                        errorMask: errorMask);
+                    if (RecordtryGet.Succeeded)
+                    {
+                        item.Record = RecordtryGet.Value;
+                    }
+                    else
+                    {
+                        item.Record = default(FormID);
+                    }
                     break;
                 default:
                     Instruction.Fill_XML_Internal(
@@ -628,7 +636,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const string GUID = "bf254321-e86f-49a5-9699-105f6b5d2457";
 
-        public const ushort FieldCount = 1;
+        public const ushort AdditionalFieldCount = 1;
+
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(RecordInstruction_Mask<>);
 
@@ -751,7 +761,8 @@ namespace Mutagen.Bethesda.Tests.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

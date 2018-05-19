@@ -30,6 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
         IDistantLODData,
         ILoquiObject<DistantLODData>,
         ILoquiObjectSetter,
+        IPropertySupporter<Single>,
         IEquatable<DistantLODData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -39,20 +40,54 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public DistantLODData()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Unknown0
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _Unknown0 = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> Unknown0_Property => _Unknown0;
+        protected Single _Unknown0;
+        protected PropertyForwarder<DistantLODData, Single> _Unknown0Forwarder;
+        public INotifyingSetItem<Single> Unknown0_Property => _Unknown0Forwarder ?? (_Unknown0Forwarder = new PropertyForwarder<DistantLODData, Single>(this, (int)DistantLODData_FieldIndex.Unknown0));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Unknown0
         {
-            get => this._Unknown0.Item;
-            set => this._Unknown0.Set(value);
+            get => this._Unknown0;
+            set => this.SetUnknown0(value);
+        }
+        protected void SetUnknown0(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)DistantLODData_FieldIndex.Unknown0];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Unknown0 == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)DistantLODData_FieldIndex.Unknown0] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = Unknown0;
+                _Unknown0 = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)DistantLODData_FieldIndex.Unknown0,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Unknown0 = item;
+            }
+        }
+        protected void UnsetUnknown0()
+        {
+            _hasBeenSetTracker[(int)DistantLODData_FieldIndex.Unknown0] = false;
+            Unknown0 = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IDistantLODData.Unknown0_Property => this.Unknown0_Property;
@@ -60,14 +95,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IDistantLODDataGetter.Unknown0_Property => this.Unknown0_Property;
         #endregion
         #region Unknown1
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _Unknown1 = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> Unknown1_Property => _Unknown1;
+        protected Single _Unknown1;
+        protected PropertyForwarder<DistantLODData, Single> _Unknown1Forwarder;
+        public INotifyingSetItem<Single> Unknown1_Property => _Unknown1Forwarder ?? (_Unknown1Forwarder = new PropertyForwarder<DistantLODData, Single>(this, (int)DistantLODData_FieldIndex.Unknown1));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Unknown1
         {
-            get => this._Unknown1.Item;
-            set => this._Unknown1.Set(value);
+            get => this._Unknown1;
+            set => this.SetUnknown1(value);
+        }
+        protected void SetUnknown1(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)DistantLODData_FieldIndex.Unknown1];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Unknown1 == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)DistantLODData_FieldIndex.Unknown1] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = Unknown1;
+                _Unknown1 = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)DistantLODData_FieldIndex.Unknown1,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Unknown1 = item;
+            }
+        }
+        protected void UnsetUnknown1()
+        {
+            _hasBeenSetTracker[(int)DistantLODData_FieldIndex.Unknown1] = false;
+            Unknown1 = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IDistantLODData.Unknown1_Property => this.Unknown1_Property;
@@ -75,14 +143,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IDistantLODDataGetter.Unknown1_Property => this.Unknown1_Property;
         #endregion
         #region Unknown2
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _Unknown2 = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> Unknown2_Property => _Unknown2;
+        protected Single _Unknown2;
+        protected PropertyForwarder<DistantLODData, Single> _Unknown2Forwarder;
+        public INotifyingSetItem<Single> Unknown2_Property => _Unknown2Forwarder ?? (_Unknown2Forwarder = new PropertyForwarder<DistantLODData, Single>(this, (int)DistantLODData_FieldIndex.Unknown2));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Unknown2
         {
-            get => this._Unknown2.Item;
-            set => this._Unknown2.Set(value);
+            get => this._Unknown2;
+            set => this.SetUnknown2(value);
+        }
+        protected void SetUnknown2(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)DistantLODData_FieldIndex.Unknown2];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Unknown2 == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)DistantLODData_FieldIndex.Unknown2] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = Unknown2;
+                _Unknown2 = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)DistantLODData_FieldIndex.Unknown2,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Unknown2 = item;
+            }
+        }
+        protected void UnsetUnknown2()
+        {
+            _hasBeenSetTracker[(int)DistantLODData_FieldIndex.Unknown2] = false;
+            Unknown2 = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IDistantLODData.Unknown2_Property => this.Unknown2_Property;
@@ -436,25 +537,203 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Unknown0":
-                    item._Unknown0.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var Unknown0tryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)DistantLODData_FieldIndex.Unknown0,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (Unknown0tryGet.Succeeded)
+                    {
+                        item.SetUnknown0(item: Unknown0tryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetUnknown0();
+                    }
                     break;
                 case "Unknown1":
-                    item._Unknown1.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var Unknown1tryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)DistantLODData_FieldIndex.Unknown1,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (Unknown1tryGet.Succeeded)
+                    {
+                        item.SetUnknown1(item: Unknown1tryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetUnknown1();
+                    }
                     break;
                 case "Unknown2":
-                    item._Unknown2.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var Unknown2tryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)DistantLODData_FieldIndex.Unknown2,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (Unknown2tryGet.Succeeded)
+                    {
+                        item.SetUnknown2(item: Unknown2tryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetUnknown2();
+                    }
                     break;
                 default:
                     break;
+            }
+        }
+
+        #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        #region IPropertySupporter Single
+        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
+        Single IPropertySupporter<Single>.Get(int index)
+        {
+            return GetSingle(index: index);
+        }
+
+        protected Single GetSingle(int index)
+        {
+            switch ((DistantLODData_FieldIndex)index)
+            {
+                case DistantLODData_FieldIndex.Unknown0:
+                    return Unknown0;
+                case DistantLODData_FieldIndex.Unknown1:
+                    return Unknown1;
+                case DistantLODData_FieldIndex.Unknown2:
+                    return Unknown2;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        void IPropertySupporter<Single>.Set(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSingle(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetSingle(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((DistantLODData_FieldIndex)index)
+            {
+                case DistantLODData_FieldIndex.Unknown0:
+                    SetUnknown0(item, hasBeenSet, cmds);
+                    break;
+                case DistantLODData_FieldIndex.Unknown1:
+                    SetUnknown1(item, hasBeenSet, cmds);
+                    break;
+                case DistantLODData_FieldIndex.Unknown2:
+                    SetUnknown2(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Single>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Single>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSingle(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetSingle(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((DistantLODData_FieldIndex)index)
+            {
+                case DistantLODData_FieldIndex.Unknown0:
+                    _hasBeenSetTracker[index] = false;
+                    Unknown0 = default(Single);
+                    break;
+                case DistantLODData_FieldIndex.Unknown1:
+                    _hasBeenSetTracker[index] = false;
+                    Unknown1 = default(Single);
+                    break;
+                case DistantLODData_FieldIndex.Unknown2:
+                    _hasBeenSetTracker[index] = false;
+                    Unknown2 = default(Single);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Single> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Single_subscriptions == null)
+            {
+                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
+            }
+            _Single_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Single_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Single IPropertySupporter<Single>.DefaultValue(int index)
+        {
+            return DefaultValueSingle(index: index);
+        }
+
+        protected Single DefaultValueSingle(int index)
+        {
+            switch ((DistantLODData_FieldIndex)index)
+            {
+                case DistantLODData_FieldIndex.Unknown0:
+                case DistantLODData_FieldIndex.Unknown1:
+                case DistantLODData_FieldIndex.Unknown2:
+                    return default(Single);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
             }
         }
 
@@ -660,18 +939,42 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<DistantLODData_ErrorMask> errorMask)
         {
-            item._Unknown0.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+            var Unknown0tryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)DistantLODData_FieldIndex.Unknown0,
-                errorMask: errorMask));
-            item._Unknown1.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            if (Unknown0tryGet.Succeeded)
+            {
+                item.SetUnknown0(item: Unknown0tryGet.Value);
+            }
+            else
+            {
+                item.UnsetUnknown0();
+            }
+            var Unknown1tryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)DistantLODData_FieldIndex.Unknown1,
-                errorMask: errorMask));
-            item._Unknown2.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            if (Unknown1tryGet.Succeeded)
+            {
+                item.SetUnknown1(item: Unknown1tryGet.Value);
+            }
+            else
+            {
+                item.UnsetUnknown1();
+            }
+            var Unknown2tryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)DistantLODData_FieldIndex.Unknown2,
-                errorMask: errorMask));
+                errorMask: errorMask);
+            if (Unknown2tryGet.Succeeded)
+            {
+                item.SetUnknown2(item: Unknown2tryGet.Value);
+            }
+            else
+            {
+                item.UnsetUnknown2();
+            }
         }
 
         #endregion
@@ -791,19 +1094,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case DistantLODData_FieldIndex.Unknown0:
-                    this._Unknown0.Set(
+                    this.SetUnknown0(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case DistantLODData_FieldIndex.Unknown1:
-                    this._Unknown1.Set(
+                    this.SetUnknown1(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case DistantLODData_FieldIndex.Unknown2:
-                    this._Unknown2.Set(
+                    this.SetUnknown2(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -843,19 +1146,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case DistantLODData_FieldIndex.Unknown0:
-                    obj._Unknown0.Set(
+                    obj.SetUnknown0(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case DistantLODData_FieldIndex.Unknown1:
-                    obj._Unknown1.Set(
+                    obj.SetUnknown1(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case DistantLODData_FieldIndex.Unknown2:
-                    obj._Unknown2.Set(
+                    obj.SetUnknown2(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -931,6 +1234,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             version: 0);
 
         public const string GUID = "d259776d-0a81-447e-8981-6b3af132e18c";
+
+        public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
 
@@ -1081,7 +1386,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

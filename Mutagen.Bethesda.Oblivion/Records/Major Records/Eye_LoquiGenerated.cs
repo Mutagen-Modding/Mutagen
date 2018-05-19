@@ -32,6 +32,8 @@ namespace Mutagen.Bethesda.Oblivion
         IEye,
         ILoquiObject<Eye>,
         ILoquiObjectSetter,
+        IPropertySupporter<String>,
+        IPropertySupporter<Eye.Flag>,
         IEquatable<Eye>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -47,14 +49,47 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _Icon = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Icon_Property => _Icon;
+        protected String _Icon;
+        protected PropertyForwarder<Eye, String> _IconForwarder;
+        public INotifyingSetItem<String> Icon_Property => _IconForwarder ?? (_IconForwarder = new PropertyForwarder<Eye, String>(this, (int)Eye_FieldIndex.Icon));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Icon
         {
-            get => this._Icon.Item;
-            set => this._Icon.Set(value);
+            get => this._Icon;
+            set => this.SetIcon(value);
+        }
+        protected void SetIcon(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Eye_FieldIndex.Icon];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Icon == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Eye_FieldIndex.Icon] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Icon;
+                _Icon = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Eye_FieldIndex.Icon,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Icon = item;
+            }
+        }
+        protected void UnsetIcon()
+        {
+            _hasBeenSetTracker[(int)Eye_FieldIndex.Icon] = false;
+            Icon = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IEye.Icon_Property => this.Icon_Property;
@@ -62,14 +97,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> IEyeGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<Eye.Flag> _Flags = NotifyingSetItem.Factory<Eye.Flag>(markAsSet: false);
-        public INotifyingSetItem<Eye.Flag> Flags_Property => _Flags;
+        protected Eye.Flag _Flags;
+        protected PropertyForwarder<Eye, Eye.Flag> _FlagsForwarder;
+        public INotifyingSetItem<Eye.Flag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<Eye, Eye.Flag>(this, (int)Eye_FieldIndex.Flags));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Eye.Flag Flags
         {
-            get => this._Flags.Item;
-            set => this._Flags.Set(value);
+            get => this._Flags;
+            set => this.SetFlags(value);
+        }
+        protected void SetFlags(
+            Eye.Flag item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Eye_FieldIndex.Flags];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Eye_FieldIndex.Flags] = hasBeenSet;
+            }
+            if (_EyeFlag_subscriptions != null)
+            {
+                var tmp = Flags;
+                _Flags = item;
+                _EyeFlag_subscriptions.FireSubscriptions(
+                    index: (int)Eye_FieldIndex.Flags,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Flags = item;
+            }
+        }
+        protected void UnsetFlags()
+        {
+            _hasBeenSetTracker[(int)Eye_FieldIndex.Flags] = false;
+            Flags = default(Eye.Flag);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Eye.Flag> IEye.Flags_Property => this.Flags_Property;
@@ -457,17 +525,33 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Icon":
-                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var IcontryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Eye_FieldIndex.Icon,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (IcontryGet.Succeeded)
+                    {
+                        item.SetIcon(item: IcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetIcon();
+                    }
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<Eye.Flag>.Instance.Parse(
+                    var FlagstryGet = EnumXmlTranslation<Eye.Flag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Eye_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (FlagstryGet.Succeeded)
+                    {
+                        item.SetFlags(item: FlagstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFlags();
+                    }
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -476,6 +560,279 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter String
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected override String GetString(int index)
+        {
+            switch ((Eye_FieldIndex)index)
+            {
+                case Eye_FieldIndex.Icon:
+                    return Icon;
+                default:
+                    return base.GetString(index: index);
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Eye_FieldIndex)index)
+            {
+                case Eye_FieldIndex.Icon:
+                    SetIcon(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetString(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Eye_FieldIndex)index)
+            {
+                case Eye_FieldIndex.Icon:
+                    _hasBeenSetTracker[index] = false;
+                    Icon = default(String);
+                    break;
+                default:
+                    base.UnsetString(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected override String DefaultValueString(int index)
+        {
+            switch ((Eye_FieldIndex)index)
+            {
+                case Eye_FieldIndex.Icon:
+                    return default(String);
+                default:
+                    return base.DefaultValueString(index: index);
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Eye.Flag
+        protected ObjectCentralizationSubscriptions<Eye.Flag> _EyeFlag_subscriptions;
+        Eye.Flag IPropertySupporter<Eye.Flag>.Get(int index)
+        {
+            return GetEyeFlag(index: index);
+        }
+
+        protected Eye.Flag GetEyeFlag(int index)
+        {
+            switch ((Eye_FieldIndex)index)
+            {
+                case Eye_FieldIndex.Flags:
+                    return Flags;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Eye.Flag: {index}");
+            }
+        }
+
+        void IPropertySupporter<Eye.Flag>.Set(
+            int index,
+            Eye.Flag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetEyeFlag(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetEyeFlag(
+            int index,
+            Eye.Flag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Eye_FieldIndex)index)
+            {
+                case Eye_FieldIndex.Flags:
+                    SetFlags(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Eye.Flag: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Eye.Flag>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Eye.Flag>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Eye.Flag>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetEyeFlag(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetEyeFlag(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Eye_FieldIndex)index)
+            {
+                case Eye_FieldIndex.Flags:
+                    _hasBeenSetTracker[index] = false;
+                    Flags = default(Eye.Flag);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Eye.Flag: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Eye.Flag>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Eye.Flag> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_EyeFlag_subscriptions == null)
+            {
+                _EyeFlag_subscriptions = new ObjectCentralizationSubscriptions<Eye.Flag>();
+            }
+            _EyeFlag_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Eye.Flag>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _EyeFlag_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Eye.Flag>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Eye.Flag IPropertySupporter<Eye.Flag>.DefaultValue(int index)
+        {
+            return DefaultValueEyeFlag(index: index);
+        }
+
+        protected Eye.Flag DefaultValueEyeFlag(int index)
+        {
+            switch ((Eye_FieldIndex)index)
+            {
+                case Eye_FieldIndex.Flags:
+                    return default(Eye.Flag);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Eye.Flag: {index}");
             }
         }
 
@@ -689,18 +1046,34 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var IcontryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Eye_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (IcontryGet.Succeeded)
+                    {
+                        item.SetIcon(item: IcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetIcon();
+                    }
                     return TryGet<Eye_FieldIndex?>.Succeed(Eye_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Eye.Flag>.Instance.Parse(
+                    var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Eye.Flag>.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Eye_FieldIndex.Flags,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FlagstryGet.Succeeded)
+                    {
+                        item.SetFlags(item: FlagstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFlags();
+                    }
                     return TryGet<Eye_FieldIndex?>.Succeed(Eye_FieldIndex.Flags);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
@@ -814,14 +1187,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Eye_FieldIndex.Icon:
-                    this._Icon.Set(
+                    this.SetIcon(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Eye_FieldIndex.Flags:
-                    this._Flags.Set(
+                    this.SetFlags(
                         (Eye.Flag)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -855,14 +1228,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Eye_FieldIndex.Icon:
-                    obj._Icon.Set(
+                    obj.SetIcon(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Eye_FieldIndex.Flags:
-                    obj._Flags.Set(
+                    obj.SetFlags(
                         (Eye.Flag)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -936,7 +1309,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "adf54439-4091-4d26-ae99-171e4b211def";
 
-        public const ushort FieldCount = 2;
+        public const ushort AdditionalFieldCount = 2;
+
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(Eye_Mask<>);
 
@@ -1076,7 +1451,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1128,8 +1504,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Icon_Property.SetToWithDefault(
                         rhs: rhs.Icon_Property,
-                        def: def?.Icon_Property,
-                        cmds: cmds);
+                        def: def?.Icon_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1143,8 +1518,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Flags_Property.SetToWithDefault(
                         rhs: rhs.Flags_Property,
-                        def: def?.Flags_Property,
-                        cmds: cmds);
+                        def: def?.Flags_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

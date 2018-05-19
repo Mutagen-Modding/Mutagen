@@ -32,6 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAlphaLayer,
         ILoquiObject<AlphaLayer>,
         ILoquiObjectSetter,
+        IPropertySupporter<Byte[]>,
         IEquatable<AlphaLayer>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -47,13 +48,47 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region AlphaLayerData
-        protected INotifyingSetItem<Byte[]> _AlphaLayerData = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
-        public INotifyingSetItem<Byte[]> AlphaLayerData_Property => _AlphaLayerData;
+        protected Byte[] _AlphaLayerData;
+        protected PropertyForwarder<AlphaLayer, Byte[]> _AlphaLayerDataForwarder;
+        public INotifyingSetItem<Byte[]> AlphaLayerData_Property => _AlphaLayerDataForwarder ?? (_AlphaLayerDataForwarder = new PropertyForwarder<AlphaLayer, Byte[]>(this, (int)AlphaLayer_FieldIndex.AlphaLayerData));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] AlphaLayerData
         {
-            get => this._AlphaLayerData.Item;
-            set => this._AlphaLayerData.Set(value);
+            get => this._AlphaLayerData;
+            set => this.SetAlphaLayerData(value);
+        }
+        protected void SetAlphaLayerData(
+            Byte[] item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)AlphaLayer_FieldIndex.AlphaLayerData];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(AlphaLayerData, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)AlphaLayer_FieldIndex.AlphaLayerData] = hasBeenSet;
+            }
+            if (_ByteArr_subscriptions != null)
+            {
+                var tmp = AlphaLayerData;
+                _AlphaLayerData = item;
+                _ByteArr_subscriptions.FireSubscriptions(
+                    index: (int)AlphaLayer_FieldIndex.AlphaLayerData,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _AlphaLayerData = item;
+            }
+        }
+        protected void UnsetAlphaLayerData()
+        {
+            _hasBeenSetTracker[(int)AlphaLayer_FieldIndex.AlphaLayerData] = false;
+            AlphaLayerData = default(Byte[]);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IAlphaLayer.AlphaLayerData_Property => this.AlphaLayerData_Property;
@@ -433,10 +468,18 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "AlphaLayerData":
-                    item._AlphaLayerData.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
+                    var AlphaLayerDatatryGet = ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)AlphaLayer_FieldIndex.AlphaLayerData,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (AlphaLayerDatatryGet.Succeeded)
+                    {
+                        item.SetAlphaLayerData(item: AlphaLayerDatatryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetAlphaLayerData();
+                    }
                     break;
                 default:
                     BaseLayer.Fill_XML_Internal(
@@ -445,6 +488,139 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Byte[]
+        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
+        Byte[] IPropertySupporter<Byte[]>.Get(int index)
+        {
+            return GetByteArr(index: index);
+        }
+
+        protected Byte[] GetByteArr(int index)
+        {
+            switch ((AlphaLayer_FieldIndex)index)
+            {
+                case AlphaLayer_FieldIndex.AlphaLayerData:
+                    return AlphaLayerData;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        void IPropertySupporter<Byte[]>.Set(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByteArr(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetByteArr(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((AlphaLayer_FieldIndex)index)
+            {
+                case AlphaLayer_FieldIndex.AlphaLayerData:
+                    SetAlphaLayerData(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte[]>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte[]>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByteArr(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetByteArr(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((AlphaLayer_FieldIndex)index)
+            {
+                case AlphaLayer_FieldIndex.AlphaLayerData:
+                    _hasBeenSetTracker[index] = false;
+                    AlphaLayerData = default(Byte[]);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte[]> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_ByteArr_subscriptions == null)
+            {
+                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
+            }
+            _ByteArr_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _ByteArr_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
+        {
+            return DefaultValueByteArr(index: index);
+        }
+
+        protected Byte[] DefaultValueByteArr(int index)
+        {
+            switch ((AlphaLayer_FieldIndex)index)
+            {
+                case AlphaLayer_FieldIndex.AlphaLayerData:
+                    return default(Byte[]);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
             }
         }
 
@@ -684,10 +860,18 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "VTXT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._AlphaLayerData.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
+                    var AlphaLayerDatatryGet = ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)AlphaLayer_FieldIndex.AlphaLayerData,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (AlphaLayerDatatryGet.Succeeded)
+                    {
+                        item.SetAlphaLayerData(item: AlphaLayerDatatryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetAlphaLayerData();
+                    }
                     return TryGet<AlphaLayer_FieldIndex?>.Succeed(AlphaLayer_FieldIndex.AlphaLayerData);
                 default:
                     return BaseLayer.Fill_Binary_RecordTypes(
@@ -802,9 +986,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case AlphaLayer_FieldIndex.AlphaLayerData:
-                    this._AlphaLayerData.Set(
+                    this.SetAlphaLayerData(
                         (Byte[])obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -838,9 +1022,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case AlphaLayer_FieldIndex.AlphaLayerData:
-                    obj._AlphaLayerData.Set(
+                    obj.SetAlphaLayerData(
                         (Byte[])pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -902,7 +1086,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "757f00fc-f49c-4ce3-90c8-a86cf9e93ff7";
 
-        public const ushort FieldCount = 1;
+        public const ushort AdditionalFieldCount = 1;
+
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(AlphaLayer_Mask<>);
 
@@ -1035,7 +1221,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1087,8 +1274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.AlphaLayerData_Property.SetToWithDefault(
                         rhs: rhs.AlphaLayerData_Property,
-                        def: def?.AlphaLayerData_Property,
-                        cmds: cmds);
+                        def: def?.AlphaLayerData_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

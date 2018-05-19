@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"{nodeAccessor}.Position += Constants.SUBRECORD_LENGTH;");
             }
             ArgsWrapper args;
-            if (itemAccessor.PropertyAccess != null)
+            if (typeGen.PrefersProperty)
             {
                 args = new ArgsWrapper(fg, $"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceededOrDefault)}(StringBinaryTranslation.Instance.Parse",
                     suffixLine: ")");
@@ -95,14 +95,7 @@ namespace Mutagen.Bethesda.Generation
                 args.Add($"parseWhole: true");
                 args.Add($"errorMask: {maskAccessor}");
             }
-            if (itemAccessor.PropertyAccess == null)
-            {
-                fg.AppendLine($"if ({typeGen.Name}tryGet.Succeeded)");
-                using (new BraceWrapper(fg))
-                {
-                    fg.AppendLine($"{itemAccessor.DirectAccess} = {typeGen.Name}tryGet.Value;");
-                }
-            }
+            TranslationGenerationSnippets.DirectTryGetSetting(fg, itemAccessor, typeGen);
         }
 
         public override void GenerateCopyInRet(

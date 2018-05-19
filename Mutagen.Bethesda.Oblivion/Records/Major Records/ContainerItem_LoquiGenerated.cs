@@ -30,6 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
         IContainerItem,
         ILoquiObject<ContainerItem>,
         ILoquiObjectSetter,
+        IPropertySupporter<UInt32>,
         IEquatable<ContainerItem>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -39,6 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public ContainerItem()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -52,14 +54,47 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<ItemAbstract> IContainerItemGetter.Item_Property => this.Item_Property;
         #endregion
         #region Count
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt32> _Count = NotifyingItem.Factory<UInt32>();
-        public INotifyingItem<UInt32> Count_Property => _Count;
+        protected UInt32 _Count;
+        protected PropertyForwarder<ContainerItem, UInt32> _CountForwarder;
+        public INotifyingSetItem<UInt32> Count_Property => _CountForwarder ?? (_CountForwarder = new PropertyForwarder<ContainerItem, UInt32>(this, (int)ContainerItem_FieldIndex.Count));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Count
         {
-            get => this._Count.Item;
-            set => this._Count.Set(value);
+            get => this._Count;
+            set => this.SetCount(value);
+        }
+        protected void SetCount(
+            UInt32 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)ContainerItem_FieldIndex.Count];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Count == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)ContainerItem_FieldIndex.Count] = hasBeenSet;
+            }
+            if (_UInt32_subscriptions != null)
+            {
+                var tmp = Count;
+                _Count = item;
+                _UInt32_subscriptions.FireSubscriptions(
+                    index: (int)ContainerItem_FieldIndex.Count,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Count = item;
+            }
+        }
+        protected void UnsetCount()
+        {
+            _hasBeenSetTracker[(int)ContainerItem_FieldIndex.Count] = false;
+            Count = default(UInt32);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> IContainerItem.Count_Property => this.Count_Property;
@@ -417,13 +452,155 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Count":
-                    item._Count.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
+                    var CounttryGet = UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)ContainerItem_FieldIndex.Count,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (CounttryGet.Succeeded)
+                    {
+                        item.SetCount(item: CounttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetCount();
+                    }
                     break;
                 default:
                     break;
+            }
+        }
+
+        #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        #region IPropertySupporter UInt32
+        protected ObjectCentralizationSubscriptions<UInt32> _UInt32_subscriptions;
+        UInt32 IPropertySupporter<UInt32>.Get(int index)
+        {
+            return GetUInt32(index: index);
+        }
+
+        protected UInt32 GetUInt32(int index)
+        {
+            switch ((ContainerItem_FieldIndex)index)
+            {
+                case ContainerItem_FieldIndex.Count:
+                    return Count;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        void IPropertySupporter<UInt32>.Set(
+            int index,
+            UInt32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetUInt32(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetUInt32(
+            int index,
+            UInt32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((ContainerItem_FieldIndex)index)
+            {
+                case ContainerItem_FieldIndex.Count:
+                    SetCount(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<UInt32>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<UInt32>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetUInt32(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetUInt32(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((ContainerItem_FieldIndex)index)
+            {
+                case ContainerItem_FieldIndex.Count:
+                    _hasBeenSetTracker[index] = false;
+                    Count = default(UInt32);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt32>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<UInt32> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_UInt32_subscriptions == null)
+            {
+                _UInt32_subscriptions = new ObjectCentralizationSubscriptions<UInt32>();
+            }
+            _UInt32_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt32>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _UInt32_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<UInt32>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        UInt32 IPropertySupporter<UInt32>.DefaultValue(int index)
+        {
+            return DefaultValueUInt32(index: index);
+        }
+
+        protected UInt32 DefaultValueUInt32(int index)
+        {
+            switch ((ContainerItem_FieldIndex)index)
+            {
+                case ContainerItem_FieldIndex.Count:
+                    return default(UInt32);
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
             }
         }
 
@@ -639,10 +816,18 @@ namespace Mutagen.Bethesda.Oblivion
                 frame: frame,
                 fieldIndex: (int)ContainerItem_FieldIndex.Item,
                 errorMask: errorMask));
-            item._Count.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+            var CounttryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)ContainerItem_FieldIndex.Count,
-                errorMask: errorMask));
+                errorMask: errorMask);
+            if (CounttryGet.Succeeded)
+            {
+                item.SetCount(item: CounttryGet.Value);
+            }
+            else
+            {
+                item.UnsetCount();
+            }
         }
 
         #endregion
@@ -767,9 +952,9 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case ContainerItem_FieldIndex.Count:
-                    this._Count.Set(
+                    this.SetCount(
                         (UInt32)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -814,9 +999,9 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case ContainerItem_FieldIndex.Count:
-                    obj._Count.Set(
+                    obj.SetCount(
                         (UInt32)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -881,6 +1066,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             version: 0);
 
         public const string GUID = "2cffd274-8e8f-4c07-8b09-679098c41712";
+
+        public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
 
@@ -1020,7 +1207,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

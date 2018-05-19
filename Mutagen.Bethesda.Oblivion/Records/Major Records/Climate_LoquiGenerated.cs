@@ -33,6 +33,10 @@ namespace Mutagen.Bethesda.Oblivion
         IClimate,
         ILoquiObject<Climate>,
         ILoquiObjectSetter,
+        IPropertySupporter<String>,
+        IPropertySupporter<Model>,
+        IPropertySupporter<Byte>,
+        IPropertySupporter<Climate.MoonPhase>,
         IEquatable<Climate>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -66,14 +70,47 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region SunTexture
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _SunTexture = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> SunTexture_Property => _SunTexture;
+        protected String _SunTexture;
+        protected PropertyForwarder<Climate, String> _SunTextureForwarder;
+        public INotifyingSetItem<String> SunTexture_Property => _SunTextureForwarder ?? (_SunTextureForwarder = new PropertyForwarder<Climate, String>(this, (int)Climate_FieldIndex.SunTexture));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String SunTexture
         {
-            get => this._SunTexture.Item;
-            set => this._SunTexture.Set(value);
+            get => this._SunTexture;
+            set => this.SetSunTexture(value);
+        }
+        protected void SetSunTexture(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Climate_FieldIndex.SunTexture];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && SunTexture == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Climate_FieldIndex.SunTexture] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = SunTexture;
+                _SunTexture = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Climate_FieldIndex.SunTexture,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _SunTexture = item;
+            }
+        }
+        protected void UnsetSunTexture()
+        {
+            _hasBeenSetTracker[(int)Climate_FieldIndex.SunTexture] = false;
+            SunTexture = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IClimate.SunTexture_Property => this.SunTexture_Property;
@@ -81,14 +118,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> IClimateGetter.SunTexture_Property => this.SunTexture_Property;
         #endregion
         #region SunGlareTexture
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _SunGlareTexture = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> SunGlareTexture_Property => _SunGlareTexture;
+        protected String _SunGlareTexture;
+        protected PropertyForwarder<Climate, String> _SunGlareTextureForwarder;
+        public INotifyingSetItem<String> SunGlareTexture_Property => _SunGlareTextureForwarder ?? (_SunGlareTextureForwarder = new PropertyForwarder<Climate, String>(this, (int)Climate_FieldIndex.SunGlareTexture));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String SunGlareTexture
         {
-            get => this._SunGlareTexture.Item;
-            set => this._SunGlareTexture.Set(value);
+            get => this._SunGlareTexture;
+            set => this.SetSunGlareTexture(value);
+        }
+        protected void SetSunGlareTexture(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Climate_FieldIndex.SunGlareTexture];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && SunGlareTexture == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Climate_FieldIndex.SunGlareTexture] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = SunGlareTexture;
+                _SunGlareTexture = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Climate_FieldIndex.SunGlareTexture,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _SunGlareTexture = item;
+            }
+        }
+        protected void UnsetSunGlareTexture()
+        {
+            _hasBeenSetTracker[(int)Climate_FieldIndex.SunGlareTexture] = false;
+            SunGlareTexture = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IClimate.SunGlareTexture_Property => this.SunGlareTexture_Property;
@@ -96,13 +166,48 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> IClimateGetter.SunGlareTexture_Property => this.SunGlareTexture_Property;
         #endregion
         #region Model
+        protected Model _Model;
+        protected PropertyForwarder<Climate, Model> _ModelForwarder;
+        public INotifyingSetItem<Model> Model_Property => _ModelForwarder ?? (_ModelForwarder = new PropertyForwarder<Climate, Model>(this, (int)Climate_FieldIndex.Model));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
-        public INotifyingSetItem<Model> Model_Property => this._Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IClimateGetter.Model => this.Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        public Model Model
+        {
+            get => this._Model;
+            set => this.SetModel(value);
+        }
+        protected void SetModel(
+            Model item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Climate_FieldIndex.Model];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Model, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Climate_FieldIndex.Model] = hasBeenSet;
+            }
+            if (_Model_subscriptions != null)
+            {
+                var tmp = Model;
+                _Model = item;
+                _Model_subscriptions.FireSubscriptions(
+                    index: (int)Climate_FieldIndex.Model,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Model = item;
+            }
+        }
+        protected void UnsetModel()
+        {
+            _hasBeenSetTracker[(int)Climate_FieldIndex.Model] = false;
+            Model = default(Model);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IClimate.Model_Property => this.Model_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -169,14 +274,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<DateTime> IClimateGetter.SunsetEnd_Property => this.SunsetEnd_Property;
         #endregion
         #region Volatility
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Volatility = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Volatility_Property => _Volatility;
+        protected Byte _Volatility;
+        protected PropertyForwarder<Climate, Byte> _VolatilityForwarder;
+        public INotifyingSetItem<Byte> Volatility_Property => _VolatilityForwarder ?? (_VolatilityForwarder = new PropertyForwarder<Climate, Byte>(this, (int)Climate_FieldIndex.Volatility));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Volatility
         {
-            get => this._Volatility.Item;
-            set => this._Volatility.Set(value);
+            get => this._Volatility;
+            set => this.SetVolatility(value);
+        }
+        protected void SetVolatility(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Climate_FieldIndex.Volatility];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Volatility == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Climate_FieldIndex.Volatility] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Volatility;
+                _Volatility = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Climate_FieldIndex.Volatility,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Volatility = item;
+            }
+        }
+        protected void UnsetVolatility()
+        {
+            _hasBeenSetTracker[(int)Climate_FieldIndex.Volatility] = false;
+            Volatility = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IClimate.Volatility_Property => this.Volatility_Property;
@@ -184,14 +322,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IClimateGetter.Volatility_Property => this.Volatility_Property;
         #endregion
         #region Phase
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Climate.MoonPhase> _Phase = NotifyingItem.Factory<Climate.MoonPhase>();
-        public INotifyingItem<Climate.MoonPhase> Phase_Property => _Phase;
+        protected Climate.MoonPhase _Phase;
+        protected PropertyForwarder<Climate, Climate.MoonPhase> _PhaseForwarder;
+        public INotifyingSetItem<Climate.MoonPhase> Phase_Property => _PhaseForwarder ?? (_PhaseForwarder = new PropertyForwarder<Climate, Climate.MoonPhase>(this, (int)Climate_FieldIndex.Phase));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Climate.MoonPhase Phase
         {
-            get => this._Phase.Item;
-            set => this._Phase.Set(value);
+            get => this._Phase;
+            set => this.SetPhase(value);
+        }
+        protected void SetPhase(
+            Climate.MoonPhase item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Climate_FieldIndex.Phase];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Phase == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Climate_FieldIndex.Phase] = hasBeenSet;
+            }
+            if (_ClimateMoonPhase_subscriptions != null)
+            {
+                var tmp = Phase;
+                _Phase = item;
+                _ClimateMoonPhase_subscriptions.FireSubscriptions(
+                    index: (int)Climate_FieldIndex.Phase,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Phase = item;
+            }
+        }
+        protected void UnsetPhase()
+        {
+            _hasBeenSetTracker[(int)Climate_FieldIndex.Phase] = false;
+            Phase = default(Climate.MoonPhase);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Climate.MoonPhase> IClimate.Phase_Property => this.Phase_Property;
@@ -199,14 +370,52 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Climate.MoonPhase> IClimateGetter.Phase_Property => this.Phase_Property;
         #endregion
         #region PhaseLength
-        protected INotifyingItem<Byte> _PhaseLength = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> PhaseLength_Property => _PhaseLength;
+        protected Byte _PhaseLength;
+        protected PropertyForwarder<Climate, Byte> _PhaseLengthForwarder;
+        public INotifyingSetItem<Byte> PhaseLength_Property => _PhaseLengthForwarder ?? (_PhaseLengthForwarder = new PropertyForwarder<Climate, Byte>(this, (int)Climate_FieldIndex.PhaseLength));
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte PhaseLength
         {
-            get => this._PhaseLength.Item;
-            set => this._PhaseLength.Set(value.PutInRange(PhaseLength_Range.Min, PhaseLength_Range.Max));
+            get => this._PhaseLength;
+            set => this.SetPhaseLength(value);
         }
+        protected void SetPhaseLength(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            item = item.PutInRange(PhaseLength_Range.Min, PhaseLength_Range.Max);
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Climate_FieldIndex.PhaseLength];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && PhaseLength == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Climate_FieldIndex.PhaseLength] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = PhaseLength;
+                _PhaseLength = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Climate_FieldIndex.PhaseLength,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _PhaseLength = item;
+            }
+        }
+        protected void UnsetPhaseLength()
+        {
+            _hasBeenSetTracker[(int)Climate_FieldIndex.PhaseLength] = false;
+            PhaseLength = default(Byte);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IClimate.PhaseLength_Property => this.PhaseLength_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> IClimateGetter.PhaseLength_Property => this.PhaseLength_Property;
         public static RangeUInt8 PhaseLength_Range = new RangeUInt8(0, 63);
         #endregion
@@ -625,22 +834,46 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "SunTexture":
-                    item._SunTexture.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var SunTexturetryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Climate_FieldIndex.SunTexture,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (SunTexturetryGet.Succeeded)
+                    {
+                        item.SetSunTexture(item: SunTexturetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetSunTexture();
+                    }
                     break;
                 case "SunGlareTexture":
-                    item._SunGlareTexture.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var SunGlareTexturetryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Climate_FieldIndex.SunGlareTexture,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (SunGlareTexturetryGet.Succeeded)
+                    {
+                        item.SetSunGlareTexture(item: SunGlareTexturetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetSunGlareTexture();
+                    }
                     break;
                 case "Model":
-                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    var ModeltryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Climate_FieldIndex.Model,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ModeltryGet.Succeeded)
+                    {
+                        item.SetModel(item: ModeltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetModel();
+                    }
                     break;
                 case "SunriseBegin":
                     item._SunriseBegin.SetIfSucceededOrDefault(DateTimeXmlTranslation.Instance.ParseNonNull(
@@ -667,23 +900,47 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Volatility":
-                    item._Volatility.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var VolatilitytryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Climate_FieldIndex.Volatility,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (VolatilitytryGet.Succeeded)
+                    {
+                        item.SetVolatility(item: VolatilitytryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetVolatility();
+                    }
                     break;
                 case "Phase":
-                    item._Phase.SetIfSucceededOrDefault(EnumXmlTranslation<Climate.MoonPhase>.Instance.Parse(
+                    var PhasetryGet = EnumXmlTranslation<Climate.MoonPhase>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Climate_FieldIndex.Phase,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (PhasetryGet.Succeeded)
+                    {
+                        item.SetPhase(item: PhasetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetPhase();
+                    }
                     break;
                 case "PhaseLength":
-                    item._PhaseLength.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var PhaseLengthtryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Climate_FieldIndex.PhaseLength,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (PhaseLengthtryGet.Succeeded)
+                    {
+                        item.SetPhaseLength(item: PhaseLengthtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetPhaseLength();
+                    }
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(
@@ -692,6 +949,565 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter String
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected override String GetString(int index)
+        {
+            switch ((Climate_FieldIndex)index)
+            {
+                case Climate_FieldIndex.SunTexture:
+                    return SunTexture;
+                case Climate_FieldIndex.SunGlareTexture:
+                    return SunGlareTexture;
+                default:
+                    return base.GetString(index: index);
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Climate_FieldIndex)index)
+            {
+                case Climate_FieldIndex.SunTexture:
+                    SetSunTexture(item, hasBeenSet, cmds);
+                    break;
+                case Climate_FieldIndex.SunGlareTexture:
+                    SetSunGlareTexture(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetString(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Climate_FieldIndex)index)
+            {
+                case Climate_FieldIndex.SunTexture:
+                    _hasBeenSetTracker[index] = false;
+                    SunTexture = default(String);
+                    break;
+                case Climate_FieldIndex.SunGlareTexture:
+                    _hasBeenSetTracker[index] = false;
+                    SunGlareTexture = default(String);
+                    break;
+                default:
+                    base.UnsetString(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected override String DefaultValueString(int index)
+        {
+            switch ((Climate_FieldIndex)index)
+            {
+                case Climate_FieldIndex.SunTexture:
+                case Climate_FieldIndex.SunGlareTexture:
+                    return default(String);
+                default:
+                    return base.DefaultValueString(index: index);
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Model
+        protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
+        Model IPropertySupporter<Model>.Get(int index)
+        {
+            return GetModel(index: index);
+        }
+
+        protected Model GetModel(int index)
+        {
+            switch ((Climate_FieldIndex)index)
+            {
+                case Climate_FieldIndex.Model:
+                    return Model;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        void IPropertySupporter<Model>.Set(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetModel(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetModel(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Climate_FieldIndex)index)
+            {
+                case Climate_FieldIndex.Model:
+                    SetModel(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Model>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Model>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Model>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetModel(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetModel(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Climate_FieldIndex)index)
+            {
+                case Climate_FieldIndex.Model:
+                    _hasBeenSetTracker[index] = false;
+                    Model = default(Model);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Model> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Model_subscriptions == null)
+            {
+                _Model_subscriptions = new ObjectCentralizationSubscriptions<Model>();
+            }
+            _Model_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Model_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Model>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Model IPropertySupporter<Model>.DefaultValue(int index)
+        {
+            return DefaultValueModel(index: index);
+        }
+
+        protected Model DefaultValueModel(int index)
+        {
+            switch ((Climate_FieldIndex)index)
+            {
+                case Climate_FieldIndex.Model:
+                    return default(Model);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Byte
+        protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
+        Byte IPropertySupporter<Byte>.Get(int index)
+        {
+            return GetByte(index: index);
+        }
+
+        protected Byte GetByte(int index)
+        {
+            switch ((Climate_FieldIndex)index)
+            {
+                case Climate_FieldIndex.Volatility:
+                    return Volatility;
+                case Climate_FieldIndex.PhaseLength:
+                    return PhaseLength;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        void IPropertySupporter<Byte>.Set(
+            int index,
+            Byte item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByte(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetByte(
+            int index,
+            Byte item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Climate_FieldIndex)index)
+            {
+                case Climate_FieldIndex.Volatility:
+                    SetVolatility(item, hasBeenSet, cmds);
+                    break;
+                case Climate_FieldIndex.PhaseLength:
+                    SetPhaseLength(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByte(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetByte(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Climate_FieldIndex)index)
+            {
+                case Climate_FieldIndex.Volatility:
+                    _hasBeenSetTracker[index] = false;
+                    Volatility = default(Byte);
+                    break;
+                case Climate_FieldIndex.PhaseLength:
+                    _hasBeenSetTracker[index] = false;
+                    PhaseLength = default(Byte);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Byte_subscriptions == null)
+            {
+                _Byte_subscriptions = new ObjectCentralizationSubscriptions<Byte>();
+            }
+            _Byte_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Byte_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte IPropertySupporter<Byte>.DefaultValue(int index)
+        {
+            return DefaultValueByte(index: index);
+        }
+
+        protected Byte DefaultValueByte(int index)
+        {
+            switch ((Climate_FieldIndex)index)
+            {
+                case Climate_FieldIndex.Volatility:
+                case Climate_FieldIndex.PhaseLength:
+                    return default(Byte);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Climate.MoonPhase
+        protected ObjectCentralizationSubscriptions<Climate.MoonPhase> _ClimateMoonPhase_subscriptions;
+        Climate.MoonPhase IPropertySupporter<Climate.MoonPhase>.Get(int index)
+        {
+            return GetClimateMoonPhase(index: index);
+        }
+
+        protected Climate.MoonPhase GetClimateMoonPhase(int index)
+        {
+            switch ((Climate_FieldIndex)index)
+            {
+                case Climate_FieldIndex.Phase:
+                    return Phase;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Climate.MoonPhase: {index}");
+            }
+        }
+
+        void IPropertySupporter<Climate.MoonPhase>.Set(
+            int index,
+            Climate.MoonPhase item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetClimateMoonPhase(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetClimateMoonPhase(
+            int index,
+            Climate.MoonPhase item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Climate_FieldIndex)index)
+            {
+                case Climate_FieldIndex.Phase:
+                    SetPhase(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Climate.MoonPhase: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Climate.MoonPhase>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Climate.MoonPhase>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Climate.MoonPhase>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetClimateMoonPhase(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetClimateMoonPhase(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Climate_FieldIndex)index)
+            {
+                case Climate_FieldIndex.Phase:
+                    _hasBeenSetTracker[index] = false;
+                    Phase = default(Climate.MoonPhase);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Climate.MoonPhase: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Climate.MoonPhase>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Climate.MoonPhase> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_ClimateMoonPhase_subscriptions == null)
+            {
+                _ClimateMoonPhase_subscriptions = new ObjectCentralizationSubscriptions<Climate.MoonPhase>();
+            }
+            _ClimateMoonPhase_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Climate.MoonPhase>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _ClimateMoonPhase_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Climate.MoonPhase>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Climate.MoonPhase IPropertySupporter<Climate.MoonPhase>.DefaultValue(int index)
+        {
+            return DefaultValueClimateMoonPhase(index: index);
+        }
+
+        protected Climate.MoonPhase DefaultValueClimateMoonPhase(int index)
+        {
+            switch ((Climate_FieldIndex)index)
+            {
+                case Climate_FieldIndex.Phase:
+                    return default(Climate.MoonPhase);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Climate.MoonPhase: {index}");
             }
         }
 
@@ -1132,25 +1948,51 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Climate_FieldIndex?>.Succeed(Climate_FieldIndex.Weathers);
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._SunTexture.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var SunTexturetryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Climate_FieldIndex.SunTexture,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (SunTexturetryGet.Succeeded)
+                    {
+                        item.SetSunTexture(item: SunTexturetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetSunTexture();
+                    }
                     return TryGet<Climate_FieldIndex?>.Succeed(Climate_FieldIndex.SunTexture);
                 case "GNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._SunGlareTexture.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var SunGlareTexturetryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Climate_FieldIndex.SunGlareTexture,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (SunGlareTexturetryGet.Succeeded)
+                    {
+                        item.SetSunGlareTexture(item: SunGlareTexturetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetSunGlareTexture();
+                    }
                     return TryGet<Climate_FieldIndex?>.Succeed(Climate_FieldIndex.SunGlareTexture);
                 case "MODL":
-                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)Climate_FieldIndex.Model,
-                        errorMask: errorMask));
+                    {
+                        var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                            frame: frame.Spawn(snapToFinalPosition: false),
+                            fieldIndex: (int)Climate_FieldIndex.Model,
+                            errorMask: errorMask);
+                        if (ModeltryGet.Succeeded)
+                        {
+                            item.SetModel(item: ModeltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetModel();
+                        }
+                    }
                     return TryGet<Climate_FieldIndex?>.Succeed(Climate_FieldIndex.Model);
                 case "TNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -1208,10 +2050,18 @@ namespace Mutagen.Bethesda.Oblivion
                         {
                             errorMask().Overall = ex;
                         }
-                        item._Volatility.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        var VolatilitytryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Climate_FieldIndex.Volatility,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (VolatilitytryGet.Succeeded)
+                        {
+                            item.SetVolatility(item: VolatilitytryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetVolatility();
+                        }
                         try
                         {
                             FillBinary_Phase_Custom(
@@ -1355,19 +2205,19 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Weathers.SetTo((IEnumerable<WeatherChance>)obj, cmds);
                     break;
                 case Climate_FieldIndex.SunTexture:
-                    this._SunTexture.Set(
+                    this.SetSunTexture(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Climate_FieldIndex.SunGlareTexture:
-                    this._SunGlareTexture.Set(
+                    this.SetSunGlareTexture(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Climate_FieldIndex.Model:
-                    this._Model.Set(
+                    this.SetModel(
                         (Model)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Climate_FieldIndex.SunriseBegin:
                     this._SunriseBegin.Set(
@@ -1390,19 +2240,19 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Climate_FieldIndex.Volatility:
-                    this._Volatility.Set(
+                    this.SetVolatility(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Climate_FieldIndex.Phase:
-                    this._Phase.Set(
+                    this.SetPhase(
                         (Climate.MoonPhase)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Climate_FieldIndex.PhaseLength:
-                    this._PhaseLength.Set(
+                    this.SetPhaseLength(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1439,19 +2289,19 @@ namespace Mutagen.Bethesda.Oblivion
                     obj._Weathers.SetTo((IEnumerable<WeatherChance>)pair.Value, null);
                     break;
                 case Climate_FieldIndex.SunTexture:
-                    obj._SunTexture.Set(
+                    obj.SetSunTexture(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Climate_FieldIndex.SunGlareTexture:
-                    obj._SunGlareTexture.Set(
+                    obj.SetSunGlareTexture(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Climate_FieldIndex.Model:
-                    obj._Model.Set(
+                    obj.SetModel(
                         (Model)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Climate_FieldIndex.SunriseBegin:
                     obj._SunriseBegin.Set(
@@ -1474,19 +2324,19 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Climate_FieldIndex.Volatility:
-                    obj._Volatility.Set(
+                    obj.SetVolatility(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Climate_FieldIndex.Phase:
-                    obj._Phase.Set(
+                    obj.SetPhase(
                         (Climate.MoonPhase)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Climate_FieldIndex.PhaseLength:
-                    obj._PhaseLength.Set(
+                    obj.SetPhaseLength(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1636,7 +2486,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "25ca8fab-7f62-4f8b-9c32-d65a3261ac05";
 
-        public const ushort FieldCount = 11;
+        public const ushort AdditionalFieldCount = 11;
+
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(Climate_Mask<>);
 
@@ -1880,7 +2732,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1964,8 +2817,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.SunTexture_Property.SetToWithDefault(
                         rhs: rhs.SunTexture_Property,
-                        def: def?.SunTexture_Property,
-                        cmds: cmds);
+                        def: def?.SunTexture_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1979,8 +2831,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.SunGlareTexture_Property.SetToWithDefault(
                         rhs: rhs.SunGlareTexture_Property,
-                        def: def?.SunGlareTexture_Property,
-                        cmds: cmds);
+                        def: def?.SunGlareTexture_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

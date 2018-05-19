@@ -424,10 +424,18 @@ namespace Mutagen.Bethesda.Tests
                     }
                     break;
                 case "Instruction":
-                    item.Instruction = LoquiXmlTranslation<Instruction, Instruction_ErrorMask>.Instance.Parse(
+                    var InstructiontryGet = LoquiXmlTranslation<Instruction, Instruction_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)BinaryProcessorInstructions_FieldIndex.Instruction,
-                        errorMask: errorMask).GetOrDefault(item.Instruction);
+                        errorMask: errorMask);
+                    if (InstructiontryGet.Succeeded)
+                    {
+                        item.Instruction = InstructiontryGet.Value;
+                    }
+                    else
+                    {
+                        item.Instruction = default(Instruction);
+                    }
                     break;
                 default:
                     break;
@@ -662,6 +670,8 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const string GUID = "73f79186-d8ce-4187-a063-f443409f5f78";
 
+        public const ushort AdditionalFieldCount = 2;
+
         public const ushort FieldCount = 2;
 
         public static readonly Type MaskType = typeof(BinaryProcessorInstructions_Mask<>);
@@ -797,7 +807,8 @@ namespace Mutagen.Bethesda.Tests.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

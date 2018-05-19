@@ -33,6 +33,12 @@ namespace Mutagen.Bethesda.Oblivion
         IBook,
         ILoquiObject<Book>,
         ILoquiObjectSetter,
+        IPropertySupporter<Model>,
+        IPropertySupporter<String>,
+        IPropertySupporter<UInt16>,
+        IPropertySupporter<Book.BookFlag>,
+        IPropertySupporter<Skill>,
+        IPropertySupporter<Single>,
         IEquatable<Book>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -48,27 +54,95 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
+        protected Model _Model;
+        protected PropertyForwarder<Book, Model> _ModelForwarder;
+        public INotifyingSetItem<Model> Model_Property => _ModelForwarder ?? (_ModelForwarder = new PropertyForwarder<Book, Model>(this, (int)Book_FieldIndex.Model));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
-        public INotifyingSetItem<Model> Model_Property => this._Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IBookGetter.Model => this.Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        public Model Model
+        {
+            get => this._Model;
+            set => this.SetModel(value);
+        }
+        protected void SetModel(
+            Model item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Book_FieldIndex.Model];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Model, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Book_FieldIndex.Model] = hasBeenSet;
+            }
+            if (_Model_subscriptions != null)
+            {
+                var tmp = Model;
+                _Model = item;
+                _Model_subscriptions.FireSubscriptions(
+                    index: (int)Book_FieldIndex.Model,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Model = item;
+            }
+        }
+        protected void UnsetModel()
+        {
+            _hasBeenSetTracker[(int)Book_FieldIndex.Model] = false;
+            Model = default(Model);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IBook.Model_Property => this.Model_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> IBookGetter.Model_Property => this.Model_Property;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _Icon = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Icon_Property => _Icon;
+        protected String _Icon;
+        protected PropertyForwarder<Book, String> _IconForwarder;
+        public INotifyingSetItem<String> Icon_Property => _IconForwarder ?? (_IconForwarder = new PropertyForwarder<Book, String>(this, (int)Book_FieldIndex.Icon));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Icon
         {
-            get => this._Icon.Item;
-            set => this._Icon.Set(value);
+            get => this._Icon;
+            set => this.SetIcon(value);
+        }
+        protected void SetIcon(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Book_FieldIndex.Icon];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Icon == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Book_FieldIndex.Icon] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Icon;
+                _Icon = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Book_FieldIndex.Icon,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Icon = item;
+            }
+        }
+        protected void UnsetIcon()
+        {
+            _hasBeenSetTracker[(int)Book_FieldIndex.Icon] = false;
+            Icon = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IBook.Icon_Property => this.Icon_Property;
@@ -90,14 +164,47 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Enchantment> IBookGetter.Enchantment_Property => this.Enchantment_Property;
         #endregion
         #region EnchantmentPoints
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<UInt16> _EnchantmentPoints = NotifyingSetItem.Factory<UInt16>(markAsSet: false);
-        public INotifyingSetItem<UInt16> EnchantmentPoints_Property => _EnchantmentPoints;
+        protected UInt16 _EnchantmentPoints;
+        protected PropertyForwarder<Book, UInt16> _EnchantmentPointsForwarder;
+        public INotifyingSetItem<UInt16> EnchantmentPoints_Property => _EnchantmentPointsForwarder ?? (_EnchantmentPointsForwarder = new PropertyForwarder<Book, UInt16>(this, (int)Book_FieldIndex.EnchantmentPoints));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 EnchantmentPoints
         {
-            get => this._EnchantmentPoints.Item;
-            set => this._EnchantmentPoints.Set(value);
+            get => this._EnchantmentPoints;
+            set => this.SetEnchantmentPoints(value);
+        }
+        protected void SetEnchantmentPoints(
+            UInt16 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Book_FieldIndex.EnchantmentPoints];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && EnchantmentPoints == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Book_FieldIndex.EnchantmentPoints] = hasBeenSet;
+            }
+            if (_UInt16_subscriptions != null)
+            {
+                var tmp = EnchantmentPoints;
+                _EnchantmentPoints = item;
+                _UInt16_subscriptions.FireSubscriptions(
+                    index: (int)Book_FieldIndex.EnchantmentPoints,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _EnchantmentPoints = item;
+            }
+        }
+        protected void UnsetEnchantmentPoints()
+        {
+            _hasBeenSetTracker[(int)Book_FieldIndex.EnchantmentPoints] = false;
+            EnchantmentPoints = default(UInt16);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<UInt16> IBook.EnchantmentPoints_Property => this.EnchantmentPoints_Property;
@@ -105,14 +212,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<UInt16> IBookGetter.EnchantmentPoints_Property => this.EnchantmentPoints_Property;
         #endregion
         #region Description
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Description_Property => _Description;
+        protected String _Description;
+        protected PropertyForwarder<Book, String> _DescriptionForwarder;
+        public INotifyingSetItem<String> Description_Property => _DescriptionForwarder ?? (_DescriptionForwarder = new PropertyForwarder<Book, String>(this, (int)Book_FieldIndex.Description));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Description
         {
-            get => this._Description.Item;
-            set => this._Description.Set(value);
+            get => this._Description;
+            set => this.SetDescription(value);
+        }
+        protected void SetDescription(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Book_FieldIndex.Description];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Description == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Book_FieldIndex.Description] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Description;
+                _Description = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Book_FieldIndex.Description,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Description = item;
+            }
+        }
+        protected void UnsetDescription()
+        {
+            _hasBeenSetTracker[(int)Book_FieldIndex.Description] = false;
+            Description = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IBook.Description_Property => this.Description_Property;
@@ -120,14 +260,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> IBookGetter.Description_Property => this.Description_Property;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Book.BookFlag> _Flags = NotifyingItem.Factory<Book.BookFlag>();
-        public INotifyingItem<Book.BookFlag> Flags_Property => _Flags;
+        protected Book.BookFlag _Flags;
+        protected PropertyForwarder<Book, Book.BookFlag> _FlagsForwarder;
+        public INotifyingSetItem<Book.BookFlag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<Book, Book.BookFlag>(this, (int)Book_FieldIndex.Flags));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Book.BookFlag Flags
         {
-            get => this._Flags.Item;
-            set => this._Flags.Set(value);
+            get => this._Flags;
+            set => this.SetFlags(value);
+        }
+        protected void SetFlags(
+            Book.BookFlag item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Book_FieldIndex.Flags];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Book_FieldIndex.Flags] = hasBeenSet;
+            }
+            if (_BookBookFlag_subscriptions != null)
+            {
+                var tmp = Flags;
+                _Flags = item;
+                _BookBookFlag_subscriptions.FireSubscriptions(
+                    index: (int)Book_FieldIndex.Flags,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Flags = item;
+            }
+        }
+        protected void UnsetFlags()
+        {
+            _hasBeenSetTracker[(int)Book_FieldIndex.Flags] = false;
+            Flags = default(Book.BookFlag);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Book.BookFlag> IBook.Flags_Property => this.Flags_Property;
@@ -135,14 +308,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Book.BookFlag> IBookGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Teaches
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Skill> _Teaches = NotifyingItem.Factory<Skill>();
-        public INotifyingItem<Skill> Teaches_Property => _Teaches;
+        protected Skill _Teaches;
+        protected PropertyForwarder<Book, Skill> _TeachesForwarder;
+        public INotifyingSetItem<Skill> Teaches_Property => _TeachesForwarder ?? (_TeachesForwarder = new PropertyForwarder<Book, Skill>(this, (int)Book_FieldIndex.Teaches));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Skill Teaches
         {
-            get => this._Teaches.Item;
-            set => this._Teaches.Set(value);
+            get => this._Teaches;
+            set => this.SetTeaches(value);
+        }
+        protected void SetTeaches(
+            Skill item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Book_FieldIndex.Teaches];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Teaches == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Book_FieldIndex.Teaches] = hasBeenSet;
+            }
+            if (_Skill_subscriptions != null)
+            {
+                var tmp = Teaches;
+                _Teaches = item;
+                _Skill_subscriptions.FireSubscriptions(
+                    index: (int)Book_FieldIndex.Teaches,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Teaches = item;
+            }
+        }
+        protected void UnsetTeaches()
+        {
+            _hasBeenSetTracker[(int)Book_FieldIndex.Teaches] = false;
+            Teaches = default(Skill);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Skill> IBook.Teaches_Property => this.Teaches_Property;
@@ -150,14 +356,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Skill> IBookGetter.Teaches_Property => this.Teaches_Property;
         #endregion
         #region Value
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _Value = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> Value_Property => _Value;
+        protected Single _Value;
+        protected PropertyForwarder<Book, Single> _ValueForwarder;
+        public INotifyingSetItem<Single> Value_Property => _ValueForwarder ?? (_ValueForwarder = new PropertyForwarder<Book, Single>(this, (int)Book_FieldIndex.Value));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Value
         {
-            get => this._Value.Item;
-            set => this._Value.Set(value);
+            get => this._Value;
+            set => this.SetValue(value);
+        }
+        protected void SetValue(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Book_FieldIndex.Value];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Value == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Book_FieldIndex.Value] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = Value;
+                _Value = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Book_FieldIndex.Value,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Value = item;
+            }
+        }
+        protected void UnsetValue()
+        {
+            _hasBeenSetTracker[(int)Book_FieldIndex.Value] = false;
+            Value = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IBook.Value_Property => this.Value_Property;
@@ -165,14 +404,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IBookGetter.Value_Property => this.Value_Property;
         #endregion
         #region Weight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> Weight_Property => _Weight;
+        protected Single _Weight;
+        protected PropertyForwarder<Book, Single> _WeightForwarder;
+        public INotifyingSetItem<Single> Weight_Property => _WeightForwarder ?? (_WeightForwarder = new PropertyForwarder<Book, Single>(this, (int)Book_FieldIndex.Weight));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Weight
         {
-            get => this._Weight.Item;
-            set => this._Weight.Set(value);
+            get => this._Weight;
+            set => this.SetWeight(value);
+        }
+        protected void SetWeight(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Book_FieldIndex.Weight];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Weight == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Book_FieldIndex.Weight] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = Weight;
+                _Weight = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Book_FieldIndex.Weight,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Weight = item;
+            }
+        }
+        protected void UnsetWeight()
+        {
+            _hasBeenSetTracker[(int)Book_FieldIndex.Weight] = false;
+            Weight = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IBook.Weight_Property => this.Weight_Property;
@@ -604,16 +876,32 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    var ModeltryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Book_FieldIndex.Model,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ModeltryGet.Succeeded)
+                    {
+                        item.SetModel(item: ModeltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetModel();
+                    }
                     break;
                 case "Icon":
-                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var IcontryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Book_FieldIndex.Icon,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (IcontryGet.Succeeded)
+                    {
+                        item.SetIcon(item: IcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetIcon();
+                    }
                     break;
                 case "Script":
                     item.Script_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
@@ -628,42 +916,90 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "EnchantmentPoints":
-                    item._EnchantmentPoints.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
+                    var EnchantmentPointstryGet = UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Book_FieldIndex.EnchantmentPoints,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (EnchantmentPointstryGet.Succeeded)
+                    {
+                        item.SetEnchantmentPoints(item: EnchantmentPointstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetEnchantmentPoints();
+                    }
                     break;
                 case "Description":
-                    item._Description.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var DescriptiontryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Book_FieldIndex.Description,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DescriptiontryGet.Succeeded)
+                    {
+                        item.SetDescription(item: DescriptiontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetDescription();
+                    }
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<Book.BookFlag>.Instance.Parse(
+                    var FlagstryGet = EnumXmlTranslation<Book.BookFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Book_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (FlagstryGet.Succeeded)
+                    {
+                        item.SetFlags(item: FlagstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFlags();
+                    }
                     break;
                 case "Teaches":
-                    item._Teaches.SetIfSucceededOrDefault(EnumXmlTranslation<Skill>.Instance.Parse(
+                    var TeachestryGet = EnumXmlTranslation<Skill>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Book_FieldIndex.Teaches,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (TeachestryGet.Succeeded)
+                    {
+                        item.SetTeaches(item: TeachestryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetTeaches();
+                    }
                     break;
                 case "Value":
-                    item._Value.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var ValuetryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Book_FieldIndex.Value,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ValuetryGet.Succeeded)
+                    {
+                        item.SetValue(item: ValuetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetValue();
+                    }
                     break;
                 case "Weight":
-                    item._Weight.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var WeighttryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Book_FieldIndex.Weight,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (WeighttryGet.Succeeded)
+                    {
+                        item.SetWeight(item: WeighttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetWeight();
+                    }
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -672,6 +1008,831 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Model
+        protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
+        Model IPropertySupporter<Model>.Get(int index)
+        {
+            return GetModel(index: index);
+        }
+
+        protected Model GetModel(int index)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.Model:
+                    return Model;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        void IPropertySupporter<Model>.Set(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetModel(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetModel(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.Model:
+                    SetModel(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Model>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Model>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Model>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetModel(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetModel(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.Model:
+                    _hasBeenSetTracker[index] = false;
+                    Model = default(Model);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Model> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Model_subscriptions == null)
+            {
+                _Model_subscriptions = new ObjectCentralizationSubscriptions<Model>();
+            }
+            _Model_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Model_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Model>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Model IPropertySupporter<Model>.DefaultValue(int index)
+        {
+            return DefaultValueModel(index: index);
+        }
+
+        protected Model DefaultValueModel(int index)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.Model:
+                    return default(Model);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter String
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected override String GetString(int index)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.Icon:
+                    return Icon;
+                case Book_FieldIndex.Description:
+                    return Description;
+                default:
+                    return base.GetString(index: index);
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.Icon:
+                    SetIcon(item, hasBeenSet, cmds);
+                    break;
+                case Book_FieldIndex.Description:
+                    SetDescription(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetString(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.Icon:
+                    _hasBeenSetTracker[index] = false;
+                    Icon = default(String);
+                    break;
+                case Book_FieldIndex.Description:
+                    _hasBeenSetTracker[index] = false;
+                    Description = default(String);
+                    break;
+                default:
+                    base.UnsetString(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected override String DefaultValueString(int index)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.Icon:
+                case Book_FieldIndex.Description:
+                    return default(String);
+                default:
+                    return base.DefaultValueString(index: index);
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter UInt16
+        protected ObjectCentralizationSubscriptions<UInt16> _UInt16_subscriptions;
+        UInt16 IPropertySupporter<UInt16>.Get(int index)
+        {
+            return GetUInt16(index: index);
+        }
+
+        protected UInt16 GetUInt16(int index)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.EnchantmentPoints:
+                    return EnchantmentPoints;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        void IPropertySupporter<UInt16>.Set(
+            int index,
+            UInt16 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetUInt16(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetUInt16(
+            int index,
+            UInt16 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.EnchantmentPoints:
+                    SetEnchantmentPoints(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        bool IPropertySupporter<UInt16>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<UInt16>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<UInt16>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetUInt16(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetUInt16(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.EnchantmentPoints:
+                    _hasBeenSetTracker[index] = false;
+                    EnchantmentPoints = default(UInt16);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt16>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<UInt16> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_UInt16_subscriptions == null)
+            {
+                _UInt16_subscriptions = new ObjectCentralizationSubscriptions<UInt16>();
+            }
+            _UInt16_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt16>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _UInt16_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<UInt16>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        UInt16 IPropertySupporter<UInt16>.DefaultValue(int index)
+        {
+            return DefaultValueUInt16(index: index);
+        }
+
+        protected UInt16 DefaultValueUInt16(int index)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.EnchantmentPoints:
+                    return default(UInt16);
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Book.BookFlag
+        protected ObjectCentralizationSubscriptions<Book.BookFlag> _BookBookFlag_subscriptions;
+        Book.BookFlag IPropertySupporter<Book.BookFlag>.Get(int index)
+        {
+            return GetBookBookFlag(index: index);
+        }
+
+        protected Book.BookFlag GetBookBookFlag(int index)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.Flags:
+                    return Flags;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Book.BookFlag: {index}");
+            }
+        }
+
+        void IPropertySupporter<Book.BookFlag>.Set(
+            int index,
+            Book.BookFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetBookBookFlag(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetBookBookFlag(
+            int index,
+            Book.BookFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.Flags:
+                    SetFlags(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Book.BookFlag: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Book.BookFlag>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Book.BookFlag>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Book.BookFlag>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetBookBookFlag(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetBookBookFlag(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.Flags:
+                    _hasBeenSetTracker[index] = false;
+                    Flags = default(Book.BookFlag);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Book.BookFlag: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Book.BookFlag>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Book.BookFlag> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_BookBookFlag_subscriptions == null)
+            {
+                _BookBookFlag_subscriptions = new ObjectCentralizationSubscriptions<Book.BookFlag>();
+            }
+            _BookBookFlag_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Book.BookFlag>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _BookBookFlag_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Book.BookFlag>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Book.BookFlag IPropertySupporter<Book.BookFlag>.DefaultValue(int index)
+        {
+            return DefaultValueBookBookFlag(index: index);
+        }
+
+        protected Book.BookFlag DefaultValueBookBookFlag(int index)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.Flags:
+                    return default(Book.BookFlag);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Book.BookFlag: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Skill
+        protected ObjectCentralizationSubscriptions<Skill> _Skill_subscriptions;
+        Skill IPropertySupporter<Skill>.Get(int index)
+        {
+            return GetSkill(index: index);
+        }
+
+        protected Skill GetSkill(int index)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.Teaches:
+                    return Teaches;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Skill: {index}");
+            }
+        }
+
+        void IPropertySupporter<Skill>.Set(
+            int index,
+            Skill item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSkill(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetSkill(
+            int index,
+            Skill item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.Teaches:
+                    SetTeaches(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Skill: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Skill>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Skill>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Skill>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSkill(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetSkill(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.Teaches:
+                    _hasBeenSetTracker[index] = false;
+                    Teaches = default(Skill);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Skill: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Skill>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Skill> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Skill_subscriptions == null)
+            {
+                _Skill_subscriptions = new ObjectCentralizationSubscriptions<Skill>();
+            }
+            _Skill_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Skill>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Skill_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Skill>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Skill IPropertySupporter<Skill>.DefaultValue(int index)
+        {
+            return DefaultValueSkill(index: index);
+        }
+
+        protected Skill DefaultValueSkill(int index)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.Teaches:
+                    return default(Skill);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Skill: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Single
+        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
+        Single IPropertySupporter<Single>.Get(int index)
+        {
+            return GetSingle(index: index);
+        }
+
+        protected Single GetSingle(int index)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.Value:
+                    return Value;
+                case Book_FieldIndex.Weight:
+                    return Weight;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        void IPropertySupporter<Single>.Set(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSingle(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetSingle(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.Value:
+                    SetValue(item, hasBeenSet, cmds);
+                    break;
+                case Book_FieldIndex.Weight:
+                    SetWeight(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Single>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Single>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSingle(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetSingle(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.Value:
+                    _hasBeenSetTracker[index] = false;
+                    Value = default(Single);
+                    break;
+                case Book_FieldIndex.Weight:
+                    _hasBeenSetTracker[index] = false;
+                    Weight = default(Single);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Single> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Single_subscriptions == null)
+            {
+                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
+            }
+            _Single_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Single_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Single IPropertySupporter<Single>.DefaultValue(int index)
+        {
+            return DefaultValueSingle(index: index);
+        }
+
+        protected Single DefaultValueSingle(int index)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.Value:
+                case Book_FieldIndex.Weight:
+                    return default(Single);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
             }
         }
 
@@ -895,18 +2056,36 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)Book_FieldIndex.Model,
-                        errorMask: errorMask));
+                    {
+                        var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                            frame: frame.Spawn(snapToFinalPosition: false),
+                            fieldIndex: (int)Book_FieldIndex.Model,
+                            errorMask: errorMask);
+                        if (ModeltryGet.Succeeded)
+                        {
+                            item.SetModel(item: ModeltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetModel();
+                        }
+                    }
                     return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var IcontryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Book_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (IcontryGet.Succeeded)
+                    {
+                        item.SetIcon(item: IcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetIcon();
+                    }
                     return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -924,39 +2103,87 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.Enchantment);
                 case "ANAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._EnchantmentPoints.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                    var EnchantmentPointstryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Book_FieldIndex.EnchantmentPoints,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (EnchantmentPointstryGet.Succeeded)
+                    {
+                        item.SetEnchantmentPoints(item: EnchantmentPointstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetEnchantmentPoints();
+                    }
                     return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.EnchantmentPoints);
                 case "DESC":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Description.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var DescriptiontryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Book_FieldIndex.Description,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DescriptiontryGet.Succeeded)
+                    {
+                        item.SetDescription(item: DescriptiontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetDescription();
+                    }
                     return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.Description);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Book.BookFlag>.Instance.Parse(
+                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Book.BookFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(1),
                             fieldIndex: (int)Book_FieldIndex.Flags,
-                            errorMask: errorMask));
-                        item._Teaches.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
+                            errorMask: errorMask);
+                        if (FlagstryGet.Succeeded)
+                        {
+                            item.SetFlags(item: FlagstryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetFlags();
+                        }
+                        var TeachestryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(1),
                             fieldIndex: (int)Book_FieldIndex.Teaches,
-                            errorMask: errorMask));
-                        item._Value.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (TeachestryGet.Succeeded)
+                        {
+                            item.SetTeaches(item: TeachestryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetTeaches();
+                        }
+                        var ValuetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Book_FieldIndex.Value,
-                            errorMask: errorMask));
-                        item._Weight.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (ValuetryGet.Succeeded)
+                        {
+                            item.SetValue(item: ValuetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetValue();
+                        }
+                        var WeighttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Book_FieldIndex.Weight,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (WeighttryGet.Succeeded)
+                        {
+                            item.SetWeight(item: WeighttryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetWeight();
+                        }
                     }
                     return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.Weight);
                 default:
@@ -1071,14 +2298,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Book_FieldIndex.Model:
-                    this._Model.Set(
+                    this.SetModel(
                         (Model)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Book_FieldIndex.Icon:
-                    this._Icon.Set(
+                    this.SetIcon(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Book_FieldIndex.Script:
                     this.Script_Property.Set(
@@ -1091,34 +2318,34 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Book_FieldIndex.EnchantmentPoints:
-                    this._EnchantmentPoints.Set(
+                    this.SetEnchantmentPoints(
                         (UInt16)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Book_FieldIndex.Description:
-                    this._Description.Set(
+                    this.SetDescription(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Book_FieldIndex.Flags:
-                    this._Flags.Set(
+                    this.SetFlags(
                         (Book.BookFlag)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Book_FieldIndex.Teaches:
-                    this._Teaches.Set(
+                    this.SetTeaches(
                         (Skill)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Book_FieldIndex.Value:
-                    this._Value.Set(
+                    this.SetValue(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Book_FieldIndex.Weight:
-                    this._Weight.Set(
+                    this.SetWeight(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1152,14 +2379,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Book_FieldIndex.Model:
-                    obj._Model.Set(
+                    obj.SetModel(
                         (Model)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Book_FieldIndex.Icon:
-                    obj._Icon.Set(
+                    obj.SetIcon(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Book_FieldIndex.Script:
                     obj.Script_Property.Set(
@@ -1172,34 +2399,34 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Book_FieldIndex.EnchantmentPoints:
-                    obj._EnchantmentPoints.Set(
+                    obj.SetEnchantmentPoints(
                         (UInt16)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Book_FieldIndex.Description:
-                    obj._Description.Set(
+                    obj.SetDescription(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Book_FieldIndex.Flags:
-                    obj._Flags.Set(
+                    obj.SetFlags(
                         (Book.BookFlag)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Book_FieldIndex.Teaches:
-                    obj._Teaches.Set(
+                    obj.SetTeaches(
                         (Skill)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Book_FieldIndex.Value:
-                    obj._Value.Set(
+                    obj.SetValue(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Book_FieldIndex.Weight:
-                    obj._Weight.Set(
+                    obj.SetWeight(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1341,7 +2568,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "e16c811f-5052-494d-8102-b7450f5b6833";
 
-        public const ushort FieldCount = 10;
+        public const ushort AdditionalFieldCount = 10;
+
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(Book_Mask<>);
 
@@ -1575,7 +2804,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1676,8 +2906,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Icon_Property.SetToWithDefault(
                         rhs: rhs.Icon_Property,
-                        def: def?.Icon_Property,
-                        cmds: cmds);
+                        def: def?.Icon_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1721,8 +2950,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.EnchantmentPoints_Property.SetToWithDefault(
                         rhs: rhs.EnchantmentPoints_Property,
-                        def: def?.EnchantmentPoints_Property,
-                        cmds: cmds);
+                        def: def?.EnchantmentPoints_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1736,8 +2964,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Description_Property.SetToWithDefault(
                         rhs: rhs.Description_Property,
-                        def: def?.Description_Property,
-                        cmds: cmds);
+                        def: def?.Description_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

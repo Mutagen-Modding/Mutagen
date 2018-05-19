@@ -33,6 +33,8 @@ namespace Mutagen.Bethesda.Oblivion
         ILeveledCreature,
         ILoquiObject<LeveledCreature>,
         ILoquiObjectSetter,
+        IPropertySupporter<Byte>,
+        IPropertySupporter<LeveledFlag>,
         IEquatable<LeveledCreature>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -48,14 +50,47 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region ChanceNone
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<Byte> _ChanceNone = NotifyingSetItem.Factory<Byte>(markAsSet: false);
-        public INotifyingSetItem<Byte> ChanceNone_Property => _ChanceNone;
+        protected Byte _ChanceNone;
+        protected PropertyForwarder<LeveledCreature, Byte> _ChanceNoneForwarder;
+        public INotifyingSetItem<Byte> ChanceNone_Property => _ChanceNoneForwarder ?? (_ChanceNoneForwarder = new PropertyForwarder<LeveledCreature, Byte>(this, (int)LeveledCreature_FieldIndex.ChanceNone));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte ChanceNone
         {
-            get => this._ChanceNone.Item;
-            set => this._ChanceNone.Set(value);
+            get => this._ChanceNone;
+            set => this.SetChanceNone(value);
+        }
+        protected void SetChanceNone(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)LeveledCreature_FieldIndex.ChanceNone];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ChanceNone == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)LeveledCreature_FieldIndex.ChanceNone] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = ChanceNone;
+                _ChanceNone = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)LeveledCreature_FieldIndex.ChanceNone,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _ChanceNone = item;
+            }
+        }
+        protected void UnsetChanceNone()
+        {
+            _hasBeenSetTracker[(int)LeveledCreature_FieldIndex.ChanceNone] = false;
+            ChanceNone = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte> ILeveledCreature.ChanceNone_Property => this.ChanceNone_Property;
@@ -63,14 +98,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Byte> ILeveledCreatureGetter.ChanceNone_Property => this.ChanceNone_Property;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<LeveledFlag> _Flags = NotifyingSetItem.Factory<LeveledFlag>(markAsSet: false);
-        public INotifyingSetItem<LeveledFlag> Flags_Property => _Flags;
+        protected LeveledFlag _Flags;
+        protected PropertyForwarder<LeveledCreature, LeveledFlag> _FlagsForwarder;
+        public INotifyingSetItem<LeveledFlag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<LeveledCreature, LeveledFlag>(this, (int)LeveledCreature_FieldIndex.Flags));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public LeveledFlag Flags
         {
-            get => this._Flags.Item;
-            set => this._Flags.Set(value);
+            get => this._Flags;
+            set => this.SetFlags(value);
+        }
+        protected void SetFlags(
+            LeveledFlag item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)LeveledCreature_FieldIndex.Flags];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)LeveledCreature_FieldIndex.Flags] = hasBeenSet;
+            }
+            if (_LeveledFlag_subscriptions != null)
+            {
+                var tmp = Flags;
+                _Flags = item;
+                _LeveledFlag_subscriptions.FireSubscriptions(
+                    index: (int)LeveledCreature_FieldIndex.Flags,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Flags = item;
+            }
+        }
+        protected void UnsetFlags()
+        {
+            _hasBeenSetTracker[(int)LeveledCreature_FieldIndex.Flags] = false;
+            Flags = default(LeveledFlag);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<LeveledFlag> ILeveledCreature.Flags_Property => this.Flags_Property;
@@ -517,17 +585,33 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "ChanceNone":
-                    item._ChanceNone.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var ChanceNonetryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)LeveledCreature_FieldIndex.ChanceNone,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ChanceNonetryGet.Succeeded)
+                    {
+                        item.SetChanceNone(item: ChanceNonetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetChanceNone();
+                    }
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<LeveledFlag>.Instance.Parse(
+                    var FlagstryGet = EnumXmlTranslation<LeveledFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)LeveledCreature_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (FlagstryGet.Succeeded)
+                    {
+                        item.SetFlags(item: FlagstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFlags();
+                    }
                     break;
                 case "Entries":
                     item._Entries.SetIfSucceededOrDefault(ListXmlTranslation<LeveledEntry<NPCSpawn>, MaskItem<Exception, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>>>.Instance.Parse(
@@ -562,6 +646,272 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Byte
+        protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
+        Byte IPropertySupporter<Byte>.Get(int index)
+        {
+            return GetByte(index: index);
+        }
+
+        protected Byte GetByte(int index)
+        {
+            switch ((LeveledCreature_FieldIndex)index)
+            {
+                case LeveledCreature_FieldIndex.ChanceNone:
+                    return ChanceNone;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        void IPropertySupporter<Byte>.Set(
+            int index,
+            Byte item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByte(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetByte(
+            int index,
+            Byte item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((LeveledCreature_FieldIndex)index)
+            {
+                case LeveledCreature_FieldIndex.ChanceNone:
+                    SetChanceNone(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByte(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetByte(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((LeveledCreature_FieldIndex)index)
+            {
+                case LeveledCreature_FieldIndex.ChanceNone:
+                    _hasBeenSetTracker[index] = false;
+                    ChanceNone = default(Byte);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Byte_subscriptions == null)
+            {
+                _Byte_subscriptions = new ObjectCentralizationSubscriptions<Byte>();
+            }
+            _Byte_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Byte_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte IPropertySupporter<Byte>.DefaultValue(int index)
+        {
+            return DefaultValueByte(index: index);
+        }
+
+        protected Byte DefaultValueByte(int index)
+        {
+            switch ((LeveledCreature_FieldIndex)index)
+            {
+                case LeveledCreature_FieldIndex.ChanceNone:
+                    return default(Byte);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter LeveledFlag
+        protected ObjectCentralizationSubscriptions<LeveledFlag> _LeveledFlag_subscriptions;
+        LeveledFlag IPropertySupporter<LeveledFlag>.Get(int index)
+        {
+            return GetLeveledFlag(index: index);
+        }
+
+        protected LeveledFlag GetLeveledFlag(int index)
+        {
+            switch ((LeveledCreature_FieldIndex)index)
+            {
+                case LeveledCreature_FieldIndex.Flags:
+                    return Flags;
+                default:
+                    throw new ArgumentException($"Unknown index for field type LeveledFlag: {index}");
+            }
+        }
+
+        void IPropertySupporter<LeveledFlag>.Set(
+            int index,
+            LeveledFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetLeveledFlag(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetLeveledFlag(
+            int index,
+            LeveledFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((LeveledCreature_FieldIndex)index)
+            {
+                case LeveledCreature_FieldIndex.Flags:
+                    SetFlags(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type LeveledFlag: {index}");
+            }
+        }
+
+        bool IPropertySupporter<LeveledFlag>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<LeveledFlag>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<LeveledFlag>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetLeveledFlag(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetLeveledFlag(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((LeveledCreature_FieldIndex)index)
+            {
+                case LeveledCreature_FieldIndex.Flags:
+                    _hasBeenSetTracker[index] = false;
+                    Flags = default(LeveledFlag);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type LeveledFlag: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<LeveledFlag>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<LeveledFlag> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_LeveledFlag_subscriptions == null)
+            {
+                _LeveledFlag_subscriptions = new ObjectCentralizationSubscriptions<LeveledFlag>();
+            }
+            _LeveledFlag_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<LeveledFlag>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _LeveledFlag_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<LeveledFlag>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        LeveledFlag IPropertySupporter<LeveledFlag>.DefaultValue(int index)
+        {
+            return DefaultValueLeveledFlag(index: index);
+        }
+
+        protected LeveledFlag DefaultValueLeveledFlag(int index)
+        {
+            switch ((LeveledCreature_FieldIndex)index)
+            {
+                case LeveledCreature_FieldIndex.Flags:
+                    return default(LeveledFlag);
+                default:
+                    throw new ArgumentException($"Unknown index for field type LeveledFlag: {index}");
             }
         }
 
@@ -790,17 +1140,33 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "LVLD":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._ChanceNone.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                    var ChanceNonetryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)LeveledCreature_FieldIndex.ChanceNone,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ChanceNonetryGet.Succeeded)
+                    {
+                        item.SetChanceNone(item: ChanceNonetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetChanceNone();
+                    }
                     return TryGet<LeveledCreature_FieldIndex?>.Succeed(LeveledCreature_FieldIndex.ChanceNone);
                 case "LVLF":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<LeveledFlag>.Instance.Parse(
+                    var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<LeveledFlag>.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)LeveledCreature_FieldIndex.Flags,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FlagstryGet.Succeeded)
+                    {
+                        item.SetFlags(item: FlagstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFlags();
+                    }
                     return TryGet<LeveledCreature_FieldIndex?>.Succeed(LeveledCreature_FieldIndex.Flags);
                 case "LVLO":
                     item.Entries.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<NPCSpawn>, MaskItem<Exception, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>>>.Instance.ParseRepeatedItem(
@@ -944,14 +1310,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case LeveledCreature_FieldIndex.ChanceNone:
-                    this._ChanceNone.Set(
+                    this.SetChanceNone(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case LeveledCreature_FieldIndex.Flags:
-                    this._Flags.Set(
+                    this.SetFlags(
                         (LeveledFlag)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case LeveledCreature_FieldIndex.Entries:
                     this._Entries.SetTo((IEnumerable<LeveledEntry<NPCSpawn>>)obj, cmds);
@@ -998,14 +1364,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case LeveledCreature_FieldIndex.ChanceNone:
-                    obj._ChanceNone.Set(
+                    obj.SetChanceNone(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case LeveledCreature_FieldIndex.Flags:
-                    obj._Flags.Set(
+                    obj.SetFlags(
                         (LeveledFlag)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case LeveledCreature_FieldIndex.Entries:
                     obj._Entries.SetTo((IEnumerable<LeveledEntry<NPCSpawn>>)pair.Value, null);
@@ -1110,7 +1476,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "3b7a7716-fb68-4925-94fc-7ec66bea9349";
 
-        public const ushort FieldCount = 5;
+        public const ushort AdditionalFieldCount = 5;
+
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(LeveledCreature_Mask<>);
 
@@ -1288,7 +1656,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1340,8 +1709,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.ChanceNone_Property.SetToWithDefault(
                         rhs: rhs.ChanceNone_Property,
-                        def: def?.ChanceNone_Property,
-                        cmds: cmds);
+                        def: def?.ChanceNone_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1355,8 +1723,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Flags_Property.SetToWithDefault(
                         rhs: rhs.Flags_Property,
-                        def: def?.Flags_Property,
-                        cmds: cmds);
+                        def: def?.Flags_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

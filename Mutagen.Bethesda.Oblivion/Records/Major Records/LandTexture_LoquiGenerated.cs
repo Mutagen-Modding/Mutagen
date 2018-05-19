@@ -33,6 +33,9 @@ namespace Mutagen.Bethesda.Oblivion
         ILandTexture,
         ILoquiObject<LandTexture>,
         ILoquiObjectSetter,
+        IPropertySupporter<String>,
+        IPropertySupporter<HavokData>,
+        IPropertySupporter<Byte>,
         IEquatable<LandTexture>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -48,14 +51,47 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _Icon = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Icon_Property => _Icon;
+        protected String _Icon;
+        protected PropertyForwarder<LandTexture, String> _IconForwarder;
+        public INotifyingSetItem<String> Icon_Property => _IconForwarder ?? (_IconForwarder = new PropertyForwarder<LandTexture, String>(this, (int)LandTexture_FieldIndex.Icon));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Icon
         {
-            get => this._Icon.Item;
-            set => this._Icon.Set(value);
+            get => this._Icon;
+            set => this.SetIcon(value);
+        }
+        protected void SetIcon(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)LandTexture_FieldIndex.Icon];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Icon == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)LandTexture_FieldIndex.Icon] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Icon;
+                _Icon = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)LandTexture_FieldIndex.Icon,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Icon = item;
+            }
+        }
+        protected void UnsetIcon()
+        {
+            _hasBeenSetTracker[(int)LandTexture_FieldIndex.Icon] = false;
+            Icon = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ILandTexture.Icon_Property => this.Icon_Property;
@@ -63,27 +99,95 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> ILandTextureGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Havok
+        protected HavokData _Havok;
+        protected PropertyForwarder<LandTexture, HavokData> _HavokForwarder;
+        public INotifyingSetItem<HavokData> Havok_Property => _HavokForwarder ?? (_HavokForwarder = new PropertyForwarder<LandTexture, HavokData>(this, (int)LandTexture_FieldIndex.Havok));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<HavokData> _Havok = new NotifyingSetItem<HavokData>();
-        public INotifyingSetItem<HavokData> Havok_Property => this._Havok;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        HavokData ILandTextureGetter.Havok => this.Havok;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public HavokData Havok { get => _Havok.Item; set => _Havok.Item = value; }
+        public HavokData Havok
+        {
+            get => this._Havok;
+            set => this.SetHavok(value);
+        }
+        protected void SetHavok(
+            HavokData item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)LandTexture_FieldIndex.Havok];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Havok, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)LandTexture_FieldIndex.Havok] = hasBeenSet;
+            }
+            if (_HavokData_subscriptions != null)
+            {
+                var tmp = Havok;
+                _Havok = item;
+                _HavokData_subscriptions.FireSubscriptions(
+                    index: (int)LandTexture_FieldIndex.Havok,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Havok = item;
+            }
+        }
+        protected void UnsetHavok()
+        {
+            _hasBeenSetTracker[(int)LandTexture_FieldIndex.Havok] = false;
+            Havok = default(HavokData);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<HavokData> ILandTexture.Havok_Property => this.Havok_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<HavokData> ILandTextureGetter.Havok_Property => this.Havok_Property;
         #endregion
         #region TextureSpecularExponent
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<Byte> _TextureSpecularExponent = NotifyingSetItem.Factory<Byte>(markAsSet: false);
-        public INotifyingSetItem<Byte> TextureSpecularExponent_Property => _TextureSpecularExponent;
+        protected Byte _TextureSpecularExponent;
+        protected PropertyForwarder<LandTexture, Byte> _TextureSpecularExponentForwarder;
+        public INotifyingSetItem<Byte> TextureSpecularExponent_Property => _TextureSpecularExponentForwarder ?? (_TextureSpecularExponentForwarder = new PropertyForwarder<LandTexture, Byte>(this, (int)LandTexture_FieldIndex.TextureSpecularExponent));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte TextureSpecularExponent
         {
-            get => this._TextureSpecularExponent.Item;
-            set => this._TextureSpecularExponent.Set(value);
+            get => this._TextureSpecularExponent;
+            set => this.SetTextureSpecularExponent(value);
+        }
+        protected void SetTextureSpecularExponent(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)LandTexture_FieldIndex.TextureSpecularExponent];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && TextureSpecularExponent == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)LandTexture_FieldIndex.TextureSpecularExponent] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = TextureSpecularExponent;
+                _TextureSpecularExponent = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)LandTexture_FieldIndex.TextureSpecularExponent,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _TextureSpecularExponent = item;
+            }
+        }
+        protected void UnsetTextureSpecularExponent()
+        {
+            _hasBeenSetTracker[(int)LandTexture_FieldIndex.TextureSpecularExponent] = false;
+            TextureSpecularExponent = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte> ILandTexture.TextureSpecularExponent_Property => this.TextureSpecularExponent_Property;
@@ -495,22 +599,46 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Icon":
-                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var IcontryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)LandTexture_FieldIndex.Icon,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (IcontryGet.Succeeded)
+                    {
+                        item.SetIcon(item: IcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetIcon();
+                    }
                     break;
                 case "Havok":
-                    item._Havok.SetIfSucceededOrDefault(LoquiXmlTranslation<HavokData, HavokData_ErrorMask>.Instance.Parse(
+                    var HavoktryGet = LoquiXmlTranslation<HavokData, HavokData_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)LandTexture_FieldIndex.Havok,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HavoktryGet.Succeeded)
+                    {
+                        item.SetHavok(item: HavoktryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHavok();
+                    }
                     break;
                 case "TextureSpecularExponent":
-                    item._TextureSpecularExponent.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var TextureSpecularExponenttryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)LandTexture_FieldIndex.TextureSpecularExponent,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (TextureSpecularExponenttryGet.Succeeded)
+                    {
+                        item.SetTextureSpecularExponent(item: TextureSpecularExponenttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetTextureSpecularExponent();
+                    }
                     break;
                 case "PotentialGrass":
                     item._PotentialGrass.SetIfSucceededOrDefault(ListXmlTranslation<FormIDSetLink<Grass>, Exception>.Instance.Parse(
@@ -534,6 +662,412 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter String
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected override String GetString(int index)
+        {
+            switch ((LandTexture_FieldIndex)index)
+            {
+                case LandTexture_FieldIndex.Icon:
+                    return Icon;
+                default:
+                    return base.GetString(index: index);
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((LandTexture_FieldIndex)index)
+            {
+                case LandTexture_FieldIndex.Icon:
+                    SetIcon(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetString(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((LandTexture_FieldIndex)index)
+            {
+                case LandTexture_FieldIndex.Icon:
+                    _hasBeenSetTracker[index] = false;
+                    Icon = default(String);
+                    break;
+                default:
+                    base.UnsetString(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected override String DefaultValueString(int index)
+        {
+            switch ((LandTexture_FieldIndex)index)
+            {
+                case LandTexture_FieldIndex.Icon:
+                    return default(String);
+                default:
+                    return base.DefaultValueString(index: index);
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter HavokData
+        protected ObjectCentralizationSubscriptions<HavokData> _HavokData_subscriptions;
+        HavokData IPropertySupporter<HavokData>.Get(int index)
+        {
+            return GetHavokData(index: index);
+        }
+
+        protected HavokData GetHavokData(int index)
+        {
+            switch ((LandTexture_FieldIndex)index)
+            {
+                case LandTexture_FieldIndex.Havok:
+                    return Havok;
+                default:
+                    throw new ArgumentException($"Unknown index for field type HavokData: {index}");
+            }
+        }
+
+        void IPropertySupporter<HavokData>.Set(
+            int index,
+            HavokData item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetHavokData(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetHavokData(
+            int index,
+            HavokData item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((LandTexture_FieldIndex)index)
+            {
+                case LandTexture_FieldIndex.Havok:
+                    SetHavok(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type HavokData: {index}");
+            }
+        }
+
+        bool IPropertySupporter<HavokData>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<HavokData>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<HavokData>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetHavokData(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetHavokData(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((LandTexture_FieldIndex)index)
+            {
+                case LandTexture_FieldIndex.Havok:
+                    _hasBeenSetTracker[index] = false;
+                    Havok = default(HavokData);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type HavokData: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<HavokData>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<HavokData> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_HavokData_subscriptions == null)
+            {
+                _HavokData_subscriptions = new ObjectCentralizationSubscriptions<HavokData>();
+            }
+            _HavokData_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<HavokData>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _HavokData_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<HavokData>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        HavokData IPropertySupporter<HavokData>.DefaultValue(int index)
+        {
+            return DefaultValueHavokData(index: index);
+        }
+
+        protected HavokData DefaultValueHavokData(int index)
+        {
+            switch ((LandTexture_FieldIndex)index)
+            {
+                case LandTexture_FieldIndex.Havok:
+                    return default(HavokData);
+                default:
+                    throw new ArgumentException($"Unknown index for field type HavokData: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Byte
+        protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
+        Byte IPropertySupporter<Byte>.Get(int index)
+        {
+            return GetByte(index: index);
+        }
+
+        protected Byte GetByte(int index)
+        {
+            switch ((LandTexture_FieldIndex)index)
+            {
+                case LandTexture_FieldIndex.TextureSpecularExponent:
+                    return TextureSpecularExponent;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        void IPropertySupporter<Byte>.Set(
+            int index,
+            Byte item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByte(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetByte(
+            int index,
+            Byte item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((LandTexture_FieldIndex)index)
+            {
+                case LandTexture_FieldIndex.TextureSpecularExponent:
+                    SetTextureSpecularExponent(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByte(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetByte(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((LandTexture_FieldIndex)index)
+            {
+                case LandTexture_FieldIndex.TextureSpecularExponent:
+                    _hasBeenSetTracker[index] = false;
+                    TextureSpecularExponent = default(Byte);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Byte_subscriptions == null)
+            {
+                _Byte_subscriptions = new ObjectCentralizationSubscriptions<Byte>();
+            }
+            _Byte_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Byte_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte IPropertySupporter<Byte>.DefaultValue(int index)
+        {
+            return DefaultValueByte(index: index);
+        }
+
+        protected Byte DefaultValueByte(int index)
+        {
+            switch ((LandTexture_FieldIndex)index)
+            {
+                case LandTexture_FieldIndex.TextureSpecularExponent:
+                    return default(Byte);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
             }
         }
 
@@ -747,24 +1281,50 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var IcontryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)LandTexture_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (IcontryGet.Succeeded)
+                    {
+                        item.SetIcon(item: IcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetIcon();
+                    }
                     return TryGet<LandTexture_FieldIndex?>.Succeed(LandTexture_FieldIndex.Icon);
                 case "HNAM":
-                    item._Havok.SetIfSucceededOrDefault(LoquiBinaryTranslation<HavokData, HavokData_ErrorMask>.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)LandTexture_FieldIndex.Havok,
-                        errorMask: errorMask));
+                    {
+                        var HavoktryGet = LoquiBinaryTranslation<HavokData, HavokData_ErrorMask>.Instance.Parse(
+                            frame: frame,
+                            fieldIndex: (int)LandTexture_FieldIndex.Havok,
+                            errorMask: errorMask);
+                        if (HavoktryGet.Succeeded)
+                        {
+                            item.SetHavok(item: HavoktryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetHavok();
+                        }
+                    }
                     return TryGet<LandTexture_FieldIndex?>.Succeed(LandTexture_FieldIndex.Havok);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._TextureSpecularExponent.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                    var TextureSpecularExponenttryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)LandTexture_FieldIndex.TextureSpecularExponent,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (TextureSpecularExponenttryGet.Succeeded)
+                    {
+                        item.SetTextureSpecularExponent(item: TextureSpecularExponenttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetTextureSpecularExponent();
+                    }
                     return TryGet<LandTexture_FieldIndex?>.Succeed(LandTexture_FieldIndex.TextureSpecularExponent);
                 case "GNAM":
                     item.PotentialGrass.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Grass>, Exception>.Instance.ParseRepeatedItem(
@@ -895,19 +1455,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case LandTexture_FieldIndex.Icon:
-                    this._Icon.Set(
+                    this.SetIcon(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case LandTexture_FieldIndex.Havok:
-                    this._Havok.Set(
+                    this.SetHavok(
                         (HavokData)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case LandTexture_FieldIndex.TextureSpecularExponent:
-                    this._TextureSpecularExponent.Set(
+                    this.SetTextureSpecularExponent(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case LandTexture_FieldIndex.PotentialGrass:
                     this._PotentialGrass.SetTo((IEnumerable<FormIDSetLink<Grass>>)obj, cmds);
@@ -944,19 +1504,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case LandTexture_FieldIndex.Icon:
-                    obj._Icon.Set(
+                    obj.SetIcon(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case LandTexture_FieldIndex.Havok:
-                    obj._Havok.Set(
+                    obj.SetHavok(
                         (HavokData)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case LandTexture_FieldIndex.TextureSpecularExponent:
-                    obj._TextureSpecularExponent.Set(
+                    obj.SetTextureSpecularExponent(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case LandTexture_FieldIndex.PotentialGrass:
                     obj._PotentialGrass.SetTo((IEnumerable<FormIDSetLink<Grass>>)pair.Value, null);
@@ -1046,7 +1606,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "528c071e-b61d-4149-b96a-a28f0d96e87e";
 
-        public const ushort FieldCount = 4;
+        public const ushort AdditionalFieldCount = 4;
+
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(LandTexture_Mask<>);
 
@@ -1212,7 +1774,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1264,8 +1827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Icon_Property.SetToWithDefault(
                         rhs: rhs.Icon_Property,
-                        def: def?.Icon_Property,
-                        cmds: cmds);
+                        def: def?.Icon_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1328,8 +1890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.TextureSpecularExponent_Property.SetToWithDefault(
                         rhs: rhs.TextureSpecularExponent_Property,
-                        def: def?.TextureSpecularExponent_Property,
-                        cmds: cmds);
+                        def: def?.TextureSpecularExponent_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

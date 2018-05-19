@@ -30,6 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRelation,
         ILoquiObject<Relation>,
         ILoquiObjectSetter,
+        IPropertySupporter<Int32>,
         IEquatable<Relation>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -39,6 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public Relation()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -52,14 +54,47 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<Faction> IRelationGetter.Faction_Property => this.Faction_Property;
         #endregion
         #region Modifier
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Int32> _Modifier = NotifyingItem.Factory<Int32>();
-        public INotifyingItem<Int32> Modifier_Property => _Modifier;
+        protected Int32 _Modifier;
+        protected PropertyForwarder<Relation, Int32> _ModifierForwarder;
+        public INotifyingSetItem<Int32> Modifier_Property => _ModifierForwarder ?? (_ModifierForwarder = new PropertyForwarder<Relation, Int32>(this, (int)Relation_FieldIndex.Modifier));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 Modifier
         {
-            get => this._Modifier.Item;
-            set => this._Modifier.Set(value);
+            get => this._Modifier;
+            set => this.SetModifier(value);
+        }
+        protected void SetModifier(
+            Int32 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Relation_FieldIndex.Modifier];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Modifier == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Relation_FieldIndex.Modifier] = hasBeenSet;
+            }
+            if (_Int32_subscriptions != null)
+            {
+                var tmp = Modifier;
+                _Modifier = item;
+                _Int32_subscriptions.FireSubscriptions(
+                    index: (int)Relation_FieldIndex.Modifier,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Modifier = item;
+            }
+        }
+        protected void UnsetModifier()
+        {
+            _hasBeenSetTracker[(int)Relation_FieldIndex.Modifier] = false;
+            Modifier = default(Int32);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Int32> IRelation.Modifier_Property => this.Modifier_Property;
@@ -417,13 +452,155 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Modifier":
-                    item._Modifier.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
+                    var ModifiertryGet = Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Relation_FieldIndex.Modifier,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ModifiertryGet.Succeeded)
+                    {
+                        item.SetModifier(item: ModifiertryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetModifier();
+                    }
                     break;
                 default:
                     break;
+            }
+        }
+
+        #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        #region IPropertySupporter Int32
+        protected ObjectCentralizationSubscriptions<Int32> _Int32_subscriptions;
+        Int32 IPropertySupporter<Int32>.Get(int index)
+        {
+            return GetInt32(index: index);
+        }
+
+        protected Int32 GetInt32(int index)
+        {
+            switch ((Relation_FieldIndex)index)
+            {
+                case Relation_FieldIndex.Modifier:
+                    return Modifier;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
+            }
+        }
+
+        void IPropertySupporter<Int32>.Set(
+            int index,
+            Int32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetInt32(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetInt32(
+            int index,
+            Int32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Relation_FieldIndex)index)
+            {
+                case Relation_FieldIndex.Modifier:
+                    SetModifier(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Int32>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Int32>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetInt32(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetInt32(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Relation_FieldIndex)index)
+            {
+                case Relation_FieldIndex.Modifier:
+                    _hasBeenSetTracker[index] = false;
+                    Modifier = default(Int32);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Int32>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Int32> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Int32_subscriptions == null)
+            {
+                _Int32_subscriptions = new ObjectCentralizationSubscriptions<Int32>();
+            }
+            _Int32_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Int32>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Int32_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Int32>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Int32 IPropertySupporter<Int32>.DefaultValue(int index)
+        {
+            return DefaultValueInt32(index: index);
+        }
+
+        protected Int32 DefaultValueInt32(int index)
+        {
+            switch ((Relation_FieldIndex)index)
+            {
+                case Relation_FieldIndex.Modifier:
+                    return default(Int32);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
             }
         }
 
@@ -639,10 +816,18 @@ namespace Mutagen.Bethesda.Oblivion
                 frame: frame,
                 fieldIndex: (int)Relation_FieldIndex.Faction,
                 errorMask: errorMask));
-            item._Modifier.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+            var ModifiertryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)Relation_FieldIndex.Modifier,
-                errorMask: errorMask));
+                errorMask: errorMask);
+            if (ModifiertryGet.Succeeded)
+            {
+                item.SetModifier(item: ModifiertryGet.Value);
+            }
+            else
+            {
+                item.UnsetModifier();
+            }
         }
 
         #endregion
@@ -767,9 +952,9 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Relation_FieldIndex.Modifier:
-                    this._Modifier.Set(
+                    this.SetModifier(
                         (Int32)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -814,9 +999,9 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Relation_FieldIndex.Modifier:
-                    obj._Modifier.Set(
+                    obj.SetModifier(
                         (Int32)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -881,6 +1066,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             version: 0);
 
         public const string GUID = "1a14276a-e5c3-4feb-8bf0-1d16878e7eb9";
+
+        public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
 
@@ -1020,7 +1207,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

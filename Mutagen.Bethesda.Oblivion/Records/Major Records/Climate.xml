@@ -10,10 +10,10 @@
       <RefDirect name="Model" refName="Model" />
       <Data recordType="TNAM">
         <Fields>
-          <DateTime name="SunriseBegin" customBinary="true" />
-          <DateTime name="SunriseEnd" customBinary="true" />
-          <DateTime name="SunsetBegin" customBinary="true" />
-          <DateTime name="SunsetEnd" customBinary="true" />
+          <DateTime name="SunriseBegin" customBinary="true" notifying="NotifyingItem" />
+          <DateTime name="SunriseEnd" customBinary="true" notifying="NotifyingItem" />
+          <DateTime name="SunsetBegin" customBinary="true" notifying="NotifyingItem" />
+          <DateTime name="SunsetEnd" customBinary="true" notifying="NotifyingItem" />
           <UInt8 name="Volatility" />
           <Enum name="Phase" enumName="Climate.MoonPhase" customBinary="true" />
           <UInt8 name="PhaseLength" customBinary="true" min="0" max="63" />

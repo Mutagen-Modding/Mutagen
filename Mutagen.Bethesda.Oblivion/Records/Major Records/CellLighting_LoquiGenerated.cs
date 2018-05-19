@@ -31,6 +31,9 @@ namespace Mutagen.Bethesda.Oblivion
         ICellLighting,
         ILoquiObject<CellLighting>,
         ILoquiObjectSetter,
+        IPropertySupporter<Color>,
+        IPropertySupporter<Single>,
+        IPropertySupporter<Int32>,
         IEquatable<CellLighting>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -40,20 +43,54 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public CellLighting()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region AmbientColor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Color> _AmbientColor = NotifyingItem.Factory<Color>();
-        public INotifyingItem<Color> AmbientColor_Property => _AmbientColor;
+        protected Color _AmbientColor;
+        protected PropertyForwarder<CellLighting, Color> _AmbientColorForwarder;
+        public INotifyingSetItem<Color> AmbientColor_Property => _AmbientColorForwarder ?? (_AmbientColorForwarder = new PropertyForwarder<CellLighting, Color>(this, (int)CellLighting_FieldIndex.AmbientColor));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Color AmbientColor
         {
-            get => this._AmbientColor.Item;
-            set => this._AmbientColor.Set(value);
+            get => this._AmbientColor;
+            set => this.SetAmbientColor(value);
+        }
+        protected void SetAmbientColor(
+            Color item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)CellLighting_FieldIndex.AmbientColor];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && AmbientColor == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)CellLighting_FieldIndex.AmbientColor] = hasBeenSet;
+            }
+            if (_Color_subscriptions != null)
+            {
+                var tmp = AmbientColor;
+                _AmbientColor = item;
+                _Color_subscriptions.FireSubscriptions(
+                    index: (int)CellLighting_FieldIndex.AmbientColor,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _AmbientColor = item;
+            }
+        }
+        protected void UnsetAmbientColor()
+        {
+            _hasBeenSetTracker[(int)CellLighting_FieldIndex.AmbientColor] = false;
+            AmbientColor = default(Color);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Color> ICellLighting.AmbientColor_Property => this.AmbientColor_Property;
@@ -61,14 +98,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Color> ICellLightingGetter.AmbientColor_Property => this.AmbientColor_Property;
         #endregion
         #region DirectionalColor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Color> _DirectionalColor = NotifyingItem.Factory<Color>();
-        public INotifyingItem<Color> DirectionalColor_Property => _DirectionalColor;
+        protected Color _DirectionalColor;
+        protected PropertyForwarder<CellLighting, Color> _DirectionalColorForwarder;
+        public INotifyingSetItem<Color> DirectionalColor_Property => _DirectionalColorForwarder ?? (_DirectionalColorForwarder = new PropertyForwarder<CellLighting, Color>(this, (int)CellLighting_FieldIndex.DirectionalColor));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Color DirectionalColor
         {
-            get => this._DirectionalColor.Item;
-            set => this._DirectionalColor.Set(value);
+            get => this._DirectionalColor;
+            set => this.SetDirectionalColor(value);
+        }
+        protected void SetDirectionalColor(
+            Color item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)CellLighting_FieldIndex.DirectionalColor];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DirectionalColor == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)CellLighting_FieldIndex.DirectionalColor] = hasBeenSet;
+            }
+            if (_Color_subscriptions != null)
+            {
+                var tmp = DirectionalColor;
+                _DirectionalColor = item;
+                _Color_subscriptions.FireSubscriptions(
+                    index: (int)CellLighting_FieldIndex.DirectionalColor,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _DirectionalColor = item;
+            }
+        }
+        protected void UnsetDirectionalColor()
+        {
+            _hasBeenSetTracker[(int)CellLighting_FieldIndex.DirectionalColor] = false;
+            DirectionalColor = default(Color);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Color> ICellLighting.DirectionalColor_Property => this.DirectionalColor_Property;
@@ -76,14 +146,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Color> ICellLightingGetter.DirectionalColor_Property => this.DirectionalColor_Property;
         #endregion
         #region FogColor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Color> _FogColor = NotifyingItem.Factory<Color>();
-        public INotifyingItem<Color> FogColor_Property => _FogColor;
+        protected Color _FogColor;
+        protected PropertyForwarder<CellLighting, Color> _FogColorForwarder;
+        public INotifyingSetItem<Color> FogColor_Property => _FogColorForwarder ?? (_FogColorForwarder = new PropertyForwarder<CellLighting, Color>(this, (int)CellLighting_FieldIndex.FogColor));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Color FogColor
         {
-            get => this._FogColor.Item;
-            set => this._FogColor.Set(value);
+            get => this._FogColor;
+            set => this.SetFogColor(value);
+        }
+        protected void SetFogColor(
+            Color item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)CellLighting_FieldIndex.FogColor];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FogColor == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)CellLighting_FieldIndex.FogColor] = hasBeenSet;
+            }
+            if (_Color_subscriptions != null)
+            {
+                var tmp = FogColor;
+                _FogColor = item;
+                _Color_subscriptions.FireSubscriptions(
+                    index: (int)CellLighting_FieldIndex.FogColor,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _FogColor = item;
+            }
+        }
+        protected void UnsetFogColor()
+        {
+            _hasBeenSetTracker[(int)CellLighting_FieldIndex.FogColor] = false;
+            FogColor = default(Color);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Color> ICellLighting.FogColor_Property => this.FogColor_Property;
@@ -91,14 +194,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Color> ICellLightingGetter.FogColor_Property => this.FogColor_Property;
         #endregion
         #region FogNear
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _FogNear = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> FogNear_Property => _FogNear;
+        protected Single _FogNear;
+        protected PropertyForwarder<CellLighting, Single> _FogNearForwarder;
+        public INotifyingSetItem<Single> FogNear_Property => _FogNearForwarder ?? (_FogNearForwarder = new PropertyForwarder<CellLighting, Single>(this, (int)CellLighting_FieldIndex.FogNear));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FogNear
         {
-            get => this._FogNear.Item;
-            set => this._FogNear.Set(value);
+            get => this._FogNear;
+            set => this.SetFogNear(value);
+        }
+        protected void SetFogNear(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)CellLighting_FieldIndex.FogNear];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FogNear == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)CellLighting_FieldIndex.FogNear] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = FogNear;
+                _FogNear = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)CellLighting_FieldIndex.FogNear,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _FogNear = item;
+            }
+        }
+        protected void UnsetFogNear()
+        {
+            _hasBeenSetTracker[(int)CellLighting_FieldIndex.FogNear] = false;
+            FogNear = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ICellLighting.FogNear_Property => this.FogNear_Property;
@@ -106,14 +242,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ICellLightingGetter.FogNear_Property => this.FogNear_Property;
         #endregion
         #region FogFar
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _FogFar = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> FogFar_Property => _FogFar;
+        protected Single _FogFar;
+        protected PropertyForwarder<CellLighting, Single> _FogFarForwarder;
+        public INotifyingSetItem<Single> FogFar_Property => _FogFarForwarder ?? (_FogFarForwarder = new PropertyForwarder<CellLighting, Single>(this, (int)CellLighting_FieldIndex.FogFar));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FogFar
         {
-            get => this._FogFar.Item;
-            set => this._FogFar.Set(value);
+            get => this._FogFar;
+            set => this.SetFogFar(value);
+        }
+        protected void SetFogFar(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)CellLighting_FieldIndex.FogFar];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FogFar == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)CellLighting_FieldIndex.FogFar] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = FogFar;
+                _FogFar = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)CellLighting_FieldIndex.FogFar,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _FogFar = item;
+            }
+        }
+        protected void UnsetFogFar()
+        {
+            _hasBeenSetTracker[(int)CellLighting_FieldIndex.FogFar] = false;
+            FogFar = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ICellLighting.FogFar_Property => this.FogFar_Property;
@@ -121,14 +290,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ICellLightingGetter.FogFar_Property => this.FogFar_Property;
         #endregion
         #region DirectionalRotationXY
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Int32> _DirectionalRotationXY = NotifyingItem.Factory<Int32>();
-        public INotifyingItem<Int32> DirectionalRotationXY_Property => _DirectionalRotationXY;
+        protected Int32 _DirectionalRotationXY;
+        protected PropertyForwarder<CellLighting, Int32> _DirectionalRotationXYForwarder;
+        public INotifyingSetItem<Int32> DirectionalRotationXY_Property => _DirectionalRotationXYForwarder ?? (_DirectionalRotationXYForwarder = new PropertyForwarder<CellLighting, Int32>(this, (int)CellLighting_FieldIndex.DirectionalRotationXY));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 DirectionalRotationXY
         {
-            get => this._DirectionalRotationXY.Item;
-            set => this._DirectionalRotationXY.Set(value);
+            get => this._DirectionalRotationXY;
+            set => this.SetDirectionalRotationXY(value);
+        }
+        protected void SetDirectionalRotationXY(
+            Int32 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)CellLighting_FieldIndex.DirectionalRotationXY];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DirectionalRotationXY == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)CellLighting_FieldIndex.DirectionalRotationXY] = hasBeenSet;
+            }
+            if (_Int32_subscriptions != null)
+            {
+                var tmp = DirectionalRotationXY;
+                _DirectionalRotationXY = item;
+                _Int32_subscriptions.FireSubscriptions(
+                    index: (int)CellLighting_FieldIndex.DirectionalRotationXY,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _DirectionalRotationXY = item;
+            }
+        }
+        protected void UnsetDirectionalRotationXY()
+        {
+            _hasBeenSetTracker[(int)CellLighting_FieldIndex.DirectionalRotationXY] = false;
+            DirectionalRotationXY = default(Int32);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Int32> ICellLighting.DirectionalRotationXY_Property => this.DirectionalRotationXY_Property;
@@ -136,14 +338,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Int32> ICellLightingGetter.DirectionalRotationXY_Property => this.DirectionalRotationXY_Property;
         #endregion
         #region DirectionalRotationZ
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Int32> _DirectionalRotationZ = NotifyingItem.Factory<Int32>();
-        public INotifyingItem<Int32> DirectionalRotationZ_Property => _DirectionalRotationZ;
+        protected Int32 _DirectionalRotationZ;
+        protected PropertyForwarder<CellLighting, Int32> _DirectionalRotationZForwarder;
+        public INotifyingSetItem<Int32> DirectionalRotationZ_Property => _DirectionalRotationZForwarder ?? (_DirectionalRotationZForwarder = new PropertyForwarder<CellLighting, Int32>(this, (int)CellLighting_FieldIndex.DirectionalRotationZ));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 DirectionalRotationZ
         {
-            get => this._DirectionalRotationZ.Item;
-            set => this._DirectionalRotationZ.Set(value);
+            get => this._DirectionalRotationZ;
+            set => this.SetDirectionalRotationZ(value);
+        }
+        protected void SetDirectionalRotationZ(
+            Int32 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)CellLighting_FieldIndex.DirectionalRotationZ];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DirectionalRotationZ == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)CellLighting_FieldIndex.DirectionalRotationZ] = hasBeenSet;
+            }
+            if (_Int32_subscriptions != null)
+            {
+                var tmp = DirectionalRotationZ;
+                _DirectionalRotationZ = item;
+                _Int32_subscriptions.FireSubscriptions(
+                    index: (int)CellLighting_FieldIndex.DirectionalRotationZ,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _DirectionalRotationZ = item;
+            }
+        }
+        protected void UnsetDirectionalRotationZ()
+        {
+            _hasBeenSetTracker[(int)CellLighting_FieldIndex.DirectionalRotationZ] = false;
+            DirectionalRotationZ = default(Int32);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Int32> ICellLighting.DirectionalRotationZ_Property => this.DirectionalRotationZ_Property;
@@ -151,14 +386,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Int32> ICellLightingGetter.DirectionalRotationZ_Property => this.DirectionalRotationZ_Property;
         #endregion
         #region DirectionalFade
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _DirectionalFade = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> DirectionalFade_Property => _DirectionalFade;
+        protected Single _DirectionalFade;
+        protected PropertyForwarder<CellLighting, Single> _DirectionalFadeForwarder;
+        public INotifyingSetItem<Single> DirectionalFade_Property => _DirectionalFadeForwarder ?? (_DirectionalFadeForwarder = new PropertyForwarder<CellLighting, Single>(this, (int)CellLighting_FieldIndex.DirectionalFade));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single DirectionalFade
         {
-            get => this._DirectionalFade.Item;
-            set => this._DirectionalFade.Set(value);
+            get => this._DirectionalFade;
+            set => this.SetDirectionalFade(value);
+        }
+        protected void SetDirectionalFade(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)CellLighting_FieldIndex.DirectionalFade];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DirectionalFade == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)CellLighting_FieldIndex.DirectionalFade] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = DirectionalFade;
+                _DirectionalFade = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)CellLighting_FieldIndex.DirectionalFade,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _DirectionalFade = item;
+            }
+        }
+        protected void UnsetDirectionalFade()
+        {
+            _hasBeenSetTracker[(int)CellLighting_FieldIndex.DirectionalFade] = false;
+            DirectionalFade = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ICellLighting.DirectionalFade_Property => this.DirectionalFade_Property;
@@ -166,14 +434,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ICellLightingGetter.DirectionalFade_Property => this.DirectionalFade_Property;
         #endregion
         #region FogClipDistance
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _FogClipDistance = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> FogClipDistance_Property => _FogClipDistance;
+        protected Single _FogClipDistance;
+        protected PropertyForwarder<CellLighting, Single> _FogClipDistanceForwarder;
+        public INotifyingSetItem<Single> FogClipDistance_Property => _FogClipDistanceForwarder ?? (_FogClipDistanceForwarder = new PropertyForwarder<CellLighting, Single>(this, (int)CellLighting_FieldIndex.FogClipDistance));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FogClipDistance
         {
-            get => this._FogClipDistance.Item;
-            set => this._FogClipDistance.Set(value);
+            get => this._FogClipDistance;
+            set => this.SetFogClipDistance(value);
+        }
+        protected void SetFogClipDistance(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)CellLighting_FieldIndex.FogClipDistance];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FogClipDistance == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)CellLighting_FieldIndex.FogClipDistance] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = FogClipDistance;
+                _FogClipDistance = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)CellLighting_FieldIndex.FogClipDistance,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _FogClipDistance = item;
+            }
+        }
+        protected void UnsetFogClipDistance()
+        {
+            _hasBeenSetTracker[(int)CellLighting_FieldIndex.FogClipDistance] = false;
+            FogClipDistance = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ICellLighting.FogClipDistance_Property => this.FogClipDistance_Property;
@@ -539,61 +840,593 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "AmbientColor":
-                    item._AmbientColor.SetIfSucceededOrDefault(ColorXmlTranslation.Instance.ParseNonNull(
+                    var AmbientColortryGet = ColorXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)CellLighting_FieldIndex.AmbientColor,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (AmbientColortryGet.Succeeded)
+                    {
+                        item.SetAmbientColor(item: AmbientColortryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetAmbientColor();
+                    }
                     break;
                 case "DirectionalColor":
-                    item._DirectionalColor.SetIfSucceededOrDefault(ColorXmlTranslation.Instance.ParseNonNull(
+                    var DirectionalColortryGet = ColorXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)CellLighting_FieldIndex.DirectionalColor,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DirectionalColortryGet.Succeeded)
+                    {
+                        item.SetDirectionalColor(item: DirectionalColortryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetDirectionalColor();
+                    }
                     break;
                 case "FogColor":
-                    item._FogColor.SetIfSucceededOrDefault(ColorXmlTranslation.Instance.ParseNonNull(
+                    var FogColortryGet = ColorXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)CellLighting_FieldIndex.FogColor,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FogColortryGet.Succeeded)
+                    {
+                        item.SetFogColor(item: FogColortryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFogColor();
+                    }
                     break;
                 case "FogNear":
-                    item._FogNear.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var FogNeartryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)CellLighting_FieldIndex.FogNear,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FogNeartryGet.Succeeded)
+                    {
+                        item.SetFogNear(item: FogNeartryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFogNear();
+                    }
                     break;
                 case "FogFar":
-                    item._FogFar.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var FogFartryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)CellLighting_FieldIndex.FogFar,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FogFartryGet.Succeeded)
+                    {
+                        item.SetFogFar(item: FogFartryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFogFar();
+                    }
                     break;
                 case "DirectionalRotationXY":
-                    item._DirectionalRotationXY.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
+                    var DirectionalRotationXYtryGet = Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationXY,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DirectionalRotationXYtryGet.Succeeded)
+                    {
+                        item.SetDirectionalRotationXY(item: DirectionalRotationXYtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetDirectionalRotationXY();
+                    }
                     break;
                 case "DirectionalRotationZ":
-                    item._DirectionalRotationZ.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
+                    var DirectionalRotationZtryGet = Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationZ,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DirectionalRotationZtryGet.Succeeded)
+                    {
+                        item.SetDirectionalRotationZ(item: DirectionalRotationZtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetDirectionalRotationZ();
+                    }
                     break;
                 case "DirectionalFade":
-                    item._DirectionalFade.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var DirectionalFadetryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)CellLighting_FieldIndex.DirectionalFade,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DirectionalFadetryGet.Succeeded)
+                    {
+                        item.SetDirectionalFade(item: DirectionalFadetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetDirectionalFade();
+                    }
                     break;
                 case "FogClipDistance":
-                    item._FogClipDistance.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var FogClipDistancetryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)CellLighting_FieldIndex.FogClipDistance,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FogClipDistancetryGet.Succeeded)
+                    {
+                        item.SetFogClipDistance(item: FogClipDistancetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFogClipDistance();
+                    }
                     break;
                 default:
                     break;
+            }
+        }
+
+        #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        #region IPropertySupporter Color
+        protected ObjectCentralizationSubscriptions<Color> _Color_subscriptions;
+        Color IPropertySupporter<Color>.Get(int index)
+        {
+            return GetColor(index: index);
+        }
+
+        protected Color GetColor(int index)
+        {
+            switch ((CellLighting_FieldIndex)index)
+            {
+                case CellLighting_FieldIndex.AmbientColor:
+                    return AmbientColor;
+                case CellLighting_FieldIndex.DirectionalColor:
+                    return DirectionalColor;
+                case CellLighting_FieldIndex.FogColor:
+                    return FogColor;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
+            }
+        }
+
+        void IPropertySupporter<Color>.Set(
+            int index,
+            Color item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetColor(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetColor(
+            int index,
+            Color item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((CellLighting_FieldIndex)index)
+            {
+                case CellLighting_FieldIndex.AmbientColor:
+                    SetAmbientColor(item, hasBeenSet, cmds);
+                    break;
+                case CellLighting_FieldIndex.DirectionalColor:
+                    SetDirectionalColor(item, hasBeenSet, cmds);
+                    break;
+                case CellLighting_FieldIndex.FogColor:
+                    SetFogColor(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Color>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Color>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Color>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetColor(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetColor(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((CellLighting_FieldIndex)index)
+            {
+                case CellLighting_FieldIndex.AmbientColor:
+                    _hasBeenSetTracker[index] = false;
+                    AmbientColor = default(Color);
+                    break;
+                case CellLighting_FieldIndex.DirectionalColor:
+                    _hasBeenSetTracker[index] = false;
+                    DirectionalColor = default(Color);
+                    break;
+                case CellLighting_FieldIndex.FogColor:
+                    _hasBeenSetTracker[index] = false;
+                    FogColor = default(Color);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Color>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Color> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Color_subscriptions == null)
+            {
+                _Color_subscriptions = new ObjectCentralizationSubscriptions<Color>();
+            }
+            _Color_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Color>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Color_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Color>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Color IPropertySupporter<Color>.DefaultValue(int index)
+        {
+            return DefaultValueColor(index: index);
+        }
+
+        protected Color DefaultValueColor(int index)
+        {
+            switch ((CellLighting_FieldIndex)index)
+            {
+                case CellLighting_FieldIndex.AmbientColor:
+                case CellLighting_FieldIndex.DirectionalColor:
+                case CellLighting_FieldIndex.FogColor:
+                    return default(Color);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Single
+        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
+        Single IPropertySupporter<Single>.Get(int index)
+        {
+            return GetSingle(index: index);
+        }
+
+        protected Single GetSingle(int index)
+        {
+            switch ((CellLighting_FieldIndex)index)
+            {
+                case CellLighting_FieldIndex.FogNear:
+                    return FogNear;
+                case CellLighting_FieldIndex.FogFar:
+                    return FogFar;
+                case CellLighting_FieldIndex.DirectionalFade:
+                    return DirectionalFade;
+                case CellLighting_FieldIndex.FogClipDistance:
+                    return FogClipDistance;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        void IPropertySupporter<Single>.Set(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSingle(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetSingle(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((CellLighting_FieldIndex)index)
+            {
+                case CellLighting_FieldIndex.FogNear:
+                    SetFogNear(item, hasBeenSet, cmds);
+                    break;
+                case CellLighting_FieldIndex.FogFar:
+                    SetFogFar(item, hasBeenSet, cmds);
+                    break;
+                case CellLighting_FieldIndex.DirectionalFade:
+                    SetDirectionalFade(item, hasBeenSet, cmds);
+                    break;
+                case CellLighting_FieldIndex.FogClipDistance:
+                    SetFogClipDistance(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Single>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Single>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSingle(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetSingle(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((CellLighting_FieldIndex)index)
+            {
+                case CellLighting_FieldIndex.FogNear:
+                    _hasBeenSetTracker[index] = false;
+                    FogNear = default(Single);
+                    break;
+                case CellLighting_FieldIndex.FogFar:
+                    _hasBeenSetTracker[index] = false;
+                    FogFar = default(Single);
+                    break;
+                case CellLighting_FieldIndex.DirectionalFade:
+                    _hasBeenSetTracker[index] = false;
+                    DirectionalFade = default(Single);
+                    break;
+                case CellLighting_FieldIndex.FogClipDistance:
+                    _hasBeenSetTracker[index] = false;
+                    FogClipDistance = default(Single);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Single> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Single_subscriptions == null)
+            {
+                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
+            }
+            _Single_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Single_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Single IPropertySupporter<Single>.DefaultValue(int index)
+        {
+            return DefaultValueSingle(index: index);
+        }
+
+        protected Single DefaultValueSingle(int index)
+        {
+            switch ((CellLighting_FieldIndex)index)
+            {
+                case CellLighting_FieldIndex.FogNear:
+                case CellLighting_FieldIndex.FogFar:
+                case CellLighting_FieldIndex.DirectionalFade:
+                case CellLighting_FieldIndex.FogClipDistance:
+                    return default(Single);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Int32
+        protected ObjectCentralizationSubscriptions<Int32> _Int32_subscriptions;
+        Int32 IPropertySupporter<Int32>.Get(int index)
+        {
+            return GetInt32(index: index);
+        }
+
+        protected Int32 GetInt32(int index)
+        {
+            switch ((CellLighting_FieldIndex)index)
+            {
+                case CellLighting_FieldIndex.DirectionalRotationXY:
+                    return DirectionalRotationXY;
+                case CellLighting_FieldIndex.DirectionalRotationZ:
+                    return DirectionalRotationZ;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
+            }
+        }
+
+        void IPropertySupporter<Int32>.Set(
+            int index,
+            Int32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetInt32(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetInt32(
+            int index,
+            Int32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((CellLighting_FieldIndex)index)
+            {
+                case CellLighting_FieldIndex.DirectionalRotationXY:
+                    SetDirectionalRotationXY(item, hasBeenSet, cmds);
+                    break;
+                case CellLighting_FieldIndex.DirectionalRotationZ:
+                    SetDirectionalRotationZ(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Int32>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Int32>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetInt32(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetInt32(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((CellLighting_FieldIndex)index)
+            {
+                case CellLighting_FieldIndex.DirectionalRotationXY:
+                    _hasBeenSetTracker[index] = false;
+                    DirectionalRotationXY = default(Int32);
+                    break;
+                case CellLighting_FieldIndex.DirectionalRotationZ:
+                    _hasBeenSetTracker[index] = false;
+                    DirectionalRotationZ = default(Int32);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Int32>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Int32> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Int32_subscriptions == null)
+            {
+                _Int32_subscriptions = new ObjectCentralizationSubscriptions<Int32>();
+            }
+            _Int32_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Int32>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Int32_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Int32>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Int32 IPropertySupporter<Int32>.DefaultValue(int index)
+        {
+            return DefaultValueInt32(index: index);
+        }
+
+        protected Int32 DefaultValueInt32(int index)
+        {
+            switch ((CellLighting_FieldIndex)index)
+            {
+                case CellLighting_FieldIndex.DirectionalRotationXY:
+                case CellLighting_FieldIndex.DirectionalRotationZ:
+                    return default(Int32);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
             }
         }
 
@@ -799,45 +1632,117 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<CellLighting_ErrorMask> errorMask)
         {
-            item._AmbientColor.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+            var AmbientColortryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)CellLighting_FieldIndex.AmbientColor,
                 errorMask: errorMask,
-                extraByte: true));
-            item._DirectionalColor.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                extraByte: true);
+            if (AmbientColortryGet.Succeeded)
+            {
+                item.SetAmbientColor(item: AmbientColortryGet.Value);
+            }
+            else
+            {
+                item.UnsetAmbientColor();
+            }
+            var DirectionalColortryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)CellLighting_FieldIndex.DirectionalColor,
                 errorMask: errorMask,
-                extraByte: true));
-            item._FogColor.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                extraByte: true);
+            if (DirectionalColortryGet.Succeeded)
+            {
+                item.SetDirectionalColor(item: DirectionalColortryGet.Value);
+            }
+            else
+            {
+                item.UnsetDirectionalColor();
+            }
+            var FogColortryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)CellLighting_FieldIndex.FogColor,
                 errorMask: errorMask,
-                extraByte: true));
-            item._FogNear.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                extraByte: true);
+            if (FogColortryGet.Succeeded)
+            {
+                item.SetFogColor(item: FogColortryGet.Value);
+            }
+            else
+            {
+                item.UnsetFogColor();
+            }
+            var FogNeartryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)CellLighting_FieldIndex.FogNear,
-                errorMask: errorMask));
-            item._FogFar.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            if (FogNeartryGet.Succeeded)
+            {
+                item.SetFogNear(item: FogNeartryGet.Value);
+            }
+            else
+            {
+                item.UnsetFogNear();
+            }
+            var FogFartryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)CellLighting_FieldIndex.FogFar,
-                errorMask: errorMask));
-            item._DirectionalRotationXY.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            if (FogFartryGet.Succeeded)
+            {
+                item.SetFogFar(item: FogFartryGet.Value);
+            }
+            else
+            {
+                item.UnsetFogFar();
+            }
+            var DirectionalRotationXYtryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationXY,
-                errorMask: errorMask));
-            item._DirectionalRotationZ.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            if (DirectionalRotationXYtryGet.Succeeded)
+            {
+                item.SetDirectionalRotationXY(item: DirectionalRotationXYtryGet.Value);
+            }
+            else
+            {
+                item.UnsetDirectionalRotationXY();
+            }
+            var DirectionalRotationZtryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationZ,
-                errorMask: errorMask));
-            item._DirectionalFade.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            if (DirectionalRotationZtryGet.Succeeded)
+            {
+                item.SetDirectionalRotationZ(item: DirectionalRotationZtryGet.Value);
+            }
+            else
+            {
+                item.UnsetDirectionalRotationZ();
+            }
+            var DirectionalFadetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)CellLighting_FieldIndex.DirectionalFade,
-                errorMask: errorMask));
-            item._FogClipDistance.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            if (DirectionalFadetryGet.Succeeded)
+            {
+                item.SetDirectionalFade(item: DirectionalFadetryGet.Value);
+            }
+            else
+            {
+                item.UnsetDirectionalFade();
+            }
+            var FogClipDistancetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)CellLighting_FieldIndex.FogClipDistance,
-                errorMask: errorMask));
+                errorMask: errorMask);
+            if (FogClipDistancetryGet.Succeeded)
+            {
+                item.SetFogClipDistance(item: FogClipDistancetryGet.Value);
+            }
+            else
+            {
+                item.UnsetFogClipDistance();
+            }
         }
 
         #endregion
@@ -957,49 +1862,49 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case CellLighting_FieldIndex.AmbientColor:
-                    this._AmbientColor.Set(
+                    this.SetAmbientColor(
                         (Color)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case CellLighting_FieldIndex.DirectionalColor:
-                    this._DirectionalColor.Set(
+                    this.SetDirectionalColor(
                         (Color)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case CellLighting_FieldIndex.FogColor:
-                    this._FogColor.Set(
+                    this.SetFogColor(
                         (Color)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case CellLighting_FieldIndex.FogNear:
-                    this._FogNear.Set(
+                    this.SetFogNear(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case CellLighting_FieldIndex.FogFar:
-                    this._FogFar.Set(
+                    this.SetFogFar(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case CellLighting_FieldIndex.DirectionalRotationXY:
-                    this._DirectionalRotationXY.Set(
+                    this.SetDirectionalRotationXY(
                         (Int32)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case CellLighting_FieldIndex.DirectionalRotationZ:
-                    this._DirectionalRotationZ.Set(
+                    this.SetDirectionalRotationZ(
                         (Int32)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case CellLighting_FieldIndex.DirectionalFade:
-                    this._DirectionalFade.Set(
+                    this.SetDirectionalFade(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case CellLighting_FieldIndex.FogClipDistance:
-                    this._FogClipDistance.Set(
+                    this.SetFogClipDistance(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1039,49 +1944,49 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case CellLighting_FieldIndex.AmbientColor:
-                    obj._AmbientColor.Set(
+                    obj.SetAmbientColor(
                         (Color)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case CellLighting_FieldIndex.DirectionalColor:
-                    obj._DirectionalColor.Set(
+                    obj.SetDirectionalColor(
                         (Color)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case CellLighting_FieldIndex.FogColor:
-                    obj._FogColor.Set(
+                    obj.SetFogColor(
                         (Color)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case CellLighting_FieldIndex.FogNear:
-                    obj._FogNear.Set(
+                    obj.SetFogNear(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case CellLighting_FieldIndex.FogFar:
-                    obj._FogFar.Set(
+                    obj.SetFogFar(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case CellLighting_FieldIndex.DirectionalRotationXY:
-                    obj._DirectionalRotationXY.Set(
+                    obj.SetDirectionalRotationXY(
                         (Int32)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case CellLighting_FieldIndex.DirectionalRotationZ:
-                    obj._DirectionalRotationZ.Set(
+                    obj.SetDirectionalRotationZ(
                         (Int32)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case CellLighting_FieldIndex.DirectionalFade:
-                    obj._DirectionalFade.Set(
+                    obj.SetDirectionalFade(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case CellLighting_FieldIndex.FogClipDistance:
-                    obj._FogClipDistance.Set(
+                    obj.SetFogClipDistance(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1211,6 +2116,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             version: 0);
 
         public const string GUID = "31acbf65-e6be-4373-9fb4-d0f1ab97c089";
+
+        public const ushort AdditionalFieldCount = 9;
 
         public const ushort FieldCount = 9;
 
@@ -1427,7 +2334,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

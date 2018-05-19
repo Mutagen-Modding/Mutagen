@@ -30,6 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
         IModel,
         ILoquiObject<Model>,
         ILoquiObjectSetter,
+        IPropertySupporter<String>,
+        IPropertySupporter<Single>,
+        IPropertySupporter<Byte[]>,
         IEquatable<Model>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -39,20 +42,54 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public Model()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region File
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<String> _File = NotifyingItem.Factory<String>();
-        public INotifyingItem<String> File_Property => _File;
+        protected String _File;
+        protected PropertyForwarder<Model, String> _FileForwarder;
+        public INotifyingSetItem<String> File_Property => _FileForwarder ?? (_FileForwarder = new PropertyForwarder<Model, String>(this, (int)Model_FieldIndex.File));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String File
         {
-            get => this._File.Item;
-            set => this._File.Set(value);
+            get => this._File;
+            set => this.SetFile(value);
+        }
+        protected void SetFile(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Model_FieldIndex.File];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && File == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Model_FieldIndex.File] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = File;
+                _File = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Model_FieldIndex.File,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _File = item;
+            }
+        }
+        protected void UnsetFile()
+        {
+            _hasBeenSetTracker[(int)Model_FieldIndex.File] = false;
+            File = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<String> IModel.File_Property => this.File_Property;
@@ -60,14 +97,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<String> IModelGetter.File_Property => this.File_Property;
         #endregion
         #region BoundRadius
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _BoundRadius = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> BoundRadius_Property => _BoundRadius;
+        protected Single _BoundRadius;
+        protected PropertyForwarder<Model, Single> _BoundRadiusForwarder;
+        public INotifyingSetItem<Single> BoundRadius_Property => _BoundRadiusForwarder ?? (_BoundRadiusForwarder = new PropertyForwarder<Model, Single>(this, (int)Model_FieldIndex.BoundRadius));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single BoundRadius
         {
-            get => this._BoundRadius.Item;
-            set => this._BoundRadius.Set(value);
+            get => this._BoundRadius;
+            set => this.SetBoundRadius(value);
+        }
+        protected void SetBoundRadius(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Model_FieldIndex.BoundRadius];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && BoundRadius == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Model_FieldIndex.BoundRadius] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = BoundRadius;
+                _BoundRadius = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Model_FieldIndex.BoundRadius,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _BoundRadius = item;
+            }
+        }
+        protected void UnsetBoundRadius()
+        {
+            _hasBeenSetTracker[(int)Model_FieldIndex.BoundRadius] = false;
+            BoundRadius = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IModel.BoundRadius_Property => this.BoundRadius_Property;
@@ -75,13 +145,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IModelGetter.BoundRadius_Property => this.BoundRadius_Property;
         #endregion
         #region Hashes
-        protected INotifyingSetItem<Byte[]> _Hashes = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
-        public INotifyingSetItem<Byte[]> Hashes_Property => _Hashes;
+        protected Byte[] _Hashes;
+        protected PropertyForwarder<Model, Byte[]> _HashesForwarder;
+        public INotifyingSetItem<Byte[]> Hashes_Property => _HashesForwarder ?? (_HashesForwarder = new PropertyForwarder<Model, Byte[]>(this, (int)Model_FieldIndex.Hashes));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Hashes
         {
-            get => this._Hashes.Item;
-            set => this._Hashes.Set(value);
+            get => this._Hashes;
+            set => this.SetHashes(value);
+        }
+        protected void SetHashes(
+            Byte[] item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Model_FieldIndex.Hashes];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Hashes, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Model_FieldIndex.Hashes] = hasBeenSet;
+            }
+            if (_ByteArr_subscriptions != null)
+            {
+                var tmp = Hashes;
+                _Hashes = item;
+                _ByteArr_subscriptions.FireSubscriptions(
+                    index: (int)Model_FieldIndex.Hashes,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Hashes = item;
+            }
+        }
+        protected void UnsetHashes()
+        {
+            _hasBeenSetTracker[(int)Model_FieldIndex.Hashes] = false;
+            Hashes = default(Byte[]);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IModel.Hashes_Property => this.Hashes_Property;
@@ -442,25 +546,449 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "File":
-                    item._File.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var FiletryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Model_FieldIndex.File,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FiletryGet.Succeeded)
+                    {
+                        item.SetFile(item: FiletryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFile();
+                    }
                     break;
                 case "BoundRadius":
-                    item._BoundRadius.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var BoundRadiustryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Model_FieldIndex.BoundRadius,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (BoundRadiustryGet.Succeeded)
+                    {
+                        item.SetBoundRadius(item: BoundRadiustryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetBoundRadius();
+                    }
                     break;
                 case "Hashes":
-                    item._Hashes.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
+                    var HashestryGet = ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Model_FieldIndex.Hashes,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HashestryGet.Succeeded)
+                    {
+                        item.SetHashes(item: HashestryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHashes();
+                    }
                     break;
                 default:
                     break;
+            }
+        }
+
+        #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        #region IPropertySupporter String
+        protected ObjectCentralizationSubscriptions<String> _String_subscriptions;
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected String GetString(int index)
+        {
+            switch ((Model_FieldIndex)index)
+            {
+                case Model_FieldIndex.File:
+                    return File;
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Model_FieldIndex)index)
+            {
+                case Model_FieldIndex.File:
+                    SetFile(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Model_FieldIndex)index)
+            {
+                case Model_FieldIndex.File:
+                    _hasBeenSetTracker[index] = false;
+                    File = default(String);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected String DefaultValueString(int index)
+        {
+            switch ((Model_FieldIndex)index)
+            {
+                case Model_FieldIndex.File:
+                    return default(String);
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Single
+        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
+        Single IPropertySupporter<Single>.Get(int index)
+        {
+            return GetSingle(index: index);
+        }
+
+        protected Single GetSingle(int index)
+        {
+            switch ((Model_FieldIndex)index)
+            {
+                case Model_FieldIndex.BoundRadius:
+                    return BoundRadius;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        void IPropertySupporter<Single>.Set(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSingle(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetSingle(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Model_FieldIndex)index)
+            {
+                case Model_FieldIndex.BoundRadius:
+                    SetBoundRadius(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Single>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Single>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSingle(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetSingle(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Model_FieldIndex)index)
+            {
+                case Model_FieldIndex.BoundRadius:
+                    _hasBeenSetTracker[index] = false;
+                    BoundRadius = default(Single);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Single> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Single_subscriptions == null)
+            {
+                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
+            }
+            _Single_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Single_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Single IPropertySupporter<Single>.DefaultValue(int index)
+        {
+            return DefaultValueSingle(index: index);
+        }
+
+        protected Single DefaultValueSingle(int index)
+        {
+            switch ((Model_FieldIndex)index)
+            {
+                case Model_FieldIndex.BoundRadius:
+                    return default(Single);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Byte[]
+        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
+        Byte[] IPropertySupporter<Byte[]>.Get(int index)
+        {
+            return GetByteArr(index: index);
+        }
+
+        protected Byte[] GetByteArr(int index)
+        {
+            switch ((Model_FieldIndex)index)
+            {
+                case Model_FieldIndex.Hashes:
+                    return Hashes;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        void IPropertySupporter<Byte[]>.Set(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByteArr(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetByteArr(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Model_FieldIndex)index)
+            {
+                case Model_FieldIndex.Hashes:
+                    SetHashes(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte[]>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte[]>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByteArr(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetByteArr(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Model_FieldIndex)index)
+            {
+                case Model_FieldIndex.Hashes:
+                    _hasBeenSetTracker[index] = false;
+                    Hashes = default(Byte[]);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte[]> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_ByteArr_subscriptions == null)
+            {
+                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
+            }
+            _ByteArr_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _ByteArr_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
+        {
+            return DefaultValueByteArr(index: index);
+        }
+
+        protected Byte[] DefaultValueByteArr(int index)
+        {
+            switch ((Model_FieldIndex)index)
+            {
+                case Model_FieldIndex.Hashes:
+                    return default(Byte[]);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
             }
         }
 
@@ -693,25 +1221,49 @@ namespace Mutagen.Bethesda.Oblivion
                 case "MODL":
                     if (lastParsed.HasValue && lastParsed.Value >= Model_FieldIndex.File) return TryGet<Model_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._File.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var FiletryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Model_FieldIndex.File,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FiletryGet.Succeeded)
+                    {
+                        item.SetFile(item: FiletryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFile();
+                    }
                     return TryGet<Model_FieldIndex?>.Succeed(Model_FieldIndex.File);
                 case "MODB":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._BoundRadius.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    var BoundRadiustryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Model_FieldIndex.BoundRadius,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (BoundRadiustryGet.Succeeded)
+                    {
+                        item.SetBoundRadius(item: BoundRadiustryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetBoundRadius();
+                    }
                     return TryGet<Model_FieldIndex?>.Succeed(Model_FieldIndex.BoundRadius);
                 case "MODT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Hashes.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
+                    var HashestryGet = ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Model_FieldIndex.Hashes,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HashestryGet.Succeeded)
+                    {
+                        item.SetHashes(item: HashestryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHashes();
+                    }
                     return TryGet<Model_FieldIndex?>.Succeed(Model_FieldIndex.Hashes);
                 default:
                     return TryGet<Model_FieldIndex?>.Failure;
@@ -835,19 +1387,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Model_FieldIndex.File:
-                    this._File.Set(
+                    this.SetFile(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Model_FieldIndex.BoundRadius:
-                    this._BoundRadius.Set(
+                    this.SetBoundRadius(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Model_FieldIndex.Hashes:
-                    this._Hashes.Set(
+                    this.SetHashes(
                         (Byte[])obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -887,19 +1439,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Model_FieldIndex.File:
-                    obj._File.Set(
+                    obj.SetFile(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Model_FieldIndex.BoundRadius:
-                    obj._BoundRadius.Set(
+                    obj.SetBoundRadius(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Model_FieldIndex.Hashes:
-                    obj._Hashes.Set(
+                    obj.SetHashes(
                         (Byte[])pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -975,6 +1527,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             version: 0);
 
         public const string GUID = "b989dfe1-feb4-4492-9a94-897f6be0c20a";
+
+        public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
 
@@ -1127,7 +1681,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1199,8 +1754,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Hashes_Property.SetToWithDefault(
                         rhs: rhs.Hashes_Property,
-                        def: def?.Hashes_Property,
-                        cmds: cmds);
+                        def: def?.Hashes_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

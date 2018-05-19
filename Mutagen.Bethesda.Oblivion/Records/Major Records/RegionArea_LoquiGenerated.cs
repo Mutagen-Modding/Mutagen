@@ -30,6 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionArea,
         ILoquiObject<RegionArea>,
         ILoquiObjectSetter,
+        IPropertySupporter<UInt32>,
         IEquatable<RegionArea>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -39,20 +40,54 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public RegionArea()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region EdgeFallOff
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<UInt32> _EdgeFallOff = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingSetItem<UInt32> EdgeFallOff_Property => _EdgeFallOff;
+        protected UInt32 _EdgeFallOff;
+        protected PropertyForwarder<RegionArea, UInt32> _EdgeFallOffForwarder;
+        public INotifyingSetItem<UInt32> EdgeFallOff_Property => _EdgeFallOffForwarder ?? (_EdgeFallOffForwarder = new PropertyForwarder<RegionArea, UInt32>(this, (int)RegionArea_FieldIndex.EdgeFallOff));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 EdgeFallOff
         {
-            get => this._EdgeFallOff.Item;
-            set => this._EdgeFallOff.Set(value);
+            get => this._EdgeFallOff;
+            set => this.SetEdgeFallOff(value);
+        }
+        protected void SetEdgeFallOff(
+            UInt32 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionArea_FieldIndex.EdgeFallOff];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && EdgeFallOff == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)RegionArea_FieldIndex.EdgeFallOff] = hasBeenSet;
+            }
+            if (_UInt32_subscriptions != null)
+            {
+                var tmp = EdgeFallOff;
+                _EdgeFallOff = item;
+                _UInt32_subscriptions.FireSubscriptions(
+                    index: (int)RegionArea_FieldIndex.EdgeFallOff,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _EdgeFallOff = item;
+            }
+        }
+        protected void UnsetEdgeFallOff()
+        {
+            _hasBeenSetTracker[(int)RegionArea_FieldIndex.EdgeFallOff] = false;
+            EdgeFallOff = default(UInt32);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<UInt32> IRegionArea.EdgeFallOff_Property => this.EdgeFallOff_Property;
@@ -436,10 +471,18 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "EdgeFallOff":
-                    item._EdgeFallOff.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
+                    var EdgeFallOfftryGet = UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RegionArea_FieldIndex.EdgeFallOff,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (EdgeFallOfftryGet.Succeeded)
+                    {
+                        item.SetEdgeFallOff(item: EdgeFallOfftryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetEdgeFallOff();
+                    }
                     break;
                 case "RegionPoints":
                     item._RegionPoints.SetIfSucceededOrDefault(ListXmlTranslation<P2Float, Exception>.Instance.Parse(
@@ -458,6 +501,140 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 default:
                     break;
+            }
+        }
+
+        #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        #region IPropertySupporter UInt32
+        protected ObjectCentralizationSubscriptions<UInt32> _UInt32_subscriptions;
+        UInt32 IPropertySupporter<UInt32>.Get(int index)
+        {
+            return GetUInt32(index: index);
+        }
+
+        protected UInt32 GetUInt32(int index)
+        {
+            switch ((RegionArea_FieldIndex)index)
+            {
+                case RegionArea_FieldIndex.EdgeFallOff:
+                    return EdgeFallOff;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        void IPropertySupporter<UInt32>.Set(
+            int index,
+            UInt32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetUInt32(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetUInt32(
+            int index,
+            UInt32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((RegionArea_FieldIndex)index)
+            {
+                case RegionArea_FieldIndex.EdgeFallOff:
+                    SetEdgeFallOff(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<UInt32>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<UInt32>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetUInt32(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetUInt32(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((RegionArea_FieldIndex)index)
+            {
+                case RegionArea_FieldIndex.EdgeFallOff:
+                    _hasBeenSetTracker[index] = false;
+                    EdgeFallOff = default(UInt32);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt32>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<UInt32> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_UInt32_subscriptions == null)
+            {
+                _UInt32_subscriptions = new ObjectCentralizationSubscriptions<UInt32>();
+            }
+            _UInt32_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt32>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _UInt32_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<UInt32>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        UInt32 IPropertySupporter<UInt32>.DefaultValue(int index)
+        {
+            return DefaultValueUInt32(index: index);
+        }
+
+        protected UInt32 DefaultValueUInt32(int index)
+        {
+            switch ((RegionArea_FieldIndex)index)
+            {
+                case RegionArea_FieldIndex.EdgeFallOff:
+                    return default(UInt32);
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
             }
         }
 
@@ -686,10 +863,18 @@ namespace Mutagen.Bethesda.Oblivion
                 case "RPLI":
                     if (lastParsed.HasValue && lastParsed.Value >= RegionArea_FieldIndex.EdgeFallOff) return TryGet<RegionArea_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._EdgeFallOff.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                    var EdgeFallOfftryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)RegionArea_FieldIndex.EdgeFallOff,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (EdgeFallOfftryGet.Succeeded)
+                    {
+                        item.SetEdgeFallOff(item: EdgeFallOfftryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetEdgeFallOff();
+                    }
                     return TryGet<RegionArea_FieldIndex?>.Succeed(RegionArea_FieldIndex.EdgeFallOff);
                 case "RPLD":
                     if (lastParsed.HasValue && lastParsed.Value >= RegionArea_FieldIndex.RegionPoints) return TryGet<RegionArea_FieldIndex?>.Failure;
@@ -830,9 +1015,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionArea_FieldIndex.EdgeFallOff:
-                    this._EdgeFallOff.Set(
+                    this.SetEdgeFallOff(
                         (UInt32)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case RegionArea_FieldIndex.RegionPoints:
                     this._RegionPoints.SetTo((IEnumerable<P2Float>)obj, cmds);
@@ -875,9 +1060,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionArea_FieldIndex.EdgeFallOff:
-                    obj._EdgeFallOff.Set(
+                    obj.SetEdgeFallOff(
                         (UInt32)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case RegionArea_FieldIndex.RegionPoints:
                     obj._RegionPoints.SetTo((IEnumerable<P2Float>)pair.Value, null);
@@ -943,6 +1128,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             version: 0);
 
         public const string GUID = "9cbce207-fe81-4953-a29f-9010447d54ff";
+
+        public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
 
@@ -1095,7 +1282,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1139,8 +1327,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.EdgeFallOff_Property.SetToWithDefault(
                         rhs: rhs.EdgeFallOff_Property,
-                        def: def?.EdgeFallOff_Property,
-                        cmds: cmds);
+                        def: def?.EdgeFallOff_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

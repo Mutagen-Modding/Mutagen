@@ -32,6 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionDataMapName,
         ILoquiObject<RegionDataMapName>,
         ILoquiObjectSetter,
+        IPropertySupporter<String>,
         IEquatable<RegionDataMapName>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -47,14 +48,47 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region MapName
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _MapName = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> MapName_Property => _MapName;
+        protected String _MapName;
+        protected PropertyForwarder<RegionDataMapName, String> _MapNameForwarder;
+        public INotifyingSetItem<String> MapName_Property => _MapNameForwarder ?? (_MapNameForwarder = new PropertyForwarder<RegionDataMapName, String>(this, (int)RegionDataMapName_FieldIndex.MapName));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String MapName
         {
-            get => this._MapName.Item;
-            set => this._MapName.Set(value);
+            get => this._MapName;
+            set => this.SetMapName(value);
+        }
+        protected void SetMapName(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionDataMapName_FieldIndex.MapName];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MapName == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)RegionDataMapName_FieldIndex.MapName] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = MapName;
+                _MapName = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)RegionDataMapName_FieldIndex.MapName,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _MapName = item;
+            }
+        }
+        protected void UnsetMapName()
+        {
+            _hasBeenSetTracker[(int)RegionDataMapName_FieldIndex.MapName] = false;
+            MapName = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IRegionDataMapName.MapName_Property => this.MapName_Property;
@@ -421,10 +455,18 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "MapName":
-                    item._MapName.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var MapNametryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)RegionDataMapName_FieldIndex.MapName,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MapNametryGet.Succeeded)
+                    {
+                        item.SetMapName(item: MapNametryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMapName();
+                    }
                     break;
                 default:
                     RegionData.Fill_XML_Internal(
@@ -433,6 +475,139 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter String
+        protected ObjectCentralizationSubscriptions<String> _String_subscriptions;
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected String GetString(int index)
+        {
+            switch ((RegionDataMapName_FieldIndex)index)
+            {
+                case RegionDataMapName_FieldIndex.MapName:
+                    return MapName;
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((RegionDataMapName_FieldIndex)index)
+            {
+                case RegionDataMapName_FieldIndex.MapName:
+                    SetMapName(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((RegionDataMapName_FieldIndex)index)
+            {
+                case RegionDataMapName_FieldIndex.MapName:
+                    _hasBeenSetTracker[index] = false;
+                    MapName = default(String);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected String DefaultValueString(int index)
+        {
+            switch ((RegionDataMapName_FieldIndex)index)
+            {
+                case RegionDataMapName_FieldIndex.MapName:
+                    return default(String);
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
             }
         }
 
@@ -664,11 +839,19 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "RDMP":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._MapName.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var MapNametryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)RegionDataMapName_FieldIndex.MapName,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MapNametryGet.Succeeded)
+                    {
+                        item.SetMapName(item: MapNametryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMapName();
+                    }
                     return TryGet<RegionDataMapName_FieldIndex?>.Succeed(RegionDataMapName_FieldIndex.MapName);
                 default:
                     return RegionData.Fill_Binary_RecordTypes(
@@ -782,9 +965,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataMapName_FieldIndex.MapName:
-                    this._MapName.Set(
+                    this.SetMapName(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -818,9 +1001,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataMapName_FieldIndex.MapName:
-                    obj._MapName.Set(
+                    obj.SetMapName(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -882,7 +1065,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "acca1023-9d99-47c2-82a4-d46ed90b087b";
 
-        public const ushort FieldCount = 1;
+        public const ushort AdditionalFieldCount = 1;
+
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(RegionDataMapName_Mask<>);
 
@@ -1010,7 +1195,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1062,8 +1248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.MapName_Property.SetToWithDefault(
                         rhs: rhs.MapName_Property,
-                        def: def?.MapName_Property,
-                        cmds: cmds);
+                        def: def?.MapName_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

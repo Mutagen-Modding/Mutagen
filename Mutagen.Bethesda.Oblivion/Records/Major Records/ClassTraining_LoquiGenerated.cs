@@ -30,6 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
         IClassTraining,
         ILoquiObject<ClassTraining>,
         ILoquiObjectSetter,
+        IPropertySupporter<Skill>,
+        IPropertySupporter<Byte>,
+        IPropertySupporter<Byte[]>,
         IEquatable<ClassTraining>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -39,20 +42,54 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public ClassTraining()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region TrainedSkill
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Skill> _TrainedSkill = NotifyingItem.Factory<Skill>();
-        public INotifyingItem<Skill> TrainedSkill_Property => _TrainedSkill;
+        protected Skill _TrainedSkill;
+        protected PropertyForwarder<ClassTraining, Skill> _TrainedSkillForwarder;
+        public INotifyingSetItem<Skill> TrainedSkill_Property => _TrainedSkillForwarder ?? (_TrainedSkillForwarder = new PropertyForwarder<ClassTraining, Skill>(this, (int)ClassTraining_FieldIndex.TrainedSkill));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Skill TrainedSkill
         {
-            get => this._TrainedSkill.Item;
-            set => this._TrainedSkill.Set(value);
+            get => this._TrainedSkill;
+            set => this.SetTrainedSkill(value);
+        }
+        protected void SetTrainedSkill(
+            Skill item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)ClassTraining_FieldIndex.TrainedSkill];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && TrainedSkill == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)ClassTraining_FieldIndex.TrainedSkill] = hasBeenSet;
+            }
+            if (_Skill_subscriptions != null)
+            {
+                var tmp = TrainedSkill;
+                _TrainedSkill = item;
+                _Skill_subscriptions.FireSubscriptions(
+                    index: (int)ClassTraining_FieldIndex.TrainedSkill,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _TrainedSkill = item;
+            }
+        }
+        protected void UnsetTrainedSkill()
+        {
+            _hasBeenSetTracker[(int)ClassTraining_FieldIndex.TrainedSkill] = false;
+            TrainedSkill = default(Skill);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Skill> IClassTraining.TrainedSkill_Property => this.TrainedSkill_Property;
@@ -60,25 +97,97 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Skill> IClassTrainingGetter.TrainedSkill_Property => this.TrainedSkill_Property;
         #endregion
         #region MaximumTrainingLevel
-        protected INotifyingItem<Byte> _MaximumTrainingLevel = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> MaximumTrainingLevel_Property => _MaximumTrainingLevel;
+        protected Byte _MaximumTrainingLevel;
+        protected PropertyForwarder<ClassTraining, Byte> _MaximumTrainingLevelForwarder;
+        public INotifyingSetItem<Byte> MaximumTrainingLevel_Property => _MaximumTrainingLevelForwarder ?? (_MaximumTrainingLevelForwarder = new PropertyForwarder<ClassTraining, Byte>(this, (int)ClassTraining_FieldIndex.MaximumTrainingLevel));
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte MaximumTrainingLevel
         {
-            get => this._MaximumTrainingLevel.Item;
-            set => this._MaximumTrainingLevel.Set(value.PutInRange(MaximumTrainingLevel_Range.Min, MaximumTrainingLevel_Range.Max));
+            get => this._MaximumTrainingLevel;
+            set => this.SetMaximumTrainingLevel(value);
         }
+        protected void SetMaximumTrainingLevel(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            item = item.PutInRange(MaximumTrainingLevel_Range.Min, MaximumTrainingLevel_Range.Max);
+            var oldHasBeenSet = _hasBeenSetTracker[(int)ClassTraining_FieldIndex.MaximumTrainingLevel];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MaximumTrainingLevel == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)ClassTraining_FieldIndex.MaximumTrainingLevel] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = MaximumTrainingLevel;
+                _MaximumTrainingLevel = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _MaximumTrainingLevel = item;
+            }
+        }
+        protected void UnsetMaximumTrainingLevel()
+        {
+            _hasBeenSetTracker[(int)ClassTraining_FieldIndex.MaximumTrainingLevel] = false;
+            MaximumTrainingLevel = default(Byte);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IClassTraining.MaximumTrainingLevel_Property => this.MaximumTrainingLevel_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> IClassTrainingGetter.MaximumTrainingLevel_Property => this.MaximumTrainingLevel_Property;
         public static RangeUInt8 MaximumTrainingLevel_Range = new RangeUInt8(0, 100);
         #endregion
         #region Fluff
-        protected INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[2]);
-        public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
+        protected Byte[] _Fluff;
+        protected PropertyForwarder<ClassTraining, Byte[]> _FluffForwarder;
+        public INotifyingSetItem<Byte[]> Fluff_Property => _FluffForwarder ?? (_FluffForwarder = new PropertyForwarder<ClassTraining, Byte[]>(this, (int)ClassTraining_FieldIndex.Fluff));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Fluff
         {
-            get => this._Fluff.Item;
-            set => this._Fluff.Set(value);
+            get => this._Fluff;
+            set => this.SetFluff(value);
+        }
+        protected void SetFluff(
+            Byte[] item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)ClassTraining_FieldIndex.Fluff];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)ClassTraining_FieldIndex.Fluff] = hasBeenSet;
+            }
+            if (_ByteArr_subscriptions != null)
+            {
+                var tmp = Fluff;
+                _Fluff = item;
+                _ByteArr_subscriptions.FireSubscriptions(
+                    index: (int)ClassTraining_FieldIndex.Fluff,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Fluff = item;
+            }
+        }
+        protected void UnsetFluff()
+        {
+            _hasBeenSetTracker[(int)ClassTraining_FieldIndex.Fluff] = false;
+            Fluff = default(Byte[]);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> IClassTraining.Fluff_Property => this.Fluff_Property;
@@ -432,26 +541,450 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "TrainedSkill":
-                    item._TrainedSkill.SetIfSucceededOrDefault(EnumXmlTranslation<Skill>.Instance.Parse(
+                    var TrainedSkilltryGet = EnumXmlTranslation<Skill>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)ClassTraining_FieldIndex.TrainedSkill,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (TrainedSkilltryGet.Succeeded)
+                    {
+                        item.SetTrainedSkill(item: TrainedSkilltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetTrainedSkill();
+                    }
                     break;
                 case "MaximumTrainingLevel":
-                    item._MaximumTrainingLevel.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var MaximumTrainingLeveltryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MaximumTrainingLeveltryGet.Succeeded)
+                    {
+                        item.SetMaximumTrainingLevel(item: MaximumTrainingLeveltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMaximumTrainingLevel();
+                    }
                     break;
                 case "Fluff":
-                    item._Fluff.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
+                    var FlufftryGet = ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)ClassTraining_FieldIndex.Fluff,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FlufftryGet.Succeeded)
+                    {
+                        item.SetFluff(item: FlufftryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFluff();
+                    }
                     break;
                 default:
                     break;
+            }
+        }
+
+        #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        #region IPropertySupporter Skill
+        protected ObjectCentralizationSubscriptions<Skill> _Skill_subscriptions;
+        Skill IPropertySupporter<Skill>.Get(int index)
+        {
+            return GetSkill(index: index);
+        }
+
+        protected Skill GetSkill(int index)
+        {
+            switch ((ClassTraining_FieldIndex)index)
+            {
+                case ClassTraining_FieldIndex.TrainedSkill:
+                    return TrainedSkill;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Skill: {index}");
+            }
+        }
+
+        void IPropertySupporter<Skill>.Set(
+            int index,
+            Skill item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSkill(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetSkill(
+            int index,
+            Skill item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((ClassTraining_FieldIndex)index)
+            {
+                case ClassTraining_FieldIndex.TrainedSkill:
+                    SetTrainedSkill(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Skill: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Skill>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Skill>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Skill>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSkill(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetSkill(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((ClassTraining_FieldIndex)index)
+            {
+                case ClassTraining_FieldIndex.TrainedSkill:
+                    _hasBeenSetTracker[index] = false;
+                    TrainedSkill = default(Skill);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Skill: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Skill>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Skill> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Skill_subscriptions == null)
+            {
+                _Skill_subscriptions = new ObjectCentralizationSubscriptions<Skill>();
+            }
+            _Skill_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Skill>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Skill_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Skill>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Skill IPropertySupporter<Skill>.DefaultValue(int index)
+        {
+            return DefaultValueSkill(index: index);
+        }
+
+        protected Skill DefaultValueSkill(int index)
+        {
+            switch ((ClassTraining_FieldIndex)index)
+            {
+                case ClassTraining_FieldIndex.TrainedSkill:
+                    return default(Skill);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Skill: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Byte
+        protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
+        Byte IPropertySupporter<Byte>.Get(int index)
+        {
+            return GetByte(index: index);
+        }
+
+        protected Byte GetByte(int index)
+        {
+            switch ((ClassTraining_FieldIndex)index)
+            {
+                case ClassTraining_FieldIndex.MaximumTrainingLevel:
+                    return MaximumTrainingLevel;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        void IPropertySupporter<Byte>.Set(
+            int index,
+            Byte item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByte(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetByte(
+            int index,
+            Byte item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((ClassTraining_FieldIndex)index)
+            {
+                case ClassTraining_FieldIndex.MaximumTrainingLevel:
+                    SetMaximumTrainingLevel(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByte(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetByte(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((ClassTraining_FieldIndex)index)
+            {
+                case ClassTraining_FieldIndex.MaximumTrainingLevel:
+                    _hasBeenSetTracker[index] = false;
+                    MaximumTrainingLevel = default(Byte);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Byte_subscriptions == null)
+            {
+                _Byte_subscriptions = new ObjectCentralizationSubscriptions<Byte>();
+            }
+            _Byte_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Byte_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte IPropertySupporter<Byte>.DefaultValue(int index)
+        {
+            return DefaultValueByte(index: index);
+        }
+
+        protected Byte DefaultValueByte(int index)
+        {
+            switch ((ClassTraining_FieldIndex)index)
+            {
+                case ClassTraining_FieldIndex.MaximumTrainingLevel:
+                    return default(Byte);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Byte[]
+        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
+        Byte[] IPropertySupporter<Byte[]>.Get(int index)
+        {
+            return GetByteArr(index: index);
+        }
+
+        protected Byte[] GetByteArr(int index)
+        {
+            switch ((ClassTraining_FieldIndex)index)
+            {
+                case ClassTraining_FieldIndex.Fluff:
+                    return Fluff;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        void IPropertySupporter<Byte[]>.Set(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByteArr(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetByteArr(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((ClassTraining_FieldIndex)index)
+            {
+                case ClassTraining_FieldIndex.Fluff:
+                    SetFluff(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte[]>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte[]>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByteArr(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetByteArr(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((ClassTraining_FieldIndex)index)
+            {
+                case ClassTraining_FieldIndex.Fluff:
+                    _hasBeenSetTracker[index] = false;
+                    Fluff = default(Byte[]);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte[]> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_ByteArr_subscriptions == null)
+            {
+                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
+            }
+            _ByteArr_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _ByteArr_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
+        {
+            return DefaultValueByteArr(index: index);
+        }
+
+        protected Byte[] DefaultValueByteArr(int index)
+        {
+            switch ((ClassTraining_FieldIndex)index)
+            {
+                case ClassTraining_FieldIndex.Fluff:
+                    return default(Byte[]);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
             }
         }
 
@@ -650,18 +1183,42 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<ClassTraining_ErrorMask> errorMask)
         {
-            item._TrainedSkill.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
+            var TrainedSkilltryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
                 frame: frame.SpawnWithLength(1),
                 fieldIndex: (int)ClassTraining_FieldIndex.TrainedSkill,
-                errorMask: errorMask));
-            item._MaximumTrainingLevel.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            if (TrainedSkilltryGet.Succeeded)
+            {
+                item.SetTrainedSkill(item: TrainedSkilltryGet.Value);
+            }
+            else
+            {
+                item.UnsetTrainedSkill();
+            }
+            var MaximumTrainingLeveltryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
-                errorMask: errorMask));
-            item._Fluff.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            if (MaximumTrainingLeveltryGet.Succeeded)
+            {
+                item.SetMaximumTrainingLevel(item: MaximumTrainingLeveltryGet.Value);
+            }
+            else
+            {
+                item.UnsetMaximumTrainingLevel();
+            }
+            var FlufftryGet = ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(2),
                 fieldIndex: (int)ClassTraining_FieldIndex.Fluff,
-                errorMask: errorMask));
+                errorMask: errorMask);
+            if (FlufftryGet.Succeeded)
+            {
+                item.SetFluff(item: FlufftryGet.Value);
+            }
+            else
+            {
+                item.UnsetFluff();
+            }
         }
 
         #endregion
@@ -781,19 +1338,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case ClassTraining_FieldIndex.TrainedSkill:
-                    this._TrainedSkill.Set(
+                    this.SetTrainedSkill(
                         (Skill)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case ClassTraining_FieldIndex.MaximumTrainingLevel:
-                    this._MaximumTrainingLevel.Set(
+                    this.SetMaximumTrainingLevel(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case ClassTraining_FieldIndex.Fluff:
-                    this._Fluff.Set(
+                    this.SetFluff(
                         (Byte[])obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -833,19 +1390,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case ClassTraining_FieldIndex.TrainedSkill:
-                    obj._TrainedSkill.Set(
+                    obj.SetTrainedSkill(
                         (Skill)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case ClassTraining_FieldIndex.MaximumTrainingLevel:
-                    obj._MaximumTrainingLevel.Set(
+                    obj.SetMaximumTrainingLevel(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case ClassTraining_FieldIndex.Fluff:
-                    obj._Fluff.Set(
+                    obj.SetFluff(
                         (Byte[])pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -921,6 +1478,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             version: 0);
 
         public const string GUID = "db3e6d59-8545-4d81-8531-4eb0b56c4a47";
+
+        public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
 
@@ -1069,7 +1628,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

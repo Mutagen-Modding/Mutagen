@@ -788,7 +788,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "2fe14395-5518-4c4a-85ff-7aba6d405e2b";
 
-        public const ushort FieldCount = 0;
+        public const ushort AdditionalFieldCount = 0;
+
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(EffectShader_Mask<>);
 
@@ -899,7 +901,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

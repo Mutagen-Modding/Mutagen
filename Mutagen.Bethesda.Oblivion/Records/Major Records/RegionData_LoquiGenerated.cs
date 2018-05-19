@@ -30,6 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionData,
         ILoquiObject<RegionData>,
         ILoquiObjectSetter,
+        IPropertySupporter<RegionData.RegionDataType>,
+        IPropertySupporter<RegionData.RegionDataFlag>,
+        IPropertySupporter<Byte>,
         IEquatable<RegionData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -39,33 +42,100 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public RegionData()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region DataType
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<RegionData.RegionDataType> _DataType = NotifyingItem.Factory<RegionData.RegionDataType>();
-        public INotifyingItemGetter<RegionData.RegionDataType> DataType_Property => _DataType;
+        protected RegionData.RegionDataType _DataType;
+        protected PropertyForwarder<RegionData, RegionData.RegionDataType> _DataTypeForwarder;
+        public INotifyingSetItemGetter<RegionData.RegionDataType> DataType_Property => _DataTypeForwarder ?? (_DataTypeForwarder = new PropertyForwarder<RegionData, RegionData.RegionDataType>(this, (int)RegionData_FieldIndex.DataType));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public RegionData.RegionDataType DataType
         {
-            get => this._DataType.Item;
-            protected set => this._DataType.Set(value);
+            get => this._DataType;
+            protected set => this.SetDataType(value);
+        }
+        protected void SetDataType(
+            RegionData.RegionDataType item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionData_FieldIndex.DataType];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DataType == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)RegionData_FieldIndex.DataType] = hasBeenSet;
+            }
+            if (_RegionDataRegionDataType_subscriptions != null)
+            {
+                var tmp = DataType;
+                _DataType = item;
+                _RegionDataRegionDataType_subscriptions.FireSubscriptions(
+                    index: (int)RegionData_FieldIndex.DataType,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _DataType = item;
+            }
+        }
+        protected void UnsetDataType()
+        {
+            _hasBeenSetTracker[(int)RegionData_FieldIndex.DataType] = false;
+            DataType = default(RegionData.RegionDataType);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<RegionData.RegionDataType> IRegionDataGetter.DataType_Property => this.DataType_Property;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<RegionData.RegionDataFlag> _Flags = NotifyingItem.Factory<RegionData.RegionDataFlag>();
-        public INotifyingItem<RegionData.RegionDataFlag> Flags_Property => _Flags;
+        protected RegionData.RegionDataFlag _Flags;
+        protected PropertyForwarder<RegionData, RegionData.RegionDataFlag> _FlagsForwarder;
+        public INotifyingSetItem<RegionData.RegionDataFlag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<RegionData, RegionData.RegionDataFlag>(this, (int)RegionData_FieldIndex.Flags));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public RegionData.RegionDataFlag Flags
         {
-            get => this._Flags.Item;
-            set => this._Flags.Set(value);
+            get => this._Flags;
+            set => this.SetFlags(value);
+        }
+        protected void SetFlags(
+            RegionData.RegionDataFlag item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionData_FieldIndex.Flags];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)RegionData_FieldIndex.Flags] = hasBeenSet;
+            }
+            if (_RegionDataRegionDataFlag_subscriptions != null)
+            {
+                var tmp = Flags;
+                _Flags = item;
+                _RegionDataRegionDataFlag_subscriptions.FireSubscriptions(
+                    index: (int)RegionData_FieldIndex.Flags,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Flags = item;
+            }
+        }
+        protected void UnsetFlags()
+        {
+            _hasBeenSetTracker[(int)RegionData_FieldIndex.Flags] = false;
+            Flags = default(RegionData.RegionDataFlag);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<RegionData.RegionDataFlag> IRegionData.Flags_Property => this.Flags_Property;
@@ -73,14 +143,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<RegionData.RegionDataFlag> IRegionDataGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Priority
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Priority = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Priority_Property => _Priority;
+        protected Byte _Priority;
+        protected PropertyForwarder<RegionData, Byte> _PriorityForwarder;
+        public INotifyingSetItem<Byte> Priority_Property => _PriorityForwarder ?? (_PriorityForwarder = new PropertyForwarder<RegionData, Byte>(this, (int)RegionData_FieldIndex.Priority));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Priority
         {
-            get => this._Priority.Item;
-            set => this._Priority.Set(value);
+            get => this._Priority;
+            set => this.SetPriority(value);
+        }
+        protected void SetPriority(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionData_FieldIndex.Priority];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Priority == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)RegionData_FieldIndex.Priority] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Priority;
+                _Priority = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)RegionData_FieldIndex.Priority,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Priority = item;
+            }
+        }
+        protected void UnsetPriority()
+        {
+            _hasBeenSetTracker[(int)RegionData_FieldIndex.Priority] = false;
+            Priority = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IRegionData.Priority_Property => this.Priority_Property;
@@ -319,27 +422,451 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "DataType":
-                    item._DataType.SetIfSucceededOrDefault(EnumXmlTranslation<RegionData.RegionDataType>.Instance.Parse(
+                    var DataTypetryGet = EnumXmlTranslation<RegionData.RegionDataType>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)RegionData_FieldIndex.DataType,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (DataTypetryGet.Succeeded)
+                    {
+                        item.SetDataType(item: DataTypetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetDataType();
+                    }
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<RegionData.RegionDataFlag>.Instance.Parse(
+                    var FlagstryGet = EnumXmlTranslation<RegionData.RegionDataFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)RegionData_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (FlagstryGet.Succeeded)
+                    {
+                        item.SetFlags(item: FlagstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFlags();
+                    }
                     break;
                 case "Priority":
-                    item._Priority.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var PrioritytryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RegionData_FieldIndex.Priority,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (PrioritytryGet.Succeeded)
+                    {
+                        item.SetPriority(item: PrioritytryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetPriority();
+                    }
                     break;
                 default:
                     break;
+            }
+        }
+
+        #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        #region IPropertySupporter RegionData.RegionDataType
+        protected ObjectCentralizationSubscriptions<RegionData.RegionDataType> _RegionDataRegionDataType_subscriptions;
+        RegionData.RegionDataType IPropertySupporter<RegionData.RegionDataType>.Get(int index)
+        {
+            return GetRegionDataRegionDataType(index: index);
+        }
+
+        protected RegionData.RegionDataType GetRegionDataRegionDataType(int index)
+        {
+            switch ((RegionData_FieldIndex)index)
+            {
+                case RegionData_FieldIndex.DataType:
+                    return DataType;
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionData.RegionDataType: {index}");
+            }
+        }
+
+        void IPropertySupporter<RegionData.RegionDataType>.Set(
+            int index,
+            RegionData.RegionDataType item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetRegionDataRegionDataType(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetRegionDataRegionDataType(
+            int index,
+            RegionData.RegionDataType item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((RegionData_FieldIndex)index)
+            {
+                case RegionData_FieldIndex.DataType:
+                    SetDataType(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionData.RegionDataType: {index}");
+            }
+        }
+
+        bool IPropertySupporter<RegionData.RegionDataType>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<RegionData.RegionDataType>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<RegionData.RegionDataType>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetRegionDataRegionDataType(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetRegionDataRegionDataType(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((RegionData_FieldIndex)index)
+            {
+                case RegionData_FieldIndex.DataType:
+                    _hasBeenSetTracker[index] = false;
+                    DataType = default(RegionData.RegionDataType);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionData.RegionDataType: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<RegionData.RegionDataType>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<RegionData.RegionDataType> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_RegionDataRegionDataType_subscriptions == null)
+            {
+                _RegionDataRegionDataType_subscriptions = new ObjectCentralizationSubscriptions<RegionData.RegionDataType>();
+            }
+            _RegionDataRegionDataType_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<RegionData.RegionDataType>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _RegionDataRegionDataType_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<RegionData.RegionDataType>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        RegionData.RegionDataType IPropertySupporter<RegionData.RegionDataType>.DefaultValue(int index)
+        {
+            return DefaultValueRegionDataRegionDataType(index: index);
+        }
+
+        protected RegionData.RegionDataType DefaultValueRegionDataRegionDataType(int index)
+        {
+            switch ((RegionData_FieldIndex)index)
+            {
+                case RegionData_FieldIndex.DataType:
+                    return default(RegionData.RegionDataType);
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionData.RegionDataType: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter RegionData.RegionDataFlag
+        protected ObjectCentralizationSubscriptions<RegionData.RegionDataFlag> _RegionDataRegionDataFlag_subscriptions;
+        RegionData.RegionDataFlag IPropertySupporter<RegionData.RegionDataFlag>.Get(int index)
+        {
+            return GetRegionDataRegionDataFlag(index: index);
+        }
+
+        protected RegionData.RegionDataFlag GetRegionDataRegionDataFlag(int index)
+        {
+            switch ((RegionData_FieldIndex)index)
+            {
+                case RegionData_FieldIndex.Flags:
+                    return Flags;
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionData.RegionDataFlag: {index}");
+            }
+        }
+
+        void IPropertySupporter<RegionData.RegionDataFlag>.Set(
+            int index,
+            RegionData.RegionDataFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetRegionDataRegionDataFlag(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetRegionDataRegionDataFlag(
+            int index,
+            RegionData.RegionDataFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((RegionData_FieldIndex)index)
+            {
+                case RegionData_FieldIndex.Flags:
+                    SetFlags(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionData.RegionDataFlag: {index}");
+            }
+        }
+
+        bool IPropertySupporter<RegionData.RegionDataFlag>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<RegionData.RegionDataFlag>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<RegionData.RegionDataFlag>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetRegionDataRegionDataFlag(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetRegionDataRegionDataFlag(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((RegionData_FieldIndex)index)
+            {
+                case RegionData_FieldIndex.Flags:
+                    _hasBeenSetTracker[index] = false;
+                    Flags = default(RegionData.RegionDataFlag);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionData.RegionDataFlag: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<RegionData.RegionDataFlag>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<RegionData.RegionDataFlag> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_RegionDataRegionDataFlag_subscriptions == null)
+            {
+                _RegionDataRegionDataFlag_subscriptions = new ObjectCentralizationSubscriptions<RegionData.RegionDataFlag>();
+            }
+            _RegionDataRegionDataFlag_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<RegionData.RegionDataFlag>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _RegionDataRegionDataFlag_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<RegionData.RegionDataFlag>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        RegionData.RegionDataFlag IPropertySupporter<RegionData.RegionDataFlag>.DefaultValue(int index)
+        {
+            return DefaultValueRegionDataRegionDataFlag(index: index);
+        }
+
+        protected RegionData.RegionDataFlag DefaultValueRegionDataRegionDataFlag(int index)
+        {
+            switch ((RegionData_FieldIndex)index)
+            {
+                case RegionData_FieldIndex.Flags:
+                    return default(RegionData.RegionDataFlag);
+                default:
+                    throw new ArgumentException($"Unknown index for field type RegionData.RegionDataFlag: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Byte
+        protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
+        Byte IPropertySupporter<Byte>.Get(int index)
+        {
+            return GetByte(index: index);
+        }
+
+        protected Byte GetByte(int index)
+        {
+            switch ((RegionData_FieldIndex)index)
+            {
+                case RegionData_FieldIndex.Priority:
+                    return Priority;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        void IPropertySupporter<Byte>.Set(
+            int index,
+            Byte item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByte(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetByte(
+            int index,
+            Byte item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((RegionData_FieldIndex)index)
+            {
+                case RegionData_FieldIndex.Priority:
+                    SetPriority(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByte(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetByte(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((RegionData_FieldIndex)index)
+            {
+                case RegionData_FieldIndex.Priority:
+                    _hasBeenSetTracker[index] = false;
+                    Priority = default(Byte);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Byte_subscriptions == null)
+            {
+                _Byte_subscriptions = new ObjectCentralizationSubscriptions<Byte>();
+            }
+            _Byte_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Byte_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte IPropertySupporter<Byte>.DefaultValue(int index)
+        {
+            return DefaultValueByte(index: index);
+        }
+
+        protected Byte DefaultValueByte(int index)
+        {
+            switch ((RegionData_FieldIndex)index)
+            {
+                case RegionData_FieldIndex.Priority:
+                    return default(Byte);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
             }
         }
 
@@ -425,18 +952,42 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._DataType.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Parse(
+                        var DataTypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)RegionData_FieldIndex.DataType,
-                            errorMask: errorMask));
-                        item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionData.RegionDataFlag>.Instance.Parse(
+                            errorMask: errorMask);
+                        if (DataTypetryGet.Succeeded)
+                        {
+                            item.SetDataType(item: DataTypetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetDataType();
+                        }
+                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionData.RegionDataFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(1),
                             fieldIndex: (int)RegionData_FieldIndex.Flags,
-                            errorMask: errorMask));
-                        item._Priority.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (FlagstryGet.Succeeded)
+                        {
+                            item.SetFlags(item: FlagstryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetFlags();
+                        }
+                        var PrioritytryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)RegionData_FieldIndex.Priority,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (PrioritytryGet.Succeeded)
+                        {
+                            item.SetPriority(item: PrioritytryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetPriority();
+                        }
                         dataFrame.SetPosition(dataFrame.Position + 2);
                     }
                     return TryGet<RegionData_FieldIndex?>.Succeed(RegionData_FieldIndex.Priority);
@@ -546,19 +1097,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionData_FieldIndex.DataType:
-                    this._DataType.Set(
+                    this.SetDataType(
                         (RegionData.RegionDataType)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case RegionData_FieldIndex.Flags:
-                    this._Flags.Set(
+                    this.SetFlags(
                         (RegionData.RegionDataFlag)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case RegionData_FieldIndex.Priority:
-                    this._Priority.Set(
+                    this.SetPriority(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -588,19 +1139,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionData_FieldIndex.DataType:
-                    obj._DataType.Set(
+                    obj.SetDataType(
                         (RegionData.RegionDataType)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case RegionData_FieldIndex.Flags:
-                    obj._Flags.Set(
+                    obj.SetFlags(
                         (RegionData.RegionDataFlag)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case RegionData_FieldIndex.Priority:
-                    obj._Priority.Set(
+                    obj.SetPriority(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -673,6 +1224,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             version: 0);
 
         public const string GUID = "46664e25-f4ef-428c-b13f-c81ff3127714";
+
+        public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
 
@@ -824,7 +1377,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

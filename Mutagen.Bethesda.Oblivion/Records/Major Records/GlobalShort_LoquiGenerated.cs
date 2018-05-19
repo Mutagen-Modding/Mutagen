@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
         IGlobalShort,
         ILoquiObject<GlobalShort>,
         ILoquiObjectSetter,
+        IPropertySupporter<Int16>,
         IEquatable<GlobalShort>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -48,14 +49,47 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Int16> _Data = NotifyingItem.Factory<Int16>();
-        public INotifyingItemGetter<Int16> Data_Property => _Data;
+        protected Int16 _Data;
+        protected PropertyForwarder<GlobalShort, Int16> _DataForwarder;
+        public INotifyingSetItemGetter<Int16> Data_Property => _DataForwarder ?? (_DataForwarder = new PropertyForwarder<GlobalShort, Int16>(this, (int)GlobalShort_FieldIndex.Data));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int16 Data
         {
-            get => this._Data.Item;
-            protected set => this._Data.Set(value);
+            get => this._Data;
+            protected set => this.SetData(value);
+        }
+        protected void SetData(
+            Int16 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)GlobalShort_FieldIndex.Data];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Data == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)GlobalShort_FieldIndex.Data] = hasBeenSet;
+            }
+            if (_Int16_subscriptions != null)
+            {
+                var tmp = Data;
+                _Data = item;
+                _Int16_subscriptions.FireSubscriptions(
+                    index: (int)GlobalShort_FieldIndex.Data,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Data = item;
+            }
+        }
+        protected void UnsetData()
+        {
+            _hasBeenSetTracker[(int)GlobalShort_FieldIndex.Data] = false;
+            Data = default(Int16);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Int16> IGlobalShortGetter.Data_Property => this.Data_Property;
@@ -425,10 +459,18 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Data":
-                    item._Data.SetIfSucceededOrDefault(Int16XmlTranslation.Instance.ParseNonNull(
+                    var DatatryGet = Int16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)GlobalShort_FieldIndex.Data,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DatatryGet.Succeeded)
+                    {
+                        item.SetData(item: DatatryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetData();
+                    }
                     break;
                 default:
                     Global.Fill_XML_Internal(
@@ -437,6 +479,139 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Int16
+        protected ObjectCentralizationSubscriptions<Int16> _Int16_subscriptions;
+        Int16 IPropertySupporter<Int16>.Get(int index)
+        {
+            return GetInt16(index: index);
+        }
+
+        protected Int16 GetInt16(int index)
+        {
+            switch ((GlobalShort_FieldIndex)index)
+            {
+                case GlobalShort_FieldIndex.Data:
+                    return Data;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int16: {index}");
+            }
+        }
+
+        void IPropertySupporter<Int16>.Set(
+            int index,
+            Int16 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetInt16(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetInt16(
+            int index,
+            Int16 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((GlobalShort_FieldIndex)index)
+            {
+                case GlobalShort_FieldIndex.Data:
+                    SetData(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int16: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Int16>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Int16>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Int16>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetInt16(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetInt16(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((GlobalShort_FieldIndex)index)
+            {
+                case GlobalShort_FieldIndex.Data:
+                    _hasBeenSetTracker[index] = false;
+                    Data = default(Int16);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int16: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Int16>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Int16> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Int16_subscriptions == null)
+            {
+                _Int16_subscriptions = new ObjectCentralizationSubscriptions<Int16>();
+            }
+            _Int16_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Int16>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Int16_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Int16>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Int16 IPropertySupporter<Int16>.DefaultValue(int index)
+        {
+            return DefaultValueInt16(index: index);
+        }
+
+        protected Int16 DefaultValueInt16(int index)
+        {
+            switch ((GlobalShort_FieldIndex)index)
+            {
+                case GlobalShort_FieldIndex.Data:
+                    return default(Int16);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int16: {index}");
             }
         }
 
@@ -832,7 +1007,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "95f041f0-bcdb-4e1e-bd9c-53b06d9d855e";
 
-        public const ushort FieldCount = 1;
+        public const ushort AdditionalFieldCount = 1;
+
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(GlobalShort_Mask<>);
 
@@ -959,7 +1136,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

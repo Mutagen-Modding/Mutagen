@@ -33,6 +33,8 @@ namespace Mutagen.Bethesda.Oblivion
         IDoor,
         ILoquiObject<Door>,
         ILoquiObjectSetter,
+        IPropertySupporter<Model>,
+        IPropertySupporter<Door.DoorFlag>,
         IEquatable<Door>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -48,13 +50,48 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
+        protected Model _Model;
+        protected PropertyForwarder<Door, Model> _ModelForwarder;
+        public INotifyingSetItem<Model> Model_Property => _ModelForwarder ?? (_ModelForwarder = new PropertyForwarder<Door, Model>(this, (int)Door_FieldIndex.Model));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
-        public INotifyingSetItem<Model> Model_Property => this._Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IDoorGetter.Model => this.Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        public Model Model
+        {
+            get => this._Model;
+            set => this.SetModel(value);
+        }
+        protected void SetModel(
+            Model item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Door_FieldIndex.Model];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Model, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Door_FieldIndex.Model] = hasBeenSet;
+            }
+            if (_Model_subscriptions != null)
+            {
+                var tmp = Model;
+                _Model = item;
+                _Model_subscriptions.FireSubscriptions(
+                    index: (int)Door_FieldIndex.Model,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Model = item;
+            }
+        }
+        protected void UnsetModel()
+        {
+            _hasBeenSetTracker[(int)Door_FieldIndex.Model] = false;
+            Model = default(Model);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IDoor.Model_Property => this.Model_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -89,14 +126,47 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Sound> IDoorGetter.LoopSound_Property => this.LoopSound_Property;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<Door.DoorFlag> _Flags = NotifyingSetItem.Factory<Door.DoorFlag>(markAsSet: false);
-        public INotifyingSetItem<Door.DoorFlag> Flags_Property => _Flags;
+        protected Door.DoorFlag _Flags;
+        protected PropertyForwarder<Door, Door.DoorFlag> _FlagsForwarder;
+        public INotifyingSetItem<Door.DoorFlag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<Door, Door.DoorFlag>(this, (int)Door_FieldIndex.Flags));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Door.DoorFlag Flags
         {
-            get => this._Flags.Item;
-            set => this._Flags.Set(value);
+            get => this._Flags;
+            set => this.SetFlags(value);
+        }
+        protected void SetFlags(
+            Door.DoorFlag item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Door_FieldIndex.Flags];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Door_FieldIndex.Flags] = hasBeenSet;
+            }
+            if (_DoorDoorFlag_subscriptions != null)
+            {
+                var tmp = Flags;
+                _Flags = item;
+                _DoorDoorFlag_subscriptions.FireSubscriptions(
+                    index: (int)Door_FieldIndex.Flags,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Flags = item;
+            }
+        }
+        protected void UnsetFlags()
+        {
+            _hasBeenSetTracker[(int)Door_FieldIndex.Flags] = false;
+            Flags = default(Door.DoorFlag);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Door.DoorFlag> IDoor.Flags_Property => this.Flags_Property;
@@ -547,10 +617,18 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    var ModeltryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Door_FieldIndex.Model,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ModeltryGet.Succeeded)
+                    {
+                        item.SetModel(item: ModeltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetModel();
+                    }
                     break;
                 case "Script":
                     item.Script_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
@@ -577,11 +655,19 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<Door.DoorFlag>.Instance.Parse(
+                    var FlagstryGet = EnumXmlTranslation<Door.DoorFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Door_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (FlagstryGet.Succeeded)
+                    {
+                        item.SetFlags(item: FlagstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFlags();
+                    }
                     break;
                 case "RandomTeleportDestinations":
                     item._RandomTeleportDestinations.SetIfSucceededOrDefault(ListXmlTranslation<FormIDSetLink<Worldspace>, Exception>.Instance.Parse(
@@ -605,6 +691,272 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Model
+        protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
+        Model IPropertySupporter<Model>.Get(int index)
+        {
+            return GetModel(index: index);
+        }
+
+        protected Model GetModel(int index)
+        {
+            switch ((Door_FieldIndex)index)
+            {
+                case Door_FieldIndex.Model:
+                    return Model;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        void IPropertySupporter<Model>.Set(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetModel(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetModel(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Door_FieldIndex)index)
+            {
+                case Door_FieldIndex.Model:
+                    SetModel(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Model>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Model>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Model>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetModel(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetModel(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Door_FieldIndex)index)
+            {
+                case Door_FieldIndex.Model:
+                    _hasBeenSetTracker[index] = false;
+                    Model = default(Model);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Model> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Model_subscriptions == null)
+            {
+                _Model_subscriptions = new ObjectCentralizationSubscriptions<Model>();
+            }
+            _Model_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Model_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Model>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Model IPropertySupporter<Model>.DefaultValue(int index)
+        {
+            return DefaultValueModel(index: index);
+        }
+
+        protected Model DefaultValueModel(int index)
+        {
+            switch ((Door_FieldIndex)index)
+            {
+                case Door_FieldIndex.Model:
+                    return default(Model);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Door.DoorFlag
+        protected ObjectCentralizationSubscriptions<Door.DoorFlag> _DoorDoorFlag_subscriptions;
+        Door.DoorFlag IPropertySupporter<Door.DoorFlag>.Get(int index)
+        {
+            return GetDoorDoorFlag(index: index);
+        }
+
+        protected Door.DoorFlag GetDoorDoorFlag(int index)
+        {
+            switch ((Door_FieldIndex)index)
+            {
+                case Door_FieldIndex.Flags:
+                    return Flags;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Door.DoorFlag: {index}");
+            }
+        }
+
+        void IPropertySupporter<Door.DoorFlag>.Set(
+            int index,
+            Door.DoorFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetDoorDoorFlag(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetDoorDoorFlag(
+            int index,
+            Door.DoorFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Door_FieldIndex)index)
+            {
+                case Door_FieldIndex.Flags:
+                    SetFlags(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Door.DoorFlag: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Door.DoorFlag>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Door.DoorFlag>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Door.DoorFlag>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetDoorDoorFlag(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetDoorDoorFlag(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Door_FieldIndex)index)
+            {
+                case Door_FieldIndex.Flags:
+                    _hasBeenSetTracker[index] = false;
+                    Flags = default(Door.DoorFlag);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Door.DoorFlag: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Door.DoorFlag>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Door.DoorFlag> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_DoorDoorFlag_subscriptions == null)
+            {
+                _DoorDoorFlag_subscriptions = new ObjectCentralizationSubscriptions<Door.DoorFlag>();
+            }
+            _DoorDoorFlag_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Door.DoorFlag>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _DoorDoorFlag_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Door.DoorFlag>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Door.DoorFlag IPropertySupporter<Door.DoorFlag>.DefaultValue(int index)
+        {
+            return DefaultValueDoorDoorFlag(index: index);
+        }
+
+        protected Door.DoorFlag DefaultValueDoorDoorFlag(int index)
+        {
+            switch ((Door_FieldIndex)index)
+            {
+                case Door_FieldIndex.Flags:
+                    return default(Door.DoorFlag);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Door.DoorFlag: {index}");
             }
         }
 
@@ -830,10 +1182,20 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)Door_FieldIndex.Model,
-                        errorMask: errorMask));
+                    {
+                        var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                            frame: frame.Spawn(snapToFinalPosition: false),
+                            fieldIndex: (int)Door_FieldIndex.Model,
+                            errorMask: errorMask);
+                        if (ModeltryGet.Succeeded)
+                        {
+                            item.SetModel(item: ModeltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetModel();
+                        }
+                    }
                     return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.Model);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -865,10 +1227,18 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.LoopSound);
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Door.DoorFlag>.Instance.Parse(
+                    var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Door.DoorFlag>.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Door_FieldIndex.Flags,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FlagstryGet.Succeeded)
+                    {
+                        item.SetFlags(item: FlagstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFlags();
+                    }
                     return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.Flags);
                 case "TNAM":
                     item.RandomTeleportDestinations.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Worldspace>, Exception>.Instance.ParseRepeatedItem(
@@ -999,9 +1369,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Door_FieldIndex.Model:
-                    this._Model.Set(
+                    this.SetModel(
                         (Model)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Door_FieldIndex.Script:
                     this.Script_Property.Set(
@@ -1024,9 +1394,9 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Door_FieldIndex.Flags:
-                    this._Flags.Set(
+                    this.SetFlags(
                         (Door.DoorFlag)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Door_FieldIndex.RandomTeleportDestinations:
                     this._RandomTeleportDestinations.SetTo((IEnumerable<FormIDSetLink<Worldspace>>)obj, cmds);
@@ -1063,9 +1433,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Door_FieldIndex.Model:
-                    obj._Model.Set(
+                    obj.SetModel(
                         (Model)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Door_FieldIndex.Script:
                     obj.Script_Property.Set(
@@ -1088,9 +1458,9 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Door_FieldIndex.Flags:
-                    obj._Flags.Set(
+                    obj.SetFlags(
                         (Door.DoorFlag)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Door_FieldIndex.RandomTeleportDestinations:
                     obj._RandomTeleportDestinations.SetTo((IEnumerable<FormIDSetLink<Worldspace>>)pair.Value, null);
@@ -1200,7 +1570,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "2430f9e3-8270-4b86-b1e2-03757c4a0f93";
 
-        public const ushort FieldCount = 7;
+        public const ushort AdditionalFieldCount = 7;
+
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(Door_Mask<>);
 
@@ -1402,7 +1774,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1563,8 +1936,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Flags_Property.SetToWithDefault(
                         rhs: rhs.Flags_Property,
-                        def: def?.Flags_Property,
-                        cmds: cmds);
+                        def: def?.Flags_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

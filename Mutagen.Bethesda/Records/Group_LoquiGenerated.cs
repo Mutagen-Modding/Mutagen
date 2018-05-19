@@ -29,6 +29,9 @@ namespace Mutagen.Bethesda
         IGroup<T>,
         ILoquiObject<Group<T>>,
         ILoquiObjectSetter,
+        IPropertySupporter<String>,
+        IPropertySupporter<GroupTypeEnum>,
+        IPropertySupporter<Byte[]>,
         IEquatable<Group<T>>
         where T : IFormID, ILoquiObject<T>
     {
@@ -39,6 +42,7 @@ namespace Mutagen.Bethesda
         #region Ctor
         public Group()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -51,27 +55,93 @@ namespace Mutagen.Bethesda
         }
 
         #region ContainedRecordType
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<String> _ContainedRecordType = NotifyingItem.Factory<String>();
-        public INotifyingItemGetter<String> ContainedRecordType_Property => _ContainedRecordType;
+        protected String _ContainedRecordType;
+        protected PropertyForwarder<Group<T>, String> _ContainedRecordTypeForwarder;
+        public INotifyingSetItemGetter<String> ContainedRecordType_Property => _ContainedRecordTypeForwarder ?? (_ContainedRecordTypeForwarder = new PropertyForwarder<Group<T>, String>(this, (int)Group_FieldIndex.ContainedRecordType));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String ContainedRecordType
         {
-            get => this._ContainedRecordType.Item;
-            protected set => this._ContainedRecordType.Set(value);
+            get => this._ContainedRecordType;
+            protected set => this.SetContainedRecordType(value);
+        }
+        protected void SetContainedRecordType(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Group_FieldIndex.ContainedRecordType];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ContainedRecordType == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Group_FieldIndex.ContainedRecordType] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = ContainedRecordType;
+                _ContainedRecordType = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Group_FieldIndex.ContainedRecordType,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _ContainedRecordType = item;
+            }
+        }
+        protected void UnsetContainedRecordType()
+        {
+            _hasBeenSetTracker[(int)Group_FieldIndex.ContainedRecordType] = false;
+            ContainedRecordType = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<String> IGroupGetter<T>.ContainedRecordType_Property => this.ContainedRecordType_Property;
         #endregion
         #region GroupType
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<GroupTypeEnum> _GroupType = NotifyingItem.Factory<GroupTypeEnum>();
-        public INotifyingItem<GroupTypeEnum> GroupType_Property => _GroupType;
+        protected GroupTypeEnum _GroupType;
+        protected PropertyForwarder<Group<T>, GroupTypeEnum> _GroupTypeForwarder;
+        public INotifyingSetItem<GroupTypeEnum> GroupType_Property => _GroupTypeForwarder ?? (_GroupTypeForwarder = new PropertyForwarder<Group<T>, GroupTypeEnum>(this, (int)Group_FieldIndex.GroupType));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public GroupTypeEnum GroupType
         {
-            get => this._GroupType.Item;
-            set => this._GroupType.Set(value);
+            get => this._GroupType;
+            set => this.SetGroupType(value);
+        }
+        protected void SetGroupType(
+            GroupTypeEnum item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Group_FieldIndex.GroupType];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && GroupType == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Group_FieldIndex.GroupType] = hasBeenSet;
+            }
+            if (_GroupTypeEnum_subscriptions != null)
+            {
+                var tmp = GroupType;
+                _GroupType = item;
+                _GroupTypeEnum_subscriptions.FireSubscriptions(
+                    index: (int)Group_FieldIndex.GroupType,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _GroupType = item;
+            }
+        }
+        protected void UnsetGroupType()
+        {
+            _hasBeenSetTracker[(int)Group_FieldIndex.GroupType] = false;
+            GroupType = default(GroupTypeEnum);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<GroupTypeEnum> IGroup<T>.GroupType_Property => this.GroupType_Property;
@@ -79,13 +149,47 @@ namespace Mutagen.Bethesda
         INotifyingItemGetter<GroupTypeEnum> IGroupGetter<T>.GroupType_Property => this.GroupType_Property;
         #endregion
         #region LastModified
-        protected INotifyingItem<Byte[]> _LastModified = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[4]);
-        public INotifyingItem<Byte[]> LastModified_Property => _LastModified;
+        protected Byte[] _LastModified;
+        protected PropertyForwarder<Group<T>, Byte[]> _LastModifiedForwarder;
+        public INotifyingSetItem<Byte[]> LastModified_Property => _LastModifiedForwarder ?? (_LastModifiedForwarder = new PropertyForwarder<Group<T>, Byte[]>(this, (int)Group_FieldIndex.LastModified));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] LastModified
         {
-            get => this._LastModified.Item;
-            set => this._LastModified.Set(value);
+            get => this._LastModified;
+            set => this.SetLastModified(value);
+        }
+        protected void SetLastModified(
+            Byte[] item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Group_FieldIndex.LastModified];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(LastModified, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Group_FieldIndex.LastModified] = hasBeenSet;
+            }
+            if (_ByteArr_subscriptions != null)
+            {
+                var tmp = LastModified;
+                _LastModified = item;
+                _ByteArr_subscriptions.FireSubscriptions(
+                    index: (int)Group_FieldIndex.LastModified,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _LastModified = item;
+            }
+        }
+        protected void UnsetLastModified()
+        {
+            _hasBeenSetTracker[(int)Group_FieldIndex.LastModified] = false;
+            LastModified = default(Byte[]);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> IGroup<T>.LastModified_Property => this.LastModified_Property;
@@ -419,23 +523,47 @@ namespace Mutagen.Bethesda
             switch (name)
             {
                 case "ContainedRecordType":
-                    item._ContainedRecordType.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var ContainedRecordTypetryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Group_FieldIndex.ContainedRecordType,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ContainedRecordTypetryGet.Succeeded)
+                    {
+                        item.SetContainedRecordType(item: ContainedRecordTypetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetContainedRecordType();
+                    }
                     break;
                 case "GroupType":
-                    item._GroupType.SetIfSucceededOrDefault(EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
+                    var GroupTypetryGet = EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Group_FieldIndex.GroupType,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (GroupTypetryGet.Succeeded)
+                    {
+                        item.SetGroupType(item: GroupTypetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetGroupType();
+                    }
                     break;
                 case "LastModified":
-                    item._LastModified.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
+                    var LastModifiedtryGet = ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Group_FieldIndex.LastModified,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (LastModifiedtryGet.Succeeded)
+                    {
+                        item.SetLastModified(item: LastModifiedtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetLastModified();
+                    }
                     break;
                 case "Items":
                     item._Items.SetIfSucceededOrDefault(KeyedDictXmlTranslation<FormID, T, MaskItem<Exception, T_ErrMask>>.Instance.Parse(
@@ -453,6 +581,406 @@ namespace Mutagen.Bethesda
                     break;
                 default:
                     break;
+            }
+        }
+
+        #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        #region IPropertySupporter String
+        protected ObjectCentralizationSubscriptions<String> _String_subscriptions;
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected String GetString(int index)
+        {
+            switch ((Group_FieldIndex)index)
+            {
+                case Group_FieldIndex.ContainedRecordType:
+                    return ContainedRecordType;
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Group_FieldIndex)index)
+            {
+                case Group_FieldIndex.ContainedRecordType:
+                    SetContainedRecordType(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Group_FieldIndex)index)
+            {
+                case Group_FieldIndex.ContainedRecordType:
+                    _hasBeenSetTracker[index] = false;
+                    ContainedRecordType = default(String);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected String DefaultValueString(int index)
+        {
+            switch ((Group_FieldIndex)index)
+            {
+                case Group_FieldIndex.ContainedRecordType:
+                    return default(String);
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter GroupTypeEnum
+        protected ObjectCentralizationSubscriptions<GroupTypeEnum> _GroupTypeEnum_subscriptions;
+        GroupTypeEnum IPropertySupporter<GroupTypeEnum>.Get(int index)
+        {
+            return GetGroupTypeEnum(index: index);
+        }
+
+        protected GroupTypeEnum GetGroupTypeEnum(int index)
+        {
+            switch ((Group_FieldIndex)index)
+            {
+                case Group_FieldIndex.GroupType:
+                    return GroupType;
+                default:
+                    throw new ArgumentException($"Unknown index for field type GroupTypeEnum: {index}");
+            }
+        }
+
+        void IPropertySupporter<GroupTypeEnum>.Set(
+            int index,
+            GroupTypeEnum item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetGroupTypeEnum(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetGroupTypeEnum(
+            int index,
+            GroupTypeEnum item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Group_FieldIndex)index)
+            {
+                case Group_FieldIndex.GroupType:
+                    SetGroupType(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type GroupTypeEnum: {index}");
+            }
+        }
+
+        bool IPropertySupporter<GroupTypeEnum>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<GroupTypeEnum>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<GroupTypeEnum>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetGroupTypeEnum(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetGroupTypeEnum(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Group_FieldIndex)index)
+            {
+                case Group_FieldIndex.GroupType:
+                    _hasBeenSetTracker[index] = false;
+                    GroupType = default(GroupTypeEnum);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type GroupTypeEnum: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<GroupTypeEnum>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<GroupTypeEnum> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_GroupTypeEnum_subscriptions == null)
+            {
+                _GroupTypeEnum_subscriptions = new ObjectCentralizationSubscriptions<GroupTypeEnum>();
+            }
+            _GroupTypeEnum_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<GroupTypeEnum>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _GroupTypeEnum_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<GroupTypeEnum>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        GroupTypeEnum IPropertySupporter<GroupTypeEnum>.DefaultValue(int index)
+        {
+            return DefaultValueGroupTypeEnum(index: index);
+        }
+
+        protected GroupTypeEnum DefaultValueGroupTypeEnum(int index)
+        {
+            switch ((Group_FieldIndex)index)
+            {
+                case Group_FieldIndex.GroupType:
+                    return default(GroupTypeEnum);
+                default:
+                    throw new ArgumentException($"Unknown index for field type GroupTypeEnum: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Byte[]
+        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
+        Byte[] IPropertySupporter<Byte[]>.Get(int index)
+        {
+            return GetByteArr(index: index);
+        }
+
+        protected Byte[] GetByteArr(int index)
+        {
+            switch ((Group_FieldIndex)index)
+            {
+                case Group_FieldIndex.LastModified:
+                    return LastModified;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        void IPropertySupporter<Byte[]>.Set(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByteArr(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetByteArr(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Group_FieldIndex)index)
+            {
+                case Group_FieldIndex.LastModified:
+                    SetLastModified(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte[]>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte[]>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByteArr(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetByteArr(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Group_FieldIndex)index)
+            {
+                case Group_FieldIndex.LastModified:
+                    _hasBeenSetTracker[index] = false;
+                    LastModified = default(Byte[]);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte[]> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_ByteArr_subscriptions == null)
+            {
+                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
+            }
+            _ByteArr_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _ByteArr_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
+        {
+            return DefaultValueByteArr(index: index);
+        }
+
+        protected Byte[] DefaultValueByteArr(int index)
+        {
+            switch ((Group_FieldIndex)index)
+            {
+                case Group_FieldIndex.LastModified:
+                    return default(Byte[]);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
             }
         }
 
@@ -711,14 +1239,30 @@ namespace Mutagen.Bethesda
             {
                 errorMask().Overall = ex;
             }
-            item._GroupType.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
+            var GroupTypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)Group_FieldIndex.GroupType,
-                errorMask: errorMask));
-            item._LastModified.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            if (GroupTypetryGet.Succeeded)
+            {
+                item.SetGroupType(item: GroupTypetryGet.Value);
+            }
+            else
+            {
+                item.UnsetGroupType();
+            }
+            var LastModifiedtryGet = ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)Group_FieldIndex.LastModified,
-                errorMask: errorMask));
+                errorMask: errorMask);
+            if (LastModifiedtryGet.Succeeded)
+            {
+                item.SetLastModified(item: LastModifiedtryGet.Value);
+            }
+            else
+            {
+                item.UnsetLastModified();
+            }
         }
 
         protected static TryGet<Group_FieldIndex?> Fill_Binary_RecordTypes<T_ErrMask>(
@@ -885,14 +1429,14 @@ namespace Mutagen.Bethesda
                 case Group_FieldIndex.ContainedRecordType:
                     throw new ArgumentException($"Tried to set at a derivative index {index}");
                 case Group_FieldIndex.GroupType:
-                    this._GroupType.Set(
+                    this.SetGroupType(
                         (GroupTypeEnum)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Group_FieldIndex.LastModified:
-                    this._LastModified.Set(
+                    this.SetLastModified(
                         (Byte[])obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Group_FieldIndex.Items:
                     this.Items.SetTo(
@@ -937,14 +1481,14 @@ namespace Mutagen.Bethesda
             switch (enu)
             {
                 case Group_FieldIndex.GroupType:
-                    obj._GroupType.Set(
+                    obj.SetGroupType(
                         (GroupTypeEnum)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Group_FieldIndex.LastModified:
-                    obj._LastModified.Set(
+                    obj.SetLastModified(
                         (Byte[])pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Group_FieldIndex.Items:
                     obj.Items.SetTo(
@@ -1029,6 +1573,8 @@ namespace Mutagen.Bethesda.Internals
             version: 0);
 
         public const string GUID = "35a37d0b-4676-4dba-9410-a5972e262f5d";
+
+        public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
 
@@ -1176,7 +1722,8 @@ namespace Mutagen.Bethesda.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

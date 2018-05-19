@@ -33,6 +33,8 @@ namespace Mutagen.Bethesda.Oblivion
         ISound,
         ILoquiObject<Sound>,
         ILoquiObjectSetter,
+        IPropertySupporter<String>,
+        IPropertySupporter<SoundData>,
         IEquatable<Sound>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -48,14 +50,47 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region File
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _File = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> File_Property => _File;
+        protected String _File;
+        protected PropertyForwarder<Sound, String> _FileForwarder;
+        public INotifyingSetItem<String> File_Property => _FileForwarder ?? (_FileForwarder = new PropertyForwarder<Sound, String>(this, (int)Sound_FieldIndex.File));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String File
         {
-            get => this._File.Item;
-            set => this._File.Set(value);
+            get => this._File;
+            set => this.SetFile(value);
+        }
+        protected void SetFile(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Sound_FieldIndex.File];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && File == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Sound_FieldIndex.File] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = File;
+                _File = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Sound_FieldIndex.File,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _File = item;
+            }
+        }
+        protected void UnsetFile()
+        {
+            _hasBeenSetTracker[(int)Sound_FieldIndex.File] = false;
+            File = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ISound.File_Property => this.File_Property;
@@ -63,13 +98,48 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> ISoundGetter.File_Property => this.File_Property;
         #endregion
         #region Data
+        protected SoundData _Data;
+        protected PropertyForwarder<Sound, SoundData> _DataForwarder;
+        public INotifyingSetItem<SoundData> Data_Property => _DataForwarder ?? (_DataForwarder = new PropertyForwarder<Sound, SoundData>(this, (int)Sound_FieldIndex.Data));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<SoundData> _Data = new NotifyingSetItem<SoundData>();
-        public INotifyingSetItem<SoundData> Data_Property => this._Data;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        SoundData ISoundGetter.Data => this.Data;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public SoundData Data { get => _Data.Item; set => _Data.Item = value; }
+        public SoundData Data
+        {
+            get => this._Data;
+            set => this.SetData(value);
+        }
+        protected void SetData(
+            SoundData item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Sound_FieldIndex.Data];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Data, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Sound_FieldIndex.Data] = hasBeenSet;
+            }
+            if (_SoundData_subscriptions != null)
+            {
+                var tmp = Data;
+                _Data = item;
+                _SoundData_subscriptions.FireSubscriptions(
+                    index: (int)Sound_FieldIndex.Data,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Data = item;
+            }
+        }
+        protected void UnsetData()
+        {
+            _hasBeenSetTracker[(int)Sound_FieldIndex.Data] = false;
+            Data = default(SoundData);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<SoundData> ISound.Data_Property => this.Data_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -444,16 +514,32 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "File":
-                    item._File.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var FiletryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Sound_FieldIndex.File,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FiletryGet.Succeeded)
+                    {
+                        item.SetFile(item: FiletryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFile();
+                    }
                     break;
                 case "Data":
-                    item._Data.SetIfSucceededOrDefault(LoquiXmlTranslation<SoundData, SoundData_ErrorMask>.Instance.Parse(
+                    var DatatryGet = LoquiXmlTranslation<SoundData, SoundData_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Sound_FieldIndex.Data,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DatatryGet.Succeeded)
+                    {
+                        item.SetData(item: DatatryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetData();
+                    }
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(
@@ -462,6 +548,279 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter String
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected override String GetString(int index)
+        {
+            switch ((Sound_FieldIndex)index)
+            {
+                case Sound_FieldIndex.File:
+                    return File;
+                default:
+                    return base.GetString(index: index);
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Sound_FieldIndex)index)
+            {
+                case Sound_FieldIndex.File:
+                    SetFile(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetString(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Sound_FieldIndex)index)
+            {
+                case Sound_FieldIndex.File:
+                    _hasBeenSetTracker[index] = false;
+                    File = default(String);
+                    break;
+                default:
+                    base.UnsetString(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected override String DefaultValueString(int index)
+        {
+            switch ((Sound_FieldIndex)index)
+            {
+                case Sound_FieldIndex.File:
+                    return default(String);
+                default:
+                    return base.DefaultValueString(index: index);
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter SoundData
+        protected ObjectCentralizationSubscriptions<SoundData> _SoundData_subscriptions;
+        SoundData IPropertySupporter<SoundData>.Get(int index)
+        {
+            return GetSoundData(index: index);
+        }
+
+        protected SoundData GetSoundData(int index)
+        {
+            switch ((Sound_FieldIndex)index)
+            {
+                case Sound_FieldIndex.Data:
+                    return Data;
+                default:
+                    throw new ArgumentException($"Unknown index for field type SoundData: {index}");
+            }
+        }
+
+        void IPropertySupporter<SoundData>.Set(
+            int index,
+            SoundData item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSoundData(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetSoundData(
+            int index,
+            SoundData item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Sound_FieldIndex)index)
+            {
+                case Sound_FieldIndex.Data:
+                    SetData(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type SoundData: {index}");
+            }
+        }
+
+        bool IPropertySupporter<SoundData>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<SoundData>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<SoundData>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSoundData(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetSoundData(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Sound_FieldIndex)index)
+            {
+                case Sound_FieldIndex.Data:
+                    _hasBeenSetTracker[index] = false;
+                    Data = default(SoundData);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type SoundData: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<SoundData>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<SoundData> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_SoundData_subscriptions == null)
+            {
+                _SoundData_subscriptions = new ObjectCentralizationSubscriptions<SoundData>();
+            }
+            _SoundData_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<SoundData>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _SoundData_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<SoundData>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        SoundData IPropertySupporter<SoundData>.DefaultValue(int index)
+        {
+            return DefaultValueSoundData(index: index);
+        }
+
+        protected SoundData DefaultValueSoundData(int index)
+        {
+            switch ((Sound_FieldIndex)index)
+            {
+                case Sound_FieldIndex.Data:
+                    return default(SoundData);
+                default:
+                    throw new ArgumentException($"Unknown index for field type SoundData: {index}");
             }
         }
 
@@ -675,23 +1034,51 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._File.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var FiletryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Sound_FieldIndex.File,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FiletryGet.Succeeded)
+                    {
+                        item.SetFile(item: FiletryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFile();
+                    }
                     return TryGet<Sound_FieldIndex?>.Succeed(Sound_FieldIndex.File);
                 case "SNDD":
-                    item._Data.SetIfSucceededOrDefault(LoquiBinaryTranslation<SoundData, SoundData_ErrorMask>.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)Sound_FieldIndex.Data,
-                        errorMask: errorMask));
+                    {
+                        var DatatryGet = LoquiBinaryTranslation<SoundData, SoundData_ErrorMask>.Instance.Parse(
+                            frame: frame,
+                            fieldIndex: (int)Sound_FieldIndex.Data,
+                            errorMask: errorMask);
+                        if (DatatryGet.Succeeded)
+                        {
+                            item.SetData(item: DatatryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetData();
+                        }
+                    }
                     return TryGet<Sound_FieldIndex?>.Succeed(Sound_FieldIndex.Data);
                 case "SNDX":
-                    item._Data.SetIfSucceededOrDefault(LoquiBinaryTranslation<SoundDataExtended, SoundDataExtended_ErrorMask>.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)Sound_FieldIndex.Data,
-                        errorMask: errorMask));
+                    {
+                        var DatatryGet = LoquiBinaryTranslation<SoundDataExtended, SoundDataExtended_ErrorMask>.Instance.Parse(
+                            frame: frame,
+                            fieldIndex: (int)Sound_FieldIndex.Data,
+                            errorMask: errorMask);
+                        if (DatatryGet.Succeeded)
+                        {
+                            item.SetData(item: DatatryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetData();
+                        }
+                    }
                     return TryGet<Sound_FieldIndex?>.Succeed(Sound_FieldIndex.Data);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
@@ -805,14 +1192,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Sound_FieldIndex.File:
-                    this._File.Set(
+                    this.SetFile(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Sound_FieldIndex.Data:
-                    this._Data.Set(
+                    this.SetData(
                         (SoundData)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -846,14 +1233,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Sound_FieldIndex.File:
-                    obj._File.Set(
+                    obj.SetFile(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Sound_FieldIndex.Data:
-                    obj._Data.Set(
+                    obj.SetData(
                         (SoundData)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -926,7 +1313,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "449f0e34-9512-4a5f-a83f-7e3dbb0cee42";
 
-        public const ushort FieldCount = 2;
+        public const ushort AdditionalFieldCount = 2;
+
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(Sound_Mask<>);
 
@@ -1068,7 +1457,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1120,8 +1510,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.File_Property.SetToWithDefault(
                         rhs: rhs.File_Property,
-                        def: def?.File_Property,
-                        cmds: cmds);
+                        def: def?.File_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

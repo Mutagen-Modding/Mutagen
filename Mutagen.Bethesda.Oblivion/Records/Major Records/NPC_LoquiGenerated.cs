@@ -34,6 +34,17 @@ namespace Mutagen.Bethesda.Oblivion
         INPC,
         ILoquiObject<NPC>,
         ILoquiObjectSetter,
+        IPropertySupporter<Model>,
+        IPropertySupporter<NPC.NPCFlag>,
+        IPropertySupporter<UInt16>,
+        IPropertySupporter<Int16>,
+        IPropertySupporter<Byte>,
+        IPropertySupporter<NPC.BuySellServiceFlag>,
+        IPropertySupporter<Skill>,
+        IPropertySupporter<Byte[]>,
+        IPropertySupporter<UInt32>,
+        IPropertySupporter<Single>,
+        IPropertySupporter<Color>,
         IEquatable<NPC>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -49,27 +60,95 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
+        protected Model _Model;
+        protected PropertyForwarder<NPC, Model> _ModelForwarder;
+        public INotifyingSetItem<Model> Model_Property => _ModelForwarder ?? (_ModelForwarder = new PropertyForwarder<NPC, Model>(this, (int)NPC_FieldIndex.Model));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
-        public INotifyingSetItem<Model> Model_Property => this._Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model INPCGetter.Model => this.Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        public Model Model
+        {
+            get => this._Model;
+            set => this.SetModel(value);
+        }
+        protected void SetModel(
+            Model item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Model];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Model, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Model] = hasBeenSet;
+            }
+            if (_Model_subscriptions != null)
+            {
+                var tmp = Model;
+                _Model = item;
+                _Model_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Model,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Model = item;
+            }
+        }
+        protected void UnsetModel()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Model] = false;
+            Model = default(Model);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> INPC.Model_Property => this.Model_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> INPCGetter.Model_Property => this.Model_Property;
         #endregion
         #region NPCFlags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<NPC.NPCFlag> _NPCFlags = NotifyingItem.Factory<NPC.NPCFlag>();
-        public INotifyingItem<NPC.NPCFlag> NPCFlags_Property => _NPCFlags;
+        protected NPC.NPCFlag _NPCFlags;
+        protected PropertyForwarder<NPC, NPC.NPCFlag> _NPCFlagsForwarder;
+        public INotifyingSetItem<NPC.NPCFlag> NPCFlags_Property => _NPCFlagsForwarder ?? (_NPCFlagsForwarder = new PropertyForwarder<NPC, NPC.NPCFlag>(this, (int)NPC_FieldIndex.NPCFlags));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public NPC.NPCFlag NPCFlags
         {
-            get => this._NPCFlags.Item;
-            set => this._NPCFlags.Set(value);
+            get => this._NPCFlags;
+            set => this.SetNPCFlags(value);
+        }
+        protected void SetNPCFlags(
+            NPC.NPCFlag item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.NPCFlags];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && NPCFlags == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.NPCFlags] = hasBeenSet;
+            }
+            if (_NPCNPCFlag_subscriptions != null)
+            {
+                var tmp = NPCFlags;
+                _NPCFlags = item;
+                _NPCNPCFlag_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.NPCFlags,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _NPCFlags = item;
+            }
+        }
+        protected void UnsetNPCFlags()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.NPCFlags] = false;
+            NPCFlags = default(NPC.NPCFlag);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<NPC.NPCFlag> INPC.NPCFlags_Property => this.NPCFlags_Property;
@@ -77,14 +156,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<NPC.NPCFlag> INPCGetter.NPCFlags_Property => this.NPCFlags_Property;
         #endregion
         #region BaseSpellPoints
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt16> _BaseSpellPoints = NotifyingItem.Factory<UInt16>();
-        public INotifyingItem<UInt16> BaseSpellPoints_Property => _BaseSpellPoints;
+        protected UInt16 _BaseSpellPoints;
+        protected PropertyForwarder<NPC, UInt16> _BaseSpellPointsForwarder;
+        public INotifyingSetItem<UInt16> BaseSpellPoints_Property => _BaseSpellPointsForwarder ?? (_BaseSpellPointsForwarder = new PropertyForwarder<NPC, UInt16>(this, (int)NPC_FieldIndex.BaseSpellPoints));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 BaseSpellPoints
         {
-            get => this._BaseSpellPoints.Item;
-            set => this._BaseSpellPoints.Set(value);
+            get => this._BaseSpellPoints;
+            set => this.SetBaseSpellPoints(value);
+        }
+        protected void SetBaseSpellPoints(
+            UInt16 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.BaseSpellPoints];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && BaseSpellPoints == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.BaseSpellPoints] = hasBeenSet;
+            }
+            if (_UInt16_subscriptions != null)
+            {
+                var tmp = BaseSpellPoints;
+                _BaseSpellPoints = item;
+                _UInt16_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.BaseSpellPoints,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _BaseSpellPoints = item;
+            }
+        }
+        protected void UnsetBaseSpellPoints()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.BaseSpellPoints] = false;
+            BaseSpellPoints = default(UInt16);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> INPC.BaseSpellPoints_Property => this.BaseSpellPoints_Property;
@@ -92,14 +204,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt16> INPCGetter.BaseSpellPoints_Property => this.BaseSpellPoints_Property;
         #endregion
         #region Fatigue
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt16> _Fatigue = NotifyingItem.Factory<UInt16>();
-        public INotifyingItem<UInt16> Fatigue_Property => _Fatigue;
+        protected UInt16 _Fatigue;
+        protected PropertyForwarder<NPC, UInt16> _FatigueForwarder;
+        public INotifyingSetItem<UInt16> Fatigue_Property => _FatigueForwarder ?? (_FatigueForwarder = new PropertyForwarder<NPC, UInt16>(this, (int)NPC_FieldIndex.Fatigue));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 Fatigue
         {
-            get => this._Fatigue.Item;
-            set => this._Fatigue.Set(value);
+            get => this._Fatigue;
+            set => this.SetFatigue(value);
+        }
+        protected void SetFatigue(
+            UInt16 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Fatigue];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Fatigue == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Fatigue] = hasBeenSet;
+            }
+            if (_UInt16_subscriptions != null)
+            {
+                var tmp = Fatigue;
+                _Fatigue = item;
+                _UInt16_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Fatigue,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Fatigue = item;
+            }
+        }
+        protected void UnsetFatigue()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Fatigue] = false;
+            Fatigue = default(UInt16);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> INPC.Fatigue_Property => this.Fatigue_Property;
@@ -107,14 +252,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt16> INPCGetter.Fatigue_Property => this.Fatigue_Property;
         #endregion
         #region BarterGold
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt16> _BarterGold = NotifyingItem.Factory<UInt16>();
-        public INotifyingItem<UInt16> BarterGold_Property => _BarterGold;
+        protected UInt16 _BarterGold;
+        protected PropertyForwarder<NPC, UInt16> _BarterGoldForwarder;
+        public INotifyingSetItem<UInt16> BarterGold_Property => _BarterGoldForwarder ?? (_BarterGoldForwarder = new PropertyForwarder<NPC, UInt16>(this, (int)NPC_FieldIndex.BarterGold));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 BarterGold
         {
-            get => this._BarterGold.Item;
-            set => this._BarterGold.Set(value);
+            get => this._BarterGold;
+            set => this.SetBarterGold(value);
+        }
+        protected void SetBarterGold(
+            UInt16 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.BarterGold];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && BarterGold == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.BarterGold] = hasBeenSet;
+            }
+            if (_UInt16_subscriptions != null)
+            {
+                var tmp = BarterGold;
+                _BarterGold = item;
+                _UInt16_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.BarterGold,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _BarterGold = item;
+            }
+        }
+        protected void UnsetBarterGold()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.BarterGold] = false;
+            BarterGold = default(UInt16);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> INPC.BarterGold_Property => this.BarterGold_Property;
@@ -122,14 +300,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt16> INPCGetter.BarterGold_Property => this.BarterGold_Property;
         #endregion
         #region LevelOffset
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Int16> _LevelOffset = NotifyingItem.Factory<Int16>();
-        public INotifyingItem<Int16> LevelOffset_Property => _LevelOffset;
+        protected Int16 _LevelOffset;
+        protected PropertyForwarder<NPC, Int16> _LevelOffsetForwarder;
+        public INotifyingSetItem<Int16> LevelOffset_Property => _LevelOffsetForwarder ?? (_LevelOffsetForwarder = new PropertyForwarder<NPC, Int16>(this, (int)NPC_FieldIndex.LevelOffset));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int16 LevelOffset
         {
-            get => this._LevelOffset.Item;
-            set => this._LevelOffset.Set(value);
+            get => this._LevelOffset;
+            set => this.SetLevelOffset(value);
+        }
+        protected void SetLevelOffset(
+            Int16 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.LevelOffset];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && LevelOffset == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.LevelOffset] = hasBeenSet;
+            }
+            if (_Int16_subscriptions != null)
+            {
+                var tmp = LevelOffset;
+                _LevelOffset = item;
+                _Int16_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.LevelOffset,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _LevelOffset = item;
+            }
+        }
+        protected void UnsetLevelOffset()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.LevelOffset] = false;
+            LevelOffset = default(Int16);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Int16> INPC.LevelOffset_Property => this.LevelOffset_Property;
@@ -137,14 +348,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Int16> INPCGetter.LevelOffset_Property => this.LevelOffset_Property;
         #endregion
         #region CalcMin
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt16> _CalcMin = NotifyingItem.Factory<UInt16>();
-        public INotifyingItem<UInt16> CalcMin_Property => _CalcMin;
+        protected UInt16 _CalcMin;
+        protected PropertyForwarder<NPC, UInt16> _CalcMinForwarder;
+        public INotifyingSetItem<UInt16> CalcMin_Property => _CalcMinForwarder ?? (_CalcMinForwarder = new PropertyForwarder<NPC, UInt16>(this, (int)NPC_FieldIndex.CalcMin));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 CalcMin
         {
-            get => this._CalcMin.Item;
-            set => this._CalcMin.Set(value);
+            get => this._CalcMin;
+            set => this.SetCalcMin(value);
+        }
+        protected void SetCalcMin(
+            UInt16 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.CalcMin];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && CalcMin == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.CalcMin] = hasBeenSet;
+            }
+            if (_UInt16_subscriptions != null)
+            {
+                var tmp = CalcMin;
+                _CalcMin = item;
+                _UInt16_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.CalcMin,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _CalcMin = item;
+            }
+        }
+        protected void UnsetCalcMin()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.CalcMin] = false;
+            CalcMin = default(UInt16);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> INPC.CalcMin_Property => this.CalcMin_Property;
@@ -152,14 +396,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt16> INPCGetter.CalcMin_Property => this.CalcMin_Property;
         #endregion
         #region CalcMax
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt16> _CalcMax = NotifyingItem.Factory<UInt16>();
-        public INotifyingItem<UInt16> CalcMax_Property => _CalcMax;
+        protected UInt16 _CalcMax;
+        protected PropertyForwarder<NPC, UInt16> _CalcMaxForwarder;
+        public INotifyingSetItem<UInt16> CalcMax_Property => _CalcMaxForwarder ?? (_CalcMaxForwarder = new PropertyForwarder<NPC, UInt16>(this, (int)NPC_FieldIndex.CalcMax));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 CalcMax
         {
-            get => this._CalcMax.Item;
-            set => this._CalcMax.Set(value);
+            get => this._CalcMax;
+            set => this.SetCalcMax(value);
+        }
+        protected void SetCalcMax(
+            UInt16 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.CalcMax];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && CalcMax == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.CalcMax] = hasBeenSet;
+            }
+            if (_UInt16_subscriptions != null)
+            {
+                var tmp = CalcMax;
+                _CalcMax = item;
+                _UInt16_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.CalcMax,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _CalcMax = item;
+            }
+        }
+        protected void UnsetCalcMax()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.CalcMax] = false;
+            CalcMax = default(UInt16);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> INPC.CalcMax_Property => this.CalcMax_Property;
@@ -242,14 +519,47 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Aggression
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Aggression = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Aggression_Property => _Aggression;
+        protected Byte _Aggression;
+        protected PropertyForwarder<NPC, Byte> _AggressionForwarder;
+        public INotifyingSetItem<Byte> Aggression_Property => _AggressionForwarder ?? (_AggressionForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Aggression));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Aggression
         {
-            get => this._Aggression.Item;
-            set => this._Aggression.Set(value);
+            get => this._Aggression;
+            set => this.SetAggression(value);
+        }
+        protected void SetAggression(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Aggression];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Aggression == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Aggression] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Aggression;
+                _Aggression = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Aggression,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Aggression = item;
+            }
+        }
+        protected void UnsetAggression()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Aggression] = false;
+            Aggression = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Aggression_Property => this.Aggression_Property;
@@ -257,14 +567,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Aggression_Property => this.Aggression_Property;
         #endregion
         #region Confidence
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Confidence = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Confidence_Property => _Confidence;
+        protected Byte _Confidence;
+        protected PropertyForwarder<NPC, Byte> _ConfidenceForwarder;
+        public INotifyingSetItem<Byte> Confidence_Property => _ConfidenceForwarder ?? (_ConfidenceForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Confidence));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Confidence
         {
-            get => this._Confidence.Item;
-            set => this._Confidence.Set(value);
+            get => this._Confidence;
+            set => this.SetConfidence(value);
+        }
+        protected void SetConfidence(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Confidence];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Confidence == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Confidence] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Confidence;
+                _Confidence = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Confidence,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Confidence = item;
+            }
+        }
+        protected void UnsetConfidence()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Confidence] = false;
+            Confidence = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Confidence_Property => this.Confidence_Property;
@@ -272,14 +615,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Confidence_Property => this.Confidence_Property;
         #endregion
         #region EnergyLevel
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _EnergyLevel = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> EnergyLevel_Property => _EnergyLevel;
+        protected Byte _EnergyLevel;
+        protected PropertyForwarder<NPC, Byte> _EnergyLevelForwarder;
+        public INotifyingSetItem<Byte> EnergyLevel_Property => _EnergyLevelForwarder ?? (_EnergyLevelForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.EnergyLevel));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte EnergyLevel
         {
-            get => this._EnergyLevel.Item;
-            set => this._EnergyLevel.Set(value);
+            get => this._EnergyLevel;
+            set => this.SetEnergyLevel(value);
+        }
+        protected void SetEnergyLevel(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.EnergyLevel];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && EnergyLevel == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.EnergyLevel] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = EnergyLevel;
+                _EnergyLevel = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.EnergyLevel,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _EnergyLevel = item;
+            }
+        }
+        protected void UnsetEnergyLevel()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.EnergyLevel] = false;
+            EnergyLevel = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.EnergyLevel_Property => this.EnergyLevel_Property;
@@ -287,14 +663,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.EnergyLevel_Property => this.EnergyLevel_Property;
         #endregion
         #region Responsibility
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Responsibility = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Responsibility_Property => _Responsibility;
+        protected Byte _Responsibility;
+        protected PropertyForwarder<NPC, Byte> _ResponsibilityForwarder;
+        public INotifyingSetItem<Byte> Responsibility_Property => _ResponsibilityForwarder ?? (_ResponsibilityForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Responsibility));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Responsibility
         {
-            get => this._Responsibility.Item;
-            set => this._Responsibility.Set(value);
+            get => this._Responsibility;
+            set => this.SetResponsibility(value);
+        }
+        protected void SetResponsibility(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Responsibility];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Responsibility == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Responsibility] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Responsibility;
+                _Responsibility = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Responsibility,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Responsibility = item;
+            }
+        }
+        protected void UnsetResponsibility()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Responsibility] = false;
+            Responsibility = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Responsibility_Property => this.Responsibility_Property;
@@ -302,14 +711,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Responsibility_Property => this.Responsibility_Property;
         #endregion
         #region BuySellServices
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<NPC.BuySellServiceFlag> _BuySellServices = NotifyingItem.Factory<NPC.BuySellServiceFlag>();
-        public INotifyingItem<NPC.BuySellServiceFlag> BuySellServices_Property => _BuySellServices;
+        protected NPC.BuySellServiceFlag _BuySellServices;
+        protected PropertyForwarder<NPC, NPC.BuySellServiceFlag> _BuySellServicesForwarder;
+        public INotifyingSetItem<NPC.BuySellServiceFlag> BuySellServices_Property => _BuySellServicesForwarder ?? (_BuySellServicesForwarder = new PropertyForwarder<NPC, NPC.BuySellServiceFlag>(this, (int)NPC_FieldIndex.BuySellServices));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public NPC.BuySellServiceFlag BuySellServices
         {
-            get => this._BuySellServices.Item;
-            set => this._BuySellServices.Set(value);
+            get => this._BuySellServices;
+            set => this.SetBuySellServices(value);
+        }
+        protected void SetBuySellServices(
+            NPC.BuySellServiceFlag item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.BuySellServices];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && BuySellServices == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.BuySellServices] = hasBeenSet;
+            }
+            if (_NPCBuySellServiceFlag_subscriptions != null)
+            {
+                var tmp = BuySellServices;
+                _BuySellServices = item;
+                _NPCBuySellServiceFlag_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.BuySellServices,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _BuySellServices = item;
+            }
+        }
+        protected void UnsetBuySellServices()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.BuySellServices] = false;
+            BuySellServices = default(NPC.BuySellServiceFlag);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<NPC.BuySellServiceFlag> INPC.BuySellServices_Property => this.BuySellServices_Property;
@@ -317,14 +759,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<NPC.BuySellServiceFlag> INPCGetter.BuySellServices_Property => this.BuySellServices_Property;
         #endregion
         #region Teaches
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Skill> _Teaches = NotifyingItem.Factory<Skill>();
-        public INotifyingItem<Skill> Teaches_Property => _Teaches;
+        protected Skill _Teaches;
+        protected PropertyForwarder<NPC, Skill> _TeachesForwarder;
+        public INotifyingSetItem<Skill> Teaches_Property => _TeachesForwarder ?? (_TeachesForwarder = new PropertyForwarder<NPC, Skill>(this, (int)NPC_FieldIndex.Teaches));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Skill Teaches
         {
-            get => this._Teaches.Item;
-            set => this._Teaches.Set(value);
+            get => this._Teaches;
+            set => this.SetTeaches(value);
+        }
+        protected void SetTeaches(
+            Skill item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Teaches];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Teaches == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Teaches] = hasBeenSet;
+            }
+            if (_Skill_subscriptions != null)
+            {
+                var tmp = Teaches;
+                _Teaches = item;
+                _Skill_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Teaches,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Teaches = item;
+            }
+        }
+        protected void UnsetTeaches()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Teaches] = false;
+            Teaches = default(Skill);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Skill> INPC.Teaches_Property => this.Teaches_Property;
@@ -332,14 +807,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Skill> INPCGetter.Teaches_Property => this.Teaches_Property;
         #endregion
         #region MaximumTrainingLevel
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _MaximumTrainingLevel = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> MaximumTrainingLevel_Property => _MaximumTrainingLevel;
+        protected Byte _MaximumTrainingLevel;
+        protected PropertyForwarder<NPC, Byte> _MaximumTrainingLevelForwarder;
+        public INotifyingSetItem<Byte> MaximumTrainingLevel_Property => _MaximumTrainingLevelForwarder ?? (_MaximumTrainingLevelForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.MaximumTrainingLevel));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte MaximumTrainingLevel
         {
-            get => this._MaximumTrainingLevel.Item;
-            set => this._MaximumTrainingLevel.Set(value);
+            get => this._MaximumTrainingLevel;
+            set => this.SetMaximumTrainingLevel(value);
+        }
+        protected void SetMaximumTrainingLevel(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.MaximumTrainingLevel];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MaximumTrainingLevel == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.MaximumTrainingLevel] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = MaximumTrainingLevel;
+                _MaximumTrainingLevel = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.MaximumTrainingLevel,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _MaximumTrainingLevel = item;
+            }
+        }
+        protected void UnsetMaximumTrainingLevel()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.MaximumTrainingLevel] = false;
+            MaximumTrainingLevel = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.MaximumTrainingLevel_Property => this.MaximumTrainingLevel_Property;
@@ -347,13 +855,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.MaximumTrainingLevel_Property => this.MaximumTrainingLevel_Property;
         #endregion
         #region Fluff
-        protected INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[2]);
-        public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
+        protected Byte[] _Fluff;
+        protected PropertyForwarder<NPC, Byte[]> _FluffForwarder;
+        public INotifyingSetItem<Byte[]> Fluff_Property => _FluffForwarder ?? (_FluffForwarder = new PropertyForwarder<NPC, Byte[]>(this, (int)NPC_FieldIndex.Fluff));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Fluff
         {
-            get => this._Fluff.Item;
-            set => this._Fluff.Set(value);
+            get => this._Fluff;
+            set => this.SetFluff(value);
+        }
+        protected void SetFluff(
+            Byte[] item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Fluff];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Fluff] = hasBeenSet;
+            }
+            if (_ByteArr_subscriptions != null)
+            {
+                var tmp = Fluff;
+                _Fluff = item;
+                _ByteArr_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Fluff,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Fluff = item;
+            }
+        }
+        protected void UnsetFluff()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Fluff] = false;
+            Fluff = default(Byte[]);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> INPC.Fluff_Property => this.Fluff_Property;
@@ -404,14 +946,47 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Class> INPCGetter.Class_Property => this.Class_Property;
         #endregion
         #region Armorer
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Armorer = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Armorer_Property => _Armorer;
+        protected Byte _Armorer;
+        protected PropertyForwarder<NPC, Byte> _ArmorerForwarder;
+        public INotifyingSetItem<Byte> Armorer_Property => _ArmorerForwarder ?? (_ArmorerForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Armorer));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Armorer
         {
-            get => this._Armorer.Item;
-            set => this._Armorer.Set(value);
+            get => this._Armorer;
+            set => this.SetArmorer(value);
+        }
+        protected void SetArmorer(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Armorer];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Armorer == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Armorer] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Armorer;
+                _Armorer = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Armorer,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Armorer = item;
+            }
+        }
+        protected void UnsetArmorer()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Armorer] = false;
+            Armorer = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Armorer_Property => this.Armorer_Property;
@@ -419,14 +994,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Armorer_Property => this.Armorer_Property;
         #endregion
         #region Athletics
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Athletics = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Athletics_Property => _Athletics;
+        protected Byte _Athletics;
+        protected PropertyForwarder<NPC, Byte> _AthleticsForwarder;
+        public INotifyingSetItem<Byte> Athletics_Property => _AthleticsForwarder ?? (_AthleticsForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Athletics));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Athletics
         {
-            get => this._Athletics.Item;
-            set => this._Athletics.Set(value);
+            get => this._Athletics;
+            set => this.SetAthletics(value);
+        }
+        protected void SetAthletics(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Athletics];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Athletics == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Athletics] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Athletics;
+                _Athletics = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Athletics,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Athletics = item;
+            }
+        }
+        protected void UnsetAthletics()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Athletics] = false;
+            Athletics = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Athletics_Property => this.Athletics_Property;
@@ -434,14 +1042,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Athletics_Property => this.Athletics_Property;
         #endregion
         #region Blade
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Blade = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Blade_Property => _Blade;
+        protected Byte _Blade;
+        protected PropertyForwarder<NPC, Byte> _BladeForwarder;
+        public INotifyingSetItem<Byte> Blade_Property => _BladeForwarder ?? (_BladeForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Blade));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Blade
         {
-            get => this._Blade.Item;
-            set => this._Blade.Set(value);
+            get => this._Blade;
+            set => this.SetBlade(value);
+        }
+        protected void SetBlade(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Blade];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Blade == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Blade] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Blade;
+                _Blade = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Blade,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Blade = item;
+            }
+        }
+        protected void UnsetBlade()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Blade] = false;
+            Blade = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Blade_Property => this.Blade_Property;
@@ -449,14 +1090,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Blade_Property => this.Blade_Property;
         #endregion
         #region Block
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Block = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Block_Property => _Block;
+        protected Byte _Block;
+        protected PropertyForwarder<NPC, Byte> _BlockForwarder;
+        public INotifyingSetItem<Byte> Block_Property => _BlockForwarder ?? (_BlockForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Block));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Block
         {
-            get => this._Block.Item;
-            set => this._Block.Set(value);
+            get => this._Block;
+            set => this.SetBlock(value);
+        }
+        protected void SetBlock(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Block];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Block == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Block] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Block;
+                _Block = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Block,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Block = item;
+            }
+        }
+        protected void UnsetBlock()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Block] = false;
+            Block = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Block_Property => this.Block_Property;
@@ -464,14 +1138,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Block_Property => this.Block_Property;
         #endregion
         #region Blunt
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Blunt = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Blunt_Property => _Blunt;
+        protected Byte _Blunt;
+        protected PropertyForwarder<NPC, Byte> _BluntForwarder;
+        public INotifyingSetItem<Byte> Blunt_Property => _BluntForwarder ?? (_BluntForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Blunt));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Blunt
         {
-            get => this._Blunt.Item;
-            set => this._Blunt.Set(value);
+            get => this._Blunt;
+            set => this.SetBlunt(value);
+        }
+        protected void SetBlunt(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Blunt];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Blunt == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Blunt] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Blunt;
+                _Blunt = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Blunt,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Blunt = item;
+            }
+        }
+        protected void UnsetBlunt()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Blunt] = false;
+            Blunt = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Blunt_Property => this.Blunt_Property;
@@ -479,14 +1186,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Blunt_Property => this.Blunt_Property;
         #endregion
         #region HandToHand
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _HandToHand = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> HandToHand_Property => _HandToHand;
+        protected Byte _HandToHand;
+        protected PropertyForwarder<NPC, Byte> _HandToHandForwarder;
+        public INotifyingSetItem<Byte> HandToHand_Property => _HandToHandForwarder ?? (_HandToHandForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.HandToHand));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte HandToHand
         {
-            get => this._HandToHand.Item;
-            set => this._HandToHand.Set(value);
+            get => this._HandToHand;
+            set => this.SetHandToHand(value);
+        }
+        protected void SetHandToHand(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.HandToHand];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && HandToHand == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.HandToHand] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = HandToHand;
+                _HandToHand = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.HandToHand,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _HandToHand = item;
+            }
+        }
+        protected void UnsetHandToHand()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.HandToHand] = false;
+            HandToHand = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.HandToHand_Property => this.HandToHand_Property;
@@ -494,14 +1234,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.HandToHand_Property => this.HandToHand_Property;
         #endregion
         #region HeavyArmor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _HeavyArmor = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> HeavyArmor_Property => _HeavyArmor;
+        protected Byte _HeavyArmor;
+        protected PropertyForwarder<NPC, Byte> _HeavyArmorForwarder;
+        public INotifyingSetItem<Byte> HeavyArmor_Property => _HeavyArmorForwarder ?? (_HeavyArmorForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.HeavyArmor));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte HeavyArmor
         {
-            get => this._HeavyArmor.Item;
-            set => this._HeavyArmor.Set(value);
+            get => this._HeavyArmor;
+            set => this.SetHeavyArmor(value);
+        }
+        protected void SetHeavyArmor(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.HeavyArmor];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && HeavyArmor == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.HeavyArmor] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = HeavyArmor;
+                _HeavyArmor = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.HeavyArmor,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _HeavyArmor = item;
+            }
+        }
+        protected void UnsetHeavyArmor()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.HeavyArmor] = false;
+            HeavyArmor = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.HeavyArmor_Property => this.HeavyArmor_Property;
@@ -509,14 +1282,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.HeavyArmor_Property => this.HeavyArmor_Property;
         #endregion
         #region Alchemy
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Alchemy = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Alchemy_Property => _Alchemy;
+        protected Byte _Alchemy;
+        protected PropertyForwarder<NPC, Byte> _AlchemyForwarder;
+        public INotifyingSetItem<Byte> Alchemy_Property => _AlchemyForwarder ?? (_AlchemyForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Alchemy));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Alchemy
         {
-            get => this._Alchemy.Item;
-            set => this._Alchemy.Set(value);
+            get => this._Alchemy;
+            set => this.SetAlchemy(value);
+        }
+        protected void SetAlchemy(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Alchemy];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Alchemy == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Alchemy] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Alchemy;
+                _Alchemy = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Alchemy,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Alchemy = item;
+            }
+        }
+        protected void UnsetAlchemy()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Alchemy] = false;
+            Alchemy = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Alchemy_Property => this.Alchemy_Property;
@@ -524,14 +1330,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Alchemy_Property => this.Alchemy_Property;
         #endregion
         #region Alteration
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Alteration = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Alteration_Property => _Alteration;
+        protected Byte _Alteration;
+        protected PropertyForwarder<NPC, Byte> _AlterationForwarder;
+        public INotifyingSetItem<Byte> Alteration_Property => _AlterationForwarder ?? (_AlterationForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Alteration));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Alteration
         {
-            get => this._Alteration.Item;
-            set => this._Alteration.Set(value);
+            get => this._Alteration;
+            set => this.SetAlteration(value);
+        }
+        protected void SetAlteration(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Alteration];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Alteration == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Alteration] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Alteration;
+                _Alteration = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Alteration,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Alteration = item;
+            }
+        }
+        protected void UnsetAlteration()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Alteration] = false;
+            Alteration = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Alteration_Property => this.Alteration_Property;
@@ -539,14 +1378,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Alteration_Property => this.Alteration_Property;
         #endregion
         #region Conjuration
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Conjuration = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Conjuration_Property => _Conjuration;
+        protected Byte _Conjuration;
+        protected PropertyForwarder<NPC, Byte> _ConjurationForwarder;
+        public INotifyingSetItem<Byte> Conjuration_Property => _ConjurationForwarder ?? (_ConjurationForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Conjuration));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Conjuration
         {
-            get => this._Conjuration.Item;
-            set => this._Conjuration.Set(value);
+            get => this._Conjuration;
+            set => this.SetConjuration(value);
+        }
+        protected void SetConjuration(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Conjuration];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Conjuration == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Conjuration] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Conjuration;
+                _Conjuration = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Conjuration,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Conjuration = item;
+            }
+        }
+        protected void UnsetConjuration()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Conjuration] = false;
+            Conjuration = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Conjuration_Property => this.Conjuration_Property;
@@ -554,14 +1426,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Conjuration_Property => this.Conjuration_Property;
         #endregion
         #region Destruction
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Destruction = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Destruction_Property => _Destruction;
+        protected Byte _Destruction;
+        protected PropertyForwarder<NPC, Byte> _DestructionForwarder;
+        public INotifyingSetItem<Byte> Destruction_Property => _DestructionForwarder ?? (_DestructionForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Destruction));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Destruction
         {
-            get => this._Destruction.Item;
-            set => this._Destruction.Set(value);
+            get => this._Destruction;
+            set => this.SetDestruction(value);
+        }
+        protected void SetDestruction(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Destruction];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Destruction == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Destruction] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Destruction;
+                _Destruction = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Destruction,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Destruction = item;
+            }
+        }
+        protected void UnsetDestruction()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Destruction] = false;
+            Destruction = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Destruction_Property => this.Destruction_Property;
@@ -569,14 +1474,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Destruction_Property => this.Destruction_Property;
         #endregion
         #region Illusion
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Illusion = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Illusion_Property => _Illusion;
+        protected Byte _Illusion;
+        protected PropertyForwarder<NPC, Byte> _IllusionForwarder;
+        public INotifyingSetItem<Byte> Illusion_Property => _IllusionForwarder ?? (_IllusionForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Illusion));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Illusion
         {
-            get => this._Illusion.Item;
-            set => this._Illusion.Set(value);
+            get => this._Illusion;
+            set => this.SetIllusion(value);
+        }
+        protected void SetIllusion(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Illusion];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Illusion == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Illusion] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Illusion;
+                _Illusion = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Illusion,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Illusion = item;
+            }
+        }
+        protected void UnsetIllusion()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Illusion] = false;
+            Illusion = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Illusion_Property => this.Illusion_Property;
@@ -584,14 +1522,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Illusion_Property => this.Illusion_Property;
         #endregion
         #region Mysticism
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Mysticism = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Mysticism_Property => _Mysticism;
+        protected Byte _Mysticism;
+        protected PropertyForwarder<NPC, Byte> _MysticismForwarder;
+        public INotifyingSetItem<Byte> Mysticism_Property => _MysticismForwarder ?? (_MysticismForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Mysticism));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Mysticism
         {
-            get => this._Mysticism.Item;
-            set => this._Mysticism.Set(value);
+            get => this._Mysticism;
+            set => this.SetMysticism(value);
+        }
+        protected void SetMysticism(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Mysticism];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Mysticism == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Mysticism] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Mysticism;
+                _Mysticism = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Mysticism,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Mysticism = item;
+            }
+        }
+        protected void UnsetMysticism()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Mysticism] = false;
+            Mysticism = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Mysticism_Property => this.Mysticism_Property;
@@ -599,14 +1570,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Mysticism_Property => this.Mysticism_Property;
         #endregion
         #region Restoration
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Restoration = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Restoration_Property => _Restoration;
+        protected Byte _Restoration;
+        protected PropertyForwarder<NPC, Byte> _RestorationForwarder;
+        public INotifyingSetItem<Byte> Restoration_Property => _RestorationForwarder ?? (_RestorationForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Restoration));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Restoration
         {
-            get => this._Restoration.Item;
-            set => this._Restoration.Set(value);
+            get => this._Restoration;
+            set => this.SetRestoration(value);
+        }
+        protected void SetRestoration(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Restoration];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Restoration == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Restoration] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Restoration;
+                _Restoration = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Restoration,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Restoration = item;
+            }
+        }
+        protected void UnsetRestoration()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Restoration] = false;
+            Restoration = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Restoration_Property => this.Restoration_Property;
@@ -614,14 +1618,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Restoration_Property => this.Restoration_Property;
         #endregion
         #region Acrobatics
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Acrobatics = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Acrobatics_Property => _Acrobatics;
+        protected Byte _Acrobatics;
+        protected PropertyForwarder<NPC, Byte> _AcrobaticsForwarder;
+        public INotifyingSetItem<Byte> Acrobatics_Property => _AcrobaticsForwarder ?? (_AcrobaticsForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Acrobatics));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Acrobatics
         {
-            get => this._Acrobatics.Item;
-            set => this._Acrobatics.Set(value);
+            get => this._Acrobatics;
+            set => this.SetAcrobatics(value);
+        }
+        protected void SetAcrobatics(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Acrobatics];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Acrobatics == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Acrobatics] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Acrobatics;
+                _Acrobatics = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Acrobatics,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Acrobatics = item;
+            }
+        }
+        protected void UnsetAcrobatics()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Acrobatics] = false;
+            Acrobatics = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Acrobatics_Property => this.Acrobatics_Property;
@@ -629,14 +1666,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Acrobatics_Property => this.Acrobatics_Property;
         #endregion
         #region LightArmor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _LightArmor = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> LightArmor_Property => _LightArmor;
+        protected Byte _LightArmor;
+        protected PropertyForwarder<NPC, Byte> _LightArmorForwarder;
+        public INotifyingSetItem<Byte> LightArmor_Property => _LightArmorForwarder ?? (_LightArmorForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.LightArmor));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte LightArmor
         {
-            get => this._LightArmor.Item;
-            set => this._LightArmor.Set(value);
+            get => this._LightArmor;
+            set => this.SetLightArmor(value);
+        }
+        protected void SetLightArmor(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.LightArmor];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && LightArmor == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.LightArmor] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = LightArmor;
+                _LightArmor = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.LightArmor,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _LightArmor = item;
+            }
+        }
+        protected void UnsetLightArmor()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.LightArmor] = false;
+            LightArmor = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.LightArmor_Property => this.LightArmor_Property;
@@ -644,14 +1714,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.LightArmor_Property => this.LightArmor_Property;
         #endregion
         #region Marksman
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Marksman = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Marksman_Property => _Marksman;
+        protected Byte _Marksman;
+        protected PropertyForwarder<NPC, Byte> _MarksmanForwarder;
+        public INotifyingSetItem<Byte> Marksman_Property => _MarksmanForwarder ?? (_MarksmanForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Marksman));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Marksman
         {
-            get => this._Marksman.Item;
-            set => this._Marksman.Set(value);
+            get => this._Marksman;
+            set => this.SetMarksman(value);
+        }
+        protected void SetMarksman(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Marksman];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Marksman == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Marksman] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Marksman;
+                _Marksman = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Marksman,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Marksman = item;
+            }
+        }
+        protected void UnsetMarksman()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Marksman] = false;
+            Marksman = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Marksman_Property => this.Marksman_Property;
@@ -659,14 +1762,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Marksman_Property => this.Marksman_Property;
         #endregion
         #region Mercantile
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Mercantile = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Mercantile_Property => _Mercantile;
+        protected Byte _Mercantile;
+        protected PropertyForwarder<NPC, Byte> _MercantileForwarder;
+        public INotifyingSetItem<Byte> Mercantile_Property => _MercantileForwarder ?? (_MercantileForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Mercantile));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Mercantile
         {
-            get => this._Mercantile.Item;
-            set => this._Mercantile.Set(value);
+            get => this._Mercantile;
+            set => this.SetMercantile(value);
+        }
+        protected void SetMercantile(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Mercantile];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Mercantile == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Mercantile] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Mercantile;
+                _Mercantile = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Mercantile,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Mercantile = item;
+            }
+        }
+        protected void UnsetMercantile()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Mercantile] = false;
+            Mercantile = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Mercantile_Property => this.Mercantile_Property;
@@ -674,14 +1810,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Mercantile_Property => this.Mercantile_Property;
         #endregion
         #region Security
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Security = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Security_Property => _Security;
+        protected Byte _Security;
+        protected PropertyForwarder<NPC, Byte> _SecurityForwarder;
+        public INotifyingSetItem<Byte> Security_Property => _SecurityForwarder ?? (_SecurityForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Security));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Security
         {
-            get => this._Security.Item;
-            set => this._Security.Set(value);
+            get => this._Security;
+            set => this.SetSecurity(value);
+        }
+        protected void SetSecurity(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Security];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Security == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Security] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Security;
+                _Security = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Security,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Security = item;
+            }
+        }
+        protected void UnsetSecurity()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Security] = false;
+            Security = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Security_Property => this.Security_Property;
@@ -689,14 +1858,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Security_Property => this.Security_Property;
         #endregion
         #region Sneak
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Sneak = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Sneak_Property => _Sneak;
+        protected Byte _Sneak;
+        protected PropertyForwarder<NPC, Byte> _SneakForwarder;
+        public INotifyingSetItem<Byte> Sneak_Property => _SneakForwarder ?? (_SneakForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Sneak));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Sneak
         {
-            get => this._Sneak.Item;
-            set => this._Sneak.Set(value);
+            get => this._Sneak;
+            set => this.SetSneak(value);
+        }
+        protected void SetSneak(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Sneak];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Sneak == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Sneak] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Sneak;
+                _Sneak = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Sneak,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Sneak = item;
+            }
+        }
+        protected void UnsetSneak()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Sneak] = false;
+            Sneak = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Sneak_Property => this.Sneak_Property;
@@ -704,14 +1906,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Sneak_Property => this.Sneak_Property;
         #endregion
         #region Speechcraft
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Speechcraft = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Speechcraft_Property => _Speechcraft;
+        protected Byte _Speechcraft;
+        protected PropertyForwarder<NPC, Byte> _SpeechcraftForwarder;
+        public INotifyingSetItem<Byte> Speechcraft_Property => _SpeechcraftForwarder ?? (_SpeechcraftForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Speechcraft));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Speechcraft
         {
-            get => this._Speechcraft.Item;
-            set => this._Speechcraft.Set(value);
+            get => this._Speechcraft;
+            set => this.SetSpeechcraft(value);
+        }
+        protected void SetSpeechcraft(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Speechcraft];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Speechcraft == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Speechcraft] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Speechcraft;
+                _Speechcraft = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Speechcraft,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Speechcraft = item;
+            }
+        }
+        protected void UnsetSpeechcraft()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Speechcraft] = false;
+            Speechcraft = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Speechcraft_Property => this.Speechcraft_Property;
@@ -719,14 +1954,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Speechcraft_Property => this.Speechcraft_Property;
         #endregion
         #region Health
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt32> _Health = NotifyingItem.Factory<UInt32>();
-        public INotifyingItem<UInt32> Health_Property => _Health;
+        protected UInt32 _Health;
+        protected PropertyForwarder<NPC, UInt32> _HealthForwarder;
+        public INotifyingSetItem<UInt32> Health_Property => _HealthForwarder ?? (_HealthForwarder = new PropertyForwarder<NPC, UInt32>(this, (int)NPC_FieldIndex.Health));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Health
         {
-            get => this._Health.Item;
-            set => this._Health.Set(value);
+            get => this._Health;
+            set => this.SetHealth(value);
+        }
+        protected void SetHealth(
+            UInt32 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Health];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Health == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Health] = hasBeenSet;
+            }
+            if (_UInt32_subscriptions != null)
+            {
+                var tmp = Health;
+                _Health = item;
+                _UInt32_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Health,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Health = item;
+            }
+        }
+        protected void UnsetHealth()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Health] = false;
+            Health = default(UInt32);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> INPC.Health_Property => this.Health_Property;
@@ -734,14 +2002,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt32> INPCGetter.Health_Property => this.Health_Property;
         #endregion
         #region Strength
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Strength = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Strength_Property => _Strength;
+        protected Byte _Strength;
+        protected PropertyForwarder<NPC, Byte> _StrengthForwarder;
+        public INotifyingSetItem<Byte> Strength_Property => _StrengthForwarder ?? (_StrengthForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Strength));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Strength
         {
-            get => this._Strength.Item;
-            set => this._Strength.Set(value);
+            get => this._Strength;
+            set => this.SetStrength(value);
+        }
+        protected void SetStrength(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Strength];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Strength == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Strength] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Strength;
+                _Strength = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Strength,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Strength = item;
+            }
+        }
+        protected void UnsetStrength()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Strength] = false;
+            Strength = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Strength_Property => this.Strength_Property;
@@ -749,14 +2050,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Strength_Property => this.Strength_Property;
         #endregion
         #region Intelligence
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Intelligence = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Intelligence_Property => _Intelligence;
+        protected Byte _Intelligence;
+        protected PropertyForwarder<NPC, Byte> _IntelligenceForwarder;
+        public INotifyingSetItem<Byte> Intelligence_Property => _IntelligenceForwarder ?? (_IntelligenceForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Intelligence));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Intelligence
         {
-            get => this._Intelligence.Item;
-            set => this._Intelligence.Set(value);
+            get => this._Intelligence;
+            set => this.SetIntelligence(value);
+        }
+        protected void SetIntelligence(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Intelligence];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Intelligence == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Intelligence] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Intelligence;
+                _Intelligence = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Intelligence,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Intelligence = item;
+            }
+        }
+        protected void UnsetIntelligence()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Intelligence] = false;
+            Intelligence = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Intelligence_Property => this.Intelligence_Property;
@@ -764,14 +2098,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Intelligence_Property => this.Intelligence_Property;
         #endregion
         #region Willpower
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Willpower = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Willpower_Property => _Willpower;
+        protected Byte _Willpower;
+        protected PropertyForwarder<NPC, Byte> _WillpowerForwarder;
+        public INotifyingSetItem<Byte> Willpower_Property => _WillpowerForwarder ?? (_WillpowerForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Willpower));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Willpower
         {
-            get => this._Willpower.Item;
-            set => this._Willpower.Set(value);
+            get => this._Willpower;
+            set => this.SetWillpower(value);
+        }
+        protected void SetWillpower(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Willpower];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Willpower == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Willpower] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Willpower;
+                _Willpower = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Willpower,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Willpower = item;
+            }
+        }
+        protected void UnsetWillpower()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Willpower] = false;
+            Willpower = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Willpower_Property => this.Willpower_Property;
@@ -779,14 +2146,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Willpower_Property => this.Willpower_Property;
         #endregion
         #region Agility
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Agility = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Agility_Property => _Agility;
+        protected Byte _Agility;
+        protected PropertyForwarder<NPC, Byte> _AgilityForwarder;
+        public INotifyingSetItem<Byte> Agility_Property => _AgilityForwarder ?? (_AgilityForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Agility));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Agility
         {
-            get => this._Agility.Item;
-            set => this._Agility.Set(value);
+            get => this._Agility;
+            set => this.SetAgility(value);
+        }
+        protected void SetAgility(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Agility];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Agility == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Agility] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Agility;
+                _Agility = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Agility,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Agility = item;
+            }
+        }
+        protected void UnsetAgility()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Agility] = false;
+            Agility = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Agility_Property => this.Agility_Property;
@@ -794,14 +2194,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Agility_Property => this.Agility_Property;
         #endregion
         #region Speed
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Speed = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Speed_Property => _Speed;
+        protected Byte _Speed;
+        protected PropertyForwarder<NPC, Byte> _SpeedForwarder;
+        public INotifyingSetItem<Byte> Speed_Property => _SpeedForwarder ?? (_SpeedForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Speed));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Speed
         {
-            get => this._Speed.Item;
-            set => this._Speed.Set(value);
+            get => this._Speed;
+            set => this.SetSpeed(value);
+        }
+        protected void SetSpeed(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Speed];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Speed == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Speed] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Speed;
+                _Speed = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Speed,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Speed = item;
+            }
+        }
+        protected void UnsetSpeed()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Speed] = false;
+            Speed = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Speed_Property => this.Speed_Property;
@@ -809,14 +2242,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Speed_Property => this.Speed_Property;
         #endregion
         #region Endurance
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Endurance = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Endurance_Property => _Endurance;
+        protected Byte _Endurance;
+        protected PropertyForwarder<NPC, Byte> _EnduranceForwarder;
+        public INotifyingSetItem<Byte> Endurance_Property => _EnduranceForwarder ?? (_EnduranceForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Endurance));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Endurance
         {
-            get => this._Endurance.Item;
-            set => this._Endurance.Set(value);
+            get => this._Endurance;
+            set => this.SetEndurance(value);
+        }
+        protected void SetEndurance(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Endurance];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Endurance == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Endurance] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Endurance;
+                _Endurance = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Endurance,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Endurance = item;
+            }
+        }
+        protected void UnsetEndurance()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Endurance] = false;
+            Endurance = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Endurance_Property => this.Endurance_Property;
@@ -824,14 +2290,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Endurance_Property => this.Endurance_Property;
         #endregion
         #region Personality
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Personality = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Personality_Property => _Personality;
+        protected Byte _Personality;
+        protected PropertyForwarder<NPC, Byte> _PersonalityForwarder;
+        public INotifyingSetItem<Byte> Personality_Property => _PersonalityForwarder ?? (_PersonalityForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Personality));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Personality
         {
-            get => this._Personality.Item;
-            set => this._Personality.Set(value);
+            get => this._Personality;
+            set => this.SetPersonality(value);
+        }
+        protected void SetPersonality(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Personality];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Personality == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Personality] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Personality;
+                _Personality = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Personality,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Personality = item;
+            }
+        }
+        protected void UnsetPersonality()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Personality] = false;
+            Personality = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Personality_Property => this.Personality_Property;
@@ -839,14 +2338,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.Personality_Property => this.Personality_Property;
         #endregion
         #region Luck
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Luck = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Luck_Property => _Luck;
+        protected Byte _Luck;
+        protected PropertyForwarder<NPC, Byte> _LuckForwarder;
+        public INotifyingSetItem<Byte> Luck_Property => _LuckForwarder ?? (_LuckForwarder = new PropertyForwarder<NPC, Byte>(this, (int)NPC_FieldIndex.Luck));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Luck
         {
-            get => this._Luck.Item;
-            set => this._Luck.Set(value);
+            get => this._Luck;
+            set => this.SetLuck(value);
+        }
+        protected void SetLuck(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Luck];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Luck == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Luck] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Luck;
+                _Luck = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Luck,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Luck = item;
+            }
+        }
+        protected void UnsetLuck()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Luck] = false;
+            Luck = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Luck_Property => this.Luck_Property;
@@ -861,14 +2393,47 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Hair> INPCGetter.Hair_Property => this.Hair_Property;
         #endregion
         #region HairLength
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<Single> _HairLength = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> HairLength_Property => _HairLength;
+        protected Single _HairLength;
+        protected PropertyForwarder<NPC, Single> _HairLengthForwarder;
+        public INotifyingSetItem<Single> HairLength_Property => _HairLengthForwarder ?? (_HairLengthForwarder = new PropertyForwarder<NPC, Single>(this, (int)NPC_FieldIndex.HairLength));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HairLength
         {
-            get => this._HairLength.Item;
-            set => this._HairLength.Set(value);
+            get => this._HairLength;
+            set => this.SetHairLength(value);
+        }
+        protected void SetHairLength(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.HairLength];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && HairLength == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.HairLength] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = HairLength;
+                _HairLength = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.HairLength,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _HairLength = item;
+            }
+        }
+        protected void UnsetHairLength()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.HairLength] = false;
+            HairLength = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Single> INPC.HairLength_Property => this.HairLength_Property;
@@ -894,14 +2459,47 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region HairColor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<Color> _HairColor = NotifyingSetItem.Factory<Color>(markAsSet: false);
-        public INotifyingSetItem<Color> HairColor_Property => _HairColor;
+        protected Color _HairColor;
+        protected PropertyForwarder<NPC, Color> _HairColorForwarder;
+        public INotifyingSetItem<Color> HairColor_Property => _HairColorForwarder ?? (_HairColorForwarder = new PropertyForwarder<NPC, Color>(this, (int)NPC_FieldIndex.HairColor));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Color HairColor
         {
-            get => this._HairColor.Item;
-            set => this._HairColor.Set(value);
+            get => this._HairColor;
+            set => this.SetHairColor(value);
+        }
+        protected void SetHairColor(
+            Color item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.HairColor];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && HairColor == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.HairColor] = hasBeenSet;
+            }
+            if (_Color_subscriptions != null)
+            {
+                var tmp = HairColor;
+                _HairColor = item;
+                _Color_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.HairColor,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _HairColor = item;
+            }
+        }
+        protected void UnsetHairColor()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.HairColor] = false;
+            HairColor = default(Color);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Color> INPC.HairColor_Property => this.HairColor_Property;
@@ -916,13 +2514,47 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<CombatStyle> INPCGetter.CombatStyle_Property => this.CombatStyle_Property;
         #endregion
         #region FaceGenGeometrySymmetric
-        protected INotifyingSetItem<Byte[]> _FaceGenGeometrySymmetric = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
-        public INotifyingSetItem<Byte[]> FaceGenGeometrySymmetric_Property => _FaceGenGeometrySymmetric;
+        protected Byte[] _FaceGenGeometrySymmetric;
+        protected PropertyForwarder<NPC, Byte[]> _FaceGenGeometrySymmetricForwarder;
+        public INotifyingSetItem<Byte[]> FaceGenGeometrySymmetric_Property => _FaceGenGeometrySymmetricForwarder ?? (_FaceGenGeometrySymmetricForwarder = new PropertyForwarder<NPC, Byte[]>(this, (int)NPC_FieldIndex.FaceGenGeometrySymmetric));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] FaceGenGeometrySymmetric
         {
-            get => this._FaceGenGeometrySymmetric.Item;
-            set => this._FaceGenGeometrySymmetric.Set(value);
+            get => this._FaceGenGeometrySymmetric;
+            set => this.SetFaceGenGeometrySymmetric(value);
+        }
+        protected void SetFaceGenGeometrySymmetric(
+            Byte[] item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.FaceGenGeometrySymmetric];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(FaceGenGeometrySymmetric, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.FaceGenGeometrySymmetric] = hasBeenSet;
+            }
+            if (_ByteArr_subscriptions != null)
+            {
+                var tmp = FaceGenGeometrySymmetric;
+                _FaceGenGeometrySymmetric = item;
+                _ByteArr_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.FaceGenGeometrySymmetric,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _FaceGenGeometrySymmetric = item;
+            }
+        }
+        protected void UnsetFaceGenGeometrySymmetric()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.FaceGenGeometrySymmetric] = false;
+            FaceGenGeometrySymmetric = default(Byte[]);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> INPC.FaceGenGeometrySymmetric_Property => this.FaceGenGeometrySymmetric_Property;
@@ -930,13 +2562,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Byte[]> INPCGetter.FaceGenGeometrySymmetric_Property => this.FaceGenGeometrySymmetric_Property;
         #endregion
         #region FaceGenGeometryAsymmetric
-        protected INotifyingSetItem<Byte[]> _FaceGenGeometryAsymmetric = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
-        public INotifyingSetItem<Byte[]> FaceGenGeometryAsymmetric_Property => _FaceGenGeometryAsymmetric;
+        protected Byte[] _FaceGenGeometryAsymmetric;
+        protected PropertyForwarder<NPC, Byte[]> _FaceGenGeometryAsymmetricForwarder;
+        public INotifyingSetItem<Byte[]> FaceGenGeometryAsymmetric_Property => _FaceGenGeometryAsymmetricForwarder ?? (_FaceGenGeometryAsymmetricForwarder = new PropertyForwarder<NPC, Byte[]>(this, (int)NPC_FieldIndex.FaceGenGeometryAsymmetric));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] FaceGenGeometryAsymmetric
         {
-            get => this._FaceGenGeometryAsymmetric.Item;
-            set => this._FaceGenGeometryAsymmetric.Set(value);
+            get => this._FaceGenGeometryAsymmetric;
+            set => this.SetFaceGenGeometryAsymmetric(value);
+        }
+        protected void SetFaceGenGeometryAsymmetric(
+            Byte[] item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.FaceGenGeometryAsymmetric];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(FaceGenGeometryAsymmetric, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.FaceGenGeometryAsymmetric] = hasBeenSet;
+            }
+            if (_ByteArr_subscriptions != null)
+            {
+                var tmp = FaceGenGeometryAsymmetric;
+                _FaceGenGeometryAsymmetric = item;
+                _ByteArr_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.FaceGenGeometryAsymmetric,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _FaceGenGeometryAsymmetric = item;
+            }
+        }
+        protected void UnsetFaceGenGeometryAsymmetric()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.FaceGenGeometryAsymmetric] = false;
+            FaceGenGeometryAsymmetric = default(Byte[]);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> INPC.FaceGenGeometryAsymmetric_Property => this.FaceGenGeometryAsymmetric_Property;
@@ -944,13 +2610,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Byte[]> INPCGetter.FaceGenGeometryAsymmetric_Property => this.FaceGenGeometryAsymmetric_Property;
         #endregion
         #region FaceGenTextureSymmetric
-        protected INotifyingSetItem<Byte[]> _FaceGenTextureSymmetric = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
-        public INotifyingSetItem<Byte[]> FaceGenTextureSymmetric_Property => _FaceGenTextureSymmetric;
+        protected Byte[] _FaceGenTextureSymmetric;
+        protected PropertyForwarder<NPC, Byte[]> _FaceGenTextureSymmetricForwarder;
+        public INotifyingSetItem<Byte[]> FaceGenTextureSymmetric_Property => _FaceGenTextureSymmetricForwarder ?? (_FaceGenTextureSymmetricForwarder = new PropertyForwarder<NPC, Byte[]>(this, (int)NPC_FieldIndex.FaceGenTextureSymmetric));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] FaceGenTextureSymmetric
         {
-            get => this._FaceGenTextureSymmetric.Item;
-            set => this._FaceGenTextureSymmetric.Set(value);
+            get => this._FaceGenTextureSymmetric;
+            set => this.SetFaceGenTextureSymmetric(value);
+        }
+        protected void SetFaceGenTextureSymmetric(
+            Byte[] item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.FaceGenTextureSymmetric];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(FaceGenTextureSymmetric, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.FaceGenTextureSymmetric] = hasBeenSet;
+            }
+            if (_ByteArr_subscriptions != null)
+            {
+                var tmp = FaceGenTextureSymmetric;
+                _FaceGenTextureSymmetric = item;
+                _ByteArr_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.FaceGenTextureSymmetric,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _FaceGenTextureSymmetric = item;
+            }
+        }
+        protected void UnsetFaceGenTextureSymmetric()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.FaceGenTextureSymmetric] = false;
+            FaceGenTextureSymmetric = default(Byte[]);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> INPC.FaceGenTextureSymmetric_Property => this.FaceGenTextureSymmetric_Property;
@@ -958,13 +2658,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Byte[]> INPCGetter.FaceGenTextureSymmetric_Property => this.FaceGenTextureSymmetric_Property;
         #endregion
         #region Unknown
-        protected INotifyingSetItem<Byte[]> _Unknown = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
-        public INotifyingSetItem<Byte[]> Unknown_Property => _Unknown;
+        protected Byte[] _Unknown;
+        protected PropertyForwarder<NPC, Byte[]> _UnknownForwarder;
+        public INotifyingSetItem<Byte[]> Unknown_Property => _UnknownForwarder ?? (_UnknownForwarder = new PropertyForwarder<NPC, Byte[]>(this, (int)NPC_FieldIndex.Unknown));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Unknown
         {
-            get => this._Unknown.Item;
-            set => this._Unknown.Set(value);
+            get => this._Unknown;
+            set => this.SetUnknown(value);
+        }
+        protected void SetUnknown(
+            Byte[] item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Unknown];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Unknown, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Unknown] = hasBeenSet;
+            }
+            if (_ByteArr_subscriptions != null)
+            {
+                var tmp = Unknown;
+                _Unknown = item;
+                _ByteArr_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Unknown,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Unknown = item;
+            }
+        }
+        protected void UnsetUnknown()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Unknown] = false;
+            Unknown = default(Byte[]);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> INPC.Unknown_Property => this.Unknown_Property;
@@ -1595,53 +3329,117 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    var ModeltryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)NPC_FieldIndex.Model,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ModeltryGet.Succeeded)
+                    {
+                        item.SetModel(item: ModeltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetModel();
+                    }
                     break;
                 case "NPCFlags":
-                    item._NPCFlags.SetIfSucceededOrDefault(EnumXmlTranslation<NPC.NPCFlag>.Instance.Parse(
+                    var NPCFlagstryGet = EnumXmlTranslation<NPC.NPCFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)NPC_FieldIndex.NPCFlags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (NPCFlagstryGet.Succeeded)
+                    {
+                        item.SetNPCFlags(item: NPCFlagstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetNPCFlags();
+                    }
                     break;
                 case "BaseSpellPoints":
-                    item._BaseSpellPoints.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
+                    var BaseSpellPointstryGet = UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.BaseSpellPoints,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (BaseSpellPointstryGet.Succeeded)
+                    {
+                        item.SetBaseSpellPoints(item: BaseSpellPointstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetBaseSpellPoints();
+                    }
                     break;
                 case "Fatigue":
-                    item._Fatigue.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
+                    var FatiguetryGet = UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Fatigue,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FatiguetryGet.Succeeded)
+                    {
+                        item.SetFatigue(item: FatiguetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFatigue();
+                    }
                     break;
                 case "BarterGold":
-                    item._BarterGold.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
+                    var BarterGoldtryGet = UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.BarterGold,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (BarterGoldtryGet.Succeeded)
+                    {
+                        item.SetBarterGold(item: BarterGoldtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetBarterGold();
+                    }
                     break;
                 case "LevelOffset":
-                    item._LevelOffset.SetIfSucceededOrDefault(Int16XmlTranslation.Instance.ParseNonNull(
+                    var LevelOffsettryGet = Int16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.LevelOffset,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (LevelOffsettryGet.Succeeded)
+                    {
+                        item.SetLevelOffset(item: LevelOffsettryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetLevelOffset();
+                    }
                     break;
                 case "CalcMin":
-                    item._CalcMin.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
+                    var CalcMintryGet = UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.CalcMin,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (CalcMintryGet.Succeeded)
+                    {
+                        item.SetCalcMin(item: CalcMintryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetCalcMin();
+                    }
                     break;
                 case "CalcMax":
-                    item._CalcMax.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
+                    var CalcMaxtryGet = UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.CalcMax,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (CalcMaxtryGet.Succeeded)
+                    {
+                        item.SetCalcMax(item: CalcMaxtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetCalcMax();
+                    }
                     break;
                 case "Factions":
                     item._Factions.SetIfSucceededOrDefault(ListXmlTranslation<RankPlacement, MaskItem<Exception, RankPlacement_ErrorMask>>.Instance.Parse(
@@ -1705,54 +3503,118 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "Aggression":
-                    item._Aggression.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var AggressiontryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Aggression,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (AggressiontryGet.Succeeded)
+                    {
+                        item.SetAggression(item: AggressiontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetAggression();
+                    }
                     break;
                 case "Confidence":
-                    item._Confidence.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var ConfidencetryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Confidence,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ConfidencetryGet.Succeeded)
+                    {
+                        item.SetConfidence(item: ConfidencetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetConfidence();
+                    }
                     break;
                 case "EnergyLevel":
-                    item._EnergyLevel.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var EnergyLeveltryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.EnergyLevel,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (EnergyLeveltryGet.Succeeded)
+                    {
+                        item.SetEnergyLevel(item: EnergyLeveltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetEnergyLevel();
+                    }
                     break;
                 case "Responsibility":
-                    item._Responsibility.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var ResponsibilitytryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Responsibility,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ResponsibilitytryGet.Succeeded)
+                    {
+                        item.SetResponsibility(item: ResponsibilitytryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetResponsibility();
+                    }
                     break;
                 case "BuySellServices":
-                    item._BuySellServices.SetIfSucceededOrDefault(EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
+                    var BuySellServicestryGet = EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)NPC_FieldIndex.BuySellServices,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (BuySellServicestryGet.Succeeded)
+                    {
+                        item.SetBuySellServices(item: BuySellServicestryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetBuySellServices();
+                    }
                     break;
                 case "Teaches":
-                    item._Teaches.SetIfSucceededOrDefault(EnumXmlTranslation<Skill>.Instance.Parse(
+                    var TeachestryGet = EnumXmlTranslation<Skill>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)NPC_FieldIndex.Teaches,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (TeachestryGet.Succeeded)
+                    {
+                        item.SetTeaches(item: TeachestryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetTeaches();
+                    }
                     break;
                 case "MaximumTrainingLevel":
-                    item._MaximumTrainingLevel.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var MaximumTrainingLeveltryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.MaximumTrainingLevel,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MaximumTrainingLeveltryGet.Succeeded)
+                    {
+                        item.SetMaximumTrainingLevel(item: MaximumTrainingLeveltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMaximumTrainingLevel();
+                    }
                     break;
                 case "Fluff":
-                    item._Fluff.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
+                    var FlufftryGet = ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Fluff,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FlufftryGet.Succeeded)
+                    {
+                        item.SetFluff(item: FlufftryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFluff();
+                    }
                     break;
                 case "AIPackages":
                     item._AIPackages.SetIfSucceededOrDefault(ListXmlTranslation<FormIDSetLink<AIPackage>, Exception>.Instance.Parse(
@@ -1790,184 +3652,424 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Armorer":
-                    item._Armorer.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var ArmorertryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Armorer,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ArmorertryGet.Succeeded)
+                    {
+                        item.SetArmorer(item: ArmorertryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetArmorer();
+                    }
                     break;
                 case "Athletics":
-                    item._Athletics.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var AthleticstryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Athletics,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (AthleticstryGet.Succeeded)
+                    {
+                        item.SetAthletics(item: AthleticstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetAthletics();
+                    }
                     break;
                 case "Blade":
-                    item._Blade.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var BladetryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Blade,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (BladetryGet.Succeeded)
+                    {
+                        item.SetBlade(item: BladetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetBlade();
+                    }
                     break;
                 case "Block":
-                    item._Block.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var BlocktryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Block,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (BlocktryGet.Succeeded)
+                    {
+                        item.SetBlock(item: BlocktryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetBlock();
+                    }
                     break;
                 case "Blunt":
-                    item._Blunt.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var BlunttryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Blunt,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (BlunttryGet.Succeeded)
+                    {
+                        item.SetBlunt(item: BlunttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetBlunt();
+                    }
                     break;
                 case "HandToHand":
-                    item._HandToHand.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var HandToHandtryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.HandToHand,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HandToHandtryGet.Succeeded)
+                    {
+                        item.SetHandToHand(item: HandToHandtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHandToHand();
+                    }
                     break;
                 case "HeavyArmor":
-                    item._HeavyArmor.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var HeavyArmortryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.HeavyArmor,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HeavyArmortryGet.Succeeded)
+                    {
+                        item.SetHeavyArmor(item: HeavyArmortryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHeavyArmor();
+                    }
                     break;
                 case "Alchemy":
-                    item._Alchemy.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var AlchemytryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Alchemy,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (AlchemytryGet.Succeeded)
+                    {
+                        item.SetAlchemy(item: AlchemytryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetAlchemy();
+                    }
                     break;
                 case "Alteration":
-                    item._Alteration.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var AlterationtryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Alteration,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (AlterationtryGet.Succeeded)
+                    {
+                        item.SetAlteration(item: AlterationtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetAlteration();
+                    }
                     break;
                 case "Conjuration":
-                    item._Conjuration.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var ConjurationtryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Conjuration,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ConjurationtryGet.Succeeded)
+                    {
+                        item.SetConjuration(item: ConjurationtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetConjuration();
+                    }
                     break;
                 case "Destruction":
-                    item._Destruction.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var DestructiontryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Destruction,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DestructiontryGet.Succeeded)
+                    {
+                        item.SetDestruction(item: DestructiontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetDestruction();
+                    }
                     break;
                 case "Illusion":
-                    item._Illusion.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var IllusiontryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Illusion,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (IllusiontryGet.Succeeded)
+                    {
+                        item.SetIllusion(item: IllusiontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetIllusion();
+                    }
                     break;
                 case "Mysticism":
-                    item._Mysticism.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var MysticismtryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Mysticism,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MysticismtryGet.Succeeded)
+                    {
+                        item.SetMysticism(item: MysticismtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMysticism();
+                    }
                     break;
                 case "Restoration":
-                    item._Restoration.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var RestorationtryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Restoration,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (RestorationtryGet.Succeeded)
+                    {
+                        item.SetRestoration(item: RestorationtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetRestoration();
+                    }
                     break;
                 case "Acrobatics":
-                    item._Acrobatics.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var AcrobaticstryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Acrobatics,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (AcrobaticstryGet.Succeeded)
+                    {
+                        item.SetAcrobatics(item: AcrobaticstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetAcrobatics();
+                    }
                     break;
                 case "LightArmor":
-                    item._LightArmor.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var LightArmortryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.LightArmor,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (LightArmortryGet.Succeeded)
+                    {
+                        item.SetLightArmor(item: LightArmortryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetLightArmor();
+                    }
                     break;
                 case "Marksman":
-                    item._Marksman.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var MarksmantryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Marksman,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MarksmantryGet.Succeeded)
+                    {
+                        item.SetMarksman(item: MarksmantryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMarksman();
+                    }
                     break;
                 case "Mercantile":
-                    item._Mercantile.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var MercantiletryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Mercantile,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MercantiletryGet.Succeeded)
+                    {
+                        item.SetMercantile(item: MercantiletryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMercantile();
+                    }
                     break;
                 case "Security":
-                    item._Security.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var SecuritytryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Security,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (SecuritytryGet.Succeeded)
+                    {
+                        item.SetSecurity(item: SecuritytryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetSecurity();
+                    }
                     break;
                 case "Sneak":
-                    item._Sneak.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var SneaktryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Sneak,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (SneaktryGet.Succeeded)
+                    {
+                        item.SetSneak(item: SneaktryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetSneak();
+                    }
                     break;
                 case "Speechcraft":
-                    item._Speechcraft.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var SpeechcrafttryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Speechcraft,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (SpeechcrafttryGet.Succeeded)
+                    {
+                        item.SetSpeechcraft(item: SpeechcrafttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetSpeechcraft();
+                    }
                     break;
                 case "Health":
-                    item._Health.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
+                    var HealthtryGet = UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Health,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HealthtryGet.Succeeded)
+                    {
+                        item.SetHealth(item: HealthtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHealth();
+                    }
                     break;
                 case "Strength":
-                    item._Strength.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var StrengthtryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Strength,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (StrengthtryGet.Succeeded)
+                    {
+                        item.SetStrength(item: StrengthtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetStrength();
+                    }
                     break;
                 case "Intelligence":
-                    item._Intelligence.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var IntelligencetryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Intelligence,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (IntelligencetryGet.Succeeded)
+                    {
+                        item.SetIntelligence(item: IntelligencetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetIntelligence();
+                    }
                     break;
                 case "Willpower":
-                    item._Willpower.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var WillpowertryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Willpower,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (WillpowertryGet.Succeeded)
+                    {
+                        item.SetWillpower(item: WillpowertryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetWillpower();
+                    }
                     break;
                 case "Agility":
-                    item._Agility.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var AgilitytryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Agility,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (AgilitytryGet.Succeeded)
+                    {
+                        item.SetAgility(item: AgilitytryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetAgility();
+                    }
                     break;
                 case "Speed":
-                    item._Speed.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var SpeedtryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Speed,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (SpeedtryGet.Succeeded)
+                    {
+                        item.SetSpeed(item: SpeedtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetSpeed();
+                    }
                     break;
                 case "Endurance":
-                    item._Endurance.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var EndurancetryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Endurance,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (EndurancetryGet.Succeeded)
+                    {
+                        item.SetEndurance(item: EndurancetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetEndurance();
+                    }
                     break;
                 case "Personality":
-                    item._Personality.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var PersonalitytryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Personality,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (PersonalitytryGet.Succeeded)
+                    {
+                        item.SetPersonality(item: PersonalitytryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetPersonality();
+                    }
                     break;
                 case "Luck":
-                    item._Luck.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var LucktryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Luck,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (LucktryGet.Succeeded)
+                    {
+                        item.SetLuck(item: LucktryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetLuck();
+                    }
                     break;
                 case "Hair":
                     item.Hair_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
@@ -1976,10 +4078,18 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "HairLength":
-                    item._HairLength.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var HairLengthtryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.HairLength,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HairLengthtryGet.Succeeded)
+                    {
+                        item.SetHairLength(item: HairLengthtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHairLength();
+                    }
                     break;
                 case "Eyes":
                     item._Eyes.SetIfSucceededOrDefault(ListXmlTranslation<FormIDLink<Eye>, Exception>.Instance.Parse(
@@ -1997,10 +4107,18 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "HairColor":
-                    item._HairColor.SetIfSucceededOrDefault(ColorXmlTranslation.Instance.ParseNonNull(
+                    var HairColortryGet = ColorXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.HairColor,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HairColortryGet.Succeeded)
+                    {
+                        item.SetHairColor(item: HairColortryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHairColor();
+                    }
                     break;
                 case "CombatStyle":
                     item.CombatStyle_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
@@ -2009,28 +4127,60 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "FaceGenGeometrySymmetric":
-                    item._FaceGenGeometrySymmetric.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
+                    var FaceGenGeometrySymmetrictryGet = ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.FaceGenGeometrySymmetric,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FaceGenGeometrySymmetrictryGet.Succeeded)
+                    {
+                        item.SetFaceGenGeometrySymmetric(item: FaceGenGeometrySymmetrictryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFaceGenGeometrySymmetric();
+                    }
                     break;
                 case "FaceGenGeometryAsymmetric":
-                    item._FaceGenGeometryAsymmetric.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
+                    var FaceGenGeometryAsymmetrictryGet = ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.FaceGenGeometryAsymmetric,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FaceGenGeometryAsymmetrictryGet.Succeeded)
+                    {
+                        item.SetFaceGenGeometryAsymmetric(item: FaceGenGeometryAsymmetrictryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFaceGenGeometryAsymmetric();
+                    }
                     break;
                 case "FaceGenTextureSymmetric":
-                    item._FaceGenTextureSymmetric.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
+                    var FaceGenTextureSymmetrictryGet = ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.FaceGenTextureSymmetric,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FaceGenTextureSymmetrictryGet.Succeeded)
+                    {
+                        item.SetFaceGenTextureSymmetric(item: FaceGenTextureSymmetrictryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFaceGenTextureSymmetric();
+                    }
                     break;
                 case "Unknown":
-                    item._Unknown.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
+                    var UnknowntryGet = ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Unknown,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (UnknowntryGet.Succeeded)
+                    {
+                        item.SetUnknown(item: UnknowntryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetUnknown();
+                    }
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -2039,6 +4189,1886 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Model
+        protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
+        Model IPropertySupporter<Model>.Get(int index)
+        {
+            return GetModel(index: index);
+        }
+
+        protected Model GetModel(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Model:
+                    return Model;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        void IPropertySupporter<Model>.Set(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetModel(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetModel(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Model:
+                    SetModel(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Model>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Model>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Model>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetModel(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetModel(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Model:
+                    _hasBeenSetTracker[index] = false;
+                    Model = default(Model);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Model> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Model_subscriptions == null)
+            {
+                _Model_subscriptions = new ObjectCentralizationSubscriptions<Model>();
+            }
+            _Model_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Model_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Model>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Model IPropertySupporter<Model>.DefaultValue(int index)
+        {
+            return DefaultValueModel(index: index);
+        }
+
+        protected Model DefaultValueModel(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Model:
+                    return default(Model);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter NPC.NPCFlag
+        protected ObjectCentralizationSubscriptions<NPC.NPCFlag> _NPCNPCFlag_subscriptions;
+        NPC.NPCFlag IPropertySupporter<NPC.NPCFlag>.Get(int index)
+        {
+            return GetNPCNPCFlag(index: index);
+        }
+
+        protected NPC.NPCFlag GetNPCNPCFlag(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.NPCFlags:
+                    return NPCFlags;
+                default:
+                    throw new ArgumentException($"Unknown index for field type NPC.NPCFlag: {index}");
+            }
+        }
+
+        void IPropertySupporter<NPC.NPCFlag>.Set(
+            int index,
+            NPC.NPCFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetNPCNPCFlag(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetNPCNPCFlag(
+            int index,
+            NPC.NPCFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.NPCFlags:
+                    SetNPCFlags(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type NPC.NPCFlag: {index}");
+            }
+        }
+
+        bool IPropertySupporter<NPC.NPCFlag>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<NPC.NPCFlag>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<NPC.NPCFlag>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetNPCNPCFlag(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetNPCNPCFlag(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.NPCFlags:
+                    _hasBeenSetTracker[index] = false;
+                    NPCFlags = default(NPC.NPCFlag);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type NPC.NPCFlag: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<NPC.NPCFlag>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<NPC.NPCFlag> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_NPCNPCFlag_subscriptions == null)
+            {
+                _NPCNPCFlag_subscriptions = new ObjectCentralizationSubscriptions<NPC.NPCFlag>();
+            }
+            _NPCNPCFlag_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<NPC.NPCFlag>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _NPCNPCFlag_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<NPC.NPCFlag>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        NPC.NPCFlag IPropertySupporter<NPC.NPCFlag>.DefaultValue(int index)
+        {
+            return DefaultValueNPCNPCFlag(index: index);
+        }
+
+        protected NPC.NPCFlag DefaultValueNPCNPCFlag(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.NPCFlags:
+                    return default(NPC.NPCFlag);
+                default:
+                    throw new ArgumentException($"Unknown index for field type NPC.NPCFlag: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter UInt16
+        protected ObjectCentralizationSubscriptions<UInt16> _UInt16_subscriptions;
+        UInt16 IPropertySupporter<UInt16>.Get(int index)
+        {
+            return GetUInt16(index: index);
+        }
+
+        protected UInt16 GetUInt16(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.BaseSpellPoints:
+                    return BaseSpellPoints;
+                case NPC_FieldIndex.Fatigue:
+                    return Fatigue;
+                case NPC_FieldIndex.BarterGold:
+                    return BarterGold;
+                case NPC_FieldIndex.CalcMin:
+                    return CalcMin;
+                case NPC_FieldIndex.CalcMax:
+                    return CalcMax;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        void IPropertySupporter<UInt16>.Set(
+            int index,
+            UInt16 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetUInt16(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetUInt16(
+            int index,
+            UInt16 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.BaseSpellPoints:
+                    SetBaseSpellPoints(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Fatigue:
+                    SetFatigue(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.BarterGold:
+                    SetBarterGold(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.CalcMin:
+                    SetCalcMin(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.CalcMax:
+                    SetCalcMax(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        bool IPropertySupporter<UInt16>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<UInt16>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<UInt16>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetUInt16(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetUInt16(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.BaseSpellPoints:
+                    _hasBeenSetTracker[index] = false;
+                    BaseSpellPoints = default(UInt16);
+                    break;
+                case NPC_FieldIndex.Fatigue:
+                    _hasBeenSetTracker[index] = false;
+                    Fatigue = default(UInt16);
+                    break;
+                case NPC_FieldIndex.BarterGold:
+                    _hasBeenSetTracker[index] = false;
+                    BarterGold = default(UInt16);
+                    break;
+                case NPC_FieldIndex.CalcMin:
+                    _hasBeenSetTracker[index] = false;
+                    CalcMin = default(UInt16);
+                    break;
+                case NPC_FieldIndex.CalcMax:
+                    _hasBeenSetTracker[index] = false;
+                    CalcMax = default(UInt16);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt16>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<UInt16> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_UInt16_subscriptions == null)
+            {
+                _UInt16_subscriptions = new ObjectCentralizationSubscriptions<UInt16>();
+            }
+            _UInt16_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt16>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _UInt16_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<UInt16>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        UInt16 IPropertySupporter<UInt16>.DefaultValue(int index)
+        {
+            return DefaultValueUInt16(index: index);
+        }
+
+        protected UInt16 DefaultValueUInt16(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.BaseSpellPoints:
+                case NPC_FieldIndex.Fatigue:
+                case NPC_FieldIndex.BarterGold:
+                case NPC_FieldIndex.CalcMin:
+                case NPC_FieldIndex.CalcMax:
+                    return default(UInt16);
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Int16
+        protected ObjectCentralizationSubscriptions<Int16> _Int16_subscriptions;
+        Int16 IPropertySupporter<Int16>.Get(int index)
+        {
+            return GetInt16(index: index);
+        }
+
+        protected Int16 GetInt16(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.LevelOffset:
+                    return LevelOffset;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int16: {index}");
+            }
+        }
+
+        void IPropertySupporter<Int16>.Set(
+            int index,
+            Int16 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetInt16(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetInt16(
+            int index,
+            Int16 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.LevelOffset:
+                    SetLevelOffset(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int16: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Int16>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Int16>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Int16>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetInt16(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetInt16(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.LevelOffset:
+                    _hasBeenSetTracker[index] = false;
+                    LevelOffset = default(Int16);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int16: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Int16>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Int16> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Int16_subscriptions == null)
+            {
+                _Int16_subscriptions = new ObjectCentralizationSubscriptions<Int16>();
+            }
+            _Int16_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Int16>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Int16_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Int16>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Int16 IPropertySupporter<Int16>.DefaultValue(int index)
+        {
+            return DefaultValueInt16(index: index);
+        }
+
+        protected Int16 DefaultValueInt16(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.LevelOffset:
+                    return default(Int16);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int16: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Byte
+        protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
+        Byte IPropertySupporter<Byte>.Get(int index)
+        {
+            return GetByte(index: index);
+        }
+
+        protected Byte GetByte(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Aggression:
+                    return Aggression;
+                case NPC_FieldIndex.Confidence:
+                    return Confidence;
+                case NPC_FieldIndex.EnergyLevel:
+                    return EnergyLevel;
+                case NPC_FieldIndex.Responsibility:
+                    return Responsibility;
+                case NPC_FieldIndex.MaximumTrainingLevel:
+                    return MaximumTrainingLevel;
+                case NPC_FieldIndex.Armorer:
+                    return Armorer;
+                case NPC_FieldIndex.Athletics:
+                    return Athletics;
+                case NPC_FieldIndex.Blade:
+                    return Blade;
+                case NPC_FieldIndex.Block:
+                    return Block;
+                case NPC_FieldIndex.Blunt:
+                    return Blunt;
+                case NPC_FieldIndex.HandToHand:
+                    return HandToHand;
+                case NPC_FieldIndex.HeavyArmor:
+                    return HeavyArmor;
+                case NPC_FieldIndex.Alchemy:
+                    return Alchemy;
+                case NPC_FieldIndex.Alteration:
+                    return Alteration;
+                case NPC_FieldIndex.Conjuration:
+                    return Conjuration;
+                case NPC_FieldIndex.Destruction:
+                    return Destruction;
+                case NPC_FieldIndex.Illusion:
+                    return Illusion;
+                case NPC_FieldIndex.Mysticism:
+                    return Mysticism;
+                case NPC_FieldIndex.Restoration:
+                    return Restoration;
+                case NPC_FieldIndex.Acrobatics:
+                    return Acrobatics;
+                case NPC_FieldIndex.LightArmor:
+                    return LightArmor;
+                case NPC_FieldIndex.Marksman:
+                    return Marksman;
+                case NPC_FieldIndex.Mercantile:
+                    return Mercantile;
+                case NPC_FieldIndex.Security:
+                    return Security;
+                case NPC_FieldIndex.Sneak:
+                    return Sneak;
+                case NPC_FieldIndex.Speechcraft:
+                    return Speechcraft;
+                case NPC_FieldIndex.Strength:
+                    return Strength;
+                case NPC_FieldIndex.Intelligence:
+                    return Intelligence;
+                case NPC_FieldIndex.Willpower:
+                    return Willpower;
+                case NPC_FieldIndex.Agility:
+                    return Agility;
+                case NPC_FieldIndex.Speed:
+                    return Speed;
+                case NPC_FieldIndex.Endurance:
+                    return Endurance;
+                case NPC_FieldIndex.Personality:
+                    return Personality;
+                case NPC_FieldIndex.Luck:
+                    return Luck;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        void IPropertySupporter<Byte>.Set(
+            int index,
+            Byte item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByte(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetByte(
+            int index,
+            Byte item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Aggression:
+                    SetAggression(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Confidence:
+                    SetConfidence(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.EnergyLevel:
+                    SetEnergyLevel(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Responsibility:
+                    SetResponsibility(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.MaximumTrainingLevel:
+                    SetMaximumTrainingLevel(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Armorer:
+                    SetArmorer(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Athletics:
+                    SetAthletics(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Blade:
+                    SetBlade(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Block:
+                    SetBlock(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Blunt:
+                    SetBlunt(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.HandToHand:
+                    SetHandToHand(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.HeavyArmor:
+                    SetHeavyArmor(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Alchemy:
+                    SetAlchemy(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Alteration:
+                    SetAlteration(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Conjuration:
+                    SetConjuration(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Destruction:
+                    SetDestruction(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Illusion:
+                    SetIllusion(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Mysticism:
+                    SetMysticism(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Restoration:
+                    SetRestoration(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Acrobatics:
+                    SetAcrobatics(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.LightArmor:
+                    SetLightArmor(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Marksman:
+                    SetMarksman(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Mercantile:
+                    SetMercantile(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Security:
+                    SetSecurity(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Sneak:
+                    SetSneak(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Speechcraft:
+                    SetSpeechcraft(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Strength:
+                    SetStrength(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Intelligence:
+                    SetIntelligence(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Willpower:
+                    SetWillpower(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Agility:
+                    SetAgility(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Speed:
+                    SetSpeed(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Endurance:
+                    SetEndurance(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Personality:
+                    SetPersonality(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Luck:
+                    SetLuck(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByte(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetByte(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Aggression:
+                    _hasBeenSetTracker[index] = false;
+                    Aggression = default(Byte);
+                    break;
+                case NPC_FieldIndex.Confidence:
+                    _hasBeenSetTracker[index] = false;
+                    Confidence = default(Byte);
+                    break;
+                case NPC_FieldIndex.EnergyLevel:
+                    _hasBeenSetTracker[index] = false;
+                    EnergyLevel = default(Byte);
+                    break;
+                case NPC_FieldIndex.Responsibility:
+                    _hasBeenSetTracker[index] = false;
+                    Responsibility = default(Byte);
+                    break;
+                case NPC_FieldIndex.MaximumTrainingLevel:
+                    _hasBeenSetTracker[index] = false;
+                    MaximumTrainingLevel = default(Byte);
+                    break;
+                case NPC_FieldIndex.Armorer:
+                    _hasBeenSetTracker[index] = false;
+                    Armorer = default(Byte);
+                    break;
+                case NPC_FieldIndex.Athletics:
+                    _hasBeenSetTracker[index] = false;
+                    Athletics = default(Byte);
+                    break;
+                case NPC_FieldIndex.Blade:
+                    _hasBeenSetTracker[index] = false;
+                    Blade = default(Byte);
+                    break;
+                case NPC_FieldIndex.Block:
+                    _hasBeenSetTracker[index] = false;
+                    Block = default(Byte);
+                    break;
+                case NPC_FieldIndex.Blunt:
+                    _hasBeenSetTracker[index] = false;
+                    Blunt = default(Byte);
+                    break;
+                case NPC_FieldIndex.HandToHand:
+                    _hasBeenSetTracker[index] = false;
+                    HandToHand = default(Byte);
+                    break;
+                case NPC_FieldIndex.HeavyArmor:
+                    _hasBeenSetTracker[index] = false;
+                    HeavyArmor = default(Byte);
+                    break;
+                case NPC_FieldIndex.Alchemy:
+                    _hasBeenSetTracker[index] = false;
+                    Alchemy = default(Byte);
+                    break;
+                case NPC_FieldIndex.Alteration:
+                    _hasBeenSetTracker[index] = false;
+                    Alteration = default(Byte);
+                    break;
+                case NPC_FieldIndex.Conjuration:
+                    _hasBeenSetTracker[index] = false;
+                    Conjuration = default(Byte);
+                    break;
+                case NPC_FieldIndex.Destruction:
+                    _hasBeenSetTracker[index] = false;
+                    Destruction = default(Byte);
+                    break;
+                case NPC_FieldIndex.Illusion:
+                    _hasBeenSetTracker[index] = false;
+                    Illusion = default(Byte);
+                    break;
+                case NPC_FieldIndex.Mysticism:
+                    _hasBeenSetTracker[index] = false;
+                    Mysticism = default(Byte);
+                    break;
+                case NPC_FieldIndex.Restoration:
+                    _hasBeenSetTracker[index] = false;
+                    Restoration = default(Byte);
+                    break;
+                case NPC_FieldIndex.Acrobatics:
+                    _hasBeenSetTracker[index] = false;
+                    Acrobatics = default(Byte);
+                    break;
+                case NPC_FieldIndex.LightArmor:
+                    _hasBeenSetTracker[index] = false;
+                    LightArmor = default(Byte);
+                    break;
+                case NPC_FieldIndex.Marksman:
+                    _hasBeenSetTracker[index] = false;
+                    Marksman = default(Byte);
+                    break;
+                case NPC_FieldIndex.Mercantile:
+                    _hasBeenSetTracker[index] = false;
+                    Mercantile = default(Byte);
+                    break;
+                case NPC_FieldIndex.Security:
+                    _hasBeenSetTracker[index] = false;
+                    Security = default(Byte);
+                    break;
+                case NPC_FieldIndex.Sneak:
+                    _hasBeenSetTracker[index] = false;
+                    Sneak = default(Byte);
+                    break;
+                case NPC_FieldIndex.Speechcraft:
+                    _hasBeenSetTracker[index] = false;
+                    Speechcraft = default(Byte);
+                    break;
+                case NPC_FieldIndex.Strength:
+                    _hasBeenSetTracker[index] = false;
+                    Strength = default(Byte);
+                    break;
+                case NPC_FieldIndex.Intelligence:
+                    _hasBeenSetTracker[index] = false;
+                    Intelligence = default(Byte);
+                    break;
+                case NPC_FieldIndex.Willpower:
+                    _hasBeenSetTracker[index] = false;
+                    Willpower = default(Byte);
+                    break;
+                case NPC_FieldIndex.Agility:
+                    _hasBeenSetTracker[index] = false;
+                    Agility = default(Byte);
+                    break;
+                case NPC_FieldIndex.Speed:
+                    _hasBeenSetTracker[index] = false;
+                    Speed = default(Byte);
+                    break;
+                case NPC_FieldIndex.Endurance:
+                    _hasBeenSetTracker[index] = false;
+                    Endurance = default(Byte);
+                    break;
+                case NPC_FieldIndex.Personality:
+                    _hasBeenSetTracker[index] = false;
+                    Personality = default(Byte);
+                    break;
+                case NPC_FieldIndex.Luck:
+                    _hasBeenSetTracker[index] = false;
+                    Luck = default(Byte);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Byte_subscriptions == null)
+            {
+                _Byte_subscriptions = new ObjectCentralizationSubscriptions<Byte>();
+            }
+            _Byte_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Byte_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte IPropertySupporter<Byte>.DefaultValue(int index)
+        {
+            return DefaultValueByte(index: index);
+        }
+
+        protected Byte DefaultValueByte(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Aggression:
+                case NPC_FieldIndex.Confidence:
+                case NPC_FieldIndex.EnergyLevel:
+                case NPC_FieldIndex.Responsibility:
+                case NPC_FieldIndex.MaximumTrainingLevel:
+                case NPC_FieldIndex.Armorer:
+                case NPC_FieldIndex.Athletics:
+                case NPC_FieldIndex.Blade:
+                case NPC_FieldIndex.Block:
+                case NPC_FieldIndex.Blunt:
+                case NPC_FieldIndex.HandToHand:
+                case NPC_FieldIndex.HeavyArmor:
+                case NPC_FieldIndex.Alchemy:
+                case NPC_FieldIndex.Alteration:
+                case NPC_FieldIndex.Conjuration:
+                case NPC_FieldIndex.Destruction:
+                case NPC_FieldIndex.Illusion:
+                case NPC_FieldIndex.Mysticism:
+                case NPC_FieldIndex.Restoration:
+                case NPC_FieldIndex.Acrobatics:
+                case NPC_FieldIndex.LightArmor:
+                case NPC_FieldIndex.Marksman:
+                case NPC_FieldIndex.Mercantile:
+                case NPC_FieldIndex.Security:
+                case NPC_FieldIndex.Sneak:
+                case NPC_FieldIndex.Speechcraft:
+                case NPC_FieldIndex.Strength:
+                case NPC_FieldIndex.Intelligence:
+                case NPC_FieldIndex.Willpower:
+                case NPC_FieldIndex.Agility:
+                case NPC_FieldIndex.Speed:
+                case NPC_FieldIndex.Endurance:
+                case NPC_FieldIndex.Personality:
+                case NPC_FieldIndex.Luck:
+                    return default(Byte);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter NPC.BuySellServiceFlag
+        protected ObjectCentralizationSubscriptions<NPC.BuySellServiceFlag> _NPCBuySellServiceFlag_subscriptions;
+        NPC.BuySellServiceFlag IPropertySupporter<NPC.BuySellServiceFlag>.Get(int index)
+        {
+            return GetNPCBuySellServiceFlag(index: index);
+        }
+
+        protected NPC.BuySellServiceFlag GetNPCBuySellServiceFlag(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.BuySellServices:
+                    return BuySellServices;
+                default:
+                    throw new ArgumentException($"Unknown index for field type NPC.BuySellServiceFlag: {index}");
+            }
+        }
+
+        void IPropertySupporter<NPC.BuySellServiceFlag>.Set(
+            int index,
+            NPC.BuySellServiceFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetNPCBuySellServiceFlag(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetNPCBuySellServiceFlag(
+            int index,
+            NPC.BuySellServiceFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.BuySellServices:
+                    SetBuySellServices(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type NPC.BuySellServiceFlag: {index}");
+            }
+        }
+
+        bool IPropertySupporter<NPC.BuySellServiceFlag>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<NPC.BuySellServiceFlag>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<NPC.BuySellServiceFlag>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetNPCBuySellServiceFlag(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetNPCBuySellServiceFlag(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.BuySellServices:
+                    _hasBeenSetTracker[index] = false;
+                    BuySellServices = default(NPC.BuySellServiceFlag);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type NPC.BuySellServiceFlag: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<NPC.BuySellServiceFlag>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<NPC.BuySellServiceFlag> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_NPCBuySellServiceFlag_subscriptions == null)
+            {
+                _NPCBuySellServiceFlag_subscriptions = new ObjectCentralizationSubscriptions<NPC.BuySellServiceFlag>();
+            }
+            _NPCBuySellServiceFlag_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<NPC.BuySellServiceFlag>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _NPCBuySellServiceFlag_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<NPC.BuySellServiceFlag>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        NPC.BuySellServiceFlag IPropertySupporter<NPC.BuySellServiceFlag>.DefaultValue(int index)
+        {
+            return DefaultValueNPCBuySellServiceFlag(index: index);
+        }
+
+        protected NPC.BuySellServiceFlag DefaultValueNPCBuySellServiceFlag(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.BuySellServices:
+                    return default(NPC.BuySellServiceFlag);
+                default:
+                    throw new ArgumentException($"Unknown index for field type NPC.BuySellServiceFlag: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Skill
+        protected ObjectCentralizationSubscriptions<Skill> _Skill_subscriptions;
+        Skill IPropertySupporter<Skill>.Get(int index)
+        {
+            return GetSkill(index: index);
+        }
+
+        protected Skill GetSkill(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Teaches:
+                    return Teaches;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Skill: {index}");
+            }
+        }
+
+        void IPropertySupporter<Skill>.Set(
+            int index,
+            Skill item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSkill(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetSkill(
+            int index,
+            Skill item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Teaches:
+                    SetTeaches(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Skill: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Skill>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Skill>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Skill>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSkill(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetSkill(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Teaches:
+                    _hasBeenSetTracker[index] = false;
+                    Teaches = default(Skill);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Skill: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Skill>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Skill> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Skill_subscriptions == null)
+            {
+                _Skill_subscriptions = new ObjectCentralizationSubscriptions<Skill>();
+            }
+            _Skill_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Skill>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Skill_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Skill>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Skill IPropertySupporter<Skill>.DefaultValue(int index)
+        {
+            return DefaultValueSkill(index: index);
+        }
+
+        protected Skill DefaultValueSkill(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Teaches:
+                    return default(Skill);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Skill: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Byte[]
+        Byte[] IPropertySupporter<Byte[]>.Get(int index)
+        {
+            return GetByteArr(index: index);
+        }
+
+        protected override Byte[] GetByteArr(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Fluff:
+                    return Fluff;
+                case NPC_FieldIndex.FaceGenGeometrySymmetric:
+                    return FaceGenGeometrySymmetric;
+                case NPC_FieldIndex.FaceGenGeometryAsymmetric:
+                    return FaceGenGeometryAsymmetric;
+                case NPC_FieldIndex.FaceGenTextureSymmetric:
+                    return FaceGenTextureSymmetric;
+                case NPC_FieldIndex.Unknown:
+                    return Unknown;
+                default:
+                    return base.GetByteArr(index: index);
+            }
+        }
+
+        void IPropertySupporter<Byte[]>.Set(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByteArr(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetByteArr(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Fluff:
+                    SetFluff(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.FaceGenGeometrySymmetric:
+                    SetFaceGenGeometrySymmetric(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.FaceGenGeometryAsymmetric:
+                    SetFaceGenGeometryAsymmetric(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.FaceGenTextureSymmetric:
+                    SetFaceGenTextureSymmetric(item, hasBeenSet, cmds);
+                    break;
+                case NPC_FieldIndex.Unknown:
+                    SetUnknown(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetByteArr(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte[]>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte[]>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByteArr(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetByteArr(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Fluff:
+                    _hasBeenSetTracker[index] = false;
+                    Fluff = default(Byte[]);
+                    break;
+                case NPC_FieldIndex.FaceGenGeometrySymmetric:
+                    _hasBeenSetTracker[index] = false;
+                    FaceGenGeometrySymmetric = default(Byte[]);
+                    break;
+                case NPC_FieldIndex.FaceGenGeometryAsymmetric:
+                    _hasBeenSetTracker[index] = false;
+                    FaceGenGeometryAsymmetric = default(Byte[]);
+                    break;
+                case NPC_FieldIndex.FaceGenTextureSymmetric:
+                    _hasBeenSetTracker[index] = false;
+                    FaceGenTextureSymmetric = default(Byte[]);
+                    break;
+                case NPC_FieldIndex.Unknown:
+                    _hasBeenSetTracker[index] = false;
+                    Unknown = default(Byte[]);
+                    break;
+                default:
+                    base.UnsetByteArr(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte[]> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_ByteArr_subscriptions == null)
+            {
+                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
+            }
+            _ByteArr_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _ByteArr_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
+        {
+            return DefaultValueByteArr(index: index);
+        }
+
+        protected override Byte[] DefaultValueByteArr(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Fluff:
+                case NPC_FieldIndex.FaceGenGeometrySymmetric:
+                case NPC_FieldIndex.FaceGenGeometryAsymmetric:
+                case NPC_FieldIndex.FaceGenTextureSymmetric:
+                case NPC_FieldIndex.Unknown:
+                    return default(Byte[]);
+                default:
+                    return base.DefaultValueByteArr(index: index);
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter UInt32
+        protected ObjectCentralizationSubscriptions<UInt32> _UInt32_subscriptions;
+        UInt32 IPropertySupporter<UInt32>.Get(int index)
+        {
+            return GetUInt32(index: index);
+        }
+
+        protected UInt32 GetUInt32(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Health:
+                    return Health;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        void IPropertySupporter<UInt32>.Set(
+            int index,
+            UInt32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetUInt32(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetUInt32(
+            int index,
+            UInt32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Health:
+                    SetHealth(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<UInt32>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<UInt32>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetUInt32(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetUInt32(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Health:
+                    _hasBeenSetTracker[index] = false;
+                    Health = default(UInt32);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt32>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<UInt32> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_UInt32_subscriptions == null)
+            {
+                _UInt32_subscriptions = new ObjectCentralizationSubscriptions<UInt32>();
+            }
+            _UInt32_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt32>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _UInt32_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<UInt32>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        UInt32 IPropertySupporter<UInt32>.DefaultValue(int index)
+        {
+            return DefaultValueUInt32(index: index);
+        }
+
+        protected UInt32 DefaultValueUInt32(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Health:
+                    return default(UInt32);
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Single
+        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
+        Single IPropertySupporter<Single>.Get(int index)
+        {
+            return GetSingle(index: index);
+        }
+
+        protected Single GetSingle(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.HairLength:
+                    return HairLength;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        void IPropertySupporter<Single>.Set(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSingle(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetSingle(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.HairLength:
+                    SetHairLength(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Single>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Single>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSingle(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetSingle(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.HairLength:
+                    _hasBeenSetTracker[index] = false;
+                    HairLength = default(Single);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Single> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Single_subscriptions == null)
+            {
+                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
+            }
+            _Single_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Single_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Single IPropertySupporter<Single>.DefaultValue(int index)
+        {
+            return DefaultValueSingle(index: index);
+        }
+
+        protected Single DefaultValueSingle(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.HairLength:
+                    return default(Single);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Color
+        protected ObjectCentralizationSubscriptions<Color> _Color_subscriptions;
+        Color IPropertySupporter<Color>.Get(int index)
+        {
+            return GetColor(index: index);
+        }
+
+        protected Color GetColor(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.HairColor:
+                    return HairColor;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
+            }
+        }
+
+        void IPropertySupporter<Color>.Set(
+            int index,
+            Color item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetColor(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetColor(
+            int index,
+            Color item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.HairColor:
+                    SetHairColor(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Color>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Color>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Color>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetColor(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetColor(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.HairColor:
+                    _hasBeenSetTracker[index] = false;
+                    HairColor = default(Color);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Color>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Color> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Color_subscriptions == null)
+            {
+                _Color_subscriptions = new ObjectCentralizationSubscriptions<Color>();
+            }
+            _Color_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Color>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Color_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Color>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Color IPropertySupporter<Color>.DefaultValue(int index)
+        {
+            return DefaultValueColor(index: index);
+        }
+
+        protected Color DefaultValueColor(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.HairColor:
+                    return default(Color);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
             }
         }
 
@@ -2274,43 +6304,109 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)NPC_FieldIndex.Model,
-                        errorMask: errorMask));
+                    {
+                        var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                            frame: frame.Spawn(snapToFinalPosition: false),
+                            fieldIndex: (int)NPC_FieldIndex.Model,
+                            errorMask: errorMask);
+                        if (ModeltryGet.Succeeded)
+                        {
+                            item.SetModel(item: ModeltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetModel();
+                        }
+                    }
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Model);
                 case "ACBS":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._NPCFlags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.NPCFlag>.Instance.Parse(
+                        var NPCFlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.NPCFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)NPC_FieldIndex.NPCFlags,
-                            errorMask: errorMask));
-                        item._BaseSpellPoints.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (NPCFlagstryGet.Succeeded)
+                        {
+                            item.SetNPCFlags(item: NPCFlagstryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetNPCFlags();
+                        }
+                        var BaseSpellPointstryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.BaseSpellPoints,
-                            errorMask: errorMask));
-                        item._Fatigue.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (BaseSpellPointstryGet.Succeeded)
+                        {
+                            item.SetBaseSpellPoints(item: BaseSpellPointstryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetBaseSpellPoints();
+                        }
+                        var FatiguetryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Fatigue,
-                            errorMask: errorMask));
-                        item._BarterGold.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (FatiguetryGet.Succeeded)
+                        {
+                            item.SetFatigue(item: FatiguetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetFatigue();
+                        }
+                        var BarterGoldtryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.BarterGold,
-                            errorMask: errorMask));
-                        item._LevelOffset.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (BarterGoldtryGet.Succeeded)
+                        {
+                            item.SetBarterGold(item: BarterGoldtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetBarterGold();
+                        }
+                        var LevelOffsettryGet = Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.LevelOffset,
-                            errorMask: errorMask));
-                        item._CalcMin.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (LevelOffsettryGet.Succeeded)
+                        {
+                            item.SetLevelOffset(item: LevelOffsettryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetLevelOffset();
+                        }
+                        var CalcMintryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.CalcMin,
-                            errorMask: errorMask));
-                        item._CalcMax.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (CalcMintryGet.Succeeded)
+                        {
+                            item.SetCalcMin(item: CalcMintryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetCalcMin();
+                        }
+                        var CalcMaxtryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.CalcMax,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (CalcMaxtryGet.Succeeded)
+                        {
+                            item.SetCalcMax(item: CalcMaxtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetCalcMax();
+                        }
                     }
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.CalcMax);
                 case "SNAM":
@@ -2387,38 +6483,102 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Aggression.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        var AggressiontryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Aggression,
-                            errorMask: errorMask));
-                        item._Confidence.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (AggressiontryGet.Succeeded)
+                        {
+                            item.SetAggression(item: AggressiontryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetAggression();
+                        }
+                        var ConfidencetryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Confidence,
-                            errorMask: errorMask));
-                        item._EnergyLevel.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (ConfidencetryGet.Succeeded)
+                        {
+                            item.SetConfidence(item: ConfidencetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetConfidence();
+                        }
+                        var EnergyLeveltryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.EnergyLevel,
-                            errorMask: errorMask));
-                        item._Responsibility.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (EnergyLeveltryGet.Succeeded)
+                        {
+                            item.SetEnergyLevel(item: EnergyLeveltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetEnergyLevel();
+                        }
+                        var ResponsibilitytryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Responsibility,
-                            errorMask: errorMask));
-                        item._BuySellServices.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
+                            errorMask: errorMask);
+                        if (ResponsibilitytryGet.Succeeded)
+                        {
+                            item.SetResponsibility(item: ResponsibilitytryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetResponsibility();
+                        }
+                        var BuySellServicestryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)NPC_FieldIndex.BuySellServices,
-                            errorMask: errorMask));
-                        item._Teaches.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
+                            errorMask: errorMask);
+                        if (BuySellServicestryGet.Succeeded)
+                        {
+                            item.SetBuySellServices(item: BuySellServicestryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetBuySellServices();
+                        }
+                        var TeachestryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(1),
                             fieldIndex: (int)NPC_FieldIndex.Teaches,
-                            errorMask: errorMask));
-                        item._MaximumTrainingLevel.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (TeachestryGet.Succeeded)
+                        {
+                            item.SetTeaches(item: TeachestryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetTeaches();
+                        }
+                        var MaximumTrainingLeveltryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.MaximumTrainingLevel,
-                            errorMask: errorMask));
-                        item._Fluff.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (MaximumTrainingLeveltryGet.Succeeded)
+                        {
+                            item.SetMaximumTrainingLevel(item: MaximumTrainingLeveltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetMaximumTrainingLevel();
+                        }
+                        var FlufftryGet = ByteArrayBinaryTranslation.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(2),
                             fieldIndex: (int)NPC_FieldIndex.Fluff,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (FlufftryGet.Succeeded)
+                        {
+                            item.SetFluff(item: FlufftryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetFluff();
+                        }
                     }
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Fluff);
                 case "PKID":
@@ -2466,126 +6626,366 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Armorer.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        var ArmorertryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Armorer,
-                            errorMask: errorMask));
-                        item._Athletics.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (ArmorertryGet.Succeeded)
+                        {
+                            item.SetArmorer(item: ArmorertryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetArmorer();
+                        }
+                        var AthleticstryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Athletics,
-                            errorMask: errorMask));
-                        item._Blade.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (AthleticstryGet.Succeeded)
+                        {
+                            item.SetAthletics(item: AthleticstryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetAthletics();
+                        }
+                        var BladetryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Blade,
-                            errorMask: errorMask));
-                        item._Block.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (BladetryGet.Succeeded)
+                        {
+                            item.SetBlade(item: BladetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetBlade();
+                        }
+                        var BlocktryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Block,
-                            errorMask: errorMask));
-                        item._Blunt.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (BlocktryGet.Succeeded)
+                        {
+                            item.SetBlock(item: BlocktryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetBlock();
+                        }
+                        var BlunttryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Blunt,
-                            errorMask: errorMask));
-                        item._HandToHand.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (BlunttryGet.Succeeded)
+                        {
+                            item.SetBlunt(item: BlunttryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetBlunt();
+                        }
+                        var HandToHandtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.HandToHand,
-                            errorMask: errorMask));
-                        item._HeavyArmor.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (HandToHandtryGet.Succeeded)
+                        {
+                            item.SetHandToHand(item: HandToHandtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetHandToHand();
+                        }
+                        var HeavyArmortryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.HeavyArmor,
-                            errorMask: errorMask));
-                        item._Alchemy.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (HeavyArmortryGet.Succeeded)
+                        {
+                            item.SetHeavyArmor(item: HeavyArmortryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetHeavyArmor();
+                        }
+                        var AlchemytryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Alchemy,
-                            errorMask: errorMask));
-                        item._Alteration.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (AlchemytryGet.Succeeded)
+                        {
+                            item.SetAlchemy(item: AlchemytryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetAlchemy();
+                        }
+                        var AlterationtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Alteration,
-                            errorMask: errorMask));
-                        item._Conjuration.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (AlterationtryGet.Succeeded)
+                        {
+                            item.SetAlteration(item: AlterationtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetAlteration();
+                        }
+                        var ConjurationtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Conjuration,
-                            errorMask: errorMask));
-                        item._Destruction.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (ConjurationtryGet.Succeeded)
+                        {
+                            item.SetConjuration(item: ConjurationtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetConjuration();
+                        }
+                        var DestructiontryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Destruction,
-                            errorMask: errorMask));
-                        item._Illusion.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (DestructiontryGet.Succeeded)
+                        {
+                            item.SetDestruction(item: DestructiontryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetDestruction();
+                        }
+                        var IllusiontryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Illusion,
-                            errorMask: errorMask));
-                        item._Mysticism.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (IllusiontryGet.Succeeded)
+                        {
+                            item.SetIllusion(item: IllusiontryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetIllusion();
+                        }
+                        var MysticismtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Mysticism,
-                            errorMask: errorMask));
-                        item._Restoration.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (MysticismtryGet.Succeeded)
+                        {
+                            item.SetMysticism(item: MysticismtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetMysticism();
+                        }
+                        var RestorationtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Restoration,
-                            errorMask: errorMask));
-                        item._Acrobatics.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (RestorationtryGet.Succeeded)
+                        {
+                            item.SetRestoration(item: RestorationtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetRestoration();
+                        }
+                        var AcrobaticstryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Acrobatics,
-                            errorMask: errorMask));
-                        item._LightArmor.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (AcrobaticstryGet.Succeeded)
+                        {
+                            item.SetAcrobatics(item: AcrobaticstryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetAcrobatics();
+                        }
+                        var LightArmortryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.LightArmor,
-                            errorMask: errorMask));
-                        item._Marksman.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (LightArmortryGet.Succeeded)
+                        {
+                            item.SetLightArmor(item: LightArmortryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetLightArmor();
+                        }
+                        var MarksmantryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Marksman,
-                            errorMask: errorMask));
-                        item._Mercantile.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (MarksmantryGet.Succeeded)
+                        {
+                            item.SetMarksman(item: MarksmantryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetMarksman();
+                        }
+                        var MercantiletryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Mercantile,
-                            errorMask: errorMask));
-                        item._Security.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (MercantiletryGet.Succeeded)
+                        {
+                            item.SetMercantile(item: MercantiletryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetMercantile();
+                        }
+                        var SecuritytryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Security,
-                            errorMask: errorMask));
-                        item._Sneak.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (SecuritytryGet.Succeeded)
+                        {
+                            item.SetSecurity(item: SecuritytryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetSecurity();
+                        }
+                        var SneaktryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Sneak,
-                            errorMask: errorMask));
-                        item._Speechcraft.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (SneaktryGet.Succeeded)
+                        {
+                            item.SetSneak(item: SneaktryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetSneak();
+                        }
+                        var SpeechcrafttryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Speechcraft,
-                            errorMask: errorMask));
-                        item._Health.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (SpeechcrafttryGet.Succeeded)
+                        {
+                            item.SetSpeechcraft(item: SpeechcrafttryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetSpeechcraft();
+                        }
+                        var HealthtryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Health,
-                            errorMask: errorMask));
-                        item._Strength.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (HealthtryGet.Succeeded)
+                        {
+                            item.SetHealth(item: HealthtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetHealth();
+                        }
+                        var StrengthtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Strength,
-                            errorMask: errorMask));
-                        item._Intelligence.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (StrengthtryGet.Succeeded)
+                        {
+                            item.SetStrength(item: StrengthtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetStrength();
+                        }
+                        var IntelligencetryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Intelligence,
-                            errorMask: errorMask));
-                        item._Willpower.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (IntelligencetryGet.Succeeded)
+                        {
+                            item.SetIntelligence(item: IntelligencetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetIntelligence();
+                        }
+                        var WillpowertryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Willpower,
-                            errorMask: errorMask));
-                        item._Agility.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (WillpowertryGet.Succeeded)
+                        {
+                            item.SetWillpower(item: WillpowertryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetWillpower();
+                        }
+                        var AgilitytryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Agility,
-                            errorMask: errorMask));
-                        item._Speed.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (AgilitytryGet.Succeeded)
+                        {
+                            item.SetAgility(item: AgilitytryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetAgility();
+                        }
+                        var SpeedtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Speed,
-                            errorMask: errorMask));
-                        item._Endurance.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (SpeedtryGet.Succeeded)
+                        {
+                            item.SetSpeed(item: SpeedtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetSpeed();
+                        }
+                        var EndurancetryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Endurance,
-                            errorMask: errorMask));
-                        item._Personality.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (EndurancetryGet.Succeeded)
+                        {
+                            item.SetEndurance(item: EndurancetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetEndurance();
+                        }
+                        var PersonalitytryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Personality,
-                            errorMask: errorMask));
-                        item._Luck.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (PersonalitytryGet.Succeeded)
+                        {
+                            item.SetPersonality(item: PersonalitytryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetPersonality();
+                        }
+                        var LucktryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)NPC_FieldIndex.Luck,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (LucktryGet.Succeeded)
+                        {
+                            item.SetLuck(item: LucktryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetLuck();
+                        }
                     }
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Luck);
                 case "HNAM":
@@ -2597,10 +6997,18 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Hair);
                 case "LNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._HairLength.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    var HairLengthtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.HairLength,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HairLengthtryGet.Succeeded)
+                    {
+                        item.SetHairLength(item: HairLengthtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHairLength();
+                    }
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.HairLength);
                 case "ENAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -2620,11 +7028,19 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Eyes);
                 case "HCLR":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._HairColor.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                    var HairColortryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.HairColor,
                         errorMask: errorMask,
-                        extraByte: true));
+                        extraByte: true);
+                    if (HairColortryGet.Succeeded)
+                    {
+                        item.SetHairColor(item: HairColortryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHairColor();
+                    }
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.HairColor);
                 case "ZNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -2635,31 +7051,63 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.CombatStyle);
                 case "FGGS":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._FaceGenGeometrySymmetric.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
+                    var FaceGenGeometrySymmetrictryGet = ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.FaceGenGeometrySymmetric,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FaceGenGeometrySymmetrictryGet.Succeeded)
+                    {
+                        item.SetFaceGenGeometrySymmetric(item: FaceGenGeometrySymmetrictryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFaceGenGeometrySymmetric();
+                    }
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.FaceGenGeometrySymmetric);
                 case "FGGA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._FaceGenGeometryAsymmetric.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
+                    var FaceGenGeometryAsymmetrictryGet = ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.FaceGenGeometryAsymmetric,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FaceGenGeometryAsymmetrictryGet.Succeeded)
+                    {
+                        item.SetFaceGenGeometryAsymmetric(item: FaceGenGeometryAsymmetrictryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFaceGenGeometryAsymmetric();
+                    }
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.FaceGenGeometryAsymmetric);
                 case "FGTS":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._FaceGenTextureSymmetric.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
+                    var FaceGenTextureSymmetrictryGet = ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.FaceGenTextureSymmetric,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FaceGenTextureSymmetrictryGet.Succeeded)
+                    {
+                        item.SetFaceGenTextureSymmetric(item: FaceGenTextureSymmetrictryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFaceGenTextureSymmetric();
+                    }
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.FaceGenTextureSymmetric);
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Unknown.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
+                    var UnknowntryGet = ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.Unknown,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (UnknowntryGet.Succeeded)
+                    {
+                        item.SetUnknown(item: UnknowntryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetUnknown();
+                    }
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Unknown);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
@@ -2773,44 +7221,44 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case NPC_FieldIndex.Model:
-                    this._Model.Set(
+                    this.SetModel(
                         (Model)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.NPCFlags:
-                    this._NPCFlags.Set(
+                    this.SetNPCFlags(
                         (NPC.NPCFlag)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.BaseSpellPoints:
-                    this._BaseSpellPoints.Set(
+                    this.SetBaseSpellPoints(
                         (UInt16)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Fatigue:
-                    this._Fatigue.Set(
+                    this.SetFatigue(
                         (UInt16)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.BarterGold:
-                    this._BarterGold.Set(
+                    this.SetBarterGold(
                         (UInt16)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.LevelOffset:
-                    this._LevelOffset.Set(
+                    this.SetLevelOffset(
                         (Int16)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.CalcMin:
-                    this._CalcMin.Set(
+                    this.SetCalcMin(
                         (UInt16)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.CalcMax:
-                    this._CalcMax.Set(
+                    this.SetCalcMax(
                         (UInt16)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Factions:
                     this._Factions.SetTo((IEnumerable<RankPlacement>)obj, cmds);
@@ -2837,44 +7285,44 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Items.SetTo((IEnumerable<ItemEntry>)obj, cmds);
                     break;
                 case NPC_FieldIndex.Aggression:
-                    this._Aggression.Set(
+                    this.SetAggression(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Confidence:
-                    this._Confidence.Set(
+                    this.SetConfidence(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.EnergyLevel:
-                    this._EnergyLevel.Set(
+                    this.SetEnergyLevel(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Responsibility:
-                    this._Responsibility.Set(
+                    this.SetResponsibility(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.BuySellServices:
-                    this._BuySellServices.Set(
+                    this.SetBuySellServices(
                         (NPC.BuySellServiceFlag)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Teaches:
-                    this._Teaches.Set(
+                    this.SetTeaches(
                         (Skill)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.MaximumTrainingLevel:
-                    this._MaximumTrainingLevel.Set(
+                    this.SetMaximumTrainingLevel(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Fluff:
-                    this._Fluff.Set(
+                    this.SetFluff(
                         (Byte[])obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.AIPackages:
                     this._AIPackages.SetTo((IEnumerable<FormIDSetLink<AIPackage>>)obj, cmds);
@@ -2888,154 +7336,154 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case NPC_FieldIndex.Armorer:
-                    this._Armorer.Set(
+                    this.SetArmorer(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Athletics:
-                    this._Athletics.Set(
+                    this.SetAthletics(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Blade:
-                    this._Blade.Set(
+                    this.SetBlade(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Block:
-                    this._Block.Set(
+                    this.SetBlock(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Blunt:
-                    this._Blunt.Set(
+                    this.SetBlunt(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.HandToHand:
-                    this._HandToHand.Set(
+                    this.SetHandToHand(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.HeavyArmor:
-                    this._HeavyArmor.Set(
+                    this.SetHeavyArmor(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Alchemy:
-                    this._Alchemy.Set(
+                    this.SetAlchemy(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Alteration:
-                    this._Alteration.Set(
+                    this.SetAlteration(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Conjuration:
-                    this._Conjuration.Set(
+                    this.SetConjuration(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Destruction:
-                    this._Destruction.Set(
+                    this.SetDestruction(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Illusion:
-                    this._Illusion.Set(
+                    this.SetIllusion(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Mysticism:
-                    this._Mysticism.Set(
+                    this.SetMysticism(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Restoration:
-                    this._Restoration.Set(
+                    this.SetRestoration(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Acrobatics:
-                    this._Acrobatics.Set(
+                    this.SetAcrobatics(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.LightArmor:
-                    this._LightArmor.Set(
+                    this.SetLightArmor(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Marksman:
-                    this._Marksman.Set(
+                    this.SetMarksman(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Mercantile:
-                    this._Mercantile.Set(
+                    this.SetMercantile(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Security:
-                    this._Security.Set(
+                    this.SetSecurity(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Sneak:
-                    this._Sneak.Set(
+                    this.SetSneak(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Speechcraft:
-                    this._Speechcraft.Set(
+                    this.SetSpeechcraft(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Health:
-                    this._Health.Set(
+                    this.SetHealth(
                         (UInt32)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Strength:
-                    this._Strength.Set(
+                    this.SetStrength(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Intelligence:
-                    this._Intelligence.Set(
+                    this.SetIntelligence(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Willpower:
-                    this._Willpower.Set(
+                    this.SetWillpower(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Agility:
-                    this._Agility.Set(
+                    this.SetAgility(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Speed:
-                    this._Speed.Set(
+                    this.SetSpeed(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Endurance:
-                    this._Endurance.Set(
+                    this.SetEndurance(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Personality:
-                    this._Personality.Set(
+                    this.SetPersonality(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Luck:
-                    this._Luck.Set(
+                    this.SetLuck(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Hair:
                     this.Hair_Property.Set(
@@ -3043,17 +7491,17 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case NPC_FieldIndex.HairLength:
-                    this._HairLength.Set(
+                    this.SetHairLength(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Eyes:
                     this._Eyes.SetTo((IEnumerable<FormIDLink<Eye>>)obj, cmds);
                     break;
                 case NPC_FieldIndex.HairColor:
-                    this._HairColor.Set(
+                    this.SetHairColor(
                         (Color)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.CombatStyle:
                     this.CombatStyle_Property.Set(
@@ -3061,24 +7509,24 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case NPC_FieldIndex.FaceGenGeometrySymmetric:
-                    this._FaceGenGeometrySymmetric.Set(
+                    this.SetFaceGenGeometrySymmetric(
                         (Byte[])obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.FaceGenGeometryAsymmetric:
-                    this._FaceGenGeometryAsymmetric.Set(
+                    this.SetFaceGenGeometryAsymmetric(
                         (Byte[])obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.FaceGenTextureSymmetric:
-                    this._FaceGenTextureSymmetric.Set(
+                    this.SetFaceGenTextureSymmetric(
                         (Byte[])obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case NPC_FieldIndex.Unknown:
-                    this._Unknown.Set(
+                    this.SetUnknown(
                         (Byte[])obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -3112,44 +7560,44 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case NPC_FieldIndex.Model:
-                    obj._Model.Set(
+                    obj.SetModel(
                         (Model)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.NPCFlags:
-                    obj._NPCFlags.Set(
+                    obj.SetNPCFlags(
                         (NPC.NPCFlag)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.BaseSpellPoints:
-                    obj._BaseSpellPoints.Set(
+                    obj.SetBaseSpellPoints(
                         (UInt16)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Fatigue:
-                    obj._Fatigue.Set(
+                    obj.SetFatigue(
                         (UInt16)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.BarterGold:
-                    obj._BarterGold.Set(
+                    obj.SetBarterGold(
                         (UInt16)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.LevelOffset:
-                    obj._LevelOffset.Set(
+                    obj.SetLevelOffset(
                         (Int16)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.CalcMin:
-                    obj._CalcMin.Set(
+                    obj.SetCalcMin(
                         (UInt16)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.CalcMax:
-                    obj._CalcMax.Set(
+                    obj.SetCalcMax(
                         (UInt16)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Factions:
                     obj._Factions.SetTo((IEnumerable<RankPlacement>)pair.Value, null);
@@ -3176,44 +7624,44 @@ namespace Mutagen.Bethesda.Oblivion
                     obj._Items.SetTo((IEnumerable<ItemEntry>)pair.Value, null);
                     break;
                 case NPC_FieldIndex.Aggression:
-                    obj._Aggression.Set(
+                    obj.SetAggression(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Confidence:
-                    obj._Confidence.Set(
+                    obj.SetConfidence(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.EnergyLevel:
-                    obj._EnergyLevel.Set(
+                    obj.SetEnergyLevel(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Responsibility:
-                    obj._Responsibility.Set(
+                    obj.SetResponsibility(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.BuySellServices:
-                    obj._BuySellServices.Set(
+                    obj.SetBuySellServices(
                         (NPC.BuySellServiceFlag)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Teaches:
-                    obj._Teaches.Set(
+                    obj.SetTeaches(
                         (Skill)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.MaximumTrainingLevel:
-                    obj._MaximumTrainingLevel.Set(
+                    obj.SetMaximumTrainingLevel(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Fluff:
-                    obj._Fluff.Set(
+                    obj.SetFluff(
                         (Byte[])pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.AIPackages:
                     obj._AIPackages.SetTo((IEnumerable<FormIDSetLink<AIPackage>>)pair.Value, null);
@@ -3227,154 +7675,154 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case NPC_FieldIndex.Armorer:
-                    obj._Armorer.Set(
+                    obj.SetArmorer(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Athletics:
-                    obj._Athletics.Set(
+                    obj.SetAthletics(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Blade:
-                    obj._Blade.Set(
+                    obj.SetBlade(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Block:
-                    obj._Block.Set(
+                    obj.SetBlock(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Blunt:
-                    obj._Blunt.Set(
+                    obj.SetBlunt(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.HandToHand:
-                    obj._HandToHand.Set(
+                    obj.SetHandToHand(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.HeavyArmor:
-                    obj._HeavyArmor.Set(
+                    obj.SetHeavyArmor(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Alchemy:
-                    obj._Alchemy.Set(
+                    obj.SetAlchemy(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Alteration:
-                    obj._Alteration.Set(
+                    obj.SetAlteration(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Conjuration:
-                    obj._Conjuration.Set(
+                    obj.SetConjuration(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Destruction:
-                    obj._Destruction.Set(
+                    obj.SetDestruction(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Illusion:
-                    obj._Illusion.Set(
+                    obj.SetIllusion(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Mysticism:
-                    obj._Mysticism.Set(
+                    obj.SetMysticism(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Restoration:
-                    obj._Restoration.Set(
+                    obj.SetRestoration(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Acrobatics:
-                    obj._Acrobatics.Set(
+                    obj.SetAcrobatics(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.LightArmor:
-                    obj._LightArmor.Set(
+                    obj.SetLightArmor(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Marksman:
-                    obj._Marksman.Set(
+                    obj.SetMarksman(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Mercantile:
-                    obj._Mercantile.Set(
+                    obj.SetMercantile(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Security:
-                    obj._Security.Set(
+                    obj.SetSecurity(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Sneak:
-                    obj._Sneak.Set(
+                    obj.SetSneak(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Speechcraft:
-                    obj._Speechcraft.Set(
+                    obj.SetSpeechcraft(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Health:
-                    obj._Health.Set(
+                    obj.SetHealth(
                         (UInt32)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Strength:
-                    obj._Strength.Set(
+                    obj.SetStrength(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Intelligence:
-                    obj._Intelligence.Set(
+                    obj.SetIntelligence(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Willpower:
-                    obj._Willpower.Set(
+                    obj.SetWillpower(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Agility:
-                    obj._Agility.Set(
+                    obj.SetAgility(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Speed:
-                    obj._Speed.Set(
+                    obj.SetSpeed(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Endurance:
-                    obj._Endurance.Set(
+                    obj.SetEndurance(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Personality:
-                    obj._Personality.Set(
+                    obj.SetPersonality(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Luck:
-                    obj._Luck.Set(
+                    obj.SetLuck(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Hair:
                     obj.Hair_Property.Set(
@@ -3382,17 +7830,17 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case NPC_FieldIndex.HairLength:
-                    obj._HairLength.Set(
+                    obj.SetHairLength(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Eyes:
                     obj._Eyes.SetTo((IEnumerable<FormIDLink<Eye>>)pair.Value, null);
                     break;
                 case NPC_FieldIndex.HairColor:
-                    obj._HairColor.Set(
+                    obj.SetHairColor(
                         (Color)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.CombatStyle:
                     obj.CombatStyle_Property.Set(
@@ -3400,24 +7848,24 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case NPC_FieldIndex.FaceGenGeometrySymmetric:
-                    obj._FaceGenGeometrySymmetric.Set(
+                    obj.SetFaceGenGeometrySymmetric(
                         (Byte[])pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.FaceGenGeometryAsymmetric:
-                    obj._FaceGenGeometryAsymmetric.Set(
+                    obj.SetFaceGenGeometryAsymmetric(
                         (Byte[])pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.FaceGenTextureSymmetric:
-                    obj._FaceGenTextureSymmetric.Set(
+                    obj.SetFaceGenTextureSymmetric(
                         (Byte[])pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case NPC_FieldIndex.Unknown:
-                    obj._Unknown.Set(
+                    obj.SetUnknown(
                         (Byte[])pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -4013,7 +8461,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "96396343-a32a-4165-b745-e038c5e06eeb";
 
-        public const ushort FieldCount = 64;
+        public const ushort AdditionalFieldCount = 64;
+
+        public const ushort FieldCount = 70;
 
         public static readonly Type MaskType = typeof(NPC_Mask<>);
 
@@ -4857,7 +9307,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -5772,8 +10223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.HairLength_Property.SetToWithDefault(
                         rhs: rhs.HairLength_Property,
-                        def: def?.HairLength_Property,
-                        cmds: cmds);
+                        def: def?.HairLength_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -5802,8 +10252,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.HairColor_Property.SetToWithDefault(
                         rhs: rhs.HairColor_Property,
-                        def: def?.HairColor_Property,
-                        cmds: cmds);
+                        def: def?.HairColor_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -5832,8 +10281,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.FaceGenGeometrySymmetric_Property.SetToWithDefault(
                         rhs: rhs.FaceGenGeometrySymmetric_Property,
-                        def: def?.FaceGenGeometrySymmetric_Property,
-                        cmds: cmds);
+                        def: def?.FaceGenGeometrySymmetric_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -5847,8 +10295,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.FaceGenGeometryAsymmetric_Property.SetToWithDefault(
                         rhs: rhs.FaceGenGeometryAsymmetric_Property,
-                        def: def?.FaceGenGeometryAsymmetric_Property,
-                        cmds: cmds);
+                        def: def?.FaceGenGeometryAsymmetric_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -5862,8 +10309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.FaceGenTextureSymmetric_Property.SetToWithDefault(
                         rhs: rhs.FaceGenTextureSymmetric_Property,
-                        def: def?.FaceGenTextureSymmetric_Property,
-                        cmds: cmds);
+                        def: def?.FaceGenTextureSymmetric_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -5877,8 +10323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Unknown_Property.SetToWithDefault(
                         rhs: rhs.Unknown_Property,
-                        def: def?.Unknown_Property,
-                        cmds: cmds);
+                        def: def?.Unknown_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

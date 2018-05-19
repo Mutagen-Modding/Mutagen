@@ -33,6 +33,10 @@ namespace Mutagen.Bethesda.Oblivion
         ITree,
         ILoquiObject<Tree>,
         ILoquiObjectSetter,
+        IPropertySupporter<Model>,
+        IPropertySupporter<String>,
+        IPropertySupporter<Single>,
+        IPropertySupporter<Int32>,
         IEquatable<Tree>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -48,27 +52,95 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
+        protected Model _Model;
+        protected PropertyForwarder<Tree, Model> _ModelForwarder;
+        public INotifyingSetItem<Model> Model_Property => _ModelForwarder ?? (_ModelForwarder = new PropertyForwarder<Tree, Model>(this, (int)Tree_FieldIndex.Model));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
-        public INotifyingSetItem<Model> Model_Property => this._Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model ITreeGetter.Model => this.Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        public Model Model
+        {
+            get => this._Model;
+            set => this.SetModel(value);
+        }
+        protected void SetModel(
+            Model item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Tree_FieldIndex.Model];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Model, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Tree_FieldIndex.Model] = hasBeenSet;
+            }
+            if (_Model_subscriptions != null)
+            {
+                var tmp = Model;
+                _Model = item;
+                _Model_subscriptions.FireSubscriptions(
+                    index: (int)Tree_FieldIndex.Model,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Model = item;
+            }
+        }
+        protected void UnsetModel()
+        {
+            _hasBeenSetTracker[(int)Tree_FieldIndex.Model] = false;
+            Model = default(Model);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> ITree.Model_Property => this.Model_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> ITreeGetter.Model_Property => this.Model_Property;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _Icon = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Icon_Property => _Icon;
+        protected String _Icon;
+        protected PropertyForwarder<Tree, String> _IconForwarder;
+        public INotifyingSetItem<String> Icon_Property => _IconForwarder ?? (_IconForwarder = new PropertyForwarder<Tree, String>(this, (int)Tree_FieldIndex.Icon));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Icon
         {
-            get => this._Icon.Item;
-            set => this._Icon.Set(value);
+            get => this._Icon;
+            set => this.SetIcon(value);
+        }
+        protected void SetIcon(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Tree_FieldIndex.Icon];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Icon == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Tree_FieldIndex.Icon] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Icon;
+                _Icon = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Tree_FieldIndex.Icon,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Icon = item;
+            }
+        }
+        protected void UnsetIcon()
+        {
+            _hasBeenSetTracker[(int)Tree_FieldIndex.Icon] = false;
+            Icon = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ITree.Icon_Property => this.Icon_Property;
@@ -94,14 +166,47 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region LeafCurvature
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _LeafCurvature = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> LeafCurvature_Property => _LeafCurvature;
+        protected Single _LeafCurvature;
+        protected PropertyForwarder<Tree, Single> _LeafCurvatureForwarder;
+        public INotifyingSetItem<Single> LeafCurvature_Property => _LeafCurvatureForwarder ?? (_LeafCurvatureForwarder = new PropertyForwarder<Tree, Single>(this, (int)Tree_FieldIndex.LeafCurvature));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single LeafCurvature
         {
-            get => this._LeafCurvature.Item;
-            set => this._LeafCurvature.Set(value);
+            get => this._LeafCurvature;
+            set => this.SetLeafCurvature(value);
+        }
+        protected void SetLeafCurvature(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Tree_FieldIndex.LeafCurvature];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && LeafCurvature == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Tree_FieldIndex.LeafCurvature] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = LeafCurvature;
+                _LeafCurvature = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Tree_FieldIndex.LeafCurvature,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _LeafCurvature = item;
+            }
+        }
+        protected void UnsetLeafCurvature()
+        {
+            _hasBeenSetTracker[(int)Tree_FieldIndex.LeafCurvature] = false;
+            LeafCurvature = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ITree.LeafCurvature_Property => this.LeafCurvature_Property;
@@ -109,14 +214,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ITreeGetter.LeafCurvature_Property => this.LeafCurvature_Property;
         #endregion
         #region MinimumLeafAngle
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _MinimumLeafAngle = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> MinimumLeafAngle_Property => _MinimumLeafAngle;
+        protected Single _MinimumLeafAngle;
+        protected PropertyForwarder<Tree, Single> _MinimumLeafAngleForwarder;
+        public INotifyingSetItem<Single> MinimumLeafAngle_Property => _MinimumLeafAngleForwarder ?? (_MinimumLeafAngleForwarder = new PropertyForwarder<Tree, Single>(this, (int)Tree_FieldIndex.MinimumLeafAngle));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single MinimumLeafAngle
         {
-            get => this._MinimumLeafAngle.Item;
-            set => this._MinimumLeafAngle.Set(value);
+            get => this._MinimumLeafAngle;
+            set => this.SetMinimumLeafAngle(value);
+        }
+        protected void SetMinimumLeafAngle(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Tree_FieldIndex.MinimumLeafAngle];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MinimumLeafAngle == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Tree_FieldIndex.MinimumLeafAngle] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = MinimumLeafAngle;
+                _MinimumLeafAngle = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Tree_FieldIndex.MinimumLeafAngle,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _MinimumLeafAngle = item;
+            }
+        }
+        protected void UnsetMinimumLeafAngle()
+        {
+            _hasBeenSetTracker[(int)Tree_FieldIndex.MinimumLeafAngle] = false;
+            MinimumLeafAngle = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ITree.MinimumLeafAngle_Property => this.MinimumLeafAngle_Property;
@@ -124,14 +262,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ITreeGetter.MinimumLeafAngle_Property => this.MinimumLeafAngle_Property;
         #endregion
         #region MaximumLeafAngle
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _MaximumLeafAngle = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> MaximumLeafAngle_Property => _MaximumLeafAngle;
+        protected Single _MaximumLeafAngle;
+        protected PropertyForwarder<Tree, Single> _MaximumLeafAngleForwarder;
+        public INotifyingSetItem<Single> MaximumLeafAngle_Property => _MaximumLeafAngleForwarder ?? (_MaximumLeafAngleForwarder = new PropertyForwarder<Tree, Single>(this, (int)Tree_FieldIndex.MaximumLeafAngle));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single MaximumLeafAngle
         {
-            get => this._MaximumLeafAngle.Item;
-            set => this._MaximumLeafAngle.Set(value);
+            get => this._MaximumLeafAngle;
+            set => this.SetMaximumLeafAngle(value);
+        }
+        protected void SetMaximumLeafAngle(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Tree_FieldIndex.MaximumLeafAngle];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MaximumLeafAngle == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Tree_FieldIndex.MaximumLeafAngle] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = MaximumLeafAngle;
+                _MaximumLeafAngle = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Tree_FieldIndex.MaximumLeafAngle,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _MaximumLeafAngle = item;
+            }
+        }
+        protected void UnsetMaximumLeafAngle()
+        {
+            _hasBeenSetTracker[(int)Tree_FieldIndex.MaximumLeafAngle] = false;
+            MaximumLeafAngle = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ITree.MaximumLeafAngle_Property => this.MaximumLeafAngle_Property;
@@ -139,14 +310,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ITreeGetter.MaximumLeafAngle_Property => this.MaximumLeafAngle_Property;
         #endregion
         #region BranchDimmingValue
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _BranchDimmingValue = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> BranchDimmingValue_Property => _BranchDimmingValue;
+        protected Single _BranchDimmingValue;
+        protected PropertyForwarder<Tree, Single> _BranchDimmingValueForwarder;
+        public INotifyingSetItem<Single> BranchDimmingValue_Property => _BranchDimmingValueForwarder ?? (_BranchDimmingValueForwarder = new PropertyForwarder<Tree, Single>(this, (int)Tree_FieldIndex.BranchDimmingValue));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single BranchDimmingValue
         {
-            get => this._BranchDimmingValue.Item;
-            set => this._BranchDimmingValue.Set(value);
+            get => this._BranchDimmingValue;
+            set => this.SetBranchDimmingValue(value);
+        }
+        protected void SetBranchDimmingValue(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Tree_FieldIndex.BranchDimmingValue];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && BranchDimmingValue == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Tree_FieldIndex.BranchDimmingValue] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = BranchDimmingValue;
+                _BranchDimmingValue = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Tree_FieldIndex.BranchDimmingValue,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _BranchDimmingValue = item;
+            }
+        }
+        protected void UnsetBranchDimmingValue()
+        {
+            _hasBeenSetTracker[(int)Tree_FieldIndex.BranchDimmingValue] = false;
+            BranchDimmingValue = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ITree.BranchDimmingValue_Property => this.BranchDimmingValue_Property;
@@ -154,14 +358,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ITreeGetter.BranchDimmingValue_Property => this.BranchDimmingValue_Property;
         #endregion
         #region LeafDimmingValue
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _LeafDimmingValue = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> LeafDimmingValue_Property => _LeafDimmingValue;
+        protected Single _LeafDimmingValue;
+        protected PropertyForwarder<Tree, Single> _LeafDimmingValueForwarder;
+        public INotifyingSetItem<Single> LeafDimmingValue_Property => _LeafDimmingValueForwarder ?? (_LeafDimmingValueForwarder = new PropertyForwarder<Tree, Single>(this, (int)Tree_FieldIndex.LeafDimmingValue));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single LeafDimmingValue
         {
-            get => this._LeafDimmingValue.Item;
-            set => this._LeafDimmingValue.Set(value);
+            get => this._LeafDimmingValue;
+            set => this.SetLeafDimmingValue(value);
+        }
+        protected void SetLeafDimmingValue(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Tree_FieldIndex.LeafDimmingValue];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && LeafDimmingValue == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Tree_FieldIndex.LeafDimmingValue] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = LeafDimmingValue;
+                _LeafDimmingValue = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Tree_FieldIndex.LeafDimmingValue,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _LeafDimmingValue = item;
+            }
+        }
+        protected void UnsetLeafDimmingValue()
+        {
+            _hasBeenSetTracker[(int)Tree_FieldIndex.LeafDimmingValue] = false;
+            LeafDimmingValue = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ITree.LeafDimmingValue_Property => this.LeafDimmingValue_Property;
@@ -169,14 +406,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ITreeGetter.LeafDimmingValue_Property => this.LeafDimmingValue_Property;
         #endregion
         #region ShadowRadius
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Int32> _ShadowRadius = NotifyingItem.Factory<Int32>();
-        public INotifyingItem<Int32> ShadowRadius_Property => _ShadowRadius;
+        protected Int32 _ShadowRadius;
+        protected PropertyForwarder<Tree, Int32> _ShadowRadiusForwarder;
+        public INotifyingSetItem<Int32> ShadowRadius_Property => _ShadowRadiusForwarder ?? (_ShadowRadiusForwarder = new PropertyForwarder<Tree, Int32>(this, (int)Tree_FieldIndex.ShadowRadius));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 ShadowRadius
         {
-            get => this._ShadowRadius.Item;
-            set => this._ShadowRadius.Set(value);
+            get => this._ShadowRadius;
+            set => this.SetShadowRadius(value);
+        }
+        protected void SetShadowRadius(
+            Int32 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Tree_FieldIndex.ShadowRadius];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ShadowRadius == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Tree_FieldIndex.ShadowRadius] = hasBeenSet;
+            }
+            if (_Int32_subscriptions != null)
+            {
+                var tmp = ShadowRadius;
+                _ShadowRadius = item;
+                _Int32_subscriptions.FireSubscriptions(
+                    index: (int)Tree_FieldIndex.ShadowRadius,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _ShadowRadius = item;
+            }
+        }
+        protected void UnsetShadowRadius()
+        {
+            _hasBeenSetTracker[(int)Tree_FieldIndex.ShadowRadius] = false;
+            ShadowRadius = default(Int32);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Int32> ITree.ShadowRadius_Property => this.ShadowRadius_Property;
@@ -184,14 +454,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Int32> ITreeGetter.ShadowRadius_Property => this.ShadowRadius_Property;
         #endregion
         #region RockingSpeed
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _RockingSpeed = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> RockingSpeed_Property => _RockingSpeed;
+        protected Single _RockingSpeed;
+        protected PropertyForwarder<Tree, Single> _RockingSpeedForwarder;
+        public INotifyingSetItem<Single> RockingSpeed_Property => _RockingSpeedForwarder ?? (_RockingSpeedForwarder = new PropertyForwarder<Tree, Single>(this, (int)Tree_FieldIndex.RockingSpeed));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single RockingSpeed
         {
-            get => this._RockingSpeed.Item;
-            set => this._RockingSpeed.Set(value);
+            get => this._RockingSpeed;
+            set => this.SetRockingSpeed(value);
+        }
+        protected void SetRockingSpeed(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Tree_FieldIndex.RockingSpeed];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && RockingSpeed == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Tree_FieldIndex.RockingSpeed] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = RockingSpeed;
+                _RockingSpeed = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Tree_FieldIndex.RockingSpeed,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _RockingSpeed = item;
+            }
+        }
+        protected void UnsetRockingSpeed()
+        {
+            _hasBeenSetTracker[(int)Tree_FieldIndex.RockingSpeed] = false;
+            RockingSpeed = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ITree.RockingSpeed_Property => this.RockingSpeed_Property;
@@ -199,14 +502,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ITreeGetter.RockingSpeed_Property => this.RockingSpeed_Property;
         #endregion
         #region RustleSpeed
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _RustleSpeed = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> RustleSpeed_Property => _RustleSpeed;
+        protected Single _RustleSpeed;
+        protected PropertyForwarder<Tree, Single> _RustleSpeedForwarder;
+        public INotifyingSetItem<Single> RustleSpeed_Property => _RustleSpeedForwarder ?? (_RustleSpeedForwarder = new PropertyForwarder<Tree, Single>(this, (int)Tree_FieldIndex.RustleSpeed));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single RustleSpeed
         {
-            get => this._RustleSpeed.Item;
-            set => this._RustleSpeed.Set(value);
+            get => this._RustleSpeed;
+            set => this.SetRustleSpeed(value);
+        }
+        protected void SetRustleSpeed(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Tree_FieldIndex.RustleSpeed];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && RustleSpeed == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Tree_FieldIndex.RustleSpeed] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = RustleSpeed;
+                _RustleSpeed = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Tree_FieldIndex.RustleSpeed,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _RustleSpeed = item;
+            }
+        }
+        protected void UnsetRustleSpeed()
+        {
+            _hasBeenSetTracker[(int)Tree_FieldIndex.RustleSpeed] = false;
+            RustleSpeed = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ITree.RustleSpeed_Property => this.RustleSpeed_Property;
@@ -214,14 +550,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ITreeGetter.RustleSpeed_Property => this.RustleSpeed_Property;
         #endregion
         #region BillboardWidth
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _BillboardWidth = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> BillboardWidth_Property => _BillboardWidth;
+        protected Single _BillboardWidth;
+        protected PropertyForwarder<Tree, Single> _BillboardWidthForwarder;
+        public INotifyingSetItem<Single> BillboardWidth_Property => _BillboardWidthForwarder ?? (_BillboardWidthForwarder = new PropertyForwarder<Tree, Single>(this, (int)Tree_FieldIndex.BillboardWidth));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single BillboardWidth
         {
-            get => this._BillboardWidth.Item;
-            set => this._BillboardWidth.Set(value);
+            get => this._BillboardWidth;
+            set => this.SetBillboardWidth(value);
+        }
+        protected void SetBillboardWidth(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Tree_FieldIndex.BillboardWidth];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && BillboardWidth == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Tree_FieldIndex.BillboardWidth] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = BillboardWidth;
+                _BillboardWidth = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Tree_FieldIndex.BillboardWidth,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _BillboardWidth = item;
+            }
+        }
+        protected void UnsetBillboardWidth()
+        {
+            _hasBeenSetTracker[(int)Tree_FieldIndex.BillboardWidth] = false;
+            BillboardWidth = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ITree.BillboardWidth_Property => this.BillboardWidth_Property;
@@ -229,14 +598,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ITreeGetter.BillboardWidth_Property => this.BillboardWidth_Property;
         #endregion
         #region BillboardHeight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _BillboardHeight = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> BillboardHeight_Property => _BillboardHeight;
+        protected Single _BillboardHeight;
+        protected PropertyForwarder<Tree, Single> _BillboardHeightForwarder;
+        public INotifyingSetItem<Single> BillboardHeight_Property => _BillboardHeightForwarder ?? (_BillboardHeightForwarder = new PropertyForwarder<Tree, Single>(this, (int)Tree_FieldIndex.BillboardHeight));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single BillboardHeight
         {
-            get => this._BillboardHeight.Item;
-            set => this._BillboardHeight.Set(value);
+            get => this._BillboardHeight;
+            set => this.SetBillboardHeight(value);
+        }
+        protected void SetBillboardHeight(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Tree_FieldIndex.BillboardHeight];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && BillboardHeight == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Tree_FieldIndex.BillboardHeight] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = BillboardHeight;
+                _BillboardHeight = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Tree_FieldIndex.BillboardHeight,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _BillboardHeight = item;
+            }
+        }
+        protected void UnsetBillboardHeight()
+        {
+            _hasBeenSetTracker[(int)Tree_FieldIndex.BillboardHeight] = false;
+            BillboardHeight = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ITree.BillboardHeight_Property => this.BillboardHeight_Property;
@@ -641,16 +1043,32 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    var ModeltryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Tree_FieldIndex.Model,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ModeltryGet.Succeeded)
+                    {
+                        item.SetModel(item: ModeltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetModel();
+                    }
                     break;
                 case "Icon":
-                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var IcontryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Tree_FieldIndex.Icon,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (IcontryGet.Succeeded)
+                    {
+                        item.SetIcon(item: IcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetIcon();
+                    }
                     break;
                 case "SpeedTreeSeeds":
                     item._SpeedTreeSeeds.SetIfSucceededOrDefault(ListXmlTranslation<UInt32, Exception>.Instance.Parse(
@@ -668,64 +1086,144 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "LeafCurvature":
-                    item._LeafCurvature.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var LeafCurvaturetryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (LeafCurvaturetryGet.Succeeded)
+                    {
+                        item.SetLeafCurvature(item: LeafCurvaturetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetLeafCurvature();
+                    }
                     break;
                 case "MinimumLeafAngle":
-                    item._MinimumLeafAngle.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var MinimumLeafAngletryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Tree_FieldIndex.MinimumLeafAngle,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MinimumLeafAngletryGet.Succeeded)
+                    {
+                        item.SetMinimumLeafAngle(item: MinimumLeafAngletryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMinimumLeafAngle();
+                    }
                     break;
                 case "MaximumLeafAngle":
-                    item._MaximumLeafAngle.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var MaximumLeafAngletryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Tree_FieldIndex.MaximumLeafAngle,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MaximumLeafAngletryGet.Succeeded)
+                    {
+                        item.SetMaximumLeafAngle(item: MaximumLeafAngletryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMaximumLeafAngle();
+                    }
                     break;
                 case "BranchDimmingValue":
-                    item._BranchDimmingValue.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var BranchDimmingValuetryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Tree_FieldIndex.BranchDimmingValue,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (BranchDimmingValuetryGet.Succeeded)
+                    {
+                        item.SetBranchDimmingValue(item: BranchDimmingValuetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetBranchDimmingValue();
+                    }
                     break;
                 case "LeafDimmingValue":
-                    item._LeafDimmingValue.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var LeafDimmingValuetryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Tree_FieldIndex.LeafDimmingValue,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (LeafDimmingValuetryGet.Succeeded)
+                    {
+                        item.SetLeafDimmingValue(item: LeafDimmingValuetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetLeafDimmingValue();
+                    }
                     break;
                 case "ShadowRadius":
-                    item._ShadowRadius.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
+                    var ShadowRadiustryGet = Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Tree_FieldIndex.ShadowRadius,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ShadowRadiustryGet.Succeeded)
+                    {
+                        item.SetShadowRadius(item: ShadowRadiustryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetShadowRadius();
+                    }
                     break;
                 case "RockingSpeed":
-                    item._RockingSpeed.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var RockingSpeedtryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Tree_FieldIndex.RockingSpeed,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (RockingSpeedtryGet.Succeeded)
+                    {
+                        item.SetRockingSpeed(item: RockingSpeedtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetRockingSpeed();
+                    }
                     break;
                 case "RustleSpeed":
-                    item._RustleSpeed.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var RustleSpeedtryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (RustleSpeedtryGet.Succeeded)
+                    {
+                        item.SetRustleSpeed(item: RustleSpeedtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetRustleSpeed();
+                    }
                     break;
                 case "BillboardWidth":
-                    item._BillboardWidth.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var BillboardWidthtryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (BillboardWidthtryGet.Succeeded)
+                    {
+                        item.SetBillboardWidth(item: BillboardWidthtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetBillboardWidth();
+                    }
                     break;
                 case "BillboardHeight":
-                    item._BillboardHeight.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var BillboardHeighttryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Tree_FieldIndex.BillboardHeight,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (BillboardHeighttryGet.Succeeded)
+                    {
+                        item.SetBillboardHeight(item: BillboardHeighttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetBillboardHeight();
+                    }
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(
@@ -734,6 +1232,625 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Model
+        protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
+        Model IPropertySupporter<Model>.Get(int index)
+        {
+            return GetModel(index: index);
+        }
+
+        protected Model GetModel(int index)
+        {
+            switch ((Tree_FieldIndex)index)
+            {
+                case Tree_FieldIndex.Model:
+                    return Model;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        void IPropertySupporter<Model>.Set(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetModel(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetModel(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Tree_FieldIndex)index)
+            {
+                case Tree_FieldIndex.Model:
+                    SetModel(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Model>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Model>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Model>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetModel(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetModel(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Tree_FieldIndex)index)
+            {
+                case Tree_FieldIndex.Model:
+                    _hasBeenSetTracker[index] = false;
+                    Model = default(Model);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Model> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Model_subscriptions == null)
+            {
+                _Model_subscriptions = new ObjectCentralizationSubscriptions<Model>();
+            }
+            _Model_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Model_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Model>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Model IPropertySupporter<Model>.DefaultValue(int index)
+        {
+            return DefaultValueModel(index: index);
+        }
+
+        protected Model DefaultValueModel(int index)
+        {
+            switch ((Tree_FieldIndex)index)
+            {
+                case Tree_FieldIndex.Model:
+                    return default(Model);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter String
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected override String GetString(int index)
+        {
+            switch ((Tree_FieldIndex)index)
+            {
+                case Tree_FieldIndex.Icon:
+                    return Icon;
+                default:
+                    return base.GetString(index: index);
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Tree_FieldIndex)index)
+            {
+                case Tree_FieldIndex.Icon:
+                    SetIcon(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetString(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Tree_FieldIndex)index)
+            {
+                case Tree_FieldIndex.Icon:
+                    _hasBeenSetTracker[index] = false;
+                    Icon = default(String);
+                    break;
+                default:
+                    base.UnsetString(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected override String DefaultValueString(int index)
+        {
+            switch ((Tree_FieldIndex)index)
+            {
+                case Tree_FieldIndex.Icon:
+                    return default(String);
+                default:
+                    return base.DefaultValueString(index: index);
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Single
+        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
+        Single IPropertySupporter<Single>.Get(int index)
+        {
+            return GetSingle(index: index);
+        }
+
+        protected Single GetSingle(int index)
+        {
+            switch ((Tree_FieldIndex)index)
+            {
+                case Tree_FieldIndex.LeafCurvature:
+                    return LeafCurvature;
+                case Tree_FieldIndex.MinimumLeafAngle:
+                    return MinimumLeafAngle;
+                case Tree_FieldIndex.MaximumLeafAngle:
+                    return MaximumLeafAngle;
+                case Tree_FieldIndex.BranchDimmingValue:
+                    return BranchDimmingValue;
+                case Tree_FieldIndex.LeafDimmingValue:
+                    return LeafDimmingValue;
+                case Tree_FieldIndex.RockingSpeed:
+                    return RockingSpeed;
+                case Tree_FieldIndex.RustleSpeed:
+                    return RustleSpeed;
+                case Tree_FieldIndex.BillboardWidth:
+                    return BillboardWidth;
+                case Tree_FieldIndex.BillboardHeight:
+                    return BillboardHeight;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        void IPropertySupporter<Single>.Set(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSingle(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetSingle(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Tree_FieldIndex)index)
+            {
+                case Tree_FieldIndex.LeafCurvature:
+                    SetLeafCurvature(item, hasBeenSet, cmds);
+                    break;
+                case Tree_FieldIndex.MinimumLeafAngle:
+                    SetMinimumLeafAngle(item, hasBeenSet, cmds);
+                    break;
+                case Tree_FieldIndex.MaximumLeafAngle:
+                    SetMaximumLeafAngle(item, hasBeenSet, cmds);
+                    break;
+                case Tree_FieldIndex.BranchDimmingValue:
+                    SetBranchDimmingValue(item, hasBeenSet, cmds);
+                    break;
+                case Tree_FieldIndex.LeafDimmingValue:
+                    SetLeafDimmingValue(item, hasBeenSet, cmds);
+                    break;
+                case Tree_FieldIndex.RockingSpeed:
+                    SetRockingSpeed(item, hasBeenSet, cmds);
+                    break;
+                case Tree_FieldIndex.RustleSpeed:
+                    SetRustleSpeed(item, hasBeenSet, cmds);
+                    break;
+                case Tree_FieldIndex.BillboardWidth:
+                    SetBillboardWidth(item, hasBeenSet, cmds);
+                    break;
+                case Tree_FieldIndex.BillboardHeight:
+                    SetBillboardHeight(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Single>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Single>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSingle(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetSingle(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Tree_FieldIndex)index)
+            {
+                case Tree_FieldIndex.LeafCurvature:
+                    _hasBeenSetTracker[index] = false;
+                    LeafCurvature = default(Single);
+                    break;
+                case Tree_FieldIndex.MinimumLeafAngle:
+                    _hasBeenSetTracker[index] = false;
+                    MinimumLeafAngle = default(Single);
+                    break;
+                case Tree_FieldIndex.MaximumLeafAngle:
+                    _hasBeenSetTracker[index] = false;
+                    MaximumLeafAngle = default(Single);
+                    break;
+                case Tree_FieldIndex.BranchDimmingValue:
+                    _hasBeenSetTracker[index] = false;
+                    BranchDimmingValue = default(Single);
+                    break;
+                case Tree_FieldIndex.LeafDimmingValue:
+                    _hasBeenSetTracker[index] = false;
+                    LeafDimmingValue = default(Single);
+                    break;
+                case Tree_FieldIndex.RockingSpeed:
+                    _hasBeenSetTracker[index] = false;
+                    RockingSpeed = default(Single);
+                    break;
+                case Tree_FieldIndex.RustleSpeed:
+                    _hasBeenSetTracker[index] = false;
+                    RustleSpeed = default(Single);
+                    break;
+                case Tree_FieldIndex.BillboardWidth:
+                    _hasBeenSetTracker[index] = false;
+                    BillboardWidth = default(Single);
+                    break;
+                case Tree_FieldIndex.BillboardHeight:
+                    _hasBeenSetTracker[index] = false;
+                    BillboardHeight = default(Single);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Single> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Single_subscriptions == null)
+            {
+                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
+            }
+            _Single_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Single_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Single IPropertySupporter<Single>.DefaultValue(int index)
+        {
+            return DefaultValueSingle(index: index);
+        }
+
+        protected Single DefaultValueSingle(int index)
+        {
+            switch ((Tree_FieldIndex)index)
+            {
+                case Tree_FieldIndex.LeafCurvature:
+                case Tree_FieldIndex.MinimumLeafAngle:
+                case Tree_FieldIndex.MaximumLeafAngle:
+                case Tree_FieldIndex.BranchDimmingValue:
+                case Tree_FieldIndex.LeafDimmingValue:
+                case Tree_FieldIndex.RockingSpeed:
+                case Tree_FieldIndex.RustleSpeed:
+                case Tree_FieldIndex.BillboardWidth:
+                case Tree_FieldIndex.BillboardHeight:
+                    return default(Single);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Int32
+        protected ObjectCentralizationSubscriptions<Int32> _Int32_subscriptions;
+        Int32 IPropertySupporter<Int32>.Get(int index)
+        {
+            return GetInt32(index: index);
+        }
+
+        protected Int32 GetInt32(int index)
+        {
+            switch ((Tree_FieldIndex)index)
+            {
+                case Tree_FieldIndex.ShadowRadius:
+                    return ShadowRadius;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
+            }
+        }
+
+        void IPropertySupporter<Int32>.Set(
+            int index,
+            Int32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetInt32(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetInt32(
+            int index,
+            Int32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Tree_FieldIndex)index)
+            {
+                case Tree_FieldIndex.ShadowRadius:
+                    SetShadowRadius(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Int32>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Int32>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetInt32(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetInt32(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Tree_FieldIndex)index)
+            {
+                case Tree_FieldIndex.ShadowRadius:
+                    _hasBeenSetTracker[index] = false;
+                    ShadowRadius = default(Int32);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Int32>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Int32> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Int32_subscriptions == null)
+            {
+                _Int32_subscriptions = new ObjectCentralizationSubscriptions<Int32>();
+            }
+            _Int32_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Int32>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Int32_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Int32>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Int32 IPropertySupporter<Int32>.DefaultValue(int index)
+        {
+            return DefaultValueInt32(index: index);
+        }
+
+        protected Int32 DefaultValueInt32(int index)
+        {
+            switch ((Tree_FieldIndex)index)
+            {
+                case Tree_FieldIndex.ShadowRadius:
+                    return default(Int32);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
             }
         }
 
@@ -946,18 +2063,36 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)Tree_FieldIndex.Model,
-                        errorMask: errorMask));
+                    {
+                        var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                            frame: frame.Spawn(snapToFinalPosition: false),
+                            fieldIndex: (int)Tree_FieldIndex.Model,
+                            errorMask: errorMask);
+                        if (ModeltryGet.Succeeded)
+                        {
+                            item.SetModel(item: ModeltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetModel();
+                        }
+                    }
                     return TryGet<Tree_FieldIndex?>.Succeed(Tree_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var IcontryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Tree_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (IcontryGet.Succeeded)
+                    {
+                        item.SetIcon(item: IcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetIcon();
+                    }
                     return TryGet<Tree_FieldIndex?>.Succeed(Tree_FieldIndex.Icon);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -979,52 +2114,132 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._LeafCurvature.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        var LeafCurvaturetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
-                            errorMask: errorMask));
-                        item._MinimumLeafAngle.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (LeafCurvaturetryGet.Succeeded)
+                        {
+                            item.SetLeafCurvature(item: LeafCurvaturetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetLeafCurvature();
+                        }
+                        var MinimumLeafAngletryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Tree_FieldIndex.MinimumLeafAngle,
-                            errorMask: errorMask));
-                        item._MaximumLeafAngle.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (MinimumLeafAngletryGet.Succeeded)
+                        {
+                            item.SetMinimumLeafAngle(item: MinimumLeafAngletryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetMinimumLeafAngle();
+                        }
+                        var MaximumLeafAngletryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Tree_FieldIndex.MaximumLeafAngle,
-                            errorMask: errorMask));
-                        item._BranchDimmingValue.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (MaximumLeafAngletryGet.Succeeded)
+                        {
+                            item.SetMaximumLeafAngle(item: MaximumLeafAngletryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetMaximumLeafAngle();
+                        }
+                        var BranchDimmingValuetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Tree_FieldIndex.BranchDimmingValue,
-                            errorMask: errorMask));
-                        item._LeafDimmingValue.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (BranchDimmingValuetryGet.Succeeded)
+                        {
+                            item.SetBranchDimmingValue(item: BranchDimmingValuetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetBranchDimmingValue();
+                        }
+                        var LeafDimmingValuetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Tree_FieldIndex.LeafDimmingValue,
-                            errorMask: errorMask));
-                        item._ShadowRadius.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (LeafDimmingValuetryGet.Succeeded)
+                        {
+                            item.SetLeafDimmingValue(item: LeafDimmingValuetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetLeafDimmingValue();
+                        }
+                        var ShadowRadiustryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Tree_FieldIndex.ShadowRadius,
-                            errorMask: errorMask));
-                        item._RockingSpeed.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (ShadowRadiustryGet.Succeeded)
+                        {
+                            item.SetShadowRadius(item: ShadowRadiustryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetShadowRadius();
+                        }
+                        var RockingSpeedtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Tree_FieldIndex.RockingSpeed,
-                            errorMask: errorMask));
-                        item._RustleSpeed.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (RockingSpeedtryGet.Succeeded)
+                        {
+                            item.SetRockingSpeed(item: RockingSpeedtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetRockingSpeed();
+                        }
+                        var RustleSpeedtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (RustleSpeedtryGet.Succeeded)
+                        {
+                            item.SetRustleSpeed(item: RustleSpeedtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetRustleSpeed();
+                        }
                     }
                     return TryGet<Tree_FieldIndex?>.Succeed(Tree_FieldIndex.RustleSpeed);
                 case "BNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._BillboardWidth.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        var BillboardWidthtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
-                            errorMask: errorMask));
-                        item._BillboardHeight.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (BillboardWidthtryGet.Succeeded)
+                        {
+                            item.SetBillboardWidth(item: BillboardWidthtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetBillboardWidth();
+                        }
+                        var BillboardHeighttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Tree_FieldIndex.BillboardHeight,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (BillboardHeighttryGet.Succeeded)
+                        {
+                            item.SetBillboardHeight(item: BillboardHeighttryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetBillboardHeight();
+                        }
                     }
                     return TryGet<Tree_FieldIndex?>.Succeed(Tree_FieldIndex.BillboardHeight);
                 default:
@@ -1139,67 +2354,67 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Tree_FieldIndex.Model:
-                    this._Model.Set(
+                    this.SetModel(
                         (Model)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Tree_FieldIndex.Icon:
-                    this._Icon.Set(
+                    this.SetIcon(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Tree_FieldIndex.SpeedTreeSeeds:
                     this._SpeedTreeSeeds.SetTo((IEnumerable<UInt32>)obj, cmds);
                     break;
                 case Tree_FieldIndex.LeafCurvature:
-                    this._LeafCurvature.Set(
+                    this.SetLeafCurvature(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Tree_FieldIndex.MinimumLeafAngle:
-                    this._MinimumLeafAngle.Set(
+                    this.SetMinimumLeafAngle(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Tree_FieldIndex.MaximumLeafAngle:
-                    this._MaximumLeafAngle.Set(
+                    this.SetMaximumLeafAngle(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Tree_FieldIndex.BranchDimmingValue:
-                    this._BranchDimmingValue.Set(
+                    this.SetBranchDimmingValue(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Tree_FieldIndex.LeafDimmingValue:
-                    this._LeafDimmingValue.Set(
+                    this.SetLeafDimmingValue(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Tree_FieldIndex.ShadowRadius:
-                    this._ShadowRadius.Set(
+                    this.SetShadowRadius(
                         (Int32)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Tree_FieldIndex.RockingSpeed:
-                    this._RockingSpeed.Set(
+                    this.SetRockingSpeed(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Tree_FieldIndex.RustleSpeed:
-                    this._RustleSpeed.Set(
+                    this.SetRustleSpeed(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Tree_FieldIndex.BillboardWidth:
-                    this._BillboardWidth.Set(
+                    this.SetBillboardWidth(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Tree_FieldIndex.BillboardHeight:
-                    this._BillboardHeight.Set(
+                    this.SetBillboardHeight(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1233,67 +2448,67 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Tree_FieldIndex.Model:
-                    obj._Model.Set(
+                    obj.SetModel(
                         (Model)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Tree_FieldIndex.Icon:
-                    obj._Icon.Set(
+                    obj.SetIcon(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Tree_FieldIndex.SpeedTreeSeeds:
                     obj._SpeedTreeSeeds.SetTo((IEnumerable<UInt32>)pair.Value, null);
                     break;
                 case Tree_FieldIndex.LeafCurvature:
-                    obj._LeafCurvature.Set(
+                    obj.SetLeafCurvature(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Tree_FieldIndex.MinimumLeafAngle:
-                    obj._MinimumLeafAngle.Set(
+                    obj.SetMinimumLeafAngle(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Tree_FieldIndex.MaximumLeafAngle:
-                    obj._MaximumLeafAngle.Set(
+                    obj.SetMaximumLeafAngle(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Tree_FieldIndex.BranchDimmingValue:
-                    obj._BranchDimmingValue.Set(
+                    obj.SetBranchDimmingValue(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Tree_FieldIndex.LeafDimmingValue:
-                    obj._LeafDimmingValue.Set(
+                    obj.SetLeafDimmingValue(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Tree_FieldIndex.ShadowRadius:
-                    obj._ShadowRadius.Set(
+                    obj.SetShadowRadius(
                         (Int32)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Tree_FieldIndex.RockingSpeed:
-                    obj._RockingSpeed.Set(
+                    obj.SetRockingSpeed(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Tree_FieldIndex.RustleSpeed:
-                    obj._RustleSpeed.Set(
+                    obj.SetRustleSpeed(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Tree_FieldIndex.BillboardWidth:
-                    obj._BillboardWidth.Set(
+                    obj.SetBillboardWidth(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Tree_FieldIndex.BillboardHeight:
-                    obj._BillboardHeight.Set(
+                    obj.SetBillboardHeight(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1461,7 +2676,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "82606775-b1a1-4c44-9052-b021c5ccc13a";
 
-        public const ushort FieldCount = 13;
+        public const ushort AdditionalFieldCount = 13;
+
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(Tree_Mask<>);
 
@@ -1727,7 +2944,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1828,8 +3046,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Icon_Property.SetToWithDefault(
                         rhs: rhs.Icon_Property,
-                        def: def?.Icon_Property,
-                        cmds: cmds);
+                        def: def?.Icon_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

@@ -30,6 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILocalVariableData,
         ILoquiObject<LocalVariableData>,
         ILoquiObjectSetter,
+        IPropertySupporter<Byte[]>,
         IEquatable<LocalVariableData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -39,19 +40,54 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public LocalVariableData()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Data
-        protected INotifyingItem<Byte[]> _Data = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[24]);
-        public INotifyingItem<Byte[]> Data_Property => _Data;
+        protected Byte[] _Data;
+        protected PropertyForwarder<LocalVariableData, Byte[]> _DataForwarder;
+        public INotifyingSetItem<Byte[]> Data_Property => _DataForwarder ?? (_DataForwarder = new PropertyForwarder<LocalVariableData, Byte[]>(this, (int)LocalVariableData_FieldIndex.Data));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Data
         {
-            get => this._Data.Item;
-            set => this._Data.Set(value);
+            get => this._Data;
+            set => this.SetData(value);
+        }
+        protected void SetData(
+            Byte[] item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)LocalVariableData_FieldIndex.Data];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Data, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)LocalVariableData_FieldIndex.Data] = hasBeenSet;
+            }
+            if (_ByteArr_subscriptions != null)
+            {
+                var tmp = Data;
+                _Data = item;
+                _ByteArr_subscriptions.FireSubscriptions(
+                    index: (int)LocalVariableData_FieldIndex.Data,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Data = item;
+            }
+        }
+        protected void UnsetData()
+        {
+            _hasBeenSetTracker[(int)LocalVariableData_FieldIndex.Data] = false;
+            Data = default(Byte[]);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> ILocalVariableData.Data_Property => this.Data_Property;
@@ -401,13 +437,155 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Data":
-                    item._Data.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
+                    var DatatryGet = ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)LocalVariableData_FieldIndex.Data,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DatatryGet.Succeeded)
+                    {
+                        item.SetData(item: DatatryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetData();
+                    }
                     break;
                 default:
                     break;
+            }
+        }
+
+        #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        #region IPropertySupporter Byte[]
+        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
+        Byte[] IPropertySupporter<Byte[]>.Get(int index)
+        {
+            return GetByteArr(index: index);
+        }
+
+        protected Byte[] GetByteArr(int index)
+        {
+            switch ((LocalVariableData_FieldIndex)index)
+            {
+                case LocalVariableData_FieldIndex.Data:
+                    return Data;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        void IPropertySupporter<Byte[]>.Set(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByteArr(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetByteArr(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((LocalVariableData_FieldIndex)index)
+            {
+                case LocalVariableData_FieldIndex.Data:
+                    SetData(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte[]>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte[]>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByteArr(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetByteArr(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((LocalVariableData_FieldIndex)index)
+            {
+                case LocalVariableData_FieldIndex.Data:
+                    _hasBeenSetTracker[index] = false;
+                    Data = default(Byte[]);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte[]> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_ByteArr_subscriptions == null)
+            {
+                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
+            }
+            _ByteArr_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _ByteArr_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
+        {
+            return DefaultValueByteArr(index: index);
+        }
+
+        protected Byte[] DefaultValueByteArr(int index)
+        {
+            switch ((LocalVariableData_FieldIndex)index)
+            {
+                case LocalVariableData_FieldIndex.Data:
+                    return default(Byte[]);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
             }
         }
 
@@ -613,10 +791,18 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<LocalVariableData_ErrorMask> errorMask)
         {
-            item._Data.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
+            var DatatryGet = ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(24),
                 fieldIndex: (int)LocalVariableData_FieldIndex.Data,
-                errorMask: errorMask));
+                errorMask: errorMask);
+            if (DatatryGet.Succeeded)
+            {
+                item.SetData(item: DatatryGet.Value);
+            }
+            else
+            {
+                item.UnsetData();
+            }
         }
 
         #endregion
@@ -736,9 +922,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case LocalVariableData_FieldIndex.Data:
-                    this._Data.Set(
+                    this.SetData(
                         (Byte[])obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -778,9 +964,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case LocalVariableData_FieldIndex.Data:
-                    obj._Data.Set(
+                    obj.SetData(
                         (Byte[])pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -838,6 +1024,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             version: 0);
 
         public const string GUID = "8a8822b6-e11c-400b-827d-6ca21f641629";
+
+        public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 1;
 
@@ -966,7 +1154,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

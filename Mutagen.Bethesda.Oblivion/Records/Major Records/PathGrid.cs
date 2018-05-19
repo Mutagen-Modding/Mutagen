@@ -56,7 +56,14 @@ namespace Mutagen.Bethesda.Oblivion
                                subFrame,
                                fieldIndex: (int)PathGrid_FieldIndex.Unknown,
                                errorMask: errorMask);
-                            item._Unknown.SetIfSucceededOrDefault(UnknowntryGet);
+                            if (UnknowntryGet.Succeeded)
+                            {
+                                item.SetUnknown(UnknowntryGet.Value);
+                            }
+                            else
+                            {
+                                item.UnsetUnknown();
+                            }
                         }
                         break;
                     case "PGRR":

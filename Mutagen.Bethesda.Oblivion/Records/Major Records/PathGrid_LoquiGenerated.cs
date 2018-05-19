@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPathGrid,
         ILoquiObject<PathGrid>,
         ILoquiObjectSetter,
+        IPropertySupporter<Byte[]>,
         IEquatable<PathGrid>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -66,13 +67,47 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Unknown
-        protected INotifyingSetItem<Byte[]> _Unknown = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
-        public INotifyingSetItem<Byte[]> Unknown_Property => _Unknown;
+        protected Byte[] _Unknown;
+        protected PropertyForwarder<PathGrid, Byte[]> _UnknownForwarder;
+        public INotifyingSetItem<Byte[]> Unknown_Property => _UnknownForwarder ?? (_UnknownForwarder = new PropertyForwarder<PathGrid, Byte[]>(this, (int)PathGrid_FieldIndex.Unknown));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Unknown
         {
-            get => this._Unknown.Item;
-            set => this._Unknown.Set(value);
+            get => this._Unknown;
+            set => this.SetUnknown(value);
+        }
+        protected void SetUnknown(
+            Byte[] item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)PathGrid_FieldIndex.Unknown];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Unknown, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)PathGrid_FieldIndex.Unknown] = hasBeenSet;
+            }
+            if (_ByteArr_subscriptions != null)
+            {
+                var tmp = Unknown;
+                _Unknown = item;
+                _ByteArr_subscriptions.FireSubscriptions(
+                    index: (int)PathGrid_FieldIndex.Unknown,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Unknown = item;
+            }
+        }
+        protected void UnsetUnknown()
+        {
+            _hasBeenSetTracker[(int)PathGrid_FieldIndex.Unknown] = false;
+            Unknown = default(Byte[]);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IPathGrid.Unknown_Property => this.Unknown_Property;
@@ -528,10 +563,18 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "Unknown":
-                    item._Unknown.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
+                    var UnknowntryGet = ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)PathGrid_FieldIndex.Unknown,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (UnknowntryGet.Succeeded)
+                    {
+                        item.SetUnknown(item: UnknowntryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetUnknown();
+                    }
                     break;
                 case "InterCellConnections":
                     item._InterCellConnections.SetIfSucceededOrDefault(ListXmlTranslation<InterCellPoint, MaskItem<Exception, InterCellPoint_ErrorMask>>.Instance.Parse(
@@ -568,6 +611,146 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Byte[]
+        Byte[] IPropertySupporter<Byte[]>.Get(int index)
+        {
+            return GetByteArr(index: index);
+        }
+
+        protected override Byte[] GetByteArr(int index)
+        {
+            switch ((PathGrid_FieldIndex)index)
+            {
+                case PathGrid_FieldIndex.Unknown:
+                    return Unknown;
+                default:
+                    return base.GetByteArr(index: index);
+            }
+        }
+
+        void IPropertySupporter<Byte[]>.Set(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByteArr(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetByteArr(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((PathGrid_FieldIndex)index)
+            {
+                case PathGrid_FieldIndex.Unknown:
+                    SetUnknown(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetByteArr(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte[]>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte[]>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByteArr(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetByteArr(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((PathGrid_FieldIndex)index)
+            {
+                case PathGrid_FieldIndex.Unknown:
+                    _hasBeenSetTracker[index] = false;
+                    Unknown = default(Byte[]);
+                    break;
+                default:
+                    base.UnsetByteArr(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte[]> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_ByteArr_subscriptions == null)
+            {
+                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
+            }
+            _ByteArr_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _ByteArr_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
+        {
+            return DefaultValueByteArr(index: index);
+        }
+
+        protected override Byte[] DefaultValueByteArr(int index)
+        {
+            switch ((PathGrid_FieldIndex)index)
+            {
+                case PathGrid_FieldIndex.Unknown:
+                    return default(Byte[]);
+                default:
+                    return base.DefaultValueByteArr(index: index);
             }
         }
 
@@ -1041,9 +1224,9 @@ namespace Mutagen.Bethesda.Oblivion
                     this._PointToPointConnections.SetTo((IEnumerable<PathGridPoint>)obj, cmds);
                     break;
                 case PathGrid_FieldIndex.Unknown:
-                    this._Unknown.Set(
+                    this.SetUnknown(
                         (Byte[])obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case PathGrid_FieldIndex.InterCellConnections:
                     this._InterCellConnections.SetTo((IEnumerable<InterCellPoint>)obj, cmds);
@@ -1086,9 +1269,9 @@ namespace Mutagen.Bethesda.Oblivion
                     obj._PointToPointConnections.SetTo((IEnumerable<PathGridPoint>)pair.Value, null);
                     break;
                 case PathGrid_FieldIndex.Unknown:
-                    obj._Unknown.Set(
+                    obj.SetUnknown(
                         (Byte[])pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case PathGrid_FieldIndex.InterCellConnections:
                     obj._InterCellConnections.SetTo((IEnumerable<InterCellPoint>)pair.Value, null);
@@ -1173,7 +1356,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "9fc6e922-dfb7-4ad4-81d3-bea823f22198";
 
-        public const ushort FieldCount = 4;
+        public const ushort AdditionalFieldCount = 4;
+
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(PathGrid_Mask<>);
 
@@ -1339,7 +1524,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1423,8 +1609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Unknown_Property.SetToWithDefault(
                         rhs: rhs.Unknown_Property,
-                        def: def?.Unknown_Property,
-                        cmds: cmds);
+                        def: def?.Unknown_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

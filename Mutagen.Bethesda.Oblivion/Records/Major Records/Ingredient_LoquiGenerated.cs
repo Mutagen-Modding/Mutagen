@@ -33,6 +33,11 @@ namespace Mutagen.Bethesda.Oblivion
         IIngredient,
         ILoquiObject<Ingredient>,
         ILoquiObjectSetter,
+        IPropertySupporter<Model>,
+        IPropertySupporter<String>,
+        IPropertySupporter<Single>,
+        IPropertySupporter<UInt32>,
+        IPropertySupporter<IngredientFlag>,
         IEquatable<Ingredient>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -48,27 +53,95 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
+        protected Model _Model;
+        protected PropertyForwarder<Ingredient, Model> _ModelForwarder;
+        public INotifyingSetItem<Model> Model_Property => _ModelForwarder ?? (_ModelForwarder = new PropertyForwarder<Ingredient, Model>(this, (int)Ingredient_FieldIndex.Model));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
-        public INotifyingSetItem<Model> Model_Property => this._Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IIngredientGetter.Model => this.Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        public Model Model
+        {
+            get => this._Model;
+            set => this.SetModel(value);
+        }
+        protected void SetModel(
+            Model item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Ingredient_FieldIndex.Model];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Model, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Ingredient_FieldIndex.Model] = hasBeenSet;
+            }
+            if (_Model_subscriptions != null)
+            {
+                var tmp = Model;
+                _Model = item;
+                _Model_subscriptions.FireSubscriptions(
+                    index: (int)Ingredient_FieldIndex.Model,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Model = item;
+            }
+        }
+        protected void UnsetModel()
+        {
+            _hasBeenSetTracker[(int)Ingredient_FieldIndex.Model] = false;
+            Model = default(Model);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IIngredient.Model_Property => this.Model_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> IIngredientGetter.Model_Property => this.Model_Property;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _Icon = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Icon_Property => _Icon;
+        protected String _Icon;
+        protected PropertyForwarder<Ingredient, String> _IconForwarder;
+        public INotifyingSetItem<String> Icon_Property => _IconForwarder ?? (_IconForwarder = new PropertyForwarder<Ingredient, String>(this, (int)Ingredient_FieldIndex.Icon));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Icon
         {
-            get => this._Icon.Item;
-            set => this._Icon.Set(value);
+            get => this._Icon;
+            set => this.SetIcon(value);
+        }
+        protected void SetIcon(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Ingredient_FieldIndex.Icon];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Icon == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Ingredient_FieldIndex.Icon] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Icon;
+                _Icon = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Ingredient_FieldIndex.Icon,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Icon = item;
+            }
+        }
+        protected void UnsetIcon()
+        {
+            _hasBeenSetTracker[(int)Ingredient_FieldIndex.Icon] = false;
+            Icon = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IIngredient.Icon_Property => this.Icon_Property;
@@ -83,14 +156,47 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Script> IIngredientGetter.Script_Property => this.Script_Property;
         #endregion
         #region Weight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<Single> _Weight = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> Weight_Property => _Weight;
+        protected Single _Weight;
+        protected PropertyForwarder<Ingredient, Single> _WeightForwarder;
+        public INotifyingSetItem<Single> Weight_Property => _WeightForwarder ?? (_WeightForwarder = new PropertyForwarder<Ingredient, Single>(this, (int)Ingredient_FieldIndex.Weight));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Weight
         {
-            get => this._Weight.Item;
-            set => this._Weight.Set(value);
+            get => this._Weight;
+            set => this.SetWeight(value);
+        }
+        protected void SetWeight(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Ingredient_FieldIndex.Weight];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Weight == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Ingredient_FieldIndex.Weight] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = Weight;
+                _Weight = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Ingredient_FieldIndex.Weight,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Weight = item;
+            }
+        }
+        protected void UnsetWeight()
+        {
+            _hasBeenSetTracker[(int)Ingredient_FieldIndex.Weight] = false;
+            Weight = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Single> IIngredient.Weight_Property => this.Weight_Property;
@@ -98,14 +204,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Single> IIngredientGetter.Weight_Property => this.Weight_Property;
         #endregion
         #region Value
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
-        public INotifyingItem<UInt32> Value_Property => _Value;
+        protected UInt32 _Value;
+        protected PropertyForwarder<Ingredient, UInt32> _ValueForwarder;
+        public INotifyingSetItem<UInt32> Value_Property => _ValueForwarder ?? (_ValueForwarder = new PropertyForwarder<Ingredient, UInt32>(this, (int)Ingredient_FieldIndex.Value));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Value
         {
-            get => this._Value.Item;
-            set => this._Value.Set(value);
+            get => this._Value;
+            set => this.SetValue(value);
+        }
+        protected void SetValue(
+            UInt32 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Ingredient_FieldIndex.Value];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Value == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Ingredient_FieldIndex.Value] = hasBeenSet;
+            }
+            if (_UInt32_subscriptions != null)
+            {
+                var tmp = Value;
+                _Value = item;
+                _UInt32_subscriptions.FireSubscriptions(
+                    index: (int)Ingredient_FieldIndex.Value,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Value = item;
+            }
+        }
+        protected void UnsetValue()
+        {
+            _hasBeenSetTracker[(int)Ingredient_FieldIndex.Value] = false;
+            Value = default(UInt32);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> IIngredient.Value_Property => this.Value_Property;
@@ -113,14 +252,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt32> IIngredientGetter.Value_Property => this.Value_Property;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<IngredientFlag> _Flags = NotifyingItem.Factory<IngredientFlag>();
-        public INotifyingItem<IngredientFlag> Flags_Property => _Flags;
+        protected IngredientFlag _Flags;
+        protected PropertyForwarder<Ingredient, IngredientFlag> _FlagsForwarder;
+        public INotifyingSetItem<IngredientFlag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<Ingredient, IngredientFlag>(this, (int)Ingredient_FieldIndex.Flags));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IngredientFlag Flags
         {
-            get => this._Flags.Item;
-            set => this._Flags.Set(value);
+            get => this._Flags;
+            set => this.SetFlags(value);
+        }
+        protected void SetFlags(
+            IngredientFlag item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Ingredient_FieldIndex.Flags];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Ingredient_FieldIndex.Flags] = hasBeenSet;
+            }
+            if (_IngredientFlag_subscriptions != null)
+            {
+                var tmp = Flags;
+                _Flags = item;
+                _IngredientFlag_subscriptions.FireSubscriptions(
+                    index: (int)Ingredient_FieldIndex.Flags,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Flags = item;
+            }
+        }
+        protected void UnsetFlags()
+        {
+            _hasBeenSetTracker[(int)Ingredient_FieldIndex.Flags] = false;
+            Flags = default(IngredientFlag);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<IngredientFlag> IIngredient.Flags_Property => this.Flags_Property;
@@ -557,16 +729,32 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    var ModeltryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Ingredient_FieldIndex.Model,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ModeltryGet.Succeeded)
+                    {
+                        item.SetModel(item: ModeltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetModel();
+                    }
                     break;
                 case "Icon":
-                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var IcontryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Ingredient_FieldIndex.Icon,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (IcontryGet.Succeeded)
+                    {
+                        item.SetIcon(item: IcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetIcon();
+                    }
                     break;
                 case "Script":
                     item.Script_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
@@ -575,23 +763,47 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Weight":
-                    item._Weight.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var WeighttryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Ingredient_FieldIndex.Weight,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (WeighttryGet.Succeeded)
+                    {
+                        item.SetWeight(item: WeighttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetWeight();
+                    }
                     break;
                 case "Value":
-                    item._Value.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
+                    var ValuetryGet = UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Ingredient_FieldIndex.Value,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ValuetryGet.Succeeded)
+                    {
+                        item.SetValue(item: ValuetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetValue();
+                    }
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<IngredientFlag>.Instance.Parse(
+                    var FlagstryGet = EnumXmlTranslation<IngredientFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Ingredient_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (FlagstryGet.Succeeded)
+                    {
+                        item.SetFlags(item: FlagstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFlags();
+                    }
                     break;
                 case "Effects":
                     item._Effects.SetIfSucceededOrDefault(ListXmlTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Parse(
@@ -614,6 +826,678 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Model
+        protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
+        Model IPropertySupporter<Model>.Get(int index)
+        {
+            return GetModel(index: index);
+        }
+
+        protected Model GetModel(int index)
+        {
+            switch ((Ingredient_FieldIndex)index)
+            {
+                case Ingredient_FieldIndex.Model:
+                    return Model;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        void IPropertySupporter<Model>.Set(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetModel(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetModel(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Ingredient_FieldIndex)index)
+            {
+                case Ingredient_FieldIndex.Model:
+                    SetModel(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Model>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Model>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Model>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetModel(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetModel(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Ingredient_FieldIndex)index)
+            {
+                case Ingredient_FieldIndex.Model:
+                    _hasBeenSetTracker[index] = false;
+                    Model = default(Model);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Model> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Model_subscriptions == null)
+            {
+                _Model_subscriptions = new ObjectCentralizationSubscriptions<Model>();
+            }
+            _Model_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Model_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Model>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Model IPropertySupporter<Model>.DefaultValue(int index)
+        {
+            return DefaultValueModel(index: index);
+        }
+
+        protected Model DefaultValueModel(int index)
+        {
+            switch ((Ingredient_FieldIndex)index)
+            {
+                case Ingredient_FieldIndex.Model:
+                    return default(Model);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter String
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected override String GetString(int index)
+        {
+            switch ((Ingredient_FieldIndex)index)
+            {
+                case Ingredient_FieldIndex.Icon:
+                    return Icon;
+                default:
+                    return base.GetString(index: index);
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Ingredient_FieldIndex)index)
+            {
+                case Ingredient_FieldIndex.Icon:
+                    SetIcon(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetString(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Ingredient_FieldIndex)index)
+            {
+                case Ingredient_FieldIndex.Icon:
+                    _hasBeenSetTracker[index] = false;
+                    Icon = default(String);
+                    break;
+                default:
+                    base.UnsetString(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected override String DefaultValueString(int index)
+        {
+            switch ((Ingredient_FieldIndex)index)
+            {
+                case Ingredient_FieldIndex.Icon:
+                    return default(String);
+                default:
+                    return base.DefaultValueString(index: index);
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Single
+        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
+        Single IPropertySupporter<Single>.Get(int index)
+        {
+            return GetSingle(index: index);
+        }
+
+        protected Single GetSingle(int index)
+        {
+            switch ((Ingredient_FieldIndex)index)
+            {
+                case Ingredient_FieldIndex.Weight:
+                    return Weight;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        void IPropertySupporter<Single>.Set(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSingle(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetSingle(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Ingredient_FieldIndex)index)
+            {
+                case Ingredient_FieldIndex.Weight:
+                    SetWeight(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Single>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Single>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSingle(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetSingle(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Ingredient_FieldIndex)index)
+            {
+                case Ingredient_FieldIndex.Weight:
+                    _hasBeenSetTracker[index] = false;
+                    Weight = default(Single);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Single> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Single_subscriptions == null)
+            {
+                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
+            }
+            _Single_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Single_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Single IPropertySupporter<Single>.DefaultValue(int index)
+        {
+            return DefaultValueSingle(index: index);
+        }
+
+        protected Single DefaultValueSingle(int index)
+        {
+            switch ((Ingredient_FieldIndex)index)
+            {
+                case Ingredient_FieldIndex.Weight:
+                    return default(Single);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter UInt32
+        protected ObjectCentralizationSubscriptions<UInt32> _UInt32_subscriptions;
+        UInt32 IPropertySupporter<UInt32>.Get(int index)
+        {
+            return GetUInt32(index: index);
+        }
+
+        protected UInt32 GetUInt32(int index)
+        {
+            switch ((Ingredient_FieldIndex)index)
+            {
+                case Ingredient_FieldIndex.Value:
+                    return Value;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        void IPropertySupporter<UInt32>.Set(
+            int index,
+            UInt32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetUInt32(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetUInt32(
+            int index,
+            UInt32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Ingredient_FieldIndex)index)
+            {
+                case Ingredient_FieldIndex.Value:
+                    SetValue(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<UInt32>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<UInt32>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetUInt32(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetUInt32(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Ingredient_FieldIndex)index)
+            {
+                case Ingredient_FieldIndex.Value:
+                    _hasBeenSetTracker[index] = false;
+                    Value = default(UInt32);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt32>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<UInt32> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_UInt32_subscriptions == null)
+            {
+                _UInt32_subscriptions = new ObjectCentralizationSubscriptions<UInt32>();
+            }
+            _UInt32_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt32>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _UInt32_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<UInt32>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        UInt32 IPropertySupporter<UInt32>.DefaultValue(int index)
+        {
+            return DefaultValueUInt32(index: index);
+        }
+
+        protected UInt32 DefaultValueUInt32(int index)
+        {
+            switch ((Ingredient_FieldIndex)index)
+            {
+                case Ingredient_FieldIndex.Value:
+                    return default(UInt32);
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter IngredientFlag
+        protected ObjectCentralizationSubscriptions<IngredientFlag> _IngredientFlag_subscriptions;
+        IngredientFlag IPropertySupporter<IngredientFlag>.Get(int index)
+        {
+            return GetIngredientFlag(index: index);
+        }
+
+        protected IngredientFlag GetIngredientFlag(int index)
+        {
+            switch ((Ingredient_FieldIndex)index)
+            {
+                case Ingredient_FieldIndex.Flags:
+                    return Flags;
+                default:
+                    throw new ArgumentException($"Unknown index for field type IngredientFlag: {index}");
+            }
+        }
+
+        void IPropertySupporter<IngredientFlag>.Set(
+            int index,
+            IngredientFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetIngredientFlag(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetIngredientFlag(
+            int index,
+            IngredientFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Ingredient_FieldIndex)index)
+            {
+                case Ingredient_FieldIndex.Flags:
+                    SetFlags(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type IngredientFlag: {index}");
+            }
+        }
+
+        bool IPropertySupporter<IngredientFlag>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<IngredientFlag>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<IngredientFlag>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetIngredientFlag(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetIngredientFlag(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Ingredient_FieldIndex)index)
+            {
+                case Ingredient_FieldIndex.Flags:
+                    _hasBeenSetTracker[index] = false;
+                    Flags = default(IngredientFlag);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type IngredientFlag: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<IngredientFlag>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<IngredientFlag> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_IngredientFlag_subscriptions == null)
+            {
+                _IngredientFlag_subscriptions = new ObjectCentralizationSubscriptions<IngredientFlag>();
+            }
+            _IngredientFlag_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<IngredientFlag>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _IngredientFlag_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<IngredientFlag>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        IngredientFlag IPropertySupporter<IngredientFlag>.DefaultValue(int index)
+        {
+            return DefaultValueIngredientFlag(index: index);
+        }
+
+        protected IngredientFlag DefaultValueIngredientFlag(int index)
+        {
+            switch ((Ingredient_FieldIndex)index)
+            {
+                case Ingredient_FieldIndex.Flags:
+                    return default(IngredientFlag);
+                default:
+                    throw new ArgumentException($"Unknown index for field type IngredientFlag: {index}");
             }
         }
 
@@ -840,18 +1724,36 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)Ingredient_FieldIndex.Model,
-                        errorMask: errorMask));
+                    {
+                        var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                            frame: frame.Spawn(snapToFinalPosition: false),
+                            fieldIndex: (int)Ingredient_FieldIndex.Model,
+                            errorMask: errorMask);
+                        if (ModeltryGet.Succeeded)
+                        {
+                            item.SetModel(item: ModeltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetModel();
+                        }
+                    }
                     return TryGet<Ingredient_FieldIndex?>.Succeed(Ingredient_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var IcontryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Ingredient_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (IcontryGet.Succeeded)
+                    {
+                        item.SetIcon(item: IcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetIcon();
+                    }
                     return TryGet<Ingredient_FieldIndex?>.Succeed(Ingredient_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -862,23 +1764,47 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Ingredient_FieldIndex?>.Succeed(Ingredient_FieldIndex.Script);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Weight.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    var WeighttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Ingredient_FieldIndex.Weight,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (WeighttryGet.Succeeded)
+                    {
+                        item.SetWeight(item: WeighttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetWeight();
+                    }
                     return TryGet<Ingredient_FieldIndex?>.Succeed(Ingredient_FieldIndex.Weight);
                 case "ENIT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Value.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        var ValuetryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Ingredient_FieldIndex.Value,
-                            errorMask: errorMask));
-                        item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<IngredientFlag>.Instance.Parse(
+                            errorMask: errorMask);
+                        if (ValuetryGet.Succeeded)
+                        {
+                            item.SetValue(item: ValuetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetValue();
+                        }
+                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<IngredientFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Ingredient_FieldIndex.Flags,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (FlagstryGet.Succeeded)
+                        {
+                            item.SetFlags(item: FlagstryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetFlags();
+                        }
                     }
                     return TryGet<Ingredient_FieldIndex?>.Succeed(Ingredient_FieldIndex.Flags);
                 case "EFID":
@@ -1009,14 +1935,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Ingredient_FieldIndex.Model:
-                    this._Model.Set(
+                    this.SetModel(
                         (Model)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Ingredient_FieldIndex.Icon:
-                    this._Icon.Set(
+                    this.SetIcon(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Ingredient_FieldIndex.Script:
                     this.Script_Property.Set(
@@ -1024,19 +1950,19 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Ingredient_FieldIndex.Weight:
-                    this._Weight.Set(
+                    this.SetWeight(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Ingredient_FieldIndex.Value:
-                    this._Value.Set(
+                    this.SetValue(
                         (UInt32)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Ingredient_FieldIndex.Flags:
-                    this._Flags.Set(
+                    this.SetFlags(
                         (IngredientFlag)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Ingredient_FieldIndex.Effects:
                     this._Effects.SetTo((IEnumerable<Effect>)obj, cmds);
@@ -1073,14 +1999,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Ingredient_FieldIndex.Model:
-                    obj._Model.Set(
+                    obj.SetModel(
                         (Model)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Ingredient_FieldIndex.Icon:
-                    obj._Icon.Set(
+                    obj.SetIcon(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Ingredient_FieldIndex.Script:
                     obj.Script_Property.Set(
@@ -1088,19 +2014,19 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Ingredient_FieldIndex.Weight:
-                    obj._Weight.Set(
+                    obj.SetWeight(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Ingredient_FieldIndex.Value:
-                    obj._Value.Set(
+                    obj.SetValue(
                         (UInt32)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Ingredient_FieldIndex.Flags:
-                    obj._Flags.Set(
+                    obj.SetFlags(
                         (IngredientFlag)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Ingredient_FieldIndex.Effects:
                     obj._Effects.SetTo((IEnumerable<Effect>)pair.Value, null);
@@ -1216,7 +2142,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "b617ece0-1ff6-475d-af9d-265d2f55af37";
 
-        public const ushort FieldCount = 7;
+        public const ushort AdditionalFieldCount = 7;
+
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(Ingredient_Mask<>);
 
@@ -1417,7 +2345,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1518,8 +2447,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Icon_Property.SetToWithDefault(
                         rhs: rhs.Icon_Property,
-                        def: def?.Icon_Property,
-                        cmds: cmds);
+                        def: def?.Icon_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1548,8 +2476,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Weight_Property.SetToWithDefault(
                         rhs: rhs.Weight_Property,
-                        def: def?.Weight_Property,
-                        cmds: cmds);
+                        def: def?.Weight_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

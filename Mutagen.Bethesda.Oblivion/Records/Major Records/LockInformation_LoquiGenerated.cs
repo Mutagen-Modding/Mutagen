@@ -30,6 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
         ILockInformation,
         ILoquiObject<LockInformation>,
         ILoquiObjectSetter,
+        IPropertySupporter<Byte>,
+        IPropertySupporter<Byte[]>,
+        IPropertySupporter<LockInformation.Flag>,
         IEquatable<LockInformation>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -39,20 +42,54 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public LockInformation()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region LockLevel
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _LockLevel = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> LockLevel_Property => _LockLevel;
+        protected Byte _LockLevel;
+        protected PropertyForwarder<LockInformation, Byte> _LockLevelForwarder;
+        public INotifyingSetItem<Byte> LockLevel_Property => _LockLevelForwarder ?? (_LockLevelForwarder = new PropertyForwarder<LockInformation, Byte>(this, (int)LockInformation_FieldIndex.LockLevel));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte LockLevel
         {
-            get => this._LockLevel.Item;
-            set => this._LockLevel.Set(value);
+            get => this._LockLevel;
+            set => this.SetLockLevel(value);
+        }
+        protected void SetLockLevel(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)LockInformation_FieldIndex.LockLevel];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && LockLevel == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)LockInformation_FieldIndex.LockLevel] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = LockLevel;
+                _LockLevel = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)LockInformation_FieldIndex.LockLevel,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _LockLevel = item;
+            }
+        }
+        protected void UnsetLockLevel()
+        {
+            _hasBeenSetTracker[(int)LockInformation_FieldIndex.LockLevel] = false;
+            LockLevel = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ILockInformation.LockLevel_Property => this.LockLevel_Property;
@@ -60,13 +97,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> ILockInformationGetter.LockLevel_Property => this.LockLevel_Property;
         #endregion
         #region Fluff
-        protected INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[3]);
-        public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
+        protected Byte[] _Fluff;
+        protected PropertyForwarder<LockInformation, Byte[]> _FluffForwarder;
+        public INotifyingSetItem<Byte[]> Fluff_Property => _FluffForwarder ?? (_FluffForwarder = new PropertyForwarder<LockInformation, Byte[]>(this, (int)LockInformation_FieldIndex.Fluff));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Fluff
         {
-            get => this._Fluff.Item;
-            set => this._Fluff.Set(value);
+            get => this._Fluff;
+            set => this.SetFluff(value);
+        }
+        protected void SetFluff(
+            Byte[] item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)LockInformation_FieldIndex.Fluff];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)LockInformation_FieldIndex.Fluff] = hasBeenSet;
+            }
+            if (_ByteArr_subscriptions != null)
+            {
+                var tmp = Fluff;
+                _Fluff = item;
+                _ByteArr_subscriptions.FireSubscriptions(
+                    index: (int)LockInformation_FieldIndex.Fluff,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Fluff = item;
+            }
+        }
+        protected void UnsetFluff()
+        {
+            _hasBeenSetTracker[(int)LockInformation_FieldIndex.Fluff] = false;
+            Fluff = default(Byte[]);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> ILockInformation.Fluff_Property => this.Fluff_Property;
@@ -81,14 +152,47 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<Key> ILockInformationGetter.Key_Property => this.Key_Property;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<LockInformation.Flag> _Flags = NotifyingItem.Factory<LockInformation.Flag>();
-        public INotifyingItem<LockInformation.Flag> Flags_Property => _Flags;
+        protected LockInformation.Flag _Flags;
+        protected PropertyForwarder<LockInformation, LockInformation.Flag> _FlagsForwarder;
+        public INotifyingSetItem<LockInformation.Flag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<LockInformation, LockInformation.Flag>(this, (int)LockInformation_FieldIndex.Flags));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public LockInformation.Flag Flags
         {
-            get => this._Flags.Item;
-            set => this._Flags.Set(value);
+            get => this._Flags;
+            set => this.SetFlags(value);
+        }
+        protected void SetFlags(
+            LockInformation.Flag item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)LockInformation_FieldIndex.Flags];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)LockInformation_FieldIndex.Flags] = hasBeenSet;
+            }
+            if (_LockInformationFlag_subscriptions != null)
+            {
+                var tmp = Flags;
+                _Flags = item;
+                _LockInformationFlag_subscriptions.FireSubscriptions(
+                    index: (int)LockInformation_FieldIndex.Flags,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Flags = item;
+            }
+        }
+        protected void UnsetFlags()
+        {
+            _hasBeenSetTracker[(int)LockInformation_FieldIndex.Flags] = false;
+            Flags = default(LockInformation.Flag);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<LockInformation.Flag> ILockInformation.Flags_Property => this.Flags_Property;
@@ -444,16 +548,32 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "LockLevel":
-                    item._LockLevel.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var LockLeveltryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)LockInformation_FieldIndex.LockLevel,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (LockLeveltryGet.Succeeded)
+                    {
+                        item.SetLockLevel(item: LockLeveltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetLockLevel();
+                    }
                     break;
                 case "Fluff":
-                    item._Fluff.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
+                    var FlufftryGet = ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)LockInformation_FieldIndex.Fluff,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FlufftryGet.Succeeded)
+                    {
+                        item.SetFluff(item: FlufftryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFluff();
+                    }
                     break;
                 case "Key":
                     item.Key_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
@@ -462,14 +582,422 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<LockInformation.Flag>.Instance.Parse(
+                    var FlagstryGet = EnumXmlTranslation<LockInformation.Flag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)LockInformation_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (FlagstryGet.Succeeded)
+                    {
+                        item.SetFlags(item: FlagstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFlags();
+                    }
                     break;
                 default:
                     break;
+            }
+        }
+
+        #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        #region IPropertySupporter Byte
+        protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
+        Byte IPropertySupporter<Byte>.Get(int index)
+        {
+            return GetByte(index: index);
+        }
+
+        protected Byte GetByte(int index)
+        {
+            switch ((LockInformation_FieldIndex)index)
+            {
+                case LockInformation_FieldIndex.LockLevel:
+                    return LockLevel;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        void IPropertySupporter<Byte>.Set(
+            int index,
+            Byte item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByte(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetByte(
+            int index,
+            Byte item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((LockInformation_FieldIndex)index)
+            {
+                case LockInformation_FieldIndex.LockLevel:
+                    SetLockLevel(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByte(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetByte(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((LockInformation_FieldIndex)index)
+            {
+                case LockInformation_FieldIndex.LockLevel:
+                    _hasBeenSetTracker[index] = false;
+                    LockLevel = default(Byte);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Byte_subscriptions == null)
+            {
+                _Byte_subscriptions = new ObjectCentralizationSubscriptions<Byte>();
+            }
+            _Byte_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Byte_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte IPropertySupporter<Byte>.DefaultValue(int index)
+        {
+            return DefaultValueByte(index: index);
+        }
+
+        protected Byte DefaultValueByte(int index)
+        {
+            switch ((LockInformation_FieldIndex)index)
+            {
+                case LockInformation_FieldIndex.LockLevel:
+                    return default(Byte);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Byte[]
+        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
+        Byte[] IPropertySupporter<Byte[]>.Get(int index)
+        {
+            return GetByteArr(index: index);
+        }
+
+        protected Byte[] GetByteArr(int index)
+        {
+            switch ((LockInformation_FieldIndex)index)
+            {
+                case LockInformation_FieldIndex.Fluff:
+                    return Fluff;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        void IPropertySupporter<Byte[]>.Set(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByteArr(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetByteArr(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((LockInformation_FieldIndex)index)
+            {
+                case LockInformation_FieldIndex.Fluff:
+                    SetFluff(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte[]>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte[]>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByteArr(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetByteArr(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((LockInformation_FieldIndex)index)
+            {
+                case LockInformation_FieldIndex.Fluff:
+                    _hasBeenSetTracker[index] = false;
+                    Fluff = default(Byte[]);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte[]> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_ByteArr_subscriptions == null)
+            {
+                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
+            }
+            _ByteArr_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _ByteArr_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
+        {
+            return DefaultValueByteArr(index: index);
+        }
+
+        protected Byte[] DefaultValueByteArr(int index)
+        {
+            switch ((LockInformation_FieldIndex)index)
+            {
+                case LockInformation_FieldIndex.Fluff:
+                    return default(Byte[]);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter LockInformation.Flag
+        protected ObjectCentralizationSubscriptions<LockInformation.Flag> _LockInformationFlag_subscriptions;
+        LockInformation.Flag IPropertySupporter<LockInformation.Flag>.Get(int index)
+        {
+            return GetLockInformationFlag(index: index);
+        }
+
+        protected LockInformation.Flag GetLockInformationFlag(int index)
+        {
+            switch ((LockInformation_FieldIndex)index)
+            {
+                case LockInformation_FieldIndex.Flags:
+                    return Flags;
+                default:
+                    throw new ArgumentException($"Unknown index for field type LockInformation.Flag: {index}");
+            }
+        }
+
+        void IPropertySupporter<LockInformation.Flag>.Set(
+            int index,
+            LockInformation.Flag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetLockInformationFlag(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetLockInformationFlag(
+            int index,
+            LockInformation.Flag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((LockInformation_FieldIndex)index)
+            {
+                case LockInformation_FieldIndex.Flags:
+                    SetFlags(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type LockInformation.Flag: {index}");
+            }
+        }
+
+        bool IPropertySupporter<LockInformation.Flag>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<LockInformation.Flag>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<LockInformation.Flag>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetLockInformationFlag(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetLockInformationFlag(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((LockInformation_FieldIndex)index)
+            {
+                case LockInformation_FieldIndex.Flags:
+                    _hasBeenSetTracker[index] = false;
+                    Flags = default(LockInformation.Flag);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type LockInformation.Flag: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<LockInformation.Flag>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<LockInformation.Flag> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_LockInformationFlag_subscriptions == null)
+            {
+                _LockInformationFlag_subscriptions = new ObjectCentralizationSubscriptions<LockInformation.Flag>();
+            }
+            _LockInformationFlag_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<LockInformation.Flag>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _LockInformationFlag_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<LockInformation.Flag>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        LockInformation.Flag IPropertySupporter<LockInformation.Flag>.DefaultValue(int index)
+        {
+            return DefaultValueLockInformationFlag(index: index);
+        }
+
+        protected LockInformation.Flag DefaultValueLockInformationFlag(int index)
+        {
+            switch ((LockInformation_FieldIndex)index)
+            {
+                case LockInformation_FieldIndex.Flags:
+                    return default(LockInformation.Flag);
+                default:
+                    throw new ArgumentException($"Unknown index for field type LockInformation.Flag: {index}");
             }
         }
 
@@ -681,22 +1209,46 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<LockInformation_ErrorMask> errorMask)
         {
-            item._LockLevel.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+            var LockLeveltryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)LockInformation_FieldIndex.LockLevel,
-                errorMask: errorMask));
-            item._Fluff.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            if (LockLeveltryGet.Succeeded)
+            {
+                item.SetLockLevel(item: LockLeveltryGet.Value);
+            }
+            else
+            {
+                item.UnsetLockLevel();
+            }
+            var FlufftryGet = ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(3),
                 fieldIndex: (int)LockInformation_FieldIndex.Fluff,
-                errorMask: errorMask));
+                errorMask: errorMask);
+            if (FlufftryGet.Succeeded)
+            {
+                item.SetFluff(item: FlufftryGet.Value);
+            }
+            else
+            {
+                item.UnsetFluff();
+            }
             item.Key_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)LockInformation_FieldIndex.Key,
                 errorMask: errorMask));
-            item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<LockInformation.Flag>.Instance.Parse(
+            var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<LockInformation.Flag>.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)LockInformation_FieldIndex.Flags,
-                errorMask: errorMask));
+                errorMask: errorMask);
+            if (FlagstryGet.Succeeded)
+            {
+                item.SetFlags(item: FlagstryGet.Value);
+            }
+            else
+            {
+                item.UnsetFlags();
+            }
         }
 
         #endregion
@@ -816,14 +1368,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case LockInformation_FieldIndex.LockLevel:
-                    this._LockLevel.Set(
+                    this.SetLockLevel(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case LockInformation_FieldIndex.Fluff:
-                    this._Fluff.Set(
+                    this.SetFluff(
                         (Byte[])obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case LockInformation_FieldIndex.Key:
                     this.Key_Property.Set(
@@ -831,9 +1383,9 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case LockInformation_FieldIndex.Flags:
-                    this._Flags.Set(
+                    this.SetFlags(
                         (LockInformation.Flag)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -873,14 +1425,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case LockInformation_FieldIndex.LockLevel:
-                    obj._LockLevel.Set(
+                    obj.SetLockLevel(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case LockInformation_FieldIndex.Fluff:
-                    obj._Fluff.Set(
+                    obj.SetFluff(
                         (Byte[])pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case LockInformation_FieldIndex.Key:
                     obj.Key_Property.Set(
@@ -888,9 +1440,9 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case LockInformation_FieldIndex.Flags:
-                    obj._Flags.Set(
+                    obj.SetFlags(
                         (LockInformation.Flag)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -973,6 +1525,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             version: 0);
 
         public const string GUID = "46a1b7ce-4f49-4017-8beb-bef9481e5fd2";
+
+        public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
 
@@ -1134,7 +1688,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

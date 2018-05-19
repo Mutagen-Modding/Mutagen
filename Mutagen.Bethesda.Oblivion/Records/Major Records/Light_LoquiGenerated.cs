@@ -34,6 +34,13 @@ namespace Mutagen.Bethesda.Oblivion
         ILight,
         ILoquiObject<Light>,
         ILoquiObjectSetter,
+        IPropertySupporter<Model>,
+        IPropertySupporter<String>,
+        IPropertySupporter<Int32>,
+        IPropertySupporter<UInt32>,
+        IPropertySupporter<Color>,
+        IPropertySupporter<Light.LightFlag>,
+        IPropertySupporter<Single>,
         IEquatable<Light>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -49,13 +56,48 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
+        protected Model _Model;
+        protected PropertyForwarder<Light, Model> _ModelForwarder;
+        public INotifyingSetItem<Model> Model_Property => _ModelForwarder ?? (_ModelForwarder = new PropertyForwarder<Light, Model>(this, (int)Light_FieldIndex.Model));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
-        public INotifyingSetItem<Model> Model_Property => this._Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model ILightGetter.Model => this.Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        public Model Model
+        {
+            get => this._Model;
+            set => this.SetModel(value);
+        }
+        protected void SetModel(
+            Model item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Light_FieldIndex.Model];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Model, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Light_FieldIndex.Model] = hasBeenSet;
+            }
+            if (_Model_subscriptions != null)
+            {
+                var tmp = Model;
+                _Model = item;
+                _Model_subscriptions.FireSubscriptions(
+                    index: (int)Light_FieldIndex.Model,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Model = item;
+            }
+        }
+        protected void UnsetModel()
+        {
+            _hasBeenSetTracker[(int)Light_FieldIndex.Model] = false;
+            Model = default(Model);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> ILight.Model_Property => this.Model_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -69,14 +111,47 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Script> ILightGetter.Script_Property => this.Script_Property;
         #endregion
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _Name = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Name_Property => _Name;
+        protected String _Name;
+        protected PropertyForwarder<Light, String> _NameForwarder;
+        public INotifyingSetItem<String> Name_Property => _NameForwarder ?? (_NameForwarder = new PropertyForwarder<Light, String>(this, (int)Light_FieldIndex.Name));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Name
         {
-            get => this._Name.Item;
-            set => this._Name.Set(value);
+            get => this._Name;
+            set => this.SetName(value);
+        }
+        protected void SetName(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Light_FieldIndex.Name];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Name == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Light_FieldIndex.Name] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Name;
+                _Name = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Light_FieldIndex.Name,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Name = item;
+            }
+        }
+        protected void UnsetName()
+        {
+            _hasBeenSetTracker[(int)Light_FieldIndex.Name] = false;
+            Name = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ILight.Name_Property => this.Name_Property;
@@ -84,14 +159,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> ILightGetter.Name_Property => this.Name_Property;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _Icon = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Icon_Property => _Icon;
+        protected String _Icon;
+        protected PropertyForwarder<Light, String> _IconForwarder;
+        public INotifyingSetItem<String> Icon_Property => _IconForwarder ?? (_IconForwarder = new PropertyForwarder<Light, String>(this, (int)Light_FieldIndex.Icon));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Icon
         {
-            get => this._Icon.Item;
-            set => this._Icon.Set(value);
+            get => this._Icon;
+            set => this.SetIcon(value);
+        }
+        protected void SetIcon(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Light_FieldIndex.Icon];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Icon == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Light_FieldIndex.Icon] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Icon;
+                _Icon = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Light_FieldIndex.Icon,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Icon = item;
+            }
+        }
+        protected void UnsetIcon()
+        {
+            _hasBeenSetTracker[(int)Light_FieldIndex.Icon] = false;
+            Icon = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ILight.Icon_Property => this.Icon_Property;
@@ -99,14 +207,48 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> ILightGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Time
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Int32> _Time = NotifyingItem.Factory<Int32>(defaultVal: -1);
-        public INotifyingItem<Int32> Time_Property => _Time;
+        protected Int32 _Time;
+        protected readonly static Int32 _Time_Default = -1;
+        protected PropertyForwarder<Light, Int32> _TimeForwarder;
+        public INotifyingSetItem<Int32> Time_Property => _TimeForwarder ?? (_TimeForwarder = new PropertyForwarder<Light, Int32>(this, (int)Light_FieldIndex.Time));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 Time
         {
-            get => this._Time.Item;
-            set => this._Time.Set(value);
+            get => this._Time;
+            set => this.SetTime(value);
+        }
+        protected void SetTime(
+            Int32 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Light_FieldIndex.Time];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Time == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Light_FieldIndex.Time] = hasBeenSet;
+            }
+            if (_Int32_subscriptions != null)
+            {
+                var tmp = Time;
+                _Time = item;
+                _Int32_subscriptions.FireSubscriptions(
+                    index: (int)Light_FieldIndex.Time,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Time = item;
+            }
+        }
+        protected void UnsetTime()
+        {
+            _hasBeenSetTracker[(int)Light_FieldIndex.Time] = false;
+            Time = _Time_Default;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Int32> ILight.Time_Property => this.Time_Property;
@@ -114,14 +256,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Int32> ILightGetter.Time_Property => this.Time_Property;
         #endregion
         #region Radius
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt32> _Radius = NotifyingItem.Factory<UInt32>();
-        public INotifyingItem<UInt32> Radius_Property => _Radius;
+        protected UInt32 _Radius;
+        protected PropertyForwarder<Light, UInt32> _RadiusForwarder;
+        public INotifyingSetItem<UInt32> Radius_Property => _RadiusForwarder ?? (_RadiusForwarder = new PropertyForwarder<Light, UInt32>(this, (int)Light_FieldIndex.Radius));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Radius
         {
-            get => this._Radius.Item;
-            set => this._Radius.Set(value);
+            get => this._Radius;
+            set => this.SetRadius(value);
+        }
+        protected void SetRadius(
+            UInt32 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Light_FieldIndex.Radius];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Radius == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Light_FieldIndex.Radius] = hasBeenSet;
+            }
+            if (_UInt32_subscriptions != null)
+            {
+                var tmp = Radius;
+                _Radius = item;
+                _UInt32_subscriptions.FireSubscriptions(
+                    index: (int)Light_FieldIndex.Radius,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Radius = item;
+            }
+        }
+        protected void UnsetRadius()
+        {
+            _hasBeenSetTracker[(int)Light_FieldIndex.Radius] = false;
+            Radius = default(UInt32);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> ILight.Radius_Property => this.Radius_Property;
@@ -129,14 +304,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt32> ILightGetter.Radius_Property => this.Radius_Property;
         #endregion
         #region Color
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Color> _Color = NotifyingItem.Factory<Color>();
-        public INotifyingItem<Color> Color_Property => _Color;
+        protected Color _Color;
+        protected PropertyForwarder<Light, Color> _ColorForwarder;
+        public INotifyingSetItem<Color> Color_Property => _ColorForwarder ?? (_ColorForwarder = new PropertyForwarder<Light, Color>(this, (int)Light_FieldIndex.Color));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Color Color
         {
-            get => this._Color.Item;
-            set => this._Color.Set(value);
+            get => this._Color;
+            set => this.SetColor(value);
+        }
+        protected void SetColor(
+            Color item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Light_FieldIndex.Color];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Color == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Light_FieldIndex.Color] = hasBeenSet;
+            }
+            if (_Color_subscriptions != null)
+            {
+                var tmp = Color;
+                _Color = item;
+                _Color_subscriptions.FireSubscriptions(
+                    index: (int)Light_FieldIndex.Color,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Color = item;
+            }
+        }
+        protected void UnsetColor()
+        {
+            _hasBeenSetTracker[(int)Light_FieldIndex.Color] = false;
+            Color = default(Color);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Color> ILight.Color_Property => this.Color_Property;
@@ -144,14 +352,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Color> ILightGetter.Color_Property => this.Color_Property;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Light.LightFlag> _Flags = NotifyingItem.Factory<Light.LightFlag>();
-        public INotifyingItem<Light.LightFlag> Flags_Property => _Flags;
+        protected Light.LightFlag _Flags;
+        protected PropertyForwarder<Light, Light.LightFlag> _FlagsForwarder;
+        public INotifyingSetItem<Light.LightFlag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<Light, Light.LightFlag>(this, (int)Light_FieldIndex.Flags));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Light.LightFlag Flags
         {
-            get => this._Flags.Item;
-            set => this._Flags.Set(value);
+            get => this._Flags;
+            set => this.SetFlags(value);
+        }
+        protected void SetFlags(
+            Light.LightFlag item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Light_FieldIndex.Flags];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Light_FieldIndex.Flags] = hasBeenSet;
+            }
+            if (_LightLightFlag_subscriptions != null)
+            {
+                var tmp = Flags;
+                _Flags = item;
+                _LightLightFlag_subscriptions.FireSubscriptions(
+                    index: (int)Light_FieldIndex.Flags,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Flags = item;
+            }
+        }
+        protected void UnsetFlags()
+        {
+            _hasBeenSetTracker[(int)Light_FieldIndex.Flags] = false;
+            Flags = default(Light.LightFlag);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Light.LightFlag> ILight.Flags_Property => this.Flags_Property;
@@ -159,14 +400,48 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Light.LightFlag> ILightGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region FalloffExponent
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _FalloffExponent = NotifyingItem.Factory<Single>(defaultVal: 1);
-        public INotifyingItem<Single> FalloffExponent_Property => _FalloffExponent;
+        protected Single _FalloffExponent;
+        protected readonly static Single _FalloffExponent_Default = 1;
+        protected PropertyForwarder<Light, Single> _FalloffExponentForwarder;
+        public INotifyingSetItem<Single> FalloffExponent_Property => _FalloffExponentForwarder ?? (_FalloffExponentForwarder = new PropertyForwarder<Light, Single>(this, (int)Light_FieldIndex.FalloffExponent));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FalloffExponent
         {
-            get => this._FalloffExponent.Item;
-            set => this._FalloffExponent.Set(value);
+            get => this._FalloffExponent;
+            set => this.SetFalloffExponent(value);
+        }
+        protected void SetFalloffExponent(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Light_FieldIndex.FalloffExponent];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FalloffExponent == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Light_FieldIndex.FalloffExponent] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = FalloffExponent;
+                _FalloffExponent = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Light_FieldIndex.FalloffExponent,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _FalloffExponent = item;
+            }
+        }
+        protected void UnsetFalloffExponent()
+        {
+            _hasBeenSetTracker[(int)Light_FieldIndex.FalloffExponent] = false;
+            FalloffExponent = _FalloffExponent_Default;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ILight.FalloffExponent_Property => this.FalloffExponent_Property;
@@ -174,14 +449,48 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ILightGetter.FalloffExponent_Property => this.FalloffExponent_Property;
         #endregion
         #region FOV
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _FOV = NotifyingItem.Factory<Single>(defaultVal: 90);
-        public INotifyingItem<Single> FOV_Property => _FOV;
+        protected Single _FOV;
+        protected readonly static Single _FOV_Default = 90;
+        protected PropertyForwarder<Light, Single> _FOVForwarder;
+        public INotifyingSetItem<Single> FOV_Property => _FOVForwarder ?? (_FOVForwarder = new PropertyForwarder<Light, Single>(this, (int)Light_FieldIndex.FOV));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FOV
         {
-            get => this._FOV.Item;
-            set => this._FOV.Set(value);
+            get => this._FOV;
+            set => this.SetFOV(value);
+        }
+        protected void SetFOV(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Light_FieldIndex.FOV];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FOV == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Light_FieldIndex.FOV] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = FOV;
+                _FOV = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Light_FieldIndex.FOV,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _FOV = item;
+            }
+        }
+        protected void UnsetFOV()
+        {
+            _hasBeenSetTracker[(int)Light_FieldIndex.FOV] = false;
+            FOV = _FOV_Default;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ILight.FOV_Property => this.FOV_Property;
@@ -189,14 +498,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ILightGetter.FOV_Property => this.FOV_Property;
         #endregion
         #region Value
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
-        public INotifyingItem<UInt32> Value_Property => _Value;
+        protected UInt32 _Value;
+        protected PropertyForwarder<Light, UInt32> _ValueForwarder;
+        public INotifyingSetItem<UInt32> Value_Property => _ValueForwarder ?? (_ValueForwarder = new PropertyForwarder<Light, UInt32>(this, (int)Light_FieldIndex.Value));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Value
         {
-            get => this._Value.Item;
-            set => this._Value.Set(value);
+            get => this._Value;
+            set => this.SetValue(value);
+        }
+        protected void SetValue(
+            UInt32 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Light_FieldIndex.Value];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Value == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Light_FieldIndex.Value] = hasBeenSet;
+            }
+            if (_UInt32_subscriptions != null)
+            {
+                var tmp = Value;
+                _Value = item;
+                _UInt32_subscriptions.FireSubscriptions(
+                    index: (int)Light_FieldIndex.Value,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Value = item;
+            }
+        }
+        protected void UnsetValue()
+        {
+            _hasBeenSetTracker[(int)Light_FieldIndex.Value] = false;
+            Value = default(UInt32);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> ILight.Value_Property => this.Value_Property;
@@ -204,14 +546,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt32> ILightGetter.Value_Property => this.Value_Property;
         #endregion
         #region Weight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> Weight_Property => _Weight;
+        protected Single _Weight;
+        protected PropertyForwarder<Light, Single> _WeightForwarder;
+        public INotifyingSetItem<Single> Weight_Property => _WeightForwarder ?? (_WeightForwarder = new PropertyForwarder<Light, Single>(this, (int)Light_FieldIndex.Weight));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Weight
         {
-            get => this._Weight.Item;
-            set => this._Weight.Set(value);
+            get => this._Weight;
+            set => this.SetWeight(value);
+        }
+        protected void SetWeight(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Light_FieldIndex.Weight];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Weight == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Light_FieldIndex.Weight] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = Weight;
+                _Weight = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Light_FieldIndex.Weight,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Weight = item;
+            }
+        }
+        protected void UnsetWeight()
+        {
+            _hasBeenSetTracker[(int)Light_FieldIndex.Weight] = false;
+            Weight = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ILight.Weight_Property => this.Weight_Property;
@@ -219,14 +594,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ILightGetter.Weight_Property => this.Weight_Property;
         #endregion
         #region Fade
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<Single> _Fade = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> Fade_Property => _Fade;
+        protected Single _Fade;
+        protected PropertyForwarder<Light, Single> _FadeForwarder;
+        public INotifyingSetItem<Single> Fade_Property => _FadeForwarder ?? (_FadeForwarder = new PropertyForwarder<Light, Single>(this, (int)Light_FieldIndex.Fade));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Fade
         {
-            get => this._Fade.Item;
-            set => this._Fade.Set(value);
+            get => this._Fade;
+            set => this.SetFade(value);
+        }
+        protected void SetFade(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Light_FieldIndex.Fade];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Fade == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Light_FieldIndex.Fade] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = Fade;
+                _Fade = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Light_FieldIndex.Fade,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Fade = item;
+            }
+        }
+        protected void UnsetFade()
+        {
+            _hasBeenSetTracker[(int)Light_FieldIndex.Fade] = false;
+            Fade = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Single> ILight.Fade_Property => this.Fade_Property;
@@ -661,10 +1069,18 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    var ModeltryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Light_FieldIndex.Model,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ModeltryGet.Succeeded)
+                    {
+                        item.SetModel(item: ModeltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetModel();
+                    }
                     break;
                 case "Script":
                     item.Script_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
@@ -673,71 +1089,159 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Name":
-                    item._Name.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var NametryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Name,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (NametryGet.Succeeded)
+                    {
+                        item.SetName(item: NametryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetName();
+                    }
                     break;
                 case "Icon":
-                    item._Icon.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var IcontryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Icon,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (IcontryGet.Succeeded)
+                    {
+                        item.SetIcon(item: IcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetIcon();
+                    }
                     break;
                 case "Time":
-                    item._Time.SetIfSucceededOrDefault(Int32XmlTranslation.Instance.ParseNonNull(
+                    var TimetryGet = Int32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Time,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (TimetryGet.Succeeded)
+                    {
+                        item.SetTime(item: TimetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetTime();
+                    }
                     break;
                 case "Radius":
-                    item._Radius.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
+                    var RadiustryGet = UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Radius,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (RadiustryGet.Succeeded)
+                    {
+                        item.SetRadius(item: RadiustryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetRadius();
+                    }
                     break;
                 case "Color":
-                    item._Color.SetIfSucceededOrDefault(ColorXmlTranslation.Instance.ParseNonNull(
+                    var ColortryGet = ColorXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Color,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ColortryGet.Succeeded)
+                    {
+                        item.SetColor(item: ColortryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetColor();
+                    }
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<Light.LightFlag>.Instance.Parse(
+                    var FlagstryGet = EnumXmlTranslation<Light.LightFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Light_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (FlagstryGet.Succeeded)
+                    {
+                        item.SetFlags(item: FlagstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFlags();
+                    }
                     break;
                 case "FalloffExponent":
-                    item._FalloffExponent.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var FalloffExponenttryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Light_FieldIndex.FalloffExponent,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FalloffExponenttryGet.Succeeded)
+                    {
+                        item.SetFalloffExponent(item: FalloffExponenttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFalloffExponent();
+                    }
                     break;
                 case "FOV":
-                    item._FOV.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var FOVtryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Light_FieldIndex.FOV,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FOVtryGet.Succeeded)
+                    {
+                        item.SetFOV(item: FOVtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFOV();
+                    }
                     break;
                 case "Value":
-                    item._Value.SetIfSucceededOrDefault(UInt32XmlTranslation.Instance.ParseNonNull(
+                    var ValuetryGet = UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Value,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ValuetryGet.Succeeded)
+                    {
+                        item.SetValue(item: ValuetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetValue();
+                    }
                     break;
                 case "Weight":
-                    item._Weight.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var WeighttryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Weight,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (WeighttryGet.Succeeded)
+                    {
+                        item.SetWeight(item: WeighttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetWeight();
+                    }
                     break;
                 case "Fade":
-                    item._Fade.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var FadetryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Fade,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FadetryGet.Succeeded)
+                    {
+                        item.SetFade(item: FadetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFade();
+                    }
                     break;
                 case "Sound":
                     item.Sound_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
@@ -752,6 +1256,996 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Model
+        protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
+        Model IPropertySupporter<Model>.Get(int index)
+        {
+            return GetModel(index: index);
+        }
+
+        protected Model GetModel(int index)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Model:
+                    return Model;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        void IPropertySupporter<Model>.Set(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetModel(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetModel(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Model:
+                    SetModel(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Model>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Model>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Model>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetModel(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetModel(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Model:
+                    _hasBeenSetTracker[index] = false;
+                    Model = default(Model);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Model> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Model_subscriptions == null)
+            {
+                _Model_subscriptions = new ObjectCentralizationSubscriptions<Model>();
+            }
+            _Model_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Model_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Model>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Model IPropertySupporter<Model>.DefaultValue(int index)
+        {
+            return DefaultValueModel(index: index);
+        }
+
+        protected Model DefaultValueModel(int index)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Model:
+                    return default(Model);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter String
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected override String GetString(int index)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Name:
+                    return Name;
+                case Light_FieldIndex.Icon:
+                    return Icon;
+                default:
+                    return base.GetString(index: index);
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Name:
+                    SetName(item, hasBeenSet, cmds);
+                    break;
+                case Light_FieldIndex.Icon:
+                    SetIcon(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetString(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Name:
+                    _hasBeenSetTracker[index] = false;
+                    Name = default(String);
+                    break;
+                case Light_FieldIndex.Icon:
+                    _hasBeenSetTracker[index] = false;
+                    Icon = default(String);
+                    break;
+                default:
+                    base.UnsetString(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected override String DefaultValueString(int index)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Name:
+                case Light_FieldIndex.Icon:
+                    return default(String);
+                default:
+                    return base.DefaultValueString(index: index);
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Int32
+        protected ObjectCentralizationSubscriptions<Int32> _Int32_subscriptions;
+        Int32 IPropertySupporter<Int32>.Get(int index)
+        {
+            return GetInt32(index: index);
+        }
+
+        protected Int32 GetInt32(int index)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Time:
+                    return Time;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
+            }
+        }
+
+        void IPropertySupporter<Int32>.Set(
+            int index,
+            Int32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetInt32(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetInt32(
+            int index,
+            Int32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Time:
+                    SetTime(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Int32>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Int32>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetInt32(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetInt32(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Time:
+                    _hasBeenSetTracker[index] = false;
+                    Time = default(Int32);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Int32>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Int32> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Int32_subscriptions == null)
+            {
+                _Int32_subscriptions = new ObjectCentralizationSubscriptions<Int32>();
+            }
+            _Int32_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Int32>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Int32_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Int32>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Int32 IPropertySupporter<Int32>.DefaultValue(int index)
+        {
+            return DefaultValueInt32(index: index);
+        }
+
+        protected Int32 DefaultValueInt32(int index)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Time:
+                    return _Time_Default;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter UInt32
+        protected ObjectCentralizationSubscriptions<UInt32> _UInt32_subscriptions;
+        UInt32 IPropertySupporter<UInt32>.Get(int index)
+        {
+            return GetUInt32(index: index);
+        }
+
+        protected UInt32 GetUInt32(int index)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Radius:
+                    return Radius;
+                case Light_FieldIndex.Value:
+                    return Value;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        void IPropertySupporter<UInt32>.Set(
+            int index,
+            UInt32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetUInt32(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetUInt32(
+            int index,
+            UInt32 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Radius:
+                    SetRadius(item, hasBeenSet, cmds);
+                    break;
+                case Light_FieldIndex.Value:
+                    SetValue(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<UInt32>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<UInt32>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetUInt32(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetUInt32(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Radius:
+                    _hasBeenSetTracker[index] = false;
+                    Radius = default(UInt32);
+                    break;
+                case Light_FieldIndex.Value:
+                    _hasBeenSetTracker[index] = false;
+                    Value = default(UInt32);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt32>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<UInt32> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_UInt32_subscriptions == null)
+            {
+                _UInt32_subscriptions = new ObjectCentralizationSubscriptions<UInt32>();
+            }
+            _UInt32_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt32>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _UInt32_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<UInt32>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        UInt32 IPropertySupporter<UInt32>.DefaultValue(int index)
+        {
+            return DefaultValueUInt32(index: index);
+        }
+
+        protected UInt32 DefaultValueUInt32(int index)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Radius:
+                case Light_FieldIndex.Value:
+                    return default(UInt32);
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Color
+        protected ObjectCentralizationSubscriptions<Color> _Color_subscriptions;
+        Color IPropertySupporter<Color>.Get(int index)
+        {
+            return GetColor(index: index);
+        }
+
+        protected Color GetColor(int index)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Color:
+                    return Color;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
+            }
+        }
+
+        void IPropertySupporter<Color>.Set(
+            int index,
+            Color item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetColor(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetColor(
+            int index,
+            Color item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Color:
+                    SetColor(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Color>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Color>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Color>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetColor(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetColor(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Color:
+                    _hasBeenSetTracker[index] = false;
+                    Color = default(Color);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Color>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Color> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Color_subscriptions == null)
+            {
+                _Color_subscriptions = new ObjectCentralizationSubscriptions<Color>();
+            }
+            _Color_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Color>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Color_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Color>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Color IPropertySupporter<Color>.DefaultValue(int index)
+        {
+            return DefaultValueColor(index: index);
+        }
+
+        protected Color DefaultValueColor(int index)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Color:
+                    return default(Color);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Color: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Light.LightFlag
+        protected ObjectCentralizationSubscriptions<Light.LightFlag> _LightLightFlag_subscriptions;
+        Light.LightFlag IPropertySupporter<Light.LightFlag>.Get(int index)
+        {
+            return GetLightLightFlag(index: index);
+        }
+
+        protected Light.LightFlag GetLightLightFlag(int index)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Flags:
+                    return Flags;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Light.LightFlag: {index}");
+            }
+        }
+
+        void IPropertySupporter<Light.LightFlag>.Set(
+            int index,
+            Light.LightFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetLightLightFlag(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetLightLightFlag(
+            int index,
+            Light.LightFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Flags:
+                    SetFlags(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Light.LightFlag: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Light.LightFlag>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Light.LightFlag>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Light.LightFlag>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetLightLightFlag(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetLightLightFlag(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Flags:
+                    _hasBeenSetTracker[index] = false;
+                    Flags = default(Light.LightFlag);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Light.LightFlag: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Light.LightFlag>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Light.LightFlag> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_LightLightFlag_subscriptions == null)
+            {
+                _LightLightFlag_subscriptions = new ObjectCentralizationSubscriptions<Light.LightFlag>();
+            }
+            _LightLightFlag_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Light.LightFlag>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _LightLightFlag_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Light.LightFlag>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Light.LightFlag IPropertySupporter<Light.LightFlag>.DefaultValue(int index)
+        {
+            return DefaultValueLightLightFlag(index: index);
+        }
+
+        protected Light.LightFlag DefaultValueLightLightFlag(int index)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Flags:
+                    return default(Light.LightFlag);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Light.LightFlag: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Single
+        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
+        Single IPropertySupporter<Single>.Get(int index)
+        {
+            return GetSingle(index: index);
+        }
+
+        protected Single GetSingle(int index)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.FalloffExponent:
+                    return FalloffExponent;
+                case Light_FieldIndex.FOV:
+                    return FOV;
+                case Light_FieldIndex.Weight:
+                    return Weight;
+                case Light_FieldIndex.Fade:
+                    return Fade;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        void IPropertySupporter<Single>.Set(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSingle(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetSingle(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.FalloffExponent:
+                    SetFalloffExponent(item, hasBeenSet, cmds);
+                    break;
+                case Light_FieldIndex.FOV:
+                    SetFOV(item, hasBeenSet, cmds);
+                    break;
+                case Light_FieldIndex.Weight:
+                    SetWeight(item, hasBeenSet, cmds);
+                    break;
+                case Light_FieldIndex.Fade:
+                    SetFade(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Single>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Single>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSingle(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetSingle(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.FalloffExponent:
+                    _hasBeenSetTracker[index] = false;
+                    FalloffExponent = default(Single);
+                    break;
+                case Light_FieldIndex.FOV:
+                    _hasBeenSetTracker[index] = false;
+                    FOV = default(Single);
+                    break;
+                case Light_FieldIndex.Weight:
+                    _hasBeenSetTracker[index] = false;
+                    Weight = default(Single);
+                    break;
+                case Light_FieldIndex.Fade:
+                    _hasBeenSetTracker[index] = false;
+                    Fade = default(Single);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Single> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Single_subscriptions == null)
+            {
+                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
+            }
+            _Single_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Single_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Single IPropertySupporter<Single>.DefaultValue(int index)
+        {
+            return DefaultValueSingle(index: index);
+        }
+
+        protected Single DefaultValueSingle(int index)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Weight:
+                case Light_FieldIndex.Fade:
+                    return default(Single);
+                case Light_FieldIndex.FalloffExponent:
+                    return _FalloffExponent_Default;
+                case Light_FieldIndex.FOV:
+                    return _FOV_Default;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
             }
         }
 
@@ -981,10 +2475,20 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)Light_FieldIndex.Model,
-                        errorMask: errorMask));
+                    {
+                        var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                            frame: frame.Spawn(snapToFinalPosition: false),
+                            fieldIndex: (int)Light_FieldIndex.Model,
+                            errorMask: errorMask);
+                        if (ModeltryGet.Succeeded)
+                        {
+                            item.SetModel(item: ModeltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetModel();
+                        }
+                    }
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Model);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -995,69 +2499,157 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Script);
                 case "FULL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Name.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var NametryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Light_FieldIndex.Name,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (NametryGet.Succeeded)
+                    {
+                        item.SetName(item: NametryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetName();
+                    }
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Name);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Icon.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var IcontryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Light_FieldIndex.Icon,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (IcontryGet.Succeeded)
+                    {
+                        item.SetIcon(item: IcontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetIcon();
+                    }
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Time.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                        var TimetryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Light_FieldIndex.Time,
-                            errorMask: errorMask));
-                        item._Radius.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (TimetryGet.Succeeded)
+                        {
+                            item.SetTime(item: TimetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetTime();
+                        }
+                        var RadiustryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Light_FieldIndex.Radius,
-                            errorMask: errorMask));
-                        item._Color.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (RadiustryGet.Succeeded)
+                        {
+                            item.SetRadius(item: RadiustryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetRadius();
+                        }
+                        var ColortryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Light_FieldIndex.Color,
                             errorMask: errorMask,
-                            extraByte: true));
-                        item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Light.LightFlag>.Instance.Parse(
+                            extraByte: true);
+                        if (ColortryGet.Succeeded)
+                        {
+                            item.SetColor(item: ColortryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetColor();
+                        }
+                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Light.LightFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Light_FieldIndex.Flags,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (FlagstryGet.Succeeded)
+                        {
+                            item.SetFlags(item: FlagstryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetFlags();
+                        }
                         if (dataFrame.TotalLength > 24)
                         {
                             item.DATADataTypeState |= DATADataType.Range0;
-                            item._FalloffExponent.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            var FalloffExponenttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                                 frame: dataFrame,
                                 fieldIndex: (int)Light_FieldIndex.FalloffExponent,
-                                errorMask: errorMask));
-                            item._FOV.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                                errorMask: errorMask);
+                            if (FalloffExponenttryGet.Succeeded)
+                            {
+                                item.SetFalloffExponent(item: FalloffExponenttryGet.Value);
+                            }
+                            else
+                            {
+                                item.UnsetFalloffExponent();
+                            }
+                            var FOVtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                                 frame: dataFrame,
                                 fieldIndex: (int)Light_FieldIndex.FOV,
-                                errorMask: errorMask));
+                                errorMask: errorMask);
+                            if (FOVtryGet.Succeeded)
+                            {
+                                item.SetFOV(item: FOVtryGet.Value);
+                            }
+                            else
+                            {
+                                item.UnsetFOV();
+                            }
                         }
-                        item._Value.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        var ValuetryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Light_FieldIndex.Value,
-                            errorMask: errorMask));
-                        item._Weight.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (ValuetryGet.Succeeded)
+                        {
+                            item.SetValue(item: ValuetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetValue();
+                        }
+                        var WeighttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Light_FieldIndex.Weight,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (WeighttryGet.Succeeded)
+                        {
+                            item.SetWeight(item: WeighttryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetWeight();
+                        }
                     }
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Weight);
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Fade.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    var FadetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Light_FieldIndex.Fade,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FadetryGet.Succeeded)
+                    {
+                        item.SetFade(item: FadetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFade();
+                    }
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Fade);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -1178,9 +2770,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Light_FieldIndex.Model:
-                    this._Model.Set(
+                    this.SetModel(
                         (Model)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Light_FieldIndex.Script:
                     this.Script_Property.Set(
@@ -1188,59 +2780,59 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Light_FieldIndex.Name:
-                    this._Name.Set(
+                    this.SetName(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Light_FieldIndex.Icon:
-                    this._Icon.Set(
+                    this.SetIcon(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Light_FieldIndex.Time:
-                    this._Time.Set(
+                    this.SetTime(
                         (Int32)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Light_FieldIndex.Radius:
-                    this._Radius.Set(
+                    this.SetRadius(
                         (UInt32)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Light_FieldIndex.Color:
-                    this._Color.Set(
+                    this.SetColor(
                         (Color)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Light_FieldIndex.Flags:
-                    this._Flags.Set(
+                    this.SetFlags(
                         (Light.LightFlag)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Light_FieldIndex.FalloffExponent:
-                    this._FalloffExponent.Set(
+                    this.SetFalloffExponent(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Light_FieldIndex.FOV:
-                    this._FOV.Set(
+                    this.SetFOV(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Light_FieldIndex.Value:
-                    this._Value.Set(
+                    this.SetValue(
                         (UInt32)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Light_FieldIndex.Weight:
-                    this._Weight.Set(
+                    this.SetWeight(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Light_FieldIndex.Fade:
-                    this._Fade.Set(
+                    this.SetFade(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Light_FieldIndex.Sound:
                     this.Sound_Property.Set(
@@ -1279,9 +2871,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Light_FieldIndex.Model:
-                    obj._Model.Set(
+                    obj.SetModel(
                         (Model)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Light_FieldIndex.Script:
                     obj.Script_Property.Set(
@@ -1289,59 +2881,59 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Light_FieldIndex.Name:
-                    obj._Name.Set(
+                    obj.SetName(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Light_FieldIndex.Icon:
-                    obj._Icon.Set(
+                    obj.SetIcon(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Light_FieldIndex.Time:
-                    obj._Time.Set(
+                    obj.SetTime(
                         (Int32)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Light_FieldIndex.Radius:
-                    obj._Radius.Set(
+                    obj.SetRadius(
                         (UInt32)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Light_FieldIndex.Color:
-                    obj._Color.Set(
+                    obj.SetColor(
                         (Color)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Light_FieldIndex.Flags:
-                    obj._Flags.Set(
+                    obj.SetFlags(
                         (Light.LightFlag)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Light_FieldIndex.FalloffExponent:
-                    obj._FalloffExponent.Set(
+                    obj.SetFalloffExponent(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Light_FieldIndex.FOV:
-                    obj._FOV.Set(
+                    obj.SetFOV(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Light_FieldIndex.Value:
-                    obj._Value.Set(
+                    obj.SetValue(
                         (UInt32)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Light_FieldIndex.Weight:
-                    obj._Weight.Set(
+                    obj.SetWeight(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Light_FieldIndex.Fade:
-                    obj._Fade.Set(
+                    obj.SetFade(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Light_FieldIndex.Sound:
                     obj.Sound_Property.Set(
@@ -1523,7 +3115,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "c427a7d6-4fbf-45c8-80c7-f3c8f8646bc1";
 
-        public const ushort FieldCount = 14;
+        public const ushort AdditionalFieldCount = 14;
+
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(Light_Mask<>);
 
@@ -1801,7 +3395,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1917,8 +3512,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Name_Property.SetToWithDefault(
                         rhs: rhs.Name_Property,
-                        def: def?.Name_Property,
-                        cmds: cmds);
+                        def: def?.Name_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1932,8 +3526,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Icon_Property.SetToWithDefault(
                         rhs: rhs.Icon_Property,
-                        def: def?.Icon_Property,
-                        cmds: cmds);
+                        def: def?.Icon_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2059,8 +3652,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Fade_Property.SetToWithDefault(
                         rhs: rhs.Fade_Property,
-                        def: def?.Fade_Property,
-                        cmds: cmds);
+                        def: def?.Fade_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

@@ -30,6 +30,8 @@ namespace Mutagen.Bethesda.Oblivion
         IBaseLayer,
         ILoquiObject<BaseLayer>,
         ILoquiObjectSetter,
+        IPropertySupporter<AlphaLayer.QuadrantEnum>,
+        IPropertySupporter<UInt16>,
         IEquatable<BaseLayer>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -39,6 +41,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public BaseLayer()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -52,14 +55,47 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<LandTexture> IBaseLayerGetter.Texture_Property => this.Texture_Property;
         #endregion
         #region Quadrant
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<AlphaLayer.QuadrantEnum> _Quadrant = NotifyingItem.Factory<AlphaLayer.QuadrantEnum>();
-        public INotifyingItem<AlphaLayer.QuadrantEnum> Quadrant_Property => _Quadrant;
+        protected AlphaLayer.QuadrantEnum _Quadrant;
+        protected PropertyForwarder<BaseLayer, AlphaLayer.QuadrantEnum> _QuadrantForwarder;
+        public INotifyingSetItem<AlphaLayer.QuadrantEnum> Quadrant_Property => _QuadrantForwarder ?? (_QuadrantForwarder = new PropertyForwarder<BaseLayer, AlphaLayer.QuadrantEnum>(this, (int)BaseLayer_FieldIndex.Quadrant));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public AlphaLayer.QuadrantEnum Quadrant
         {
-            get => this._Quadrant.Item;
-            set => this._Quadrant.Set(value);
+            get => this._Quadrant;
+            set => this.SetQuadrant(value);
+        }
+        protected void SetQuadrant(
+            AlphaLayer.QuadrantEnum item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)BaseLayer_FieldIndex.Quadrant];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Quadrant == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)BaseLayer_FieldIndex.Quadrant] = hasBeenSet;
+            }
+            if (_AlphaLayerQuadrantEnum_subscriptions != null)
+            {
+                var tmp = Quadrant;
+                _Quadrant = item;
+                _AlphaLayerQuadrantEnum_subscriptions.FireSubscriptions(
+                    index: (int)BaseLayer_FieldIndex.Quadrant,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Quadrant = item;
+            }
+        }
+        protected void UnsetQuadrant()
+        {
+            _hasBeenSetTracker[(int)BaseLayer_FieldIndex.Quadrant] = false;
+            Quadrant = default(AlphaLayer.QuadrantEnum);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<AlphaLayer.QuadrantEnum> IBaseLayer.Quadrant_Property => this.Quadrant_Property;
@@ -67,14 +103,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<AlphaLayer.QuadrantEnum> IBaseLayerGetter.Quadrant_Property => this.Quadrant_Property;
         #endregion
         #region LayerNumber
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt16> _LayerNumber = NotifyingItem.Factory<UInt16>();
-        public INotifyingItemGetter<UInt16> LayerNumber_Property => _LayerNumber;
+        protected UInt16 _LayerNumber;
+        protected PropertyForwarder<BaseLayer, UInt16> _LayerNumberForwarder;
+        public INotifyingSetItemGetter<UInt16> LayerNumber_Property => _LayerNumberForwarder ?? (_LayerNumberForwarder = new PropertyForwarder<BaseLayer, UInt16>(this, (int)BaseLayer_FieldIndex.LayerNumber));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 LayerNumber
         {
-            get => this._LayerNumber.Item;
-            protected set => this._LayerNumber.Set(value);
+            get => this._LayerNumber;
+            protected set => this.SetLayerNumber(value);
+        }
+        protected void SetLayerNumber(
+            UInt16 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)BaseLayer_FieldIndex.LayerNumber];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && LayerNumber == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)BaseLayer_FieldIndex.LayerNumber] = hasBeenSet;
+            }
+            if (_UInt16_subscriptions != null)
+            {
+                var tmp = LayerNumber;
+                _LayerNumber = item;
+                _UInt16_subscriptions.FireSubscriptions(
+                    index: (int)BaseLayer_FieldIndex.LayerNumber,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _LayerNumber = item;
+            }
+        }
+        protected void UnsetLayerNumber()
+        {
+            _hasBeenSetTracker[(int)BaseLayer_FieldIndex.LayerNumber] = false;
+            LayerNumber = default(UInt16);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt16> IBaseLayerGetter.LayerNumber_Property => this.LayerNumber_Property;
@@ -432,20 +501,303 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Quadrant":
-                    item._Quadrant.SetIfSucceededOrDefault(EnumXmlTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
+                    var QuadranttryGet = EnumXmlTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)BaseLayer_FieldIndex.Quadrant,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (QuadranttryGet.Succeeded)
+                    {
+                        item.SetQuadrant(item: QuadranttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetQuadrant();
+                    }
                     break;
                 case "LayerNumber":
-                    item._LayerNumber.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
+                    var LayerNumbertryGet = UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)BaseLayer_FieldIndex.LayerNumber,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (LayerNumbertryGet.Succeeded)
+                    {
+                        item.SetLayerNumber(item: LayerNumbertryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetLayerNumber();
+                    }
                     break;
                 default:
                     break;
+            }
+        }
+
+        #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        #region IPropertySupporter AlphaLayer.QuadrantEnum
+        protected ObjectCentralizationSubscriptions<AlphaLayer.QuadrantEnum> _AlphaLayerQuadrantEnum_subscriptions;
+        AlphaLayer.QuadrantEnum IPropertySupporter<AlphaLayer.QuadrantEnum>.Get(int index)
+        {
+            return GetAlphaLayerQuadrantEnum(index: index);
+        }
+
+        protected AlphaLayer.QuadrantEnum GetAlphaLayerQuadrantEnum(int index)
+        {
+            switch ((BaseLayer_FieldIndex)index)
+            {
+                case BaseLayer_FieldIndex.Quadrant:
+                    return Quadrant;
+                default:
+                    throw new ArgumentException($"Unknown index for field type AlphaLayer.QuadrantEnum: {index}");
+            }
+        }
+
+        void IPropertySupporter<AlphaLayer.QuadrantEnum>.Set(
+            int index,
+            AlphaLayer.QuadrantEnum item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetAlphaLayerQuadrantEnum(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetAlphaLayerQuadrantEnum(
+            int index,
+            AlphaLayer.QuadrantEnum item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((BaseLayer_FieldIndex)index)
+            {
+                case BaseLayer_FieldIndex.Quadrant:
+                    SetQuadrant(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type AlphaLayer.QuadrantEnum: {index}");
+            }
+        }
+
+        bool IPropertySupporter<AlphaLayer.QuadrantEnum>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<AlphaLayer.QuadrantEnum>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<AlphaLayer.QuadrantEnum>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetAlphaLayerQuadrantEnum(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetAlphaLayerQuadrantEnum(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((BaseLayer_FieldIndex)index)
+            {
+                case BaseLayer_FieldIndex.Quadrant:
+                    _hasBeenSetTracker[index] = false;
+                    Quadrant = default(AlphaLayer.QuadrantEnum);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type AlphaLayer.QuadrantEnum: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<AlphaLayer.QuadrantEnum>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<AlphaLayer.QuadrantEnum> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_AlphaLayerQuadrantEnum_subscriptions == null)
+            {
+                _AlphaLayerQuadrantEnum_subscriptions = new ObjectCentralizationSubscriptions<AlphaLayer.QuadrantEnum>();
+            }
+            _AlphaLayerQuadrantEnum_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<AlphaLayer.QuadrantEnum>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _AlphaLayerQuadrantEnum_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<AlphaLayer.QuadrantEnum>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        AlphaLayer.QuadrantEnum IPropertySupporter<AlphaLayer.QuadrantEnum>.DefaultValue(int index)
+        {
+            return DefaultValueAlphaLayerQuadrantEnum(index: index);
+        }
+
+        protected AlphaLayer.QuadrantEnum DefaultValueAlphaLayerQuadrantEnum(int index)
+        {
+            switch ((BaseLayer_FieldIndex)index)
+            {
+                case BaseLayer_FieldIndex.Quadrant:
+                    return default(AlphaLayer.QuadrantEnum);
+                default:
+                    throw new ArgumentException($"Unknown index for field type AlphaLayer.QuadrantEnum: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter UInt16
+        protected ObjectCentralizationSubscriptions<UInt16> _UInt16_subscriptions;
+        UInt16 IPropertySupporter<UInt16>.Get(int index)
+        {
+            return GetUInt16(index: index);
+        }
+
+        protected UInt16 GetUInt16(int index)
+        {
+            switch ((BaseLayer_FieldIndex)index)
+            {
+                case BaseLayer_FieldIndex.LayerNumber:
+                    return LayerNumber;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        void IPropertySupporter<UInt16>.Set(
+            int index,
+            UInt16 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetUInt16(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetUInt16(
+            int index,
+            UInt16 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((BaseLayer_FieldIndex)index)
+            {
+                case BaseLayer_FieldIndex.LayerNumber:
+                    SetLayerNumber(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        bool IPropertySupporter<UInt16>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<UInt16>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<UInt16>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetUInt16(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetUInt16(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((BaseLayer_FieldIndex)index)
+            {
+                case BaseLayer_FieldIndex.LayerNumber:
+                    _hasBeenSetTracker[index] = false;
+                    LayerNumber = default(UInt16);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt16>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<UInt16> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_UInt16_subscriptions == null)
+            {
+                _UInt16_subscriptions = new ObjectCentralizationSubscriptions<UInt16>();
+            }
+            _UInt16_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt16>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _UInt16_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<UInt16>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        UInt16 IPropertySupporter<UInt16>.DefaultValue(int index)
+        {
+            return DefaultValueUInt16(index: index);
+        }
+
+        protected UInt16 DefaultValueUInt16(int index)
+        {
+            switch ((BaseLayer_FieldIndex)index)
+            {
+                case BaseLayer_FieldIndex.LayerNumber:
+                    return default(UInt16);
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
             }
         }
 
@@ -689,14 +1041,30 @@ namespace Mutagen.Bethesda.Oblivion
                             frame: dataFrame,
                             fieldIndex: (int)BaseLayer_FieldIndex.Texture,
                             errorMask: errorMask));
-                        item._Quadrant.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
+                        var QuadranttryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(2),
                             fieldIndex: (int)BaseLayer_FieldIndex.Quadrant,
-                            errorMask: errorMask));
-                        item._LayerNumber.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (QuadranttryGet.Succeeded)
+                        {
+                            item.SetQuadrant(item: QuadranttryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetQuadrant();
+                        }
+                        var LayerNumbertryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)BaseLayer_FieldIndex.LayerNumber,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (LayerNumbertryGet.Succeeded)
+                        {
+                            item.SetLayerNumber(item: LayerNumbertryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetLayerNumber();
+                        }
                     }
                     return TryGet<BaseLayer_FieldIndex?>.Succeed(BaseLayer_FieldIndex.LayerNumber);
                 default:
@@ -826,14 +1194,14 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case BaseLayer_FieldIndex.Quadrant:
-                    this._Quadrant.Set(
+                    this.SetQuadrant(
                         (AlphaLayer.QuadrantEnum)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case BaseLayer_FieldIndex.LayerNumber:
-                    this._LayerNumber.Set(
+                    this.SetLayerNumber(
                         (UInt16)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -878,14 +1246,14 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case BaseLayer_FieldIndex.Quadrant:
-                    obj._Quadrant.Set(
+                    obj.SetQuadrant(
                         (AlphaLayer.QuadrantEnum)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case BaseLayer_FieldIndex.LayerNumber:
-                    obj._LayerNumber.Set(
+                    obj.SetLayerNumber(
                         (UInt16)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -956,6 +1324,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             version: 0);
 
         public const string GUID = "4b14f70e-5702-4ed0-b691-09996696e4d9";
+
+        public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
 
@@ -1119,7 +1489,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

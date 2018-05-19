@@ -29,6 +29,8 @@ namespace Mutagen.Bethesda
         IMasterReference,
         ILoquiObject<MasterReference>,
         ILoquiObjectSetter,
+        IPropertySupporter<String>,
+        IPropertySupporter<UInt64>,
         IEquatable<MasterReference>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -38,20 +40,54 @@ namespace Mutagen.Bethesda
         #region Ctor
         public MasterReference()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Master
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _Master = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Master_Property => _Master;
+        protected String _Master;
+        protected PropertyForwarder<MasterReference, String> _MasterForwarder;
+        public INotifyingSetItem<String> Master_Property => _MasterForwarder ?? (_MasterForwarder = new PropertyForwarder<MasterReference, String>(this, (int)MasterReference_FieldIndex.Master));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Master
         {
-            get => this._Master.Item;
-            set => this._Master.Set(value);
+            get => this._Master;
+            set => this.SetMaster(value);
+        }
+        protected void SetMaster(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)MasterReference_FieldIndex.Master];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Master == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)MasterReference_FieldIndex.Master] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Master;
+                _Master = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)MasterReference_FieldIndex.Master,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Master = item;
+            }
+        }
+        protected void UnsetMaster()
+        {
+            _hasBeenSetTracker[(int)MasterReference_FieldIndex.Master] = false;
+            Master = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IMasterReference.Master_Property => this.Master_Property;
@@ -59,14 +95,47 @@ namespace Mutagen.Bethesda
         INotifyingSetItemGetter<String> IMasterReferenceGetter.Master_Property => this.Master_Property;
         #endregion
         #region FileSize
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<UInt64> _FileSize = NotifyingSetItem.Factory<UInt64>(markAsSet: false);
-        public INotifyingSetItem<UInt64> FileSize_Property => _FileSize;
+        protected UInt64 _FileSize;
+        protected PropertyForwarder<MasterReference, UInt64> _FileSizeForwarder;
+        public INotifyingSetItem<UInt64> FileSize_Property => _FileSizeForwarder ?? (_FileSizeForwarder = new PropertyForwarder<MasterReference, UInt64>(this, (int)MasterReference_FieldIndex.FileSize));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt64 FileSize
         {
-            get => this._FileSize.Item;
-            set => this._FileSize.Set(value);
+            get => this._FileSize;
+            set => this.SetFileSize(value);
+        }
+        protected void SetFileSize(
+            UInt64 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)MasterReference_FieldIndex.FileSize];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FileSize == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)MasterReference_FieldIndex.FileSize] = hasBeenSet;
+            }
+            if (_UInt64_subscriptions != null)
+            {
+                var tmp = FileSize;
+                _FileSize = item;
+                _UInt64_subscriptions.FireSubscriptions(
+                    index: (int)MasterReference_FieldIndex.FileSize,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _FileSize = item;
+            }
+        }
+        protected void UnsetFileSize()
+        {
+            _hasBeenSetTracker[(int)MasterReference_FieldIndex.FileSize] = false;
+            FileSize = default(UInt64);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<UInt64> IMasterReference.FileSize_Property => this.FileSize_Property;
@@ -432,19 +501,302 @@ namespace Mutagen.Bethesda
             switch (name)
             {
                 case "Master":
-                    item._Master.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var MastertryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)MasterReference_FieldIndex.Master,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MastertryGet.Succeeded)
+                    {
+                        item.SetMaster(item: MastertryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMaster();
+                    }
                     break;
                 case "FileSize":
-                    item._FileSize.SetIfSucceededOrDefault(UInt64XmlTranslation.Instance.ParseNonNull(
+                    var FileSizetryGet = UInt64XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)MasterReference_FieldIndex.FileSize,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FileSizetryGet.Succeeded)
+                    {
+                        item.SetFileSize(item: FileSizetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFileSize();
+                    }
                     break;
                 default:
                     break;
+            }
+        }
+
+        #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        #region IPropertySupporter String
+        protected ObjectCentralizationSubscriptions<String> _String_subscriptions;
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected String GetString(int index)
+        {
+            switch ((MasterReference_FieldIndex)index)
+            {
+                case MasterReference_FieldIndex.Master:
+                    return Master;
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((MasterReference_FieldIndex)index)
+            {
+                case MasterReference_FieldIndex.Master:
+                    SetMaster(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((MasterReference_FieldIndex)index)
+            {
+                case MasterReference_FieldIndex.Master:
+                    _hasBeenSetTracker[index] = false;
+                    Master = default(String);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected String DefaultValueString(int index)
+        {
+            switch ((MasterReference_FieldIndex)index)
+            {
+                case MasterReference_FieldIndex.Master:
+                    return default(String);
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter UInt64
+        protected ObjectCentralizationSubscriptions<UInt64> _UInt64_subscriptions;
+        UInt64 IPropertySupporter<UInt64>.Get(int index)
+        {
+            return GetUInt64(index: index);
+        }
+
+        protected UInt64 GetUInt64(int index)
+        {
+            switch ((MasterReference_FieldIndex)index)
+            {
+                case MasterReference_FieldIndex.FileSize:
+                    return FileSize;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt64: {index}");
+            }
+        }
+
+        void IPropertySupporter<UInt64>.Set(
+            int index,
+            UInt64 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetUInt64(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetUInt64(
+            int index,
+            UInt64 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((MasterReference_FieldIndex)index)
+            {
+                case MasterReference_FieldIndex.FileSize:
+                    SetFileSize(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt64: {index}");
+            }
+        }
+
+        bool IPropertySupporter<UInt64>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<UInt64>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<UInt64>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetUInt64(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetUInt64(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((MasterReference_FieldIndex)index)
+            {
+                case MasterReference_FieldIndex.FileSize:
+                    _hasBeenSetTracker[index] = false;
+                    FileSize = default(UInt64);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt64: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt64>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<UInt64> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_UInt64_subscriptions == null)
+            {
+                _UInt64_subscriptions = new ObjectCentralizationSubscriptions<UInt64>();
+            }
+            _UInt64_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt64>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _UInt64_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<UInt64>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        UInt64 IPropertySupporter<UInt64>.DefaultValue(int index)
+        {
+            return DefaultValueUInt64(index: index);
+        }
+
+        protected UInt64 DefaultValueUInt64(int index)
+        {
+            switch ((MasterReference_FieldIndex)index)
+            {
+                case MasterReference_FieldIndex.FileSize:
+                    return default(UInt64);
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt64: {index}");
             }
         }
 
@@ -673,19 +1025,35 @@ namespace Mutagen.Bethesda
                 case "MAST":
                     if (lastParsed.HasValue && lastParsed.Value >= MasterReference_FieldIndex.Master) return TryGet<MasterReference_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Master.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var MastertryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)MasterReference_FieldIndex.Master,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MastertryGet.Succeeded)
+                    {
+                        item.SetMaster(item: MastertryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMaster();
+                    }
                     return TryGet<MasterReference_FieldIndex?>.Succeed(MasterReference_FieldIndex.Master);
                 case "DATA":
                     if (lastParsed.HasValue && lastParsed.Value >= MasterReference_FieldIndex.FileSize) return TryGet<MasterReference_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._FileSize.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Parse(
+                    var FileSizetryGet = Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)MasterReference_FieldIndex.FileSize,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FileSizetryGet.Succeeded)
+                    {
+                        item.SetFileSize(item: FileSizetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFileSize();
+                    }
                     return TryGet<MasterReference_FieldIndex?>.Succeed(MasterReference_FieldIndex.FileSize);
                 default:
                     return TryGet<MasterReference_FieldIndex?>.Failure;
@@ -809,14 +1177,14 @@ namespace Mutagen.Bethesda
             switch (enu)
             {
                 case MasterReference_FieldIndex.Master:
-                    this._Master.Set(
+                    this.SetMaster(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case MasterReference_FieldIndex.FileSize:
-                    this._FileSize.Set(
+                    this.SetFileSize(
                         (UInt64)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -856,14 +1224,14 @@ namespace Mutagen.Bethesda
             switch (enu)
             {
                 case MasterReference_FieldIndex.Master:
-                    obj._Master.Set(
+                    obj.SetMaster(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case MasterReference_FieldIndex.FileSize:
-                    obj._FileSize.Set(
+                    obj.SetFileSize(
                         (UInt64)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -930,6 +1298,8 @@ namespace Mutagen.Bethesda.Internals
             version: 0);
 
         public const string GUID = "f1785555-cc72-4e7c-91b3-342cee7a1068";
+
+        public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
 
@@ -1081,7 +1451,8 @@ namespace Mutagen.Bethesda.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1125,8 +1496,7 @@ namespace Mutagen.Bethesda.Internals
                 {
                     item.Master_Property.SetToWithDefault(
                         rhs: rhs.Master_Property,
-                        def: def?.Master_Property,
-                        cmds: cmds);
+                        def: def?.Master_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1140,8 +1510,7 @@ namespace Mutagen.Bethesda.Internals
                 {
                     item.FileSize_Property.SetToWithDefault(
                         rhs: rhs.FileSize_Property,
-                        def: def?.FileSize_Property,
-                        cmds: cmds);
+                        def: def?.FileSize_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

@@ -393,16 +393,32 @@ namespace Mutagen.Bethesda.Tests
             switch (name)
             {
                 case "SectionToMove":
-                    item.SectionToMove = RangeInt64XmlTranslation.Instance.ParseNonNull(
+                    var SectionToMovetryGet = RangeInt64XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Move_FieldIndex.SectionToMove,
-                        errorMask: errorMask).GetOrDefault(item.SectionToMove);
+                        errorMask: errorMask);
+                    if (SectionToMovetryGet.Succeeded)
+                    {
+                        item.SectionToMove = SectionToMovetryGet.Value;
+                    }
+                    else
+                    {
+                        item.SectionToMove = default(RangeInt64);
+                    }
                     break;
                 case "LocationToMove":
-                    item.LocationToMove = Int64XmlTranslation.Instance.ParseNonNull(
+                    var LocationToMovetryGet = Int64XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Move_FieldIndex.LocationToMove,
-                        errorMask: errorMask).GetOrDefault(item.LocationToMove);
+                        errorMask: errorMask);
+                    if (LocationToMovetryGet.Succeeded)
+                    {
+                        item.LocationToMove = LocationToMovetryGet.Value;
+                    }
+                    else
+                    {
+                        item.LocationToMove = default(Int64);
+                    }
                     break;
                 default:
                     break;
@@ -636,6 +652,8 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const string GUID = "226328fc-e330-4693-9377-5d70b7a70342";
 
+        public const ushort AdditionalFieldCount = 2;
+
         public const ushort FieldCount = 2;
 
         public static readonly Type MaskType = typeof(Move_Mask<>);
@@ -770,7 +788,8 @@ namespace Mutagen.Bethesda.Tests.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

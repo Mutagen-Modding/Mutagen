@@ -123,42 +123,38 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else
                 {
-                    ArgsWrapper args;
-                    if (itemAccessor.PropertyAccess != null)
+                    using (new BraceWrapper(fg))
                     {
-                        args = new ArgsWrapper(fg, $"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceededOrDefault)}(LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.Mask(MaskType.Error)}>.Instance.Parse",
-                            suffixLine: ")");
-                    }
-                    else
-                    {
-                        args = new ArgsWrapper(fg, $"var {typeGen.Name}tryGet = LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.Mask(MaskType.Error)}>.Instance.Parse");
-                    }
-                    using (args)
-                    {
-                        args.Add($"frame: {frameAccessor}{(loquiGen.TargetObjectGeneration.HasRecordType() ? null : ".Spawn(snapToFinalPosition: false)")}");
-                        if (loquiGen.HasIndex)
+                        ArgsWrapper args;
+                        if (typeGen.PrefersProperty)
                         {
-                            args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                            args.Add($"errorMask: {maskAccessor}");
+                            args = new ArgsWrapper(fg, $"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceededOrDefault)}(LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.Mask(MaskType.Error)}>.Instance.Parse",
+                                suffixLine: ")");
                         }
                         else
                         {
-                            args.Add($"doMasks: {doMaskAccessor}");
-                            args.Add($"errorMask: out {maskAccessor}");
+                            args = new ArgsWrapper(fg, $"var {typeGen.Name}tryGet = LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.Mask(MaskType.Error)}>.Instance.Parse");
                         }
-                        if (data?.RecordTypeConverter != null
-                            && data.RecordTypeConverter.FromConversions.Count > 0)
+                        using (args)
                         {
-                            args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
+                            args.Add($"frame: {frameAccessor}{(loquiGen.TargetObjectGeneration.HasRecordType() ? null : ".Spawn(snapToFinalPosition: false)")}");
+                            if (loquiGen.HasIndex)
+                            {
+                                args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
+                                args.Add($"errorMask: {maskAccessor}");
+                            }
+                            else
+                            {
+                                args.Add($"doMasks: {doMaskAccessor}");
+                                args.Add($"errorMask: out {maskAccessor}");
+                            }
+                            if (data?.RecordTypeConverter != null
+                                && data.RecordTypeConverter.FromConversions.Count > 0)
+                            {
+                                args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
+                            }
                         }
-                    }
-                    if (itemAccessor.PropertyAccess == null)
-                    {
-                        fg.AppendLine($"if ({typeGen.Name}tryGet.Succeeded)");
-                        using (new BraceWrapper(fg))
-                        {
-                            fg.AppendLine($"{itemAccessor.DirectAccess} = {typeGen.Name}tryGet.Value;");
-                        }
+                        TranslationGenerationSnippets.DirectTryGetSetting(fg, itemAccessor, typeGen);
                     }
                 }
             }

@@ -33,6 +33,12 @@ namespace Mutagen.Bethesda.Oblivion
         IGrass,
         ILoquiObject<Grass>,
         ILoquiObjectSetter,
+        IPropertySupporter<Model>,
+        IPropertySupporter<Byte>,
+        IPropertySupporter<UInt16>,
+        IPropertySupporter<Grass.UnitFromWaterType>,
+        IPropertySupporter<Single>,
+        IPropertySupporter<Grass.GrassFlag>,
         IEquatable<Grass>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -48,27 +54,95 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
+        protected Model _Model;
+        protected PropertyForwarder<Grass, Model> _ModelForwarder;
+        public INotifyingSetItem<Model> Model_Property => _ModelForwarder ?? (_ModelForwarder = new PropertyForwarder<Grass, Model>(this, (int)Grass_FieldIndex.Model));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
-        public INotifyingSetItem<Model> Model_Property => this._Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model IGrassGetter.Model => this.Model;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        public Model Model
+        {
+            get => this._Model;
+            set => this.SetModel(value);
+        }
+        protected void SetModel(
+            Model item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Grass_FieldIndex.Model];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Model, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Grass_FieldIndex.Model] = hasBeenSet;
+            }
+            if (_Model_subscriptions != null)
+            {
+                var tmp = Model;
+                _Model = item;
+                _Model_subscriptions.FireSubscriptions(
+                    index: (int)Grass_FieldIndex.Model,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Model = item;
+            }
+        }
+        protected void UnsetModel()
+        {
+            _hasBeenSetTracker[(int)Grass_FieldIndex.Model] = false;
+            Model = default(Model);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IGrass.Model_Property => this.Model_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> IGrassGetter.Model_Property => this.Model_Property;
         #endregion
         #region Density
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _Density = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> Density_Property => _Density;
+        protected Byte _Density;
+        protected PropertyForwarder<Grass, Byte> _DensityForwarder;
+        public INotifyingSetItem<Byte> Density_Property => _DensityForwarder ?? (_DensityForwarder = new PropertyForwarder<Grass, Byte>(this, (int)Grass_FieldIndex.Density));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Density
         {
-            get => this._Density.Item;
-            set => this._Density.Set(value);
+            get => this._Density;
+            set => this.SetDensity(value);
+        }
+        protected void SetDensity(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Grass_FieldIndex.Density];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Density == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Grass_FieldIndex.Density] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = Density;
+                _Density = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Grass_FieldIndex.Density,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Density = item;
+            }
+        }
+        protected void UnsetDensity()
+        {
+            _hasBeenSetTracker[(int)Grass_FieldIndex.Density] = false;
+            Density = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IGrass.Density_Property => this.Density_Property;
@@ -76,14 +150,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IGrassGetter.Density_Property => this.Density_Property;
         #endregion
         #region MinSlope
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _MinSlope = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> MinSlope_Property => _MinSlope;
+        protected Byte _MinSlope;
+        protected PropertyForwarder<Grass, Byte> _MinSlopeForwarder;
+        public INotifyingSetItem<Byte> MinSlope_Property => _MinSlopeForwarder ?? (_MinSlopeForwarder = new PropertyForwarder<Grass, Byte>(this, (int)Grass_FieldIndex.MinSlope));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte MinSlope
         {
-            get => this._MinSlope.Item;
-            set => this._MinSlope.Set(value);
+            get => this._MinSlope;
+            set => this.SetMinSlope(value);
+        }
+        protected void SetMinSlope(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Grass_FieldIndex.MinSlope];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MinSlope == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Grass_FieldIndex.MinSlope] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = MinSlope;
+                _MinSlope = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Grass_FieldIndex.MinSlope,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _MinSlope = item;
+            }
+        }
+        protected void UnsetMinSlope()
+        {
+            _hasBeenSetTracker[(int)Grass_FieldIndex.MinSlope] = false;
+            MinSlope = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IGrass.MinSlope_Property => this.MinSlope_Property;
@@ -91,14 +198,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IGrassGetter.MinSlope_Property => this.MinSlope_Property;
         #endregion
         #region MaxSlope
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Byte> _MaxSlope = NotifyingItem.Factory<Byte>();
-        public INotifyingItem<Byte> MaxSlope_Property => _MaxSlope;
+        protected Byte _MaxSlope;
+        protected PropertyForwarder<Grass, Byte> _MaxSlopeForwarder;
+        public INotifyingSetItem<Byte> MaxSlope_Property => _MaxSlopeForwarder ?? (_MaxSlopeForwarder = new PropertyForwarder<Grass, Byte>(this, (int)Grass_FieldIndex.MaxSlope));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte MaxSlope
         {
-            get => this._MaxSlope.Item;
-            set => this._MaxSlope.Set(value);
+            get => this._MaxSlope;
+            set => this.SetMaxSlope(value);
+        }
+        protected void SetMaxSlope(
+            Byte item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Grass_FieldIndex.MaxSlope];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MaxSlope == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Grass_FieldIndex.MaxSlope] = hasBeenSet;
+            }
+            if (_Byte_subscriptions != null)
+            {
+                var tmp = MaxSlope;
+                _MaxSlope = item;
+                _Byte_subscriptions.FireSubscriptions(
+                    index: (int)Grass_FieldIndex.MaxSlope,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _MaxSlope = item;
+            }
+        }
+        protected void UnsetMaxSlope()
+        {
+            _hasBeenSetTracker[(int)Grass_FieldIndex.MaxSlope] = false;
+            MaxSlope = default(Byte);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IGrass.MaxSlope_Property => this.MaxSlope_Property;
@@ -106,14 +246,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IGrassGetter.MaxSlope_Property => this.MaxSlope_Property;
         #endregion
         #region UnitFromWaterAmount
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt16> _UnitFromWaterAmount = NotifyingItem.Factory<UInt16>();
-        public INotifyingItem<UInt16> UnitFromWaterAmount_Property => _UnitFromWaterAmount;
+        protected UInt16 _UnitFromWaterAmount;
+        protected PropertyForwarder<Grass, UInt16> _UnitFromWaterAmountForwarder;
+        public INotifyingSetItem<UInt16> UnitFromWaterAmount_Property => _UnitFromWaterAmountForwarder ?? (_UnitFromWaterAmountForwarder = new PropertyForwarder<Grass, UInt16>(this, (int)Grass_FieldIndex.UnitFromWaterAmount));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 UnitFromWaterAmount
         {
-            get => this._UnitFromWaterAmount.Item;
-            set => this._UnitFromWaterAmount.Set(value);
+            get => this._UnitFromWaterAmount;
+            set => this.SetUnitFromWaterAmount(value);
+        }
+        protected void SetUnitFromWaterAmount(
+            UInt16 item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Grass_FieldIndex.UnitFromWaterAmount];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && UnitFromWaterAmount == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Grass_FieldIndex.UnitFromWaterAmount] = hasBeenSet;
+            }
+            if (_UInt16_subscriptions != null)
+            {
+                var tmp = UnitFromWaterAmount;
+                _UnitFromWaterAmount = item;
+                _UInt16_subscriptions.FireSubscriptions(
+                    index: (int)Grass_FieldIndex.UnitFromWaterAmount,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _UnitFromWaterAmount = item;
+            }
+        }
+        protected void UnsetUnitFromWaterAmount()
+        {
+            _hasBeenSetTracker[(int)Grass_FieldIndex.UnitFromWaterAmount] = false;
+            UnitFromWaterAmount = default(UInt16);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> IGrass.UnitFromWaterAmount_Property => this.UnitFromWaterAmount_Property;
@@ -121,14 +294,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt16> IGrassGetter.UnitFromWaterAmount_Property => this.UnitFromWaterAmount_Property;
         #endregion
         #region UnitFromWaterMode
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Grass.UnitFromWaterType> _UnitFromWaterMode = NotifyingItem.Factory<Grass.UnitFromWaterType>();
-        public INotifyingItem<Grass.UnitFromWaterType> UnitFromWaterMode_Property => _UnitFromWaterMode;
+        protected Grass.UnitFromWaterType _UnitFromWaterMode;
+        protected PropertyForwarder<Grass, Grass.UnitFromWaterType> _UnitFromWaterModeForwarder;
+        public INotifyingSetItem<Grass.UnitFromWaterType> UnitFromWaterMode_Property => _UnitFromWaterModeForwarder ?? (_UnitFromWaterModeForwarder = new PropertyForwarder<Grass, Grass.UnitFromWaterType>(this, (int)Grass_FieldIndex.UnitFromWaterMode));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Grass.UnitFromWaterType UnitFromWaterMode
         {
-            get => this._UnitFromWaterMode.Item;
-            set => this._UnitFromWaterMode.Set(value);
+            get => this._UnitFromWaterMode;
+            set => this.SetUnitFromWaterMode(value);
+        }
+        protected void SetUnitFromWaterMode(
+            Grass.UnitFromWaterType item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Grass_FieldIndex.UnitFromWaterMode];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && UnitFromWaterMode == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Grass_FieldIndex.UnitFromWaterMode] = hasBeenSet;
+            }
+            if (_GrassUnitFromWaterType_subscriptions != null)
+            {
+                var tmp = UnitFromWaterMode;
+                _UnitFromWaterMode = item;
+                _GrassUnitFromWaterType_subscriptions.FireSubscriptions(
+                    index: (int)Grass_FieldIndex.UnitFromWaterMode,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _UnitFromWaterMode = item;
+            }
+        }
+        protected void UnsetUnitFromWaterMode()
+        {
+            _hasBeenSetTracker[(int)Grass_FieldIndex.UnitFromWaterMode] = false;
+            UnitFromWaterMode = default(Grass.UnitFromWaterType);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Grass.UnitFromWaterType> IGrass.UnitFromWaterMode_Property => this.UnitFromWaterMode_Property;
@@ -136,14 +342,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Grass.UnitFromWaterType> IGrassGetter.UnitFromWaterMode_Property => this.UnitFromWaterMode_Property;
         #endregion
         #region PositionRange
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _PositionRange = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> PositionRange_Property => _PositionRange;
+        protected Single _PositionRange;
+        protected PropertyForwarder<Grass, Single> _PositionRangeForwarder;
+        public INotifyingSetItem<Single> PositionRange_Property => _PositionRangeForwarder ?? (_PositionRangeForwarder = new PropertyForwarder<Grass, Single>(this, (int)Grass_FieldIndex.PositionRange));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single PositionRange
         {
-            get => this._PositionRange.Item;
-            set => this._PositionRange.Set(value);
+            get => this._PositionRange;
+            set => this.SetPositionRange(value);
+        }
+        protected void SetPositionRange(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Grass_FieldIndex.PositionRange];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && PositionRange == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Grass_FieldIndex.PositionRange] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = PositionRange;
+                _PositionRange = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Grass_FieldIndex.PositionRange,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _PositionRange = item;
+            }
+        }
+        protected void UnsetPositionRange()
+        {
+            _hasBeenSetTracker[(int)Grass_FieldIndex.PositionRange] = false;
+            PositionRange = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IGrass.PositionRange_Property => this.PositionRange_Property;
@@ -151,14 +390,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IGrassGetter.PositionRange_Property => this.PositionRange_Property;
         #endregion
         #region HeightRange
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _HeightRange = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> HeightRange_Property => _HeightRange;
+        protected Single _HeightRange;
+        protected PropertyForwarder<Grass, Single> _HeightRangeForwarder;
+        public INotifyingSetItem<Single> HeightRange_Property => _HeightRangeForwarder ?? (_HeightRangeForwarder = new PropertyForwarder<Grass, Single>(this, (int)Grass_FieldIndex.HeightRange));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HeightRange
         {
-            get => this._HeightRange.Item;
-            set => this._HeightRange.Set(value);
+            get => this._HeightRange;
+            set => this.SetHeightRange(value);
+        }
+        protected void SetHeightRange(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Grass_FieldIndex.HeightRange];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && HeightRange == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Grass_FieldIndex.HeightRange] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = HeightRange;
+                _HeightRange = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Grass_FieldIndex.HeightRange,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _HeightRange = item;
+            }
+        }
+        protected void UnsetHeightRange()
+        {
+            _hasBeenSetTracker[(int)Grass_FieldIndex.HeightRange] = false;
+            HeightRange = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IGrass.HeightRange_Property => this.HeightRange_Property;
@@ -166,14 +438,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IGrassGetter.HeightRange_Property => this.HeightRange_Property;
         #endregion
         #region ColorRange
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _ColorRange = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> ColorRange_Property => _ColorRange;
+        protected Single _ColorRange;
+        protected PropertyForwarder<Grass, Single> _ColorRangeForwarder;
+        public INotifyingSetItem<Single> ColorRange_Property => _ColorRangeForwarder ?? (_ColorRangeForwarder = new PropertyForwarder<Grass, Single>(this, (int)Grass_FieldIndex.ColorRange));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single ColorRange
         {
-            get => this._ColorRange.Item;
-            set => this._ColorRange.Set(value);
+            get => this._ColorRange;
+            set => this.SetColorRange(value);
+        }
+        protected void SetColorRange(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Grass_FieldIndex.ColorRange];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ColorRange == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Grass_FieldIndex.ColorRange] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = ColorRange;
+                _ColorRange = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Grass_FieldIndex.ColorRange,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _ColorRange = item;
+            }
+        }
+        protected void UnsetColorRange()
+        {
+            _hasBeenSetTracker[(int)Grass_FieldIndex.ColorRange] = false;
+            ColorRange = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IGrass.ColorRange_Property => this.ColorRange_Property;
@@ -181,14 +486,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IGrassGetter.ColorRange_Property => this.ColorRange_Property;
         #endregion
         #region WavePeriod
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Single> _WavePeriod = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> WavePeriod_Property => _WavePeriod;
+        protected Single _WavePeriod;
+        protected PropertyForwarder<Grass, Single> _WavePeriodForwarder;
+        public INotifyingSetItem<Single> WavePeriod_Property => _WavePeriodForwarder ?? (_WavePeriodForwarder = new PropertyForwarder<Grass, Single>(this, (int)Grass_FieldIndex.WavePeriod));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single WavePeriod
         {
-            get => this._WavePeriod.Item;
-            set => this._WavePeriod.Set(value);
+            get => this._WavePeriod;
+            set => this.SetWavePeriod(value);
+        }
+        protected void SetWavePeriod(
+            Single item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Grass_FieldIndex.WavePeriod];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && WavePeriod == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Grass_FieldIndex.WavePeriod] = hasBeenSet;
+            }
+            if (_Single_subscriptions != null)
+            {
+                var tmp = WavePeriod;
+                _WavePeriod = item;
+                _Single_subscriptions.FireSubscriptions(
+                    index: (int)Grass_FieldIndex.WavePeriod,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _WavePeriod = item;
+            }
+        }
+        protected void UnsetWavePeriod()
+        {
+            _hasBeenSetTracker[(int)Grass_FieldIndex.WavePeriod] = false;
+            WavePeriod = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IGrass.WavePeriod_Property => this.WavePeriod_Property;
@@ -196,14 +534,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IGrassGetter.WavePeriod_Property => this.WavePeriod_Property;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<Grass.GrassFlag> _Flags = NotifyingItem.Factory<Grass.GrassFlag>();
-        public INotifyingItem<Grass.GrassFlag> Flags_Property => _Flags;
+        protected Grass.GrassFlag _Flags;
+        protected PropertyForwarder<Grass, Grass.GrassFlag> _FlagsForwarder;
+        public INotifyingSetItem<Grass.GrassFlag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<Grass, Grass.GrassFlag>(this, (int)Grass_FieldIndex.Flags));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Grass.GrassFlag Flags
         {
-            get => this._Flags.Item;
-            set => this._Flags.Set(value);
+            get => this._Flags;
+            set => this.SetFlags(value);
+        }
+        protected void SetFlags(
+            Grass.GrassFlag item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Grass_FieldIndex.Flags];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Grass_FieldIndex.Flags] = hasBeenSet;
+            }
+            if (_GrassGrassFlag_subscriptions != null)
+            {
+                var tmp = Flags;
+                _Flags = item;
+                _GrassGrassFlag_subscriptions.FireSubscriptions(
+                    index: (int)Grass_FieldIndex.Flags,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Flags = item;
+            }
+        }
+        protected void UnsetFlags()
+        {
+            _hasBeenSetTracker[(int)Grass_FieldIndex.Flags] = false;
+            Flags = default(Grass.GrassFlag);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Grass.GrassFlag> IGrass.Flags_Property => this.Flags_Property;
@@ -590,72 +961,160 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceededOrDefault(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    var ModeltryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Grass_FieldIndex.Model,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ModeltryGet.Succeeded)
+                    {
+                        item.SetModel(item: ModeltryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetModel();
+                    }
                     break;
                 case "Density":
-                    item._Density.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var DensitytryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Grass_FieldIndex.Density,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DensitytryGet.Succeeded)
+                    {
+                        item.SetDensity(item: DensitytryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetDensity();
+                    }
                     break;
                 case "MinSlope":
-                    item._MinSlope.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var MinSlopetryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Grass_FieldIndex.MinSlope,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MinSlopetryGet.Succeeded)
+                    {
+                        item.SetMinSlope(item: MinSlopetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMinSlope();
+                    }
                     break;
                 case "MaxSlope":
-                    item._MaxSlope.SetIfSucceededOrDefault(ByteXmlTranslation.Instance.ParseNonNull(
+                    var MaxSlopetryGet = ByteXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Grass_FieldIndex.MaxSlope,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (MaxSlopetryGet.Succeeded)
+                    {
+                        item.SetMaxSlope(item: MaxSlopetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetMaxSlope();
+                    }
                     break;
                 case "UnitFromWaterAmount":
-                    item._UnitFromWaterAmount.SetIfSucceededOrDefault(UInt16XmlTranslation.Instance.ParseNonNull(
+                    var UnitFromWaterAmounttryGet = UInt16XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Grass_FieldIndex.UnitFromWaterAmount,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (UnitFromWaterAmounttryGet.Succeeded)
+                    {
+                        item.SetUnitFromWaterAmount(item: UnitFromWaterAmounttryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetUnitFromWaterAmount();
+                    }
                     break;
                 case "UnitFromWaterMode":
-                    item._UnitFromWaterMode.SetIfSucceededOrDefault(EnumXmlTranslation<Grass.UnitFromWaterType>.Instance.Parse(
+                    var UnitFromWaterModetryGet = EnumXmlTranslation<Grass.UnitFromWaterType>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Grass_FieldIndex.UnitFromWaterMode,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (UnitFromWaterModetryGet.Succeeded)
+                    {
+                        item.SetUnitFromWaterMode(item: UnitFromWaterModetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetUnitFromWaterMode();
+                    }
                     break;
                 case "PositionRange":
-                    item._PositionRange.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var PositionRangetryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Grass_FieldIndex.PositionRange,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (PositionRangetryGet.Succeeded)
+                    {
+                        item.SetPositionRange(item: PositionRangetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetPositionRange();
+                    }
                     break;
                 case "HeightRange":
-                    item._HeightRange.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var HeightRangetryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Grass_FieldIndex.HeightRange,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HeightRangetryGet.Succeeded)
+                    {
+                        item.SetHeightRange(item: HeightRangetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHeightRange();
+                    }
                     break;
                 case "ColorRange":
-                    item._ColorRange.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var ColorRangetryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Grass_FieldIndex.ColorRange,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (ColorRangetryGet.Succeeded)
+                    {
+                        item.SetColorRange(item: ColorRangetryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetColorRange();
+                    }
                     break;
                 case "WavePeriod":
-                    item._WavePeriod.SetIfSucceededOrDefault(FloatXmlTranslation.Instance.ParseNonNull(
+                    var WavePeriodtryGet = FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Grass_FieldIndex.WavePeriod,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (WavePeriodtryGet.Succeeded)
+                    {
+                        item.SetWavePeriod(item: WavePeriodtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetWavePeriod();
+                    }
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<Grass.GrassFlag>.Instance.Parse(
+                    var FlagstryGet = EnumXmlTranslation<Grass.GrassFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)Grass_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (FlagstryGet.Succeeded)
+                    {
+                        item.SetFlags(item: FlagstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFlags();
+                    }
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(
@@ -664,6 +1123,854 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Model
+        protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
+        Model IPropertySupporter<Model>.Get(int index)
+        {
+            return GetModel(index: index);
+        }
+
+        protected Model GetModel(int index)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.Model:
+                    return Model;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        void IPropertySupporter<Model>.Set(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetModel(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetModel(
+            int index,
+            Model item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.Model:
+                    SetModel(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Model>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Model>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Model>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetModel(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetModel(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.Model:
+                    _hasBeenSetTracker[index] = false;
+                    Model = default(Model);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Model> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Model_subscriptions == null)
+            {
+                _Model_subscriptions = new ObjectCentralizationSubscriptions<Model>();
+            }
+            _Model_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Model>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Model_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Model>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Model IPropertySupporter<Model>.DefaultValue(int index)
+        {
+            return DefaultValueModel(index: index);
+        }
+
+        protected Model DefaultValueModel(int index)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.Model:
+                    return default(Model);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Model: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Byte
+        protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
+        Byte IPropertySupporter<Byte>.Get(int index)
+        {
+            return GetByte(index: index);
+        }
+
+        protected Byte GetByte(int index)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.Density:
+                    return Density;
+                case Grass_FieldIndex.MinSlope:
+                    return MinSlope;
+                case Grass_FieldIndex.MaxSlope:
+                    return MaxSlope;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        void IPropertySupporter<Byte>.Set(
+            int index,
+            Byte item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByte(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetByte(
+            int index,
+            Byte item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.Density:
+                    SetDensity(item, hasBeenSet, cmds);
+                    break;
+                case Grass_FieldIndex.MinSlope:
+                    SetMinSlope(item, hasBeenSet, cmds);
+                    break;
+                case Grass_FieldIndex.MaxSlope:
+                    SetMaxSlope(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByte(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetByte(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.Density:
+                    _hasBeenSetTracker[index] = false;
+                    Density = default(Byte);
+                    break;
+                case Grass_FieldIndex.MinSlope:
+                    _hasBeenSetTracker[index] = false;
+                    MinSlope = default(Byte);
+                    break;
+                case Grass_FieldIndex.MaxSlope:
+                    _hasBeenSetTracker[index] = false;
+                    MaxSlope = default(Byte);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Byte_subscriptions == null)
+            {
+                _Byte_subscriptions = new ObjectCentralizationSubscriptions<Byte>();
+            }
+            _Byte_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Byte_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte IPropertySupporter<Byte>.DefaultValue(int index)
+        {
+            return DefaultValueByte(index: index);
+        }
+
+        protected Byte DefaultValueByte(int index)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.Density:
+                case Grass_FieldIndex.MinSlope:
+                case Grass_FieldIndex.MaxSlope:
+                    return default(Byte);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter UInt16
+        protected ObjectCentralizationSubscriptions<UInt16> _UInt16_subscriptions;
+        UInt16 IPropertySupporter<UInt16>.Get(int index)
+        {
+            return GetUInt16(index: index);
+        }
+
+        protected UInt16 GetUInt16(int index)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.UnitFromWaterAmount:
+                    return UnitFromWaterAmount;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        void IPropertySupporter<UInt16>.Set(
+            int index,
+            UInt16 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetUInt16(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetUInt16(
+            int index,
+            UInt16 item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.UnitFromWaterAmount:
+                    SetUnitFromWaterAmount(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        bool IPropertySupporter<UInt16>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<UInt16>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<UInt16>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetUInt16(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetUInt16(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.UnitFromWaterAmount:
+                    _hasBeenSetTracker[index] = false;
+                    UnitFromWaterAmount = default(UInt16);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt16>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<UInt16> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_UInt16_subscriptions == null)
+            {
+                _UInt16_subscriptions = new ObjectCentralizationSubscriptions<UInt16>();
+            }
+            _UInt16_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<UInt16>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _UInt16_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<UInt16>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        UInt16 IPropertySupporter<UInt16>.DefaultValue(int index)
+        {
+            return DefaultValueUInt16(index: index);
+        }
+
+        protected UInt16 DefaultValueUInt16(int index)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.UnitFromWaterAmount:
+                    return default(UInt16);
+                default:
+                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Grass.UnitFromWaterType
+        protected ObjectCentralizationSubscriptions<Grass.UnitFromWaterType> _GrassUnitFromWaterType_subscriptions;
+        Grass.UnitFromWaterType IPropertySupporter<Grass.UnitFromWaterType>.Get(int index)
+        {
+            return GetGrassUnitFromWaterType(index: index);
+        }
+
+        protected Grass.UnitFromWaterType GetGrassUnitFromWaterType(int index)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.UnitFromWaterMode:
+                    return UnitFromWaterMode;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Grass.UnitFromWaterType: {index}");
+            }
+        }
+
+        void IPropertySupporter<Grass.UnitFromWaterType>.Set(
+            int index,
+            Grass.UnitFromWaterType item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetGrassUnitFromWaterType(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetGrassUnitFromWaterType(
+            int index,
+            Grass.UnitFromWaterType item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.UnitFromWaterMode:
+                    SetUnitFromWaterMode(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Grass.UnitFromWaterType: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Grass.UnitFromWaterType>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Grass.UnitFromWaterType>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Grass.UnitFromWaterType>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetGrassUnitFromWaterType(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetGrassUnitFromWaterType(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.UnitFromWaterMode:
+                    _hasBeenSetTracker[index] = false;
+                    UnitFromWaterMode = default(Grass.UnitFromWaterType);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Grass.UnitFromWaterType: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Grass.UnitFromWaterType>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Grass.UnitFromWaterType> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_GrassUnitFromWaterType_subscriptions == null)
+            {
+                _GrassUnitFromWaterType_subscriptions = new ObjectCentralizationSubscriptions<Grass.UnitFromWaterType>();
+            }
+            _GrassUnitFromWaterType_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Grass.UnitFromWaterType>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _GrassUnitFromWaterType_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Grass.UnitFromWaterType>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Grass.UnitFromWaterType IPropertySupporter<Grass.UnitFromWaterType>.DefaultValue(int index)
+        {
+            return DefaultValueGrassUnitFromWaterType(index: index);
+        }
+
+        protected Grass.UnitFromWaterType DefaultValueGrassUnitFromWaterType(int index)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.UnitFromWaterMode:
+                    return default(Grass.UnitFromWaterType);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Grass.UnitFromWaterType: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Single
+        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
+        Single IPropertySupporter<Single>.Get(int index)
+        {
+            return GetSingle(index: index);
+        }
+
+        protected Single GetSingle(int index)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.PositionRange:
+                    return PositionRange;
+                case Grass_FieldIndex.HeightRange:
+                    return HeightRange;
+                case Grass_FieldIndex.ColorRange:
+                    return ColorRange;
+                case Grass_FieldIndex.WavePeriod:
+                    return WavePeriod;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        void IPropertySupporter<Single>.Set(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetSingle(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetSingle(
+            int index,
+            Single item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.PositionRange:
+                    SetPositionRange(item, hasBeenSet, cmds);
+                    break;
+                case Grass_FieldIndex.HeightRange:
+                    SetHeightRange(item, hasBeenSet, cmds);
+                    break;
+                case Grass_FieldIndex.ColorRange:
+                    SetColorRange(item, hasBeenSet, cmds);
+                    break;
+                case Grass_FieldIndex.WavePeriod:
+                    SetWavePeriod(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Single>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Single>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetSingle(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetSingle(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.PositionRange:
+                    _hasBeenSetTracker[index] = false;
+                    PositionRange = default(Single);
+                    break;
+                case Grass_FieldIndex.HeightRange:
+                    _hasBeenSetTracker[index] = false;
+                    HeightRange = default(Single);
+                    break;
+                case Grass_FieldIndex.ColorRange:
+                    _hasBeenSetTracker[index] = false;
+                    ColorRange = default(Single);
+                    break;
+                case Grass_FieldIndex.WavePeriod:
+                    _hasBeenSetTracker[index] = false;
+                    WavePeriod = default(Single);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Single> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Single_subscriptions == null)
+            {
+                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
+            }
+            _Single_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Single>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Single_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Single IPropertySupporter<Single>.DefaultValue(int index)
+        {
+            return DefaultValueSingle(index: index);
+        }
+
+        protected Single DefaultValueSingle(int index)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.PositionRange:
+                case Grass_FieldIndex.HeightRange:
+                case Grass_FieldIndex.ColorRange:
+                case Grass_FieldIndex.WavePeriod:
+                    return default(Single);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Single: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Grass.GrassFlag
+        protected ObjectCentralizationSubscriptions<Grass.GrassFlag> _GrassGrassFlag_subscriptions;
+        Grass.GrassFlag IPropertySupporter<Grass.GrassFlag>.Get(int index)
+        {
+            return GetGrassGrassFlag(index: index);
+        }
+
+        protected Grass.GrassFlag GetGrassGrassFlag(int index)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.Flags:
+                    return Flags;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Grass.GrassFlag: {index}");
+            }
+        }
+
+        void IPropertySupporter<Grass.GrassFlag>.Set(
+            int index,
+            Grass.GrassFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetGrassGrassFlag(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetGrassGrassFlag(
+            int index,
+            Grass.GrassFlag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.Flags:
+                    SetFlags(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Grass.GrassFlag: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Grass.GrassFlag>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Grass.GrassFlag>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Grass.GrassFlag>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetGrassGrassFlag(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetGrassGrassFlag(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.Flags:
+                    _hasBeenSetTracker[index] = false;
+                    Flags = default(Grass.GrassFlag);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Grass.GrassFlag: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Grass.GrassFlag>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Grass.GrassFlag> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_GrassGrassFlag_subscriptions == null)
+            {
+                _GrassGrassFlag_subscriptions = new ObjectCentralizationSubscriptions<Grass.GrassFlag>();
+            }
+            _GrassGrassFlag_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Grass.GrassFlag>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _GrassGrassFlag_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Grass.GrassFlag>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Grass.GrassFlag IPropertySupporter<Grass.GrassFlag>.DefaultValue(int index)
+        {
+            return DefaultValueGrassGrassFlag(index: index);
+        }
+
+        protected Grass.GrassFlag DefaultValueGrassGrassFlag(int index)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.Flags:
+                    return default(Grass.GrassFlag);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Grass.GrassFlag: {index}");
             }
         }
 
@@ -942,23 +2249,49 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceededOrDefault(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)Grass_FieldIndex.Model,
-                        errorMask: errorMask));
+                    {
+                        var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                            frame: frame.Spawn(snapToFinalPosition: false),
+                            fieldIndex: (int)Grass_FieldIndex.Model,
+                            errorMask: errorMask);
+                        if (ModeltryGet.Succeeded)
+                        {
+                            item.SetModel(item: ModeltryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetModel();
+                        }
+                    }
                     return TryGet<Grass_FieldIndex?>.Succeed(Grass_FieldIndex.Model);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Density.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        var DensitytryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Grass_FieldIndex.Density,
-                            errorMask: errorMask));
-                        item._MinSlope.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (DensitytryGet.Succeeded)
+                        {
+                            item.SetDensity(item: DensitytryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetDensity();
+                        }
+                        var MinSlopetryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Grass_FieldIndex.MinSlope,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (MinSlopetryGet.Succeeded)
+                        {
+                            item.SetMinSlope(item: MinSlopetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetMinSlope();
+                        }
                         try
                         {
                             FillBinary_MaxSlope_Custom(
@@ -985,30 +2318,78 @@ namespace Mutagen.Bethesda.Oblivion
                         {
                             errorMask().Overall = ex;
                         }
-                        item._UnitFromWaterMode.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Parse(
+                        var UnitFromWaterModetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Grass_FieldIndex.UnitFromWaterMode,
-                            errorMask: errorMask));
-                        item._PositionRange.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (UnitFromWaterModetryGet.Succeeded)
+                        {
+                            item.SetUnitFromWaterMode(item: UnitFromWaterModetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetUnitFromWaterMode();
+                        }
+                        var PositionRangetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Grass_FieldIndex.PositionRange,
-                            errorMask: errorMask));
-                        item._HeightRange.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (PositionRangetryGet.Succeeded)
+                        {
+                            item.SetPositionRange(item: PositionRangetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetPositionRange();
+                        }
+                        var HeightRangetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Grass_FieldIndex.HeightRange,
-                            errorMask: errorMask));
-                        item._ColorRange.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (HeightRangetryGet.Succeeded)
+                        {
+                            item.SetHeightRange(item: HeightRangetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetHeightRange();
+                        }
+                        var ColorRangetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Grass_FieldIndex.ColorRange,
-                            errorMask: errorMask));
-                        item._WavePeriod.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        if (ColorRangetryGet.Succeeded)
+                        {
+                            item.SetColorRange(item: ColorRangetryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetColorRange();
+                        }
+                        var WavePeriodtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Grass_FieldIndex.WavePeriod,
-                            errorMask: errorMask));
-                        item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.GrassFlag>.Instance.Parse(
+                            errorMask: errorMask);
+                        if (WavePeriodtryGet.Succeeded)
+                        {
+                            item.SetWavePeriod(item: WavePeriodtryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetWavePeriod();
+                        }
+                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.GrassFlag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
                             fieldIndex: (int)Grass_FieldIndex.Flags,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
+                        if (FlagstryGet.Succeeded)
+                        {
+                            item.SetFlags(item: FlagstryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetFlags();
+                        }
                     }
                     return TryGet<Grass_FieldIndex?>.Succeed(Grass_FieldIndex.Flags);
                 default:
@@ -1123,59 +2504,59 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Grass_FieldIndex.Model:
-                    this._Model.Set(
+                    this.SetModel(
                         (Model)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Grass_FieldIndex.Density:
-                    this._Density.Set(
+                    this.SetDensity(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Grass_FieldIndex.MinSlope:
-                    this._MinSlope.Set(
+                    this.SetMinSlope(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Grass_FieldIndex.MaxSlope:
-                    this._MaxSlope.Set(
+                    this.SetMaxSlope(
                         (Byte)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Grass_FieldIndex.UnitFromWaterAmount:
-                    this._UnitFromWaterAmount.Set(
+                    this.SetUnitFromWaterAmount(
                         (UInt16)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Grass_FieldIndex.UnitFromWaterMode:
-                    this._UnitFromWaterMode.Set(
+                    this.SetUnitFromWaterMode(
                         (Grass.UnitFromWaterType)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Grass_FieldIndex.PositionRange:
-                    this._PositionRange.Set(
+                    this.SetPositionRange(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Grass_FieldIndex.HeightRange:
-                    this._HeightRange.Set(
+                    this.SetHeightRange(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Grass_FieldIndex.ColorRange:
-                    this._ColorRange.Set(
+                    this.SetColorRange(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Grass_FieldIndex.WavePeriod:
-                    this._WavePeriod.Set(
+                    this.SetWavePeriod(
                         (Single)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case Grass_FieldIndex.Flags:
-                    this._Flags.Set(
+                    this.SetFlags(
                         (Grass.GrassFlag)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1209,59 +2590,59 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Grass_FieldIndex.Model:
-                    obj._Model.Set(
+                    obj.SetModel(
                         (Model)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Grass_FieldIndex.Density:
-                    obj._Density.Set(
+                    obj.SetDensity(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Grass_FieldIndex.MinSlope:
-                    obj._MinSlope.Set(
+                    obj.SetMinSlope(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Grass_FieldIndex.MaxSlope:
-                    obj._MaxSlope.Set(
+                    obj.SetMaxSlope(
                         (Byte)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Grass_FieldIndex.UnitFromWaterAmount:
-                    obj._UnitFromWaterAmount.Set(
+                    obj.SetUnitFromWaterAmount(
                         (UInt16)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Grass_FieldIndex.UnitFromWaterMode:
-                    obj._UnitFromWaterMode.Set(
+                    obj.SetUnitFromWaterMode(
                         (Grass.UnitFromWaterType)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Grass_FieldIndex.PositionRange:
-                    obj._PositionRange.Set(
+                    obj.SetPositionRange(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Grass_FieldIndex.HeightRange:
-                    obj._HeightRange.Set(
+                    obj.SetHeightRange(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Grass_FieldIndex.ColorRange:
-                    obj._ColorRange.Set(
+                    obj.SetColorRange(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Grass_FieldIndex.WavePeriod:
-                    obj._WavePeriod.Set(
+                    obj.SetWavePeriod(
                         (Single)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case Grass_FieldIndex.Flags:
-                    obj._Flags.Set(
+                    obj.SetFlags(
                         (Grass.GrassFlag)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1415,7 +2796,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "08091e89-54fe-4950-b16d-c11d6c7faef3";
 
-        public const ushort FieldCount = 11;
+        public const ushort AdditionalFieldCount = 11;
+
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(Grass_Mask<>);
 
@@ -1655,7 +3038,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;

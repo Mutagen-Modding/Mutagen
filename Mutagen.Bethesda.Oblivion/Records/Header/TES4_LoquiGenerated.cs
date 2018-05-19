@@ -32,6 +32,9 @@ namespace Mutagen.Bethesda.Oblivion
         ITES4,
         ILoquiObject<TES4>,
         ILoquiObjectSetter,
+        IPropertySupporter<Byte[]>,
+        IPropertySupporter<Header>,
+        IPropertySupporter<String>,
         IEquatable<TES4>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -41,19 +44,54 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public TES4()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Fluff
-        protected INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[12]);
-        public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
+        protected Byte[] _Fluff;
+        protected PropertyForwarder<TES4, Byte[]> _FluffForwarder;
+        public INotifyingSetItem<Byte[]> Fluff_Property => _FluffForwarder ?? (_FluffForwarder = new PropertyForwarder<TES4, Byte[]>(this, (int)TES4_FieldIndex.Fluff));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Fluff
         {
-            get => this._Fluff.Item;
-            set => this._Fluff.Set(value);
+            get => this._Fluff;
+            set => this.SetFluff(value);
+        }
+        protected void SetFluff(
+            Byte[] item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)TES4_FieldIndex.Fluff];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)TES4_FieldIndex.Fluff] = hasBeenSet;
+            }
+            if (_ByteArr_subscriptions != null)
+            {
+                var tmp = Fluff;
+                _Fluff = item;
+                _ByteArr_subscriptions.FireSubscriptions(
+                    index: (int)TES4_FieldIndex.Fluff,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Fluff = item;
+            }
+        }
+        protected void UnsetFluff()
+        {
+            _hasBeenSetTracker[(int)TES4_FieldIndex.Fluff] = false;
+            Fluff = default(Byte[]);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> ITES4.Fluff_Property => this.Fluff_Property;
@@ -61,36 +99,99 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte[]> ITES4Getter.Fluff_Property => this.Fluff_Property;
         #endregion
         #region Header
+        protected Header _Header;
+        protected PropertyForwarder<TES4, Header> _HeaderForwarder;
+        public INotifyingSetItem<Header> Header_Property => _HeaderForwarder ?? (_HeaderForwarder = new PropertyForwarder<TES4, Header>(this, (int)TES4_FieldIndex.Header));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingSetItem<Header> _Header = new NotifyingSetItemConvertWrapper<Header>(
-            defaultVal: new Header(),
-            incomingConverter: (change) =>
+        public Header Header
+        {
+            get => this._Header;
+            set => this.SetHeader(value);
+        }
+        protected void SetHeader(
+            Header item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)TES4_FieldIndex.Header];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Header, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
             {
-                if (change.New == null)
-                {
-                    return TryGet<Header>.Succeed(new Header());
-                }
-                return TryGet<Header>.Succeed(change.New);
+                _hasBeenSetTracker[(int)TES4_FieldIndex.Header] = hasBeenSet;
             }
-        );
-        public INotifyingSetItem<Header> Header_Property => this._Header;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Header ITES4Getter.Header => this.Header;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Header Header { get => _Header.Item; set => _Header.Item = value; }
+            if (_Header_subscriptions != null)
+            {
+                var tmp = Header;
+                if (item == null)
+                {
+                    item = new Header();
+                }
+                _Header = item;
+                _Header_subscriptions.FireSubscriptions(
+                    index: (int)TES4_FieldIndex.Header,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Header = item;
+            }
+        }
+        protected void UnsetHeader()
+        {
+            _hasBeenSetTracker[(int)TES4_FieldIndex.Header] = false;
+            Header = default(Header);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Header> ITES4.Header_Property => this.Header_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Header> ITES4Getter.Header_Property => this.Header_Property;
         #endregion
         #region TypeOffsets
-        protected INotifyingSetItem<Byte[]> _TypeOffsets = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
-        public INotifyingSetItem<Byte[]> TypeOffsets_Property => _TypeOffsets;
+        protected Byte[] _TypeOffsets;
+        protected PropertyForwarder<TES4, Byte[]> _TypeOffsetsForwarder;
+        public INotifyingSetItem<Byte[]> TypeOffsets_Property => _TypeOffsetsForwarder ?? (_TypeOffsetsForwarder = new PropertyForwarder<TES4, Byte[]>(this, (int)TES4_FieldIndex.TypeOffsets));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] TypeOffsets
         {
-            get => this._TypeOffsets.Item;
-            set => this._TypeOffsets.Set(value);
+            get => this._TypeOffsets;
+            set => this.SetTypeOffsets(value);
+        }
+        protected void SetTypeOffsets(
+            Byte[] item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)TES4_FieldIndex.TypeOffsets];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(TypeOffsets, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)TES4_FieldIndex.TypeOffsets] = hasBeenSet;
+            }
+            if (_ByteArr_subscriptions != null)
+            {
+                var tmp = TypeOffsets;
+                _TypeOffsets = item;
+                _ByteArr_subscriptions.FireSubscriptions(
+                    index: (int)TES4_FieldIndex.TypeOffsets,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _TypeOffsets = item;
+            }
+        }
+        protected void UnsetTypeOffsets()
+        {
+            _hasBeenSetTracker[(int)TES4_FieldIndex.TypeOffsets] = false;
+            TypeOffsets = default(Byte[]);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> ITES4.TypeOffsets_Property => this.TypeOffsets_Property;
@@ -98,13 +199,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Byte[]> ITES4Getter.TypeOffsets_Property => this.TypeOffsets_Property;
         #endregion
         #region Deleted
-        protected INotifyingSetItem<Byte[]> _Deleted = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
-        public INotifyingSetItem<Byte[]> Deleted_Property => _Deleted;
+        protected Byte[] _Deleted;
+        protected PropertyForwarder<TES4, Byte[]> _DeletedForwarder;
+        public INotifyingSetItem<Byte[]> Deleted_Property => _DeletedForwarder ?? (_DeletedForwarder = new PropertyForwarder<TES4, Byte[]>(this, (int)TES4_FieldIndex.Deleted));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Deleted
         {
-            get => this._Deleted.Item;
-            set => this._Deleted.Set(value);
+            get => this._Deleted;
+            set => this.SetDeleted(value);
+        }
+        protected void SetDeleted(
+            Byte[] item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)TES4_FieldIndex.Deleted];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Deleted, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)TES4_FieldIndex.Deleted] = hasBeenSet;
+            }
+            if (_ByteArr_subscriptions != null)
+            {
+                var tmp = Deleted;
+                _Deleted = item;
+                _ByteArr_subscriptions.FireSubscriptions(
+                    index: (int)TES4_FieldIndex.Deleted,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Deleted = item;
+            }
+        }
+        protected void UnsetDeleted()
+        {
+            _hasBeenSetTracker[(int)TES4_FieldIndex.Deleted] = false;
+            Deleted = default(Byte[]);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> ITES4.Deleted_Property => this.Deleted_Property;
@@ -112,14 +247,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Byte[]> ITES4Getter.Deleted_Property => this.Deleted_Property;
         #endregion
         #region Author
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _Author = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Author_Property => _Author;
+        protected String _Author;
+        protected PropertyForwarder<TES4, String> _AuthorForwarder;
+        public INotifyingSetItem<String> Author_Property => _AuthorForwarder ?? (_AuthorForwarder = new PropertyForwarder<TES4, String>(this, (int)TES4_FieldIndex.Author));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Author
         {
-            get => this._Author.Item;
-            set => this._Author.Set(value);
+            get => this._Author;
+            set => this.SetAuthor(value);
+        }
+        protected void SetAuthor(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)TES4_FieldIndex.Author];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Author == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)TES4_FieldIndex.Author] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Author;
+                _Author = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)TES4_FieldIndex.Author,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Author = item;
+            }
+        }
+        protected void UnsetAuthor()
+        {
+            _hasBeenSetTracker[(int)TES4_FieldIndex.Author] = false;
+            Author = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ITES4.Author_Property => this.Author_Property;
@@ -127,14 +295,47 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> ITES4Getter.Author_Property => this.Author_Property;
         #endregion
         #region Description
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Description_Property => _Description;
+        protected String _Description;
+        protected PropertyForwarder<TES4, String> _DescriptionForwarder;
+        public INotifyingSetItem<String> Description_Property => _DescriptionForwarder ?? (_DescriptionForwarder = new PropertyForwarder<TES4, String>(this, (int)TES4_FieldIndex.Description));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Description
         {
-            get => this._Description.Item;
-            set => this._Description.Set(value);
+            get => this._Description;
+            set => this.SetDescription(value);
+        }
+        protected void SetDescription(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)TES4_FieldIndex.Description];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Description == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)TES4_FieldIndex.Description] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Description;
+                _Description = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)TES4_FieldIndex.Description,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Description = item;
+            }
+        }
+        protected void UnsetDescription()
+        {
+            _hasBeenSetTracker[(int)TES4_FieldIndex.Description] = false;
+            Description = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ITES4.Description_Property => this.Description_Property;
@@ -556,40 +757,88 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Fluff":
-                    item._Fluff.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
+                    var FlufftryGet = ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)TES4_FieldIndex.Fluff,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (FlufftryGet.Succeeded)
+                    {
+                        item.SetFluff(item: FlufftryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFluff();
+                    }
                     break;
                 case "Header":
-                    item._Header.SetIfSucceededOrDefault(LoquiXmlTranslation<Header, Header_ErrorMask>.Instance.Parse(
+                    var HeadertryGet = LoquiXmlTranslation<Header, Header_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)TES4_FieldIndex.Header,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (HeadertryGet.Succeeded)
+                    {
+                        item.SetHeader(item: HeadertryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetHeader();
+                    }
                     break;
                 case "TypeOffsets":
-                    item._TypeOffsets.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
+                    var TypeOffsetstryGet = ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (TypeOffsetstryGet.Succeeded)
+                    {
+                        item.SetTypeOffsets(item: TypeOffsetstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetTypeOffsets();
+                    }
                     break;
                 case "Deleted":
-                    item._Deleted.SetIfSucceededOrDefault(ByteArrayXmlTranslation.Instance.Parse(
+                    var DeletedtryGet = ByteArrayXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)TES4_FieldIndex.Deleted,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DeletedtryGet.Succeeded)
+                    {
+                        item.SetDeleted(item: DeletedtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetDeleted();
+                    }
                     break;
                 case "Author":
-                    item._Author.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var AuthortryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)TES4_FieldIndex.Author,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (AuthortryGet.Succeeded)
+                    {
+                        item.SetAuthor(item: AuthortryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetAuthor();
+                    }
                     break;
                 case "Description":
-                    item._Description.SetIfSucceededOrDefault(StringXmlTranslation.Instance.Parse(
+                    var DescriptiontryGet = StringXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)TES4_FieldIndex.Description,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DescriptiontryGet.Succeeded)
+                    {
+                        item.SetDescription(item: DescriptiontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetDescription();
+                    }
                     break;
                 case "MasterReferences":
                     item._MasterReferences.SetIfSucceededOrDefault(ListXmlTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.Parse(
@@ -607,6 +856,436 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 default:
                     break;
+            }
+        }
+
+        #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        #region IPropertySupporter Byte[]
+        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
+        Byte[] IPropertySupporter<Byte[]>.Get(int index)
+        {
+            return GetByteArr(index: index);
+        }
+
+        protected Byte[] GetByteArr(int index)
+        {
+            switch ((TES4_FieldIndex)index)
+            {
+                case TES4_FieldIndex.Fluff:
+                    return Fluff;
+                case TES4_FieldIndex.TypeOffsets:
+                    return TypeOffsets;
+                case TES4_FieldIndex.Deleted:
+                    return Deleted;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        void IPropertySupporter<Byte[]>.Set(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByteArr(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetByteArr(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((TES4_FieldIndex)index)
+            {
+                case TES4_FieldIndex.Fluff:
+                    SetFluff(item, hasBeenSet, cmds);
+                    break;
+                case TES4_FieldIndex.TypeOffsets:
+                    SetTypeOffsets(item, hasBeenSet, cmds);
+                    break;
+                case TES4_FieldIndex.Deleted:
+                    SetDeleted(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte[]>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte[]>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByteArr(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetByteArr(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((TES4_FieldIndex)index)
+            {
+                case TES4_FieldIndex.Fluff:
+                    _hasBeenSetTracker[index] = false;
+                    Fluff = default(Byte[]);
+                    break;
+                case TES4_FieldIndex.TypeOffsets:
+                    _hasBeenSetTracker[index] = false;
+                    TypeOffsets = default(Byte[]);
+                    break;
+                case TES4_FieldIndex.Deleted:
+                    _hasBeenSetTracker[index] = false;
+                    Deleted = default(Byte[]);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte[]> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_ByteArr_subscriptions == null)
+            {
+                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
+            }
+            _ByteArr_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _ByteArr_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
+        {
+            return DefaultValueByteArr(index: index);
+        }
+
+        protected Byte[] DefaultValueByteArr(int index)
+        {
+            switch ((TES4_FieldIndex)index)
+            {
+                case TES4_FieldIndex.Fluff:
+                case TES4_FieldIndex.TypeOffsets:
+                case TES4_FieldIndex.Deleted:
+                    return default(Byte[]);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Header
+        protected ObjectCentralizationSubscriptions<Header> _Header_subscriptions;
+        Header IPropertySupporter<Header>.Get(int index)
+        {
+            return GetHeader(index: index);
+        }
+
+        protected Header GetHeader(int index)
+        {
+            switch ((TES4_FieldIndex)index)
+            {
+                case TES4_FieldIndex.Header:
+                    return Header;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Header: {index}");
+            }
+        }
+
+        void IPropertySupporter<Header>.Set(
+            int index,
+            Header item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetHeader(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetHeader(
+            int index,
+            Header item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((TES4_FieldIndex)index)
+            {
+                case TES4_FieldIndex.Header:
+                    SetHeader(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Header: {index}");
+            }
+        }
+
+        bool IPropertySupporter<Header>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Header>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Header>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetHeader(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetHeader(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((TES4_FieldIndex)index)
+            {
+                case TES4_FieldIndex.Header:
+                    _hasBeenSetTracker[index] = false;
+                    Header = default(Header);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type Header: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Header>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Header> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_Header_subscriptions == null)
+            {
+                _Header_subscriptions = new ObjectCentralizationSubscriptions<Header>();
+            }
+            _Header_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Header>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _Header_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Header>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Header IPropertySupporter<Header>.DefaultValue(int index)
+        {
+            return DefaultValueHeader(index: index);
+        }
+
+        protected Header DefaultValueHeader(int index)
+        {
+            switch ((TES4_FieldIndex)index)
+            {
+                case TES4_FieldIndex.Header:
+                    return default(Header);
+                default:
+                    throw new ArgumentException($"Unknown index for field type Header: {index}");
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter String
+        protected ObjectCentralizationSubscriptions<String> _String_subscriptions;
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected String GetString(int index)
+        {
+            switch ((TES4_FieldIndex)index)
+            {
+                case TES4_FieldIndex.Author:
+                    return Author;
+                case TES4_FieldIndex.Description:
+                    return Description;
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((TES4_FieldIndex)index)
+            {
+                case TES4_FieldIndex.Author:
+                    SetAuthor(item, hasBeenSet, cmds);
+                    break;
+                case TES4_FieldIndex.Description:
+                    SetDescription(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((TES4_FieldIndex)index)
+            {
+                case TES4_FieldIndex.Author:
+                    _hasBeenSetTracker[index] = false;
+                    Author = default(String);
+                    break;
+                case TES4_FieldIndex.Description:
+                    _hasBeenSetTracker[index] = false;
+                    Description = default(String);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected String DefaultValueString(int index)
+        {
+            switch ((TES4_FieldIndex)index)
+            {
+                case TES4_FieldIndex.Author:
+                case TES4_FieldIndex.Description:
+                    return default(String);
+                default:
+                    throw new ArgumentException($"Unknown index for field type String: {index}");
             }
         }
 
@@ -821,10 +1500,18 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<TES4_ErrorMask> errorMask)
         {
-            item._Fluff.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
+            var FlufftryGet = ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(12),
                 fieldIndex: (int)TES4_FieldIndex.Fluff,
-                errorMask: errorMask));
+                errorMask: errorMask);
+            if (FlufftryGet.Succeeded)
+            {
+                item.SetFluff(item: FlufftryGet.Value);
+            }
+            else
+            {
+                item.UnsetFluff();
+            }
         }
 
         protected static TryGet<TES4_FieldIndex?> Fill_Binary_RecordTypes(
@@ -840,40 +1527,82 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "HEDR":
-                    item._Header.SetIfSucceededOrDefault(LoquiBinaryTranslation<Header, Header_ErrorMask>.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)TES4_FieldIndex.Header,
-                        errorMask: errorMask));
+                    {
+                        var HeadertryGet = LoquiBinaryTranslation<Header, Header_ErrorMask>.Instance.Parse(
+                            frame: frame,
+                            fieldIndex: (int)TES4_FieldIndex.Header,
+                            errorMask: errorMask);
+                        if (HeadertryGet.Succeeded)
+                        {
+                            item.SetHeader(item: HeadertryGet.Value);
+                        }
+                        else
+                        {
+                            item.UnsetHeader();
+                        }
+                    }
                     return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.Header);
                 case "OFST":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._TypeOffsets.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
+                    var TypeOffsetstryGet = ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (TypeOffsetstryGet.Succeeded)
+                    {
+                        item.SetTypeOffsets(item: TypeOffsetstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetTypeOffsets();
+                    }
                     return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.TypeOffsets);
                 case "DELE":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Deleted.SetIfSucceededOrDefault(ByteArrayBinaryTranslation.Instance.Parse(
+                    var DeletedtryGet = ByteArrayBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)TES4_FieldIndex.Deleted,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DeletedtryGet.Succeeded)
+                    {
+                        item.SetDeleted(item: DeletedtryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetDeleted();
+                    }
                     return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.Deleted);
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Author.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var AuthortryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)TES4_FieldIndex.Author,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (AuthortryGet.Succeeded)
+                    {
+                        item.SetAuthor(item: AuthortryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetAuthor();
+                    }
                     return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.Author);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Description.SetIfSucceededOrDefault(StringBinaryTranslation.Instance.Parse(
+                    var DescriptiontryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)TES4_FieldIndex.Description,
                         parseWhole: true,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
+                    if (DescriptiontryGet.Succeeded)
+                    {
+                        item.SetDescription(item: DescriptiontryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetDescription();
+                    }
                     return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.Description);
                 case "MAST":
                 case "DATA":
@@ -1016,34 +1745,34 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case TES4_FieldIndex.Fluff:
-                    this._Fluff.Set(
+                    this.SetFluff(
                         (Byte[])obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case TES4_FieldIndex.Header:
-                    this._Header.Set(
+                    this.SetHeader(
                         (Header)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case TES4_FieldIndex.TypeOffsets:
-                    this._TypeOffsets.Set(
+                    this.SetTypeOffsets(
                         (Byte[])obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case TES4_FieldIndex.Deleted:
-                    this._Deleted.Set(
+                    this.SetDeleted(
                         (Byte[])obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case TES4_FieldIndex.Author:
-                    this._Author.Set(
+                    this.SetAuthor(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case TES4_FieldIndex.Description:
-                    this._Description.Set(
+                    this.SetDescription(
                         (String)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 case TES4_FieldIndex.MasterReferences:
                     this._MasterReferences.SetTo((IEnumerable<MasterReference>)obj, cmds);
@@ -1086,34 +1815,34 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case TES4_FieldIndex.Fluff:
-                    obj._Fluff.Set(
+                    obj.SetFluff(
                         (Byte[])pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case TES4_FieldIndex.Header:
-                    obj._Header.Set(
+                    obj.SetHeader(
                         (Header)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case TES4_FieldIndex.TypeOffsets:
-                    obj._TypeOffsets.Set(
+                    obj.SetTypeOffsets(
                         (Byte[])pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case TES4_FieldIndex.Deleted:
-                    obj._Deleted.Set(
+                    obj.SetDeleted(
                         (Byte[])pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case TES4_FieldIndex.Author:
-                    obj._Author.Set(
+                    obj.SetAuthor(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case TES4_FieldIndex.Description:
-                    obj._Description.Set(
+                    obj.SetDescription(
                         (String)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 case TES4_FieldIndex.MasterReferences:
                     obj._MasterReferences.SetTo((IEnumerable<MasterReference>)pair.Value, null);
@@ -1224,6 +1953,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             version: 0);
 
         public const string GUID = "d26d9f2a-53af-4c45-9490-dfdb377b6655";
+
+        public const ushort AdditionalFieldCount = 7;
 
         public const ushort FieldCount = 7;
 
@@ -1427,7 +2158,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
@@ -1534,8 +2266,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.TypeOffsets_Property.SetToWithDefault(
                         rhs: rhs.TypeOffsets_Property,
-                        def: def?.TypeOffsets_Property,
-                        cmds: cmds);
+                        def: def?.TypeOffsets_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1549,8 +2280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Deleted_Property.SetToWithDefault(
                         rhs: rhs.Deleted_Property,
-                        def: def?.Deleted_Property,
-                        cmds: cmds);
+                        def: def?.Deleted_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1564,8 +2294,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Author_Property.SetToWithDefault(
                         rhs: rhs.Author_Property,
-                        def: def?.Author_Property,
-                        cmds: cmds);
+                        def: def?.Author_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1579,8 +2308,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Description_Property.SetToWithDefault(
                         rhs: rhs.Description_Property,
-                        def: def?.Description_Property,
-                        cmds: cmds);
+                        def: def?.Description_Property);
                 }
                 catch (Exception ex)
                 when (doMasks)

@@ -30,6 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
         IEnableParent,
         ILoquiObject<EnableParent>,
         ILoquiObjectSetter,
+        IPropertySupporter<EnableParent.Flag>,
         IEquatable<EnableParent>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -39,6 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public EnableParent()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -52,14 +54,47 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<PlacedObject> IEnableParentGetter.Reference_Property => this.Reference_Property;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<EnableParent.Flag> _Flags = NotifyingItem.Factory<EnableParent.Flag>();
-        public INotifyingItem<EnableParent.Flag> Flags_Property => _Flags;
+        protected EnableParent.Flag _Flags;
+        protected PropertyForwarder<EnableParent, EnableParent.Flag> _FlagsForwarder;
+        public INotifyingSetItem<EnableParent.Flag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<EnableParent, EnableParent.Flag>(this, (int)EnableParent_FieldIndex.Flags));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public EnableParent.Flag Flags
         {
-            get => this._Flags.Item;
-            set => this._Flags.Set(value);
+            get => this._Flags;
+            set => this.SetFlags(value);
+        }
+        protected void SetFlags(
+            EnableParent.Flag item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)EnableParent_FieldIndex.Flags];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)EnableParent_FieldIndex.Flags] = hasBeenSet;
+            }
+            if (_EnableParentFlag_subscriptions != null)
+            {
+                var tmp = Flags;
+                _Flags = item;
+                _EnableParentFlag_subscriptions.FireSubscriptions(
+                    index: (int)EnableParent_FieldIndex.Flags,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Flags = item;
+            }
+        }
+        protected void UnsetFlags()
+        {
+            _hasBeenSetTracker[(int)EnableParent_FieldIndex.Flags] = false;
+            Flags = default(EnableParent.Flag);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<EnableParent.Flag> IEnableParent.Flags_Property => this.Flags_Property;
@@ -417,14 +452,156 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceededOrDefault(EnumXmlTranslation<EnableParent.Flag>.Instance.Parse(
+                    var FlagstryGet = EnumXmlTranslation<EnableParent.Flag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)EnableParent_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        errorMask: errorMask).Bubble((o) => o.Value);
+                    if (FlagstryGet.Succeeded)
+                    {
+                        item.SetFlags(item: FlagstryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFlags();
+                    }
                     break;
                 default:
                     break;
+            }
+        }
+
+        #endregion
+
+        protected readonly BitArray _hasBeenSetTracker;
+        #region IPropertySupporter EnableParent.Flag
+        protected ObjectCentralizationSubscriptions<EnableParent.Flag> _EnableParentFlag_subscriptions;
+        EnableParent.Flag IPropertySupporter<EnableParent.Flag>.Get(int index)
+        {
+            return GetEnableParentFlag(index: index);
+        }
+
+        protected EnableParent.Flag GetEnableParentFlag(int index)
+        {
+            switch ((EnableParent_FieldIndex)index)
+            {
+                case EnableParent_FieldIndex.Flags:
+                    return Flags;
+                default:
+                    throw new ArgumentException($"Unknown index for field type EnableParent.Flag: {index}");
+            }
+        }
+
+        void IPropertySupporter<EnableParent.Flag>.Set(
+            int index,
+            EnableParent.Flag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetEnableParentFlag(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected void SetEnableParentFlag(
+            int index,
+            EnableParent.Flag item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((EnableParent_FieldIndex)index)
+            {
+                case EnableParent_FieldIndex.Flags:
+                    SetFlags(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type EnableParent.Flag: {index}");
+            }
+        }
+
+        bool IPropertySupporter<EnableParent.Flag>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<EnableParent.Flag>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<EnableParent.Flag>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetEnableParentFlag(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected void UnsetEnableParentFlag(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((EnableParent_FieldIndex)index)
+            {
+                case EnableParent_FieldIndex.Flags:
+                    _hasBeenSetTracker[index] = false;
+                    Flags = default(EnableParent.Flag);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown index for field type EnableParent.Flag: {index}");
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<EnableParent.Flag>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<EnableParent.Flag> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_EnableParentFlag_subscriptions == null)
+            {
+                _EnableParentFlag_subscriptions = new ObjectCentralizationSubscriptions<EnableParent.Flag>();
+            }
+            _EnableParentFlag_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<EnableParent.Flag>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _EnableParentFlag_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<EnableParent.Flag>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        EnableParent.Flag IPropertySupporter<EnableParent.Flag>.DefaultValue(int index)
+        {
+            return DefaultValueEnableParentFlag(index: index);
+        }
+
+        protected EnableParent.Flag DefaultValueEnableParentFlag(int index)
+        {
+            switch ((EnableParent_FieldIndex)index)
+            {
+                case EnableParent_FieldIndex.Flags:
+                    return default(EnableParent.Flag);
+                default:
+                    throw new ArgumentException($"Unknown index for field type EnableParent.Flag: {index}");
             }
         }
 
@@ -640,10 +817,18 @@ namespace Mutagen.Bethesda.Oblivion
                 frame: frame,
                 fieldIndex: (int)EnableParent_FieldIndex.Reference,
                 errorMask: errorMask));
-            item._Flags.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.EnumBinaryTranslation<EnableParent.Flag>.Instance.Parse(
+            var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<EnableParent.Flag>.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
                 fieldIndex: (int)EnableParent_FieldIndex.Flags,
-                errorMask: errorMask));
+                errorMask: errorMask);
+            if (FlagstryGet.Succeeded)
+            {
+                item.SetFlags(item: FlagstryGet.Value);
+            }
+            else
+            {
+                item.UnsetFlags();
+            }
         }
 
         #endregion
@@ -768,9 +953,9 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case EnableParent_FieldIndex.Flags:
-                    this._Flags.Set(
+                    this.SetFlags(
                         (EnableParent.Flag)obj,
-                        cmds);
+                        cmds: cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -815,9 +1000,9 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case EnableParent_FieldIndex.Flags:
-                    obj._Flags.Set(
+                    obj.SetFlags(
                         (EnableParent.Flag)pair.Value,
-                        null);
+                        cmds: null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -882,6 +1067,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             version: 0);
 
         public const string GUID = "e078cd3d-8b51-4e47-ac43-427229d9cf88";
+
+        public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
 
@@ -1021,7 +1208,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
         string ILoquiRegistration.GUID => GUID;
-        int ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.FieldCount => FieldCount;
+        ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
