@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static (Exception Exception, IEnumerable<(RangeInt64 Source, RangeInt64? Output)> Sections) AssertFilesEqual(
-            Stream stream,
+            IBinaryStream stream,
             string path2,
             RangeCollection ignoreList = null,
             RangeCollection sourceSkips = null,
@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Tests
             ushort amountToReport = 5)
         {
             List<RangeInt32> errorRanges = new List<RangeInt32>();
-            using (var reader2 = new FileStream(path2, FileMode.Open, FileAccess.Read))
+            using (var reader2 = new BinaryReadStream(path2))
             {
                 var errs = ConstructRanges(
                         GetDifferences(stream, reader2, ignoreList, sourceSkips, targetSkips),
@@ -115,8 +115,8 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static IEnumerable<(long Source, long Output, bool Equal)> GetDifferences(
-            Stream reader1,
-            Stream reader2,
+            IBinaryStream reader1,
+            IBinaryStream reader2,
             RangeCollection ignoreList,
             RangeCollection reader1Skips,
             RangeCollection reader2Skips)

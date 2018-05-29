@@ -112,38 +112,35 @@ namespace Mutagen.Bethesda
             string filePath,
             RecordInterest interest = null)
         {
-            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            using (var stream = new BinaryReadStream(filePath))
             {
                 return GetFileLocations(stream, interest);
             }
         }
 
         public static FileLocations GetFileLocations(
-            Stream stream,
+            BinaryReadStream reader,
             RecordInterest interest = null)
         {
             FileLocations ret = new FileLocations();
-            using (var reader = new BinaryReadStream(stream, dispose: false))
+            // Skip header
+            reader.Position += 4;
+            var headerLen = reader.ReadUInt32();
+            reader.Position += 12;
+            reader.Position += headerLen;
+
+            HashSet<RecordType> remainingTypes = (interest?.InterestingTypes?.Count <= 0) ? null : new HashSet<RecordType>(interest.InterestingTypes);
+
+            while (!reader.Complete
+                && (remainingTypes?.Count ?? 1) > 0)
             {
-                // Skip header
-                reader.Position += 4;
-                var headerLen = reader.ReadUInt32();
-                reader.Position += 12;
-                reader.Position += headerLen;
-
-                HashSet<RecordType> remainingTypes = (interest?.InterestingTypes?.Count <= 0) ? null : new HashSet<RecordType>(interest.InterestingTypes);
-
-                while (!reader.Complete
-                    && (remainingTypes?.Count ?? 1) > 0)
+                var parsed = ParseTopLevelGRUP(
+                    reader: reader,
+                    fileLocs: ret,
+                    interest: interest);
+                if (parsed.HasValue)
                 {
-                    var parsed = ParseTopLevelGRUP(
-                        reader: reader,
-                        fileLocs: ret,
-                        interest: interest);
-                    if (parsed.HasValue)
-                    {
-                        remainingTypes?.Remove(parsed.Value);
-                    }
+                    remainingTypes?.Remove(parsed.Value);
                 }
             }
             return ret;

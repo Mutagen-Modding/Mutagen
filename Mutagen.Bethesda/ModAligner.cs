@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda
             FilePath outputPath,
             AlignmentRules alignmentRules)
         {
-            using (var inputStream = new FileStream(inputPath.Path, FileMode.Open, FileAccess.Read))
+            using (var inputStream = new BinaryReadStream(inputPath.Path))
             {
                 using (var outputStream = new FileStream(outputPath.Path, FileMode.Create, FileAccess.Write))
                 {
@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda
         }
 
         public static void Align(
-            Stream inputStream,
+            BinaryReadStream inputStream,
             Stream outputStream,
             AlignmentRules alignmentRules)
         {
@@ -39,64 +39,61 @@ namespace Mutagen.Bethesda
             var fileLocs = MajorRecordLocator.GetFileLocations(inputStream, interest);
             var tempMemOutput = new MemoryStream();
             inputStream.Position = 0;
-            using (var mutaReader = new BinaryReadStream(inputStream))
+            using (var writer = new MutagenWriter(tempMemOutput, dispose: false))
             {
-                using (var writer = new MutagenWriter(tempMemOutput, dispose: false))
+                while (!inputStream.Complete)
                 {
-                    while (!mutaReader.Complete)
+                    // Import until next listed major record
+                    long noRecordLength;
+                    if (fileLocs.ListedRecords.TryGetInDirection(
+                        inputStream.Position,
+                        higher: true,
+                        result: out var nextRec))
                     {
-                        // Import until next listed major record
-                        long noRecordLength;
-                        if (fileLocs.ListedRecords.TryGetInDirection(
-                            mutaReader.Position,
-                            higher: true,
-                            result: out var nextRec))
-                        {
-                            var recordLocation = fileLocs.ListedRecords.Keys[nextRec.Key];
-                            noRecordLength = recordLocation - mutaReader.Position;
-                        }
-                        else
-                        {
-                            noRecordLength = mutaReader.Remaining;
-                        }
-                        writer.Write(mutaReader.ReadBytes((int)noRecordLength));
+                        var recordLocation = fileLocs.ListedRecords.Keys[nextRec.Key];
+                        noRecordLength = recordLocation - inputStream.Position;
+                    }
+                    else
+                    {
+                        noRecordLength = inputStream.Remaining;
+                    }
+                    writer.Write(inputStream.ReadBytes((int)noRecordLength));
 
-                        // If complete overall, return
-                        if (mutaReader.Complete) break;
+                    // If complete overall, return
+                    if (inputStream.Complete) break;
 
-                        var recType = HeaderTranslation.ReadNextRecordType(
-                            mutaReader,
-                            out var len);
-                        writer.Write(recType.Type);
-                        writer.Write(len);
-                        writer.Write(mutaReader.ReadBytes(12));
+                    var recType = HeaderTranslation.ReadNextRecordType(
+                        inputStream,
+                        out var len);
+                    writer.Write(recType.Type);
+                    writer.Write(len);
+                    writer.Write(inputStream.ReadBytes(12));
 
-                        var endPos = mutaReader.Position + len;
-                        Dictionary<RecordType, byte[]> dataDict = new Dictionary<RecordType, byte[]>();
-                        while (mutaReader.Position < endPos)
+                    var endPos = inputStream.Position + len;
+                    Dictionary<RecordType, byte[]> dataDict = new Dictionary<RecordType, byte[]>();
+                    while (inputStream.Position < endPos)
+                    {
+                        var subType = HeaderTranslation.ReadNextSubRecordType(
+                            inputStream,
+                            out var subLen);
+                        dataDict[subType] = inputStream.ReadBytes(subLen);
+                    }
+                    foreach (var alignment in alignmentRules.Alignments[recType])
+                    {
+                        if (dataDict.TryGetValue(
+                            alignment,
+                            out var data))
                         {
-                            var subType = HeaderTranslation.ReadNextSubRecordType(
-                                mutaReader,
-                                out var subLen);
-                            dataDict[subType] = mutaReader.ReadBytes(subLen);
-                        }
-                        foreach (var alignment in alignmentRules.Alignments[recType])
-                        {
-                            if (dataDict.TryGetValue(
-                                alignment,
-                                out var data))
+                            using (HeaderExport.ExportSubRecordHeader(writer, alignment))
                             {
-                                using (HeaderExport.ExportSubRecordHeader(writer, alignment))
-                                {
-                                    writer.Write(data);
-                                }
-                                dataDict.Remove(alignment);
+                                writer.Write(data);
                             }
+                            dataDict.Remove(alignment);
                         }
-                        if (dataDict.Count > 0)
-                        {
-                            throw new ArgumentException($"Encountered an unknown record: {dataDict.First().Key}");
-                        }
+                    }
+                    if (dataDict.Count > 0)
+                    {
+                        throw new ArgumentException($"Encountered an unknown record: {dataDict.First().Key}");
                     }
                 }
             }

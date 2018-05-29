@@ -44,34 +44,34 @@ namespace Mutagen.Bethesda.Tests
          * Some records that seem older have an odd record order.  Rather than accommodating, dynamically mark as exceptions
          */
         private void AddDynamicProcessorInstructions(
+            BinaryReadStream stream,
             MajorRecord rec,
             Instruction instr,
-            string filePath,
             RangeInt64 loc,
             MajorRecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
             bool processing)
         {
-            ProcessNPC_Mismatch(rec, instr, filePath, loc, processing);
-            ProcessCreature_Mismatch(rec, instr, filePath, loc, processing);
-            ProcessLeveledItemDataFields(rec, instr, filePath, loc, processing);
-            ProcessRegions(rec, instr, filePath, loc, processing);
-            ProcessPlacedObject_Mismatch(rec, instr, filePath, loc, fileLocs, lengthTracker, processing);
-            ProcessCells(rec, instr, filePath, loc, fileLocs, lengthTracker, processing);
+            ProcessNPC_Mismatch(stream, rec, instr, loc, processing);
+            ProcessCreature_Mismatch(stream, rec, instr, loc, processing);
+            ProcessLeveledItemDataFields(stream, rec, instr, loc, processing);
+            ProcessRegions(stream, rec, instr, loc, processing);
+            ProcessPlacedObject_Mismatch(stream, rec, instr, loc, fileLocs, lengthTracker, processing);
+            ProcessCells(stream, rec, instr, loc, fileLocs, lengthTracker, processing);
         }
 
         private void ProcessNPC_Mismatch(
+            BinaryReadStream stream,
             MajorRecord rec,
             Instruction instr,
-            string filePath,
             RangeInt64 loc,
             bool processing)
         {
             if (!processing) return;
             if (!(rec is NPC)) return;
             this.DynamicMove(
+                stream,
                 instr,
-                filePath,
                 loc,
                 offendingIndices: new RecordType[]
                 {
@@ -90,17 +90,17 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessCreature_Mismatch(
+            BinaryReadStream stream,
             MajorRecord rec,
             Instruction instr,
-            string filePath,
             RangeInt64 loc,
             bool processing)
         {
             if (!processing) return;
             if (!(rec is Creature)) return;
             this.AlignRecords(
+                stream,
                 instr,
-                filePath,
                 loc,
                 new RecordType[]
                 {
@@ -131,31 +131,29 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessLeveledItemDataFields(
+            BinaryReadStream stream,
             MajorRecord rec,
             Instruction instr,
-            string filePath,
             RangeInt64 loc,
             bool processing)
         {
             if (!processing) return;
             if (!(rec is LeveledItem)) return;
-            using (var stream = new BinaryReadStream(filePath))
-            {
-                stream.Position = loc.Min;
-                var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
-                var dataIndex = str.IndexOf("DATA");
-                if (dataIndex == -1) return;
+            stream.Position = loc.Min;
+            var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var dataIndex = str.IndexOf("DATA");
+            if (dataIndex == -1) return;
 
-                var dataFlag = str[dataIndex + 6];
-                if (dataFlag == 1)
+            var dataFlag = str[dataIndex + 6];
+            if (dataFlag == 1)
+            {
+                var index = str.IndexOf("LVLD");
+                index += 7;
+                var addition = new DataTarget()
                 {
-                    var index = str.IndexOf("LVLD");
-                    index += 7;
-                    var addition = new DataTarget()
+                    Location = index + loc.Min,
+                    Data = new byte[]
                     {
-                        Location = index + loc.Min,
-                        Data = new byte[]
-                        {
                             (byte)'L',
                             (byte)'V',
                             (byte)'L',
@@ -163,129 +161,125 @@ namespace Mutagen.Bethesda.Tests
                             0x1,
                             0x0,
                             0x1
-                        }
-                    };
-                    instr.Additions.Add(addition);
-                }
-                else
-                {
-                    // Modify Length
-                    stream.Position = loc.Min + Constants.HEADER_LENGTH;
-                    var existingLen = stream.ReadUInt16();
-                    byte[] lenData = new byte[2];
-                    using (var writer = new MutagenWriter(new MemoryStream(lenData)))
-                    {
-                        writer.Write((ushort)(existingLen - 7));
                     }
-                    instr.Substitutions.Add(
-                        new DataTarget()
-                        {
-                            Location = loc.Min + Constants.HEADER_LENGTH,
-                            Data = lenData
-                        });
-                }
-
-                // Remove DATA
-                var move = new Move()
-                {
-                    LocationToMove = long.MaxValue,
-                    SectionToMove = new RangeInt64(dataIndex + loc.Min, dataIndex + loc.Min + 7 - 1)
                 };
-                instr.Moves.Add(move);
+                instr.Additions.Add(addition);
             }
+            else
+            {
+                // Modify Length
+                stream.Position = loc.Min + Constants.HEADER_LENGTH;
+                var existingLen = stream.ReadUInt16();
+                byte[] lenData = new byte[2];
+                using (var writer = new MutagenWriter(new MemoryStream(lenData)))
+                {
+                    writer.Write((ushort)(existingLen - 7));
+                }
+                instr.Substitutions.Add(
+                    new DataTarget()
+                    {
+                        Location = loc.Min + Constants.HEADER_LENGTH,
+                        Data = lenData
+                    });
+            }
+
+            // Remove DATA
+            var move = new Move()
+            {
+                LocationToMove = long.MaxValue,
+                SectionToMove = new RangeInt64(dataIndex + loc.Min, dataIndex + loc.Min + 7 - 1)
+            };
+            instr.Moves.Add(move);
         }
 
         private void ProcessRegions(
+            BinaryReadStream stream,
             MajorRecord rec,
             Instruction instr,
-            string filePath,
             RangeInt64 loc,
             bool processing)
         {
             if (!processing) return;
             if (!(rec is Region)) return;
-            using (var stream = new BinaryReadStream(filePath))
+            stream.Position = loc.Min;
+            var lenToRead = (int)loc.Width + Constants.RECORD_HEADER_LENGTH;
+            var str = stream.ReadString(lenToRead);
+            var rdatIndex = str.IndexOf("RDAT");
+            if (rdatIndex == -1) return;
+            SortedList<uint, RangeInt64> rdats = new SortedList<uint, RangeInt64>();
+            while (rdatIndex != -1)
             {
-                stream.Position = loc.Min;
-                var lenToRead = (int)loc.Width + Constants.RECORD_HEADER_LENGTH;
-                var str = stream.ReadString(lenToRead);
-                var rdatIndex = str.IndexOf("RDAT");
-                if (rdatIndex == -1) return;
-                SortedList<uint, RangeInt64> rdats = new SortedList<uint, RangeInt64>();
-                while (rdatIndex != -1)
-                {
-                    var nextRdat = str.IndexOf("RDAT", rdatIndex + 1);
-                    stream.Position = rdatIndex + 6 + loc.Min;
-                    var index = stream.ReadUInt32();
-                    rdats[index] =
-                        new RangeInt64(
-                            rdatIndex + loc.Min,
-                            nextRdat == -1 ? loc.Max : nextRdat - 1 + loc.Min);
-                    rdatIndex = nextRdat;
-                }
-                foreach (var item in rdats.Reverse())
-                {
-                    if (item.Key == (int)RegionData.RegionDataType.Icon) continue;
-                    instr.Moves.Add(
-                        new Move()
-                        {
-                            LocationToMove = loc.Max + 1,
-                            SectionToMove = item.Value
-                        });
-                }
-
-                if (rdats.ContainsKey((int)RegionData.RegionDataType.Icon))
-                { // Need to create icon record
-                    var edidIndex = str.IndexOf("EDID");
-                    if (edidIndex == -1)
+                var nextRdat = str.IndexOf("RDAT", rdatIndex + 1);
+                stream.Position = rdatIndex + 6 + loc.Min;
+                var index = stream.ReadUInt32();
+                rdats[index] =
+                    new RangeInt64(
+                        rdatIndex + loc.Min,
+                        nextRdat == -1 ? loc.Max : nextRdat - 1 + loc.Min);
+                rdatIndex = nextRdat;
+            }
+            foreach (var item in rdats.Reverse())
+            {
+                if (item.Key == (int)RegionData.RegionDataType.Icon) continue;
+                instr.Moves.Add(
+                    new Move()
                     {
-                        throw new ArgumentException();
-                    }
-                    stream.Position = edidIndex + loc.Min + Constants.HEADER_LENGTH;
-                    var edidLen = stream.ReadUInt16();
-                    stream.Position += edidLen;
-                    var locToPlace = stream.Position;
+                        LocationToMove = loc.Max + 1,
+                        SectionToMove = item.Value
+                    });
+            }
 
-                    // Get icon string
-                    var iconLoc = rdats[(int)RegionData.RegionDataType.Icon];
-                    stream.Position = iconLoc.Min + Region.RDAT_LEN + 6;
-                    var iconStr = stream.ReadString((int)(iconLoc.Max - stream.Position));
-
-                    // Get icon bytes
-                    MemoryStream memStream = new MemoryStream();
-                    using (var writer = new MutagenWriter(memStream))
-                    {
-                        using (HeaderExport.ExportHeader(
-                            writer,
-                            new RecordType("ICON"),
-                            ObjectType.Subrecord))
-                        {
-                            writer.Write(iconStr);
-                            writer.Write(default(byte));
-                        }
-                    }
-
-                    instr.Additions.Add(
-                        new DataTarget()
-                        {
-                            Location = locToPlace,
-                            Data = memStream.ToArray()
-                        });
-                    instr.Moves.Add(
-                        new Move()
-                        {
-                            LocationToMove = long.MaxValue,
-                            SectionToMove = iconLoc
-                        });
+            if (rdats.ContainsKey((int)RegionData.RegionDataType.Icon))
+            { // Need to create icon record
+                var edidIndex = str.IndexOf("EDID");
+                if (edidIndex == -1)
+                {
+                    throw new ArgumentException();
                 }
+                stream.Position = edidIndex + loc.Min + Constants.HEADER_LENGTH;
+                var edidLen = stream.ReadUInt16();
+                stream.Position += edidLen;
+                var locToPlace = stream.Position;
+
+                // Get icon string
+                var iconLoc = rdats[(int)RegionData.RegionDataType.Icon];
+                stream.Position = iconLoc.Min + Region.RDAT_LEN + 6;
+                var iconStr = stream.ReadString((int)(iconLoc.Max - stream.Position));
+
+                // Get icon bytes
+                MemoryStream memStream = new MemoryStream();
+                using (var writer = new MutagenWriter(memStream))
+                {
+                    using (HeaderExport.ExportHeader(
+                        writer,
+                        new RecordType("ICON"),
+                        ObjectType.Subrecord))
+                    {
+                        writer.Write(iconStr);
+                        writer.Write(default(byte));
+                    }
+                }
+
+                instr.Additions.Add(
+                    new DataTarget()
+                    {
+                        Location = locToPlace,
+                        Data = memStream.ToArray()
+                    });
+                instr.Moves.Add(
+                    new Move()
+                    {
+                        LocationToMove = long.MaxValue,
+                        SectionToMove = iconLoc
+                    });
             }
         }
 
         private static byte[] ZeroFloat = new byte[] { 0, 0, 0, 0x80 };
         private void ProcessPlacedObject_Mismatch(
+            BinaryReadStream stream,
             MajorRecord rec,
             Instruction instr,
-            string filePath,
             RangeInt64 loc,
             MajorRecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
@@ -294,81 +288,75 @@ namespace Mutagen.Bethesda.Tests
             if (!(rec is PlacedObject)) return;
             if (processing)
             {
-                using (var stream = new BinaryReadStream(filePath))
+                stream.Position = loc.Min;
+                var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+                var datIndex = str.IndexOf("XLOC");
+                if (datIndex == -1) return;
+                stream.Position = loc.Min + datIndex;
+                stream.Position += 4;
+                var len = stream.ReadUInt16();
+                if (len == 16)
                 {
-                    stream.Position = loc.Min;
-                    var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
-                    var datIndex = str.IndexOf("XLOC");
-                    if (datIndex == -1) return;
-                    stream.Position = loc.Min + datIndex;
-                    stream.Position += 4;
-                    var len = stream.ReadUInt16();
-                    if (len == 16)
-                    {
-                        lengthTracker[loc.Min] = lengthTracker[loc.Min] - 4;
-                        var removeStart = loc.Min + datIndex + 6 + 12;
-                        instr.Substitutions.Add(
-                            new DataTarget()
-                            {
-                                Location = loc.Min + datIndex + 4,
-                                Data = new byte[] { 12, 0 }
-                            });
-                        instr.Moves.Add(
-                            new Move()
-                            {
-                                SectionToMove = new RangeInt64(
-                                     removeStart,
-                                     removeStart + 3),
-                                LocationToMove = long.MaxValue,
-                            });
-                        foreach (var k in fileLocs.GetContainingGroupLocations(rec.FormID))
+                    lengthTracker[loc.Min] = lengthTracker[loc.Min] - 4;
+                    var removeStart = loc.Min + datIndex + 6 + 12;
+                    instr.Substitutions.Add(
+                        new DataTarget()
                         {
-                            lengthTracker[k] = lengthTracker[k] - 4;
-                        }
+                            Location = loc.Min + datIndex + 4,
+                            Data = new byte[] { 12, 0 }
+                        });
+                    instr.Moves.Add(
+                        new Move()
+                        {
+                            SectionToMove = new RangeInt64(
+                                 removeStart,
+                                 removeStart + 3),
+                            LocationToMove = long.MaxValue,
+                        });
+                    foreach (var k in fileLocs.GetContainingGroupLocations(rec.FormID))
+                    {
+                        lengthTracker[k] = lengthTracker[k] - 4;
                     }
                 }
             }
             else
             {
-                using (var stream = new BinaryReadStream(filePath))
+                stream.Position = loc.Min;
+                var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+                var datIndex = str.IndexOf("DATA");
+                if (datIndex != -1)
                 {
-                    stream.Position = loc.Min;
-                    var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
-                    var datIndex = str.IndexOf("DATA");
-                    if (datIndex != -1)
+                    stream.Position = loc.Min + datIndex;
+                    stream.Position += 6;
+                    for (int i = 0; i < 6; i++)
                     {
-                        stream.Position = loc.Min + datIndex;
-                        stream.Position += 6;
-                        for (int i = 0; i < 6; i++)
+                        var bytes = stream.ReadBytes(4);
+                        if (bytes.SequenceEqual(ZeroFloat))
                         {
-                            var bytes = stream.ReadBytes(4);
-                            if (bytes.SequenceEqual(ZeroFloat))
-                            {
-                                instr.IgnoreDifferenceSections.Add(new RangeInt64(stream.Position - 4, stream.Position - 1));
-                            }
+                            instr.IgnoreDifferenceSections.Add(new RangeInt64(stream.Position - 4, stream.Position - 1));
                         }
                     }
+                }
 
-                    datIndex = str.IndexOf("XLOC");
-                    if (datIndex != -1)
-                    {
-                        instr.IgnoreDifferenceSections.Add(
-                            new RangeInt64(
-                                loc.Min + datIndex + 7,
-                                loc.Min + datIndex + 9));
-                    }
+                datIndex = str.IndexOf("XLOC");
+                if (datIndex != -1)
+                {
+                    instr.IgnoreDifferenceSections.Add(
+                        new RangeInt64(
+                            loc.Min + datIndex + 7,
+                            loc.Min + datIndex + 9));
+                }
 
-                    datIndex = str.IndexOf("XTEL");
-                    if (datIndex != -1)
+                datIndex = str.IndexOf("XTEL");
+                if (datIndex != -1)
+                {
+                    stream.Position = loc.Min + datIndex + 10;
+                    for (int i = 0; i < 6; i++)
                     {
-                        stream.Position = loc.Min + datIndex + 10;
-                        for (int i = 0; i < 6; i++)
+                        var bytes = stream.ReadBytes(4);
+                        if (bytes.SequenceEqual(ZeroFloat))
                         {
-                            var bytes = stream.ReadBytes(4);
-                            if (bytes.SequenceEqual(ZeroFloat))
-                            {
-                                instr.IgnoreDifferenceSections.Add(new RangeInt64(stream.Position - 4, stream.Position - 1));
-                            }
+                            instr.IgnoreDifferenceSections.Add(new RangeInt64(stream.Position - 4, stream.Position - 1));
                         }
                     }
                 }
@@ -376,9 +364,9 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessCells(
+            BinaryReadStream stream,
             MajorRecord rec,
             Instruction instr,
-            string filePath,
             RangeInt64 loc,
             MajorRecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
@@ -389,38 +377,34 @@ namespace Mutagen.Bethesda.Tests
 
             // Clean empty child groups
             List<RangeInt64> moves = new List<RangeInt64>();
-            long grupPos;
-            using (var stream = new BinaryReadStream(filePath))
+            stream.Position = loc.Min + 4;
+            var len = stream.ReadUInt32();
+            stream.Position += len + 12;
+            var grupPos = stream.Position;
+            var grup = stream.ReadString(4);
+            if (!grup.Equals("GRUP")) return;
+            var grupLen = stream.ReadUInt32();
+            if (grupLen == 0x14)
             {
-                stream.Position = loc.Min + 4;
-                var len = stream.ReadUInt32();
-                stream.Position += len + 12;
-                grupPos = stream.Position;
-                var grup = stream.ReadString(4);
-                if (!grup.Equals("GRUP")) return;
-                var grupLen = stream.ReadUInt32();
-                if (grupLen == 0x14)
+                moves.Add(new RangeInt64(grupPos, grupPos + 0x14));
+            }
+            else
+            {
+                stream.Position += 4;
+                var grupType = (GroupTypeEnum)stream.ReadUInt32();
+                if (grupType != GroupTypeEnum.CellChildren) return;
+                stream.Position += 4;
+                for (int i = 0; i < 3; i++)
                 {
-                    moves.Add(new RangeInt64(grupPos, grupPos + 0x14));
-                }
-                else
-                {
-                    stream.Position += 4;
-                    var grupType = (GroupTypeEnum)stream.ReadUInt32();
-                    if (grupType != GroupTypeEnum.CellChildren) return;
-                    stream.Position += 4;
-                    for (int i = 0; i < 3; i++)
-                    {
-                        var startPos = stream.Position;
-                        var subGrup = stream.ReadString(4);
-                        if (!subGrup.Equals("GRUP")) break;
-                        var subGrupLen = stream.ReadUInt32();
-                        stream.Position = startPos + subGrupLen;
-                        if (subGrupLen == 0x14)
-                        { // Empty group
-                            lengthTracker[grupPos] = lengthTracker[grupPos] - 0x14;
-                            moves.Add(new RangeInt64(stream.Position - 0x14, stream.Position - 1));
-                        }
+                    var startPos = stream.Position;
+                    var subGrup = stream.ReadString(4);
+                    if (!subGrup.Equals("GRUP")) break;
+                    var subGrupLen = stream.ReadUInt32();
+                    stream.Position = startPos + subGrupLen;
+                    if (subGrupLen == 0x14)
+                    { // Empty group
+                        lengthTracker[grupPos] = lengthTracker[grupPos] - 0x14;
+                        moves.Add(new RangeInt64(stream.Position - 0x14, stream.Position - 1));
                     }
                 }
             }
@@ -458,109 +442,103 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private bool DynamicMove(
+            BinaryReadStream stream,
             Instruction instr,
-            string filePath,
             RangeInt64 loc,
             IEnumerable<RecordType> offendingIndices,
             IEnumerable<RecordType> offendingLimits,
             IEnumerable<RecordType> locationsToMove)
         {
-            using (var stream = new BinaryReadStream(filePath))
+            stream.Position = loc.Min;
+            var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            if (!LocateFirstOf(
+                str,
+                loc.Min,
+                offendingIndices,
+                out var offender)) return false;
+            if (!LocateFirstOf(
+                str,
+                loc.Min,
+                offendingLimits,
+                out var limit)) return false;
+            if (!LocateFirstOf(
+                str,
+                loc.Min,
+                locationsToMove,
+                out var locToMove))
             {
-                stream.Position = loc.Min;
-                var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
-                if (!LocateFirstOf(
-                    str,
-                    loc.Min,
-                    offendingIndices,
-                    out var offender)) return false;
-                if (!LocateFirstOf(
-                    str,
-                    loc.Min,
-                    offendingLimits,
-                    out var limit)) return false;
-                if (!LocateFirstOf(
-                    str,
-                    loc.Min,
-                    locationsToMove,
-                    out var locToMove))
+                locToMove = loc.Min + str.Length;
+            }
+            if (limit == locToMove) return false;
+            if (offender < limit)
+            {
+                if (locToMove < offender)
                 {
-                    locToMove = loc.Min + str.Length;
+                    throw new ArgumentException();
                 }
-                if (limit == locToMove) return false;
-                if (offender < limit)
-                {
-                    if (locToMove < offender)
+                instr.Moves.Add(
+                    new Move()
                     {
-                        throw new ArgumentException();
-                    }
-                    instr.Moves.Add(
-                        new Move()
-                        {
-                            SectionToMove = new RangeInt64(offender, limit - 1),
-                            LocationToMove = locToMove
-                        });
-                    return true;
-                }
+                        SectionToMove = new RangeInt64(offender, limit - 1),
+                        LocationToMove = locToMove
+                    });
+                return true;
             }
             return false;
         }
 
         private void AlignRecords(
+            BinaryReadStream stream,
             Instruction instr,
-            string filePath,
             RangeInt64 loc,
             IEnumerable<RecordType> rectypes)
         {
-            using (var stream = new BinaryReadStream(filePath))
+            stream.Position = loc.Min;
+            var bytes = stream.ReadBytes((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = BinaryUtility.BytesToString(bytes);
+            List<(RecordType rec, int sourceIndex, int loc)> list = new List<(RecordType rec, int sourceIndex, int loc)>();
+            int recTypeIndex = -1;
+            foreach (var rec in rectypes)
             {
-                stream.Position = loc.Min;
-                var bytes = stream.ReadBytes((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
-                var str = BinaryUtility.BytesToString(bytes);
-                List<(RecordType rec, int sourceIndex, int loc)> list = new List<(RecordType rec, int sourceIndex, int loc)>();
-                int recTypeIndex = -1;
-                foreach (var rec in rectypes)
+                recTypeIndex++;
+                var index = str.IndexOf(rec.Type);
+                if (index == -1) continue;
+                list.Add((rec, recTypeIndex, index));
+            }
+            if (list.Count == 0) return;
+            List<int> locs = new List<int>(list.OrderBy((l) => l.loc).Select((l) => l.loc));
+            var orderedList = list.OrderBy((l) => l.loc).ToList();
+            if (list.Select(i => i.rec).SequenceEqual(orderedList.Select(i => i.rec))) return;
+            int start = orderedList[0].loc;
+            foreach (var item in list)
+            {
+                var locIndex = locs.IndexOf(item.loc);
+                int len;
+                if (locIndex == locs.Count - 1)
                 {
-                    recTypeIndex++;
-                    var index = str.IndexOf(rec.Type);
-                    if (index == -1) continue;
-                    list.Add((rec, recTypeIndex, index));
+                    len = str.Length - item.loc;
                 }
-                if (list.Count == 0) return;
-                List<int> locs = new List<int>(list.OrderBy((l) => l.loc).Select((l) => l.loc));
-                var orderedList = list.OrderBy((l) => l.loc).ToList();
-                if (list.Select(i => i.rec).SequenceEqual(orderedList.Select(i => i.rec))) return;
-                int start = orderedList[0].loc;
-                foreach (var item in list)
+                else
                 {
-                    var locIndex = locs.IndexOf(item.loc);
-                    int len;
-                    if (locIndex == locs.Count - 1)
-                    {
-                        len = str.Length - item.loc;
-                    }
-                    else
-                    {
-                        len = locs[locIndex + 1] - item.loc;
-                    }
-                    if (item.loc == start)
-                    {
-                        start += len;
-                        continue;
-                    }
-                    var data = new byte[len];
-                    for (int index = 0; index < len; index++)
-                    {
-                        data[index] = bytes[item.loc + index];
-                    }
-                    instr.Substitutions.Add(
-                        new DataTarget()
-                        {
-                            Location = start + loc.Min,
-                            Data = data
-                        });
+                    len = locs[locIndex + 1] - item.loc;
+                }
+                if (item.loc == start)
+                {
                     start += len;
+                    continue;
                 }
+                var data = new byte[len];
+                for (int index = 0; index < len; index++)
+                {
+                    data[index] = bytes[item.loc + index];
+                }
+                instr.Substitutions.Add(
+                    new DataTarget()
+                    {
+                        Location = start + loc.Min,
+                        Data = data
+                    });
+                start += len;
             }
         }
 
@@ -718,16 +696,19 @@ namespace Mutagen.Bethesda.Tests
                     lengthTracker,
                     alignedFileLocs);
 
-                foreach (var rec in mod.MajorRecords.Values)
+                using (var stream = new BinaryReadStream(alignedPath))
                 {
-                    AddDynamicProcessorInstructions(
-                        rec: rec,
-                        instr: instructions.Instruction,
-                        loc: alignedFileLocs[rec.FormID],
-                        filePath: alignedPath,
-                        fileLocs: alignedFileLocs,
-                        lengthTracker: lengthTracker,
-                        processing: true);
+                    foreach (var rec in mod.MajorRecords.Values)
+                    {
+                        AddDynamicProcessorInstructions(
+                            stream: stream,
+                            rec: rec,
+                            instr: instructions.Instruction,
+                            loc: alignedFileLocs[rec.FormID],
+                            fileLocs: alignedFileLocs,
+                            lengthTracker: lengthTracker,
+                            processing: true);
+                    }
                 }
 
                 using (var reader = new BinaryReadStream(alignedPath))
@@ -760,20 +741,23 @@ namespace Mutagen.Bethesda.Tests
                     processedPath,
                     interest: new RecordInterest(
                         uninterestingTypes: OblivionMod.NonTypeGroups));
-                foreach (var rec in mod.MajorRecords.Values)
+                using (var stream = new BinaryReadStream(processedPath))
                 {
-                    AddDynamicProcessorInstructions(
-                        rec: rec,
-                        instr: instructions.Instruction,
-                        loc: processedFileLocs[rec.FormID],
-                        filePath: processedPath,
-                        fileLocs: processedFileLocs,
-                        lengthTracker: null,
-                        processing: false);
+                    foreach (var rec in mod.MajorRecords.Values)
+                    {
+                        AddDynamicProcessorInstructions(
+                            stream: stream,
+                            rec: rec,
+                            instr: instructions.Instruction,
+                            loc: processedFileLocs[rec.FormID],
+                            fileLocs: processedFileLocs,
+                            lengthTracker: null,
+                            processing: false);
+                    }
                 }
 
                 mod.Write_Binary(oblivionOutputPath, out var outputErrMask);
-                using (var stream = new FileStream(processedPath, FileMode.Open, FileAccess.Read))
+                using (var stream = new BinaryReadStream(processedPath))
                 {
                     var ret = Passthrough_Tests.AssertFilesEqual(
                         stream,
