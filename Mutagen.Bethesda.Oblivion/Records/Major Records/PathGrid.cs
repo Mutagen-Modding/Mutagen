@@ -46,6 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool readPGRR = false;
             for (int recAttempt = 0; recAttempt < 2; recAttempt++)
             {
+                if (frame.Reader.Complete) break;
                 nextRec = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out len);
                 switch (nextRec.Type)
                 {
