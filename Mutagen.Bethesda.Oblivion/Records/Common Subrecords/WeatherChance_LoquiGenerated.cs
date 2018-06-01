@@ -809,11 +809,11 @@ namespace Mutagen.Bethesda.Oblivion
             Func<WeatherChance_ErrorMask> errorMask)
         {
             item.Weather_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)WeatherChance_FieldIndex.Weather,
                 errorMask: errorMask));
             var ChancetryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)WeatherChance_FieldIndex.Chance,
                 errorMask: errorMask);
             if (ChancetryGet.Succeeded)

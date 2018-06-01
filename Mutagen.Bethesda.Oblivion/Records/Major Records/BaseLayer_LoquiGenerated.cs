@@ -1038,7 +1038,7 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item.Texture_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)BaseLayer_FieldIndex.Texture,
                             errorMask: errorMask));
                         var QuadranttryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
@@ -1054,7 +1054,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetQuadrant();
                         }
                         var LayerNumbertryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)BaseLayer_FieldIndex.LayerNumber,
                             errorMask: errorMask);
                         if (LayerNumbertryGet.Succeeded)

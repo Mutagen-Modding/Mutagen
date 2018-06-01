@@ -1504,7 +1504,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetFluff();
             }
             var RefCounttryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.RefCount,
                 errorMask: errorMask);
             if (RefCounttryGet.Succeeded)
@@ -1529,7 +1529,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask().Overall = ex;
             }
             var VariableCounttryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
                 errorMask: errorMask);
             if (VariableCounttryGet.Succeeded)

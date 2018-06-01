@@ -1008,7 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<WeatherType_ErrorMask> errorMask)
         {
             var SunrisetryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)WeatherType_FieldIndex.Sunrise,
                 errorMask: errorMask,
                 extraByte: true);
@@ -1021,7 +1021,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetSunrise();
             }
             var DaytryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)WeatherType_FieldIndex.Day,
                 errorMask: errorMask,
                 extraByte: true);
@@ -1034,7 +1034,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetDay();
             }
             var SunsettryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)WeatherType_FieldIndex.Sunset,
                 errorMask: errorMask,
                 extraByte: true);
@@ -1047,7 +1047,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetSunset();
             }
             var NighttryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)WeatherType_FieldIndex.Night,
                 errorMask: errorMask,
                 extraByte: true);

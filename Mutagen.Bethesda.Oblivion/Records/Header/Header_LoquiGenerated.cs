@@ -1188,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Header_ErrorMask> errorMask)
         {
             var VersiontryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)Header_FieldIndex.Version,
                 errorMask: errorMask);
             if (VersiontryGet.Succeeded)
@@ -1200,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetVersion();
             }
             var NumRecordstryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)Header_FieldIndex.NumRecords,
                 errorMask: errorMask);
             if (NumRecordstryGet.Succeeded)
@@ -1212,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetNumRecords();
             }
             var NextObjectIDtryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)Header_FieldIndex.NextObjectID,
                 errorMask: errorMask);
             if (NextObjectIDtryGet.Succeeded)

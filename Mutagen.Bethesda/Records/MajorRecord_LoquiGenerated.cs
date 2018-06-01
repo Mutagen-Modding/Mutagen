@@ -995,7 +995,7 @@ namespace Mutagen.Bethesda
                 item.UnsetMajorRecordFlags();
             }
             var FormIDtryGet = Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)MajorRecord_FieldIndex.FormID,
                 errorMask: errorMask);
             if (FormIDtryGet.Succeeded)

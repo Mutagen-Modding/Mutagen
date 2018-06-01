@@ -1342,7 +1342,7 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         var SpringtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Flora_FieldIndex.Spring,
                             errorMask: errorMask);
                         if (SpringtryGet.Succeeded)
@@ -1354,7 +1354,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetSpring();
                         }
                         var SummertryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Flora_FieldIndex.Summer,
                             errorMask: errorMask);
                         if (SummertryGet.Succeeded)
@@ -1366,7 +1366,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetSummer();
                         }
                         var FalltryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Flora_FieldIndex.Fall,
                             errorMask: errorMask);
                         if (FalltryGet.Succeeded)
@@ -1378,7 +1378,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetFall();
                         }
                         var WintertryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Flora_FieldIndex.Winter,
                             errorMask: errorMask);
                         if (WintertryGet.Succeeded)

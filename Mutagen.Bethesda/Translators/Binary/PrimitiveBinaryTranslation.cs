@@ -38,6 +38,10 @@ namespace Mutagen.Bethesda.Binary
                 }
                 throw;
             }
+            finally
+            {
+                frame.Dispose();
+            }
         }
 
         public TryGet<T> Parse<M>(

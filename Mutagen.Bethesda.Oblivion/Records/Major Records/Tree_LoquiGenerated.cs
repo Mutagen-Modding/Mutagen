@@ -2115,7 +2115,7 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         var LeafCurvaturetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
                             errorMask: errorMask);
                         if (LeafCurvaturetryGet.Succeeded)
@@ -2127,7 +2127,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetLeafCurvature();
                         }
                         var MinimumLeafAngletryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Tree_FieldIndex.MinimumLeafAngle,
                             errorMask: errorMask);
                         if (MinimumLeafAngletryGet.Succeeded)
@@ -2139,7 +2139,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetMinimumLeafAngle();
                         }
                         var MaximumLeafAngletryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Tree_FieldIndex.MaximumLeafAngle,
                             errorMask: errorMask);
                         if (MaximumLeafAngletryGet.Succeeded)
@@ -2151,7 +2151,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetMaximumLeafAngle();
                         }
                         var BranchDimmingValuetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Tree_FieldIndex.BranchDimmingValue,
                             errorMask: errorMask);
                         if (BranchDimmingValuetryGet.Succeeded)
@@ -2163,7 +2163,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetBranchDimmingValue();
                         }
                         var LeafDimmingValuetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Tree_FieldIndex.LeafDimmingValue,
                             errorMask: errorMask);
                         if (LeafDimmingValuetryGet.Succeeded)
@@ -2175,7 +2175,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetLeafDimmingValue();
                         }
                         var ShadowRadiustryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Tree_FieldIndex.ShadowRadius,
                             errorMask: errorMask);
                         if (ShadowRadiustryGet.Succeeded)
@@ -2187,7 +2187,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetShadowRadius();
                         }
                         var RockingSpeedtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Tree_FieldIndex.RockingSpeed,
                             errorMask: errorMask);
                         if (RockingSpeedtryGet.Succeeded)
@@ -2199,7 +2199,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetRockingSpeed();
                         }
                         var RustleSpeedtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
                             errorMask: errorMask);
                         if (RustleSpeedtryGet.Succeeded)
@@ -2217,7 +2217,7 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         var BillboardWidthtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
                             errorMask: errorMask);
                         if (BillboardWidthtryGet.Succeeded)
@@ -2229,7 +2229,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetBillboardWidth();
                         }
                         var BillboardHeighttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Tree_FieldIndex.BillboardHeight,
                             errorMask: errorMask);
                         if (BillboardHeighttryGet.Succeeded)

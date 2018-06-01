@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Binary
 
         protected override Color ParseValue(MutagenFrame reader)
         {
-            return reader.Reader.ReadColor();
+            return reader.ReadColor();
         }
 
         protected override void WriteValue(MutagenWriter writer, Color item)

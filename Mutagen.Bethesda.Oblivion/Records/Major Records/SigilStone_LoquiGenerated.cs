@@ -1775,7 +1775,7 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         var UsestryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)SigilStone_FieldIndex.Uses,
                             errorMask: errorMask);
                         if (UsestryGet.Succeeded)
@@ -1787,7 +1787,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetUses();
                         }
                         var ValuetryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)SigilStone_FieldIndex.Value,
                             errorMask: errorMask);
                         if (ValuetryGet.Succeeded)
@@ -1799,7 +1799,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetValue();
                         }
                         var WeighttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)SigilStone_FieldIndex.Weight,
                             errorMask: errorMask);
                         if (WeighttryGet.Succeeded)

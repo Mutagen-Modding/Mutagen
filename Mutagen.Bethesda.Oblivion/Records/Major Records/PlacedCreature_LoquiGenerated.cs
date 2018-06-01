@@ -1898,7 +1898,7 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         var PositiontryGet = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)PlacedCreature_FieldIndex.Position,
                             errorMask: errorMask);
                         if (PositiontryGet.Succeeded)
@@ -1910,7 +1910,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetPosition();
                         }
                         var RotationtryGet = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)PlacedCreature_FieldIndex.Rotation,
                             errorMask: errorMask);
                         if (RotationtryGet.Succeeded)

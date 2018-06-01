@@ -4069,7 +4069,7 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         var FogDayNeartryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.FogDayNear,
                             errorMask: errorMask);
                         if (FogDayNeartryGet.Succeeded)
@@ -4081,7 +4081,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetFogDayNear();
                         }
                         var FogDayFartryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.FogDayFar,
                             errorMask: errorMask);
                         if (FogDayFartryGet.Succeeded)
@@ -4093,7 +4093,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetFogDayFar();
                         }
                         var FogNightNeartryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.FogNightNear,
                             errorMask: errorMask);
                         if (FogNightNeartryGet.Succeeded)
@@ -4105,7 +4105,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetFogNightNear();
                         }
                         var FogNightFartryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.FogNightFar,
                             errorMask: errorMask);
                         if (FogNightFartryGet.Succeeded)
@@ -4123,7 +4123,7 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         var HdrEyeAdaptSpeedtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.HdrEyeAdaptSpeed,
                             errorMask: errorMask);
                         if (HdrEyeAdaptSpeedtryGet.Succeeded)
@@ -4135,7 +4135,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetHdrEyeAdaptSpeed();
                         }
                         var HdrBlurRadiustryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.HdrBlurRadius,
                             errorMask: errorMask);
                         if (HdrBlurRadiustryGet.Succeeded)
@@ -4147,7 +4147,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetHdrBlurRadius();
                         }
                         var HdrBlurPassestryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.HdrBlurPasses,
                             errorMask: errorMask);
                         if (HdrBlurPassestryGet.Succeeded)
@@ -4159,7 +4159,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetHdrBlurPasses();
                         }
                         var HdrEmissiveMulttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.HdrEmissiveMult,
                             errorMask: errorMask);
                         if (HdrEmissiveMulttryGet.Succeeded)
@@ -4171,7 +4171,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetHdrEmissiveMult();
                         }
                         var HdrTargetLumtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.HdrTargetLum,
                             errorMask: errorMask);
                         if (HdrTargetLumtryGet.Succeeded)
@@ -4183,7 +4183,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetHdrTargetLum();
                         }
                         var HdrUpperLumClamptryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.HdrUpperLumClamp,
                             errorMask: errorMask);
                         if (HdrUpperLumClamptryGet.Succeeded)
@@ -4195,7 +4195,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetHdrUpperLumClamp();
                         }
                         var HdrBrightScaletryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.HdrBrightScale,
                             errorMask: errorMask);
                         if (HdrBrightScaletryGet.Succeeded)
@@ -4207,7 +4207,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetHdrBrightScale();
                         }
                         var HdrBrightClamptryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.HdrBrightClamp,
                             errorMask: errorMask);
                         if (HdrBrightClamptryGet.Succeeded)
@@ -4219,7 +4219,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetHdrBrightClamp();
                         }
                         var HdrLumRampNoTextryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.HdrLumRampNoTex,
                             errorMask: errorMask);
                         if (HdrLumRampNoTextryGet.Succeeded)
@@ -4231,7 +4231,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetHdrLumRampNoTex();
                         }
                         var HdrLumRampMintryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.HdrLumRampMin,
                             errorMask: errorMask);
                         if (HdrLumRampMintryGet.Succeeded)
@@ -4243,7 +4243,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetHdrLumRampMin();
                         }
                         var HdrLumRampMaxtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.HdrLumRampMax,
                             errorMask: errorMask);
                         if (HdrLumRampMaxtryGet.Succeeded)
@@ -4255,7 +4255,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetHdrLumRampMax();
                         }
                         var HdrSunlightDimmertryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.HdrSunlightDimmer,
                             errorMask: errorMask);
                         if (HdrSunlightDimmertryGet.Succeeded)
@@ -4267,7 +4267,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetHdrSunlightDimmer();
                         }
                         var HdrGrassDimmertryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.HdrGrassDimmer,
                             errorMask: errorMask);
                         if (HdrGrassDimmertryGet.Succeeded)
@@ -4279,7 +4279,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetHdrGrassDimmer();
                         }
                         var HdrTreeDimmertryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.HdrTreeDimmer,
                             errorMask: errorMask);
                         if (HdrTreeDimmertryGet.Succeeded)
@@ -4297,7 +4297,7 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         var WindSpeedtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.WindSpeed,
                             errorMask: errorMask);
                         if (WindSpeedtryGet.Succeeded)
@@ -4309,7 +4309,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetWindSpeed();
                         }
                         var CloudSpeedLowertryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.CloudSpeedLower,
                             errorMask: errorMask);
                         if (CloudSpeedLowertryGet.Succeeded)
@@ -4321,7 +4321,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetCloudSpeedLower();
                         }
                         var CloudSpeedUppertryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.CloudSpeedUpper,
                             errorMask: errorMask);
                         if (CloudSpeedUppertryGet.Succeeded)
@@ -4333,7 +4333,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetCloudSpeedUpper();
                         }
                         var TransDeltatryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.TransDelta,
                             errorMask: errorMask);
                         if (TransDeltatryGet.Succeeded)
@@ -4345,7 +4345,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetTransDelta();
                         }
                         var SunGlaretryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.SunGlare,
                             errorMask: errorMask);
                         if (SunGlaretryGet.Succeeded)
@@ -4357,7 +4357,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetSunGlare();
                         }
                         var SunDamagetryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.SunDamage,
                             errorMask: errorMask);
                         if (SunDamagetryGet.Succeeded)
@@ -4369,7 +4369,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetSunDamage();
                         }
                         var PrecipitationBeginFadeIntryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.PrecipitationBeginFadeIn,
                             errorMask: errorMask);
                         if (PrecipitationBeginFadeIntryGet.Succeeded)
@@ -4381,7 +4381,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetPrecipitationBeginFadeIn();
                         }
                         var PrecipitationEndFadeOuttryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.PrecipitationEndFadeOut,
                             errorMask: errorMask);
                         if (PrecipitationEndFadeOuttryGet.Succeeded)
@@ -4393,7 +4393,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetPrecipitationEndFadeOut();
                         }
                         var ThunderLightningBeginFadeIntryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.ThunderLightningBeginFadeIn,
                             errorMask: errorMask);
                         if (ThunderLightningBeginFadeIntryGet.Succeeded)
@@ -4405,7 +4405,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetThunderLightningBeginFadeIn();
                         }
                         var ThunderLightningEndFadeOuttryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.ThunderLightningEndFadeOut,
                             errorMask: errorMask);
                         if (ThunderLightningEndFadeOuttryGet.Succeeded)
@@ -4417,7 +4417,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetThunderLightningEndFadeOut();
                         }
                         var ThunderLightningFrequencytryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.ThunderLightningFrequency,
                             errorMask: errorMask);
                         if (ThunderLightningFrequencytryGet.Succeeded)
@@ -4441,7 +4441,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetClassification();
                         }
                         var LightningColortryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Weather_FieldIndex.LightningColor,
                             errorMask: errorMask);
                         if (LightningColortryGet.Succeeded)

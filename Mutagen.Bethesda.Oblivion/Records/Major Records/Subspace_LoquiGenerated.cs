@@ -965,7 +965,7 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         var XtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Subspace_FieldIndex.X,
                             errorMask: errorMask);
                         if (XtryGet.Succeeded)
@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetX();
                         }
                         var YtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Subspace_FieldIndex.Y,
                             errorMask: errorMask);
                         if (YtryGet.Succeeded)
@@ -989,7 +989,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetY();
                         }
                         var ZtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Subspace_FieldIndex.Z,
                             errorMask: errorMask);
                         if (ZtryGet.Succeeded)

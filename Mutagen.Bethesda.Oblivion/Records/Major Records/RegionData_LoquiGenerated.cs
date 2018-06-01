@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetFlags();
                         }
                         var PrioritytryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)RegionData_FieldIndex.Priority,
                             errorMask: errorMask);
                         if (PrioritytryGet.Succeeded)

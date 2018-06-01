@@ -1210,7 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<LockInformation_ErrorMask> errorMask)
         {
             var LockLeveltryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)LockInformation_FieldIndex.LockLevel,
                 errorMask: errorMask);
             if (LockLeveltryGet.Succeeded)
@@ -1234,7 +1234,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetFluff();
             }
             item.Key_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)LockInformation_FieldIndex.Key,
                 errorMask: errorMask));
             var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<LockInformation.Flag>.Instance.Parse(

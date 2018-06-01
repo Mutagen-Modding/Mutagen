@@ -3608,7 +3608,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetFluff();
                         }
                         var MaleHeighttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Race_FieldIndex.MaleHeight,
                             errorMask: errorMask);
                         if (MaleHeighttryGet.Succeeded)
@@ -3620,7 +3620,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetMaleHeight();
                         }
                         var FemaleHeighttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Race_FieldIndex.FemaleHeight,
                             errorMask: errorMask);
                         if (FemaleHeighttryGet.Succeeded)
@@ -3632,7 +3632,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetFemaleHeight();
                         }
                         var MaleWeighttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Race_FieldIndex.MaleWeight,
                             errorMask: errorMask);
                         if (MaleWeighttryGet.Succeeded)
@@ -3644,7 +3644,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetMaleWeight();
                         }
                         var FemaleWeighttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Race_FieldIndex.FemaleWeight,
                             errorMask: errorMask);
                         if (FemaleWeighttryGet.Succeeded)

@@ -1077,7 +1077,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetMaterial();
             }
             var FrictiontryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)HavokData_FieldIndex.Friction,
                 errorMask: errorMask);
             if (FrictiontryGet.Succeeded)
@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetFriction();
             }
             var RestitutiontryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)HavokData_FieldIndex.Restitution,
                 errorMask: errorMask);
             if (RestitutiontryGet.Succeeded)

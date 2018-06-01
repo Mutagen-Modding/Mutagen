@@ -1505,7 +1505,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetType();
                         }
                         var CosttryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)SpellUnleveled_FieldIndex.Cost,
                             errorMask: errorMask);
                         if (CosttryGet.Succeeded)

@@ -16,7 +16,10 @@ namespace Mutagen.Bethesda
                 stream.ReadByte(),
                 stream.ReadByte(),
                 stream.ReadByte());
-            stream.ReadByte();
+            if (stream.Remaining > 0)
+            {
+                stream.ReadByte();
+            }
             return ret;
         }
     }

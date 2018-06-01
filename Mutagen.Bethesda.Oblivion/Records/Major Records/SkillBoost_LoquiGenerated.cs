@@ -996,7 +996,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetSkill();
             }
             var BoosttryGet = Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)SkillBoost_FieldIndex.Boost,
                 errorMask: errorMask);
             if (BoosttryGet.Succeeded)

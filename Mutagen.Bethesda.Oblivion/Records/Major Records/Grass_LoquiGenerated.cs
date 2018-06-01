@@ -2269,7 +2269,7 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         var DensitytryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Grass_FieldIndex.Density,
                             errorMask: errorMask);
                         if (DensitytryGet.Succeeded)
@@ -2281,7 +2281,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetDensity();
                         }
                         var MinSlopetryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Grass_FieldIndex.MinSlope,
                             errorMask: errorMask);
                         if (MinSlopetryGet.Succeeded)
@@ -2331,7 +2331,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetUnitFromWaterMode();
                         }
                         var PositionRangetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Grass_FieldIndex.PositionRange,
                             errorMask: errorMask);
                         if (PositionRangetryGet.Succeeded)
@@ -2343,7 +2343,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetPositionRange();
                         }
                         var HeightRangetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Grass_FieldIndex.HeightRange,
                             errorMask: errorMask);
                         if (HeightRangetryGet.Succeeded)
@@ -2355,7 +2355,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetHeightRange();
                         }
                         var ColorRangetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Grass_FieldIndex.ColorRange,
                             errorMask: errorMask);
                         if (ColorRangetryGet.Succeeded)
@@ -2367,7 +2367,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetColorRange();
                         }
                         var WavePeriodtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Grass_FieldIndex.WavePeriod,
                             errorMask: errorMask);
                         if (WavePeriodtryGet.Succeeded)

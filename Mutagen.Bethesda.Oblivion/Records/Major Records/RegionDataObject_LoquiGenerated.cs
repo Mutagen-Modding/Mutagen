@@ -2540,11 +2540,11 @@ namespace Mutagen.Bethesda.Oblivion
             Func<RegionDataObject_ErrorMask> errorMask)
         {
             item.Object_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RegionDataObject_FieldIndex.Object,
                 errorMask: errorMask));
             var ParentIndextryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RegionDataObject_FieldIndex.ParentIndex,
                 errorMask: errorMask);
             if (ParentIndextryGet.Succeeded)
@@ -2568,7 +2568,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetUnknown1();
             }
             var DensitytryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RegionDataObject_FieldIndex.Density,
                 errorMask: errorMask);
             if (DensitytryGet.Succeeded)
@@ -2580,7 +2580,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetDensity();
             }
             var ClusteringtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RegionDataObject_FieldIndex.Clustering,
                 errorMask: errorMask);
             if (ClusteringtryGet.Succeeded)
@@ -2592,7 +2592,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetClustering();
             }
             var MinSlopetryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RegionDataObject_FieldIndex.MinSlope,
                 errorMask: errorMask);
             if (MinSlopetryGet.Succeeded)
@@ -2604,7 +2604,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetMinSlope();
             }
             var MaxSlopetryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RegionDataObject_FieldIndex.MaxSlope,
                 errorMask: errorMask);
             if (MaxSlopetryGet.Succeeded)
@@ -2628,7 +2628,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetFlags();
             }
             var RadiusWrtPercenttryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RegionDataObject_FieldIndex.RadiusWrtPercent,
                 errorMask: errorMask);
             if (RadiusWrtPercenttryGet.Succeeded)
@@ -2640,7 +2640,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetRadiusWrtPercent();
             }
             var RadiustryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RegionDataObject_FieldIndex.Radius,
                 errorMask: errorMask);
             if (RadiustryGet.Succeeded)
@@ -2652,7 +2652,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetRadius();
             }
             var MinHeighttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RegionDataObject_FieldIndex.MinHeight,
                 errorMask: errorMask);
             if (MinHeighttryGet.Succeeded)
@@ -2664,7 +2664,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetMinHeight();
             }
             var MaxHeighttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RegionDataObject_FieldIndex.MaxHeight,
                 errorMask: errorMask);
             if (MaxHeighttryGet.Succeeded)
@@ -2676,7 +2676,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetMaxHeight();
             }
             var SinktryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RegionDataObject_FieldIndex.Sink,
                 errorMask: errorMask);
             if (SinktryGet.Succeeded)
@@ -2688,7 +2688,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetSink();
             }
             var SinkVariancetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RegionDataObject_FieldIndex.SinkVariance,
                 errorMask: errorMask);
             if (SinkVariancetryGet.Succeeded)
@@ -2700,7 +2700,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetSinkVariance();
             }
             var SizeVariancetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RegionDataObject_FieldIndex.SizeVariance,
                 errorMask: errorMask);
             if (SizeVariancetryGet.Succeeded)
@@ -2712,7 +2712,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetSizeVariance();
             }
             var AngleVariancetryGet = Mutagen.Bethesda.Binary.P3UInt16BinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RegionDataObject_FieldIndex.AngleVariance,
                 errorMask: errorMask);
             if (AngleVariancetryGet.Succeeded)

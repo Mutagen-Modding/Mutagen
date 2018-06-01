@@ -1196,7 +1196,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetTrainedSkill();
             }
             var MaximumTrainingLeveltryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
                 errorMask: errorMask);
             if (MaximumTrainingLeveltryGet.Succeeded)

@@ -1234,7 +1234,7 @@ namespace Mutagen.Bethesda.Oblivion
                             errorMask().Overall = ex;
                         }
                         var ValuetryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Armor_FieldIndex.Value,
                             errorMask: errorMask);
                         if (ValuetryGet.Succeeded)
@@ -1246,7 +1246,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetValue();
                         }
                         var HealthtryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Armor_FieldIndex.Health,
                             errorMask: errorMask);
                         if (HealthtryGet.Succeeded)
@@ -1258,7 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetHealth();
                         }
                         var WeighttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Armor_FieldIndex.Weight,
                             errorMask: errorMask);
                         if (WeighttryGet.Succeeded)

@@ -6336,7 +6336,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetNPCFlags();
                         }
                         var BaseSpellPointstryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.BaseSpellPoints,
                             errorMask: errorMask);
                         if (BaseSpellPointstryGet.Succeeded)
@@ -6348,7 +6348,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetBaseSpellPoints();
                         }
                         var FatiguetryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Fatigue,
                             errorMask: errorMask);
                         if (FatiguetryGet.Succeeded)
@@ -6360,7 +6360,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetFatigue();
                         }
                         var BarterGoldtryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.BarterGold,
                             errorMask: errorMask);
                         if (BarterGoldtryGet.Succeeded)
@@ -6372,7 +6372,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetBarterGold();
                         }
                         var LevelOffsettryGet = Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.LevelOffset,
                             errorMask: errorMask);
                         if (LevelOffsettryGet.Succeeded)
@@ -6384,7 +6384,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetLevelOffset();
                         }
                         var CalcMintryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.CalcMin,
                             errorMask: errorMask);
                         if (CalcMintryGet.Succeeded)
@@ -6396,7 +6396,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetCalcMin();
                         }
                         var CalcMaxtryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.CalcMax,
                             errorMask: errorMask);
                         if (CalcMaxtryGet.Succeeded)
@@ -6484,7 +6484,7 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         var AggressiontryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Aggression,
                             errorMask: errorMask);
                         if (AggressiontryGet.Succeeded)
@@ -6496,7 +6496,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetAggression();
                         }
                         var ConfidencetryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Confidence,
                             errorMask: errorMask);
                         if (ConfidencetryGet.Succeeded)
@@ -6508,7 +6508,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetConfidence();
                         }
                         var EnergyLeveltryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.EnergyLevel,
                             errorMask: errorMask);
                         if (EnergyLeveltryGet.Succeeded)
@@ -6520,7 +6520,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetEnergyLevel();
                         }
                         var ResponsibilitytryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Responsibility,
                             errorMask: errorMask);
                         if (ResponsibilitytryGet.Succeeded)
@@ -6556,7 +6556,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetTeaches();
                         }
                         var MaximumTrainingLeveltryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.MaximumTrainingLevel,
                             errorMask: errorMask);
                         if (MaximumTrainingLeveltryGet.Succeeded)
@@ -6627,7 +6627,7 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         var ArmorertryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Armorer,
                             errorMask: errorMask);
                         if (ArmorertryGet.Succeeded)
@@ -6639,7 +6639,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetArmorer();
                         }
                         var AthleticstryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Athletics,
                             errorMask: errorMask);
                         if (AthleticstryGet.Succeeded)
@@ -6651,7 +6651,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetAthletics();
                         }
                         var BladetryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Blade,
                             errorMask: errorMask);
                         if (BladetryGet.Succeeded)
@@ -6663,7 +6663,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetBlade();
                         }
                         var BlocktryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Block,
                             errorMask: errorMask);
                         if (BlocktryGet.Succeeded)
@@ -6675,7 +6675,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetBlock();
                         }
                         var BlunttryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Blunt,
                             errorMask: errorMask);
                         if (BlunttryGet.Succeeded)
@@ -6687,7 +6687,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetBlunt();
                         }
                         var HandToHandtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.HandToHand,
                             errorMask: errorMask);
                         if (HandToHandtryGet.Succeeded)
@@ -6699,7 +6699,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetHandToHand();
                         }
                         var HeavyArmortryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.HeavyArmor,
                             errorMask: errorMask);
                         if (HeavyArmortryGet.Succeeded)
@@ -6711,7 +6711,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetHeavyArmor();
                         }
                         var AlchemytryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Alchemy,
                             errorMask: errorMask);
                         if (AlchemytryGet.Succeeded)
@@ -6723,7 +6723,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetAlchemy();
                         }
                         var AlterationtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Alteration,
                             errorMask: errorMask);
                         if (AlterationtryGet.Succeeded)
@@ -6735,7 +6735,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetAlteration();
                         }
                         var ConjurationtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Conjuration,
                             errorMask: errorMask);
                         if (ConjurationtryGet.Succeeded)
@@ -6747,7 +6747,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetConjuration();
                         }
                         var DestructiontryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Destruction,
                             errorMask: errorMask);
                         if (DestructiontryGet.Succeeded)
@@ -6759,7 +6759,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetDestruction();
                         }
                         var IllusiontryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Illusion,
                             errorMask: errorMask);
                         if (IllusiontryGet.Succeeded)
@@ -6771,7 +6771,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetIllusion();
                         }
                         var MysticismtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Mysticism,
                             errorMask: errorMask);
                         if (MysticismtryGet.Succeeded)
@@ -6783,7 +6783,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetMysticism();
                         }
                         var RestorationtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Restoration,
                             errorMask: errorMask);
                         if (RestorationtryGet.Succeeded)
@@ -6795,7 +6795,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetRestoration();
                         }
                         var AcrobaticstryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Acrobatics,
                             errorMask: errorMask);
                         if (AcrobaticstryGet.Succeeded)
@@ -6807,7 +6807,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetAcrobatics();
                         }
                         var LightArmortryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.LightArmor,
                             errorMask: errorMask);
                         if (LightArmortryGet.Succeeded)
@@ -6819,7 +6819,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetLightArmor();
                         }
                         var MarksmantryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Marksman,
                             errorMask: errorMask);
                         if (MarksmantryGet.Succeeded)
@@ -6831,7 +6831,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetMarksman();
                         }
                         var MercantiletryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Mercantile,
                             errorMask: errorMask);
                         if (MercantiletryGet.Succeeded)
@@ -6843,7 +6843,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetMercantile();
                         }
                         var SecuritytryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Security,
                             errorMask: errorMask);
                         if (SecuritytryGet.Succeeded)
@@ -6855,7 +6855,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetSecurity();
                         }
                         var SneaktryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Sneak,
                             errorMask: errorMask);
                         if (SneaktryGet.Succeeded)
@@ -6867,7 +6867,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetSneak();
                         }
                         var SpeechcrafttryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Speechcraft,
                             errorMask: errorMask);
                         if (SpeechcrafttryGet.Succeeded)
@@ -6879,7 +6879,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetSpeechcraft();
                         }
                         var HealthtryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Health,
                             errorMask: errorMask);
                         if (HealthtryGet.Succeeded)
@@ -6891,7 +6891,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetHealth();
                         }
                         var StrengthtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Strength,
                             errorMask: errorMask);
                         if (StrengthtryGet.Succeeded)
@@ -6903,7 +6903,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetStrength();
                         }
                         var IntelligencetryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Intelligence,
                             errorMask: errorMask);
                         if (IntelligencetryGet.Succeeded)
@@ -6915,7 +6915,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetIntelligence();
                         }
                         var WillpowertryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Willpower,
                             errorMask: errorMask);
                         if (WillpowertryGet.Succeeded)
@@ -6927,7 +6927,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetWillpower();
                         }
                         var AgilitytryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Agility,
                             errorMask: errorMask);
                         if (AgilitytryGet.Succeeded)
@@ -6939,7 +6939,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetAgility();
                         }
                         var SpeedtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Speed,
                             errorMask: errorMask);
                         if (SpeedtryGet.Succeeded)
@@ -6951,7 +6951,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetSpeed();
                         }
                         var EndurancetryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Endurance,
                             errorMask: errorMask);
                         if (EndurancetryGet.Succeeded)
@@ -6963,7 +6963,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetEndurance();
                         }
                         var PersonalitytryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Personality,
                             errorMask: errorMask);
                         if (PersonalitytryGet.Succeeded)
@@ -6975,7 +6975,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetPersonality();
                         }
                         var LucktryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)NPC_FieldIndex.Luck,
                             errorMask: errorMask);
                         if (LucktryGet.Succeeded)

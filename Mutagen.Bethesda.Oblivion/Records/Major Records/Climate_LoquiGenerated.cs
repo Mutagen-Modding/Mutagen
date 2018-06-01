@@ -2051,7 +2051,7 @@ namespace Mutagen.Bethesda.Oblivion
                             errorMask().Overall = ex;
                         }
                         var VolatilitytryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Climate_FieldIndex.Volatility,
                             errorMask: errorMask);
                         if (VolatilitytryGet.Succeeded)

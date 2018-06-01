@@ -887,11 +887,11 @@ namespace Mutagen.Bethesda.Oblivion
             Func<TeleportDestination_ErrorMask> errorMask)
         {
             item.Door_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)TeleportDestination_FieldIndex.Door,
                 errorMask: errorMask));
             var PositiontryGet = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)TeleportDestination_FieldIndex.Position,
                 errorMask: errorMask);
             if (PositiontryGet.Succeeded)
@@ -903,7 +903,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetPosition();
             }
             var RotationtryGet = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)TeleportDestination_FieldIndex.Rotation,
                 errorMask: errorMask);
             if (RotationtryGet.Succeeded)

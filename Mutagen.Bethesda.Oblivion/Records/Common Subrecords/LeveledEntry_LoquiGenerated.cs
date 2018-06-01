@@ -1264,7 +1264,7 @@ namespace Mutagen.Bethesda.Oblivion
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             var LeveltryGet = Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)LeveledEntry_FieldIndex.Level,
                 errorMask: errorMask);
             if (LeveltryGet.Succeeded)
@@ -1288,12 +1288,12 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetFluff();
             }
             item.Reference_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)LeveledEntry_FieldIndex.Reference,
                 errorMask: errorMask));
             if (frame.Complete) return;
             var CounttryGet = Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)LeveledEntry_FieldIndex.Count,
                 errorMask: errorMask);
             if (CounttryGet.Succeeded)

@@ -813,11 +813,11 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Relation_ErrorMask> errorMask)
         {
             item.Faction_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)Relation_FieldIndex.Faction,
                 errorMask: errorMask));
             var ModifiertryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)Relation_FieldIndex.Modifier,
                 errorMask: errorMask);
             if (ModifiertryGet.Succeeded)

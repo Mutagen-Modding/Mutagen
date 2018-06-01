@@ -2161,7 +2161,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetTeaches();
                         }
                         var ValuetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Book_FieldIndex.Value,
                             errorMask: errorMask);
                         if (ValuetryGet.Succeeded)
@@ -2173,7 +2173,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetValue();
                         }
                         var WeighttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Book_FieldIndex.Weight,
                             errorMask: errorMask);
                         if (WeighttryGet.Succeeded)

@@ -814,7 +814,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<WeatherSound_ErrorMask> errorMask)
         {
             item.Sound_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)WeatherSound_FieldIndex.Sound,
                 errorMask: errorMask));
             var TypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<WeatherSound.SoundType>.Instance.Parse(

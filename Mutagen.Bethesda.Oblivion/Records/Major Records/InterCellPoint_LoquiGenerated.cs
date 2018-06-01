@@ -983,7 +983,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<InterCellPoint_ErrorMask> errorMask)
         {
             var PointIDtryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)InterCellPoint_FieldIndex.PointID,
                 errorMask: errorMask);
             if (PointIDtryGet.Succeeded)
@@ -995,7 +995,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetPointID();
             }
             var PointtryGet = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)InterCellPoint_FieldIndex.Point,
                 errorMask: errorMask);
             if (PointtryGet.Succeeded)

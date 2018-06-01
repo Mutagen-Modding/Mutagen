@@ -2813,7 +2813,7 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         var UsableDimensionstryGet = Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Worldspace_FieldIndex.UsableDimensions,
                             errorMask: errorMask);
                         if (UsableDimensionstryGet.Succeeded)
@@ -2825,7 +2825,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetUsableDimensions();
                         }
                         var CellCoordinatesNWCelltryGet = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Worldspace_FieldIndex.CellCoordinatesNWCell,
                             errorMask: errorMask);
                         if (CellCoordinatesNWCelltryGet.Succeeded)
@@ -2837,7 +2837,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetCellCoordinatesNWCell();
                         }
                         var CellCoordinatesSECelltryGet = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Worldspace_FieldIndex.CellCoordinatesSECell,
                             errorMask: errorMask);
                         if (CellCoordinatesSECelltryGet.Succeeded)

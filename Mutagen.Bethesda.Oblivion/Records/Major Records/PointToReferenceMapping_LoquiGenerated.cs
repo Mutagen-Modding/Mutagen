@@ -648,7 +648,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<PointToReferenceMapping_ErrorMask> errorMask)
         {
             item.Reference_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)PointToReferenceMapping_FieldIndex.Reference,
                 errorMask: errorMask));
             item.Points.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16, Exception>.Instance.ParseRepeatedItem(

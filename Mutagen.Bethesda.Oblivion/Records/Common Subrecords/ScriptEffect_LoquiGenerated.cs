@@ -1293,7 +1293,7 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)ScriptEffect_FieldIndex.Script,
                             errorMask: errorMask));
                         if (dataFrame.Complete)
@@ -1314,7 +1314,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetMagicSchool();
                         }
                         item.VisualEffect_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
                             errorMask: errorMask));
                         if (dataFrame.Complete)

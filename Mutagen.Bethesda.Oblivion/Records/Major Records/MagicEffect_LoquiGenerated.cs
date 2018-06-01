@@ -2757,7 +2757,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetFlags();
                         }
                         var BaseCosttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)MagicEffect_FieldIndex.BaseCost,
                             errorMask: errorMask);
                         if (BaseCosttryGet.Succeeded)
@@ -2805,7 +2805,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetResistance();
                         }
                         var CounterEffectCounttryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)MagicEffect_FieldIndex.CounterEffectCount,
                             errorMask: errorMask);
                         if (CounterEffectCounttryGet.Succeeded)
@@ -2817,11 +2817,11 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetCounterEffectCount();
                         }
                         item.Light_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)MagicEffect_FieldIndex.Light,
                             errorMask: errorMask));
                         var ProjectileSpeedtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)MagicEffect_FieldIndex.ProjectileSpeed,
                             errorMask: errorMask);
                         if (ProjectileSpeedtryGet.Succeeded)
@@ -2833,7 +2833,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetProjectileSpeed();
                         }
                         item.EffectShader_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
                             errorMask: errorMask));
                         if (dataFrame.Complete)

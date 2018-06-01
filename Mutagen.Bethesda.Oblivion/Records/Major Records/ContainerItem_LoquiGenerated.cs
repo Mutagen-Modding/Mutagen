@@ -813,11 +813,11 @@ namespace Mutagen.Bethesda.Oblivion
             Func<ContainerItem_ErrorMask> errorMask)
         {
             item.Item_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)ContainerItem_FieldIndex.Item,
                 errorMask: errorMask));
             var CounttryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)ContainerItem_FieldIndex.Count,
                 errorMask: errorMask);
             if (CounttryGet.Succeeded)

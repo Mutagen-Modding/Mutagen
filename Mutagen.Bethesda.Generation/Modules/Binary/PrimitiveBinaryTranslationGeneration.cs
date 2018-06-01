@@ -92,6 +92,7 @@ namespace Mutagen.Bethesda.Generation
             string doMaskAccessor,
             string maskAccessor)
         {
+            var prim = typeGen as PrimitiveType;
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             if (data.HasTrigger)
             {
@@ -115,7 +116,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else
                 {
-                    args.Add($"frame: {nodeAccessor}");
+                    args.Add($"frame: {nodeAccessor}.Spawn(snapToFinalPosition: false)");
                 }
                 if (typeGen.HasIndex)
                 {

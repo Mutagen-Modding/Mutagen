@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public struct MutagenFrame : IDisposable
+    public struct MutagenFrame : IDisposable, IBinaryStream
     {
         public static bool ErrorOnFinalPosition;
 
@@ -28,6 +28,8 @@ namespace Mutagen.Bethesda.Binary
         }
         public long TotalLength => this.FinalLocation - this.InitialPosition;
         public long Remaining => this.FinalLocation - this.Position;
+
+        public long Length => Reader.Length;
 
         [DebuggerStepThrough]
         public MutagenFrame(IBinaryStream reader)
@@ -184,6 +186,86 @@ namespace Mutagen.Bethesda.Binary
             {
                 throw;
             }
+        }
+
+        public int Read(byte[] buffer, int offset, int amount)
+        {
+            return Reader.Read(buffer, offset, amount);
+        }
+
+        public int Read(byte[] buffer)
+        {
+            return Reader.Read(buffer);
+        }
+
+        public byte[] ReadBytes(int amount)
+        {
+            return Reader.ReadBytes(amount);
+        }
+
+        public bool ReadBool()
+        {
+            return Reader.ReadBool();
+        }
+
+        public byte ReadByte()
+        {
+            return Reader.ReadByte();
+        }
+
+        public byte ReadUInt8()
+        {
+            return Reader.ReadUInt8();
+        }
+
+        public ushort ReadUInt16()
+        {
+            return Reader.ReadUInt16();
+        }
+
+        public uint ReadUInt32()
+        {
+            return Reader.ReadUInt32();
+        }
+
+        public ulong ReadUInt64()
+        {
+            return Reader.ReadUInt64();
+        }
+
+        public sbyte ReadInt8()
+        {
+            return Reader.ReadInt8();
+        }
+
+        public short ReadInt16()
+        {
+            return Reader.ReadInt16();
+        }
+
+        public int ReadInt32()
+        {
+            return Reader.ReadInt32();
+        }
+
+        public long ReadInt64()
+        {
+            return Reader.ReadInt64();
+        }
+
+        public float ReadFloat()
+        {
+            return Reader.ReadFloat();
+        }
+
+        public double ReadDouble()
+        {
+            return Reader.ReadDouble();
+        }
+
+        public string ReadString(int amount)
+        {
+            return Reader.ReadString(amount);
         }
     }
 }

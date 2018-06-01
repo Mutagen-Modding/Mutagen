@@ -1010,7 +1010,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<RegionSound_ErrorMask> errorMask)
         {
             item.Sound_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RegionSound_FieldIndex.Sound,
                 errorMask: errorMask));
             var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionSound.Flag>.Instance.Parse(
@@ -1026,7 +1026,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetFlags();
             }
             var ChancetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RegionSound_FieldIndex.Chance,
                 errorMask: errorMask);
             if (ChancetryGet.Succeeded)

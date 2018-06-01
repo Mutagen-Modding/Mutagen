@@ -132,9 +132,10 @@ namespace Mutagen.Bethesda.Binary
                 {
                     List<M> maskList = null;
                     var ret = new List<T>();
-                    while (!frame.Complete)
+                    var subFrame = frame.Spawn(snapToFinalPosition: false);
+                    while (!subFrame.Complete)
                     {
-                        var get = transl(frame, doMasks, out var subMaskObj);
+                        var get = transl(subFrame, doMasks, out var subMaskObj);
                         if (get.Succeeded)
                         {
                             ret.Add(get.Value);

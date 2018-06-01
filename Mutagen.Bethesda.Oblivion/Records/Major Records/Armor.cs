@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Oblivion
         static partial void FillBinary_ArmorValue_Custom(MutagenFrame frame, Armor item, int fieldIndex, Func<Armor_ErrorMask> errorMask)
         {
             var tryGet = UInt16BinaryTranslation.Instance.Parse(
-                frame,
+                frame.Spawn(snapToFinalPosition: false),
                 doMasks: errorMask != null,
                 errorMask: out var mask);
             ErrorMask.HandleErrorMask(

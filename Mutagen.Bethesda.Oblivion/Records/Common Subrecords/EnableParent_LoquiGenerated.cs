@@ -814,7 +814,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<EnableParent_ErrorMask> errorMask)
         {
             item.Reference_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)EnableParent_FieldIndex.Reference,
                 errorMask: errorMask));
             var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<EnableParent.Flag>.Instance.Parse(

@@ -1011,11 +1011,11 @@ namespace Mutagen.Bethesda.Oblivion
             Func<RankPlacement_ErrorMask> errorMask)
         {
             item.Faction_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RankPlacement_FieldIndex.Faction,
                 errorMask: errorMask));
             var RanktryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RankPlacement_FieldIndex.Rank,
                 errorMask: errorMask);
             if (RanktryGet.Succeeded)

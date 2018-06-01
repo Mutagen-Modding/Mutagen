@@ -2146,7 +2146,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetSpecialization();
                         }
                         var UseValueFirsttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
                             errorMask: errorMask);
                         if (UseValueFirsttryGet.Succeeded)
@@ -2158,7 +2158,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetUseValueFirst();
                         }
                         var UseValueSecondtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
                             errorMask: errorMask);
                         if (UseValueSecondtryGet.Succeeded)

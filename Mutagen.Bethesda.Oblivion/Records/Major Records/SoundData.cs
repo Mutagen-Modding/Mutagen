@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
         static partial void FillBinary_MinimumAttenuationDistance_Custom(MutagenFrame frame, SoundData item, int fieldIndex, Func<SoundData_ErrorMask> errorMask)
         {
             var ret = ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: fieldIndex,
                 errorMask: errorMask);
             if (ret.Succeeded)
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Oblivion
         static partial void FillBinary_MaximumAttenuationDistance_Custom(MutagenFrame frame, SoundData item, int fieldIndex, Func<SoundData_ErrorMask> errorMask)
         {
             var ret = ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: fieldIndex,
                 errorMask: errorMask);
             if (ret.Succeeded)

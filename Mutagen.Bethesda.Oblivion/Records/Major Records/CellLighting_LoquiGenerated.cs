@@ -1633,7 +1633,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<CellLighting_ErrorMask> errorMask)
         {
             var AmbientColortryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)CellLighting_FieldIndex.AmbientColor,
                 errorMask: errorMask,
                 extraByte: true);
@@ -1646,7 +1646,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetAmbientColor();
             }
             var DirectionalColortryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)CellLighting_FieldIndex.DirectionalColor,
                 errorMask: errorMask,
                 extraByte: true);
@@ -1659,7 +1659,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetDirectionalColor();
             }
             var FogColortryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)CellLighting_FieldIndex.FogColor,
                 errorMask: errorMask,
                 extraByte: true);
@@ -1672,7 +1672,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetFogColor();
             }
             var FogNeartryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)CellLighting_FieldIndex.FogNear,
                 errorMask: errorMask);
             if (FogNeartryGet.Succeeded)
@@ -1684,7 +1684,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetFogNear();
             }
             var FogFartryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)CellLighting_FieldIndex.FogFar,
                 errorMask: errorMask);
             if (FogFartryGet.Succeeded)
@@ -1696,7 +1696,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetFogFar();
             }
             var DirectionalRotationXYtryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationXY,
                 errorMask: errorMask);
             if (DirectionalRotationXYtryGet.Succeeded)
@@ -1708,7 +1708,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetDirectionalRotationXY();
             }
             var DirectionalRotationZtryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationZ,
                 errorMask: errorMask);
             if (DirectionalRotationZtryGet.Succeeded)
@@ -1720,7 +1720,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetDirectionalRotationZ();
             }
             var DirectionalFadetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)CellLighting_FieldIndex.DirectionalFade,
                 errorMask: errorMask);
             if (DirectionalFadetryGet.Succeeded)
@@ -1732,7 +1732,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetDirectionalFade();
             }
             var FogClipDistancetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)CellLighting_FieldIndex.FogClipDistance,
                 errorMask: errorMask);
             if (FogClipDistancetryGet.Succeeded)

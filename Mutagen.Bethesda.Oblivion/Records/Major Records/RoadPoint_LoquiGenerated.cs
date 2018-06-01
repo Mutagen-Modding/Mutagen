@@ -1018,7 +1018,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<RoadPoint_ErrorMask> errorMask)
         {
             var PointtryGet = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RoadPoint_FieldIndex.Point,
                 errorMask: errorMask);
             if (PointtryGet.Succeeded)

@@ -1125,7 +1125,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask().Overall = ex;
             }
             var FrequencyAdjustmenttryGet = Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)SoundData_FieldIndex.FrequencyAdjustment,
                 errorMask: errorMask);
             if (FrequencyAdjustmenttryGet.Succeeded)

@@ -2534,7 +2534,7 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         var TimetryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Light_FieldIndex.Time,
                             errorMask: errorMask);
                         if (TimetryGet.Succeeded)
@@ -2546,7 +2546,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetTime();
                         }
                         var RadiustryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Light_FieldIndex.Radius,
                             errorMask: errorMask);
                         if (RadiustryGet.Succeeded)
@@ -2558,7 +2558,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetRadius();
                         }
                         var ColortryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Light_FieldIndex.Color,
                             errorMask: errorMask,
                             extraByte: true);
@@ -2586,7 +2586,7 @@ namespace Mutagen.Bethesda.Oblivion
                         {
                             item.DATADataTypeState |= DATADataType.Range0;
                             var FalloffExponenttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame,
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
                                 fieldIndex: (int)Light_FieldIndex.FalloffExponent,
                                 errorMask: errorMask);
                             if (FalloffExponenttryGet.Succeeded)
@@ -2598,7 +2598,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 item.UnsetFalloffExponent();
                             }
                             var FOVtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame,
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
                                 fieldIndex: (int)Light_FieldIndex.FOV,
                                 errorMask: errorMask);
                             if (FOVtryGet.Succeeded)
@@ -2611,7 +2611,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                         var ValuetryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Light_FieldIndex.Value,
                             errorMask: errorMask);
                         if (ValuetryGet.Succeeded)
@@ -2623,7 +2623,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetValue();
                         }
                         var WeighttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Light_FieldIndex.Weight,
                             errorMask: errorMask);
                         if (WeighttryGet.Succeeded)

@@ -940,7 +940,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<DistantLODData_ErrorMask> errorMask)
         {
             var Unknown0tryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)DistantLODData_FieldIndex.Unknown0,
                 errorMask: errorMask);
             if (Unknown0tryGet.Succeeded)
@@ -952,7 +952,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetUnknown0();
             }
             var Unknown1tryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)DistantLODData_FieldIndex.Unknown1,
                 errorMask: errorMask);
             if (Unknown1tryGet.Succeeded)
@@ -964,7 +964,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetUnknown1();
             }
             var Unknown2tryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)DistantLODData_FieldIndex.Unknown2,
                 errorMask: errorMask);
             if (Unknown2tryGet.Succeeded)

@@ -1625,11 +1625,11 @@ namespace Mutagen.Bethesda.Oblivion
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         item.MagicEffect_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Effect_FieldIndex.MagicEffect,
                             errorMask: errorMask));
                         var MagnitudetryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Effect_FieldIndex.Magnitude,
                             errorMask: errorMask);
                         if (MagnitudetryGet.Succeeded)
@@ -1641,7 +1641,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetMagnitude();
                         }
                         var AreatryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Effect_FieldIndex.Area,
                             errorMask: errorMask);
                         if (AreatryGet.Succeeded)
@@ -1653,7 +1653,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetArea();
                         }
                         var DurationtryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Effect_FieldIndex.Duration,
                             errorMask: errorMask);
                         if (DurationtryGet.Succeeded)

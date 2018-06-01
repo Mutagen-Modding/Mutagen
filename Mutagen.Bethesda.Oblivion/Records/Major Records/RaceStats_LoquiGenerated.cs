@@ -1303,7 +1303,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<RaceStats_ErrorMask> errorMask)
         {
             var StrengthtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RaceStats_FieldIndex.Strength,
                 errorMask: errorMask);
             if (StrengthtryGet.Succeeded)
@@ -1315,7 +1315,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetStrength();
             }
             var IntelligencetryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RaceStats_FieldIndex.Intelligence,
                 errorMask: errorMask);
             if (IntelligencetryGet.Succeeded)
@@ -1327,7 +1327,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetIntelligence();
             }
             var WillpowertryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RaceStats_FieldIndex.Willpower,
                 errorMask: errorMask);
             if (WillpowertryGet.Succeeded)
@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetWillpower();
             }
             var AgilitytryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RaceStats_FieldIndex.Agility,
                 errorMask: errorMask);
             if (AgilitytryGet.Succeeded)
@@ -1351,7 +1351,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetAgility();
             }
             var SpeedtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RaceStats_FieldIndex.Speed,
                 errorMask: errorMask);
             if (SpeedtryGet.Succeeded)
@@ -1363,7 +1363,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetSpeed();
             }
             var EndurancetryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RaceStats_FieldIndex.Endurance,
                 errorMask: errorMask);
             if (EndurancetryGet.Succeeded)
@@ -1375,7 +1375,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetEndurance();
             }
             var PersonalitytryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RaceStats_FieldIndex.Personality,
                 errorMask: errorMask);
             if (PersonalitytryGet.Succeeded)
@@ -1387,7 +1387,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.UnsetPersonality();
             }
             var LucktryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RaceStats_FieldIndex.Luck,
                 errorMask: errorMask);
             if (LucktryGet.Succeeded)

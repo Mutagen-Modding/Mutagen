@@ -1368,7 +1368,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetType();
                         }
                         var ChargeAmounttryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
                             errorMask: errorMask);
                         if (ChargeAmounttryGet.Succeeded)
@@ -1380,7 +1380,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetChargeAmount();
                         }
                         var EnchantCosttryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
                             errorMask: errorMask);
                         if (EnchantCosttryGet.Succeeded)
