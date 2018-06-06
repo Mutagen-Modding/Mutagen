@@ -3,6 +3,8 @@
   <Object name="PlacedNPC" baseClass="Placed" objType="Record" recordType="ACHR" GUID="1bd10cd8-4d9b-4cc0-9639-51f02a1b2e36" ID="137">
     <Fields>
       <FormIDLink name="Base" recordType="NAME" refName="NPC" />
+      <ByteArray name="XPCIFluff" recordType="XPCI" />
+      <ByteArray name="FULLFluff" recordType="FULL" />
       <RefDirect name="DistantLODData" refName="DistantLODData" />
       <RefDirect name="EnableParent" refName="EnableParent" />
       <FormIDLink name="MerchantContainer" recordType="XMRC" refName="PlacedObject" />

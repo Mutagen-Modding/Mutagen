@@ -45,32 +45,35 @@ namespace Mutagen.Bethesda.Tests
          */
         private void AddDynamicProcessorInstructions(
             BinaryReadStream stream,
-            MajorRecord rec,
+            FormID formID,
+            Type recType,
             Instruction instr,
             RangeInt64 loc,
             MajorRecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
             bool processing)
         {
-            ProcessNPC_Mismatch(stream, rec, instr, loc, processing);
-            ProcessCreature_Mismatch(stream, rec, instr, loc, processing);
-            ProcessLeveledItemDataFields(stream, rec, instr, loc, processing);
-            ProcessRegions(stream, rec, instr, loc, processing);
-            ProcessPlacedObject_Mismatch(stream, rec, instr, loc, fileLocs, lengthTracker, processing);
-            ProcessCells(stream, rec, instr, loc, fileLocs, lengthTracker, processing);
+            ProcessNPC_Mismatch(stream, recType, instr, loc, processing);
+            ProcessCreature_Mismatch(stream, recType, instr, loc, processing);
+            ProcessLeveledItemDataFields(stream, recType, instr, loc, processing);
+            ProcessRegions(stream, recType, instr, loc, processing);
+            ProcessPlacedObject_Mismatch(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
+            ProcessCells(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
         }
 
         private void ProcessNPC_Mismatch(
             BinaryReadStream stream,
-            MajorRecord rec,
+            Type recType,
             Instruction instr,
             RangeInt64 loc,
             bool processing)
         {
             if (!processing) return;
-            if (!(rec is NPC)) return;
+            if (!typeof(NPC).Equals(recType)) return;
+            stream.Position = loc.Min;
+            var str = stream.ReadString((int)loc.Width);
             this.DynamicMove(
-                stream,
+                str,
                 instr,
                 loc,
                 offendingIndices: new RecordType[]
@@ -91,13 +94,13 @@ namespace Mutagen.Bethesda.Tests
 
         private void ProcessCreature_Mismatch(
             BinaryReadStream stream,
-            MajorRecord rec,
+            Type recType,
             Instruction instr,
             RangeInt64 loc,
             bool processing)
         {
             if (!processing) return;
-            if (!(rec is Creature)) return;
+            if (!typeof(Creature).Equals(recType)) return;
             this.AlignRecords(
                 stream,
                 instr,
@@ -132,13 +135,13 @@ namespace Mutagen.Bethesda.Tests
 
         private void ProcessLeveledItemDataFields(
             BinaryReadStream stream,
-            MajorRecord rec,
+            Type recType,
             Instruction instr,
             RangeInt64 loc,
             bool processing)
         {
             if (!processing) return;
-            if (!(rec is LeveledItem)) return;
+            if (!typeof(LeveledItem).Equals(recType)) return;
             stream.Position = loc.Min;
             var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
             var dataIndex = str.IndexOf("DATA");
@@ -194,13 +197,13 @@ namespace Mutagen.Bethesda.Tests
 
         private void ProcessRegions(
             BinaryReadStream stream,
-            MajorRecord rec,
+            Type recType,
             Instruction instr,
             RangeInt64 loc,
             bool processing)
         {
             if (!processing) return;
-            if (!(rec is Region)) return;
+            if (!typeof(Region).Equals(recType)) return;
             stream.Position = loc.Min;
             var lenToRead = (int)loc.Width + Constants.RECORD_HEADER_LENGTH;
             var str = stream.ReadString(lenToRead);
@@ -278,18 +281,19 @@ namespace Mutagen.Bethesda.Tests
         private static byte[] ZeroFloat = new byte[] { 0, 0, 0, 0x80 };
         private void ProcessPlacedObject_Mismatch(
             BinaryReadStream stream,
-            MajorRecord rec,
+            FormID formID,
+            Type recType,
             Instruction instr,
             RangeInt64 loc,
             MajorRecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
             bool processing)
         {
-            if (!(rec is PlacedObject)) return;
+            if (!typeof(PlacedObject).Equals(recType)) return;
+            stream.Position = loc.Min;
+            var str = stream.ReadString((int)loc.Width);
             if (processing)
             {
-                stream.Position = loc.Min;
-                var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
                 var datIndex = str.IndexOf("XLOC");
                 if (datIndex == -1) return;
                 stream.Position = loc.Min + datIndex;
@@ -313,7 +317,7 @@ namespace Mutagen.Bethesda.Tests
                                  removeStart + 3),
                             LocationToMove = long.MaxValue,
                         });
-                    foreach (var k in fileLocs.GetContainingGroupLocations(rec.FormID))
+                    foreach (var k in fileLocs.GetContainingGroupLocations(formID))
                     {
                         lengthTracker[k] = lengthTracker[k] - 4;
                     }
@@ -321,8 +325,6 @@ namespace Mutagen.Bethesda.Tests
             }
             else
             {
-                stream.Position = loc.Min;
-                var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
                 var datIndex = str.IndexOf("DATA");
                 if (datIndex != -1)
                 {
@@ -365,7 +367,8 @@ namespace Mutagen.Bethesda.Tests
 
         private void ProcessCells(
             BinaryReadStream stream,
-            MajorRecord rec,
+            FormID formID,
+            Type recType,
             Instruction instr,
             RangeInt64 loc,
             MajorRecordLocator.FileLocations fileLocs,
@@ -373,7 +376,7 @@ namespace Mutagen.Bethesda.Tests
             bool processing)
         {
             if (!processing) return;
-            if (!(rec is Cell cell)) return;
+            if (!typeof(Cell).Equals(recType)) return;
 
             // Clean empty child groups
             List<RangeInt64> moves = new List<RangeInt64>();
@@ -410,7 +413,7 @@ namespace Mutagen.Bethesda.Tests
             }
 
             if (moves.Count == 0) return;
-            var parentGrups = fileLocs.GetContainingGroupLocations(rec.FormID);
+            var parentGrups = fileLocs.GetContainingGroupLocations(formID);
             foreach (var move in moves)
             {
                 instr.Moves.Add(
@@ -442,15 +445,14 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private bool DynamicMove(
-            BinaryReadStream stream,
+            string str,
             Instruction instr,
             RangeInt64 loc,
             IEnumerable<RecordType> offendingIndices,
             IEnumerable<RecordType> offendingLimits,
-            IEnumerable<RecordType> locationsToMove)
+            IEnumerable<RecordType> locationsToMove,
+            bool enforcePast = false)
         {
-            stream.Position = loc.Min;
-            var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
             if (!LocateFirstOf(
                 str,
                 loc.Min,
@@ -465,7 +467,8 @@ namespace Mutagen.Bethesda.Tests
                 str,
                 loc.Min,
                 locationsToMove,
-                out var locToMove))
+                out var locToMove,
+                past: enforcePast ? offender : default(long?)))
             {
                 locToMove = loc.Min + str.Length;
             }
@@ -494,14 +497,14 @@ namespace Mutagen.Bethesda.Tests
             IEnumerable<RecordType> rectypes)
         {
             stream.Position = loc.Min;
-            var bytes = stream.ReadBytes((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var bytes = stream.ReadBytes((int)loc.Width);
             var str = BinaryUtility.BytesToString(bytes);
             List<(RecordType rec, int sourceIndex, int loc)> list = new List<(RecordType rec, int sourceIndex, int loc)>();
             int recTypeIndex = -1;
             foreach (var rec in rectypes)
             {
                 recTypeIndex++;
-                var index = str.IndexOf(rec.Type);
+                var index = str.IndexOf(rec.Type, Constants.RECORD_HEADER_LENGTH);
                 if (index == -1) continue;
                 list.Add((rec, recTypeIndex, index));
             }
@@ -546,9 +549,13 @@ namespace Mutagen.Bethesda.Tests
             string str,
             long offset,
             IEnumerable<RecordType> types,
-            out long loc)
+            out long loc,
+            long? past = null)
         {
-            List<int> indices = new List<int>(types.Select((r) => str.IndexOf(r.Type)).Where((i) => i != -1));
+            List<int> indices = new List<int>(types
+                .Select((r) => str.IndexOf(r.Type))
+                .Where((i) => i != -1)
+                .Where((i) => !past.HasValue || i > past));
             if (indices.Count == 0)
             {
                 loc = default(long);
@@ -587,10 +594,30 @@ namespace Mutagen.Bethesda.Tests
                 new RecordType("XRNK"),
                 new RecordType("XGLB"),
             };
+            ret.Alignments[Worldspace_Registration.WRLD_HEADER] = new List<RecordType>()
+            {
+                new RecordType("EDID"),
+                new RecordType("FULL"),
+                new RecordType("WNAM"),
+                new RecordType("CNAM"),
+                new RecordType("NAM2"),
+                new RecordType("ICON"),
+                new RecordType("MNAM"),
+                new RecordType("DATA"),
+                new RecordType("NAM0"),
+                new RecordType("NAM9"),
+                new RecordType("SNAM"),
+                new RecordType("XXXX"),
+            };
+            ret.StopMarkers[Worldspace_Registration.WRLD_HEADER] = new List<RecordType>()
+            {
+                new RecordType("OFST"),
+            };
             ret.Alignments[PlacedObject_Registration.REFR_HEADER] = new List<RecordType>()
             {
                 new RecordType("EDID"),
                 new RecordType("NAME"),
+                new RecordType("XPCI"),
                 new RecordType("XTEL"),
                 new RecordType("XLOC"),
                 new RecordType("XOWN"),
@@ -632,6 +659,8 @@ namespace Mutagen.Bethesda.Tests
             {
                 new RecordType("EDID"),
                 new RecordType("NAME"),
+                new RecordType("XPCI"),
+                new RecordType("FULL"),
                 new RecordType("XLOD"),
                 new RecordType("XESP"),
                 new RecordType("XMRC"),
@@ -640,6 +669,34 @@ namespace Mutagen.Bethesda.Tests
                 new RecordType("XSCL"),
                 new RecordType("DATA"),
             };
+            return ret;
+        }
+
+        private Dictionary<Type, List<FormID>> ImportExport(
+            string inputPath,
+            string outputPath)
+        {
+            var mod = OblivionMod.Create_Binary(
+                inputPath,
+                out var inputErrMask);
+            Assert.False(inputErrMask?.IsInError() ?? false);
+
+            foreach (var record in mod.MajorRecords.Values)
+            {
+                if (record.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
+                {
+                    record.MajorRecordFlags &= ~MajorRecord.MajorRecordFlag.Compressed;
+                }
+            }
+
+            mod.Write_Binary(outputPath, out var outputErrMask);
+            Assert.False(outputErrMask?.IsInError() ?? false);
+
+            Dictionary<Type, List<FormID>> ret = new Dictionary<Type, List<FormID>>();
+            foreach (var rec in mod.MajorRecords.Values)
+            {
+                ret.TryCreateValue(rec.GetType()).Add(rec.FormID);
+            }
             return ret;
         }
 
@@ -658,18 +715,7 @@ namespace Mutagen.Bethesda.Tests
                     interest: new RecordInterest(
                         uninterestingTypes: OblivionMod.NonTypeGroups));
 
-                var mod = OblivionMod.Create_Binary(
-                    uncompressedPath,
-                    out var inputErrMask);
-                Assert.False(inputErrMask?.IsInError() ?? false);
-
-                foreach (var record in mod.MajorRecords.Values)
-                {
-                    if (record.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
-                    {
-                        record.MajorRecordFlags &= ~MajorRecord.MajorRecordFlag.Compressed;
-                    }
-                }
+                var importRecs = ImportExport(uncompressedPath, oblivionOutputPath);
 
                 ModAligner.Align(
                     inputPath: uncompressedPath,
@@ -698,16 +744,20 @@ namespace Mutagen.Bethesda.Tests
 
                 using (var stream = new BinaryReadStream(alignedPath))
                 {
-                    foreach (var rec in mod.MajorRecords.Values)
+                    foreach (var recType in importRecs)
                     {
-                        AddDynamicProcessorInstructions(
-                            stream: stream,
-                            rec: rec,
-                            instr: instructions.Instruction,
-                            loc: alignedFileLocs[rec.FormID],
-                            fileLocs: alignedFileLocs,
-                            lengthTracker: lengthTracker,
-                            processing: true);
+                        foreach (var id in recType.Value)
+                        {
+                            AddDynamicProcessorInstructions(
+                                stream: stream,
+                                formID: id,
+                                recType: recType.Key,
+                                instr: instructions.Instruction,
+                                loc: alignedFileLocs[id],
+                                fileLocs: alignedFileLocs,
+                                lengthTracker: lengthTracker,
+                                processing: true);
+                        }
                     }
                 }
 
@@ -743,20 +793,23 @@ namespace Mutagen.Bethesda.Tests
                         uninterestingTypes: OblivionMod.NonTypeGroups));
                 using (var stream = new BinaryReadStream(processedPath))
                 {
-                    foreach (var rec in mod.MajorRecords.Values)
+                    foreach (var recType in importRecs)
                     {
-                        AddDynamicProcessorInstructions(
-                            stream: stream,
-                            rec: rec,
-                            instr: instructions.Instruction,
-                            loc: processedFileLocs[rec.FormID],
-                            fileLocs: processedFileLocs,
-                            lengthTracker: null,
-                            processing: false);
+                        foreach (var id in recType.Value)
+                        {
+                            AddDynamicProcessorInstructions(
+                                stream: stream,
+                                formID: id,
+                                recType: recType.Key,
+                                instr: instructions.Instruction,
+                                loc: processedFileLocs[id],
+                                fileLocs: processedFileLocs,
+                                lengthTracker: null,
+                                processing: false);
+                        }
                     }
                 }
 
-                mod.Write_Binary(oblivionOutputPath, out var outputErrMask);
                 using (var stream = new BinaryReadStream(processedPath))
                 {
                     var ret = Passthrough_Tests.AssertFilesEqual(
@@ -766,7 +819,6 @@ namespace Mutagen.Bethesda.Tests
                         sourceSkips: new RangeCollection(instructions.Instruction.SkipSourceSections),
                         targetSkips: new RangeCollection(instructions.Instruction.SkipOutputSections),
                         amountToReport: 15);
-                    Assert.False(outputErrMask?.IsInError() ?? false);
                     if (ret.Exception != null)
                     {
                         throw ret.Exception;

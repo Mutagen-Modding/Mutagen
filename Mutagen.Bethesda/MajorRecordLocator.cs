@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda
                 this._fromFormIDs[id] = section;
                 this._fromStart[section.Min] = id;
                 this._fromEnd[section.Max] = id;
-                this._parentGroupMapper[id] = new HashSet<long>(parentGrupLocations);
+                this._parentGroupMapper[id] = parentGrupLocations.Distinct().ToArray();
             }
 
             public bool TryGetSection(FormID id, out RangeInt64 section)

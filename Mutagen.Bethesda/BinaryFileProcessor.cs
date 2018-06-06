@@ -242,7 +242,6 @@ namespace Mutagen.Bethesda
                 {
                     // Delete out move
                     var moveRange = _sortedMoves[moveFromKey.Value];
-
                     var moveLocBufStart = moveRange.Min - this._position - moveDeletions;
                     int len = (int)Math.Min(bufferEnd - moveLocBufStart, moveRange.Width);
 

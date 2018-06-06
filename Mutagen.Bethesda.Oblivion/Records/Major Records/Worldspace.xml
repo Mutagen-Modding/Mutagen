@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Worldspace" objType="Record" baseClass="Bethesda.NamedMajorRecord" recordType="WRLD" customBinaryEnd="true" GUID="d95e86a2-5fdd-4bb1-a2b9-c16161ef2f62" ID="75">
     <Fields>
+      <FormIDLink name="Parent" recordType="WNAM" refName="Worldspace" />
       <FormIDLink name="Climate" recordType="CNAM" refName="Climate" />
       <FormIDLink name="Water" recordType="NAM2" refName="Water" />
       <String name="Icon" recordType="ICON" />
@@ -12,12 +13,12 @@
           <P2Int16 name="CellCoordinatesSECell" />
         </Fields>
       </Data>
-      <Enum name="Flags" recordType="DATA" enumName="Worldspace.Flag" />
+      <Enum name="Flags" recordType="DATA" enumName="Worldspace.Flag" byteLength="1" />
       <P2Float name="ObjectBoundsMin" recordType="NAM0" />
       <P2Float name="ObjectBoundsMax" recordType="NAM9" />
       <Enum name="Music" recordType="SNAM" enumName="MusicType" />
       <CustomLogic name="OffsetLength" recordType="XXXX" />
-      <ByteArray name="OffsetData" recordType="OFST" noBinary="true" />
+      <ByteArray name="OffsetData" recordType="OFST" customBinary="true" />
       <RefDirect name="Road" refName="Road" noBinary="true" />
       <RefDirect name="TopCell" refName="Cell" noBinary="true" />
       <RefList name="SubCells" refName="WorldspaceBlock" noBinary="true" />

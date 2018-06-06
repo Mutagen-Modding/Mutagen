@@ -17,15 +17,16 @@ namespace Mutagen.Bethesda.Oblivion
         public static IReadOnlyCollection<RecordType> NonTypeGroups { get; } = new HashSet<RecordType>(
             new RecordType[]
             {
-                new RecordType("WRLD"),
                 new RecordType("DIAL"),
             });
 
         partial void CustomCtor()
         {
             this.SubscribeToCells();
+            this.SubscribeToWorldspaces();
         }
 
+        #region Cell Subscription
         protected void SubscribeToCells()
         {
             _Cells_Object.Items.Subscribe_Enumerable_Single((change) =>
@@ -54,6 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
                         SubscribeToCellSubBlock(change.Item);
                         break;
                     case AddRemove.Remove:
+                        change.Item.Items.Unsubscribe(this);
                         break;
                     default:
                         throw new NotImplementedException();
@@ -68,40 +70,37 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (change.AddRem)
                 {
                     case AddRemove.Add:
-                        var ct = _majorRecords.Count;
-                        if (change.AddRem == AddRemove.Add
-                            && _majorRecords.ContainsKey(change.Item.FormID))
-                        {
-                            throw new ArgumentException("Cannot add a cell that exists elsewhere in the same mod.");
-                        }
-                        change.Item.Persistent.Subscribe_Enumerable_Single(this, (r) => _majorRecords.Modify(r.Item.FormID, r.Item, r.AddRem));
-                        change.Item.Temporary.Subscribe_Enumerable_Single(this, (r) => _majorRecords.Modify(r.Item.FormID, r.Item, r.AddRem));
-                        change.Item.VisibleWhenDistant.Subscribe_Enumerable_Single(this, (r) => _majorRecords.Modify(r.Item.FormID, r.Item, r.AddRem));
-                        change.Item.PathGrid_Property.Subscribe(this, (r) =>
-                        {
-                            if (r.Old != null)
-                            {
-                                _majorRecords.Remove(r.Old.FormID);
-                            }
-                            if (r.New != null)
-                            {
-                                if (_majorRecords.ContainsKey(r.New.FormID))
-                                {
-                                    throw new ArgumentException("Cannot add a pathgrid that exists elsewhere in the same mod.");
-                                }
-                                _majorRecords[r.New.FormID] = r.New;
-                            }
-                        });
+                        SubscribeToCell(change.Item);
                         break;
                     case AddRemove.Remove:
-                        change.Item.Persistent.Unsubscribe(this);
-                        change.Item.Temporary.Unsubscribe(this);
-                        change.Item.VisibleWhenDistant.Unsubscribe(this);
+                        UnsubscribeFromCell(change.Item);
                         break;
                     default:
                         break;
                 }
-                _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem);
+                Utility.ModifyButThrow(_majorRecords, change);
+            });
+        }
+
+        protected void SubscribeToCell(Cell cell)
+        {
+            cell.Persistent.Subscribe_Enumerable_Single(this, (r) => Utility.ModifyButThrow(_majorRecords, r));
+            cell.Temporary.Subscribe_Enumerable_Single(this, (r) => Utility.ModifyButThrow(_majorRecords, r));
+            cell.VisibleWhenDistant.Subscribe_Enumerable_Single(this, (r) => Utility.ModifyButThrow(_majorRecords, r));
+            cell.PathGrid_Property.Subscribe(this, (r) =>
+            {
+                if (r.Old != null)
+                {
+                    _majorRecords.Remove(r.Old.FormID);
+                }
+                if (r.New != null)
+                {
+                    if (_majorRecords.ContainsKey(r.New.FormID))
+                    {
+                        throw new ArgumentException($"Cannot add a pathgrid {r.New.FormID} that exists elsewhere in the same mod.");
+                    }
+                    _majorRecords[r.New.FormID] = r.New;
+                }
             });
         }
 
@@ -117,5 +116,124 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+
+        protected void UnsubscribeFromCell(Cell cell)
+        {
+            cell.Persistent.Unsubscribe(this);
+            cell.Temporary.Unsubscribe(this);
+            cell.VisibleWhenDistant.Unsubscribe(this);
+            cell.PathGrid_Property.Subscribe(this, (r) => Utility.Modify(_majorRecords, r));
+        }
+        #endregion
+
+        #region Worldspace Subscription
+        protected void SubscribeToWorldspaces()
+        {
+            _Worldspaces_Object.Items.Subscribe_Enumerable_Single((change) =>
+            {
+                switch (change.AddRem)
+                {
+                    case AddRemove.Add:
+                        SubscribeToWorldspace(change.Item.Value);
+                        break;
+                    case AddRemove.Remove:
+                        UnsubscribeFromWorldspace(change.Item.Value);
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+            });
+        }
+
+        protected void SubscribeToWorldspace(Worldspace worldspace)
+        {
+            worldspace.Road_Property.Subscribe(this, (r) =>
+            {
+                if (r.Old != null)
+                {
+                    _majorRecords.Remove(r.Old.FormID);
+                }
+                if (r.New != null)
+                {
+                    if (_majorRecords.ContainsKey(r.New.FormID))
+                    {
+                        throw new ArgumentException("Cannot add a road that exists elsewhere in the same mod.");
+                    }
+                    _majorRecords[r.New.FormID] = r.New;
+                }
+            });
+            worldspace.TopCell_Property.Subscribe(this, (r) =>
+            {
+                if (r.Old != null)
+                {
+                    _majorRecords.Remove(r.Old.FormID);
+                    UnsubscribeFromCell(r.Old);
+                }
+                if (r.New != null)
+                {
+                    SubscribeToCell(r.New);
+                    _majorRecords[r.New.FormID] = r.New;
+                }
+            });
+            worldspace.SubCells.Subscribe_Enumerable_Single(this, (change) =>
+            {
+                switch (change.AddRem)
+                {
+                    case AddRemove.Add:
+                        SubscribeToWorldspaceBlock(change.Item);
+                        break;
+                    case AddRemove.Remove:
+                        change.Item.Items.Unsubscribe(this);
+                        break;
+                    default:
+                        break;
+                }
+            });
+        }
+
+        protected void SubscribeToWorldspaceBlock(WorldspaceBlock block)
+        {
+            block.Items.Subscribe_Enumerable_Single(this, (change) =>
+            {
+                switch (change.AddRem)
+                {
+                    case AddRemove.Add:
+                        SubscribeToWorldspaceSubBlock(change.Item);
+                        break;
+                    case AddRemove.Remove:
+                        change.Item.Items.Unsubscribe(this);
+                        break;
+                    default:
+                        break;
+                }
+            });
+        }
+
+        protected void SubscribeToWorldspaceSubBlock(WorldspaceSubBlock block)
+        {
+            block.Items.Subscribe_Enumerable_Single(this, (change) =>
+            {
+                switch (change.AddRem)
+                {
+                    case AddRemove.Add:
+                        SubscribeToCell(change.Item);
+                        break;
+                    case AddRemove.Remove:
+                        UnsubscribeFromCell(change.Item);
+                        break;
+                    default:
+                        break;
+                }
+                Utility.ModifyButThrow(_majorRecords, change);
+            });
+        }
+
+        protected void UnsubscribeFromWorldspace(Worldspace worldspace)
+        {
+            worldspace.SubCells.Unsubscribe(this);
+            worldspace.TopCell_Property.Unsubscribe(this);
+            worldspace.Road_Property.Unsubscribe(this);
+        }
+        #endregion
     }
 }

@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 if (subObj.BaseClassTrail().Any((b) => b.Name.Equals("MajorRecord")))
                 {
-                    fg.AppendLine($"{field.ProtectedName}.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));");
+                    fg.AppendLine($"{field.ProtectedName}.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));");
                 }
             }
             return base.GenerateInCtor(obj, fg);

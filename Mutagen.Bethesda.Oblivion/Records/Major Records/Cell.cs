@@ -136,42 +136,38 @@ namespace Mutagen.Bethesda.Oblivion
                 );
         }
 
-        static void ParseTemporaryOutliers(MutagenFrame frame, Cell obj, Func<Cell_ErrorMask> errorMask)
+        static bool ParseTemporaryOutliers(MutagenFrame frame, Cell obj, Func<Cell_ErrorMask> errorMask)
         {
-            for (int i = 0; i < 2; i++)
+            var nextHeader = HeaderTranslation.GetNextRecordType(frame.Reader, out var pathLen);
+            if (nextHeader.Equals(PathGrid_Registration.PGRD_HEADER))
             {
-                var nextHeader = HeaderTranslation.GetNextRecordType(frame.Reader, out var pathLen);
-                if (nextHeader.Equals(PathGrid_Registration.PGRD_HEADER))
+                using (var subFrame = frame.SpawnWithLength(pathLen + Constants.RECORD_HEADER_LENGTH))
                 {
-                    using (var subFrame = frame.SpawnWithLength(pathLen + Constants.RECORD_HEADER_LENGTH))
+                    obj.PathGrid = PathGrid.Create_Binary(
+                        subFrame,
+                        out var subMask);
+                    if (subMask != null)
                     {
-                        obj.PathGrid = PathGrid.Create_Binary(
-                            subFrame,
-                            out var subMask);
-                        if (subMask != null)
-                        {
-                            errorMask().PathGrid = new MaskItem<Exception, PathGrid_ErrorMask>(null, subMask);
-                        }
+                        errorMask().PathGrid = new MaskItem<Exception, PathGrid_ErrorMask>(null, subMask);
                     }
                 }
-                else if (nextHeader.Equals(Landscape_Registration.LAND_HEADER))
-                {
-                    using (var subFrame = frame.SpawnWithLength(pathLen + Constants.RECORD_HEADER_LENGTH))
-                    {
-                        obj.Landscape = Landscape.Create_Binary(
-                            subFrame,
-                            out var subMask);
-                        if (subMask != null)
-                        {
-                            errorMask().Landscape = new MaskItem<Exception, Landscape_ErrorMask>(null, subMask);
-                        }
-                    }
-                }
-                else
-                {
-                    return;
-                }
+                return true;
             }
+            else if (nextHeader.Equals(Landscape_Registration.LAND_HEADER))
+            {
+                using (var subFrame = frame.SpawnWithLength(pathLen + Constants.RECORD_HEADER_LENGTH))
+                {
+                    obj.Landscape = Landscape.Create_Binary(
+                        subFrame,
+                        out var subMask);
+                    if (subMask != null)
+                    {
+                        errorMask().Landscape = new MaskItem<Exception, Landscape_ErrorMask>(null, subMask);
+                    }
+                }
+                return true;
+            }
+            return false;
         }
 
         static void ParseTemporary(MutagenFrame frame, Cell obj, Func<Cell_ErrorMask> errorMask)
@@ -184,7 +180,6 @@ namespace Mutagen.Bethesda.Oblivion
             }
             frame.Reader.Position += 4;
             obj._temporaryTimeStamp = frame.Reader.ReadBytes(4);
-            ParseTemporaryOutliers(frame, obj, errorMask);
             var persistentTryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.ParseRepeatedItem(
                 frame: frame,
                 fieldIndex: (int)Cell_FieldIndex.Persistent,
@@ -210,6 +205,11 @@ namespace Mutagen.Bethesda.Oblivion
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask).Bubble<PlacedObject, Placed>();
                         default:
+                            if (ParseTemporaryOutliers(frame, obj, errorMask))
+                            {
+                                listSubMask = null;
+                                return TryGet<Placed>.Failure;
+                            }
                             throw new NotImplementedException();
                     }
                 }

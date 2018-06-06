@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPlacedObject,
         ILoquiObject<PlacedObject>,
         ILoquiObjectSetter,
+        IPropertySupporter<Byte[]>,
         IPropertySupporter<TeleportDestination>,
         IPropertySupporter<LockInformation>,
         IPropertySupporter<Int32>,
@@ -43,7 +44,6 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<PlacedObject.ActionFlag>,
         IPropertySupporter<MapMarker>,
         IPropertySupporter<Boolean>,
-        IPropertySupporter<Byte[]>,
         IPropertySupporter<P3Float>,
         IEquatable<PlacedObject>
     {
@@ -65,6 +65,102 @@ namespace Mutagen.Bethesda.Oblivion
         public MajorRecord Base { get => Base_Property.Item; set => Base_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<MajorRecord> IPlacedObjectGetter.Base_Property => this.Base_Property;
+        #endregion
+        #region XPCIFluff
+        protected Byte[] _XPCIFluff;
+        protected PropertyForwarder<PlacedObject, Byte[]> _XPCIFluffForwarder;
+        public INotifyingSetItem<Byte[]> XPCIFluff_Property => _XPCIFluffForwarder ?? (_XPCIFluffForwarder = new PropertyForwarder<PlacedObject, Byte[]>(this, (int)PlacedObject_FieldIndex.XPCIFluff));
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public Byte[] XPCIFluff
+        {
+            get => this._XPCIFluff;
+            set => this.SetXPCIFluff(value);
+        }
+        protected void SetXPCIFluff(
+            Byte[] item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedObject_FieldIndex.XPCIFluff];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(XPCIFluff, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)PlacedObject_FieldIndex.XPCIFluff] = hasBeenSet;
+            }
+            if (_ByteArr_subscriptions != null)
+            {
+                var tmp = XPCIFluff;
+                _XPCIFluff = item;
+                _ByteArr_subscriptions.FireSubscriptions(
+                    index: (int)PlacedObject_FieldIndex.XPCIFluff,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _XPCIFluff = item;
+            }
+        }
+        protected void UnsetXPCIFluff()
+        {
+            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.XPCIFluff] = false;
+            XPCIFluff = default(Byte[]);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItem<Byte[]> IPlacedObject.XPCIFluff_Property => this.XPCIFluff_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<Byte[]> IPlacedObjectGetter.XPCIFluff_Property => this.XPCIFluff_Property;
+        #endregion
+        #region FULLFluff
+        protected Byte[] _FULLFluff;
+        protected PropertyForwarder<PlacedObject, Byte[]> _FULLFluffForwarder;
+        public INotifyingSetItem<Byte[]> FULLFluff_Property => _FULLFluffForwarder ?? (_FULLFluffForwarder = new PropertyForwarder<PlacedObject, Byte[]>(this, (int)PlacedObject_FieldIndex.FULLFluff));
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public Byte[] FULLFluff
+        {
+            get => this._FULLFluff;
+            set => this.SetFULLFluff(value);
+        }
+        protected void SetFULLFluff(
+            Byte[] item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedObject_FieldIndex.FULLFluff];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(FULLFluff, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)PlacedObject_FieldIndex.FULLFluff] = hasBeenSet;
+            }
+            if (_ByteArr_subscriptions != null)
+            {
+                var tmp = FULLFluff;
+                _FULLFluff = item;
+                _ByteArr_subscriptions.FireSubscriptions(
+                    index: (int)PlacedObject_FieldIndex.FULLFluff,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _FULLFluff = item;
+            }
+        }
+        protected void UnsetFULLFluff()
+        {
+            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.FULLFluff] = false;
+            FULLFluff = default(Byte[]);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItem<Byte[]> IPlacedObject.FULLFluff_Property => this.FULLFluff_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<Byte[]> IPlacedObjectGetter.FULLFluff_Property => this.FULLFluff_Property;
         #endregion
         #region TeleportDestination
         protected TeleportDestination _TeleportDestination;
@@ -981,6 +1077,16 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.Base_Property.Equals(rhs.Base_Property)) return false;
             }
+            if (XPCIFluff_Property.HasBeenSet != rhs.XPCIFluff_Property.HasBeenSet) return false;
+            if (XPCIFluff_Property.HasBeenSet)
+            {
+                if (!this.XPCIFluff.EqualsFast(rhs.XPCIFluff)) return false;
+            }
+            if (FULLFluff_Property.HasBeenSet != rhs.FULLFluff_Property.HasBeenSet) return false;
+            if (FULLFluff_Property.HasBeenSet)
+            {
+                if (!this.FULLFluff.EqualsFast(rhs.FULLFluff)) return false;
+            }
             if (TeleportDestination_Property.HasBeenSet != rhs.TeleportDestination_Property.HasBeenSet) return false;
             if (TeleportDestination_Property.HasBeenSet)
             {
@@ -1088,6 +1194,14 @@ namespace Mutagen.Bethesda.Oblivion
             if (Base_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Base).CombineHashCode(ret);
+            }
+            if (XPCIFluff_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(XPCIFluff).CombineHashCode(ret);
+            }
+            if (FULLFluff_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(FULLFluff).CombineHashCode(ret);
             }
             if (TeleportDestination_Property.HasBeenSet)
             {
@@ -1471,6 +1585,34 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)PlacedObject_FieldIndex.Base,
                         errorMask: errorMask));
                     break;
+                case "XPCIFluff":
+                    var XPCIFlufftryGet = ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)PlacedObject_FieldIndex.XPCIFluff,
+                        errorMask: errorMask);
+                    if (XPCIFlufftryGet.Succeeded)
+                    {
+                        item.SetXPCIFluff(item: XPCIFlufftryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetXPCIFluff();
+                    }
+                    break;
+                case "FULLFluff":
+                    var FULLFlufftryGet = ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)PlacedObject_FieldIndex.FULLFluff,
+                        errorMask: errorMask);
+                    if (FULLFlufftryGet.Succeeded)
+                    {
+                        item.SetFULLFluff(item: FULLFlufftryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFULLFluff();
+                    }
+                    break;
                 case "TeleportDestination":
                     var TeleportDestinationtryGet = LoquiXmlTranslation<TeleportDestination, TeleportDestination_ErrorMask>.Instance.Parse(
                         root: root,
@@ -1747,6 +1889,166 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Byte[]
+        Byte[] IPropertySupporter<Byte[]>.Get(int index)
+        {
+            return GetByteArr(index: index);
+        }
+
+        protected override Byte[] GetByteArr(int index)
+        {
+            switch ((PlacedObject_FieldIndex)index)
+            {
+                case PlacedObject_FieldIndex.XPCIFluff:
+                    return XPCIFluff;
+                case PlacedObject_FieldIndex.FULLFluff:
+                    return FULLFluff;
+                case PlacedObject_FieldIndex.RagdollData:
+                    return RagdollData;
+                default:
+                    return base.GetByteArr(index: index);
+            }
+        }
+
+        void IPropertySupporter<Byte[]>.Set(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByteArr(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetByteArr(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((PlacedObject_FieldIndex)index)
+            {
+                case PlacedObject_FieldIndex.XPCIFluff:
+                    SetXPCIFluff(item, hasBeenSet, cmds);
+                    break;
+                case PlacedObject_FieldIndex.FULLFluff:
+                    SetFULLFluff(item, hasBeenSet, cmds);
+                    break;
+                case PlacedObject_FieldIndex.RagdollData:
+                    SetRagdollData(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetByteArr(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte[]>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte[]>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByteArr(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetByteArr(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((PlacedObject_FieldIndex)index)
+            {
+                case PlacedObject_FieldIndex.XPCIFluff:
+                    _hasBeenSetTracker[index] = false;
+                    XPCIFluff = default(Byte[]);
+                    break;
+                case PlacedObject_FieldIndex.FULLFluff:
+                    _hasBeenSetTracker[index] = false;
+                    FULLFluff = default(Byte[]);
+                    break;
+                case PlacedObject_FieldIndex.RagdollData:
+                    _hasBeenSetTracker[index] = false;
+                    RagdollData = default(Byte[]);
+                    break;
+                default:
+                    base.UnsetByteArr(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte[]> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_ByteArr_subscriptions == null)
+            {
+                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
+            }
+            _ByteArr_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _ByteArr_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
+        {
+            return DefaultValueByteArr(index: index);
+        }
+
+        protected override Byte[] DefaultValueByteArr(int index)
+        {
+            switch ((PlacedObject_FieldIndex)index)
+            {
+                case PlacedObject_FieldIndex.XPCIFluff:
+                case PlacedObject_FieldIndex.FULLFluff:
+                case PlacedObject_FieldIndex.RagdollData:
+                    return default(Byte[]);
+                default:
+                    return base.DefaultValueByteArr(index: index);
             }
         }
 
@@ -3122,146 +3424,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region IPropertySupporter Byte[]
-        Byte[] IPropertySupporter<Byte[]>.Get(int index)
-        {
-            return GetByteArr(index: index);
-        }
-
-        protected override Byte[] GetByteArr(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.RagdollData:
-                    return RagdollData;
-                default:
-                    return base.GetByteArr(index: index);
-            }
-        }
-
-        void IPropertySupporter<Byte[]>.Set(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByteArr(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected override void SetByteArr(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.RagdollData:
-                    SetRagdollData(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    base.SetByteArr(
-                        index: index,
-                        item: item,
-                        hasBeenSet: hasBeenSet,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
-        {
-            return _hasBeenSetTracker[index];
-        }
-
-        void IPropertySupporter<Byte[]>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte[]>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByteArr(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected override void UnsetByteArr(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.RagdollData:
-                    _hasBeenSetTracker[index] = false;
-                    RagdollData = default(Byte[]);
-                    break;
-                default:
-                    base.UnsetByteArr(
-                        index: index,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte[]> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ByteArr_subscriptions == null)
-            {
-                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
-            }
-            _ByteArr_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ByteArr_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
-        {
-            return DefaultValueByteArr(index: index);
-        }
-
-        protected override Byte[] DefaultValueByteArr(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.RagdollData:
-                    return default(Byte[]);
-                default:
-                    return base.DefaultValueByteArr(index: index);
-            }
-        }
-
-        #endregion
-
         #region IPropertySupporter P3Float
         protected ObjectCentralizationSubscriptions<P3Float> _P3Float_subscriptions;
         P3Float IPropertySupporter<P3Float>.Get(int index)
@@ -3687,6 +3849,36 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)PlacedObject_FieldIndex.Base,
                         errorMask: errorMask));
                     return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.Base);
+                case "XPCI":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    var XPCIFlufftryGet = ByteArrayBinaryTranslation.Instance.Parse(
+                        frame.SpawnWithLength(contentLength),
+                        fieldIndex: (int)PlacedObject_FieldIndex.XPCIFluff,
+                        errorMask: errorMask);
+                    if (XPCIFlufftryGet.Succeeded)
+                    {
+                        item.SetXPCIFluff(item: XPCIFlufftryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetXPCIFluff();
+                    }
+                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.XPCIFluff);
+                case "FULL":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    var FULLFlufftryGet = ByteArrayBinaryTranslation.Instance.Parse(
+                        frame.SpawnWithLength(contentLength),
+                        fieldIndex: (int)PlacedObject_FieldIndex.FULLFluff,
+                        errorMask: errorMask);
+                    if (FULLFlufftryGet.Succeeded)
+                    {
+                        item.SetFULLFluff(item: FULLFlufftryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFULLFluff();
+                    }
+                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.FULLFluff);
                 case "XTEL":
                     {
                         var TeleportDestinationtryGet = LoquiBinaryTranslation<TeleportDestination, TeleportDestination_ErrorMask>.Instance.Parse(
@@ -4102,6 +4294,16 @@ namespace Mutagen.Bethesda.Oblivion
                         (FormIDSetLink<MajorRecord>)obj,
                         cmds);
                     break;
+                case PlacedObject_FieldIndex.XPCIFluff:
+                    this.SetXPCIFluff(
+                        (Byte[])obj,
+                        cmds: cmds);
+                    break;
+                case PlacedObject_FieldIndex.FULLFluff:
+                    this.SetFULLFluff(
+                        (Byte[])obj,
+                        cmds: cmds);
+                    break;
                 case PlacedObject_FieldIndex.TeleportDestination:
                     this.SetTeleportDestination(
                         (TeleportDestination)obj,
@@ -4248,6 +4450,16 @@ namespace Mutagen.Bethesda.Oblivion
                         (FormIDSetLink<MajorRecord>)pair.Value,
                         null);
                     break;
+                case PlacedObject_FieldIndex.XPCIFluff:
+                    obj.SetXPCIFluff(
+                        (Byte[])pair.Value,
+                        cmds: null);
+                    break;
+                case PlacedObject_FieldIndex.FULLFluff:
+                    obj.SetFULLFluff(
+                        (Byte[])pair.Value,
+                        cmds: null);
+                    break;
                 case PlacedObject_FieldIndex.TeleportDestination:
                     obj.SetTeleportDestination(
                         (TeleportDestination)pair.Value,
@@ -4374,6 +4586,12 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IPlacedObject : IPlacedObjectGetter, IPlaced, ILoquiClass<IPlacedObject, IPlacedObjectGetter>, ILoquiClass<PlacedObject, IPlacedObjectGetter>
     {
         new MajorRecord Base { get; set; }
+        new Byte[] XPCIFluff { get; set; }
+        new INotifyingSetItem<Byte[]> XPCIFluff_Property { get; }
+
+        new Byte[] FULLFluff { get; set; }
+        new INotifyingSetItem<Byte[]> FULLFluff_Property { get; }
+
         new TeleportDestination TeleportDestination { get; set; }
         new INotifyingSetItem<TeleportDestination> TeleportDestination_Property { get; }
 
@@ -4437,6 +4655,16 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base
         MajorRecord Base { get; }
         FormIDSetLink<MajorRecord> Base_Property { get; }
+
+        #endregion
+        #region XPCIFluff
+        Byte[] XPCIFluff { get; }
+        INotifyingSetItemGetter<Byte[]> XPCIFluff_Property { get; }
+
+        #endregion
+        #region FULLFluff
+        Byte[] FULLFluff { get; }
+        INotifyingSetItemGetter<Byte[]> FULLFluff_Property { get; }
 
         #endregion
         #region TeleportDestination
@@ -4567,28 +4795,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         EditorID = 3,
         RecordType = 4,
         Base = 5,
-        TeleportDestination = 6,
-        Lock = 7,
-        Owner = 8,
-        FactionRank = 9,
-        GlobalVariable = 10,
-        EnableParent = 11,
-        Target = 12,
-        SpeedTreeSeed = 13,
-        DistantLODData = 14,
-        Charge = 15,
-        Health = 16,
-        LevelModifier = 17,
-        Unknown = 18,
-        ActionFlags = 19,
-        Count = 20,
-        MapMarker = 21,
-        OpenByDefault = 22,
-        RagdollData = 23,
-        Scale = 24,
-        ContainedSoul = 25,
-        Position = 26,
-        Rotation = 27,
+        XPCIFluff = 6,
+        FULLFluff = 7,
+        TeleportDestination = 8,
+        Lock = 9,
+        Owner = 10,
+        FactionRank = 11,
+        GlobalVariable = 12,
+        EnableParent = 13,
+        Target = 14,
+        SpeedTreeSeed = 15,
+        DistantLODData = 16,
+        Charge = 17,
+        Health = 18,
+        LevelModifier = 19,
+        Unknown = 20,
+        ActionFlags = 21,
+        Count = 22,
+        MapMarker = 23,
+        OpenByDefault = 24,
+        RagdollData = 25,
+        Scale = 26,
+        ContainedSoul = 27,
+        Position = 28,
+        Rotation = 29,
     }
     #endregion
 
@@ -4606,9 +4836,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "7a559a46-7ef9-49e9-98c1-ec16c3df81f2";
 
-        public const ushort AdditionalFieldCount = 23;
+        public const ushort AdditionalFieldCount = 25;
 
-        public const ushort FieldCount = 28;
+        public const ushort FieldCount = 30;
 
         public static readonly Type MaskType = typeof(PlacedObject_Mask<>);
 
@@ -4638,6 +4868,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case "BASE":
                     return (ushort)PlacedObject_FieldIndex.Base;
+                case "XPCIFLUFF":
+                    return (ushort)PlacedObject_FieldIndex.XPCIFluff;
+                case "FULLFLUFF":
+                    return (ushort)PlacedObject_FieldIndex.FULLFluff;
                 case "TELEPORTDESTINATION":
                     return (ushort)PlacedObject_FieldIndex.TeleportDestination;
                 case "LOCK":
@@ -4693,6 +4927,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PlacedObject_FieldIndex.Base:
+                case PlacedObject_FieldIndex.XPCIFluff:
+                case PlacedObject_FieldIndex.FULLFluff:
                 case PlacedObject_FieldIndex.TeleportDestination:
                 case PlacedObject_FieldIndex.Lock:
                 case PlacedObject_FieldIndex.Owner:
@@ -4733,6 +4969,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.MapMarker:
                     return true;
                 case PlacedObject_FieldIndex.Base:
+                case PlacedObject_FieldIndex.XPCIFluff:
+                case PlacedObject_FieldIndex.FULLFluff:
                 case PlacedObject_FieldIndex.Owner:
                 case PlacedObject_FieldIndex.FactionRank:
                 case PlacedObject_FieldIndex.GlobalVariable:
@@ -4762,6 +5000,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PlacedObject_FieldIndex.Base:
+                case PlacedObject_FieldIndex.XPCIFluff:
+                case PlacedObject_FieldIndex.FULLFluff:
                 case PlacedObject_FieldIndex.TeleportDestination:
                 case PlacedObject_FieldIndex.Lock:
                 case PlacedObject_FieldIndex.Owner:
@@ -4797,6 +5037,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case PlacedObject_FieldIndex.Base:
                     return "Base";
+                case PlacedObject_FieldIndex.XPCIFluff:
+                    return "XPCIFluff";
+                case PlacedObject_FieldIndex.FULLFluff:
+                    return "FULLFluff";
                 case PlacedObject_FieldIndex.TeleportDestination:
                     return "TeleportDestination";
                 case PlacedObject_FieldIndex.Lock:
@@ -4852,6 +5096,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PlacedObject_FieldIndex.Base:
+                case PlacedObject_FieldIndex.XPCIFluff:
+                case PlacedObject_FieldIndex.FULLFluff:
                 case PlacedObject_FieldIndex.TeleportDestination:
                 case PlacedObject_FieldIndex.Lock:
                 case PlacedObject_FieldIndex.Owner:
@@ -4886,6 +5132,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PlacedObject_FieldIndex.Base:
+                case PlacedObject_FieldIndex.XPCIFluff:
+                case PlacedObject_FieldIndex.FULLFluff:
                 case PlacedObject_FieldIndex.TeleportDestination:
                 case PlacedObject_FieldIndex.Lock:
                 case PlacedObject_FieldIndex.Owner:
@@ -4921,6 +5169,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case PlacedObject_FieldIndex.Base:
                     return typeof(FormIDSetLink<MajorRecord>);
+                case PlacedObject_FieldIndex.XPCIFluff:
+                    return typeof(Byte[]);
+                case PlacedObject_FieldIndex.FULLFluff:
+                    return typeof(Byte[]);
                 case PlacedObject_FieldIndex.TeleportDestination:
                     return typeof(TeleportDestination);
                 case PlacedObject_FieldIndex.Lock:
@@ -4972,6 +5224,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly RecordType REFR_HEADER = new RecordType("REFR");
         public static readonly RecordType NAME_HEADER = new RecordType("NAME");
+        public static readonly RecordType XPCI_HEADER = new RecordType("XPCI");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType XTEL_HEADER = new RecordType("XTEL");
         public static readonly RecordType XLOC_HEADER = new RecordType("XLOC");
         public static readonly RecordType XOWN_HEADER = new RecordType("XOWN");
@@ -4995,7 +5249,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = REFR_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 21;
+        public const int NumTypedFields = 23;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -5060,6 +5314,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 when (doMasks)
                 {
                     errorMask().SetNthException((int)PlacedObject_FieldIndex.Base, ex);
+                }
+            }
+            if (copyMask?.XPCIFluff ?? true)
+            {
+                try
+                {
+                    item.XPCIFluff_Property.SetToWithDefault(
+                        rhs: rhs.XPCIFluff_Property,
+                        def: def?.XPCIFluff_Property);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)PlacedObject_FieldIndex.XPCIFluff, ex);
+                }
+            }
+            if (copyMask?.FULLFluff ?? true)
+            {
+                try
+                {
+                    item.FULLFluff_Property.SetToWithDefault(
+                        rhs: rhs.FULLFluff_Property,
+                        def: def?.FULLFluff_Property);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)PlacedObject_FieldIndex.FULLFluff, ex);
                 }
             }
             if (copyMask?.TeleportDestination.Overall != CopyOption.Skip)
@@ -5571,6 +5853,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Base:
                     obj.Base_Property.HasBeenSet = on;
                     break;
+                case PlacedObject_FieldIndex.XPCIFluff:
+                    obj.XPCIFluff_Property.HasBeenSet = on;
+                    break;
+                case PlacedObject_FieldIndex.FULLFluff:
+                    obj.FULLFluff_Property.HasBeenSet = on;
+                    break;
                 case PlacedObject_FieldIndex.TeleportDestination:
                     obj.TeleportDestination_Property.HasBeenSet = on;
                     break;
@@ -5644,6 +5932,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case PlacedObject_FieldIndex.Base:
                     obj.Base_Property.Unset(cmds);
+                    break;
+                case PlacedObject_FieldIndex.XPCIFluff:
+                    obj.XPCIFluff_Property.Unset(cmds);
+                    break;
+                case PlacedObject_FieldIndex.FULLFluff:
+                    obj.FULLFluff_Property.Unset(cmds);
                     break;
                 case PlacedObject_FieldIndex.TeleportDestination:
                     obj.TeleportDestination_Property.Unset(cmds);
@@ -5730,6 +6024,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return true;
                 case PlacedObject_FieldIndex.Base:
                     return obj.Base_Property.HasBeenSet;
+                case PlacedObject_FieldIndex.XPCIFluff:
+                    return obj.XPCIFluff_Property.HasBeenSet;
+                case PlacedObject_FieldIndex.FULLFluff:
+                    return obj.FULLFluff_Property.HasBeenSet;
                 case PlacedObject_FieldIndex.TeleportDestination:
                     return obj.TeleportDestination_Property.HasBeenSet;
                 case PlacedObject_FieldIndex.Lock:
@@ -5782,6 +6080,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case PlacedObject_FieldIndex.Base:
                     return obj.Base;
+                case PlacedObject_FieldIndex.XPCIFluff:
+                    return obj.XPCIFluff;
+                case PlacedObject_FieldIndex.FULLFluff:
+                    return obj.FULLFluff;
                 case PlacedObject_FieldIndex.TeleportDestination:
                     return obj.TeleportDestination;
                 case PlacedObject_FieldIndex.Lock:
@@ -5836,6 +6138,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Base_Property.Unset(cmds.ToUnsetParams());
+            item.XPCIFluff_Property.Unset(cmds.ToUnsetParams());
+            item.FULLFluff_Property.Unset(cmds.ToUnsetParams());
             item.TeleportDestination_Property.Unset(cmds.ToUnsetParams());
             item.Lock_Property.Unset(cmds.ToUnsetParams());
             item.Owner_Property.Unset(cmds.ToUnsetParams());
@@ -5876,6 +6180,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Base = item.Base_Property.Equals(rhs.Base_Property, (l, r) => l == r);
+            ret.XPCIFluff = item.XPCIFluff_Property.Equals(rhs.XPCIFluff_Property, (l, r) => l.EqualsFast(r));
+            ret.FULLFluff = item.FULLFluff_Property.Equals(rhs.FULLFluff_Property, (l, r) => l.EqualsFast(r));
             ret.TeleportDestination = item.TeleportDestination_Property.LoquiEqualsHelper(rhs.TeleportDestination_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Lock = item.Lock_Property.LoquiEqualsHelper(rhs.Lock_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Owner = item.Owner_Property.Equals(rhs.Owner_Property, (l, r) => l == r);
@@ -5931,6 +6237,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 if (printMask?.Base ?? true)
                 {
                     fg.AppendLine($"Base => {item.Base_Property}");
+                }
+                if (printMask?.XPCIFluff ?? true)
+                {
+                    fg.AppendLine($"XPCIFluff => {item.XPCIFluff}");
+                }
+                if (printMask?.FULLFluff ?? true)
+                {
+                    fg.AppendLine($"FULLFluff => {item.FULLFluff}");
                 }
                 if (printMask?.TeleportDestination?.Overall ?? true)
                 {
@@ -6029,6 +6343,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PlacedObject_Mask<bool?> checkMask)
         {
             if (checkMask.Base.HasValue && checkMask.Base.Value != item.Base_Property.HasBeenSet) return false;
+            if (checkMask.XPCIFluff.HasValue && checkMask.XPCIFluff.Value != item.XPCIFluff_Property.HasBeenSet) return false;
+            if (checkMask.FULLFluff.HasValue && checkMask.FULLFluff.Value != item.FULLFluff_Property.HasBeenSet) return false;
             if (checkMask.TeleportDestination.Overall.HasValue && checkMask.TeleportDestination.Overall.Value != item.TeleportDestination_Property.HasBeenSet) return false;
             if (checkMask.TeleportDestination.Specific != null && (item.TeleportDestination == null || !item.TeleportDestination.HasBeenSet(checkMask.TeleportDestination.Specific))) return false;
             if (checkMask.Lock.Overall.HasValue && checkMask.Lock.Overall.Value != item.Lock_Property.HasBeenSet) return false;
@@ -6060,6 +6376,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new PlacedObject_Mask<bool>();
             ret.Base = item.Base_Property.HasBeenSet;
+            ret.XPCIFluff = item.XPCIFluff_Property.HasBeenSet;
+            ret.FULLFluff = item.FULLFluff_Property.HasBeenSet;
             ret.TeleportDestination = new MaskItem<bool, TeleportDestination_Mask<bool>>(item.TeleportDestination_Property.HasBeenSet, TeleportDestinationCommon.GetHasBeenSetMask(item.TeleportDestination));
             ret.Lock = new MaskItem<bool, LockInformation_Mask<bool>>(item.Lock_Property.HasBeenSet, LockInformationCommon.GetHasBeenSetMask(item.Lock));
             ret.Owner = item.Owner_Property.HasBeenSet;
@@ -6174,6 +6492,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         name: nameof(item.Base),
                         item: item.Base?.FormID,
                         fieldIndex: (int)PlacedObject_FieldIndex.Base,
+                        errorMask: errorMask);
+                }
+                if (item.XPCIFluff_Property.HasBeenSet)
+                {
+                    ByteArrayXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.XPCIFluff),
+                        item: item.XPCIFluff_Property,
+                        fieldIndex: (int)PlacedObject_FieldIndex.XPCIFluff,
+                        errorMask: errorMask);
+                }
+                if (item.FULLFluff_Property.HasBeenSet)
+                {
+                    ByteArrayXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.FULLFluff),
+                        item: item.FULLFluff_Property,
+                        fieldIndex: (int)PlacedObject_FieldIndex.FULLFluff,
                         errorMask: errorMask);
                 }
                 if (item.TeleportDestination_Property.HasBeenSet)
@@ -6444,6 +6780,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.NAME_HEADER),
                 nullable: false);
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.XPCIFluff_Property,
+                fieldIndex: (int)PlacedObject_FieldIndex.XPCIFluff,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XPCI_HEADER),
+                nullable: false);
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.FULLFluff_Property,
+                fieldIndex: (int)PlacedObject_FieldIndex.FULLFluff,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.FULL_HEADER),
+                nullable: false);
             LoquiBinaryTranslation<TeleportDestination, TeleportDestination_ErrorMask>.Instance.Write(
                 writer: writer,
                 item: item.TeleportDestination_Property,
@@ -6610,6 +6960,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public PlacedObject_Mask(T initialValue)
         {
             this.Base = initialValue;
+            this.XPCIFluff = initialValue;
+            this.FULLFluff = initialValue;
             this.TeleportDestination = new MaskItem<T, TeleportDestination_Mask<T>>(initialValue, new TeleportDestination_Mask<T>(initialValue));
             this.Lock = new MaskItem<T, LockInformation_Mask<T>>(initialValue, new LockInformation_Mask<T>(initialValue));
             this.Owner = initialValue;
@@ -6637,6 +6989,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Members
         public T Base;
+        public T XPCIFluff;
+        public T FULLFluff;
         public MaskItem<T, TeleportDestination_Mask<T>> TeleportDestination { get; set; }
         public MaskItem<T, LockInformation_Mask<T>> Lock { get; set; }
         public T Owner;
@@ -6673,6 +7027,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
             if (!object.Equals(this.Base, rhs.Base)) return false;
+            if (!object.Equals(this.XPCIFluff, rhs.XPCIFluff)) return false;
+            if (!object.Equals(this.FULLFluff, rhs.FULLFluff)) return false;
             if (!object.Equals(this.TeleportDestination, rhs.TeleportDestination)) return false;
             if (!object.Equals(this.Lock, rhs.Lock)) return false;
             if (!object.Equals(this.Owner, rhs.Owner)) return false;
@@ -6701,6 +7057,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             int ret = 0;
             ret = ret.CombineHashCode(this.Base?.GetHashCode());
+            ret = ret.CombineHashCode(this.XPCIFluff?.GetHashCode());
+            ret = ret.CombineHashCode(this.FULLFluff?.GetHashCode());
             ret = ret.CombineHashCode(this.TeleportDestination?.GetHashCode());
             ret = ret.CombineHashCode(this.Lock?.GetHashCode());
             ret = ret.CombineHashCode(this.Owner?.GetHashCode());
@@ -6734,6 +7092,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (!base.AllEqual(eval)) return false;
             if (!eval(this.Base)) return false;
+            if (!eval(this.XPCIFluff)) return false;
+            if (!eval(this.FULLFluff)) return false;
             if (TeleportDestination != null)
             {
                 if (!eval(this.TeleportDestination.Overall)) return false;
@@ -6792,6 +7152,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             base.Translate_InternalFill(obj, eval);
             obj.Base = eval(this.Base);
+            obj.XPCIFluff = eval(this.XPCIFluff);
+            obj.FULLFluff = eval(this.FULLFluff);
             if (this.TeleportDestination != null)
             {
                 obj.TeleportDestination = new MaskItem<R, TeleportDestination_Mask<R>>();
@@ -6886,6 +7248,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 if (printMask?.Base ?? true)
                 {
                     fg.AppendLine($"Base => {Base}");
+                }
+                if (printMask?.XPCIFluff ?? true)
+                {
+                    fg.AppendLine($"XPCIFluff => {XPCIFluff}");
+                }
+                if (printMask?.FULLFluff ?? true)
+                {
+                    fg.AppendLine($"FULLFluff => {FULLFluff}");
                 }
                 if (printMask?.TeleportDestination?.Overall ?? true)
                 {
@@ -6986,6 +7356,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Members
         public Exception Base;
+        public Exception XPCIFluff;
+        public Exception FULLFluff;
         public MaskItem<Exception, TeleportDestination_ErrorMask> TeleportDestination;
         public MaskItem<Exception, LockInformation_ErrorMask> Lock;
         public Exception Owner;
@@ -7018,6 +7390,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case PlacedObject_FieldIndex.Base:
                     return Base;
+                case PlacedObject_FieldIndex.XPCIFluff:
+                    return XPCIFluff;
+                case PlacedObject_FieldIndex.FULLFluff:
+                    return FULLFluff;
                 case PlacedObject_FieldIndex.TeleportDestination:
                     return TeleportDestination;
                 case PlacedObject_FieldIndex.Lock:
@@ -7074,6 +7450,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case PlacedObject_FieldIndex.Base:
                     this.Base = ex;
+                    break;
+                case PlacedObject_FieldIndex.XPCIFluff:
+                    this.XPCIFluff = ex;
+                    break;
+                case PlacedObject_FieldIndex.FULLFluff:
+                    this.FULLFluff = ex;
                     break;
                 case PlacedObject_FieldIndex.TeleportDestination:
                     this.TeleportDestination = new MaskItem<Exception, TeleportDestination_ErrorMask>(ex, null);
@@ -7155,6 +7537,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Base:
                     this.Base = (Exception)obj;
                     break;
+                case PlacedObject_FieldIndex.XPCIFluff:
+                    this.XPCIFluff = (Exception)obj;
+                    break;
+                case PlacedObject_FieldIndex.FULLFluff:
+                    this.FULLFluff = (Exception)obj;
+                    break;
                 case PlacedObject_FieldIndex.TeleportDestination:
                     this.TeleportDestination = (MaskItem<Exception, TeleportDestination_ErrorMask>)obj;
                     break;
@@ -7231,6 +7619,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (Overall != null) return true;
             if (Base != null) return true;
+            if (XPCIFluff != null) return true;
+            if (FULLFluff != null) return true;
             if (TeleportDestination != null) return true;
             if (Lock != null) return true;
             if (Owner != null) return true;
@@ -7289,6 +7679,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             base.ToString_FillInternal(fg);
             fg.AppendLine($"Base => {Base}");
+            fg.AppendLine($"XPCIFluff => {XPCIFluff}");
+            fg.AppendLine($"FULLFluff => {FULLFluff}");
             TeleportDestination?.ToString(fg);
             Lock?.ToString(fg);
             fg.AppendLine($"Owner => {Owner}");
@@ -7319,6 +7711,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new PlacedObject_ErrorMask();
             ret.Base = this.Base.Combine(rhs.Base);
+            ret.XPCIFluff = this.XPCIFluff.Combine(rhs.XPCIFluff);
+            ret.FULLFluff = this.FULLFluff.Combine(rhs.FULLFluff);
             ret.TeleportDestination = new MaskItem<Exception, TeleportDestination_ErrorMask>(this.TeleportDestination.Overall.Combine(rhs.TeleportDestination.Overall), ((IErrorMask<TeleportDestination_ErrorMask>)this.TeleportDestination.Specific).Combine(rhs.TeleportDestination.Specific));
             ret.Lock = new MaskItem<Exception, LockInformation_ErrorMask>(this.Lock.Overall.Combine(rhs.Lock.Overall), ((IErrorMask<LockInformation_ErrorMask>)this.Lock.Specific).Combine(rhs.Lock.Specific));
             ret.Owner = this.Owner.Combine(rhs.Owner);
@@ -7355,6 +7749,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Members
         public bool Base;
+        public bool XPCIFluff;
+        public bool FULLFluff;
         public MaskItem<CopyOption, TeleportDestination_CopyMask> TeleportDestination;
         public MaskItem<CopyOption, LockInformation_CopyMask> Lock;
         public bool Owner;

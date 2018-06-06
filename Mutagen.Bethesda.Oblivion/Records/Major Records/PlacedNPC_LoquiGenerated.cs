@@ -33,9 +33,9 @@ namespace Mutagen.Bethesda.Oblivion
         IPlacedNPC,
         ILoquiObject<PlacedNPC>,
         ILoquiObjectSetter,
+        IPropertySupporter<Byte[]>,
         IPropertySupporter<DistantLODData>,
         IPropertySupporter<EnableParent>,
-        IPropertySupporter<Byte[]>,
         IPropertySupporter<Single>,
         IPropertySupporter<P3Float>,
         IEquatable<PlacedNPC>
@@ -58,6 +58,102 @@ namespace Mutagen.Bethesda.Oblivion
         public NPC Base { get => Base_Property.Item; set => Base_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<NPC> IPlacedNPCGetter.Base_Property => this.Base_Property;
+        #endregion
+        #region XPCIFluff
+        protected Byte[] _XPCIFluff;
+        protected PropertyForwarder<PlacedNPC, Byte[]> _XPCIFluffForwarder;
+        public INotifyingSetItem<Byte[]> XPCIFluff_Property => _XPCIFluffForwarder ?? (_XPCIFluffForwarder = new PropertyForwarder<PlacedNPC, Byte[]>(this, (int)PlacedNPC_FieldIndex.XPCIFluff));
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public Byte[] XPCIFluff
+        {
+            get => this._XPCIFluff;
+            set => this.SetXPCIFluff(value);
+        }
+        protected void SetXPCIFluff(
+            Byte[] item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.XPCIFluff];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(XPCIFluff, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.XPCIFluff] = hasBeenSet;
+            }
+            if (_ByteArr_subscriptions != null)
+            {
+                var tmp = XPCIFluff;
+                _XPCIFluff = item;
+                _ByteArr_subscriptions.FireSubscriptions(
+                    index: (int)PlacedNPC_FieldIndex.XPCIFluff,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _XPCIFluff = item;
+            }
+        }
+        protected void UnsetXPCIFluff()
+        {
+            _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.XPCIFluff] = false;
+            XPCIFluff = default(Byte[]);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItem<Byte[]> IPlacedNPC.XPCIFluff_Property => this.XPCIFluff_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<Byte[]> IPlacedNPCGetter.XPCIFluff_Property => this.XPCIFluff_Property;
+        #endregion
+        #region FULLFluff
+        protected Byte[] _FULLFluff;
+        protected PropertyForwarder<PlacedNPC, Byte[]> _FULLFluffForwarder;
+        public INotifyingSetItem<Byte[]> FULLFluff_Property => _FULLFluffForwarder ?? (_FULLFluffForwarder = new PropertyForwarder<PlacedNPC, Byte[]>(this, (int)PlacedNPC_FieldIndex.FULLFluff));
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public Byte[] FULLFluff
+        {
+            get => this._FULLFluff;
+            set => this.SetFULLFluff(value);
+        }
+        protected void SetFULLFluff(
+            Byte[] item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.FULLFluff];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(FULLFluff, item)) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.FULLFluff] = hasBeenSet;
+            }
+            if (_ByteArr_subscriptions != null)
+            {
+                var tmp = FULLFluff;
+                _FULLFluff = item;
+                _ByteArr_subscriptions.FireSubscriptions(
+                    index: (int)PlacedNPC_FieldIndex.FULLFluff,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _FULLFluff = item;
+            }
+        }
+        protected void UnsetFULLFluff()
+        {
+            _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.FULLFluff] = false;
+            FULLFluff = default(Byte[]);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItem<Byte[]> IPlacedNPC.FULLFluff_Property => this.FULLFluff_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<Byte[]> IPlacedNPCGetter.FULLFluff_Property => this.FULLFluff_Property;
         #endregion
         #region DistantLODData
         protected DistantLODData _DistantLODData;
@@ -425,6 +521,16 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.Base_Property.Equals(rhs.Base_Property)) return false;
             }
+            if (XPCIFluff_Property.HasBeenSet != rhs.XPCIFluff_Property.HasBeenSet) return false;
+            if (XPCIFluff_Property.HasBeenSet)
+            {
+                if (!this.XPCIFluff.EqualsFast(rhs.XPCIFluff)) return false;
+            }
+            if (FULLFluff_Property.HasBeenSet != rhs.FULLFluff_Property.HasBeenSet) return false;
+            if (FULLFluff_Property.HasBeenSet)
+            {
+                if (!this.FULLFluff.EqualsFast(rhs.FULLFluff)) return false;
+            }
             if (DistantLODData_Property.HasBeenSet != rhs.DistantLODData_Property.HasBeenSet) return false;
             if (DistantLODData_Property.HasBeenSet)
             {
@@ -466,6 +572,14 @@ namespace Mutagen.Bethesda.Oblivion
             if (Base_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Base).CombineHashCode(ret);
+            }
+            if (XPCIFluff_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(XPCIFluff).CombineHashCode(ret);
+            }
+            if (FULLFluff_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(FULLFluff).CombineHashCode(ret);
             }
             if (DistantLODData_Property.HasBeenSet)
             {
@@ -796,6 +910,34 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)PlacedNPC_FieldIndex.Base,
                         errorMask: errorMask));
                     break;
+                case "XPCIFluff":
+                    var XPCIFlufftryGet = ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.XPCIFluff,
+                        errorMask: errorMask);
+                    if (XPCIFlufftryGet.Succeeded)
+                    {
+                        item.SetXPCIFluff(item: XPCIFlufftryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetXPCIFluff();
+                    }
+                    break;
+                case "FULLFluff":
+                    var FULLFlufftryGet = ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.FULLFluff,
+                        errorMask: errorMask);
+                    if (FULLFlufftryGet.Succeeded)
+                    {
+                        item.SetFULLFluff(item: FULLFlufftryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFULLFluff();
+                    }
+                    break;
                 case "DistantLODData":
                     var DistantLODDatatryGet = LoquiXmlTranslation<DistantLODData, DistantLODData_ErrorMask>.Instance.Parse(
                         root: root,
@@ -899,6 +1041,166 @@ namespace Mutagen.Bethesda.Oblivion
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        #region IPropertySupporter Byte[]
+        Byte[] IPropertySupporter<Byte[]>.Get(int index)
+        {
+            return GetByteArr(index: index);
+        }
+
+        protected override Byte[] GetByteArr(int index)
+        {
+            switch ((PlacedNPC_FieldIndex)index)
+            {
+                case PlacedNPC_FieldIndex.XPCIFluff:
+                    return XPCIFluff;
+                case PlacedNPC_FieldIndex.FULLFluff:
+                    return FULLFluff;
+                case PlacedNPC_FieldIndex.RagdollData:
+                    return RagdollData;
+                default:
+                    return base.GetByteArr(index: index);
+            }
+        }
+
+        void IPropertySupporter<Byte[]>.Set(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetByteArr(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetByteArr(
+            int index,
+            Byte[] item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((PlacedNPC_FieldIndex)index)
+            {
+                case PlacedNPC_FieldIndex.XPCIFluff:
+                    SetXPCIFluff(item, hasBeenSet, cmds);
+                    break;
+                case PlacedNPC_FieldIndex.FULLFluff:
+                    SetFULLFluff(item, hasBeenSet, cmds);
+                    break;
+                case PlacedNPC_FieldIndex.RagdollData:
+                    SetRagdollData(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetByteArr(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
+        {
+            return _hasBeenSetTracker[index];
+        }
+
+        void IPropertySupporter<Byte[]>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<Byte[]>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetByteArr(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetByteArr(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((PlacedNPC_FieldIndex)index)
+            {
+                case PlacedNPC_FieldIndex.XPCIFluff:
+                    _hasBeenSetTracker[index] = false;
+                    XPCIFluff = default(Byte[]);
+                    break;
+                case PlacedNPC_FieldIndex.FULLFluff:
+                    _hasBeenSetTracker[index] = false;
+                    FULLFluff = default(Byte[]);
+                    break;
+                case PlacedNPC_FieldIndex.RagdollData:
+                    _hasBeenSetTracker[index] = false;
+                    RagdollData = default(Byte[]);
+                    break;
+                default:
+                    base.UnsetByteArr(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<Byte[]> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_ByteArr_subscriptions == null)
+            {
+                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
+            }
+            _ByteArr_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<Byte[]>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _ByteArr_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
+        {
+            return DefaultValueByteArr(index: index);
+        }
+
+        protected override Byte[] DefaultValueByteArr(int index)
+        {
+            switch ((PlacedNPC_FieldIndex)index)
+            {
+                case PlacedNPC_FieldIndex.XPCIFluff:
+                case PlacedNPC_FieldIndex.FULLFluff:
+                case PlacedNPC_FieldIndex.RagdollData:
+                    return default(Byte[]);
+                default:
+                    return base.DefaultValueByteArr(index: index);
             }
         }
 
@@ -1165,146 +1467,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return default(EnableParent);
                 default:
                     throw new ArgumentException($"Unknown index for field type EnableParent: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Byte[]
-        Byte[] IPropertySupporter<Byte[]>.Get(int index)
-        {
-            return GetByteArr(index: index);
-        }
-
-        protected override Byte[] GetByteArr(int index)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.RagdollData:
-                    return RagdollData;
-                default:
-                    return base.GetByteArr(index: index);
-            }
-        }
-
-        void IPropertySupporter<Byte[]>.Set(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByteArr(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected override void SetByteArr(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.RagdollData:
-                    SetRagdollData(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    base.SetByteArr(
-                        index: index,
-                        item: item,
-                        hasBeenSet: hasBeenSet,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
-        {
-            return _hasBeenSetTracker[index];
-        }
-
-        void IPropertySupporter<Byte[]>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte[]>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByteArr(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected override void UnsetByteArr(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.RagdollData:
-                    _hasBeenSetTracker[index] = false;
-                    RagdollData = default(Byte[]);
-                    break;
-                default:
-                    base.UnsetByteArr(
-                        index: index,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte[]> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ByteArr_subscriptions == null)
-            {
-                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
-            }
-            _ByteArr_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ByteArr_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
-        {
-            return DefaultValueByteArr(index: index);
-        }
-
-        protected override Byte[] DefaultValueByteArr(int index)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.RagdollData:
-                    return default(Byte[]);
-                default:
-                    return base.DefaultValueByteArr(index: index);
             }
         }
 
@@ -1818,6 +1980,36 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)PlacedNPC_FieldIndex.Base,
                         errorMask: errorMask));
                     return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.Base);
+                case "XPCI":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    var XPCIFlufftryGet = ByteArrayBinaryTranslation.Instance.Parse(
+                        frame.SpawnWithLength(contentLength),
+                        fieldIndex: (int)PlacedNPC_FieldIndex.XPCIFluff,
+                        errorMask: errorMask);
+                    if (XPCIFlufftryGet.Succeeded)
+                    {
+                        item.SetXPCIFluff(item: XPCIFlufftryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetXPCIFluff();
+                    }
+                    return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.XPCIFluff);
+                case "FULL":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    var FULLFlufftryGet = ByteArrayBinaryTranslation.Instance.Parse(
+                        frame.SpawnWithLength(contentLength),
+                        fieldIndex: (int)PlacedNPC_FieldIndex.FULLFluff,
+                        errorMask: errorMask);
+                    if (FULLFlufftryGet.Succeeded)
+                    {
+                        item.SetFULLFluff(item: FULLFlufftryGet.Value);
+                    }
+                    else
+                    {
+                        item.UnsetFULLFluff();
+                    }
+                    return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.FULLFluff);
                 case "XLOD":
                     {
                         var DistantLODDatatryGet = LoquiBinaryTranslation<DistantLODData, DistantLODData_ErrorMask>.Instance.Parse(
@@ -2040,6 +2232,16 @@ namespace Mutagen.Bethesda.Oblivion
                         (FormIDSetLink<NPC>)obj,
                         cmds);
                     break;
+                case PlacedNPC_FieldIndex.XPCIFluff:
+                    this.SetXPCIFluff(
+                        (Byte[])obj,
+                        cmds: cmds);
+                    break;
+                case PlacedNPC_FieldIndex.FULLFluff:
+                    this.SetFULLFluff(
+                        (Byte[])obj,
+                        cmds: cmds);
+                    break;
                 case PlacedNPC_FieldIndex.DistantLODData:
                     this.SetDistantLODData(
                         (DistantLODData)obj,
@@ -2116,6 +2318,16 @@ namespace Mutagen.Bethesda.Oblivion
                         (FormIDSetLink<NPC>)pair.Value,
                         null);
                     break;
+                case PlacedNPC_FieldIndex.XPCIFluff:
+                    obj.SetXPCIFluff(
+                        (Byte[])pair.Value,
+                        cmds: null);
+                    break;
+                case PlacedNPC_FieldIndex.FULLFluff:
+                    obj.SetFULLFluff(
+                        (Byte[])pair.Value,
+                        cmds: null);
+                    break;
                 case PlacedNPC_FieldIndex.DistantLODData:
                     obj.SetDistantLODData(
                         (DistantLODData)pair.Value,
@@ -2172,6 +2384,12 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IPlacedNPC : IPlacedNPCGetter, IPlaced, ILoquiClass<IPlacedNPC, IPlacedNPCGetter>, ILoquiClass<PlacedNPC, IPlacedNPCGetter>
     {
         new NPC Base { get; set; }
+        new Byte[] XPCIFluff { get; set; }
+        new INotifyingSetItem<Byte[]> XPCIFluff_Property { get; }
+
+        new Byte[] FULLFluff { get; set; }
+        new INotifyingSetItem<Byte[]> FULLFluff_Property { get; }
+
         new DistantLODData DistantLODData { get; set; }
         new INotifyingSetItem<DistantLODData> DistantLODData_Property { get; }
 
@@ -2199,6 +2417,16 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base
         NPC Base { get; }
         FormIDSetLink<NPC> Base_Property { get; }
+
+        #endregion
+        #region XPCIFluff
+        Byte[] XPCIFluff { get; }
+        INotifyingSetItemGetter<Byte[]> XPCIFluff_Property { get; }
+
+        #endregion
+        #region FULLFluff
+        Byte[] FULLFluff { get; }
+        INotifyingSetItemGetter<Byte[]> FULLFluff_Property { get; }
 
         #endregion
         #region DistantLODData
@@ -2259,14 +2487,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         EditorID = 3,
         RecordType = 4,
         Base = 5,
-        DistantLODData = 6,
-        EnableParent = 7,
-        MerchantContainer = 8,
-        Horse = 9,
-        RagdollData = 10,
-        Scale = 11,
-        Position = 12,
-        Rotation = 13,
+        XPCIFluff = 6,
+        FULLFluff = 7,
+        DistantLODData = 8,
+        EnableParent = 9,
+        MerchantContainer = 10,
+        Horse = 11,
+        RagdollData = 12,
+        Scale = 13,
+        Position = 14,
+        Rotation = 15,
     }
     #endregion
 
@@ -2284,9 +2514,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "1bd10cd8-4d9b-4cc0-9639-51f02a1b2e36";
 
-        public const ushort AdditionalFieldCount = 9;
+        public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(PlacedNPC_Mask<>);
 
@@ -2316,6 +2546,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case "BASE":
                     return (ushort)PlacedNPC_FieldIndex.Base;
+                case "XPCIFLUFF":
+                    return (ushort)PlacedNPC_FieldIndex.XPCIFluff;
+                case "FULLFLUFF":
+                    return (ushort)PlacedNPC_FieldIndex.FULLFluff;
                 case "DISTANTLODDATA":
                     return (ushort)PlacedNPC_FieldIndex.DistantLODData;
                 case "ENABLEPARENT":
@@ -2343,6 +2577,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PlacedNPC_FieldIndex.Base:
+                case PlacedNPC_FieldIndex.XPCIFluff:
+                case PlacedNPC_FieldIndex.FULLFluff:
                 case PlacedNPC_FieldIndex.DistantLODData:
                 case PlacedNPC_FieldIndex.EnableParent:
                 case PlacedNPC_FieldIndex.MerchantContainer:
@@ -2366,6 +2602,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedNPC_FieldIndex.EnableParent:
                     return true;
                 case PlacedNPC_FieldIndex.Base:
+                case PlacedNPC_FieldIndex.XPCIFluff:
+                case PlacedNPC_FieldIndex.FULLFluff:
                 case PlacedNPC_FieldIndex.MerchantContainer:
                 case PlacedNPC_FieldIndex.Horse:
                 case PlacedNPC_FieldIndex.RagdollData:
@@ -2384,6 +2622,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PlacedNPC_FieldIndex.Base:
+                case PlacedNPC_FieldIndex.XPCIFluff:
+                case PlacedNPC_FieldIndex.FULLFluff:
                 case PlacedNPC_FieldIndex.DistantLODData:
                 case PlacedNPC_FieldIndex.EnableParent:
                 case PlacedNPC_FieldIndex.MerchantContainer:
@@ -2405,6 +2645,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case PlacedNPC_FieldIndex.Base:
                     return "Base";
+                case PlacedNPC_FieldIndex.XPCIFluff:
+                    return "XPCIFluff";
+                case PlacedNPC_FieldIndex.FULLFluff:
+                    return "FULLFluff";
                 case PlacedNPC_FieldIndex.DistantLODData:
                     return "DistantLODData";
                 case PlacedNPC_FieldIndex.EnableParent:
@@ -2432,6 +2676,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PlacedNPC_FieldIndex.Base:
+                case PlacedNPC_FieldIndex.XPCIFluff:
+                case PlacedNPC_FieldIndex.FULLFluff:
                 case PlacedNPC_FieldIndex.DistantLODData:
                 case PlacedNPC_FieldIndex.EnableParent:
                 case PlacedNPC_FieldIndex.MerchantContainer:
@@ -2452,6 +2698,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PlacedNPC_FieldIndex.Base:
+                case PlacedNPC_FieldIndex.XPCIFluff:
+                case PlacedNPC_FieldIndex.FULLFluff:
                 case PlacedNPC_FieldIndex.DistantLODData:
                 case PlacedNPC_FieldIndex.EnableParent:
                 case PlacedNPC_FieldIndex.MerchantContainer:
@@ -2473,6 +2721,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case PlacedNPC_FieldIndex.Base:
                     return typeof(FormIDSetLink<NPC>);
+                case PlacedNPC_FieldIndex.XPCIFluff:
+                    return typeof(Byte[]);
+                case PlacedNPC_FieldIndex.FULLFluff:
+                    return typeof(Byte[]);
                 case PlacedNPC_FieldIndex.DistantLODData:
                     return typeof(DistantLODData);
                 case PlacedNPC_FieldIndex.EnableParent:
@@ -2496,6 +2748,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly RecordType ACHR_HEADER = new RecordType("ACHR");
         public static readonly RecordType NAME_HEADER = new RecordType("NAME");
+        public static readonly RecordType XPCI_HEADER = new RecordType("XPCI");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType XLOD_HEADER = new RecordType("XLOD");
         public static readonly RecordType XESP_HEADER = new RecordType("XESP");
         public static readonly RecordType XMRC_HEADER = new RecordType("XMRC");
@@ -2505,7 +2759,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = ACHR_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 7;
+        public const int NumTypedFields = 9;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2570,6 +2824,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 when (doMasks)
                 {
                     errorMask().SetNthException((int)PlacedNPC_FieldIndex.Base, ex);
+                }
+            }
+            if (copyMask?.XPCIFluff ?? true)
+            {
+                try
+                {
+                    item.XPCIFluff_Property.SetToWithDefault(
+                        rhs: rhs.XPCIFluff_Property,
+                        def: def?.XPCIFluff_Property);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)PlacedNPC_FieldIndex.XPCIFluff, ex);
+                }
+            }
+            if (copyMask?.FULLFluff ?? true)
+            {
+                try
+                {
+                    item.FULLFluff_Property.SetToWithDefault(
+                        rhs: rhs.FULLFluff_Property,
+                        def: def?.FULLFluff_Property);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)PlacedNPC_FieldIndex.FULLFluff, ex);
                 }
             }
             if (copyMask?.DistantLODData.Overall != CopyOption.Skip)
@@ -2776,6 +3058,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedNPC_FieldIndex.Base:
                     obj.Base_Property.HasBeenSet = on;
                     break;
+                case PlacedNPC_FieldIndex.XPCIFluff:
+                    obj.XPCIFluff_Property.HasBeenSet = on;
+                    break;
+                case PlacedNPC_FieldIndex.FULLFluff:
+                    obj.FULLFluff_Property.HasBeenSet = on;
+                    break;
                 case PlacedNPC_FieldIndex.DistantLODData:
                     obj.DistantLODData_Property.HasBeenSet = on;
                     break;
@@ -2810,6 +3098,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case PlacedNPC_FieldIndex.Base:
                     obj.Base_Property.Unset(cmds);
+                    break;
+                case PlacedNPC_FieldIndex.XPCIFluff:
+                    obj.XPCIFluff_Property.Unset(cmds);
+                    break;
+                case PlacedNPC_FieldIndex.FULLFluff:
+                    obj.FULLFluff_Property.Unset(cmds);
                     break;
                 case PlacedNPC_FieldIndex.DistantLODData:
                     obj.DistantLODData_Property.Unset(cmds);
@@ -2853,6 +3147,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return true;
                 case PlacedNPC_FieldIndex.Base:
                     return obj.Base_Property.HasBeenSet;
+                case PlacedNPC_FieldIndex.XPCIFluff:
+                    return obj.XPCIFluff_Property.HasBeenSet;
+                case PlacedNPC_FieldIndex.FULLFluff:
+                    return obj.FULLFluff_Property.HasBeenSet;
                 case PlacedNPC_FieldIndex.DistantLODData:
                     return obj.DistantLODData_Property.HasBeenSet;
                 case PlacedNPC_FieldIndex.EnableParent:
@@ -2879,6 +3177,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case PlacedNPC_FieldIndex.Base:
                     return obj.Base;
+                case PlacedNPC_FieldIndex.XPCIFluff:
+                    return obj.XPCIFluff;
+                case PlacedNPC_FieldIndex.FULLFluff:
+                    return obj.FULLFluff;
                 case PlacedNPC_FieldIndex.DistantLODData:
                     return obj.DistantLODData;
                 case PlacedNPC_FieldIndex.EnableParent:
@@ -2905,6 +3207,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Base_Property.Unset(cmds.ToUnsetParams());
+            item.XPCIFluff_Property.Unset(cmds.ToUnsetParams());
+            item.FULLFluff_Property.Unset(cmds.ToUnsetParams());
             item.DistantLODData_Property.Unset(cmds.ToUnsetParams());
             item.EnableParent_Property.Unset(cmds.ToUnsetParams());
             item.MerchantContainer_Property.Unset(cmds.ToUnsetParams());
@@ -2931,6 +3235,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Base = item.Base_Property.Equals(rhs.Base_Property, (l, r) => l == r);
+            ret.XPCIFluff = item.XPCIFluff_Property.Equals(rhs.XPCIFluff_Property, (l, r) => l.EqualsFast(r));
+            ret.FULLFluff = item.FULLFluff_Property.Equals(rhs.FULLFluff_Property, (l, r) => l.EqualsFast(r));
             ret.DistantLODData = item.DistantLODData_Property.LoquiEqualsHelper(rhs.DistantLODData_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.EnableParent = item.EnableParent_Property.LoquiEqualsHelper(rhs.EnableParent_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.MerchantContainer = item.MerchantContainer_Property.Equals(rhs.MerchantContainer_Property, (l, r) => l == r);
@@ -2973,6 +3279,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Base => {item.Base_Property}");
                 }
+                if (printMask?.XPCIFluff ?? true)
+                {
+                    fg.AppendLine($"XPCIFluff => {item.XPCIFluff}");
+                }
+                if (printMask?.FULLFluff ?? true)
+                {
+                    fg.AppendLine($"FULLFluff => {item.FULLFluff}");
+                }
                 if (printMask?.DistantLODData?.Overall ?? true)
                 {
                     item.DistantLODData?.ToString(fg, "DistantLODData");
@@ -3014,6 +3328,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PlacedNPC_Mask<bool?> checkMask)
         {
             if (checkMask.Base.HasValue && checkMask.Base.Value != item.Base_Property.HasBeenSet) return false;
+            if (checkMask.XPCIFluff.HasValue && checkMask.XPCIFluff.Value != item.XPCIFluff_Property.HasBeenSet) return false;
+            if (checkMask.FULLFluff.HasValue && checkMask.FULLFluff.Value != item.FULLFluff_Property.HasBeenSet) return false;
             if (checkMask.DistantLODData.Overall.HasValue && checkMask.DistantLODData.Overall.Value != item.DistantLODData_Property.HasBeenSet) return false;
             if (checkMask.DistantLODData.Specific != null && (item.DistantLODData == null || !item.DistantLODData.HasBeenSet(checkMask.DistantLODData.Specific))) return false;
             if (checkMask.EnableParent.Overall.HasValue && checkMask.EnableParent.Overall.Value != item.EnableParent_Property.HasBeenSet) return false;
@@ -3029,6 +3345,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new PlacedNPC_Mask<bool>();
             ret.Base = item.Base_Property.HasBeenSet;
+            ret.XPCIFluff = item.XPCIFluff_Property.HasBeenSet;
+            ret.FULLFluff = item.FULLFluff_Property.HasBeenSet;
             ret.DistantLODData = new MaskItem<bool, DistantLODData_Mask<bool>>(item.DistantLODData_Property.HasBeenSet, DistantLODDataCommon.GetHasBeenSetMask(item.DistantLODData));
             ret.EnableParent = new MaskItem<bool, EnableParent_Mask<bool>>(item.EnableParent_Property.HasBeenSet, EnableParentCommon.GetHasBeenSetMask(item.EnableParent));
             ret.MerchantContainer = item.MerchantContainer_Property.HasBeenSet;
@@ -3129,6 +3447,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         name: nameof(item.Base),
                         item: item.Base?.FormID,
                         fieldIndex: (int)PlacedNPC_FieldIndex.Base,
+                        errorMask: errorMask);
+                }
+                if (item.XPCIFluff_Property.HasBeenSet)
+                {
+                    ByteArrayXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.XPCIFluff),
+                        item: item.XPCIFluff_Property,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.XPCIFluff,
+                        errorMask: errorMask);
+                }
+                if (item.FULLFluff_Property.HasBeenSet)
+                {
+                    ByteArrayXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.FULLFluff),
+                        item: item.FULLFluff_Property,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.FULLFluff,
                         errorMask: errorMask);
                 }
                 if (item.DistantLODData_Property.HasBeenSet)
@@ -3276,6 +3612,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.NAME_HEADER),
                 nullable: false);
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.XPCIFluff_Property,
+                fieldIndex: (int)PlacedNPC_FieldIndex.XPCIFluff,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.XPCI_HEADER),
+                nullable: false);
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.FULLFluff_Property,
+                fieldIndex: (int)PlacedNPC_FieldIndex.FULLFluff,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.FULL_HEADER),
+                nullable: false);
             LoquiBinaryTranslation<DistantLODData, DistantLODData_ErrorMask>.Instance.Write(
                 writer: writer,
                 item: item.DistantLODData_Property,
@@ -3347,6 +3697,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public PlacedNPC_Mask(T initialValue)
         {
             this.Base = initialValue;
+            this.XPCIFluff = initialValue;
+            this.FULLFluff = initialValue;
             this.DistantLODData = new MaskItem<T, DistantLODData_Mask<T>>(initialValue, new DistantLODData_Mask<T>(initialValue));
             this.EnableParent = new MaskItem<T, EnableParent_Mask<T>>(initialValue, new EnableParent_Mask<T>(initialValue));
             this.MerchantContainer = initialValue;
@@ -3360,6 +3712,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Members
         public T Base;
+        public T XPCIFluff;
+        public T FULLFluff;
         public MaskItem<T, DistantLODData_Mask<T>> DistantLODData { get; set; }
         public MaskItem<T, EnableParent_Mask<T>> EnableParent { get; set; }
         public T MerchantContainer;
@@ -3382,6 +3736,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
             if (!object.Equals(this.Base, rhs.Base)) return false;
+            if (!object.Equals(this.XPCIFluff, rhs.XPCIFluff)) return false;
+            if (!object.Equals(this.FULLFluff, rhs.FULLFluff)) return false;
             if (!object.Equals(this.DistantLODData, rhs.DistantLODData)) return false;
             if (!object.Equals(this.EnableParent, rhs.EnableParent)) return false;
             if (!object.Equals(this.MerchantContainer, rhs.MerchantContainer)) return false;
@@ -3396,6 +3752,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             int ret = 0;
             ret = ret.CombineHashCode(this.Base?.GetHashCode());
+            ret = ret.CombineHashCode(this.XPCIFluff?.GetHashCode());
+            ret = ret.CombineHashCode(this.FULLFluff?.GetHashCode());
             ret = ret.CombineHashCode(this.DistantLODData?.GetHashCode());
             ret = ret.CombineHashCode(this.EnableParent?.GetHashCode());
             ret = ret.CombineHashCode(this.MerchantContainer?.GetHashCode());
@@ -3415,6 +3773,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (!base.AllEqual(eval)) return false;
             if (!eval(this.Base)) return false;
+            if (!eval(this.XPCIFluff)) return false;
+            if (!eval(this.FULLFluff)) return false;
             if (DistantLODData != null)
             {
                 if (!eval(this.DistantLODData.Overall)) return false;
@@ -3447,6 +3807,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             base.Translate_InternalFill(obj, eval);
             obj.Base = eval(this.Base);
+            obj.XPCIFluff = eval(this.XPCIFluff);
+            obj.FULLFluff = eval(this.FULLFluff);
             if (this.DistantLODData != null)
             {
                 obj.DistantLODData = new MaskItem<R, DistantLODData_Mask<R>>();
@@ -3504,6 +3866,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Base => {Base}");
                 }
+                if (printMask?.XPCIFluff ?? true)
+                {
+                    fg.AppendLine($"XPCIFluff => {XPCIFluff}");
+                }
+                if (printMask?.FULLFluff ?? true)
+                {
+                    fg.AppendLine($"FULLFluff => {FULLFluff}");
+                }
                 if (printMask?.DistantLODData?.Overall ?? true)
                 {
                     DistantLODData?.ToString(fg);
@@ -3547,6 +3917,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Members
         public Exception Base;
+        public Exception XPCIFluff;
+        public Exception FULLFluff;
         public MaskItem<Exception, DistantLODData_ErrorMask> DistantLODData;
         public MaskItem<Exception, EnableParent_ErrorMask> EnableParent;
         public Exception MerchantContainer;
@@ -3565,6 +3937,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case PlacedNPC_FieldIndex.Base:
                     return Base;
+                case PlacedNPC_FieldIndex.XPCIFluff:
+                    return XPCIFluff;
+                case PlacedNPC_FieldIndex.FULLFluff:
+                    return FULLFluff;
                 case PlacedNPC_FieldIndex.DistantLODData:
                     return DistantLODData;
                 case PlacedNPC_FieldIndex.EnableParent:
@@ -3593,6 +3969,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case PlacedNPC_FieldIndex.Base:
                     this.Base = ex;
+                    break;
+                case PlacedNPC_FieldIndex.XPCIFluff:
+                    this.XPCIFluff = ex;
+                    break;
+                case PlacedNPC_FieldIndex.FULLFluff:
+                    this.FULLFluff = ex;
                     break;
                 case PlacedNPC_FieldIndex.DistantLODData:
                     this.DistantLODData = new MaskItem<Exception, DistantLODData_ErrorMask>(ex, null);
@@ -3632,6 +4014,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedNPC_FieldIndex.Base:
                     this.Base = (Exception)obj;
                     break;
+                case PlacedNPC_FieldIndex.XPCIFluff:
+                    this.XPCIFluff = (Exception)obj;
+                    break;
+                case PlacedNPC_FieldIndex.FULLFluff:
+                    this.FULLFluff = (Exception)obj;
+                    break;
                 case PlacedNPC_FieldIndex.DistantLODData:
                     this.DistantLODData = (MaskItem<Exception, DistantLODData_ErrorMask>)obj;
                     break;
@@ -3666,6 +4054,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (Overall != null) return true;
             if (Base != null) return true;
+            if (XPCIFluff != null) return true;
+            if (FULLFluff != null) return true;
             if (DistantLODData != null) return true;
             if (EnableParent != null) return true;
             if (MerchantContainer != null) return true;
@@ -3710,6 +4100,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             base.ToString_FillInternal(fg);
             fg.AppendLine($"Base => {Base}");
+            fg.AppendLine($"XPCIFluff => {XPCIFluff}");
+            fg.AppendLine($"FULLFluff => {FULLFluff}");
             DistantLODData?.ToString(fg);
             EnableParent?.ToString(fg);
             fg.AppendLine($"MerchantContainer => {MerchantContainer}");
@@ -3726,6 +4118,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new PlacedNPC_ErrorMask();
             ret.Base = this.Base.Combine(rhs.Base);
+            ret.XPCIFluff = this.XPCIFluff.Combine(rhs.XPCIFluff);
+            ret.FULLFluff = this.FULLFluff.Combine(rhs.FULLFluff);
             ret.DistantLODData = new MaskItem<Exception, DistantLODData_ErrorMask>(this.DistantLODData.Overall.Combine(rhs.DistantLODData.Overall), ((IErrorMask<DistantLODData_ErrorMask>)this.DistantLODData.Specific).Combine(rhs.DistantLODData.Specific));
             ret.EnableParent = new MaskItem<Exception, EnableParent_ErrorMask>(this.EnableParent.Overall.Combine(rhs.EnableParent.Overall), ((IErrorMask<EnableParent_ErrorMask>)this.EnableParent.Specific).Combine(rhs.EnableParent.Specific));
             ret.MerchantContainer = this.MerchantContainer.Combine(rhs.MerchantContainer);
@@ -3748,6 +4142,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Members
         public bool Base;
+        public bool XPCIFluff;
+        public bool FULLFluff;
         public MaskItem<CopyOption, DistantLODData_CopyMask> DistantLODData;
         public MaskItem<CopyOption, EnableParent_CopyMask> EnableParent;
         public bool MerchantContainer;

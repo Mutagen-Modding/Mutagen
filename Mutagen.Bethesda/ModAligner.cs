@@ -1,5 +1,6 @@
 ﻿using Mutagen.Bethesda.Binary;
 using Noggog;
+using Noggog.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,6 +15,7 @@ namespace Mutagen.Bethesda
         public class AlignmentRules
         {
             public Dictionary<RecordType, IEnumerable<RecordType>> Alignments = new Dictionary<RecordType, IEnumerable<RecordType>>();
+            public Dictionary<RecordType, IEnumerable<RecordType>> StopMarkers = new Dictionary<RecordType, IEnumerable<RecordType>>();
         }
 
         public static void Align(
@@ -37,126 +39,134 @@ namespace Mutagen.Bethesda
         {
             var interest = new RecordInterest(alignmentRules.Alignments.Keys);
             var fileLocs = MajorRecordLocator.GetFileLocations(inputStream, interest);
-            var tempMemOutput = new MemoryStream();
-            inputStream.Position = 0;
-            using (var writer = new MutagenWriter(tempMemOutput, dispose: false))
+            using (var temp = new TempFolder())
             {
-                while (!inputStream.Complete)
+                var file = Path.Combine(temp.Dir.Path, "file");
+                inputStream.Position = 0;
+                using (var writer = new MutagenWriter(new FileStream(file, FileMode.Create)))
                 {
-                    // Import until next listed major record
-                    long noRecordLength;
-                    if (fileLocs.ListedRecords.TryGetInDirection(
-                        inputStream.Position,
-                        higher: true,
-                        result: out var nextRec))
+                    while (!inputStream.Complete)
                     {
-                        var recordLocation = fileLocs.ListedRecords.Keys[nextRec.Key];
-                        noRecordLength = recordLocation - inputStream.Position;
-                    }
-                    else
-                    {
-                        noRecordLength = inputStream.Remaining;
-                    }
-                    writer.Write(inputStream.ReadBytes((int)noRecordLength));
-
-                    // If complete overall, return
-                    if (inputStream.Complete) break;
-
-                    var recType = HeaderTranslation.ReadNextRecordType(
-                        inputStream,
-                        out var len);
-                    writer.Write(recType.Type);
-                    writer.Write(len);
-                    writer.Write(inputStream.ReadBytes(12));
-
-                    var endPos = inputStream.Position + len;
-                    Dictionary<RecordType, byte[]> dataDict = new Dictionary<RecordType, byte[]>();
-                    while (inputStream.Position < endPos)
-                    {
-                        var subType = HeaderTranslation.ReadNextSubRecordType(
-                            inputStream,
-                            out var subLen);
-                        dataDict[subType] = inputStream.ReadBytes(subLen);
-                    }
-                    foreach (var alignment in alignmentRules.Alignments[recType])
-                    {
-                        if (dataDict.TryGetValue(
-                            alignment,
-                            out var data))
+                        // Import until next listed major record
+                        long noRecordLength;
+                        if (fileLocs.ListedRecords.TryGetInDirection(
+                            inputStream.Position,
+                            higher: true,
+                            result: out var nextRec))
                         {
-                            using (HeaderExport.ExportSubRecordHeader(writer, alignment))
-                            {
-                                writer.Write(data);
-                            }
-                            dataDict.Remove(alignment);
+                            var recordLocation = fileLocs.ListedRecords.Keys[nextRec.Key];
+                            noRecordLength = recordLocation - inputStream.Position;
                         }
-                    }
-                    if (dataDict.Count > 0)
-                    {
-                        throw new ArgumentException($"Encountered an unknown record: {dataDict.First().Key}");
-                    }
-                }
-            }
-
-            tempMemOutput.Position = 0;
-            using (var mutaReader = new BinaryMemoryStream(tempMemOutput.GetBuffer()))
-            {
-                using (var writer = new MutagenWriter(outputStream))
-                {
-                    foreach (var grup in fileLocs.GrupLocations)
-                    {
-                        if (grup <= mutaReader.Position) continue;
-                        var noRecordLength = grup - mutaReader.Position;
-                        writer.Write(mutaReader.ReadBytes(checked((int)noRecordLength)));
+                        else
+                        {
+                            noRecordLength = inputStream.Remaining;
+                        }
+                        writer.Write(inputStream.ReadBytes((int)noRecordLength));
 
                         // If complete overall, return
-                        if (mutaReader.Complete) break;
+                        if (inputStream.Complete) break;
 
-                        writer.Write(mutaReader.ReadBytes(12));
-                        var grupType = (GroupTypeEnum)mutaReader.ReadUInt32();
-                        writer.Write((int)grupType);
-                        switch (grupType)
+                        var recType = HeaderTranslation.ReadNextRecordType(
+                            inputStream,
+                            out var len);
+                        IEnumerable<RecordType> stopMarkers;
+                        if (!alignmentRules.StopMarkers.TryGetValue(recType, out stopMarkers))
                         {
-                            case GroupTypeEnum.CellChildren:
-                                break;
-                            default:
-                                continue;
+                            stopMarkers = null;
                         }
-                        writer.Write(mutaReader.ReadBytes(4));
-                        Dictionary<GroupTypeEnum, byte[]> storage = new Dictionary<GroupTypeEnum, byte[]>();
-                        for (int i = 0; i < 3; i++)
+                        writer.Write(recType.Type);
+                        writer.Write(len);
+                        writer.Write(inputStream.ReadBytes(12));
+                        var endPos = inputStream.Position + len;
+                        Dictionary<RecordType, byte[]> dataDict = new Dictionary<RecordType, byte[]>();
+                        while (inputStream.Position < endPos)
                         {
-                            mutaReader.Position += 4;
-                            var subLen = mutaReader.ReadInt32();
-                            mutaReader.Position += 4;
-                            var subGrupType = (GroupTypeEnum)mutaReader.ReadUInt32();
-                            mutaReader.Position -= 16;
-                            switch (subGrupType)
+                            var subType = HeaderTranslation.GetNextSubRecordType(
+                                inputStream,
+                                out var subLen);
+                            if (stopMarkers?.Contains(subType) ?? false) break;
+                            inputStream.Position += 6;
+                            dataDict[subType] = inputStream.ReadBytes(subLen);
+                        }
+                        foreach (var alignment in alignmentRules.Alignments[recType])
+                        {
+                            if (dataDict.TryGetValue(
+                                alignment,
+                                out var data))
                             {
-                                case GroupTypeEnum.CellPersistentChildren:
-                                case GroupTypeEnum.CellTemporaryChildren:
-                                case GroupTypeEnum.CellVisibleDistantChildren:
-                                    break;
-                                default:
-                                    i = 3; // end loop
-                                    continue;
+                                using (HeaderExport.ExportSubRecordHeader(writer, alignment))
+                                {
+                                    writer.Write(data);
+                                }
+                                dataDict.Remove(alignment);
                             }
-                            storage[subGrupType] = mutaReader.ReadBytes(subLen);
                         }
-                        if (storage.TryGetValue(GroupTypeEnum.CellPersistentChildren, out var content))
+                        if (dataDict.Count > 0)
                         {
-                            writer.Write(content);
-                        }
-                        if (storage.TryGetValue(GroupTypeEnum.CellTemporaryChildren, out content))
-                        {
-                            writer.Write(content);
-                        }
-                        if (storage.TryGetValue(GroupTypeEnum.CellVisibleDistantChildren, out content))
-                        {
-                            writer.Write(content);
+                            throw new ArgumentException($"Encountered an unknown record: {dataDict.First().Key}");
                         }
                     }
-                    writer.Write(mutaReader.ReadBytes(checked((int)mutaReader.Remaining)));
+                }
+                
+                using (var mutaReader = new BinaryReadStream(file))
+                {
+                    using (var writer = new MutagenWriter(outputStream))
+                    {
+                        foreach (var grup in fileLocs.GrupLocations)
+                        {
+                            if (grup <= mutaReader.Position) continue;
+                            var noRecordLength = grup - mutaReader.Position;
+                            writer.Write(mutaReader.ReadBytes(checked((int)noRecordLength)));
+
+                            // If complete overall, return
+                            if (mutaReader.Complete) break;
+
+                            writer.Write(mutaReader.ReadBytes(12));
+                            var grupType = (GroupTypeEnum)mutaReader.ReadUInt32();
+                            writer.Write((int)grupType);
+                            switch (grupType)
+                            {
+                                case GroupTypeEnum.CellChildren:
+                                    break;
+                                default:
+                                    continue;
+                            }
+                            writer.Write(mutaReader.ReadBytes(4));
+                            Dictionary<GroupTypeEnum, byte[]> storage = new Dictionary<GroupTypeEnum, byte[]>();
+                            for (int i = 0; i < 3; i++)
+                            {
+                                mutaReader.Position += 4;
+                                var subLen = mutaReader.ReadInt32();
+                                mutaReader.Position += 4;
+                                var subGrupType = (GroupTypeEnum)mutaReader.ReadUInt32();
+                                mutaReader.Position -= 16;
+                                switch (subGrupType)
+                                {
+                                    case GroupTypeEnum.CellPersistentChildren:
+                                    case GroupTypeEnum.CellTemporaryChildren:
+                                    case GroupTypeEnum.CellVisibleDistantChildren:
+                                        break;
+                                    default:
+                                        i = 3; // end loop
+                                        continue;
+                                }
+                                storage[subGrupType] = mutaReader.ReadBytes(subLen);
+                            }
+                            if (storage.TryGetValue(GroupTypeEnum.CellPersistentChildren, out var content))
+                            {
+                                writer.Write(content);
+                            }
+                            if (storage.TryGetValue(GroupTypeEnum.CellTemporaryChildren, out content))
+                            {
+                                writer.Write(content);
+                            }
+                            if (storage.TryGetValue(GroupTypeEnum.CellVisibleDistantChildren, out content))
+                            {
+                                writer.Write(content);
+                            }
+                        }
+                        writer.Write(mutaReader.ReadBytes(checked((int)mutaReader.Remaining)));
+                    }
                 }
             }
         }

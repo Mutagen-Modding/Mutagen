@@ -132,6 +132,7 @@
     <Compile Include="Records\ListGroup_LoquiGenerated.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
+    <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MutagenSource.xsd">

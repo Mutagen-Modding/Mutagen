@@ -3,6 +3,8 @@
   <Object name="PlacedObject" baseClass="Placed" recordType="REFR" objType="Record" GUID="7a559a46-7ef9-49e9-98c1-ec16c3df81f2" ID="121">
     <Fields>
       <FormIDLink name="Base" recordType="NAME" refName="Bethesda.MajorRecord" />
+      <ByteArray name="XPCIFluff" recordType="XPCI" />
+      <ByteArray name="FULLFluff" recordType="FULL" />
       <RefDirect name="TeleportDestination" refName="TeleportDestination" />
       <RefDirect name="Lock" refName="LockInformation" />
       <FormIDLink name="Owner" recordType="XOWN" refName="Faction" />
