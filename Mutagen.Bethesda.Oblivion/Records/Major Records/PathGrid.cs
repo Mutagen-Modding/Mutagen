@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Oblivion
                 reader.ReadFloat(),
                 reader.ReadFloat(),
                 reader.ReadFloat());
-            numConn = reader.ReadByte();
+            numConn = reader.ReadUInt8();
             pt.NumConnectionsFluffBytes = reader.ReadBytes(3);
             return pt;
         }

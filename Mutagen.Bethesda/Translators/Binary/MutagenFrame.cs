@@ -208,11 +208,6 @@ namespace Mutagen.Bethesda.Binary
             return Reader.ReadBool();
         }
 
-        public byte ReadByte()
-        {
-            return Reader.ReadByte();
-        }
-
         public byte ReadUInt8()
         {
             return Reader.ReadUInt8();

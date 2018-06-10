@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             // Create proper Global subclass
-            var triggerChar = (char)frame.Reader.ReadByte();
+            var triggerChar = (char)frame.Reader.ReadUInt8();
             Global g;
             switch (triggerChar)
             {

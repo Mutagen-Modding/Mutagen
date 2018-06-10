@@ -138,8 +138,8 @@ namespace Mutagen.Bethesda.Tests
                     reader2.Position = range2.Max + 1;
                     continue;
                 }
-                var b1 = reader1.ReadByte();
-                var b2 = reader2.ReadByte();
+                var b1 = reader1.ReadUInt8();
+                var b2 = reader2.ReadUInt8();
                 var pos = reader1.Position - 1;
                 var same = b1 == b2 || (ignoreList?.IsEncapsulated(pos) ?? false);
                 yield return (

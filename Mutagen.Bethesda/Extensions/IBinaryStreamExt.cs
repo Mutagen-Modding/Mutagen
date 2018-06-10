@@ -13,12 +13,12 @@ namespace Mutagen.Bethesda
         public static Color ReadColor(this IBinaryStream stream)
         {
             var ret = Color.FromRgb(
-                stream.ReadByte(),
-                stream.ReadByte(),
-                stream.ReadByte());
+                stream.ReadUInt8(),
+                stream.ReadUInt8(),
+                stream.ReadUInt8());
             if (stream.Remaining > 0)
             {
-                stream.ReadByte();
+                stream.ReadUInt8();
             }
             return ret;
         }

@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>e1f369f56034dc402ce325e7d86c79033887cbd2</Sha>
+         <Sha>fb6367c7feb632afaacb2a6c396cc5c9f3ee6712</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>05-26-2018 17:14:51</CommitDate>
-         <Description>Removed markAsSet from NotifyingFireParameters.  Removed Bind from NotifyingItem interface, in favor of extension functions.  Ownerless subsccribs made into extension functions</Description>
+         <CommitDate>06-10-2018 13:07:50</CommitDate>
+         <Description>BinaryReadStream implements Stream</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Binary
             List<byte> chars = new List<byte>();
             while (!reader.Complete)
             {
-                var nextChar = reader.ReadByte();
+                var nextChar = reader.ReadUInt8();
                 if (nextChar == stopChar)
                 {
                     if (include)

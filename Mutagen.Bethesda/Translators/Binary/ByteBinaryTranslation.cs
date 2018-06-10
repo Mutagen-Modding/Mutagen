@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Binary
 
         protected override byte ParseValue(MutagenFrame reader)
         {
-            return reader.Reader.ReadByte();
+            return reader.Reader.ReadUInt8();
         }
 
         protected override void WriteValue(MutagenWriter writer, byte item)

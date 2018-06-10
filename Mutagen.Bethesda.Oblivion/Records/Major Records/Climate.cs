@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Oblivion
         
         static partial void FillBinary_SunriseBegin_Custom(MutagenFrame frame, Climate item, int fieldIndex, Func<Climate_ErrorMask> errorMask)
         {
-            if (GetDate(frame.Reader.ReadByte(), out var date, out var ex))
+            if (GetDate(frame.Reader.ReadUInt8(), out var date, out var ex))
             {
                 item.SunriseBegin = date;
             }
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void FillBinary_SunriseEnd_Custom(MutagenFrame frame, Climate item, int fieldIndex, Func<Climate_ErrorMask> errorMask)
         {
-            if (GetDate(frame.Reader.ReadByte(), out var date, out var ex))
+            if (GetDate(frame.Reader.ReadUInt8(), out var date, out var ex))
             {
                 item.SunriseEnd = date;
             }
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void FillBinary_SunsetBegin_Custom(MutagenFrame frame, Climate item, int fieldIndex, Func<Climate_ErrorMask> errorMask)
         {
-            if (GetDate(frame.Reader.ReadByte(), out var date, out var ex))
+            if (GetDate(frame.Reader.ReadUInt8(), out var date, out var ex))
             {
                 item.SunsetBegin = date;
             }
@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void FillBinary_SunsetEnd_Custom(MutagenFrame frame, Climate item, int fieldIndex, Func<Climate_ErrorMask> errorMask)
         {
-            if (GetDate(frame.Reader.ReadByte(), out var date, out var ex))
+            if (GetDate(frame.Reader.ReadUInt8(), out var date, out var ex))
             {
                 item.SunsetEnd = date;
             }
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void FillBinary_Phase_Custom(MutagenFrame frame, Climate item, int fieldIndex, Func<Climate_ErrorMask> errorMask)
         {
-            var b1 = frame.Reader.ReadByte();
+            var b1 = frame.Reader.ReadUInt8();
             var eInt = b1 / 64;
             var phaseLen = (byte)(b1 % 64);
             if (EnumExt.TryParse<Climate.MoonPhase>(eInt, out var e))

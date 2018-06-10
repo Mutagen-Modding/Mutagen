@@ -342,7 +342,7 @@ namespace Mutagen.Bethesda.Binary
             switch (reader.Remaining)
             {
                 case 1:
-                    i = reader.Reader.ReadByte();
+                    i = reader.Reader.ReadUInt8();
                     break;
                 case 2:
                     i = reader.Reader.ReadInt16();
