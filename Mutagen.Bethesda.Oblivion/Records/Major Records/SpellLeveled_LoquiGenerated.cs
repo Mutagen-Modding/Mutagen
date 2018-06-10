@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<SpellLeveled_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<SpellLeveled, SpellLeveled_ErrorMask, SpellLeveled_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<SpellLeveled, SpellLeveled_ErrorMask>(
                 record: new SpellLeveled(),
                 frame: frame,
                 errorMask: errorMask,

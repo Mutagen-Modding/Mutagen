@@ -1105,7 +1105,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<LeveledCreature_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<LeveledCreature, LeveledCreature_ErrorMask, LeveledCreature_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<LeveledCreature, LeveledCreature_ErrorMask>(
                 record: new LeveledCreature(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1126,7 +1126,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<LeveledCreature_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             LeveledCreature item,
             MutagenFrame frame,
             Func<LeveledCreature_ErrorMask> errorMask,
@@ -1152,7 +1152,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetChanceNone();
                     }
-                    return TryGet<LeveledCreature_FieldIndex?>.Succeed(LeveledCreature_FieldIndex.ChanceNone);
+                    return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.ChanceNone);
                 case "LVLF":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<LeveledFlag>.Instance.Parse(
@@ -1167,7 +1167,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetFlags();
                     }
-                    return TryGet<LeveledCreature_FieldIndex?>.Succeed(LeveledCreature_FieldIndex.Flags);
+                    return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Flags);
                 case "LVLO":
                     item.Entries.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<NPCSpawn>, MaskItem<Exception, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>>>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -1183,27 +1183,27 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<LeveledCreature_FieldIndex?>.Succeed(LeveledCreature_FieldIndex.Entries);
+                    return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Entries);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)LeveledCreature_FieldIndex.Script,
                         errorMask: errorMask));
-                    return TryGet<LeveledCreature_FieldIndex?>.Succeed(LeveledCreature_FieldIndex.Script);
+                    return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Script);
                 case "TNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Template_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)LeveledCreature_FieldIndex.Template,
                         errorMask: errorMask));
-                    return TryGet<LeveledCreature_FieldIndex?>.Succeed(LeveledCreature_FieldIndex.Template);
+                    return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Template);
                 default:
                     return NPCSpawn.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => LeveledCreatureCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

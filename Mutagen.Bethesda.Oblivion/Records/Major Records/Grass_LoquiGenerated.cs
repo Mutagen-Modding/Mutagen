@@ -2215,7 +2215,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Grass_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Grass, Grass_ErrorMask, Grass_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Grass, Grass_ErrorMask>(
                 record: new Grass(),
                 frame: frame,
                 errorMask: errorMask,
@@ -2236,7 +2236,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Grass_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Grass item,
             MutagenFrame frame,
             Func<Grass_ErrorMask> errorMask,
@@ -2263,7 +2263,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetModel();
                         }
                     }
-                    return TryGet<Grass_FieldIndex?>.Succeed(Grass_FieldIndex.Model);
+                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Model);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -2391,13 +2391,13 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetFlags();
                         }
                     }
-                    return TryGet<Grass_FieldIndex?>.Succeed(Grass_FieldIndex.Flags);
+                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Flags);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => GrassCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

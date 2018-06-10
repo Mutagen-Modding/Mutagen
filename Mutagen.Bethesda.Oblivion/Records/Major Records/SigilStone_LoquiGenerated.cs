@@ -1682,7 +1682,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<SigilStone_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<SigilStone, SigilStone_ErrorMask, SigilStone_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<SigilStone, SigilStone_ErrorMask>(
                 record: new SigilStone(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1703,7 +1703,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<SigilStone_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             SigilStone item,
             MutagenFrame frame,
             Func<SigilStone_ErrorMask> errorMask,
@@ -1730,7 +1730,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetModel();
                         }
                     }
-                    return TryGet<SigilStone_FieldIndex?>.Succeed(SigilStone_FieldIndex.Model);
+                    return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var IcontryGet = StringBinaryTranslation.Instance.Parse(
@@ -1746,14 +1746,14 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetIcon();
                     }
-                    return TryGet<SigilStone_FieldIndex?>.Succeed(SigilStone_FieldIndex.Icon);
+                    return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SigilStone_FieldIndex.Script,
                         errorMask: errorMask));
-                    return TryGet<SigilStone_FieldIndex?>.Succeed(SigilStone_FieldIndex.Script);
+                    return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Script);
                 case "EFID":
                     item.Effects.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -1769,7 +1769,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<SigilStone_FieldIndex?>.Succeed(SigilStone_FieldIndex.Effects);
+                    return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Effects);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -1811,13 +1811,13 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetWeight();
                         }
                     }
-                    return TryGet<SigilStone_FieldIndex?>.Succeed(SigilStone_FieldIndex.Weight);
+                    return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Weight);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => SigilStoneCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

@@ -611,7 +611,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    ScriptObjectReference_FieldIndex? lastParsed = null;
+                    int? lastParsed = null;
                     while (!frame.Complete)
                     {
                         var parsed = Fill_Binary_RecordTypes(
@@ -640,10 +640,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static TryGet<ScriptObjectReference_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             ScriptObjectReference item,
             MutagenFrame frame,
-            ScriptObjectReference_FieldIndex? lastParsed,
+            int? lastParsed,
             Func<ScriptObjectReference_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -654,15 +654,15 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "SCRO":
-                    if (lastParsed.HasValue && lastParsed.Value >= ScriptObjectReference_FieldIndex.Reference) return TryGet<ScriptObjectReference_FieldIndex?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptObjectReference_FieldIndex.Reference) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Reference_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)ScriptObjectReference_FieldIndex.Reference,
                         errorMask: errorMask));
-                    return TryGet<ScriptObjectReference_FieldIndex?>.Succeed(ScriptObjectReference_FieldIndex.Reference);
+                    return TryGet<int?>.Succeed((int)ScriptObjectReference_FieldIndex.Reference);
                 default:
-                    return TryGet<ScriptObjectReference_FieldIndex?>.Failure;
+                    return TryGet<int?>.Failure;
             }
         }
 

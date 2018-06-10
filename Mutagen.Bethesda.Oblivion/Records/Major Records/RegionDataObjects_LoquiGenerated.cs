@@ -640,7 +640,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    RegionDataObjects_FieldIndex? lastParsed = null;
+                    int? lastParsed = null;
                     while (!frame.Complete)
                     {
                         var parsed = Fill_Binary_RecordTypes(
@@ -669,10 +669,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static TryGet<RegionDataObjects_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             RegionDataObjects item,
             MutagenFrame frame,
-            RegionDataObjects_FieldIndex? lastParsed,
+            int? lastParsed,
             Func<RegionDataObjects_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -697,13 +697,13 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<RegionDataObjects_FieldIndex?>.Succeed(RegionDataObjects_FieldIndex.Objects);
+                    return TryGet<int?>.Succeed((int)RegionDataObjects_FieldIndex.Objects);
                 default:
                     return RegionData.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => RegionDataObjectsCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

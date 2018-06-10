@@ -1714,7 +1714,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<AlchemicalApparatus_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<AlchemicalApparatus, AlchemicalApparatus_ErrorMask, AlchemicalApparatus_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<AlchemicalApparatus, AlchemicalApparatus_ErrorMask>(
                 record: new AlchemicalApparatus(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1735,7 +1735,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<AlchemicalApparatus_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             AlchemicalApparatus item,
             MutagenFrame frame,
             Func<AlchemicalApparatus_ErrorMask> errorMask,
@@ -1762,7 +1762,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetModel();
                         }
                     }
-                    return TryGet<AlchemicalApparatus_FieldIndex?>.Succeed(AlchemicalApparatus_FieldIndex.Model);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var IcontryGet = StringBinaryTranslation.Instance.Parse(
@@ -1778,14 +1778,14 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetIcon();
                     }
-                    return TryGet<AlchemicalApparatus_FieldIndex?>.Succeed(AlchemicalApparatus_FieldIndex.Icon);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)AlchemicalApparatus_FieldIndex.Script,
                         errorMask: errorMask));
-                    return TryGet<AlchemicalApparatus_FieldIndex?>.Succeed(AlchemicalApparatus_FieldIndex.Script);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Script);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -1839,13 +1839,13 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetQuality();
                         }
                     }
-                    return TryGet<AlchemicalApparatus_FieldIndex?>.Succeed(AlchemicalApparatus_FieldIndex.Quality);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Quality);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => AlchemicalApparatusCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

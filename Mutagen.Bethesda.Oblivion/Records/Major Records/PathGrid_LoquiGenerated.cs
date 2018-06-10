@@ -1008,7 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<PathGrid_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<PathGrid, PathGrid_ErrorMask, PathGrid_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<PathGrid, PathGrid_ErrorMask>(
                 record: new PathGrid(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1029,7 +1029,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<PathGrid_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             PathGrid item,
             MutagenFrame frame,
             Func<PathGrid_ErrorMask> errorMask,
@@ -1058,7 +1058,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask().Overall = ex;
                     }
-                    return TryGet<PathGrid_FieldIndex?>.Succeed(PathGrid_FieldIndex.PointToPointConnections);
+                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToPointConnections);
                 case "PGAG":
                     try
                     {
@@ -1076,7 +1076,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask().Overall = ex;
                     }
-                    return TryGet<PathGrid_FieldIndex?>.Succeed(PathGrid_FieldIndex.Unknown);
+                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.Unknown);
                 case "PGRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.InterCellConnections.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<InterCellPoint, MaskItem<Exception, InterCellPoint_ErrorMask>>.Instance.ParseRepeatedItem(
@@ -1092,7 +1092,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<PathGrid_FieldIndex?>.Succeed(PathGrid_FieldIndex.InterCellConnections);
+                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.InterCellConnections);
                 case "PGRL":
                     item.PointToReferenceMappings.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<PointToReferenceMapping, MaskItem<Exception, PointToReferenceMapping_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -1108,13 +1108,13 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<PathGrid_FieldIndex?>.Succeed(PathGrid_FieldIndex.PointToReferenceMappings);
+                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToReferenceMappings);
                 default:
                     return Placed.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => PathGridCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

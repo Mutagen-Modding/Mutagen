@@ -807,7 +807,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    SoundItem_FieldIndex? lastParsed = null;
+                    int? lastParsed = null;
                     while (!frame.Complete)
                     {
                         var parsed = Fill_Binary_RecordTypes(
@@ -836,10 +836,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static TryGet<SoundItem_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             SoundItem item,
             MutagenFrame frame,
-            SoundItem_FieldIndex? lastParsed,
+            int? lastParsed,
             Func<SoundItem_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -850,15 +850,15 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "CSDI":
-                    if (lastParsed.HasValue && lastParsed.Value >= SoundItem_FieldIndex.Sound) return TryGet<SoundItem_FieldIndex?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Sound) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Sound_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SoundItem_FieldIndex.Sound,
                         errorMask: errorMask));
-                    return TryGet<SoundItem_FieldIndex?>.Succeed(SoundItem_FieldIndex.Sound);
+                    return TryGet<int?>.Succeed((int)SoundItem_FieldIndex.Sound);
                 case "CSDC":
-                    if (lastParsed.HasValue && lastParsed.Value >= SoundItem_FieldIndex.Chance) return TryGet<SoundItem_FieldIndex?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Chance) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var ChancetryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
@@ -872,9 +872,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetChance();
                     }
-                    return TryGet<SoundItem_FieldIndex?>.Succeed(SoundItem_FieldIndex.Chance);
+                    return TryGet<int?>.Succeed((int)SoundItem_FieldIndex.Chance);
                 default:
-                    return TryGet<SoundItem_FieldIndex?>.Failure;
+                    return TryGet<int?>.Failure;
             }
         }
 

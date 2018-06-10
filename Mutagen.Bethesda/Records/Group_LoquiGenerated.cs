@@ -1265,7 +1265,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        protected static TryGet<Group_FieldIndex?> Fill_Binary_RecordTypes<T_ErrMask>(
+        protected static TryGet<int?> Fill_Binary_RecordTypes<T_ErrMask>(
             Group<T> item,
             MutagenFrame frame,
             Func<Group_ErrorMask<T_ErrMask>> errorMask,
@@ -1295,11 +1295,11 @@ namespace Mutagen.Bethesda
                                     errorMask: out listSubMask);
                             }
                             ));
-                        return TryGet<Group_FieldIndex?>.Failure;
+                        return TryGet<int?>.Failure;
                     }
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + Constants.RECORD_LENGTH;
-                    return TryGet<Group_FieldIndex?>.Succeed(null);
+                    return TryGet<int?>.Succeed(null);
             }
         }
 

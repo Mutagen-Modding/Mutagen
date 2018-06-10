@@ -2022,7 +2022,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Book_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Book, Book_ErrorMask, Book_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Book, Book_ErrorMask>(
                 record: new Book(),
                 frame: frame,
                 errorMask: errorMask,
@@ -2043,7 +2043,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Book_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Book item,
             MutagenFrame frame,
             Func<Book_ErrorMask> errorMask,
@@ -2070,7 +2070,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetModel();
                         }
                     }
-                    return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.Model);
+                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var IcontryGet = StringBinaryTranslation.Instance.Parse(
@@ -2086,21 +2086,21 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetIcon();
                     }
-                    return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.Icon);
+                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Book_FieldIndex.Script,
                         errorMask: errorMask));
-                    return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.Script);
+                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Script);
                 case "ENAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Enchantment_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Book_FieldIndex.Enchantment,
                         errorMask: errorMask));
-                    return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.Enchantment);
+                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Enchantment);
                 case "ANAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var EnchantmentPointstryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
@@ -2115,7 +2115,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetEnchantmentPoints();
                     }
-                    return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.EnchantmentPoints);
+                    return TryGet<int?>.Succeed((int)Book_FieldIndex.EnchantmentPoints);
                 case "DESC":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var DescriptiontryGet = StringBinaryTranslation.Instance.Parse(
@@ -2131,7 +2131,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetDescription();
                     }
-                    return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.Description);
+                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Description);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -2185,13 +2185,13 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetWeight();
                         }
                     }
-                    return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.Weight);
+                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Weight);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => BookCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

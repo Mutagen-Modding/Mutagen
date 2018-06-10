@@ -3967,7 +3967,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Weather_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Weather, Weather_ErrorMask, Weather_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Weather, Weather_ErrorMask>(
                 record: new Weather(),
                 frame: frame,
                 errorMask: errorMask,
@@ -3988,7 +3988,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Weather_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Weather item,
             MutagenFrame frame,
             Func<Weather_ErrorMask> errorMask,
@@ -4015,7 +4015,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetTextureLowerLayer();
                     }
-                    return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.TextureLowerLayer);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureLowerLayer);
                 case "DNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var TextureUpperLayertryGet = StringBinaryTranslation.Instance.Parse(
@@ -4031,7 +4031,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetTextureUpperLayer();
                     }
-                    return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.TextureUpperLayer);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureUpperLayer);
                 case "MODL":
                     {
                         var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
@@ -4047,7 +4047,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetModel();
                         }
                     }
-                    return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.Model);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Model);
                 case "NAM0":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.WeatherTypes.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType, MaskItem<Exception, WeatherType_ErrorMask>>.Instance.ParseRepeatedItem(
@@ -4063,7 +4063,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.WeatherTypes);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.WeatherTypes);
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -4117,7 +4117,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetFogNightFar();
                         }
                     }
-                    return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.FogNightFar);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.FogNightFar);
                 case "HNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -4291,7 +4291,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetHdrTreeDimmer();
                         }
                     }
-                    return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.HdrTreeDimmer);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.HdrTreeDimmer);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -4453,7 +4453,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetLightningColor();
                         }
                     }
-                    return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.LightningColor);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.LightningColor);
                 case "SNAM":
                     item.Sounds.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherSound, MaskItem<Exception, WeatherSound_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -4469,13 +4469,13 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<Weather_FieldIndex?>.Succeed(Weather_FieldIndex.Sounds);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Sounds);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => WeatherCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

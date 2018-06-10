@@ -1160,7 +1160,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected static TryGet<WorldspaceBlock_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             WorldspaceBlock item,
             MutagenFrame frame,
             Func<WorldspaceBlock_ErrorMask> errorMask,
@@ -1187,11 +1187,11 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<WorldspaceBlock_FieldIndex?>.Succeed(WorldspaceBlock_FieldIndex.Items);
+                    return TryGet<int?>.Succeed((int)WorldspaceBlock_FieldIndex.Items);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + Constants.RECORD_LENGTH;
-                    return TryGet<WorldspaceBlock_FieldIndex?>.Succeed(null);
+                    return TryGet<int?>.Succeed(null);
             }
         }
 

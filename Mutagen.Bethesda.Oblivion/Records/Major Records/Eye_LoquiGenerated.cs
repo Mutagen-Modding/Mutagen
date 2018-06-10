@@ -1011,7 +1011,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Eye_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Eye, Eye_ErrorMask, Eye_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Eye, Eye_ErrorMask>(
                 record: new Eye(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Eye_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Eye item,
             MutagenFrame frame,
             Func<Eye_ErrorMask> errorMask,
@@ -1059,7 +1059,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetIcon();
                     }
-                    return TryGet<Eye_FieldIndex?>.Succeed(Eye_FieldIndex.Icon);
+                    return TryGet<int?>.Succeed((int)Eye_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Eye.Flag>.Instance.Parse(
@@ -1074,13 +1074,13 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetFlags();
                     }
-                    return TryGet<Eye_FieldIndex?>.Succeed(Eye_FieldIndex.Flags);
+                    return TryGet<int?>.Succeed((int)Eye_FieldIndex.Flags);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => EyeCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

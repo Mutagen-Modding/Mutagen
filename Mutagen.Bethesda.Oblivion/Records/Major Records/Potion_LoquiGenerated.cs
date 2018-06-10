@@ -1690,7 +1690,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Potion_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Potion, Potion_ErrorMask, Potion_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Potion, Potion_ErrorMask>(
                 record: new Potion(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1711,7 +1711,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Potion_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Potion item,
             MutagenFrame frame,
             Func<Potion_ErrorMask> errorMask,
@@ -1738,7 +1738,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetModel();
                         }
                     }
-                    return TryGet<Potion_FieldIndex?>.Succeed(Potion_FieldIndex.Model);
+                    return TryGet<int?>.Succeed((int)Potion_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var IcontryGet = StringBinaryTranslation.Instance.Parse(
@@ -1754,14 +1754,14 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetIcon();
                     }
-                    return TryGet<Potion_FieldIndex?>.Succeed(Potion_FieldIndex.Icon);
+                    return TryGet<int?>.Succeed((int)Potion_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Potion_FieldIndex.Script,
                         errorMask: errorMask));
-                    return TryGet<Potion_FieldIndex?>.Succeed(Potion_FieldIndex.Script);
+                    return TryGet<int?>.Succeed((int)Potion_FieldIndex.Script);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var WeighttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
@@ -1776,7 +1776,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetWeight();
                     }
-                    return TryGet<Potion_FieldIndex?>.Succeed(Potion_FieldIndex.Weight);
+                    return TryGet<int?>.Succeed((int)Potion_FieldIndex.Weight);
                 case "ENIT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -1806,7 +1806,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetFlags();
                         }
                     }
-                    return TryGet<Potion_FieldIndex?>.Succeed(Potion_FieldIndex.Flags);
+                    return TryGet<int?>.Succeed((int)Potion_FieldIndex.Flags);
                 case "EFID":
                     item.Effects.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -1822,13 +1822,13 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<Potion_FieldIndex?>.Succeed(Potion_FieldIndex.Effects);
+                    return TryGet<int?>.Succeed((int)Potion_FieldIndex.Effects);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => PotionCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

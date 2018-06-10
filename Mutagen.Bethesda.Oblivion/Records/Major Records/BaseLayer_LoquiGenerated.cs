@@ -990,7 +990,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    BaseLayer_FieldIndex? lastParsed = null;
+                    int? lastParsed = null;
                     while (!frame.Complete)
                     {
                         var parsed = Fill_Binary_RecordTypes(
@@ -1019,10 +1019,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static TryGet<BaseLayer_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             BaseLayer item,
             MutagenFrame frame,
-            BaseLayer_FieldIndex? lastParsed,
+            int? lastParsed,
             Func<BaseLayer_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -1033,7 +1033,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "BTXT":
-                    if (lastParsed.HasValue && lastParsed.Value >= BaseLayer_FieldIndex.LayerNumber) return TryGet<BaseLayer_FieldIndex?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BaseLayer_FieldIndex.LayerNumber) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
@@ -1066,9 +1066,9 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetLayerNumber();
                         }
                     }
-                    return TryGet<BaseLayer_FieldIndex?>.Succeed(BaseLayer_FieldIndex.LayerNumber);
+                    return TryGet<int?>.Succeed((int)BaseLayer_FieldIndex.LayerNumber);
                 default:
-                    return TryGet<BaseLayer_FieldIndex?>.Failure;
+                    return TryGet<int?>.Failure;
             }
         }
 

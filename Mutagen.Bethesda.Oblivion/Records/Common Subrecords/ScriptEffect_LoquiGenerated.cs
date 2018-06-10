@@ -1222,7 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    ScriptEffect_FieldIndex? lastParsed = null;
+                    int? lastParsed = null;
                     while (!frame.Complete)
                     {
                         var parsed = Fill_Binary_RecordTypes(
@@ -1274,10 +1274,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static TryGet<ScriptEffect_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             ScriptEffect item,
             MutagenFrame frame,
-            ScriptEffect_FieldIndex? lastParsed,
+            int? lastParsed,
             Func<ScriptEffect_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -1288,7 +1288,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "SCIT":
-                    if (lastParsed.HasValue && lastParsed.Value >= ScriptEffect_FieldIndex.Flags) return TryGet<ScriptEffect_FieldIndex?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptEffect_FieldIndex.Flags) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
@@ -1299,7 +1299,7 @@ namespace Mutagen.Bethesda.Oblivion
                         if (dataFrame.Complete)
                         {
                             item.SCITDataTypeState |= SCITDataType.Break0;
-                            return TryGet<ScriptEffect_FieldIndex?>.Succeed(ScriptEffect_FieldIndex.Script);
+                            return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Script);
                         }
                         var MagicSchooltryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
@@ -1320,7 +1320,7 @@ namespace Mutagen.Bethesda.Oblivion
                         if (dataFrame.Complete)
                         {
                             item.SCITDataTypeState |= SCITDataType.Break1;
-                            return TryGet<ScriptEffect_FieldIndex?>.Succeed(ScriptEffect_FieldIndex.VisualEffect);
+                            return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.VisualEffect);
                         }
                         var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Parse(
                             frame: dataFrame.SpawnWithLength(4),
@@ -1335,7 +1335,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetFlags();
                         }
                     }
-                    return TryGet<ScriptEffect_FieldIndex?>.Succeed(ScriptEffect_FieldIndex.Flags);
+                    return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Flags);
                 case "FULL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var NametryGet = StringBinaryTranslation.Instance.Parse(
@@ -1351,9 +1351,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetName();
                     }
-                    return TryGet<ScriptEffect_FieldIndex?>.Succeed(ScriptEffect_FieldIndex.Name);
+                    return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Name);
                 default:
-                    return TryGet<ScriptEffect_FieldIndex?>.Failure;
+                    return TryGet<int?>.Failure;
             }
         }
 

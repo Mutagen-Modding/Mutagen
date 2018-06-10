@@ -1319,7 +1319,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Container_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Container, Container_ErrorMask, Container_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Container, Container_ErrorMask>(
                 record: new Container(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1340,7 +1340,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Container_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Container item,
             MutagenFrame frame,
             Func<Container_ErrorMask> errorMask,
@@ -1367,14 +1367,14 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetModel();
                         }
                     }
-                    return TryGet<Container_FieldIndex?>.Succeed(Container_FieldIndex.Model);
+                    return TryGet<int?>.Succeed((int)Container_FieldIndex.Model);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Container_FieldIndex.Script,
                         errorMask: errorMask));
-                    return TryGet<Container_FieldIndex?>.Succeed(Container_FieldIndex.Script);
+                    return TryGet<int?>.Succeed((int)Container_FieldIndex.Script);
                 case "CNTO":
                     item.Items.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<ContainerItem, MaskItem<Exception, ContainerItem_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -1390,7 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<Container_FieldIndex?>.Succeed(Container_FieldIndex.Items);
+                    return TryGet<int?>.Succeed((int)Container_FieldIndex.Items);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -1420,27 +1420,27 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetWeight();
                         }
                     }
-                    return TryGet<Container_FieldIndex?>.Succeed(Container_FieldIndex.Weight);
+                    return TryGet<int?>.Succeed((int)Container_FieldIndex.Weight);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.OpenSound_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Container_FieldIndex.OpenSound,
                         errorMask: errorMask));
-                    return TryGet<Container_FieldIndex?>.Succeed(Container_FieldIndex.OpenSound);
+                    return TryGet<int?>.Succeed((int)Container_FieldIndex.OpenSound);
                 case "QNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.CloseSound_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Container_FieldIndex.CloseSound,
                         errorMask: errorMask));
-                    return TryGet<Container_FieldIndex?>.Succeed(Container_FieldIndex.CloseSound);
+                    return TryGet<int?>.Succeed((int)Container_FieldIndex.CloseSound);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => ContainerCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

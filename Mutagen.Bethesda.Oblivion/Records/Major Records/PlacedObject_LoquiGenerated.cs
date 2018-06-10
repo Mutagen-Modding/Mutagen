@@ -3809,7 +3809,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<PlacedObject_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<PlacedObject, PlacedObject_ErrorMask, PlacedObject_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<PlacedObject, PlacedObject_ErrorMask>(
                 record: new PlacedObject(),
                 frame: frame,
                 errorMask: errorMask,
@@ -3830,7 +3830,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<PlacedObject_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             PlacedObject item,
             MutagenFrame frame,
             Func<PlacedObject_ErrorMask> errorMask,
@@ -3848,7 +3848,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedObject_FieldIndex.Base,
                         errorMask: errorMask));
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.Base);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Base);
                 case "XPCI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var XPCIFlufftryGet = ByteArrayBinaryTranslation.Instance.Parse(
@@ -3863,7 +3863,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetXPCIFluff();
                     }
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.XPCIFluff);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XPCIFluff);
                 case "FULL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FULLFlufftryGet = ByteArrayBinaryTranslation.Instance.Parse(
@@ -3878,7 +3878,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetFULLFluff();
                     }
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.FULLFluff);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.FULLFluff);
                 case "XTEL":
                     {
                         var TeleportDestinationtryGet = LoquiBinaryTranslation<TeleportDestination, TeleportDestination_ErrorMask>.Instance.Parse(
@@ -3894,7 +3894,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetTeleportDestination();
                         }
                     }
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.TeleportDestination);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.TeleportDestination);
                 case "XLOC":
                     {
                         var LocktryGet = LoquiBinaryTranslation<LockInformation, LockInformation_ErrorMask>.Instance.Parse(
@@ -3910,14 +3910,14 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetLock();
                         }
                     }
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.Lock);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Lock);
                 case "XOWN":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Owner_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedObject_FieldIndex.Owner,
                         errorMask: errorMask));
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.Owner);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Owner);
                 case "XRNK":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FactionRanktryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
@@ -3932,14 +3932,14 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetFactionRank();
                     }
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.FactionRank);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.FactionRank);
                 case "XGLB":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.GlobalVariable_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedObject_FieldIndex.GlobalVariable,
                         errorMask: errorMask));
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.GlobalVariable);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.GlobalVariable);
                 case "XESP":
                     {
                         var EnableParenttryGet = LoquiBinaryTranslation<EnableParent, EnableParent_ErrorMask>.Instance.Parse(
@@ -3955,14 +3955,14 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetEnableParent();
                         }
                     }
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.EnableParent);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.EnableParent);
                 case "XTRG":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Target_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedObject_FieldIndex.Target,
                         errorMask: errorMask));
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.Target);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Target);
                 case "XSED":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var SpeedTreeSeedtryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
@@ -3977,7 +3977,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetSpeedTreeSeed();
                     }
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.SpeedTreeSeed);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.SpeedTreeSeed);
                 case "XLOD":
                     {
                         var DistantLODDatatryGet = LoquiBinaryTranslation<DistantLODData, DistantLODData_ErrorMask>.Instance.Parse(
@@ -3993,7 +3993,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetDistantLODData();
                         }
                     }
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.DistantLODData);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.DistantLODData);
                 case "XCHG":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var ChargetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
@@ -4008,7 +4008,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetCharge();
                     }
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.Charge);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Charge);
                 case "XHLT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var HealthtryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
@@ -4023,7 +4023,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetHealth();
                     }
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.Health);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Health);
                 case "XLCM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var LevelModifiertryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
@@ -4038,14 +4038,14 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetLevelModifier();
                     }
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.LevelModifier);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LevelModifier);
                 case "XRTM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Unknown_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
                         errorMask: errorMask));
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.Unknown);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown);
                 case "XACT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var ActionFlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<PlacedObject.ActionFlag>.Instance.Parse(
@@ -4060,7 +4060,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetActionFlags();
                     }
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.ActionFlags);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ActionFlags);
                 case "XCNT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var CounttryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
@@ -4075,7 +4075,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetCount();
                     }
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.Count);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Count);
                 case "XMRK":
                     frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
                     {
@@ -4092,7 +4092,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetMapMarker();
                         }
                     }
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.MapMarker);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.MapMarker);
                 case "ONAM":
                     try
                     {
@@ -4110,7 +4110,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask().Overall = ex;
                     }
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.OpenByDefault);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.OpenByDefault);
                 case "XRGD":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var RagdollDatatryGet = ByteArrayBinaryTranslation.Instance.Parse(
@@ -4125,7 +4125,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetRagdollData();
                     }
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.RagdollData);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.RagdollData);
                 case "XSCL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var ScaletryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
@@ -4140,14 +4140,14 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetScale();
                     }
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.Scale);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Scale);
                 case "XSOL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.ContainedSoul_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedObject_FieldIndex.ContainedSoul,
                         errorMask: errorMask));
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.ContainedSoul);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ContainedSoul);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -4177,13 +4177,13 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetRotation();
                         }
                     }
-                    return TryGet<PlacedObject_FieldIndex?>.Succeed(PlacedObject_FieldIndex.Rotation);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Rotation);
                 default:
                     return Placed.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => PlacedObjectCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

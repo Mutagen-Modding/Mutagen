@@ -854,7 +854,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Activator_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Activator, Activator_ErrorMask, Activator_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Activator, Activator_ErrorMask>(
                 record: new Activator(),
                 frame: frame,
                 errorMask: errorMask,
@@ -875,7 +875,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Activator_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Activator item,
             MutagenFrame frame,
             Func<Activator_ErrorMask> errorMask,
@@ -902,27 +902,27 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetModel();
                         }
                     }
-                    return TryGet<Activator_FieldIndex?>.Succeed(Activator_FieldIndex.Model);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.Model);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Activator_FieldIndex.Script,
                         errorMask: errorMask));
-                    return TryGet<Activator_FieldIndex?>.Succeed(Activator_FieldIndex.Script);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.Script);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Sound_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Activator_FieldIndex.Sound,
                         errorMask: errorMask));
-                    return TryGet<Activator_FieldIndex?>.Succeed(Activator_FieldIndex.Sound);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.Sound);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => ActivatorCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

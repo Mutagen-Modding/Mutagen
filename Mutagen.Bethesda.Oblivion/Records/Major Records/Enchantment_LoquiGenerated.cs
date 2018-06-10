@@ -1318,7 +1318,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Enchantment_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Enchantment, Enchantment_ErrorMask, Enchantment_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Enchantment, Enchantment_ErrorMask>(
                 record: new Enchantment(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Enchantment_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Enchantment item,
             MutagenFrame frame,
             Func<Enchantment_ErrorMask> errorMask,
@@ -1404,7 +1404,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetFlags();
                         }
                     }
-                    return TryGet<Enchantment_FieldIndex?>.Succeed(Enchantment_FieldIndex.Flags);
+                    return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Flags);
                 case "EFID":
                     item.Effects.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -1420,13 +1420,13 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<Enchantment_FieldIndex?>.Succeed(Enchantment_FieldIndex.Effects);
+                    return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Effects);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => EnchantmentCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

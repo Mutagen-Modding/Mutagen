@@ -936,7 +936,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static TryGet<RegionData_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             RegionData item,
             MutagenFrame frame,
             Func<RegionData_ErrorMask> errorMask,
@@ -990,9 +990,9 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         dataFrame.SetPosition(dataFrame.Position + 2);
                     }
-                    return TryGet<RegionData_FieldIndex?>.Succeed(RegionData_FieldIndex.Priority);
+                    return TryGet<int?>.Succeed((int)RegionData_FieldIndex.Priority);
                 default:
-                    return TryGet<RegionData_FieldIndex?>.Failure;
+                    return TryGet<int?>.Failure;
             }
         }
 

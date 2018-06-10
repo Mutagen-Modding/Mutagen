@@ -1023,7 +1023,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    MapMarker_FieldIndex? lastParsed = null;
+                    int? lastParsed = null;
                     while (!frame.Complete)
                     {
                         var parsed = Fill_Binary_RecordTypes(
@@ -1052,10 +1052,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static TryGet<MapMarker_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             MapMarker item,
             MutagenFrame frame,
-            MapMarker_FieldIndex? lastParsed,
+            int? lastParsed,
             Func<MapMarker_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -1066,7 +1066,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "FNAM":
-                    if (lastParsed.HasValue && lastParsed.Value >= MapMarker_FieldIndex.Flags) return TryGet<MapMarker_FieldIndex?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Flags) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Flag>.Instance.Parse(
                         frame.SpawnWithLength(contentLength),
@@ -1080,9 +1080,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetFlags();
                     }
-                    return TryGet<MapMarker_FieldIndex?>.Succeed(MapMarker_FieldIndex.Flags);
+                    return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Flags);
                 case "FULL":
-                    if (lastParsed.HasValue && lastParsed.Value >= MapMarker_FieldIndex.Name) return TryGet<MapMarker_FieldIndex?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Name) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var NametryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
@@ -1097,9 +1097,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetName();
                     }
-                    return TryGet<MapMarker_FieldIndex?>.Succeed(MapMarker_FieldIndex.Name);
+                    return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Name);
                 case "TNAM":
-                    if (lastParsed.HasValue && lastParsed.Value >= MapMarker_FieldIndex.Types) return TryGet<MapMarker_FieldIndex?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Types) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Types.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<MapMarker.Type, Exception>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
@@ -1114,9 +1114,9 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<MapMarker_FieldIndex?>.Succeed(MapMarker_FieldIndex.Types);
+                    return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Types);
                 default:
-                    return TryGet<MapMarker_FieldIndex?>.Failure;
+                    return TryGet<int?>.Failure;
             }
         }
 

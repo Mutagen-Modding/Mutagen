@@ -11,17 +11,16 @@ namespace Mutagen.Bethesda
 {
     public static class UtilityTranslation
     {
-        public static M MajorRecordParse<M, E, I>(
+        public static M MajorRecordParse<M, E>(
             M record,
             MutagenFrame frame,
             Func<E> errorMask,
             RecordType recType,
             RecordTypeConverter recordTypeConverter,
             Action<M, MutagenFrame, Func<E>> fillStructs,
-            Func<M, MutagenFrame, Func<E>, RecordTypeConverter, TryGet<I?>> fillTyped)
+            Func<M, MutagenFrame, Func<E>, RecordTypeConverter, TryGet<int?>> fillTyped)
             where M : MajorRecord
             where E : IErrorMask
-            where I : struct
         {
             try
             {

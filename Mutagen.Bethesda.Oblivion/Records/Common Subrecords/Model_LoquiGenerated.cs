@@ -1176,7 +1176,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    Model_FieldIndex? lastParsed = null;
+                    int? lastParsed = null;
                     while (!frame.Complete)
                     {
                         var parsed = Fill_Binary_RecordTypes(
@@ -1205,10 +1205,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static TryGet<Model_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Model item,
             MutagenFrame frame,
-            Model_FieldIndex? lastParsed,
+            int? lastParsed,
             Func<Model_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -1219,7 +1219,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    if (lastParsed.HasValue && lastParsed.Value >= Model_FieldIndex.File) return TryGet<Model_FieldIndex?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Model_FieldIndex.File) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FiletryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
@@ -1234,7 +1234,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetFile();
                     }
-                    return TryGet<Model_FieldIndex?>.Succeed(Model_FieldIndex.File);
+                    return TryGet<int?>.Succeed((int)Model_FieldIndex.File);
                 case "MODB":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var BoundRadiustryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
@@ -1249,7 +1249,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetBoundRadius();
                     }
-                    return TryGet<Model_FieldIndex?>.Succeed(Model_FieldIndex.BoundRadius);
+                    return TryGet<int?>.Succeed((int)Model_FieldIndex.BoundRadius);
                 case "MODT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var HashestryGet = ByteArrayBinaryTranslation.Instance.Parse(
@@ -1264,9 +1264,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetHashes();
                     }
-                    return TryGet<Model_FieldIndex?>.Succeed(Model_FieldIndex.Hashes);
+                    return TryGet<int?>.Succeed((int)Model_FieldIndex.Hashes);
                 default:
-                    return TryGet<Model_FieldIndex?>.Failure;
+                    return TryGet<int?>.Failure;
             }
         }
 

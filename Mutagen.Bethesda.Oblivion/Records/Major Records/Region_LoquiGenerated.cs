@@ -2148,7 +2148,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Region_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Region, Region_ErrorMask, Region_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Region, Region_ErrorMask>(
                 record: new Region(),
                 frame: frame,
                 errorMask: errorMask,
@@ -2169,7 +2169,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Region_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Region item,
             MutagenFrame frame,
             Func<Region_ErrorMask> errorMask,
@@ -2196,7 +2196,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetIcon();
                     }
-                    return TryGet<Region_FieldIndex?>.Succeed(Region_FieldIndex.Icon);
+                    return TryGet<int?>.Succeed((int)Region_FieldIndex.Icon);
                 case "RCLR":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var MapColortryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
@@ -2212,14 +2212,14 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetMapColor();
                     }
-                    return TryGet<Region_FieldIndex?>.Succeed(Region_FieldIndex.MapColor);
+                    return TryGet<int?>.Succeed((int)Region_FieldIndex.MapColor);
                 case "WNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Worldspace_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Region_FieldIndex.Worldspace,
                         errorMask: errorMask));
-                    return TryGet<Region_FieldIndex?>.Succeed(Region_FieldIndex.Worldspace);
+                    return TryGet<int?>.Succeed((int)Region_FieldIndex.Worldspace);
                 case "RPLI":
                 case "RPLD":
                     item.Areas.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionArea, MaskItem<Exception, RegionArea_ErrorMask>>.Instance.ParseRepeatedItem(
@@ -2236,7 +2236,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<Region_FieldIndex?>.Succeed(Region_FieldIndex.Areas);
+                    return TryGet<int?>.Succeed((int)Region_FieldIndex.Areas);
                 case "RDAT":
                     try
                     {
@@ -2253,13 +2253,13 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask().Overall = ex;
                     }
-                    return TryGet<Region_FieldIndex?>.Succeed(null);
+                    return TryGet<int?>.Succeed(null);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => RegionCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

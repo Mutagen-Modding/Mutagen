@@ -858,7 +858,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    GenderedBodyData_FieldIndex? lastParsed = null;
+                    int? lastParsed = null;
                     while (!frame.Complete)
                     {
                         var parsed = Fill_Binary_RecordTypes(
@@ -887,10 +887,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static TryGet<GenderedBodyData_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             GenderedBodyData item,
             MutagenFrame frame,
-            GenderedBodyData_FieldIndex? lastParsed,
+            int? lastParsed,
             Func<GenderedBodyData_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -901,7 +901,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MNAM":
-                    if (lastParsed.HasValue && lastParsed.Value >= GenderedBodyData_FieldIndex.Male) return TryGet<GenderedBodyData_FieldIndex?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)GenderedBodyData_FieldIndex.Male) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
                     {
                         var MaletryGet = LoquiBinaryTranslation<BodyData, BodyData_ErrorMask>.Instance.Parse(
@@ -917,9 +917,9 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetMale();
                         }
                     }
-                    return TryGet<GenderedBodyData_FieldIndex?>.Succeed(GenderedBodyData_FieldIndex.Male);
+                    return TryGet<int?>.Succeed((int)GenderedBodyData_FieldIndex.Male);
                 case "FNAM":
-                    if (lastParsed.HasValue && lastParsed.Value >= GenderedBodyData_FieldIndex.Female) return TryGet<GenderedBodyData_FieldIndex?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)GenderedBodyData_FieldIndex.Female) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
                     {
                         var FemaletryGet = LoquiBinaryTranslation<BodyData, BodyData_ErrorMask>.Instance.Parse(
@@ -935,9 +935,9 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetFemale();
                         }
                     }
-                    return TryGet<GenderedBodyData_FieldIndex?>.Succeed(GenderedBodyData_FieldIndex.Female);
+                    return TryGet<int?>.Succeed((int)GenderedBodyData_FieldIndex.Female);
                 default:
-                    return TryGet<GenderedBodyData_FieldIndex?>.Failure;
+                    return TryGet<int?>.Failure;
             }
         }
 

@@ -2441,7 +2441,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Light_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Light, Light_ErrorMask, Light_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Light, Light_ErrorMask>(
                 record: new Light(),
                 frame: frame,
                 errorMask: errorMask,
@@ -2462,7 +2462,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Light_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Light item,
             MutagenFrame frame,
             Func<Light_ErrorMask> errorMask,
@@ -2489,14 +2489,14 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetModel();
                         }
                     }
-                    return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Model);
+                    return TryGet<int?>.Succeed((int)Light_FieldIndex.Model);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Light_FieldIndex.Script,
                         errorMask: errorMask));
-                    return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Script);
+                    return TryGet<int?>.Succeed((int)Light_FieldIndex.Script);
                 case "FULL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var NametryGet = StringBinaryTranslation.Instance.Parse(
@@ -2512,7 +2512,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetName();
                     }
-                    return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Name);
+                    return TryGet<int?>.Succeed((int)Light_FieldIndex.Name);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var IcontryGet = StringBinaryTranslation.Instance.Parse(
@@ -2528,7 +2528,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetIcon();
                     }
-                    return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Icon);
+                    return TryGet<int?>.Succeed((int)Light_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -2635,7 +2635,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetWeight();
                         }
                     }
-                    return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Weight);
+                    return TryGet<int?>.Succeed((int)Light_FieldIndex.Weight);
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FadetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
@@ -2650,20 +2650,20 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetFade();
                     }
-                    return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Fade);
+                    return TryGet<int?>.Succeed((int)Light_FieldIndex.Fade);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Sound_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Light_FieldIndex.Sound,
                         errorMask: errorMask));
-                    return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Sound);
+                    return TryGet<int?>.Succeed((int)Light_FieldIndex.Sound);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => LightCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

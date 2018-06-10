@@ -2029,7 +2029,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Tree_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Tree, Tree_ErrorMask, Tree_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Tree, Tree_ErrorMask>(
                 record: new Tree(),
                 frame: frame,
                 errorMask: errorMask,
@@ -2050,7 +2050,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Tree_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Tree item,
             MutagenFrame frame,
             Func<Tree_ErrorMask> errorMask,
@@ -2077,7 +2077,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetModel();
                         }
                     }
-                    return TryGet<Tree_FieldIndex?>.Succeed(Tree_FieldIndex.Model);
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var IcontryGet = StringBinaryTranslation.Instance.Parse(
@@ -2093,7 +2093,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetIcon();
                     }
-                    return TryGet<Tree_FieldIndex?>.Succeed(Tree_FieldIndex.Icon);
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Icon);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.SpeedTreeSeeds.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32, Exception>.Instance.ParseRepeatedItem(
@@ -2109,7 +2109,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<Tree_FieldIndex?>.Succeed(Tree_FieldIndex.SpeedTreeSeeds);
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.SpeedTreeSeeds);
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -2211,7 +2211,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetRustleSpeed();
                         }
                     }
-                    return TryGet<Tree_FieldIndex?>.Succeed(Tree_FieldIndex.RustleSpeed);
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.RustleSpeed);
                 case "BNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -2241,13 +2241,13 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetBillboardHeight();
                         }
                     }
-                    return TryGet<Tree_FieldIndex?>.Succeed(Tree_FieldIndex.BillboardHeight);
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.BillboardHeight);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => TreeCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

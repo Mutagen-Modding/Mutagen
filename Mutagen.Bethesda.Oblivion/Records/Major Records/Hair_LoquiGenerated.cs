@@ -1217,7 +1217,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Hair_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Hair, Hair_ErrorMask, Hair_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Hair, Hair_ErrorMask>(
                 record: new Hair(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1238,7 +1238,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Hair_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Hair item,
             MutagenFrame frame,
             Func<Hair_ErrorMask> errorMask,
@@ -1265,7 +1265,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetModel();
                         }
                     }
-                    return TryGet<Hair_FieldIndex?>.Succeed(Hair_FieldIndex.Model);
+                    return TryGet<int?>.Succeed((int)Hair_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var IcontryGet = StringBinaryTranslation.Instance.Parse(
@@ -1281,7 +1281,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetIcon();
                     }
-                    return TryGet<Hair_FieldIndex?>.Succeed(Hair_FieldIndex.Icon);
+                    return TryGet<int?>.Succeed((int)Hair_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Hair.HairFlag>.Instance.Parse(
@@ -1296,13 +1296,13 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetFlags();
                     }
-                    return TryGet<Hair_FieldIndex?>.Succeed(Hair_FieldIndex.Flags);
+                    return TryGet<int?>.Succeed((int)Hair_FieldIndex.Flags);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => HairCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

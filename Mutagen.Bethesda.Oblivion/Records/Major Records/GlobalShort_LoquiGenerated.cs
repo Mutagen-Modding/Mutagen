@@ -790,7 +790,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<GlobalShort_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<GlobalShort, GlobalShort_ErrorMask, GlobalShort_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<GlobalShort, GlobalShort_ErrorMask>(
                 record: new GlobalShort(),
                 frame: frame,
                 errorMask: errorMask,

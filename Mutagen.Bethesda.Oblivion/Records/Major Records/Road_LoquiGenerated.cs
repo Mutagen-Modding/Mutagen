@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Road_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Road, Road_ErrorMask, Road_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Road, Road_ErrorMask>(
                 record: new Road(),
                 frame: frame,
                 errorMask: errorMask,
@@ -677,7 +677,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Road_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Road item,
             MutagenFrame frame,
             Func<Road_ErrorMask> errorMask,
@@ -706,13 +706,13 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask().Overall = ex;
                     }
-                    return TryGet<Road_FieldIndex?>.Succeed(Road_FieldIndex.Points);
+                    return TryGet<int?>.Succeed((int)Road_FieldIndex.Points);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => RoadCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

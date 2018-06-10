@@ -1043,7 +1043,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Furnature_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Furnature, Furnature_ErrorMask, Furnature_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Furnature, Furnature_ErrorMask>(
                 record: new Furnature(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1064,7 +1064,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Furnature_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Furnature item,
             MutagenFrame frame,
             Func<Furnature_ErrorMask> errorMask,
@@ -1091,14 +1091,14 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetModel();
                         }
                     }
-                    return TryGet<Furnature_FieldIndex?>.Succeed(Furnature_FieldIndex.Model);
+                    return TryGet<int?>.Succeed((int)Furnature_FieldIndex.Model);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Furnature_FieldIndex.Script,
                         errorMask: errorMask));
-                    return TryGet<Furnature_FieldIndex?>.Succeed(Furnature_FieldIndex.Script);
+                    return TryGet<int?>.Succeed((int)Furnature_FieldIndex.Script);
                 case "MNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var MarkerFlagstryGet = ByteArrayBinaryTranslation.Instance.Parse(
@@ -1113,13 +1113,13 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetMarkerFlags();
                     }
-                    return TryGet<Furnature_FieldIndex?>.Succeed(Furnature_FieldIndex.MarkerFlags);
+                    return TryGet<int?>.Succeed((int)Furnature_FieldIndex.MarkerFlags);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => FurnatureCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

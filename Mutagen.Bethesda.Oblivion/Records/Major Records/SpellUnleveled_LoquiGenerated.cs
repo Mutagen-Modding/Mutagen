@@ -1455,7 +1455,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<SpellUnleveled_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<SpellUnleveled, SpellUnleveled_ErrorMask, SpellUnleveled_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<SpellUnleveled, SpellUnleveled_ErrorMask>(
                 record: new SpellUnleveled(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1476,7 +1476,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<SpellUnleveled_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             SpellUnleveled item,
             MutagenFrame frame,
             Func<SpellUnleveled_ErrorMask> errorMask,
@@ -1541,7 +1541,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetFlag();
                         }
                     }
-                    return TryGet<SpellUnleveled_FieldIndex?>.Succeed(SpellUnleveled_FieldIndex.Flag);
+                    return TryGet<int?>.Succeed((int)SpellUnleveled_FieldIndex.Flag);
                 case "EFID":
                     item.Effects.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -1557,13 +1557,13 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<SpellUnleveled_FieldIndex?>.Succeed(SpellUnleveled_FieldIndex.Effects);
+                    return TryGet<int?>.Succeed((int)SpellUnleveled_FieldIndex.Effects);
                 default:
                     return Spell.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => SpellUnleveledCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

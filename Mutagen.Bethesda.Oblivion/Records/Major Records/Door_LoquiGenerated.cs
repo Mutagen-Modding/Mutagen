@@ -1148,7 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Door_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Door, Door_ErrorMask, Door_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Door, Door_ErrorMask>(
                 record: new Door(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1169,7 +1169,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Door_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Door item,
             MutagenFrame frame,
             Func<Door_ErrorMask> errorMask,
@@ -1196,35 +1196,35 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetModel();
                         }
                     }
-                    return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.Model);
+                    return TryGet<int?>.Succeed((int)Door_FieldIndex.Model);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Door_FieldIndex.Script,
                         errorMask: errorMask));
-                    return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.Script);
+                    return TryGet<int?>.Succeed((int)Door_FieldIndex.Script);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.OpenSound_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Door_FieldIndex.OpenSound,
                         errorMask: errorMask));
-                    return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.OpenSound);
+                    return TryGet<int?>.Succeed((int)Door_FieldIndex.OpenSound);
                 case "ANAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.CloseSound_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Door_FieldIndex.CloseSound,
                         errorMask: errorMask));
-                    return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.CloseSound);
+                    return TryGet<int?>.Succeed((int)Door_FieldIndex.CloseSound);
                 case "BNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.LoopSound_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Door_FieldIndex.LoopSound,
                         errorMask: errorMask));
-                    return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.LoopSound);
+                    return TryGet<int?>.Succeed((int)Door_FieldIndex.LoopSound);
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Door.DoorFlag>.Instance.Parse(
@@ -1239,7 +1239,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetFlags();
                     }
-                    return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.Flags);
+                    return TryGet<int?>.Succeed((int)Door_FieldIndex.Flags);
                 case "TNAM":
                     item.RandomTeleportDestinations.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Worldspace>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -1256,13 +1256,13 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<Worldspace>(o));
                         }
                         ));
-                    return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.RandomTeleportDestinations);
+                    return TryGet<int?>.Succeed((int)Door_FieldIndex.RandomTeleportDestinations);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => DoorCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

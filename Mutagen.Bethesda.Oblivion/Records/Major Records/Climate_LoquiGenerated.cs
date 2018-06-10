@@ -1897,7 +1897,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Climate_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Climate, Climate_ErrorMask, Climate_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Climate, Climate_ErrorMask>(
                 record: new Climate(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1918,7 +1918,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Climate_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Climate item,
             MutagenFrame frame,
             Func<Climate_ErrorMask> errorMask,
@@ -1945,7 +1945,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<Climate_FieldIndex?>.Succeed(Climate_FieldIndex.Weathers);
+                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.Weathers);
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var SunTexturetryGet = StringBinaryTranslation.Instance.Parse(
@@ -1961,7 +1961,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetSunTexture();
                     }
-                    return TryGet<Climate_FieldIndex?>.Succeed(Climate_FieldIndex.SunTexture);
+                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunTexture);
                 case "GNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var SunGlareTexturetryGet = StringBinaryTranslation.Instance.Parse(
@@ -1977,7 +1977,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetSunGlareTexture();
                     }
-                    return TryGet<Climate_FieldIndex?>.Succeed(Climate_FieldIndex.SunGlareTexture);
+                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunGlareTexture);
                 case "MODL":
                     {
                         var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
@@ -1993,7 +1993,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetModel();
                         }
                     }
-                    return TryGet<Climate_FieldIndex?>.Succeed(Climate_FieldIndex.Model);
+                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.Model);
                 case "TNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -2089,13 +2089,13 @@ namespace Mutagen.Bethesda.Oblivion
                             errorMask().Overall = ex;
                         }
                     }
-                    return TryGet<Climate_FieldIndex?>.Succeed(Climate_FieldIndex.PhaseLength);
+                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.PhaseLength);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => ClimateCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

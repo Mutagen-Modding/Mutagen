@@ -818,7 +818,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    BodyData_FieldIndex? lastParsed = null;
+                    int? lastParsed = null;
                     while (!frame.Complete)
                     {
                         var parsed = Fill_Binary_RecordTypes(
@@ -847,10 +847,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static TryGet<BodyData_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             BodyData item,
             MutagenFrame frame,
-            BodyData_FieldIndex? lastParsed,
+            int? lastParsed,
             Func<BodyData_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -861,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    if (lastParsed.HasValue && lastParsed.Value >= BodyData_FieldIndex.Model) return TryGet<BodyData_FieldIndex?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Model) return TryGet<int?>.Failure;
                     {
                         var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                             frame: frame.Spawn(snapToFinalPosition: false),
@@ -876,10 +876,10 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetModel();
                         }
                     }
-                    return TryGet<BodyData_FieldIndex?>.Succeed(BodyData_FieldIndex.Model);
+                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Model);
                 case "INDX":
                 case "ICON":
-                    if (lastParsed.HasValue && lastParsed.Value >= BodyData_FieldIndex.BodyParts) return TryGet<BodyData_FieldIndex?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.BodyParts) return TryGet<int?>.Failure;
                     item.BodyParts.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<BodyPart, MaskItem<Exception, BodyPart_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: BodyPart_Registration.TriggeringRecordTypes,
@@ -894,9 +894,9 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<BodyData_FieldIndex?>.Succeed(BodyData_FieldIndex.BodyParts);
+                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.BodyParts);
                 default:
-                    return TryGet<BodyData_FieldIndex?>.Failure;
+                    return TryGet<int?>.Failure;
             }
         }
 

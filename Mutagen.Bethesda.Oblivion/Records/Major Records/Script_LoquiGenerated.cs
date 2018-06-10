@@ -1280,7 +1280,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Script_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Script, Script_ErrorMask, Script_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Script, Script_ErrorMask>(
                 record: new Script(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1301,7 +1301,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Script_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Script item,
             MutagenFrame frame,
             Func<Script_ErrorMask> errorMask,
@@ -1330,7 +1330,7 @@ namespace Mutagen.Bethesda.Oblivion
                         creator: errorMask,
                         index: (int)Script_FieldIndex.MetadataSummary,
                         errMaskObj: combinedMetadataSummary == null ? null : new MaskItem<Exception, ScriptMetaSummary_ErrorMask>(null, combinedMetadataSummary));
-                    return TryGet<Script_FieldIndex?>.Succeed(Script_FieldIndex.MetadataSummary);
+                    return TryGet<int?>.Succeed((int)Script_FieldIndex.MetadataSummary);
                 case "SCDA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var CompiledScripttryGet = ByteArrayBinaryTranslation.Instance.Parse(
@@ -1345,7 +1345,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetCompiledScript();
                     }
-                    return TryGet<Script_FieldIndex?>.Succeed(Script_FieldIndex.CompiledScript);
+                    return TryGet<int?>.Succeed((int)Script_FieldIndex.CompiledScript);
                 case "SCTX":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var SourceCodetryGet = StringBinaryTranslation.Instance.Parse(
@@ -1361,7 +1361,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetSourceCode();
                     }
-                    return TryGet<Script_FieldIndex?>.Succeed(Script_FieldIndex.SourceCode);
+                    return TryGet<int?>.Succeed((int)Script_FieldIndex.SourceCode);
                 case "SLSD":
                 case "SCVR":
                     item.LocalVariables.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<LocalVariable, MaskItem<Exception, LocalVariable_ErrorMask>>.Instance.ParseRepeatedItem(
@@ -1378,7 +1378,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<Script_FieldIndex?>.Succeed(Script_FieldIndex.LocalVariables);
+                    return TryGet<int?>.Succeed((int)Script_FieldIndex.LocalVariables);
                 case "SCRV":
                 case "SCRO":
                     item.References.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptReference, MaskItem<Exception, ScriptReference_ErrorMask>>.Instance.ParseRepeatedItem(
@@ -1412,13 +1412,13 @@ namespace Mutagen.Bethesda.Oblivion
                             return ret;
                         }
                         ));
-                    return TryGet<Script_FieldIndex?>.Succeed(Script_FieldIndex.References);
+                    return TryGet<int?>.Succeed((int)Script_FieldIndex.References);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => ScriptCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

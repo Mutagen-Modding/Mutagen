@@ -2361,7 +2361,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Weapon_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Weapon, Weapon_ErrorMask, Weapon_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Weapon, Weapon_ErrorMask>(
                 record: new Weapon(),
                 frame: frame,
                 errorMask: errorMask,
@@ -2382,7 +2382,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Weapon_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Weapon item,
             MutagenFrame frame,
             Func<Weapon_ErrorMask> errorMask,
@@ -2409,7 +2409,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetModel();
                         }
                     }
-                    return TryGet<Weapon_FieldIndex?>.Succeed(Weapon_FieldIndex.Model);
+                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var IcontryGet = StringBinaryTranslation.Instance.Parse(
@@ -2425,21 +2425,21 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetIcon();
                     }
-                    return TryGet<Weapon_FieldIndex?>.Succeed(Weapon_FieldIndex.Icon);
+                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Weapon_FieldIndex.Script,
                         errorMask: errorMask));
-                    return TryGet<Weapon_FieldIndex?>.Succeed(Weapon_FieldIndex.Script);
+                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Script);
                 case "ENAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Enchantment_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Weapon_FieldIndex.Enchantment,
                         errorMask: errorMask));
-                    return TryGet<Weapon_FieldIndex?>.Succeed(Weapon_FieldIndex.Enchantment);
+                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Enchantment);
                 case "ANAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var EnchantmentPointstryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
@@ -2454,7 +2454,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetEnchantmentPoints();
                     }
-                    return TryGet<Weapon_FieldIndex?>.Succeed(Weapon_FieldIndex.EnchantmentPoints);
+                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EnchantmentPoints);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -2556,13 +2556,13 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetDamage();
                         }
                     }
-                    return TryGet<Weapon_FieldIndex?>.Succeed(Weapon_FieldIndex.Damage);
+                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Damage);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => WeaponCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

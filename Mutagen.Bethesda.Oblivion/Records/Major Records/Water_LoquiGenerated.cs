@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Water_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Water, Water_ErrorMask, Water_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Water, Water_ErrorMask>(
                 record: new Water(),
                 frame: frame,
                 errorMask: errorMask,

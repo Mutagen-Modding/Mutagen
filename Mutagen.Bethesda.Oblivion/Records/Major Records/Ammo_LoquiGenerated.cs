@@ -2072,7 +2072,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Ammo_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Ammo, Ammo_ErrorMask, Ammo_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Ammo, Ammo_ErrorMask>(
                 record: new Ammo(),
                 frame: frame,
                 errorMask: errorMask,
@@ -2093,7 +2093,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Ammo_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Ammo item,
             MutagenFrame frame,
             Func<Ammo_ErrorMask> errorMask,
@@ -2120,7 +2120,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetName();
                     }
-                    return TryGet<Ammo_FieldIndex?>.Succeed(Ammo_FieldIndex.Name);
+                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Name);
                 case "MODL":
                     {
                         var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
@@ -2136,7 +2136,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetModel();
                         }
                     }
-                    return TryGet<Ammo_FieldIndex?>.Succeed(Ammo_FieldIndex.Model);
+                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var IcontryGet = StringBinaryTranslation.Instance.Parse(
@@ -2152,14 +2152,14 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetIcon();
                     }
-                    return TryGet<Ammo_FieldIndex?>.Succeed(Ammo_FieldIndex.Icon);
+                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Icon);
                 case "ENAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Enchantment_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Ammo_FieldIndex.Enchantment,
                         errorMask: errorMask));
-                    return TryGet<Ammo_FieldIndex?>.Succeed(Ammo_FieldIndex.Enchantment);
+                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Enchantment);
                 case "ANAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var EnchantmentPointstryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
@@ -2174,7 +2174,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetEnchantmentPoints();
                     }
-                    return TryGet<Ammo_FieldIndex?>.Succeed(Ammo_FieldIndex.EnchantmentPoints);
+                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.EnchantmentPoints);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -2240,13 +2240,13 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetDamage();
                         }
                     }
-                    return TryGet<Ammo_FieldIndex?>.Succeed(Ammo_FieldIndex.Damage);
+                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Damage);
                 default:
                     return ItemAbstract.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => AmmoCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

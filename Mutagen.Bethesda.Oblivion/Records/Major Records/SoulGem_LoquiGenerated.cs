@@ -1727,7 +1727,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<SoulGem_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<SoulGem, SoulGem_ErrorMask, SoulGem_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<SoulGem, SoulGem_ErrorMask>(
                 record: new SoulGem(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1748,7 +1748,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<SoulGem_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             SoulGem item,
             MutagenFrame frame,
             Func<SoulGem_ErrorMask> errorMask,
@@ -1775,7 +1775,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetModel();
                         }
                     }
-                    return TryGet<SoulGem_FieldIndex?>.Succeed(SoulGem_FieldIndex.Model);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var IcontryGet = StringBinaryTranslation.Instance.Parse(
@@ -1791,14 +1791,14 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetIcon();
                     }
-                    return TryGet<SoulGem_FieldIndex?>.Succeed(SoulGem_FieldIndex.Icon);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)SoulGem_FieldIndex.Script,
                         errorMask: errorMask));
-                    return TryGet<SoulGem_FieldIndex?>.Succeed(SoulGem_FieldIndex.Script);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Script);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -1828,7 +1828,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetWeight();
                         }
                     }
-                    return TryGet<SoulGem_FieldIndex?>.Succeed(SoulGem_FieldIndex.Weight);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Weight);
                 case "SOUL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var ContainedSoultryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.Parse(
@@ -1843,7 +1843,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetContainedSoul();
                     }
-                    return TryGet<SoulGem_FieldIndex?>.Succeed(SoulGem_FieldIndex.ContainedSoul);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.ContainedSoul);
                 case "SLCP":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var MaximumCapacitytryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.Parse(
@@ -1858,13 +1858,13 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetMaximumCapacity();
                     }
-                    return TryGet<SoulGem_FieldIndex?>.Succeed(SoulGem_FieldIndex.MaximumCapacity);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.MaximumCapacity);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => SoulGemCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

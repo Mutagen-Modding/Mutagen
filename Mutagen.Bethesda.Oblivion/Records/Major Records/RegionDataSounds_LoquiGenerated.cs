@@ -846,7 +846,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    RegionDataSounds_FieldIndex? lastParsed = null;
+                    int? lastParsed = null;
                     while (!frame.Complete)
                     {
                         var parsed = Fill_Binary_RecordTypes(
@@ -875,10 +875,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static TryGet<RegionDataSounds_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             RegionDataSounds item,
             MutagenFrame frame,
-            RegionDataSounds_FieldIndex? lastParsed,
+            int? lastParsed,
             Func<RegionDataSounds_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -902,7 +902,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetMusicType();
                     }
-                    return TryGet<RegionDataSounds_FieldIndex?>.Succeed(RegionDataSounds_FieldIndex.MusicType);
+                    return TryGet<int?>.Succeed((int)RegionDataSounds_FieldIndex.MusicType);
                 case "RDSD":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Sounds.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionSound, MaskItem<Exception, RegionSound_ErrorMask>>.Instance.ParseRepeatedItem(
@@ -918,13 +918,13 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<RegionDataSounds_FieldIndex?>.Succeed(RegionDataSounds_FieldIndex.Sounds);
+                    return TryGet<int?>.Succeed((int)RegionDataSounds_FieldIndex.Sounds);
                 default:
                     return RegionData.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => RegionDataSoundsCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

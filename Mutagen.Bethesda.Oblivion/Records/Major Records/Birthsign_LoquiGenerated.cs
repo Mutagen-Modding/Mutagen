@@ -928,7 +928,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Birthsign_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Birthsign, Birthsign_ErrorMask, Birthsign_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Birthsign, Birthsign_ErrorMask>(
                 record: new Birthsign(),
                 frame: frame,
                 errorMask: errorMask,
@@ -949,7 +949,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Birthsign_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Birthsign item,
             MutagenFrame frame,
             Func<Birthsign_ErrorMask> errorMask,
@@ -976,7 +976,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetIcon();
                     }
-                    return TryGet<Birthsign_FieldIndex?>.Succeed(Birthsign_FieldIndex.Icon);
+                    return TryGet<int?>.Succeed((int)Birthsign_FieldIndex.Icon);
                 case "DESC":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var DescriptiontryGet = StringBinaryTranslation.Instance.Parse(
@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetDescription();
                     }
-                    return TryGet<Birthsign_FieldIndex?>.Succeed(Birthsign_FieldIndex.Description);
+                    return TryGet<int?>.Succeed((int)Birthsign_FieldIndex.Description);
                 case "SPLO":
                     item.Spells.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -1009,13 +1009,13 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<Spell>(o));
                         }
                         ));
-                    return TryGet<Birthsign_FieldIndex?>.Succeed(Birthsign_FieldIndex.Spells);
+                    return TryGet<int?>.Succeed((int)Birthsign_FieldIndex.Spells);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => BirthsignCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

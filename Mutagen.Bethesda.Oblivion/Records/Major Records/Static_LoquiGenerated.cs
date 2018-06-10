@@ -787,7 +787,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Static_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Static, Static_ErrorMask, Static_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Static, Static_ErrorMask>(
                 record: new Static(),
                 frame: frame,
                 errorMask: errorMask,
@@ -808,7 +808,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Static_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Static item,
             MutagenFrame frame,
             Func<Static_ErrorMask> errorMask,
@@ -835,13 +835,13 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetModel();
                         }
                     }
-                    return TryGet<Static_FieldIndex?>.Succeed(Static_FieldIndex.Model);
+                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Model);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => StaticCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

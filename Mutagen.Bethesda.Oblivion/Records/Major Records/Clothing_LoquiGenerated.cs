@@ -1002,7 +1002,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Clothing_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Clothing, Clothing_ErrorMask, Clothing_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Clothing, Clothing_ErrorMask>(
                 record: new Clothing(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1023,7 +1023,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Clothing_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Clothing item,
             MutagenFrame frame,
             Func<Clothing_ErrorMask> errorMask,
@@ -1064,13 +1064,13 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetWeight();
                         }
                     }
-                    return TryGet<Clothing_FieldIndex?>.Succeed(Clothing_FieldIndex.Weight);
+                    return TryGet<int?>.Succeed((int)Clothing_FieldIndex.Weight);
                 default:
                     return ClothingAbstract.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => ClothingCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

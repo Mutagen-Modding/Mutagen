@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<AIPackage_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<AIPackage, AIPackage_ErrorMask, AIPackage_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<AIPackage, AIPackage_ErrorMask>(
                 record: new AIPackage(),
                 frame: frame,
                 errorMask: errorMask,

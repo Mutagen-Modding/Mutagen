@@ -927,7 +927,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Subspace_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Subspace, Subspace_ErrorMask, Subspace_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Subspace, Subspace_ErrorMask>(
                 record: new Subspace(),
                 frame: frame,
                 errorMask: errorMask,
@@ -948,7 +948,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Subspace_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Subspace item,
             MutagenFrame frame,
             Func<Subspace_ErrorMask> errorMask,
@@ -1001,13 +1001,13 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetZ();
                         }
                     }
-                    return TryGet<Subspace_FieldIndex?>.Succeed(Subspace_FieldIndex.Z);
+                    return TryGet<int?>.Succeed((int)Subspace_FieldIndex.Z);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => SubspaceCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

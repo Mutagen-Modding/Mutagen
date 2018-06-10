@@ -999,7 +999,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Sound_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Sound, Sound_ErrorMask, Sound_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Sound, Sound_ErrorMask>(
                 record: new Sound(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1020,7 +1020,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Sound_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Sound item,
             MutagenFrame frame,
             Func<Sound_ErrorMask> errorMask,
@@ -1047,7 +1047,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetFile();
                     }
-                    return TryGet<Sound_FieldIndex?>.Succeed(Sound_FieldIndex.File);
+                    return TryGet<int?>.Succeed((int)Sound_FieldIndex.File);
                 case "SNDD":
                     {
                         var DatatryGet = LoquiBinaryTranslation<SoundData, SoundData_ErrorMask>.Instance.Parse(
@@ -1063,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetData();
                         }
                     }
-                    return TryGet<Sound_FieldIndex?>.Succeed(Sound_FieldIndex.Data);
+                    return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
                 case "SNDX":
                     {
                         var DatatryGet = LoquiBinaryTranslation<SoundDataExtended, SoundDataExtended_ErrorMask>.Instance.Parse(
@@ -1079,13 +1079,13 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetData();
                         }
                     }
-                    return TryGet<Sound_FieldIndex?>.Succeed(Sound_FieldIndex.Data);
+                    return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => SoundCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

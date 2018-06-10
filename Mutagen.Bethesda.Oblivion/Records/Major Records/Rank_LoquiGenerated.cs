@@ -1143,7 +1143,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    Rank_FieldIndex? lastParsed = null;
+                    int? lastParsed = null;
                     while (!frame.Complete)
                     {
                         var parsed = Fill_Binary_RecordTypes(
@@ -1172,10 +1172,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static TryGet<Rank_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Rank item,
             MutagenFrame frame,
-            Rank_FieldIndex? lastParsed,
+            int? lastParsed,
             Func<Rank_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -1186,7 +1186,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "RNAM":
-                    if (lastParsed.HasValue && lastParsed.Value >= Rank_FieldIndex.RankNumber) return TryGet<Rank_FieldIndex?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var RankNumbertryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
@@ -1200,9 +1200,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetRankNumber();
                     }
-                    return TryGet<Rank_FieldIndex?>.Succeed(Rank_FieldIndex.RankNumber);
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
                 case "MNAM":
-                    if (lastParsed.HasValue && lastParsed.Value >= Rank_FieldIndex.MaleName) return TryGet<Rank_FieldIndex?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.MaleName) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var MaleNametryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
@@ -1217,9 +1217,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetMaleName();
                     }
-                    return TryGet<Rank_FieldIndex?>.Succeed(Rank_FieldIndex.MaleName);
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.MaleName);
                 case "FNAM":
-                    if (lastParsed.HasValue && lastParsed.Value >= Rank_FieldIndex.FemaleName) return TryGet<Rank_FieldIndex?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.FemaleName) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FemaleNametryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
@@ -1234,9 +1234,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetFemaleName();
                     }
-                    return TryGet<Rank_FieldIndex?>.Succeed(Rank_FieldIndex.FemaleName);
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.FemaleName);
                 case "INAM":
-                    if (lastParsed.HasValue && lastParsed.Value >= Rank_FieldIndex.Insignia) return TryGet<Rank_FieldIndex?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var InsigniatryGet = StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
@@ -1251,9 +1251,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetInsignia();
                     }
-                    return TryGet<Rank_FieldIndex?>.Succeed(Rank_FieldIndex.Insignia);
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.Insignia);
                 default:
-                    return TryGet<Rank_FieldIndex?>.Failure;
+                    return TryGet<int?>.Failure;
             }
         }
 

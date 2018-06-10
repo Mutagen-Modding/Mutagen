@@ -1760,7 +1760,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Class_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Class, Class_ErrorMask, Class_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Class, Class_ErrorMask>(
                 record: new Class(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1781,7 +1781,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Class_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Class item,
             MutagenFrame frame,
             Func<Class_ErrorMask> errorMask,
@@ -1808,7 +1808,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetDescription();
                     }
-                    return TryGet<Class_FieldIndex?>.Succeed(Class_FieldIndex.Description);
+                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Description);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var IcontryGet = StringBinaryTranslation.Instance.Parse(
@@ -1824,7 +1824,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetIcon();
                     }
-                    return TryGet<Class_FieldIndex?>.Succeed(Class_FieldIndex.Icon);
+                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -1894,7 +1894,7 @@ namespace Mutagen.Bethesda.Oblivion
                         if (dataFrame.Complete)
                         {
                             item.DATADataTypeState |= DATADataType.Break0;
-                            return TryGet<Class_FieldIndex?>.Succeed(Class_FieldIndex.ClassServices);
+                            return TryGet<int?>.Succeed((int)Class_FieldIndex.ClassServices);
                         }
                         {
                             var TrainingtryGet = LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Parse(
@@ -1911,13 +1911,13 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
-                    return TryGet<Class_FieldIndex?>.Succeed(Class_FieldIndex.Training);
+                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Training);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => ClassCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

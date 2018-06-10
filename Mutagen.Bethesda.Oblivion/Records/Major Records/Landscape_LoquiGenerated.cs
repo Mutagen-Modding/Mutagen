@@ -1136,7 +1136,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Landscape_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Landscape, Landscape_ErrorMask, Landscape_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Landscape, Landscape_ErrorMask>(
                 record: new Landscape(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1157,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Landscape_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Landscape item,
             MutagenFrame frame,
             Func<Landscape_ErrorMask> errorMask,
@@ -1183,7 +1183,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetUnknown();
                     }
-                    return TryGet<Landscape_FieldIndex?>.Succeed(Landscape_FieldIndex.Unknown);
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Unknown);
                 case "VNML":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var VertexNormalstryGet = ByteArrayBinaryTranslation.Instance.Parse(
@@ -1198,7 +1198,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetVertexNormals();
                     }
-                    return TryGet<Landscape_FieldIndex?>.Succeed(Landscape_FieldIndex.VertexNormals);
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexNormals);
                 case "VHGT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var VertexHeightMaptryGet = ByteArrayBinaryTranslation.Instance.Parse(
@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetVertexHeightMap();
                     }
-                    return TryGet<Landscape_FieldIndex?>.Succeed(Landscape_FieldIndex.VertexHeightMap);
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexHeightMap);
                 case "VCLR":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var VertexColorstryGet = ByteArrayBinaryTranslation.Instance.Parse(
@@ -1228,7 +1228,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetVertexColors();
                     }
-                    return TryGet<Landscape_FieldIndex?>.Succeed(Landscape_FieldIndex.VertexColors);
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexColors);
                 case "BTXT":
                 case "ATXT":
                     item.Layers.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<BaseLayer, MaskItem<Exception, BaseLayer_ErrorMask>>.Instance.ParseRepeatedItem(
@@ -1262,7 +1262,7 @@ namespace Mutagen.Bethesda.Oblivion
                             return ret;
                         }
                         ));
-                    return TryGet<Landscape_FieldIndex?>.Succeed(Landscape_FieldIndex.Layers);
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Layers);
                 case "VTEX":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Textures.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<LandTexture>, Exception>.Instance.ParseRepeatedItem(
@@ -1278,13 +1278,13 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask).Bubble((o) => new FormIDLink<LandTexture>(o));
                         }
                         ));
-                    return TryGet<Landscape_FieldIndex?>.Succeed(Landscape_FieldIndex.Textures);
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Textures);
                 default:
                     return Placed.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => LandscapeCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

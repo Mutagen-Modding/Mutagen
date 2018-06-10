@@ -2659,7 +2659,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<MagicEffect_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<MagicEffect, MagicEffect_ErrorMask, MagicEffect_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<MagicEffect, MagicEffect_ErrorMask>(
                 record: new MagicEffect(),
                 frame: frame,
                 errorMask: errorMask,
@@ -2680,7 +2680,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<MagicEffect_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             MagicEffect item,
             MutagenFrame frame,
             Func<MagicEffect_ErrorMask> errorMask,
@@ -2707,7 +2707,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetDescription();
                     }
-                    return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.Description);
+                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Description);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var IcontryGet = StringBinaryTranslation.Instance.Parse(
@@ -2723,7 +2723,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetIcon();
                     }
-                    return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.Icon);
+                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Icon);
                 case "MODL":
                     {
                         var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
@@ -2739,7 +2739,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetModel();
                         }
                     }
-                    return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.Model);
+                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Model);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -2839,7 +2839,7 @@ namespace Mutagen.Bethesda.Oblivion
                         if (dataFrame.Complete)
                         {
                             item.DATADataTypeState |= DATADataType.Break0;
-                            return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.EffectShader);
+                            return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.EffectShader);
                         }
                         {
                             var SubDatatryGet = LoquiBinaryTranslation<MagicEffectSubData, MagicEffectSubData_ErrorMask>.Instance.Parse(
@@ -2856,7 +2856,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
-                    return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.SubData);
+                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.SubData);
                 case "ESCE":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.CounterEffects.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<EDIDLink<MagicEffect>, Exception>.Instance.ParseRepeatedItem(
@@ -2870,13 +2870,13 @@ namespace Mutagen.Bethesda.Oblivion
                             return TryGet<EDIDLink<MagicEffect>>.Succeed(new EDIDLink<MagicEffect>(HeaderTranslation.ReadNextRecordType(r.Reader)));
                         }
                         ));
-                    return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.CounterEffects);
+                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.CounterEffects);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => MagicEffectCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

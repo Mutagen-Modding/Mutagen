@@ -1571,7 +1571,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    Effect_FieldIndex? lastParsed = null;
+                    int? lastParsed = null;
                     while (!frame.Complete)
                     {
                         var parsed = Fill_Binary_RecordTypes(
@@ -1600,10 +1600,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static TryGet<Effect_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Effect item,
             MutagenFrame frame,
-            Effect_FieldIndex? lastParsed,
+            int? lastParsed,
             Func<Effect_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -1614,12 +1614,12 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "EFID":
-                    if (lastParsed.HasValue && lastParsed.Value >= Effect_FieldIndex.MagicEffect) return TryGet<Effect_FieldIndex?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.MagicEffect) return TryGet<int?>.Failure;
                     SpecialParse_EffectInitial(
                         item: item,
                         frame: frame,
                         errorMask: errorMask);
-                    return TryGet<Effect_FieldIndex?>.Succeed(lastParsed);
+                    return TryGet<int?>.Succeed(lastParsed);
                 case "EFIT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -1689,7 +1689,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetActorValue();
                         }
                     }
-                    return TryGet<Effect_FieldIndex?>.Succeed(Effect_FieldIndex.ActorValue);
+                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.ActorValue);
                 case "SCIT":
                     {
                         var ScriptEffecttryGet = LoquiBinaryTranslation<ScriptEffect, ScriptEffect_ErrorMask>.Instance.Parse(
@@ -1705,9 +1705,9 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetScriptEffect();
                         }
                     }
-                    return TryGet<Effect_FieldIndex?>.Succeed(Effect_FieldIndex.ScriptEffect);
+                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.ScriptEffect);
                 default:
-                    return TryGet<Effect_FieldIndex?>.Failure;
+                    return TryGet<int?>.Failure;
             }
         }
 

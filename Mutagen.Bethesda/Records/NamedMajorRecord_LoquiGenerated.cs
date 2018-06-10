@@ -550,7 +550,7 @@ namespace Mutagen.Bethesda
         }
         #endregion
 
-        protected static TryGet<NamedMajorRecord_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             NamedMajorRecord item,
             MutagenFrame frame,
             Func<NamedMajorRecord_ErrorMask> errorMask,
@@ -577,13 +577,13 @@ namespace Mutagen.Bethesda
                     {
                         item.UnsetName();
                     }
-                    return TryGet<NamedMajorRecord_FieldIndex?>.Succeed(NamedMajorRecord_FieldIndex.Name);
+                    return TryGet<int?>.Succeed((int)NamedMajorRecord_FieldIndex.Name);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => NamedMajorRecordCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

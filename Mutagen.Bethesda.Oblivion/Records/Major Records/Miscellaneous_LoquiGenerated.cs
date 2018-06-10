@@ -1439,7 +1439,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Miscellaneous_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Miscellaneous, Miscellaneous_ErrorMask, Miscellaneous_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Miscellaneous, Miscellaneous_ErrorMask>(
                 record: new Miscellaneous(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1460,7 +1460,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Miscellaneous_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Miscellaneous item,
             MutagenFrame frame,
             Func<Miscellaneous_ErrorMask> errorMask,
@@ -1487,7 +1487,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetModel();
                         }
                     }
-                    return TryGet<Miscellaneous_FieldIndex?>.Succeed(Miscellaneous_FieldIndex.Model);
+                    return TryGet<int?>.Succeed((int)Miscellaneous_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var IcontryGet = StringBinaryTranslation.Instance.Parse(
@@ -1503,14 +1503,14 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetIcon();
                     }
-                    return TryGet<Miscellaneous_FieldIndex?>.Succeed(Miscellaneous_FieldIndex.Icon);
+                    return TryGet<int?>.Succeed((int)Miscellaneous_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)Miscellaneous_FieldIndex.Script,
                         errorMask: errorMask));
-                    return TryGet<Miscellaneous_FieldIndex?>.Succeed(Miscellaneous_FieldIndex.Script);
+                    return TryGet<int?>.Succeed((int)Miscellaneous_FieldIndex.Script);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -1540,13 +1540,13 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetWeight();
                         }
                     }
-                    return TryGet<Miscellaneous_FieldIndex?>.Succeed(Miscellaneous_FieldIndex.Weight);
+                    return TryGet<int?>.Succeed((int)Miscellaneous_FieldIndex.Weight);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => MiscellaneousCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

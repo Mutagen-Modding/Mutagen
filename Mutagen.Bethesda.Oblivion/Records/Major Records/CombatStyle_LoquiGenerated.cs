@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<CombatStyle_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<CombatStyle, CombatStyle_ErrorMask, CombatStyle_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<CombatStyle, CombatStyle_ErrorMask>(
                 record: new CombatStyle(),
                 frame: frame,
                 errorMask: errorMask,

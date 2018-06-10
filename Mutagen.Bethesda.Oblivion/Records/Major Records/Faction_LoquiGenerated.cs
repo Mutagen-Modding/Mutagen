@@ -1100,7 +1100,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Faction_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<Faction, Faction_ErrorMask, Faction_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Faction, Faction_ErrorMask>(
                 record: new Faction(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1121,7 +1121,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Faction_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             Faction item,
             MutagenFrame frame,
             Func<Faction_ErrorMask> errorMask,
@@ -1148,7 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<Faction_FieldIndex?>.Succeed(Faction_FieldIndex.Relations);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(
@@ -1163,7 +1163,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetFlags();
                     }
-                    return TryGet<Faction_FieldIndex?>.Succeed(Faction_FieldIndex.Flags);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Flags);
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var CrimeGoldMultipliertryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
@@ -1178,7 +1178,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetCrimeGoldMultiplier();
                     }
-                    return TryGet<Faction_FieldIndex?>.Succeed(Faction_FieldIndex.CrimeGoldMultiplier);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeGoldMultiplier);
                 case "RNAM":
                 case "MNAM":
                 case "FNAM":
@@ -1197,13 +1197,13 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<Faction_FieldIndex?>.Succeed(Faction_FieldIndex.Ranks);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => FactionCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

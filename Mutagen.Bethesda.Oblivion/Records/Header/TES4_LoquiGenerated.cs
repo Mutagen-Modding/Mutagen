@@ -1514,7 +1514,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected static TryGet<TES4_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             TES4 item,
             MutagenFrame frame,
             Func<TES4_ErrorMask> errorMask,
@@ -1541,7 +1541,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetHeader();
                         }
                     }
-                    return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.Header);
+                    return TryGet<int?>.Succeed((int)TES4_FieldIndex.Header);
                 case "OFST":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var TypeOffsetstryGet = ByteArrayBinaryTranslation.Instance.Parse(
@@ -1556,7 +1556,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetTypeOffsets();
                     }
-                    return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.TypeOffsets);
+                    return TryGet<int?>.Succeed((int)TES4_FieldIndex.TypeOffsets);
                 case "DELE":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var DeletedtryGet = ByteArrayBinaryTranslation.Instance.Parse(
@@ -1571,7 +1571,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetDeleted();
                     }
-                    return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.Deleted);
+                    return TryGet<int?>.Succeed((int)TES4_FieldIndex.Deleted);
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var AuthortryGet = StringBinaryTranslation.Instance.Parse(
@@ -1587,7 +1587,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetAuthor();
                     }
-                    return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.Author);
+                    return TryGet<int?>.Succeed((int)TES4_FieldIndex.Author);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var DescriptiontryGet = StringBinaryTranslation.Instance.Parse(
@@ -1603,7 +1603,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetDescription();
                     }
-                    return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.Description);
+                    return TryGet<int?>.Succeed((int)TES4_FieldIndex.Description);
                 case "MAST":
                 case "DATA":
                     item.MasterReferences.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.ParseRepeatedItem(
@@ -1620,11 +1620,11 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.MasterReferences);
+                    return TryGet<int?>.Succeed((int)TES4_FieldIndex.MasterReferences);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + Constants.SUBRECORD_LENGTH;
-                    return TryGet<TES4_FieldIndex?>.Succeed(null);
+                    return TryGet<int?>.Succeed(null);
             }
         }
 

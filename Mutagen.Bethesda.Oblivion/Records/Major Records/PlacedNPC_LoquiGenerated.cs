@@ -1940,7 +1940,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<PlacedNPC_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<PlacedNPC, PlacedNPC_ErrorMask, PlacedNPC_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<PlacedNPC, PlacedNPC_ErrorMask>(
                 record: new PlacedNPC(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1961,7 +1961,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<PlacedNPC_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             PlacedNPC item,
             MutagenFrame frame,
             Func<PlacedNPC_ErrorMask> errorMask,
@@ -1979,7 +1979,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedNPC_FieldIndex.Base,
                         errorMask: errorMask));
-                    return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.Base);
+                    return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.Base);
                 case "XPCI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var XPCIFlufftryGet = ByteArrayBinaryTranslation.Instance.Parse(
@@ -1994,7 +1994,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetXPCIFluff();
                     }
-                    return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.XPCIFluff);
+                    return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.XPCIFluff);
                 case "FULL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FULLFlufftryGet = ByteArrayBinaryTranslation.Instance.Parse(
@@ -2009,7 +2009,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetFULLFluff();
                     }
-                    return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.FULLFluff);
+                    return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.FULLFluff);
                 case "XLOD":
                     {
                         var DistantLODDatatryGet = LoquiBinaryTranslation<DistantLODData, DistantLODData_ErrorMask>.Instance.Parse(
@@ -2025,7 +2025,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetDistantLODData();
                         }
                     }
-                    return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.DistantLODData);
+                    return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.DistantLODData);
                 case "XESP":
                     {
                         var EnableParenttryGet = LoquiBinaryTranslation<EnableParent, EnableParent_ErrorMask>.Instance.Parse(
@@ -2041,21 +2041,21 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetEnableParent();
                         }
                     }
-                    return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.EnableParent);
+                    return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.EnableParent);
                 case "XMRC":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.MerchantContainer_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedNPC_FieldIndex.MerchantContainer,
                         errorMask: errorMask));
-                    return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.MerchantContainer);
+                    return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.MerchantContainer);
                 case "XHRS":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Horse_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)PlacedNPC_FieldIndex.Horse,
                         errorMask: errorMask));
-                    return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.Horse);
+                    return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.Horse);
                 case "XRGD":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var RagdollDatatryGet = ByteArrayBinaryTranslation.Instance.Parse(
@@ -2070,7 +2070,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetRagdollData();
                     }
-                    return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.RagdollData);
+                    return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.RagdollData);
                 case "XSCL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var ScaletryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
@@ -2085,7 +2085,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetScale();
                     }
-                    return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.Scale);
+                    return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.Scale);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -2115,13 +2115,13 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetRotation();
                         }
                     }
-                    return TryGet<PlacedNPC_FieldIndex?>.Succeed(PlacedNPC_FieldIndex.Rotation);
+                    return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.Rotation);
                 default:
                     return Placed.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => PlacedNPCCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

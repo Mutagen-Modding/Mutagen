@@ -2025,7 +2025,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<SkillRecord_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<SkillRecord, SkillRecord_ErrorMask, SkillRecord_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<SkillRecord, SkillRecord_ErrorMask>(
                 record: new SkillRecord(),
                 frame: frame,
                 errorMask: errorMask,
@@ -2046,7 +2046,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<SkillRecord_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             SkillRecord item,
             MutagenFrame frame,
             Func<SkillRecord_ErrorMask> errorMask,
@@ -2072,7 +2072,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetSkill();
                     }
-                    return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.Skill);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Skill);
                 case "DESC":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var DescriptiontryGet = StringBinaryTranslation.Instance.Parse(
@@ -2088,7 +2088,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetDescription();
                     }
-                    return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.Description);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Description);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var IcontryGet = StringBinaryTranslation.Instance.Parse(
@@ -2104,7 +2104,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetIcon();
                     }
-                    return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.Icon);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -2170,7 +2170,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetUseValueSecond();
                         }
                     }
-                    return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.UseValueSecond);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.UseValueSecond);
                 case "ANAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var ApprenticeTexttryGet = StringBinaryTranslation.Instance.Parse(
@@ -2186,7 +2186,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetApprenticeText();
                     }
-                    return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.ApprenticeText);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.ApprenticeText);
                 case "JNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var JourneymanTexttryGet = StringBinaryTranslation.Instance.Parse(
@@ -2202,7 +2202,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetJourneymanText();
                     }
-                    return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.JourneymanText);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.JourneymanText);
                 case "ENAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var ExpertTexttryGet = StringBinaryTranslation.Instance.Parse(
@@ -2218,7 +2218,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetExpertText();
                     }
-                    return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.ExpertText);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.ExpertText);
                 case "MNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var MasterTexttryGet = StringBinaryTranslation.Instance.Parse(
@@ -2234,13 +2234,13 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetMasterText();
                     }
-                    return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.MasterText);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.MasterText);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => SkillRecordCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

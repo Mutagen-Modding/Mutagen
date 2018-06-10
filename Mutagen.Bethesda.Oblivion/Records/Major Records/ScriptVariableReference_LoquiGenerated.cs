@@ -790,7 +790,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    ScriptVariableReference_FieldIndex? lastParsed = null;
+                    int? lastParsed = null;
                     while (!frame.Complete)
                     {
                         var parsed = Fill_Binary_RecordTypes(
@@ -819,10 +819,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static TryGet<ScriptVariableReference_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             ScriptVariableReference item,
             MutagenFrame frame,
-            ScriptVariableReference_FieldIndex? lastParsed,
+            int? lastParsed,
             Func<ScriptVariableReference_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -833,7 +833,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "SCRV":
-                    if (lastParsed.HasValue && lastParsed.Value >= ScriptVariableReference_FieldIndex.VariableIndex) return TryGet<ScriptVariableReference_FieldIndex?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptVariableReference_FieldIndex.VariableIndex) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var VariableIndextryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
@@ -847,9 +847,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetVariableIndex();
                     }
-                    return TryGet<ScriptVariableReference_FieldIndex?>.Succeed(ScriptVariableReference_FieldIndex.VariableIndex);
+                    return TryGet<int?>.Succeed((int)ScriptVariableReference_FieldIndex.VariableIndex);
                 default:
-                    return TryGet<ScriptVariableReference_FieldIndex?>.Failure;
+                    return TryGet<int?>.Failure;
             }
         }
 

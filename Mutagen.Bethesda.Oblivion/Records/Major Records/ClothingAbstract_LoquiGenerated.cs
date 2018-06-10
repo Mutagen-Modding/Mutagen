@@ -1754,7 +1754,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static TryGet<ClothingAbstract_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             ClothingAbstract item,
             MutagenFrame frame,
             Func<ClothingAbstract_ErrorMask> errorMask,
@@ -1772,14 +1772,14 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)ClothingAbstract_FieldIndex.Script,
                         errorMask: errorMask));
-                    return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.Script);
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Script);
                 case "ENAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Enchantment_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         fieldIndex: (int)ClothingAbstract_FieldIndex.Enchantment,
                         errorMask: errorMask));
-                    return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.Enchantment);
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Enchantment);
                 case "ANAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var EnchantmentPointstryGet = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
@@ -1794,7 +1794,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetEnchantmentPoints();
                     }
-                    return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.EnchantmentPoints);
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.EnchantmentPoints);
                 case "BMDT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -1824,7 +1824,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetFlags();
                         }
                     }
-                    return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.Flags);
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Flags);
                 case "MODL":
                     {
                         var MaleBipedModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
@@ -1840,7 +1840,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetMaleBipedModel();
                         }
                     }
-                    return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.MaleBipedModel);
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.MaleBipedModel);
                 case "MOD2":
                     {
                         var MaleWorldModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
@@ -1857,7 +1857,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetMaleWorldModel();
                         }
                     }
-                    return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.MaleWorldModel);
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.MaleWorldModel);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var MaleIcontryGet = StringBinaryTranslation.Instance.Parse(
@@ -1873,7 +1873,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetMaleIcon();
                     }
-                    return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.MaleIcon);
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.MaleIcon);
                 case "MOD3":
                     {
                         var FemaleBipedModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
@@ -1890,7 +1890,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetFemaleBipedModel();
                         }
                     }
-                    return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.FemaleBipedModel);
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
                 case "MOD4":
                     {
                         var FemaleWorldModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
@@ -1907,7 +1907,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetFemaleWorldModel();
                         }
                     }
-                    return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.FemaleWorldModel);
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
                 case "ICO2":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FemaleIcontryGet = StringBinaryTranslation.Instance.Parse(
@@ -1923,13 +1923,13 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetFemaleIcon();
                     }
-                    return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.FemaleIcon);
+                    return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.FemaleIcon);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => ClothingAbstractCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

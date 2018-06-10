@@ -823,7 +823,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    AlphaLayer_FieldIndex? lastParsed = null;
+                    int? lastParsed = null;
                     while (!frame.Complete)
                     {
                         var parsed = Fill_Binary_RecordTypes(
@@ -845,10 +845,10 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        protected static TryGet<AlphaLayer_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             AlphaLayer item,
             MutagenFrame frame,
-            AlphaLayer_FieldIndex? lastParsed,
+            int? lastParsed,
             Func<AlphaLayer_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -872,14 +872,14 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetAlphaLayerData();
                     }
-                    return TryGet<AlphaLayer_FieldIndex?>.Succeed(AlphaLayer_FieldIndex.AlphaLayerData);
+                    return TryGet<int?>.Succeed((int)AlphaLayer_FieldIndex.AlphaLayerData);
                 default:
                     return BaseLayer.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         lastParsed: null,
                         recordTypeConverter: recordTypeConverter.Combine(AlphaLayer_Registration.BaseConverter),
-                        errorMask: errorMask).Bubble((i) => AlphaLayerCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

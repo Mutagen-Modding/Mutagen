@@ -1065,7 +1065,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<LeveledItem_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<LeveledItem, LeveledItem_ErrorMask, LeveledItem_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<LeveledItem, LeveledItem_ErrorMask>(
                 record: new LeveledItem(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1086,7 +1086,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<LeveledItem_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             LeveledItem item,
             MutagenFrame frame,
             Func<LeveledItem_ErrorMask> errorMask,
@@ -1112,7 +1112,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetChanceNone();
                     }
-                    return TryGet<LeveledItem_FieldIndex?>.Succeed(LeveledItem_FieldIndex.ChanceNone);
+                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.ChanceNone);
                 case "LVLF":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<LeveledFlag>.Instance.Parse(
@@ -1127,7 +1127,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetFlags();
                     }
-                    return TryGet<LeveledItem_FieldIndex?>.Succeed(LeveledItem_FieldIndex.Flags);
+                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Flags);
                 case "LVLO":
                     item.Entries.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<ItemAbstract>, MaskItem<Exception, LeveledEntry_ErrorMask<ItemAbstract_ErrorMask>>>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -1143,19 +1143,19 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<LeveledItem_FieldIndex?>.Succeed(LeveledItem_FieldIndex.Entries);
+                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Entries);
                 case "DATA":
                     SpecialParse_Vestigial(
                         item: item,
                         frame: frame,
                         errorMask: errorMask);
-                    return TryGet<LeveledItem_FieldIndex?>.Succeed(null);
+                    return TryGet<int?>.Succeed(null);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => LeveledItemCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 

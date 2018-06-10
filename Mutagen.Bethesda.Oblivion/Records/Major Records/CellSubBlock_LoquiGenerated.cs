@@ -1160,7 +1160,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected static TryGet<CellSubBlock_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             CellSubBlock item,
             MutagenFrame frame,
             Func<CellSubBlock_ErrorMask> errorMask,
@@ -1187,11 +1187,11 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<CellSubBlock_FieldIndex?>.Succeed(CellSubBlock_FieldIndex.Items);
+                    return TryGet<int?>.Succeed((int)CellSubBlock_FieldIndex.Items);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + Constants.RECORD_LENGTH;
-                    return TryGet<CellSubBlock_FieldIndex?>.Succeed(null);
+                    return TryGet<int?>.Succeed(null);
             }
         }
 

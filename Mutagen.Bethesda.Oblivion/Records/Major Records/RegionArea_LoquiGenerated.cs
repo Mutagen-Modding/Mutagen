@@ -818,7 +818,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    RegionArea_FieldIndex? lastParsed = null;
+                    int? lastParsed = null;
                     while (!frame.Complete)
                     {
                         var parsed = Fill_Binary_RecordTypes(
@@ -847,10 +847,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static TryGet<RegionArea_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             RegionArea item,
             MutagenFrame frame,
-            RegionArea_FieldIndex? lastParsed,
+            int? lastParsed,
             Func<RegionArea_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -861,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "RPLI":
-                    if (lastParsed.HasValue && lastParsed.Value >= RegionArea_FieldIndex.EdgeFallOff) return TryGet<RegionArea_FieldIndex?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.EdgeFallOff) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var EdgeFallOfftryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
@@ -875,9 +875,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetEdgeFallOff();
                     }
-                    return TryGet<RegionArea_FieldIndex?>.Succeed(RegionArea_FieldIndex.EdgeFallOff);
+                    return TryGet<int?>.Succeed((int)RegionArea_FieldIndex.EdgeFallOff);
                 case "RPLD":
-                    if (lastParsed.HasValue && lastParsed.Value >= RegionArea_FieldIndex.RegionPoints) return TryGet<RegionArea_FieldIndex?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.RegionPoints) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.RegionPoints.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Float, Exception>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
@@ -892,9 +892,9 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask);
                         }
                         ));
-                    return TryGet<RegionArea_FieldIndex?>.Succeed(RegionArea_FieldIndex.RegionPoints);
+                    return TryGet<int?>.Succeed((int)RegionArea_FieldIndex.RegionPoints);
                 default:
-                    return TryGet<RegionArea_FieldIndex?>.Failure;
+                    return TryGet<int?>.Failure;
             }
         }
 

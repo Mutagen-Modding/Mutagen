@@ -1246,7 +1246,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<LandTexture_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return UtilityTranslation.MajorRecordParse<LandTexture, LandTexture_ErrorMask, LandTexture_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<LandTexture, LandTexture_ErrorMask>(
                 record: new LandTexture(),
                 frame: frame,
                 errorMask: errorMask,
@@ -1267,7 +1267,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<LandTexture_FieldIndex?> Fill_Binary_RecordTypes(
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
             LandTexture item,
             MutagenFrame frame,
             Func<LandTexture_ErrorMask> errorMask,
@@ -1294,7 +1294,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetIcon();
                     }
-                    return TryGet<LandTexture_FieldIndex?>.Succeed(LandTexture_FieldIndex.Icon);
+                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.Icon);
                 case "HNAM":
                     {
                         var HavoktryGet = LoquiBinaryTranslation<HavokData, HavokData_ErrorMask>.Instance.Parse(
@@ -1310,7 +1310,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.UnsetHavok();
                         }
                     }
-                    return TryGet<LandTexture_FieldIndex?>.Succeed(LandTexture_FieldIndex.Havok);
+                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.Havok);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var TextureSpecularExponenttryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
@@ -1325,7 +1325,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnsetTextureSpecularExponent();
                     }
-                    return TryGet<LandTexture_FieldIndex?>.Succeed(LandTexture_FieldIndex.TextureSpecularExponent);
+                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.TextureSpecularExponent);
                 case "GNAM":
                     item.PotentialGrass.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Grass>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -1342,13 +1342,13 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<Grass>(o));
                         }
                         ));
-                    return TryGet<LandTexture_FieldIndex?>.Succeed(LandTexture_FieldIndex.PotentialGrass);
+                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.PotentialGrass);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask).Bubble((i) => LandTextureCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask);
             }
         }
 
