@@ -720,7 +720,8 @@ namespace Mutagen.Bethesda.Tests
                 ModAligner.Align(
                     inputPath: uncompressedPath,
                     outputPath: alignedPath,
-                    alignmentRules: GetAlignmentRules());
+                    alignmentRules: GetAlignmentRules(),
+                    temp: tmp);
 
                 var alignedFileLocs = MajorRecordLocator.GetFileLocations(
                     alignedPath,

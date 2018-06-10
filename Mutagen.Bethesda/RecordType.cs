@@ -46,6 +46,16 @@ namespace Mutagen.Bethesda
             return string.Equals(other, Type);
         }
 
+        public static bool operator ==(RecordType r1, RecordType r2)
+        {
+            return r1.Equals(r2);
+        }
+
+        public static bool operator !=(RecordType r1, RecordType r2)
+        {
+            return !r1.Equals(r2);
+        }
+
         public override int GetHashCode()
         {
             return HashHelper.GetHashCode(this.Type);

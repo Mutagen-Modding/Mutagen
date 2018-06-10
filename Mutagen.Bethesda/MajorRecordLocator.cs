@@ -23,6 +23,8 @@ namespace Mutagen.Bethesda
             public SortedSet<long> GrupLocations = new SortedSet<long>();
             public SortedList<long, FormID> ListedRecords => _fromStart;
             public RangeInt64 this[FormID id] => _fromFormIDs[id];
+            private FormID _lastParsed;
+            private long _lastLoc;
 
             public void Add(
                 FormID id,
@@ -33,6 +35,8 @@ namespace Mutagen.Bethesda
                 this._fromStart[section.Min] = id;
                 this._fromEnd[section.Max] = id;
                 this._parentGroupMapper[id] = parentGrupLocations.Distinct().ToArray();
+                this._lastParsed = id;
+                this._lastLoc = section.Min;
             }
 
             public bool TryGetSection(FormID id, out RangeInt64 section)
