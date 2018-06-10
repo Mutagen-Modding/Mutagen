@@ -2563,7 +2563,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Flora_Registration.PFIG_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, Flora_Registration.PFPC_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Flora_Registration.PFPC_HEADER)))
             {
                 Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                     writer: writer,

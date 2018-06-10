@@ -2253,7 +2253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             Func<ScriptEffect_ErrorMask> errorMask)
         {
-            using (HeaderExport.ExportSubRecordHeader(writer, ScriptEffect_Registration.SCIT_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(ScriptEffect_Registration.SCIT_HEADER)))
             {
                 Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                     writer: writer,

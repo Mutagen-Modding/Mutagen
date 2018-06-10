@@ -2779,7 +2779,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 errorMask: errorMask);
-            using (HeaderExport.ExportSubRecordHeader(writer, Effect_Registration.EFIT_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Effect_Registration.EFIT_HEADER)))
             {
                 Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
                     writer: writer,

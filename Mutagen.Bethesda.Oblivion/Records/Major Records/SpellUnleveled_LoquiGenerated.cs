@@ -2619,7 +2619,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            using (HeaderExport.ExportSubRecordHeader(writer, SpellUnleveled_Registration.SPIT_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(SpellUnleveled_Registration.SPIT_HEADER)))
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellType>.Instance.Write(
                     writer,

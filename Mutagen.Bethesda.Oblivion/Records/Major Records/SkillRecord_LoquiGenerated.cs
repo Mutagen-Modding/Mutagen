@@ -3699,7 +3699,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(SkillRecord_Registration.ICON_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, SkillRecord_Registration.DATA_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(SkillRecord_Registration.DATA_HEADER)))
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                     writer,

@@ -3817,7 +3817,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: out listSubMask);
                 }
                 );
-            using (HeaderExport.ExportSubRecordHeader(writer, Tree_Registration.CNAM_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Tree_Registration.CNAM_HEADER)))
             {
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -3860,7 +3860,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
                     errorMask: errorMask);
             }
-            using (HeaderExport.ExportSubRecordHeader(writer, Tree_Registration.BNAM_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Tree_Registration.BNAM_HEADER)))
             {
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,

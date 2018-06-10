@@ -3664,7 +3664,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.XSCL_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, PlacedNPC_Registration.DATA_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.DATA_HEADER)))
             {
                 Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                     writer: writer,

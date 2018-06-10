@@ -1899,7 +1899,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            using (HeaderExport.ExportSubRecordHeader(writer, Clothing_Registration.DATA_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Clothing_Registration.DATA_HEADER)))
             {
                 Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                     writer: writer,

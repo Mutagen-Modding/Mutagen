@@ -6927,7 +6927,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XSOL_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, PlacedObject_Registration.DATA_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(PlacedObject_Registration.DATA_HEADER)))
             {
                 Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                     writer: writer,

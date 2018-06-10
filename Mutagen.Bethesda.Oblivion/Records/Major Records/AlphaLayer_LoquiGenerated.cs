@@ -877,7 +877,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return BaseLayer.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        lastParsed: null,
+                        lastParsed: lastParsed,
                         recordTypeConverter: recordTypeConverter.Combine(AlphaLayer_Registration.BaseConverter),
                         errorMask: errorMask);
             }
@@ -1547,7 +1547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BaseLayerCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
+                recordTypeConverter: recordTypeConverter.Combine(AlphaLayer_Registration.BaseConverter),
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,

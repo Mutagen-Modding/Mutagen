@@ -1722,7 +1722,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             Func<RegionData_ErrorMask> errorMask)
         {
-            using (HeaderExport.ExportSubRecordHeader(writer, RegionData_Registration.RDAT_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(RegionData_Registration.RDAT_HEADER)))
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Write(
                     writer,

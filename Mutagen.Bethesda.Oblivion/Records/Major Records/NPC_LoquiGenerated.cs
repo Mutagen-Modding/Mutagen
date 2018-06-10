@@ -12298,7 +12298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Model_Property,
                 fieldIndex: (int)NPC_FieldIndex.Model,
                 errorMask: errorMask);
-            using (HeaderExport.ExportSubRecordHeader(writer, NPC_Registration.ACBS_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(NPC_Registration.ACBS_HEADER)))
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.NPCFlag>.Instance.Write(
                     writer,
@@ -12402,7 +12402,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: out listSubMask);
                 }
                 );
-            using (HeaderExport.ExportSubRecordHeader(writer, NPC_Registration.AIDT_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(NPC_Registration.AIDT_HEADER)))
             {
                 Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -12485,7 +12485,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(NPC_Registration.CNAM_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, NPC_Registration.DATA_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(NPC_Registration.DATA_HEADER)))
             {
                 Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                     writer: writer,

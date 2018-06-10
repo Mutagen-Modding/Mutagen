@@ -1828,7 +1828,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             Func<BaseLayer_ErrorMask> errorMask)
         {
-            using (HeaderExport.ExportSubRecordHeader(writer, BaseLayer_Registration.BTXT_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(BaseLayer_Registration.BTXT_HEADER)))
             {
                 Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                     writer: writer,

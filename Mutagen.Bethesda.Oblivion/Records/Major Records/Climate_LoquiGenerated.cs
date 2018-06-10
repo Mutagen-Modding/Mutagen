@@ -3576,7 +3576,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Model_Property,
                 fieldIndex: (int)Climate_FieldIndex.Model,
                 errorMask: errorMask);
-            using (HeaderExport.ExportSubRecordHeader(writer, Climate_Registration.TNAM_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Climate_Registration.TNAM_HEADER)))
             {
                 Climate.WriteBinary_SunriseBegin(
                     writer: writer,

@@ -10369,7 +10369,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Creature_Registration.NIFT_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, Creature_Registration.ACBS_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Creature_Registration.ACBS_HEADER)))
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureFlag>.Instance.Write(
                     writer,
@@ -10436,7 +10436,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Creature_Registration.SCRI_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, Creature_Registration.AIDT_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Creature_Registration.AIDT_HEADER)))
             {
                 Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -10508,7 +10508,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: out listSubMask);
                 }
                 );
-            using (HeaderExport.ExportSubRecordHeader(writer, Creature_Registration.DATA_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Creature_Registration.DATA_HEADER)))
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureTypeEnum>.Instance.Write(
                     writer,

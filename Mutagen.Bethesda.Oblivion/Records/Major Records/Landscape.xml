@@ -6,13 +6,7 @@
       <ByteArray name="VertexNormals" recordType="VNML" />
       <ByteArray name="VertexHeightMap" recordType="VHGT" />
       <ByteArray name="VertexColors" recordType="VCLR" />
-      <Dict name="Layers">
-        <KeyedValue keyAccessor="LayerNumber" keyType="ushort">
-          <Ref>
-            <Direct refName="BaseLayer" />
-          </Ref>
-        </KeyedValue>
-      </Dict>
+      <RefList name="Layers" refName="BaseLayer" />
       <List name="Textures" recordType="VTEX">
         <FormIDLink refName="LandTexture" />
       </List>

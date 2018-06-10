@@ -3048,7 +3048,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(SoulGem_Registration.SCRI_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, SoulGem_Registration.DATA_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(SoulGem_Registration.DATA_HEADER)))
             {
                 Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                     writer: writer,

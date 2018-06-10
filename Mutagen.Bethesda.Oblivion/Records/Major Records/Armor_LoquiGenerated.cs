@@ -2233,7 +2233,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            using (HeaderExport.ExportSubRecordHeader(writer, Armor_Registration.DATA_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Armor_Registration.DATA_HEADER)))
             {
                 Armor.WriteBinary_ArmorValue(
                     writer: writer,

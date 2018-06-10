@@ -4570,7 +4570,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Model_Property,
                 fieldIndex: (int)MagicEffect_FieldIndex.Model,
                 errorMask: errorMask);
-            using (HeaderExport.ExportSubRecordHeader(writer, MagicEffect_Registration.DATA_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(MagicEffect_Registration.DATA_HEADER)))
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicEffect.MagicFlag>.Instance.Write(
                     writer,

@@ -3764,7 +3764,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Model_Property,
                 fieldIndex: (int)Grass_FieldIndex.Model,
                 errorMask: errorMask);
-            using (HeaderExport.ExportSubRecordHeader(writer, Grass_Registration.DATA_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Grass_Registration.DATA_HEADER)))
             {
                 Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                     writer: writer,

@@ -3078,7 +3078,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Potion_Registration.DATA_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, Potion_Registration.ENIT_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Potion_Registration.ENIT_HEADER)))
             {
                 Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                     writer: writer,

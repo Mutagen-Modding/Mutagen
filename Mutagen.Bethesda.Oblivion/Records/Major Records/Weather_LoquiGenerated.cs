@@ -7624,7 +7624,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: out listSubMask);
                 }
                 );
-            using (HeaderExport.ExportSubRecordHeader(writer, Weather_Registration.FNAM_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.FNAM_HEADER)))
             {
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -7647,7 +7647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Weather_FieldIndex.FogNightFar,
                     errorMask: errorMask);
             }
-            using (HeaderExport.ExportSubRecordHeader(writer, Weather_Registration.HNAM_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.HNAM_HEADER)))
             {
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -7720,7 +7720,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Weather_FieldIndex.HdrTreeDimmer,
                     errorMask: errorMask);
             }
-            using (HeaderExport.ExportSubRecordHeader(writer, Weather_Registration.DATA_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.DATA_HEADER)))
             {
                 Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                     writer: writer,

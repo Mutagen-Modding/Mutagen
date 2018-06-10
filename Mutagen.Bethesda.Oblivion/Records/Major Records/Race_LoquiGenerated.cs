@@ -6525,7 +6525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: out listSubMask);
                 }
                 );
-            using (HeaderExport.ExportSubRecordHeader(writer, Race_Registration.DATA_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.DATA_HEADER)))
             {
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<SkillBoost, MaskItem<Exception, SkillBoost_ErrorMask>>.Instance.Write(
                     writer: writer,

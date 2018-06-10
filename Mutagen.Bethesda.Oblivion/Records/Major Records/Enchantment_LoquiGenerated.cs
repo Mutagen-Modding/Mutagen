@@ -2455,7 +2455,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            using (HeaderExport.ExportSubRecordHeader(writer, Enchantment_Registration.ENIT_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Enchantment_Registration.ENIT_HEADER)))
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Write(
                     writer,

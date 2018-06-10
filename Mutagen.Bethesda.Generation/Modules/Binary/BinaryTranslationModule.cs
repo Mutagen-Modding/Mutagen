@@ -615,7 +615,7 @@ namespace Mutagen.Bethesda.Generation
                                     args.Add("frame: frame");
                                     if (obj.BaseClass.IsTypelessStruct())
                                     {
-                                        args.Add($"lastParsed: null");
+                                        args.Add($"lastParsed: lastParsed");
                                     }
                                     if (data.BaseRecordTypeConverter?.FromConversions.Count > 0)
                                     {
@@ -1112,7 +1112,14 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 args.Add($"item: item");
                                 args.Add("writer: writer");
-                                args.Add("recordTypeConverter: recordTypeConverter");
+                                if (data.BaseRecordTypeConverter?.FromConversions.Count > 0)
+                                {
+                                    args.Add($"recordTypeConverter: recordTypeConverter.Combine({obj.RegistrationName}.BaseConverter)");
+                                }
+                                else
+                                {
+                                    args.Add("recordTypeConverter: recordTypeConverter");
+                                }
                                 args.Add($"errorMask: errorMask");
                             }
                         }
@@ -1138,7 +1145,7 @@ namespace Mutagen.Bethesda.Generation
 
                         if (field is DataType dataType)
                         {
-                            fg.AppendLine($"using (HeaderExport.ExportSubRecordHeader(writer, {obj.RecordTypeHeaderName(fieldData.RecordType.Value)}))");
+                            fg.AppendLine($"using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(fieldData.RecordType.Value)})))");
                             using (new BraceWrapper(fg))
                             {
                                 bool isInRange = false;
