@@ -295,31 +295,63 @@ namespace Mutagen.Bethesda.Tests
             if (processing)
             {
                 var datIndex = str.IndexOf("XLOC");
-                if (datIndex == -1) return;
-                stream.Position = loc.Min + datIndex;
-                stream.Position += 4;
-                var len = stream.ReadUInt16();
-                if (len == 16)
+                if (datIndex != -1)
                 {
-                    lengthTracker[loc.Min] = lengthTracker[loc.Min] - 4;
-                    var removeStart = loc.Min + datIndex + 6 + 12;
-                    instr.Substitutions.Add(
-                        new DataTarget()
-                        {
-                            Location = loc.Min + datIndex + 4,
-                            Data = new byte[] { 12, 0 }
-                        });
-                    instr.Moves.Add(
-                        new Move()
-                        {
-                            SectionToMove = new RangeInt64(
-                                 removeStart,
-                                 removeStart + 3),
-                            LocationToMove = long.MaxValue,
-                        });
-                    foreach (var k in fileLocs.GetContainingGroupLocations(formID))
+                    stream.Position = loc.Min + datIndex;
+                    stream.Position += 4;
+                    var len = stream.ReadUInt16();
+                    if (len == 16)
                     {
-                        lengthTracker[k] = lengthTracker[k] - 4;
+                        lengthTracker[loc.Min] = lengthTracker[loc.Min] - 4;
+                        var removeStart = loc.Min + datIndex + 6 + 12;
+                        instr.Substitutions.Add(
+                            new DataTarget()
+                            {
+                                Location = loc.Min + datIndex + 4,
+                                Data = new byte[] { 12, 0 }
+                            });
+                        instr.Moves.Add(
+                            new Move()
+                            {
+                                SectionToMove = new RangeInt64(
+                                     removeStart,
+                                     removeStart + 3),
+                                LocationToMove = long.MaxValue,
+                            });
+                        foreach (var k in fileLocs.GetContainingGroupLocations(formID))
+                        {
+                            lengthTracker[k] = lengthTracker[k] - 4;
+                        }
+                    }
+                }
+                datIndex = str.IndexOf("XSED");
+                if (datIndex != -1)
+                {
+                    stream.Position = loc.Min + datIndex;
+                    stream.Position += 4;
+                    var len = stream.ReadUInt16();
+                    if (len == 4)
+                    {
+                        lengthTracker[loc.Min] = lengthTracker[loc.Min] - 3;
+                        var removeStart = loc.Min + datIndex + 6 + 1;
+                        instr.Substitutions.Add(
+                            new DataTarget()
+                            {
+                                Location = loc.Min + datIndex + 4,
+                                Data = new byte[] { 1, 0 }
+                            });
+                        instr.Moves.Add(
+                            new Move()
+                            {
+                                SectionToMove = new RangeInt64(
+                                     removeStart,
+                                     removeStart + 2),
+                                LocationToMove = long.MaxValue,
+                            });
+                        foreach (var k in fileLocs.GetContainingGroupLocations(formID))
+                        {
+                            lengthTracker[k] = lengthTracker[k] - 3;
+                        }
                     }
                 }
             }
