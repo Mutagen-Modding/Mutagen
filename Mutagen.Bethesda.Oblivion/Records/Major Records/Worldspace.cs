@@ -44,6 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
         static partial void WriteBinary_OffsetLength_Custom(MutagenWriter writer, Worldspace item, Func<Worldspace_ErrorMask> errorMask)
         {
             if (!item.OffsetData_Property.HasBeenSet) return;
+            if (!item.usingOffsetLength) return;
             using (HeaderExport.ExportSubRecordHeader(writer, Worldspace_Registration.XXXX_HEADER))
             {
                 writer.Write(item.OffsetData.Length);
