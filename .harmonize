@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>fb6367c7feb632afaacb2a6c396cc5c9f3ee6712</Sha>
+         <Sha>2ae352ff56c5bbc1a2ba74a3071dcf5ee2c53c15</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>06-10-2018 13:07:50</CommitDate>
-         <Description>BinaryReadStream implements Stream</Description>
+         <CommitDate>06-10-2018 20:24:32</CommitDate>
+         <Description>IBinaryStream.WriteTo</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
