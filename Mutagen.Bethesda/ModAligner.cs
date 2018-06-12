@@ -15,8 +15,115 @@ namespace Mutagen.Bethesda
     {
         public class AlignmentRules
         {
-            public Dictionary<RecordType, IEnumerable<RecordType>> Alignments = new Dictionary<RecordType, IEnumerable<RecordType>>();
+            public Dictionary<RecordType, Dictionary<RecordType, AlignmentRule>> Alignments = new Dictionary<RecordType, Dictionary<RecordType, AlignmentRule>>();
             public Dictionary<RecordType, IEnumerable<RecordType>> StopMarkers = new Dictionary<RecordType, IEnumerable<RecordType>>();
+
+            public void AddAlignments(RecordType type, params RecordType[] recTypes)
+            {
+                var subList = new Dictionary<RecordType, AlignmentRule>();
+                foreach (var t in recTypes)
+                {
+                    subList[t] = new AlignmentStraightRecord(t.Type);
+                }
+                this.Alignments.Add(
+                    type,
+                    subList);
+            }
+
+            public void AddAlignments(RecordType type, params AlignmentRule[] rules)
+            {
+                var dict = Alignments.TryCreateValue(type);
+                foreach (var rule in rules)
+                {
+                    dict[rule.RecordType] = rule;
+                }
+            }
+        }
+
+        public abstract class AlignmentRule
+        {
+            public abstract RecordType RecordType { get; }
+
+            public abstract byte[] GetBytes(BinaryReadStream inputStream);
+        }
+
+        public class AlignmentStraightRecord : AlignmentRule
+        {
+            private RecordType _recordType;
+
+            public AlignmentStraightRecord(string str)
+            {
+                _recordType = new RecordType(str);
+            }
+
+            public override RecordType RecordType => _recordType;
+
+            public override byte[] GetBytes(BinaryReadStream inputStream)
+            {
+                var subType = HeaderTranslation.ReadNextSubRecordType(
+                    inputStream,
+                    out var subLen);
+                if (!subType.Equals(_recordType))
+                {
+                    throw new ArgumentException();
+                }
+                var ret = new byte[subLen + 6];
+                MutagenWriter stream = new MutagenWriter(new MemoryStream(ret));
+                using (HeaderExport.ExportSubRecordHeader(stream, _recordType))
+                {
+                    inputStream.WriteTo(stream.Writer.BaseStream, subLen);
+                }
+                return ret;
+            }
+        }
+
+        public class AlignmentSubRule : AlignmentRule
+        {
+            public List<RecordType> SubTypes = new List<RecordType>();
+
+            public AlignmentSubRule(
+                params RecordType[] types)
+            {
+                this.SubTypes = types.ToList();
+            }
+
+            public override RecordType RecordType => SubTypes[0];
+
+            public override byte[] GetBytes(BinaryReadStream inputStream)
+            {
+                Dictionary<RecordType, byte[]> dataDict = new Dictionary<RecordType, byte[]>();
+                MutagenWriter stream;
+                while (!inputStream.Complete)
+                {
+                    var subType = HeaderTranslation.ReadNextSubRecordType(
+                        inputStream,
+                        out var subLen);
+                    if (!SubTypes.Contains(subType))
+                    {
+                        inputStream.Position -= 6;
+                        break;
+                    }
+                    var data = new byte[subLen + 6];
+                    stream = new MutagenWriter(new MemoryStream(data));
+                    using (HeaderExport.ExportSubRecordHeader(stream, subType))
+                    {
+                        inputStream.WriteTo(stream.Writer.BaseStream, subLen);
+                    }
+                    dataDict[subType] = data;
+                }
+                byte[] ret = new byte[dataDict.Values.Sum((d) => d.Length)];
+                stream = new MutagenWriter(new MemoryStream(ret));
+                foreach (var alignment in SubTypes)
+                {
+                    if (dataDict.TryGetValue(
+                        alignment,
+                        out var data))
+                    {
+                        stream.Write(data);
+                    }
+                }
+                return ret;
+            }
         }
 
         public static void Align(
@@ -35,76 +142,7 @@ namespace Mutagen.Bethesda
                 {
                     using (var writer = new MutagenWriter(new FileStream(alignedRulesFile, FileMode.Create)))
                     {
-                        while (!inputStream.Complete)
-                        {
-                            // Import until next listed major record
-                            long noRecordLength;
-                            if (fileLocs.ListedRecords.TryGetInDirection(
-                                inputStream.Position,
-                                higher: true,
-                                result: out var nextRec))
-                            {
-                                var recordLocation = fileLocs.ListedRecords.Keys[nextRec.Key];
-                                noRecordLength = recordLocation - inputStream.Position;
-                            }
-                            else
-                            {
-                                noRecordLength = inputStream.Remaining;
-                            }
-                            inputStream.WriteTo(writer.Writer.BaseStream, (int)noRecordLength);
-
-                            // If complete overall, return
-                            if (inputStream.Complete) break;
-
-                            var recType = HeaderTranslation.ReadNextRecordType(
-                                inputStream,
-                                out var len);
-                            IEnumerable<RecordType> stopMarkers;
-                            if (!alignmentRules.StopMarkers.TryGetValue(recType, out stopMarkers))
-                            {
-                                stopMarkers = null;
-                            }
-                            writer.Write(recType.Type);
-                            writer.Write(len);
-                            inputStream.WriteTo(writer.Writer.BaseStream, 12);
-                            var endPos = inputStream.Position + len;
-                            Dictionary<RecordType, byte[]> dataDict = new Dictionary<RecordType, byte[]>();
-                            byte[] rest = null;
-                            while (inputStream.Position < endPos)
-                            {
-                                var subType = HeaderTranslation.GetNextSubRecordType(
-                                    inputStream,
-                                    out var subLen);
-                                if (stopMarkers?.Contains(subType) ?? false)
-                                {
-                                    rest = inputStream.ReadBytes((int)(endPos - inputStream.Position));
-                                    break;
-                                }
-                                inputStream.Position += 6;
-                                dataDict[subType] = inputStream.ReadBytes(subLen);
-                            }
-                            foreach (var alignment in alignmentRules.Alignments[recType])
-                            {
-                                if (dataDict.TryGetValue(
-                                    alignment,
-                                    out var data))
-                                {
-                                    using (HeaderExport.ExportSubRecordHeader(writer, alignment))
-                                    {
-                                        writer.Write(data);
-                                    }
-                                    dataDict.Remove(alignment);
-                                }
-                            }
-                            if (dataDict.Count > 0)
-                            {
-                                throw new ArgumentException($"Encountered an unknown record: {dataDict.First().Key}");
-                            }
-                            if (rest != null)
-                            {
-                                writer.Write(rest);
-                            }
-                        }
+                        AlignByRules(inputStream, writer, alignmentRules, fileLocs);
                     }
                 }
 
@@ -167,6 +205,88 @@ namespace Mutagen.Bethesda
                         }
                         mutaReader.WriteTo(writer.Writer.BaseStream, checked((int)mutaReader.Remaining));
                     }
+                }
+            }
+        }
+
+        private static void AlignByRules(
+            BinaryReadStream inputStream,
+            MutagenWriter writer,
+            AlignmentRules alignmentRules,
+            MajorRecordLocator.FileLocations fileLocs)
+        {
+            while (!inputStream.Complete)
+            {
+                // Import until next listed major record
+                long noRecordLength;
+                if (fileLocs.ListedRecords.TryGetInDirection(
+                    inputStream.Position,
+                    higher: true,
+                    result: out var nextRec))
+                {
+                    var recordLocation = fileLocs.ListedRecords.Keys[nextRec.Key];
+                    noRecordLength = recordLocation - inputStream.Position;
+                }
+                else
+                {
+                    noRecordLength = inputStream.Remaining;
+                }
+                inputStream.WriteTo(writer.Writer.BaseStream, (int)noRecordLength);
+
+                // If complete overall, return
+                if (inputStream.Complete) break;
+
+                var recType = HeaderTranslation.ReadNextRecordType(
+                    inputStream,
+                    out var len);
+                IEnumerable<RecordType> stopMarkers;
+                if (!alignmentRules.StopMarkers.TryGetValue(recType, out stopMarkers))
+                {
+                    stopMarkers = null;
+                }
+                if (!alignmentRules.Alignments.TryGetValue(recType, out var alignments))
+                {
+                    throw new ArgumentException($"Encountered an unknown record: {recType}");
+                }
+                writer.Write(recType.Type);
+                writer.Write(len);
+                inputStream.WriteTo(writer.Writer.BaseStream, 12);
+                var endPos = inputStream.Position + len;
+                Dictionary<RecordType, byte[]> dataDict = new Dictionary<RecordType, byte[]>();
+                byte[] rest = null;
+                while (inputStream.Position < endPos)
+                {
+                    var subType = HeaderTranslation.GetNextSubRecordType(
+                        inputStream,
+                        out var subLen);
+                    if (stopMarkers?.Contains(subType) ?? false)
+                    {
+                        rest = inputStream.ReadBytes((int)(endPos - inputStream.Position));
+                        break;
+                    }
+                    if (!alignments.TryGetValue(subType, out var rule))
+                    {
+                        throw new ArgumentException($"Encountered an unknown record: {subType}");
+                    }
+                    dataDict[subType] = rule.GetBytes(inputStream);
+                }
+                foreach (var alignment in alignmentRules.Alignments[recType])
+                {
+                    if (dataDict.TryGetValue(
+                        alignment.Key,
+                        out var data))
+                    {
+                        writer.Write(data);
+                        dataDict.Remove(alignment.Key);
+                    }
+                }
+                if (dataDict.Count > 0)
+                {
+                    throw new ArgumentException($"Encountered an unknown record: {dataDict.First().Key}");
+                }
+                if (rest != null)
+                {
+                    writer.Write(rest);
                 }
             }
         }

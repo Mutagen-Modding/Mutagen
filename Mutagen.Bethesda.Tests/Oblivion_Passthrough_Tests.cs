@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using static Mutagen.Bethesda.ModAligner;
 
 namespace Mutagen.Bethesda.Tests
 {
@@ -610,8 +611,8 @@ namespace Mutagen.Bethesda.Tests
         public ModAligner.AlignmentRules GetAlignmentRules()
         {
             var ret = new ModAligner.AlignmentRules();
-            ret.Alignments[Cell_Registration.CELL_HEADER] = new List<RecordType>()
-            {
+            ret.AddAlignments(
+                Cell_Registration.CELL_HEADER,
                 new RecordType("EDID"),
                 new RecordType("FULL"),
                 new RecordType("DATA"),
@@ -624,10 +625,9 @@ namespace Mutagen.Bethesda.Tests
                 new RecordType("XCWT"),
                 new RecordType("XOWN"),
                 new RecordType("XRNK"),
-                new RecordType("XGLB"),
-            };
-            ret.Alignments[Worldspace_Registration.WRLD_HEADER] = new List<RecordType>()
-            {
+                new RecordType("XGLB"));
+            ret.AddAlignments(
+                Worldspace_Registration.WRLD_HEADER,
                 new RecordType("EDID"),
                 new RecordType("FULL"),
                 new RecordType("WNAM"),
@@ -639,56 +639,55 @@ namespace Mutagen.Bethesda.Tests
                 new RecordType("NAM0"),
                 new RecordType("NAM9"),
                 new RecordType("SNAM"),
-                new RecordType("XXXX"),
-            };
+                new RecordType("XXXX"));
             ret.StopMarkers[Worldspace_Registration.WRLD_HEADER] = new List<RecordType>()
             {
                 new RecordType("OFST"),
             };
-            ret.Alignments[PlacedObject_Registration.REFR_HEADER] = new List<RecordType>()
-            {
+            ret.AddAlignments(
+                PlacedObject_Registration.REFR_HEADER,
+                new ModAligner.AlignmentStraightRecord("EDID"),
+                new ModAligner.AlignmentStraightRecord("NAME"),
+                new ModAligner.AlignmentStraightRecord("XPCI"),
+                new ModAligner.AlignmentStraightRecord("FULL"),
+                new ModAligner.AlignmentStraightRecord("XTEL"),
+                new ModAligner.AlignmentStraightRecord("XLOC"),
+                new ModAligner.AlignmentStraightRecord("XOWN"),
+                new ModAligner.AlignmentStraightRecord("XRNK"),
+                new ModAligner.AlignmentStraightRecord("XGLB"),
+                new ModAligner.AlignmentStraightRecord("XESP"),
+                new ModAligner.AlignmentStraightRecord("XTRG"),
+                new ModAligner.AlignmentStraightRecord("XSED"),
+                new ModAligner.AlignmentStraightRecord("XLOD"),
+                new ModAligner.AlignmentStraightRecord("XCHG"),
+                new ModAligner.AlignmentStraightRecord("XHLT"),
+                new ModAligner.AlignmentStraightRecord("XLCM"),
+                new ModAligner.AlignmentStraightRecord("XRTM"),
+                new ModAligner.AlignmentStraightRecord("XACT"),
+                new ModAligner.AlignmentStraightRecord("XCNT"),
+                new ModAligner.AlignmentSubRule(
+                    new RecordType("XMRK"),
+                    new RecordType("FNAM"),
+                    new RecordType("FULL"),
+                    new RecordType("TNAM")),
+                new ModAligner.AlignmentStraightRecord("ONAM"),
+                new ModAligner.AlignmentStraightRecord("XRGD"),
+                new ModAligner.AlignmentStraightRecord("XSCL"),
+                new ModAligner.AlignmentStraightRecord("XSOL"),
+                new ModAligner.AlignmentStraightRecord("DATA"));
+            ret.AddAlignments(
+                PlacedCreature_Registration.ACRE_HEADER,
                 new RecordType("EDID"),
                 new RecordType("NAME"),
-                new RecordType("XPCI"),
-                new RecordType("XTEL"),
-                new RecordType("XLOC"),
                 new RecordType("XOWN"),
                 new RecordType("XRNK"),
                 new RecordType("XGLB"),
                 new RecordType("XESP"),
-                new RecordType("XTRG"),
-                new RecordType("XSED"),
-                new RecordType("XLOD"),
-                new RecordType("XCHG"),
-                new RecordType("XHLT"),
-                new RecordType("XLCM"),
-                new RecordType("XRTM"),
-                new RecordType("XACT"),
-                new RecordType("XCNT"),
-                new RecordType("XMRK"),
-                new RecordType("FNAM"),
-                new RecordType("FULL"),
-                new RecordType("TNAM"),
-                new RecordType("ONAM"),
                 new RecordType("XRGD"),
                 new RecordType("XSCL"),
-                new RecordType("XSOL"),
-                new RecordType("DATA"),
-            };
-            ret.Alignments[PlacedCreature_Registration.ACRE_HEADER] = new List<RecordType>()
-            {
-                new RecordType("EDID"),
-                new RecordType("NAME"),
-                new RecordType("XOWN"),
-                new RecordType("XRNK"),
-                new RecordType("XGLB"),
-                new RecordType("XESP"),
-                new RecordType("XRGD"),
-                new RecordType("XSCL"),
-                new RecordType("DATA"),
-            };
-            ret.Alignments[PlacedNPC_Registration.ACHR_HEADER] = new List<RecordType>()
-            {
+                new RecordType("DATA"));
+            ret.AddAlignments(
+                PlacedNPC_Registration.ACHR_HEADER,
                 new RecordType("EDID"),
                 new RecordType("NAME"),
                 new RecordType("XPCI"),
@@ -699,8 +698,7 @@ namespace Mutagen.Bethesda.Tests
                 new RecordType("XHRS"),
                 new RecordType("XRGD"),
                 new RecordType("XSCL"),
-                new RecordType("DATA"),
-            };
+                new RecordType("DATA"));
             return ret;
         }
 
