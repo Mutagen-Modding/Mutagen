@@ -34,8 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<Worldspace>,
         ILoquiObjectSetter,
         IPropertySupporter<String>,
-        IPropertySupporter<P2Int>,
-        IPropertySupporter<P2Int16>,
+        IPropertySupporter<MapData>,
         IPropertySupporter<Worldspace.Flag>,
         IPropertySupporter<P2Float>,
         IPropertySupporter<MusicType>,
@@ -125,33 +124,33 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<String> IWorldspaceGetter.Icon_Property => this.Icon_Property;
         #endregion
-        #region UsableDimensions
-        protected P2Int _UsableDimensions;
-        protected PropertyForwarder<Worldspace, P2Int> _UsableDimensionsForwarder;
-        public INotifyingSetItem<P2Int> UsableDimensions_Property => _UsableDimensionsForwarder ?? (_UsableDimensionsForwarder = new PropertyForwarder<Worldspace, P2Int>(this, (int)Worldspace_FieldIndex.UsableDimensions));
+        #region MapData
+        protected MapData _MapData;
+        protected PropertyForwarder<Worldspace, MapData> _MapDataForwarder;
+        public INotifyingSetItem<MapData> MapData_Property => _MapDataForwarder ?? (_MapDataForwarder = new PropertyForwarder<Worldspace, MapData>(this, (int)Worldspace_FieldIndex.MapData));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public P2Int UsableDimensions
+        public MapData MapData
         {
-            get => this._UsableDimensions;
-            set => this.SetUsableDimensions(value);
+            get => this._MapData;
+            set => this.SetMapData(value);
         }
-        protected void SetUsableDimensions(
-            P2Int item,
+        protected void SetMapData(
+            MapData item,
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Worldspace_FieldIndex.UsableDimensions];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && UsableDimensions == item) return;
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Worldspace_FieldIndex.MapData];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(MapData, item)) return;
             if (oldHasBeenSet != hasBeenSet)
             {
-                _hasBeenSetTracker[(int)Worldspace_FieldIndex.UsableDimensions] = hasBeenSet;
+                _hasBeenSetTracker[(int)Worldspace_FieldIndex.MapData] = hasBeenSet;
             }
-            if (_P2Int_subscriptions != null)
+            if (_MapData_subscriptions != null)
             {
-                var tmp = UsableDimensions;
-                _UsableDimensions = item;
-                _P2Int_subscriptions.FireSubscriptions(
-                    index: (int)Worldspace_FieldIndex.UsableDimensions,
+                var tmp = MapData;
+                _MapData = item;
+                _MapData_subscriptions.FireSubscriptions(
+                    index: (int)Worldspace_FieldIndex.MapData,
                     oldHasBeenSet: oldHasBeenSet,
                     newHasBeenSet: hasBeenSet,
                     oldVal: tmp,
@@ -160,114 +159,18 @@ namespace Mutagen.Bethesda.Oblivion
             }
             else
             {
-                _UsableDimensions = item;
+                _MapData = item;
             }
         }
-        protected void UnsetUsableDimensions()
+        protected void UnsetMapData()
         {
-            _hasBeenSetTracker[(int)Worldspace_FieldIndex.UsableDimensions] = false;
-            UsableDimensions = default(P2Int);
+            _hasBeenSetTracker[(int)Worldspace_FieldIndex.MapData] = false;
+            MapData = default(MapData);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<P2Int> IWorldspace.UsableDimensions_Property => this.UsableDimensions_Property;
+        INotifyingSetItem<MapData> IWorldspace.MapData_Property => this.MapData_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<P2Int> IWorldspaceGetter.UsableDimensions_Property => this.UsableDimensions_Property;
-        #endregion
-        #region CellCoordinatesNWCell
-        protected P2Int16 _CellCoordinatesNWCell;
-        protected PropertyForwarder<Worldspace, P2Int16> _CellCoordinatesNWCellForwarder;
-        public INotifyingSetItem<P2Int16> CellCoordinatesNWCell_Property => _CellCoordinatesNWCellForwarder ?? (_CellCoordinatesNWCellForwarder = new PropertyForwarder<Worldspace, P2Int16>(this, (int)Worldspace_FieldIndex.CellCoordinatesNWCell));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public P2Int16 CellCoordinatesNWCell
-        {
-            get => this._CellCoordinatesNWCell;
-            set => this.SetCellCoordinatesNWCell(value);
-        }
-        protected void SetCellCoordinatesNWCell(
-            P2Int16 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Worldspace_FieldIndex.CellCoordinatesNWCell];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && CellCoordinatesNWCell == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Worldspace_FieldIndex.CellCoordinatesNWCell] = hasBeenSet;
-            }
-            if (_P2Int16_subscriptions != null)
-            {
-                var tmp = CellCoordinatesNWCell;
-                _CellCoordinatesNWCell = item;
-                _P2Int16_subscriptions.FireSubscriptions(
-                    index: (int)Worldspace_FieldIndex.CellCoordinatesNWCell,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _CellCoordinatesNWCell = item;
-            }
-        }
-        protected void UnsetCellCoordinatesNWCell()
-        {
-            _hasBeenSetTracker[(int)Worldspace_FieldIndex.CellCoordinatesNWCell] = false;
-            CellCoordinatesNWCell = default(P2Int16);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<P2Int16> IWorldspace.CellCoordinatesNWCell_Property => this.CellCoordinatesNWCell_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<P2Int16> IWorldspaceGetter.CellCoordinatesNWCell_Property => this.CellCoordinatesNWCell_Property;
-        #endregion
-        #region CellCoordinatesSECell
-        protected P2Int16 _CellCoordinatesSECell;
-        protected PropertyForwarder<Worldspace, P2Int16> _CellCoordinatesSECellForwarder;
-        public INotifyingSetItem<P2Int16> CellCoordinatesSECell_Property => _CellCoordinatesSECellForwarder ?? (_CellCoordinatesSECellForwarder = new PropertyForwarder<Worldspace, P2Int16>(this, (int)Worldspace_FieldIndex.CellCoordinatesSECell));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public P2Int16 CellCoordinatesSECell
-        {
-            get => this._CellCoordinatesSECell;
-            set => this.SetCellCoordinatesSECell(value);
-        }
-        protected void SetCellCoordinatesSECell(
-            P2Int16 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Worldspace_FieldIndex.CellCoordinatesSECell];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && CellCoordinatesSECell == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Worldspace_FieldIndex.CellCoordinatesSECell] = hasBeenSet;
-            }
-            if (_P2Int16_subscriptions != null)
-            {
-                var tmp = CellCoordinatesSECell;
-                _CellCoordinatesSECell = item;
-                _P2Int16_subscriptions.FireSubscriptions(
-                    index: (int)Worldspace_FieldIndex.CellCoordinatesSECell,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _CellCoordinatesSECell = item;
-            }
-        }
-        protected void UnsetCellCoordinatesSECell()
-        {
-            _hasBeenSetTracker[(int)Worldspace_FieldIndex.CellCoordinatesSECell] = false;
-            CellCoordinatesSECell = default(P2Int16);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<P2Int16> IWorldspace.CellCoordinatesSECell_Property => this.CellCoordinatesSECell_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<P2Int16> IWorldspaceGetter.CellCoordinatesSECell_Property => this.CellCoordinatesSECell_Property;
+        INotifyingSetItemGetter<MapData> IWorldspaceGetter.MapData_Property => this.MapData_Property;
         #endregion
         #region Flags
         protected Worldspace.Flag _Flags;
@@ -702,9 +605,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!object.Equals(this.Icon, rhs.Icon)) return false;
             }
-            if (this.UsableDimensions != rhs.UsableDimensions) return false;
-            if (this.CellCoordinatesNWCell != rhs.CellCoordinatesNWCell) return false;
-            if (this.CellCoordinatesSECell != rhs.CellCoordinatesSECell) return false;
+            if (MapData_Property.HasBeenSet != rhs.MapData_Property.HasBeenSet) return false;
+            if (MapData_Property.HasBeenSet)
+            {
+                if (!object.Equals(this.MapData, rhs.MapData)) return false;
+            }
             if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
             if (Flags_Property.HasBeenSet)
             {
@@ -767,9 +672,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
             }
-            ret = HashHelper.GetHashCode(UsableDimensions).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(CellCoordinatesNWCell).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(CellCoordinatesSECell).CombineHashCode(ret);
+            if (MapData_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(MapData).CombineHashCode(ret);
+            }
             if (Flags_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
@@ -1131,46 +1037,18 @@ namespace Mutagen.Bethesda.Oblivion
                         item.UnsetIcon();
                     }
                     break;
-                case "UsableDimensions":
-                    var UsableDimensionstryGet = P2IntXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Worldspace_FieldIndex.UsableDimensions,
+                case "MapData":
+                    var MapDatatryGet = LoquiXmlTranslation<MapData, MapData_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Worldspace_FieldIndex.MapData,
                         errorMask: errorMask);
-                    if (UsableDimensionstryGet.Succeeded)
+                    if (MapDatatryGet.Succeeded)
                     {
-                        item.SetUsableDimensions(item: UsableDimensionstryGet.Value);
+                        item.SetMapData(item: MapDatatryGet.Value);
                     }
                     else
                     {
-                        item.UnsetUsableDimensions();
-                    }
-                    break;
-                case "CellCoordinatesNWCell":
-                    var CellCoordinatesNWCelltryGet = P2Int16XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Worldspace_FieldIndex.CellCoordinatesNWCell,
-                        errorMask: errorMask);
-                    if (CellCoordinatesNWCelltryGet.Succeeded)
-                    {
-                        item.SetCellCoordinatesNWCell(item: CellCoordinatesNWCelltryGet.Value);
-                    }
-                    else
-                    {
-                        item.UnsetCellCoordinatesNWCell();
-                    }
-                    break;
-                case "CellCoordinatesSECell":
-                    var CellCoordinatesSECelltryGet = P2Int16XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Worldspace_FieldIndex.CellCoordinatesSECell,
-                        errorMask: errorMask);
-                    if (CellCoordinatesSECelltryGet.Succeeded)
-                    {
-                        item.SetCellCoordinatesSECell(item: CellCoordinatesSECelltryGet.Value);
-                    }
-                    else
-                    {
-                        item.UnsetCellCoordinatesSECell();
+                        item.UnsetMapData();
                     }
                     break;
                 case "Flags":
@@ -1439,101 +1317,101 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region IPropertySupporter P2Int
-        protected ObjectCentralizationSubscriptions<P2Int> _P2Int_subscriptions;
-        P2Int IPropertySupporter<P2Int>.Get(int index)
+        #region IPropertySupporter MapData
+        protected ObjectCentralizationSubscriptions<MapData> _MapData_subscriptions;
+        MapData IPropertySupporter<MapData>.Get(int index)
         {
-            return GetP2Int(index: index);
+            return GetMapData(index: index);
         }
 
-        protected P2Int GetP2Int(int index)
+        protected MapData GetMapData(int index)
         {
             switch ((Worldspace_FieldIndex)index)
             {
-                case Worldspace_FieldIndex.UsableDimensions:
-                    return UsableDimensions;
+                case Worldspace_FieldIndex.MapData:
+                    return MapData;
                 default:
-                    throw new ArgumentException($"Unknown index for field type P2Int: {index}");
+                    throw new ArgumentException($"Unknown index for field type MapData: {index}");
             }
         }
 
-        void IPropertySupporter<P2Int>.Set(
+        void IPropertySupporter<MapData>.Set(
             int index,
-            P2Int item,
+            MapData item,
             bool hasBeenSet,
             NotifyingFireParameters cmds)
         {
-            SetP2Int(
+            SetMapData(
                 index: index,
                 item: item,
                 hasBeenSet: hasBeenSet,
                 cmds: cmds);
         }
 
-        protected void SetP2Int(
+        protected void SetMapData(
             int index,
-            P2Int item,
+            MapData item,
             bool hasBeenSet,
             NotifyingFireParameters cmds)
         {
             switch ((Worldspace_FieldIndex)index)
             {
-                case Worldspace_FieldIndex.UsableDimensions:
-                    SetUsableDimensions(item, hasBeenSet, cmds);
+                case Worldspace_FieldIndex.MapData:
+                    SetMapData(item, hasBeenSet, cmds);
                     break;
                 default:
-                    throw new ArgumentException($"Unknown index for field type P2Int: {index}");
+                    throw new ArgumentException($"Unknown index for field type MapData: {index}");
             }
         }
 
-        bool IPropertySupporter<P2Int>.GetHasBeenSet(int index)
+        bool IPropertySupporter<MapData>.GetHasBeenSet(int index)
         {
             return _hasBeenSetTracker[index];
         }
 
-        void IPropertySupporter<P2Int>.SetHasBeenSet(
+        void IPropertySupporter<MapData>.SetHasBeenSet(
             int index,
             bool on)
         {
             _hasBeenSetTracker[index] = on;
         }
 
-        void IPropertySupporter<P2Int>.Unset(
+        void IPropertySupporter<MapData>.Unset(
             int index,
             NotifyingUnsetParameters cmds)
         {
-            UnsetP2Int(
+            UnsetMapData(
                 index: index,
                 cmds: cmds);
         }
 
-        protected void UnsetP2Int(
+        protected void UnsetMapData(
             int index,
             NotifyingUnsetParameters cmds)
         {
             switch ((Worldspace_FieldIndex)index)
             {
-                case Worldspace_FieldIndex.UsableDimensions:
+                case Worldspace_FieldIndex.MapData:
                     _hasBeenSetTracker[index] = false;
-                    UsableDimensions = default(P2Int);
+                    MapData = default(MapData);
                     break;
                 default:
-                    throw new ArgumentException($"Unknown index for field type P2Int: {index}");
+                    throw new ArgumentException($"Unknown index for field type MapData: {index}");
             }
         }
 
         [DebuggerStepThrough]
-        void IPropertySupporter<P2Int>.Subscribe(
+        void IPropertySupporter<MapData>.Subscribe(
             int index,
             object owner,
-            NotifyingSetItemInternalCallback<P2Int> callback,
+            NotifyingSetItemInternalCallback<MapData> callback,
             NotifyingSubscribeParameters cmds)
         {
-            if (_P2Int_subscriptions == null)
+            if (_MapData_subscriptions == null)
             {
-                _P2Int_subscriptions = new ObjectCentralizationSubscriptions<P2Int>();
+                _MapData_subscriptions = new ObjectCentralizationSubscriptions<MapData>();
             }
-            _P2Int_subscriptions.Subscribe(
+            _MapData_subscriptions.Subscribe(
                 index: index,
                 owner: owner,
                 prop: this,
@@ -1542,174 +1420,31 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        void IPropertySupporter<P2Int>.Unsubscribe(
+        void IPropertySupporter<MapData>.Unsubscribe(
             int index,
             object owner)
         {
-            _P2Int_subscriptions?.Unsubscribe(index, owner);
+            _MapData_subscriptions?.Unsubscribe(index, owner);
         }
 
-        void IPropertySupporter<P2Int>.SetCurrentAsDefault(int index)
+        void IPropertySupporter<MapData>.SetCurrentAsDefault(int index)
         {
             throw new NotImplementedException();
         }
 
-        P2Int IPropertySupporter<P2Int>.DefaultValue(int index)
+        MapData IPropertySupporter<MapData>.DefaultValue(int index)
         {
-            return DefaultValueP2Int(index: index);
+            return DefaultValueMapData(index: index);
         }
 
-        protected P2Int DefaultValueP2Int(int index)
+        protected MapData DefaultValueMapData(int index)
         {
             switch ((Worldspace_FieldIndex)index)
             {
-                case Worldspace_FieldIndex.UsableDimensions:
-                    return default(P2Int);
+                case Worldspace_FieldIndex.MapData:
+                    return default(MapData);
                 default:
-                    throw new ArgumentException($"Unknown index for field type P2Int: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter P2Int16
-        protected ObjectCentralizationSubscriptions<P2Int16> _P2Int16_subscriptions;
-        P2Int16 IPropertySupporter<P2Int16>.Get(int index)
-        {
-            return GetP2Int16(index: index);
-        }
-
-        protected P2Int16 GetP2Int16(int index)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.CellCoordinatesNWCell:
-                    return CellCoordinatesNWCell;
-                case Worldspace_FieldIndex.CellCoordinatesSECell:
-                    return CellCoordinatesSECell;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Int16: {index}");
-            }
-        }
-
-        void IPropertySupporter<P2Int16>.Set(
-            int index,
-            P2Int16 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetP2Int16(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetP2Int16(
-            int index,
-            P2Int16 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.CellCoordinatesNWCell:
-                    SetCellCoordinatesNWCell(item, hasBeenSet, cmds);
-                    break;
-                case Worldspace_FieldIndex.CellCoordinatesSECell:
-                    SetCellCoordinatesSECell(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Int16: {index}");
-            }
-        }
-
-        bool IPropertySupporter<P2Int16>.GetHasBeenSet(int index)
-        {
-            return _hasBeenSetTracker[index];
-        }
-
-        void IPropertySupporter<P2Int16>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<P2Int16>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetP2Int16(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetP2Int16(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.CellCoordinatesNWCell:
-                    _hasBeenSetTracker[index] = false;
-                    CellCoordinatesNWCell = default(P2Int16);
-                    break;
-                case Worldspace_FieldIndex.CellCoordinatesSECell:
-                    _hasBeenSetTracker[index] = false;
-                    CellCoordinatesSECell = default(P2Int16);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Int16: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P2Int16>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<P2Int16> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_P2Int16_subscriptions == null)
-            {
-                _P2Int16_subscriptions = new ObjectCentralizationSubscriptions<P2Int16>();
-            }
-            _P2Int16_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P2Int16>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _P2Int16_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<P2Int16>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        P2Int16 IPropertySupporter<P2Int16>.DefaultValue(int index)
-        {
-            return DefaultValueP2Int16(index: index);
-        }
-
-        protected P2Int16 DefaultValueP2Int16(int index)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.CellCoordinatesNWCell:
-                case Worldspace_FieldIndex.CellCoordinatesSECell:
-                    return default(P2Int16);
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Int16: {index}");
+                    throw new ArgumentException($"Unknown index for field type MapData: {index}");
             }
         }
 
@@ -2872,47 +2607,21 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Icon);
                 case "MNAM":
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        var UsableDimensionstryGet = Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)Worldspace_FieldIndex.UsableDimensions,
+                        var MapDatatryGet = LoquiBinaryTranslation<MapData, MapData_ErrorMask>.Instance.Parse(
+                            frame: frame,
+                            fieldIndex: (int)Worldspace_FieldIndex.MapData,
                             errorMask: errorMask);
-                        if (UsableDimensionstryGet.Succeeded)
+                        if (MapDatatryGet.Succeeded)
                         {
-                            item.SetUsableDimensions(item: UsableDimensionstryGet.Value);
+                            item.SetMapData(item: MapDatatryGet.Value);
                         }
                         else
                         {
-                            item.UnsetUsableDimensions();
-                        }
-                        var CellCoordinatesNWCelltryGet = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)Worldspace_FieldIndex.CellCoordinatesNWCell,
-                            errorMask: errorMask);
-                        if (CellCoordinatesNWCelltryGet.Succeeded)
-                        {
-                            item.SetCellCoordinatesNWCell(item: CellCoordinatesNWCelltryGet.Value);
-                        }
-                        else
-                        {
-                            item.UnsetCellCoordinatesNWCell();
-                        }
-                        var CellCoordinatesSECelltryGet = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)Worldspace_FieldIndex.CellCoordinatesSECell,
-                            errorMask: errorMask);
-                        if (CellCoordinatesSECelltryGet.Succeeded)
-                        {
-                            item.SetCellCoordinatesSECell(item: CellCoordinatesSECelltryGet.Value);
-                        }
-                        else
-                        {
-                            item.UnsetCellCoordinatesSECell();
+                            item.UnsetMapData();
                         }
                     }
-                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.CellCoordinatesSECell);
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.MapData);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Worldspace.Flag>.Instance.Parse(
@@ -3157,19 +2866,9 @@ namespace Mutagen.Bethesda.Oblivion
                         (String)obj,
                         cmds: cmds);
                     break;
-                case Worldspace_FieldIndex.UsableDimensions:
-                    this.SetUsableDimensions(
-                        (P2Int)obj,
-                        cmds: cmds);
-                    break;
-                case Worldspace_FieldIndex.CellCoordinatesNWCell:
-                    this.SetCellCoordinatesNWCell(
-                        (P2Int16)obj,
-                        cmds: cmds);
-                    break;
-                case Worldspace_FieldIndex.CellCoordinatesSECell:
-                    this.SetCellCoordinatesSECell(
-                        (P2Int16)obj,
+                case Worldspace_FieldIndex.MapData:
+                    this.SetMapData(
+                        (MapData)obj,
                         cmds: cmds);
                     break;
                 case Worldspace_FieldIndex.Flags:
@@ -3261,19 +2960,9 @@ namespace Mutagen.Bethesda.Oblivion
                         (String)pair.Value,
                         cmds: null);
                     break;
-                case Worldspace_FieldIndex.UsableDimensions:
-                    obj.SetUsableDimensions(
-                        (P2Int)pair.Value,
-                        cmds: null);
-                    break;
-                case Worldspace_FieldIndex.CellCoordinatesNWCell:
-                    obj.SetCellCoordinatesNWCell(
-                        (P2Int16)pair.Value,
-                        cmds: null);
-                    break;
-                case Worldspace_FieldIndex.CellCoordinatesSECell:
-                    obj.SetCellCoordinatesSECell(
-                        (P2Int16)pair.Value,
+                case Worldspace_FieldIndex.MapData:
+                    obj.SetMapData(
+                        (MapData)pair.Value,
                         cmds: null);
                     break;
                 case Worldspace_FieldIndex.Flags:
@@ -3335,14 +3024,8 @@ namespace Mutagen.Bethesda.Oblivion
         new String Icon { get; set; }
         new INotifyingSetItem<String> Icon_Property { get; }
 
-        new P2Int UsableDimensions { get; set; }
-        new INotifyingItem<P2Int> UsableDimensions_Property { get; }
-
-        new P2Int16 CellCoordinatesNWCell { get; set; }
-        new INotifyingItem<P2Int16> CellCoordinatesNWCell_Property { get; }
-
-        new P2Int16 CellCoordinatesSECell { get; set; }
-        new INotifyingItem<P2Int16> CellCoordinatesSECell_Property { get; }
+        new MapData MapData { get; set; }
+        new INotifyingSetItem<MapData> MapData_Property { get; }
 
         new Worldspace.Flag Flags { get; set; }
         new INotifyingSetItem<Worldspace.Flag> Flags_Property { get; }
@@ -3390,19 +3073,9 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> Icon_Property { get; }
 
         #endregion
-        #region UsableDimensions
-        P2Int UsableDimensions { get; }
-        INotifyingItemGetter<P2Int> UsableDimensions_Property { get; }
-
-        #endregion
-        #region CellCoordinatesNWCell
-        P2Int16 CellCoordinatesNWCell { get; }
-        INotifyingItemGetter<P2Int16> CellCoordinatesNWCell_Property { get; }
-
-        #endregion
-        #region CellCoordinatesSECell
-        P2Int16 CellCoordinatesSECell { get; }
-        INotifyingItemGetter<P2Int16> CellCoordinatesSECell_Property { get; }
+        #region MapData
+        MapData MapData { get; }
+        INotifyingSetItemGetter<MapData> MapData_Property { get; }
 
         #endregion
         #region Flags
@@ -3465,17 +3138,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Climate = 7,
         Water = 8,
         Icon = 9,
-        UsableDimensions = 10,
-        CellCoordinatesNWCell = 11,
-        CellCoordinatesSECell = 12,
-        Flags = 13,
-        ObjectBoundsMin = 14,
-        ObjectBoundsMax = 15,
-        Music = 16,
-        OffsetData = 17,
-        Road = 18,
-        TopCell = 19,
-        SubCells = 20,
+        MapData = 10,
+        Flags = 11,
+        ObjectBoundsMin = 12,
+        ObjectBoundsMax = 13,
+        Music = 14,
+        OffsetData = 15,
+        Road = 16,
+        TopCell = 17,
+        SubCells = 18,
     }
     #endregion
 
@@ -3493,9 +3164,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "d95e86a2-5fdd-4bb1-a2b9-c16161ef2f62";
 
-        public const ushort AdditionalFieldCount = 15;
+        public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 21;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(Worldspace_Mask<>);
 
@@ -3531,12 +3202,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Worldspace_FieldIndex.Water;
                 case "ICON":
                     return (ushort)Worldspace_FieldIndex.Icon;
-                case "USABLEDIMENSIONS":
-                    return (ushort)Worldspace_FieldIndex.UsableDimensions;
-                case "CELLCOORDINATESNWCELL":
-                    return (ushort)Worldspace_FieldIndex.CellCoordinatesNWCell;
-                case "CELLCOORDINATESSECELL":
-                    return (ushort)Worldspace_FieldIndex.CellCoordinatesSECell;
+                case "MAPDATA":
+                    return (ushort)Worldspace_FieldIndex.MapData;
                 case "FLAGS":
                     return (ushort)Worldspace_FieldIndex.Flags;
                 case "OBJECTBOUNDSMIN":
@@ -3569,9 +3236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.Climate:
                 case Worldspace_FieldIndex.Water:
                 case Worldspace_FieldIndex.Icon:
-                case Worldspace_FieldIndex.UsableDimensions:
-                case Worldspace_FieldIndex.CellCoordinatesNWCell:
-                case Worldspace_FieldIndex.CellCoordinatesSECell:
+                case Worldspace_FieldIndex.MapData:
                 case Worldspace_FieldIndex.Flags:
                 case Worldspace_FieldIndex.ObjectBoundsMin:
                 case Worldspace_FieldIndex.ObjectBoundsMax:
@@ -3590,6 +3255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.MapData:
                 case Worldspace_FieldIndex.Road:
                 case Worldspace_FieldIndex.TopCell:
                 case Worldspace_FieldIndex.SubCells:
@@ -3598,9 +3264,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.Climate:
                 case Worldspace_FieldIndex.Water:
                 case Worldspace_FieldIndex.Icon:
-                case Worldspace_FieldIndex.UsableDimensions:
-                case Worldspace_FieldIndex.CellCoordinatesNWCell:
-                case Worldspace_FieldIndex.CellCoordinatesSECell:
                 case Worldspace_FieldIndex.Flags:
                 case Worldspace_FieldIndex.ObjectBoundsMin:
                 case Worldspace_FieldIndex.ObjectBoundsMax:
@@ -3621,9 +3284,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.Climate:
                 case Worldspace_FieldIndex.Water:
                 case Worldspace_FieldIndex.Icon:
-                case Worldspace_FieldIndex.UsableDimensions:
-                case Worldspace_FieldIndex.CellCoordinatesNWCell:
-                case Worldspace_FieldIndex.CellCoordinatesSECell:
+                case Worldspace_FieldIndex.MapData:
                 case Worldspace_FieldIndex.Flags:
                 case Worldspace_FieldIndex.ObjectBoundsMin:
                 case Worldspace_FieldIndex.ObjectBoundsMax:
@@ -3651,12 +3312,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Water";
                 case Worldspace_FieldIndex.Icon:
                     return "Icon";
-                case Worldspace_FieldIndex.UsableDimensions:
-                    return "UsableDimensions";
-                case Worldspace_FieldIndex.CellCoordinatesNWCell:
-                    return "CellCoordinatesNWCell";
-                case Worldspace_FieldIndex.CellCoordinatesSECell:
-                    return "CellCoordinatesSECell";
+                case Worldspace_FieldIndex.MapData:
+                    return "MapData";
                 case Worldspace_FieldIndex.Flags:
                     return "Flags";
                 case Worldspace_FieldIndex.ObjectBoundsMin:
@@ -3687,9 +3344,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.Climate:
                 case Worldspace_FieldIndex.Water:
                 case Worldspace_FieldIndex.Icon:
-                case Worldspace_FieldIndex.UsableDimensions:
-                case Worldspace_FieldIndex.CellCoordinatesNWCell:
-                case Worldspace_FieldIndex.CellCoordinatesSECell:
+                case Worldspace_FieldIndex.MapData:
                 case Worldspace_FieldIndex.Flags:
                 case Worldspace_FieldIndex.ObjectBoundsMin:
                 case Worldspace_FieldIndex.ObjectBoundsMax:
@@ -3713,9 +3368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.Climate:
                 case Worldspace_FieldIndex.Water:
                 case Worldspace_FieldIndex.Icon:
-                case Worldspace_FieldIndex.UsableDimensions:
-                case Worldspace_FieldIndex.CellCoordinatesNWCell:
-                case Worldspace_FieldIndex.CellCoordinatesSECell:
+                case Worldspace_FieldIndex.MapData:
                 case Worldspace_FieldIndex.Flags:
                 case Worldspace_FieldIndex.ObjectBoundsMin:
                 case Worldspace_FieldIndex.ObjectBoundsMax:
@@ -3743,12 +3396,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(FormIDSetLink<Water>);
                 case Worldspace_FieldIndex.Icon:
                     return typeof(String);
-                case Worldspace_FieldIndex.UsableDimensions:
-                    return typeof(P2Int);
-                case Worldspace_FieldIndex.CellCoordinatesNWCell:
-                    return typeof(P2Int16);
-                case Worldspace_FieldIndex.CellCoordinatesSECell:
-                    return typeof(P2Int16);
+                case Worldspace_FieldIndex.MapData:
+                    return typeof(MapData);
                 case Worldspace_FieldIndex.Flags:
                     return typeof(Worldspace.Flag);
                 case Worldspace_FieldIndex.ObjectBoundsMin:
@@ -3787,7 +3436,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = WRLD_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 12;
+        public const int NumTypedFields = 13;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -3898,46 +3547,53 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)Worldspace_FieldIndex.Icon, ex);
                 }
             }
-            if (copyMask?.UsableDimensions ?? true)
+            if (copyMask?.MapData.Overall != CopyOption.Skip)
             {
                 try
                 {
-                    item.UsableDimensions_Property.Set(
-                        value: rhs.UsableDimensions,
-                        cmds: cmds);
+                    item.MapData_Property.SetToWithDefault(
+                        rhs.MapData_Property,
+                        def?.MapData_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.MapData.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    MapDataCommon.CopyFieldsFrom(
+                                        item: item.MapData,
+                                        rhs: rhs.MapData,
+                                        def: def?.MapData,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<MapData_ErrorMask>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            var mask = new MapData_ErrorMask();
+                                            baseMask.SetNthMask((int)Worldspace_FieldIndex.MapData, mask);
+                                            return mask;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.MapData.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(MapData);
+                                    return MapData.Copy(
+                                        r,
+                                        copyMask?.MapData?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.MapData?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)Worldspace_FieldIndex.UsableDimensions, ex);
-                }
-            }
-            if (copyMask?.CellCoordinatesNWCell ?? true)
-            {
-                try
-                {
-                    item.CellCoordinatesNWCell_Property.Set(
-                        value: rhs.CellCoordinatesNWCell,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)Worldspace_FieldIndex.CellCoordinatesNWCell, ex);
-                }
-            }
-            if (copyMask?.CellCoordinatesSECell ?? true)
-            {
-                try
-                {
-                    item.CellCoordinatesSECell_Property.Set(
-                        value: rhs.CellCoordinatesSECell,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)Worldspace_FieldIndex.CellCoordinatesSECell, ex);
+                    errorMask().SetNthException((int)Worldspace_FieldIndex.MapData, ex);
                 }
             }
             if (copyMask?.Flags ?? true)
@@ -4153,11 +3809,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
-                case Worldspace_FieldIndex.UsableDimensions:
-                case Worldspace_FieldIndex.CellCoordinatesNWCell:
-                case Worldspace_FieldIndex.CellCoordinatesSECell:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case Worldspace_FieldIndex.Parent:
                     obj.Parent_Property.HasBeenSet = on;
                     break;
@@ -4169,6 +3820,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Worldspace_FieldIndex.Icon:
                     obj.Icon_Property.HasBeenSet = on;
+                    break;
+                case Worldspace_FieldIndex.MapData:
+                    obj.MapData_Property.HasBeenSet = on;
                     break;
                 case Worldspace_FieldIndex.Flags:
                     obj.Flags_Property.HasBeenSet = on;
@@ -4220,14 +3874,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.Icon:
                     obj.Icon_Property.Unset(cmds);
                     break;
-                case Worldspace_FieldIndex.UsableDimensions:
-                    obj.UsableDimensions = default(P2Int);
-                    break;
-                case Worldspace_FieldIndex.CellCoordinatesNWCell:
-                    obj.CellCoordinatesNWCell = default(P2Int16);
-                    break;
-                case Worldspace_FieldIndex.CellCoordinatesSECell:
-                    obj.CellCoordinatesSECell = default(P2Int16);
+                case Worldspace_FieldIndex.MapData:
+                    obj.MapData_Property.Unset(cmds);
                     break;
                 case Worldspace_FieldIndex.Flags:
                     obj.Flags_Property.Unset(cmds);
@@ -4266,10 +3914,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
-                case Worldspace_FieldIndex.UsableDimensions:
-                case Worldspace_FieldIndex.CellCoordinatesNWCell:
-                case Worldspace_FieldIndex.CellCoordinatesSECell:
-                    return true;
                 case Worldspace_FieldIndex.Parent:
                     return obj.Parent_Property.HasBeenSet;
                 case Worldspace_FieldIndex.Climate:
@@ -4278,6 +3922,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Water_Property.HasBeenSet;
                 case Worldspace_FieldIndex.Icon:
                     return obj.Icon_Property.HasBeenSet;
+                case Worldspace_FieldIndex.MapData:
+                    return obj.MapData_Property.HasBeenSet;
                 case Worldspace_FieldIndex.Flags:
                     return obj.Flags_Property.HasBeenSet;
                 case Worldspace_FieldIndex.ObjectBoundsMin:
@@ -4314,12 +3960,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Water;
                 case Worldspace_FieldIndex.Icon:
                     return obj.Icon;
-                case Worldspace_FieldIndex.UsableDimensions:
-                    return obj.UsableDimensions;
-                case Worldspace_FieldIndex.CellCoordinatesNWCell:
-                    return obj.CellCoordinatesNWCell;
-                case Worldspace_FieldIndex.CellCoordinatesSECell:
-                    return obj.CellCoordinatesSECell;
+                case Worldspace_FieldIndex.MapData:
+                    return obj.MapData;
                 case Worldspace_FieldIndex.Flags:
                     return obj.Flags;
                 case Worldspace_FieldIndex.ObjectBoundsMin:
@@ -4349,9 +3991,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Climate_Property.Unset(cmds.ToUnsetParams());
             item.Water_Property.Unset(cmds.ToUnsetParams());
             item.Icon_Property.Unset(cmds.ToUnsetParams());
-            item.UsableDimensions = default(P2Int);
-            item.CellCoordinatesNWCell = default(P2Int16);
-            item.CellCoordinatesSECell = default(P2Int16);
+            item.MapData_Property.Unset(cmds.ToUnsetParams());
             item.Flags_Property.Unset(cmds.ToUnsetParams());
             item.ObjectBoundsMin_Property.Unset(cmds.ToUnsetParams());
             item.ObjectBoundsMax_Property.Unset(cmds.ToUnsetParams());
@@ -4381,9 +4021,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Climate = item.Climate_Property.Equals(rhs.Climate_Property, (l, r) => l == r);
             ret.Water = item.Water_Property.Equals(rhs.Water_Property, (l, r) => l == r);
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
-            ret.UsableDimensions = item.UsableDimensions == rhs.UsableDimensions;
-            ret.CellCoordinatesNWCell = item.CellCoordinatesNWCell == rhs.CellCoordinatesNWCell;
-            ret.CellCoordinatesSECell = item.CellCoordinatesSECell == rhs.CellCoordinatesSECell;
+            ret.MapData = item.MapData_Property.LoquiEqualsHelper(rhs.MapData_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
             ret.ObjectBoundsMin = item.ObjectBoundsMin_Property.Equals(rhs.ObjectBoundsMin_Property, (l, r) => l == r);
             ret.ObjectBoundsMax = item.ObjectBoundsMax_Property.Equals(rhs.ObjectBoundsMax_Property, (l, r) => l == r);
@@ -4462,17 +4100,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Icon => {item.Icon}");
                 }
-                if (printMask?.UsableDimensions ?? true)
+                if (printMask?.MapData?.Overall ?? true)
                 {
-                    fg.AppendLine($"UsableDimensions => {item.UsableDimensions}");
-                }
-                if (printMask?.CellCoordinatesNWCell ?? true)
-                {
-                    fg.AppendLine($"CellCoordinatesNWCell => {item.CellCoordinatesNWCell}");
-                }
-                if (printMask?.CellCoordinatesSECell ?? true)
-                {
-                    fg.AppendLine($"CellCoordinatesSECell => {item.CellCoordinatesSECell}");
+                    item.MapData?.ToString(fg, "MapData");
                 }
                 if (printMask?.Flags ?? true)
                 {
@@ -4532,6 +4162,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Climate.HasValue && checkMask.Climate.Value != item.Climate_Property.HasBeenSet) return false;
             if (checkMask.Water.HasValue && checkMask.Water.Value != item.Water_Property.HasBeenSet) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
+            if (checkMask.MapData.Overall.HasValue && checkMask.MapData.Overall.Value != item.MapData_Property.HasBeenSet) return false;
+            if (checkMask.MapData.Specific != null && (item.MapData == null || !item.MapData.HasBeenSet(checkMask.MapData.Specific))) return false;
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
             if (checkMask.ObjectBoundsMin.HasValue && checkMask.ObjectBoundsMin.Value != item.ObjectBoundsMin_Property.HasBeenSet) return false;
             if (checkMask.ObjectBoundsMax.HasValue && checkMask.ObjectBoundsMax.Value != item.ObjectBoundsMax_Property.HasBeenSet) return false;
@@ -4552,9 +4184,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Climate = item.Climate_Property.HasBeenSet;
             ret.Water = item.Water_Property.HasBeenSet;
             ret.Icon = item.Icon_Property.HasBeenSet;
-            ret.UsableDimensions = true;
-            ret.CellCoordinatesNWCell = true;
-            ret.CellCoordinatesSECell = true;
+            ret.MapData = new MaskItem<bool, MapData_Mask<bool>>(item.MapData_Property.HasBeenSet, MapDataCommon.GetHasBeenSetMask(item.MapData));
             ret.Flags = item.Flags_Property.HasBeenSet;
             ret.ObjectBoundsMin = item.ObjectBoundsMin_Property.HasBeenSet;
             ret.ObjectBoundsMax = item.ObjectBoundsMax_Property.HasBeenSet;
@@ -4686,24 +4316,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         fieldIndex: (int)Worldspace_FieldIndex.Icon,
                         errorMask: errorMask);
                 }
-                P2IntXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.UsableDimensions),
-                    item: item.UsableDimensions_Property,
-                    fieldIndex: (int)Worldspace_FieldIndex.UsableDimensions,
-                    errorMask: errorMask);
-                P2Int16XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.CellCoordinatesNWCell),
-                    item: item.CellCoordinatesNWCell_Property,
-                    fieldIndex: (int)Worldspace_FieldIndex.CellCoordinatesNWCell,
-                    errorMask: errorMask);
-                P2Int16XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.CellCoordinatesSECell),
-                    item: item.CellCoordinatesSECell_Property,
-                    fieldIndex: (int)Worldspace_FieldIndex.CellCoordinatesSECell,
-                    errorMask: errorMask);
+                if (item.MapData_Property.HasBeenSet)
+                {
+                    LoquiXmlTranslation<MapData, MapData_ErrorMask>.Instance.Write(
+                        node: elem,
+                        item: item.MapData_Property,
+                        name: nameof(item.MapData),
+                        fieldIndex: (int)Worldspace_FieldIndex.MapData,
+                        errorMask: errorMask);
+                }
                 if (item.Flags_Property.HasBeenSet)
                 {
                     EnumXmlTranslation<Worldspace.Flag>.Instance.Write(
@@ -4890,24 +4511,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.ICON_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Worldspace_Registration.MNAM_HEADER)))
-            {
-                Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.UsableDimensions_Property,
-                    fieldIndex: (int)Worldspace_FieldIndex.UsableDimensions,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.CellCoordinatesNWCell_Property,
-                    fieldIndex: (int)Worldspace_FieldIndex.CellCoordinatesNWCell,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.CellCoordinatesSECell_Property,
-                    fieldIndex: (int)Worldspace_FieldIndex.CellCoordinatesSECell,
-                    errorMask: errorMask);
-            }
+            LoquiBinaryTranslation<MapData, MapData_ErrorMask>.Instance.Write(
+                writer: writer,
+                item: item.MapData_Property,
+                fieldIndex: (int)Worldspace_FieldIndex.MapData,
+                errorMask: errorMask);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Worldspace.Flag>.Instance.Write(
                 writer,
                 item.Flags_Property,
@@ -4970,9 +4578,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Climate = initialValue;
             this.Water = initialValue;
             this.Icon = initialValue;
-            this.UsableDimensions = initialValue;
-            this.CellCoordinatesNWCell = initialValue;
-            this.CellCoordinatesSECell = initialValue;
+            this.MapData = new MaskItem<T, MapData_Mask<T>>(initialValue, new MapData_Mask<T>(initialValue));
             this.Flags = initialValue;
             this.ObjectBoundsMin = initialValue;
             this.ObjectBoundsMax = initialValue;
@@ -4989,9 +4595,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T Climate;
         public T Water;
         public T Icon;
-        public T UsableDimensions;
-        public T CellCoordinatesNWCell;
-        public T CellCoordinatesSECell;
+        public MaskItem<T, MapData_Mask<T>> MapData { get; set; }
         public T Flags;
         public T ObjectBoundsMin;
         public T ObjectBoundsMax;
@@ -5017,9 +4621,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Climate, rhs.Climate)) return false;
             if (!object.Equals(this.Water, rhs.Water)) return false;
             if (!object.Equals(this.Icon, rhs.Icon)) return false;
-            if (!object.Equals(this.UsableDimensions, rhs.UsableDimensions)) return false;
-            if (!object.Equals(this.CellCoordinatesNWCell, rhs.CellCoordinatesNWCell)) return false;
-            if (!object.Equals(this.CellCoordinatesSECell, rhs.CellCoordinatesSECell)) return false;
+            if (!object.Equals(this.MapData, rhs.MapData)) return false;
             if (!object.Equals(this.Flags, rhs.Flags)) return false;
             if (!object.Equals(this.ObjectBoundsMin, rhs.ObjectBoundsMin)) return false;
             if (!object.Equals(this.ObjectBoundsMax, rhs.ObjectBoundsMax)) return false;
@@ -5037,9 +4639,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Climate?.GetHashCode());
             ret = ret.CombineHashCode(this.Water?.GetHashCode());
             ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-            ret = ret.CombineHashCode(this.UsableDimensions?.GetHashCode());
-            ret = ret.CombineHashCode(this.CellCoordinatesNWCell?.GetHashCode());
-            ret = ret.CombineHashCode(this.CellCoordinatesSECell?.GetHashCode());
+            ret = ret.CombineHashCode(this.MapData?.GetHashCode());
             ret = ret.CombineHashCode(this.Flags?.GetHashCode());
             ret = ret.CombineHashCode(this.ObjectBoundsMin?.GetHashCode());
             ret = ret.CombineHashCode(this.ObjectBoundsMax?.GetHashCode());
@@ -5062,9 +4662,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!eval(this.Climate)) return false;
             if (!eval(this.Water)) return false;
             if (!eval(this.Icon)) return false;
-            if (!eval(this.UsableDimensions)) return false;
-            if (!eval(this.CellCoordinatesNWCell)) return false;
-            if (!eval(this.CellCoordinatesSECell)) return false;
+            if (MapData != null)
+            {
+                if (!eval(this.MapData.Overall)) return false;
+                if (this.MapData.Specific != null && !this.MapData.Specific.AllEqual(eval)) return false;
+            }
             if (!eval(this.Flags)) return false;
             if (!eval(this.ObjectBoundsMin)) return false;
             if (!eval(this.ObjectBoundsMax)) return false;
@@ -5111,9 +4713,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Climate = eval(this.Climate);
             obj.Water = eval(this.Water);
             obj.Icon = eval(this.Icon);
-            obj.UsableDimensions = eval(this.UsableDimensions);
-            obj.CellCoordinatesNWCell = eval(this.CellCoordinatesNWCell);
-            obj.CellCoordinatesSECell = eval(this.CellCoordinatesSECell);
+            if (this.MapData != null)
+            {
+                obj.MapData = new MaskItem<R, MapData_Mask<R>>();
+                obj.MapData.Overall = eval(this.MapData.Overall);
+                if (this.MapData.Specific != null)
+                {
+                    obj.MapData.Specific = this.MapData.Specific.Translate(eval);
+                }
+            }
             obj.Flags = eval(this.Flags);
             obj.ObjectBoundsMin = eval(this.ObjectBoundsMin);
             obj.ObjectBoundsMax = eval(this.ObjectBoundsMax);
@@ -5207,17 +4815,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Icon => {Icon}");
                 }
-                if (printMask?.UsableDimensions ?? true)
+                if (printMask?.MapData?.Overall ?? true)
                 {
-                    fg.AppendLine($"UsableDimensions => {UsableDimensions}");
-                }
-                if (printMask?.CellCoordinatesNWCell ?? true)
-                {
-                    fg.AppendLine($"CellCoordinatesNWCell => {CellCoordinatesNWCell}");
-                }
-                if (printMask?.CellCoordinatesSECell ?? true)
-                {
-                    fg.AppendLine($"CellCoordinatesSECell => {CellCoordinatesSECell}");
+                    MapData?.ToString(fg);
                 }
                 if (printMask?.Flags ?? true)
                 {
@@ -5286,9 +4886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception Climate;
         public Exception Water;
         public Exception Icon;
-        public Exception UsableDimensions;
-        public Exception CellCoordinatesNWCell;
-        public Exception CellCoordinatesSECell;
+        public MaskItem<Exception, MapData_ErrorMask> MapData;
         public Exception Flags;
         public Exception ObjectBoundsMin;
         public Exception ObjectBoundsMax;
@@ -5313,12 +4911,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return Water;
                 case Worldspace_FieldIndex.Icon:
                     return Icon;
-                case Worldspace_FieldIndex.UsableDimensions:
-                    return UsableDimensions;
-                case Worldspace_FieldIndex.CellCoordinatesNWCell:
-                    return CellCoordinatesNWCell;
-                case Worldspace_FieldIndex.CellCoordinatesSECell:
-                    return CellCoordinatesSECell;
+                case Worldspace_FieldIndex.MapData:
+                    return MapData;
                 case Worldspace_FieldIndex.Flags:
                     return Flags;
                 case Worldspace_FieldIndex.ObjectBoundsMin:
@@ -5357,14 +4951,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.Icon:
                     this.Icon = ex;
                     break;
-                case Worldspace_FieldIndex.UsableDimensions:
-                    this.UsableDimensions = ex;
-                    break;
-                case Worldspace_FieldIndex.CellCoordinatesNWCell:
-                    this.CellCoordinatesNWCell = ex;
-                    break;
-                case Worldspace_FieldIndex.CellCoordinatesSECell:
-                    this.CellCoordinatesSECell = ex;
+                case Worldspace_FieldIndex.MapData:
+                    this.MapData = new MaskItem<Exception, MapData_ErrorMask>(ex, null);
                     break;
                 case Worldspace_FieldIndex.Flags:
                     this.Flags = ex;
@@ -5413,14 +5001,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.Icon:
                     this.Icon = (Exception)obj;
                     break;
-                case Worldspace_FieldIndex.UsableDimensions:
-                    this.UsableDimensions = (Exception)obj;
-                    break;
-                case Worldspace_FieldIndex.CellCoordinatesNWCell:
-                    this.CellCoordinatesNWCell = (Exception)obj;
-                    break;
-                case Worldspace_FieldIndex.CellCoordinatesSECell:
-                    this.CellCoordinatesSECell = (Exception)obj;
+                case Worldspace_FieldIndex.MapData:
+                    this.MapData = (MaskItem<Exception, MapData_ErrorMask>)obj;
                     break;
                 case Worldspace_FieldIndex.Flags:
                     this.Flags = (Exception)obj;
@@ -5459,9 +5041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Climate != null) return true;
             if (Water != null) return true;
             if (Icon != null) return true;
-            if (UsableDimensions != null) return true;
-            if (CellCoordinatesNWCell != null) return true;
-            if (CellCoordinatesSECell != null) return true;
+            if (MapData != null) return true;
             if (Flags != null) return true;
             if (ObjectBoundsMin != null) return true;
             if (ObjectBoundsMax != null) return true;
@@ -5509,9 +5089,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine($"Climate => {Climate}");
             fg.AppendLine($"Water => {Water}");
             fg.AppendLine($"Icon => {Icon}");
-            fg.AppendLine($"UsableDimensions => {UsableDimensions}");
-            fg.AppendLine($"CellCoordinatesNWCell => {CellCoordinatesNWCell}");
-            fg.AppendLine($"CellCoordinatesSECell => {CellCoordinatesSECell}");
+            MapData?.ToString(fg);
             fg.AppendLine($"Flags => {Flags}");
             fg.AppendLine($"ObjectBoundsMin => {ObjectBoundsMin}");
             fg.AppendLine($"ObjectBoundsMax => {ObjectBoundsMax}");
@@ -5552,9 +5130,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Climate = this.Climate.Combine(rhs.Climate);
             ret.Water = this.Water.Combine(rhs.Water);
             ret.Icon = this.Icon.Combine(rhs.Icon);
-            ret.UsableDimensions = this.UsableDimensions.Combine(rhs.UsableDimensions);
-            ret.CellCoordinatesNWCell = this.CellCoordinatesNWCell.Combine(rhs.CellCoordinatesNWCell);
-            ret.CellCoordinatesSECell = this.CellCoordinatesSECell.Combine(rhs.CellCoordinatesSECell);
+            ret.MapData = new MaskItem<Exception, MapData_ErrorMask>(this.MapData.Overall.Combine(rhs.MapData.Overall), ((IErrorMask<MapData_ErrorMask>)this.MapData.Specific).Combine(rhs.MapData.Specific));
             ret.Flags = this.Flags.Combine(rhs.Flags);
             ret.ObjectBoundsMin = this.ObjectBoundsMin.Combine(rhs.ObjectBoundsMin);
             ret.ObjectBoundsMax = this.ObjectBoundsMax.Combine(rhs.ObjectBoundsMax);
@@ -5580,9 +5156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Climate;
         public bool Water;
         public bool Icon;
-        public bool UsableDimensions;
-        public bool CellCoordinatesNWCell;
-        public bool CellCoordinatesSECell;
+        public MaskItem<CopyOption, MapData_CopyMask> MapData;
         public bool Flags;
         public bool ObjectBoundsMin;
         public bool ObjectBoundsMax;

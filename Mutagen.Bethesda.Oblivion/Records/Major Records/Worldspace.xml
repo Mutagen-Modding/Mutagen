@@ -6,13 +6,7 @@
       <FormIDLink name="Climate" recordType="CNAM" refName="Climate" />
       <FormIDLink name="Water" recordType="NAM2" refName="Water" />
       <String name="Icon" recordType="ICON" />
-      <Data recordType="MNAM">
-        <Fields>
-          <P2Int32 name="UsableDimensions" />
-          <P2Int16 name="CellCoordinatesNWCell" />
-          <P2Int16 name="CellCoordinatesSECell" />
-        </Fields>
-      </Data>
+      <RefDirect name="MapData" refName="MapData" />
       <Enum name="Flags" recordType="DATA" enumName="Worldspace.Flag" byteLength="1" />
       <P2Float name="ObjectBoundsMin" recordType="NAM0" />
       <P2Float name="ObjectBoundsMax" recordType="NAM9" />
@@ -38,6 +32,13 @@
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
       <ByteArray name="LastModified" length="4" nullable="NotNull" />
       <RefList name="Items" refName="Cell" />
+    </Fields>
+  </Object>
+  <Object name="MapData" objType="Subrecord" recordType="MNAM" GUID="493c28c6-8dd0-40cd-9c54-87243564a406" ID="146">
+    <Fields>
+      <P2Int32 name="UsableDimensions" />
+      <P2Int16 name="CellCoordinatesNWCell" />
+      <P2Int16 name="CellCoordinatesSECell" />
     </Fields>
   </Object>
 </Loqui>
