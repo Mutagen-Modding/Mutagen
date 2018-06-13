@@ -261,7 +261,7 @@ namespace Mutagen.Bethesda
                     this._activeMoves.TryCreate(moveLoc).Add((moveRange, moveContents));
                     if (targetSection.IsInRange(moveLoc))
                     {
-                        moveToKeys.InsertSorted(moveLoc, replaceDuplicate: true);
+                        PreSortedListExt.Set<long>(moveToKeys, moveLoc);
                     }
 
                     // Delete moved snippet

@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>2ae352ff56c5bbc1a2ba74a3071dcf5ee2c53c15</Sha>
+         <Sha>97e7840835e5fbec48bb5f71110c20ea80da58d6</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>06-10-2018 20:24:32</CommitDate>
-         <Description>IBinaryStream.WriteTo</Description>
+         <CommitDate>06-12-2018 21:01:12</CommitDate>
+         <Description>SortingList and some interfaces and extensions</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>12c0db61c34af1ab45f04adc778c3ed39e0d462d</Sha>
+         <Sha>78a29624fa91c96a155b0c88fdd7c3a5b5ef33e3</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>05-26-2018 18:11:01</CommitDate>
-         <Description>Initial object centralization refactor complete</Description>
+         <CommitDate>06-12-2018 21:56:00</CommitDate>
+         <Description>Fixed VS template</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

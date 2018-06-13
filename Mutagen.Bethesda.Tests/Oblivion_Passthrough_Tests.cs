@@ -699,6 +699,10 @@ namespace Mutagen.Bethesda.Tests
                 new RecordType("XRGD"),
                 new RecordType("XSCL"),
                 new RecordType("DATA"));
+            ret.SetGroupAlignment(
+                GroupTypeEnum.CellTemporaryChildren,
+                new RecordType("LAND"),
+                new RecordType("PGRD"));
             return ret;
         }
 

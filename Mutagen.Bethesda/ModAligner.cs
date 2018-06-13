@@ -17,6 +17,7 @@ namespace Mutagen.Bethesda
         {
             public Dictionary<RecordType, Dictionary<RecordType, AlignmentRule>> Alignments = new Dictionary<RecordType, Dictionary<RecordType, AlignmentRule>>();
             public Dictionary<RecordType, IEnumerable<RecordType>> StopMarkers = new Dictionary<RecordType, IEnumerable<RecordType>>();
+            public Dictionary<GroupTypeEnum, List<RecordType>> GroupAlignment = new Dictionary<GroupTypeEnum, List<RecordType>>();
 
             public void AddAlignments(RecordType type, params RecordType[] recTypes)
             {
@@ -37,6 +38,11 @@ namespace Mutagen.Bethesda
                 {
                     dict[rule.RecordType] = rule;
                 }
+            }
+
+            public void SetGroupAlignment(GroupTypeEnum group, params RecordType[] recTypes)
+            {
+                GroupAlignment.TryCreateValue(group).SetTo(recTypes);
             }
         }
 
@@ -137,18 +143,27 @@ namespace Mutagen.Bethesda
             temp = temp ?? new TempFolder();
             using (temp)
             {
-                var alignedRulesFile = Path.Combine(temp.Dir.Path, "alignedRules");
+                var alignedMajorRecordsFile = Path.Combine(temp.Dir.Path, "alignedRules");
                 using (var inputStream = new BinaryReadStream(inputPath.Path))
                 {
-                    using (var writer = new MutagenWriter(new FileStream(alignedRulesFile, FileMode.Create)))
+                    using (var writer = new MutagenWriter(new FileStream(alignedMajorRecordsFile, FileMode.Create)))
                     {
-                        AlignByRules(inputStream, writer, alignmentRules, fileLocs);
+                        AlignMajorRecordsByRules(inputStream, writer, alignmentRules, fileLocs);
                     }
                 }
 
-                fileLocs = MajorRecordLocator.GetFileLocations(alignedRulesFile, interest);
+                var alignedGroupsFile = Path.Combine(temp.Dir.Path, "alignedGroups");
+                using (var inputStream = new BinaryReadStream(alignedMajorRecordsFile))
+                {
+                    using (var writer = new MutagenWriter(new FileStream(alignedGroupsFile, FileMode.Create)))
+                    {
+                        AlignGroupsByRules(inputStream, writer, alignmentRules, fileLocs);
+                    }
+                }
+
+                fileLocs = MajorRecordLocator.GetFileLocations(alignedGroupsFile, interest);
                 var alignedCellsFile = Path.Combine(temp.Dir.Path, "alignedCells");
-                using (var mutaReader = new BinaryReadStream(alignedRulesFile))
+                using (var mutaReader = new BinaryReadStream(alignedGroupsFile))
                 {
                     using (var writer = new MutagenWriter(alignedCellsFile))
                     {
@@ -209,7 +224,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        private static void AlignByRules(
+        private static void AlignMajorRecordsByRules(
             BinaryReadStream inputStream,
             MutagenWriter writer,
             AlignmentRules alignmentRules,
@@ -287,6 +302,82 @@ namespace Mutagen.Bethesda
                 if (rest != null)
                 {
                     writer.Write(rest);
+                }
+            }
+        }
+
+        private static void AlignGroupsByRules(
+            BinaryReadStream inputStream,
+            MutagenWriter writer,
+            AlignmentRules alignmentRules,
+            MajorRecordLocator.FileLocations fileLocs)
+        {
+            while (!inputStream.Complete)
+            {
+                // Import until next listed major record
+                long noRecordLength;
+                if (fileLocs.GrupLocations.TryGetInDirection(
+                    inputStream.Position,
+                    higher: true,
+                    result: out var nextRec))
+                {
+                    noRecordLength = nextRec.Value - inputStream.Position;
+                }
+                else
+                {
+                    noRecordLength = inputStream.Remaining;
+                }
+                inputStream.WriteTo(writer.Writer.BaseStream, (int)noRecordLength);
+
+                // If complete overall, return
+                if (inputStream.Complete) break;
+                var recType = HeaderTranslation.ReadNextRecordType(
+                    inputStream,
+                    out var len);
+                writer.Write(recType.Type);
+                writer.Write(len);
+                if (recType.Type != "GRUP")
+                {
+                    throw new ArgumentException();
+                }
+                inputStream.WriteTo(writer.Writer.BaseStream, 4);
+                var groupType = (GroupTypeEnum)inputStream.ReadInt32();
+                writer.Write((int)groupType);
+
+                if (!alignmentRules.GroupAlignment.TryGetValue(groupType, out var groupRules)) continue;
+
+                inputStream.WriteTo(writer.Writer.BaseStream, 4);
+                Dictionary<RecordType, List<byte[]>> storage = new Dictionary<RecordType, List<byte[]>>();
+                List<byte[]> rest = new List<byte[]>();
+                using (var frame = MutagenFrame.ByLength(inputStream, len - 20))
+                {
+                    while (!frame.Complete)
+                    {
+                        var type = HeaderTranslation.GetNextSubRecordType(inputStream, out var recLength);
+                        var bytes = inputStream.ReadBytes(recLength + Constants.RECORD_HEADER_LENGTH);
+                        if (groupRules.Contains(type))
+                        {
+                            storage.TryCreateValue(type).Add(bytes);
+                        }
+                        else
+                        {
+                            rest.Add(bytes);
+                        }
+                    }
+                }
+                foreach (var rule in groupRules)
+                {
+                    if (storage.TryGetValue(rule, out var storageBytes))
+                    {
+                        foreach (var item in storageBytes)
+                        {
+                            writer.Write(item);
+                        }
+                    }
+                }
+                foreach (var item in rest)
+                {
+                    writer.Write(item);
                 }
             }
         }
