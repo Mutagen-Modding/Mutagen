@@ -1314,18 +1314,18 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "SCHR":
-                    var tmpMetadataSummary = ScriptMetaSummary.Create_Binary(
+                    var tmpMetadataSummary = ScriptMetaSummary.Create_Binary<ScriptMetaSummary_ErrorMask>(
                         frame: frame,
                         doMasks: errorMask != null,
-                        errorMask: out ScriptMetaSummary_ErrorMask MetadataSummarycreateMask);
+                        recordTypeConverter: recordTypeConverter);
                     item.MetadataSummary.CopyFieldsFrom(
-                        rhs: tmpMetadataSummary,
+                        rhs: tmpMetadataSummary.Object,
                         def: null,
                         cmds: null,
                         copyMask: null,
                         doMasks: errorMask != null,
                         errorMask: out ScriptMetaSummary_ErrorMask MetadataSummaryerrorMask);
-                    var combinedMetadataSummary = ScriptMetaSummary_ErrorMask.Combine(MetadataSummarycreateMask, MetadataSummaryerrorMask);
+                    var combinedMetadataSummary = ScriptMetaSummary_ErrorMask.Combine(tmpMetadataSummary.ErrorMask, MetadataSummaryerrorMask);
                     ErrorMask.HandleErrorMask(
                         creator: errorMask,
                         index: (int)Script_FieldIndex.MetadataSummary,

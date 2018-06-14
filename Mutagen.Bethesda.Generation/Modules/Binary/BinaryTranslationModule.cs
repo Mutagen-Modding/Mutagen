@@ -299,7 +299,7 @@ namespace Mutagen.Bethesda.Generation
                                                 suffixLine: ")"))
                                             {
                                                 args.Add("frame.Reader");
-                                                args.Add($"{obj.GetTriggeringSource()}");
+                                                args.Add($"recordTypeConverter.ConvertToCustom({obj.GetTriggeringSource()})");
                                             }
                                         }
                                         break;
@@ -309,7 +309,7 @@ namespace Mutagen.Bethesda.Generation
                                             suffixLine: ")"))
                                         {
                                             args.Add("frame.Reader");
-                                            args.Add($"{obj.GetTriggeringSource()}");
+                                            args.Add($"recordTypeConverter.ConvertToCustom({obj.GetTriggeringSource()})");
                                         }
                                         break;
                                     case ObjectType.Group:

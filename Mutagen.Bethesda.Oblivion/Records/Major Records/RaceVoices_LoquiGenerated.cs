@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
-                    RaceVoices_Registration.VNAM_HEADER));
+                    recordTypeConverter.ConvertToCustom(RaceVoices_Registration.VNAM_HEADER)));
                 using (frame)
                 {
                     Fill_Binary_Structs(

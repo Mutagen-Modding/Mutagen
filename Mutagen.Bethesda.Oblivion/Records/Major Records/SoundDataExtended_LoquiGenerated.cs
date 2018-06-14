@@ -1065,7 +1065,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
-                    SoundDataExtended_Registration.SNDX_HEADER));
+                    recordTypeConverter.ConvertToCustom(SoundDataExtended_Registration.SNDX_HEADER)));
                 using (frame)
                 {
                     Fill_Binary_Structs(

@@ -1476,6 +1476,8 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType PACK_HEADER = new RecordType("PACK");
         public static readonly RecordType CLMT_HEADER = new RecordType("CLMT");
         public static readonly RecordType CSTY_HEADER = new RecordType("CSTY");
+        public static readonly RecordType DIAL_HEADER = new RecordType("DIAL");
+        public static readonly RecordType INFO_HEADER = new RecordType("INFO");
         public static readonly RecordType EFSH_HEADER = new RecordType("EFSH");
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
@@ -1483,6 +1485,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
         public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
         public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
+        public static readonly RecordType QUST_HEADER = new RecordType("QUST");
         public static readonly RecordType REGN_HEADER = new RecordType("REGN");
         public static readonly RecordType ROAD_HEADER = new RecordType("ROAD");
         public static readonly RecordType SCPT_HEADER = new RecordType("SCPT");
@@ -1542,6 +1545,8 @@ namespace Mutagen.Bethesda.Internals
                         PACK_HEADER,
                         CLMT_HEADER,
                         CSTY_HEADER,
+                        DIAL_HEADER,
+                        INFO_HEADER,
                         EFSH_HEADER,
                         GMST_HEADER,
                         GLOB_HEADER,
@@ -1549,6 +1554,7 @@ namespace Mutagen.Bethesda.Internals
                         LTEX_HEADER,
                         LVLI_HEADER,
                         LIGH_HEADER,
+                        QUST_HEADER,
                         REGN_HEADER,
                         ROAD_HEADER,
                         SCPT_HEADER,

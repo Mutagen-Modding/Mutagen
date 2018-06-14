@@ -96,23 +96,23 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (loquiGen.InterfaceType == LoquiInterfaceType.IGetter) return;
                     using (var args = new ArgsWrapper(fg,
-                        $"var tmp{typeGen.Name} = {loquiGen.TypeName}.Create_{ModNickname}"))
+                        $"var tmp{typeGen.Name} = {loquiGen.TypeName}.Create_{ModNickname}<{loquiGen.TargetObjectGeneration.GetGroupLoquiType()}>"))
                     {
                         args.Add($"frame: {frameAccessor}");
                         args.Add($"doMasks: errorMask != null");
-                        args.Add($"errorMask: out {loquiGen.Mask(MaskType.Error)} {loquiGen.Name}createMask");
+                        args.Add($"recordTypeConverter: recordTypeConverter");
                     }
                     using (var args = new ArgsWrapper(fg,
                         $"{itemAccessor.DirectAccess}.CopyFieldsFrom{loquiGen.GetGenericTypes(MaskType.Error, MaskType.Copy)}"))
                     {
-                        args.Add($"rhs: tmp{typeGen.Name}");
+                        args.Add($"rhs: tmp{typeGen.Name}.Object");
                         args.Add("def: null");
                         args.Add("cmds: null");
                         args.Add("copyMask: null");
                         args.Add("doMasks: errorMask != null");
                         args.Add($"errorMask: out {loquiGen.Mask(MaskType.Error)} {loquiGen.Name}errorMask");
                     }
-                    fg.AppendLine($"var combined{typeGen.Name} = {loquiGen.Mask(MaskType.Error)}.Combine({loquiGen.Name}createMask, {loquiGen.Name}errorMask);");
+                    fg.AppendLine($"var combined{typeGen.Name} = {loquiGen.Mask(MaskType.Error)}.Combine(tmp{typeGen.Name}.ErrorMask, {loquiGen.Name}errorMask);");
                     using (var args = new ArgsWrapper(fg,
                         $"ErrorMask.HandleErrorMask"))
                     {

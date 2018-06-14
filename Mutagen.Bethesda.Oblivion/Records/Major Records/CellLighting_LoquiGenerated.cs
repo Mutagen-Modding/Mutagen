@@ -1610,7 +1610,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
-                    CellLighting_Registration.XCLL_HEADER));
+                    recordTypeConverter.ConvertToCustom(CellLighting_Registration.XCLL_HEADER)));
                 using (frame)
                 {
                     Fill_Binary_Structs(

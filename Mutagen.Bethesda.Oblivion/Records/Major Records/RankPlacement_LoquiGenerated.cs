@@ -988,7 +988,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
-                    RankPlacement_Registration.SNAM_HEADER));
+                    recordTypeConverter.ConvertToCustom(RankPlacement_Registration.SNAM_HEADER)));
                 using (frame)
                 {
                     Fill_Binary_Structs(

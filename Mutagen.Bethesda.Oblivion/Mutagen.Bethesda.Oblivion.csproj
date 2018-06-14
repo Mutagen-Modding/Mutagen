@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -45,7 +45,11 @@
     <Compile Include="Records\Common Enums\ActorValueExtended.cs" />
     <Compile Include="Records\Common Enums\Attribute.cs" />
     <Compile Include="Records\Common Enums\BipedFlag.cs" />
+    <Compile Include="Records\Common Enums\CompareOperator.cs" />
+    <Compile Include="Records\Common Enums\DialogTopic.cs" />
+    <Compile Include="Records\Common Enums\EmotionType.cs" />
     <Compile Include="Records\Common Enums\EquipmentFlag.cs" />
+    <Compile Include="Records\Common Enums\FunctionIndex.cs" />
     <Compile Include="Records\Common Enums\IngredientFlag.cs" />
     <Compile Include="Records\Common Enums\LeveledFlag.cs" />
     <Compile Include="Records\Common Enums\MagicSchool.cs" />
@@ -125,6 +129,15 @@
     </Compile>
     <Compile Include="Records\Major Records\CreatureSound.cs">
       <DependentUpon>Creature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DialogCondition.cs">
+      <DependentUpon>DialogTopic.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DialogItem.cs">
+      <DependentUpon>DialogTopic.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DialogTopic.cs">
+      <DependentUpon>DialogTopic.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Door.cs">
       <DependentUpon>Door.xml</DependentUpon>
@@ -218,9 +231,6 @@
     </Compile>
     <Compile Include="Records\Major Records\Light.cs">
       <DependentUpon>Light.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\LocalVariableData_LoquiGenerated.cs">
-      <DependentUpon>Script.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\LocalVariable_LoquiGenerated.cs">
       <DependentUpon>Script.xml</DependentUpon>
@@ -621,6 +631,21 @@
     <Compile Include="Records\Major Records\Landscape_LoquiGenerated.cs">
       <DependentUpon>Landscape.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\DialogTopic_LoquiGenerated.cs">
+      <DependentUpon>DialogTopic.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Quest_LoquiGenerated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DialogItem_LoquiGenerated.cs">
+      <DependentUpon>DialogTopic.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DialogResponse_LoquiGenerated.cs">
+      <DependentUpon>DialogTopic.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DialogCondition_LoquiGenerated.cs">
+      <DependentUpon>DialogTopic.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\DistantLODData.xml">
@@ -691,6 +716,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Creature.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\DialogTopic.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Door.xml">
@@ -781,6 +809,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Potion.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Quest.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Race.xml">

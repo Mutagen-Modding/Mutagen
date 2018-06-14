@@ -791,7 +791,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
-                    WeatherSound_Registration.SNAM_HEADER));
+                    recordTypeConverter.ConvertToCustom(WeatherSound_Registration.SNAM_HEADER)));
                 using (frame)
                 {
                     Fill_Binary_Structs(

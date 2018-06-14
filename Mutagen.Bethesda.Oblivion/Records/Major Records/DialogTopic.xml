@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DialogTopic" recordType="DIAL" objType="Record" baseClass="Bethesda.MajorRecord" customBinaryEnd="true" GUID="64f03683-28fd-43e3-8141-da8e95a52f89" ID="147">
+    <Fields>
+      <List name="Quests">
+        <FormIDLink recordType="QSTI" refName="Quest" />
+      </List>
+      <String name="Name" recordType="FULL" />
+      <Enum name="DialogType" recordType="DATA" enumName="DialogType" byteLength="1" />
+      <RefList name="Items" noBinary="true" refName="DialogItem" />
+    </Fields>
+  </Object>
+  <Object name="DialogItem" objType="Record" baseClass="Bethesda.MajorRecord" recordType="INFO" GUID="2d9149e0-aa5e-4b4e-8bef-93b32f602f3b" ID="149">
+    <Fields>
+      <Data>
+        <Fields>
+          <Enum name="DialogType" enumName="DialogType" byteLength="2" />
+          <Enum name="Flags" enumName="DialogItem.Flag" byteLength="1" />
+        </Fields>
+      </Data>
+      <FormIDLink name="Quest" recordType="QSTI" refName="Quest" />
+      <FormIDLink name="PreviousTopic" recordType="PNAM" refName="DialogItem" />
+      <List name="Topics">
+        <FormIDLink recordType="NAME" refName="DialogTopic" />
+      </List>
+      <RefList name="Responses" refName="DialogResponse" />
+      <RefList name="Conditions" refName="DialogCondition" customBinary="true" />
+      <CustomLogic name="ConditionsOld" recordType="CTDT"/>
+      <List name="Choices">
+        <FormIDLink recordType="TCLT" refName="DialogTopic" />
+      </List>
+      <List name="LinkFrom">
+        <FormIDLink recordType="TCLF" refName="DialogTopic" />
+      </List>
+      <RefDirect name="MetadataSummary" refName="ScriptMetaSummary" nullable="Singleton" />
+      <CustomLogic name="MetadataSummaryOld" recordType="SCHD"/>
+      <ByteArray name="CompiledScript" recordType="SCDA" />
+      <String name="SourceCode" recordType="SCTX" nullTerminate="false" />
+      <RefList name="References" refName="ScriptObjectReference" />
+    </Fields>
+  </Object>
+  <Object name="DialogResponse" objType="Subrecord" GUID="d8438f70-ccc0-4bc8-876d-11134cdabd97" ID="150">
+    <Fields>
+      <Data recordType="TRDT">
+        <Fields>
+          <Enum name="Emotion" enumName="EmotionType" byteLength="4" />
+          <Int32 name="EmotionValue" />
+          <ByteArray name="Fluff1" length="4" nullable="NotNull" />
+          <UInt8 name="ResponseNumber" />
+          <ByteArray name="Fluff2" length="3" nullable="NotNull" />
+        </Fields>
+      </Data>
+      <String name="ResponseText" recordType="NAM1" />
+      <String name="ActorNotes" recordType="NAM2" />
+    </Fields>
+  </Object>
+  <Object name="DialogCondition" objType="Subrecord" recordType="CTDA" GUID="d744c161-2c6d-42a0-ada5-4cef3c179f12" ID="151">
+    <Fields>
+      <Enum name="CompareOperator" enumName="CompareOperator" customBinary="true" />
+      <Enum name="Flags" enumName="DialogCondition.Flag" customBinary="true" />
+      <ByteArray name="Fluff" length="4" nullable="NotNull" />
+      <Float name="ComparisonValue" />
+      <Enum name="Function" enumName="Function" byteLength="4" />
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+      <Int32 name="ThirdParameter" />
+    </Fields>
+  </Object>
+</Loqui>

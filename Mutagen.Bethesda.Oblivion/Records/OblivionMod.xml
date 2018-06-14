@@ -53,6 +53,7 @@
         </Direct>
       </Ref>
       <Group name="Worldspaces" refName="Worldspace" />
+      <Group name="DialogTopics" refName="DialogTopic" />
     </Fields>
   </Object>
 </Loqui>
