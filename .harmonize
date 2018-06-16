@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>97e7840835e5fbec48bb5f71110c20ea80da58d6</Sha>
+         <Sha>bbc0863669f8c63fc305aa67e35f267e0ce5f976</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>06-12-2018 21:01:12</CommitDate>
-         <Description>SortingList and some interfaces and extensions</Description>
+         <CommitDate>06-16-2018 16:44:31</CommitDate>
+         <Description>RangeCollection revamp to use sorted list internals.  Many more unit tests for all sorted list systems</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

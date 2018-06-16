@@ -745,9 +745,7 @@ namespace Mutagen.Bethesda.Tests
 
                 ModDecompressor.Decompress(
                     inputPath: Properties.Settings.Default.OblivionESM,
-                    outputPath: uncompressedPath,
-                    interest: new RecordInterest(
-                        uninterestingTypes: OblivionMod.NonTypeGroups));
+                    outputPath: uncompressedPath);
 
                 var importRecs = ImportExport(uncompressedPath, oblivionOutputPath);
 
@@ -758,9 +756,7 @@ namespace Mutagen.Bethesda.Tests
                     temp: tmp);
 
                 var alignedFileLocs = MajorRecordLocator.GetFileLocations(
-                    alignedPath,
-                    interest: new RecordInterest(
-                        uninterestingTypes: OblivionMod.NonTypeGroups));
+                    alignedPath);
 
                 Dictionary<long, uint> lengthTracker = new Dictionary<long, uint>();
 
@@ -823,9 +819,7 @@ namespace Mutagen.Bethesda.Tests
                 }
 
                 var processedFileLocs = MajorRecordLocator.GetFileLocations(
-                    processedPath,
-                    interest: new RecordInterest(
-                        uninterestingTypes: OblivionMod.NonTypeGroups));
+                    processedPath);
                 using (var stream = new BinaryReadStream(processedPath))
                 {
                     foreach (var recType in importRecs)

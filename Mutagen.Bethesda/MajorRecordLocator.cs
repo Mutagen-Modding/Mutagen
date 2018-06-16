@@ -73,15 +73,15 @@ namespace Mutagen.Bethesda
 
             public bool TryGetRecords(RangeInt64 section, out IEnumerable<FormID> ids)
             {
-                var gotStart = _fromStart.TryGetInDirectionIndex(
+                var gotStart = _fromStart.TryGetIndexInDirection(
                     key: section.Min,
                     higher: false,
                     result: out var start);
-                var gotEndStart = _fromStart.TryGetInDirectionIndex(
+                var gotEndStart = _fromStart.TryGetIndexInDirection(
                     key: section.Max,
                     higher: true,
                     result: out var endStart);
-                var gotEnd = _fromEnd.TryGetInDirectionIndex(
+                var gotEnd = _fromEnd.TryGetIndexInDirection(
                     key: section.Max,
                     higher: true,
                     result: out var end);
@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda
             reader.Position += 12;
             reader.Position += headerLen;
 
-            HashSet<RecordType> remainingTypes = (interest?.InterestingTypes?.Count <= 0) ? null : new HashSet<RecordType>(interest.InterestingTypes);
+            HashSet<RecordType> remainingTypes = ((interest?.InterestingTypes?.Count ?? 0) <= 0) ? null : new HashSet<RecordType>(interest.InterestingTypes);
 
             while (!reader.Complete
                 && (remainingTypes?.Count ?? 1) > 0)
@@ -164,7 +164,7 @@ namespace Mutagen.Bethesda
             {
                 throw new ArgumentException();
             }
-            fileLocs.GrupLocations.Set(grupLoc);
+            fileLocs.GrupLocations.Add(grupLoc);
             var grupLength = reader.ReadUInt32();
             var grupRec = HeaderTranslation.ReadNextRecordType(reader);
             if (grupRecOverride != null)
@@ -247,6 +247,7 @@ namespace Mutagen.Bethesda
                 case GroupTypeEnum.ExteriorCellBlock:
                 case GroupTypeEnum.CellChildren:
                 case GroupTypeEnum.WorldChildren:
+                case GroupTypeEnum.TopicChildren:
                     return true;
                 default:
                     return false;
@@ -266,7 +267,7 @@ namespace Mutagen.Bethesda
             {
                 throw new ArgumentException();
             }
-            fileLocs.GrupLocations.Set(grupLoc);
+            fileLocs.GrupLocations.Add(grupLoc);
             var recLength = frame.Reader.ReadUInt32();
             var grupRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
             var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(MutagenFrame.ByLength(frame.Reader, 4));
@@ -289,6 +290,7 @@ namespace Mutagen.Bethesda
                         interest: interest);
                     break;
                 case GroupTypeEnum.WorldChildren:
+                case GroupTypeEnum.TopicChildren:
                     ParseTopLevelGRUP(
                         reader: frame.Reader,
                         fileLocs: fileLocs,
@@ -316,7 +318,7 @@ namespace Mutagen.Bethesda
                 {
                     throw new ArgumentException();
                 }
-                fileLocs.GrupLocations.Set(grupLoc);
+                fileLocs.GrupLocations.Add(grupLoc);
                 var recLength = frame.Reader.ReadUInt32();
                 var grupRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
                 var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(MutagenFrame.ByLength(frame.Reader, 4));
@@ -353,7 +355,7 @@ namespace Mutagen.Bethesda
                 {
                     throw new ArgumentException();
                 }
-                fileLocs.GrupLocations.Set(grupLoc);
+                fileLocs.GrupLocations.Add(grupLoc);
                 var recLength = frame.Reader.ReadUInt32();
                 var grupRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
                 var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(MutagenFrame.ByLength(frame.Reader, 4));

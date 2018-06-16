@@ -2175,18 +2175,18 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.LinkFrom);
                 case "SCHR":
-                    var tmpMetadataSummary = ScriptMetaSummary.Create_Binary<ScriptMetaSummary_ErrorMask>(
+                    var tmpMetadataSummary = ScriptMetaSummary.Create_Binary(
                         frame: frame,
                         doMasks: errorMask != null,
-                        recordTypeConverter: recordTypeConverter);
+                        errorMask: out ScriptMetaSummary_ErrorMask MetadataSummarycreateMask);
                     item.MetadataSummary.CopyFieldsFrom(
-                        rhs: tmpMetadataSummary.Object,
+                        rhs: tmpMetadataSummary,
                         def: null,
                         cmds: null,
                         copyMask: null,
                         doMasks: errorMask != null,
                         errorMask: out ScriptMetaSummary_ErrorMask MetadataSummaryerrorMask);
-                    var combinedMetadataSummary = ScriptMetaSummary_ErrorMask.Combine(tmpMetadataSummary.ErrorMask, MetadataSummaryerrorMask);
+                    var combinedMetadataSummary = ScriptMetaSummary_ErrorMask.Combine(MetadataSummarycreateMask, MetadataSummaryerrorMask);
                     ErrorMask.HandleErrorMask(
                         creator: errorMask,
                         index: (int)DialogItem_FieldIndex.MetadataSummary,

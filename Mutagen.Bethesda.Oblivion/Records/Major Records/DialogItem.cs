@@ -7,6 +7,7 @@ using Loqui;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;
+using Noggog.Notifying;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -23,6 +24,16 @@ namespace Mutagen.Bethesda.Oblivion
             RunForRumors = 0x040
         }
 
+        partial void CustomCtor()
+        {
+            this.CompiledScript_Property.Subscribe(
+                (change) =>
+                {
+                    this.MetadataSummary.CompiledSizeInternal = change.New.Length;
+                },
+                cmds: NotifyingSubscribeParameters.NoFire);
+        }
+
         private readonly static RecordTypeConverter conditionConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
                 DialogItem_Registration.CTDA_HEADER,
@@ -36,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         static partial void FillBinary_Conditions_Custom(MutagenFrame frame, DialogItem item, int fieldIndex, Func<DialogItem_ErrorMask> errorMask)
         {
             item.Conditions.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogCondition, MaskItem<Exception, DialogCondition_ErrorMask>>.Instance.ParseRepeatedItem(
-               frame: frame,
+               frame: new MutagenFrame(frame.Reader),
                triggeringRecord: DialogItem_Registration.CTDA_HEADER,
                fieldIndex: (int)DialogItem_FieldIndex.Conditions,
                lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
@@ -96,11 +107,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void FillBinary_MetadataSummaryOld_Custom(MutagenFrame frame, DialogItem item, Func<DialogItem_ErrorMask> errorMask)
         {
-            DialogItem.Fill_Binary_RecordTypes(
-                item,
-                frame,
-                errorMask,
-                metaConverter);
+            var tmpMetadataSummary = ScriptMetaSummary.Create_Binary(
+                frame: frame,
+                doMasks: errorMask != null,
+                recordTypeConverter: metaConverter);
+            item.MetadataSummary.CopyFieldsFrom(
+                rhs: tmpMetadataSummary.Object,
+                def: null,
+                cmds: null,
+                copyMask: null,
+                doMasks: errorMask != null,
+                errorMask: out ScriptMetaSummary_ErrorMask MetadataSummaryerrorMask);
+            var combinedMetadataSummary = ScriptMetaSummary_ErrorMask.Combine(tmpMetadataSummary.ErrorMask, MetadataSummaryerrorMask);
+            ErrorMask.HandleErrorMask(
+                creator: errorMask,
+                index: (int)DialogItem_FieldIndex.MetadataSummary,
+                errMaskObj: combinedMetadataSummary == null ? null : new MaskItem<Exception, ScriptMetaSummary_ErrorMask>(null, combinedMetadataSummary));
         }
 
         static partial void WriteBinary_MetadataSummaryOld_Custom(MutagenWriter writer, DialogItem item, Func<DialogItem_ErrorMask> errorMask)

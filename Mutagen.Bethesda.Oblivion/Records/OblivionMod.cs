@@ -14,12 +14,6 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public INotifyingListGetter<MasterReference> MasterReferences => this.TES4.MasterReferences;
 
-        public static IReadOnlyCollection<RecordType> NonTypeGroups { get; } = new HashSet<RecordType>(
-            new RecordType[]
-            {
-                new RecordType("DIAL"),
-            });
-
         partial void CustomCtor()
         {
             this.SubscribeToCells();

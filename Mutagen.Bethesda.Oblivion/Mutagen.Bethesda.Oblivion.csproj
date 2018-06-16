@@ -46,7 +46,7 @@
     <Compile Include="Records\Common Enums\Attribute.cs" />
     <Compile Include="Records\Common Enums\BipedFlag.cs" />
     <Compile Include="Records\Common Enums\CompareOperator.cs" />
-    <Compile Include="Records\Common Enums\DialogTopic.cs" />
+    <Compile Include="Records\Common Enums\DialogType.cs" />
     <Compile Include="Records\Common Enums\EmotionType.cs" />
     <Compile Include="Records\Common Enums\EquipmentFlag.cs" />
     <Compile Include="Records\Common Enums\FunctionIndex.cs" />

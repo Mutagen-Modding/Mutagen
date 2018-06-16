@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             using (var subFrame = frame.SpawnWithLength(len - Constants.RECORD_HEADER_LENGTH))
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem, MaskItem<Exception, DialogItem_ErrorMask>>.Instance.ParseRepeatedItem(
+                obj.Items.SetIfSucceeded(Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem, MaskItem<Exception, DialogItem_ErrorMask>>.Instance.ParseRepeatedItem(
                     frame: subFrame,
                     fieldIndex: (int)DialogTopic_FieldIndex.Items,
                     lengthLength: 4,
@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
                             doMasks: listDoMasks,
                             errorMask: out listSubMask);
                     }
-                    );
+                    ));
             }
         }
 
