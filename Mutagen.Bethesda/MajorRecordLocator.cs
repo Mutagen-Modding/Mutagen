@@ -157,7 +157,7 @@ namespace Mutagen.Bethesda
         }
 
         private static RecordType? ParseTopLevelGRUP(
-            IBinaryStream reader,
+            IBinaryReadStream reader,
             FileLocations fileLocs,
             RecordInterest interest,
             Stack<long> parentGroupLocations,
@@ -240,7 +240,7 @@ namespace Mutagen.Bethesda
         }
 
         private static bool IsSubLevelGRUP(
-            IBinaryStream reader)
+            IBinaryReadStream reader)
         {
             var targetRec = HeaderTranslation.ReadNextRecordType(reader);
             if (!targetRec.Type.Equals("GRUP"))

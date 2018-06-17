@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Oblivion
                    byte[] newBytes = new byte[bytes.Length + 4];
                    Array.Copy(bytes, newBytes, bytes.Length);
                    return LoquiBinaryTranslation<DialogCondition, DialogCondition_ErrorMask>.Instance.Parse(
-                       frame: new MutagenFrame(new BinaryMemoryStream(newBytes)),
+                       frame: new MutagenFrame(new BinaryMemoryReadStream(newBytes)),
                        doMasks: listDoMasks,
                        errorMask: out listSubMask,
                        recordTypeConverter: conditionConverter);

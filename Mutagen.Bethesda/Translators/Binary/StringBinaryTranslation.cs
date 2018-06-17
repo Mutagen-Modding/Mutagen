@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static string ReadStringUntil(
-            IBinaryStream reader,
+            IBinaryReadStream reader,
             char stopChar,
             bool include)
         {

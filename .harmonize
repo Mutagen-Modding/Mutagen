@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>59ea463026286d840e73abe833a4693c8266df15</Sha>
+         <Sha>5b1b7f63343421c1a4c921d50249aef448cea2a0</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>06-17-2018 13:19:25</CommitDate>
-         <Description>FileComparison utility</Description>
+         <CommitDate>06-17-2018 14:23:29</CommitDate>
+         <Description>IBinaryWriteStream work</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>78a29624fa91c96a155b0c88fdd7c3a5b5ef33e3</Sha>
+         <Sha>877701f6e51bf15c9f1e838e981bb5290e6cd353</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>06-12-2018 21:56:00</CommitDate>
-         <Description>Fixed VS template</Description>
+         <CommitDate>06-17-2018 01:52:10</CommitDate>
+         <Description>Common interface functionality</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

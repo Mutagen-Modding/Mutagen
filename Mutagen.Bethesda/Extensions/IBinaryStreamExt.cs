@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda
 {
     public static class IBinaryStreamExt
     {
-        public static Color ReadColor(this IBinaryStream stream)
+        public static Color ReadColor(this IBinaryReadStream stream)
         {
             var ret = Color.FromRgb(
                 stream.ReadUInt8(),

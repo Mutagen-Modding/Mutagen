@@ -69,9 +69,9 @@ namespace Mutagen.Bethesda.Oblivion
                         break;
                     case "PGRR":
                         var connectionBytes = frame.Reader.ReadBytes(len);
-                        using (var ptByteReader = new BinaryMemoryStream(pointBytes))
+                        using (var ptByteReader = new BinaryMemoryReadStream(pointBytes))
                         {
-                            using (var connectionReader = new BinaryMemoryStream(connectionBytes))
+                            using (var connectionReader = new BinaryMemoryReadStream(connectionBytes))
                             {
                                 for (int i = 0; i < pointBytes.Length; i = i + POINT_LEN)
                                 {
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             if (!readPGRR)
             {
-                using (var ptByteReader = new BinaryMemoryStream(pointBytes))
+                using (var ptByteReader = new BinaryMemoryReadStream(pointBytes))
                 {
                     while (!ptByteReader.Complete)
                     {
@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        private static PathGridPoint ReadPathGridPoint(IBinaryStream reader, out byte numConn)
+        private static PathGridPoint ReadPathGridPoint(IBinaryReadStream reader, out byte numConn)
         {
             var pt = new PathGridPoint();
             pt.Point = new Noggog.P3Float(

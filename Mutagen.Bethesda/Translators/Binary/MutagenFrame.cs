@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public struct MutagenFrame : IDisposable, IBinaryStream
+    public struct MutagenFrame : IDisposable, IBinaryReadStream
     {
         public static bool ErrorOnFinalPosition;
 
-        public readonly IBinaryStream Reader;
+        public readonly IBinaryReadStream Reader;
         public readonly long InitialPosition;
         public readonly long FinalLocation;
         public readonly bool SnapToFinalPosition;
@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Binary
         public long Length => Reader.Length;
 
         [DebuggerStepThrough]
-        public MutagenFrame(IBinaryStream reader)
+        public MutagenFrame(IBinaryReadStream reader)
         {
             this.Reader = reader;
             this.InitialPosition = reader.Position;
@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Binary
 
         [DebuggerStepThrough]
         private MutagenFrame(
-            IBinaryStream reader,
+            IBinaryReadStream reader,
             long finalPosition,
             bool snapToFinalPosition = true)
         {
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Binary
 
         [DebuggerStepThrough]
         public static MutagenFrame ByFinalPosition(
-            IBinaryStream reader,
+            IBinaryReadStream reader,
             long finalPosition,
             bool snapToFinalPosition = true)
         {
@@ -136,7 +136,7 @@ namespace Mutagen.Bethesda.Binary
 
         [DebuggerStepThrough]
         public static MutagenFrame ByLength(
-            IBinaryStream reader,
+            IBinaryReadStream reader,
             long length,
             bool snapToFinalPosition = true)
         {
@@ -180,7 +180,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 var res = ZlibStream.UncompressBuffer(bytes);
                 return new MutagenFrame(
-                    new BinaryMemoryStream(res));
+                    new BinaryMemoryReadStream(res));
             }
             catch (Exception)
             {

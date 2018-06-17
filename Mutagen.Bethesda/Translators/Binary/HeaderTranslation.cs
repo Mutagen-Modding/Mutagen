@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Binary
         public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
 
         public static bool TryParse(
-            IBinaryStream reader,
+            IBinaryReadStream reader,
             RecordType expectedHeader,
             out long contentLength,
             long lengthLength)
@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static bool TryGet(
-            IBinaryStream reader,
+            IBinaryReadStream reader,
             RecordType expectedHeader,
             out long contentLength,
             long lengthLength)
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static long Parse(
-            IBinaryStream reader,
+            IBinaryReadStream reader,
             RecordType expectedHeader,
             int lengthLength)
         {
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static long ParseRecord(
-            IBinaryStream reader,
+            IBinaryReadStream reader,
             RecordType expectedHeader)
         {
             if (!TryParse(
@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static long ParseSubrecord(
-            IBinaryStream reader,
+            IBinaryReadStream reader,
             RecordType expectedHeader)
         {
             if (!TryParse(
@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static long ParseGroup(
-            IBinaryStream reader)
+            IBinaryReadStream reader)
         {
             if (!TryParse(
                 reader,
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static bool TryParseRecordType(
-            IBinaryStream reader,
+            IBinaryReadStream reader,
             int lengthLength,
             RecordType expectedHeader)
         {
@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static bool TryGetRecordType(
-            IBinaryStream reader,
+            IBinaryReadStream reader,
             int lengthLength,
             RecordType expectedHeader)
         {
@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static long GetSubrecord(
-            IBinaryStream reader,
+            IBinaryReadStream reader,
             RecordType expectedHeader)
         {
             var ret = ParseSubrecord(
@@ -170,14 +170,14 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static RecordType ReadNextRecordType(
-            IBinaryStream reader)
+            IBinaryReadStream reader)
         {
             var header = Encoding.ASCII.GetString(reader.ReadBytes(Constants.HEADER_LENGTH));
             return new RecordType(header, validate: false);
         }
 
         public static RecordType GetNextRecordType(
-            IBinaryStream reader,
+            IBinaryReadStream reader,
             RecordTypeConverter recordTypeConverter = null)
         {
             var header = Encoding.ASCII.GetString(reader.ReadBytes(Constants.HEADER_LENGTH));
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static RecordType GetNextRecordType(
-            IBinaryStream reader,
+            IBinaryReadStream reader,
             out int contentLength,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         protected static int ReadContentLength(
-            IBinaryStream reader,
+            IBinaryReadStream reader,
             int lengthLength)
         {
             switch (lengthLength)
@@ -216,7 +216,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static RecordType ReadNextRecordType(
-            IBinaryStream reader,
+            IBinaryReadStream reader,
             int lengthLength,
             out int contentLength)
         {
@@ -226,7 +226,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static RecordType ReadNextRecordType(
-            IBinaryStream reader,
+            IBinaryReadStream reader,
             out int contentLength)
         {
             return ReadNextRecordType(
@@ -236,7 +236,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static RecordType ReadNextSubRecordType(
-            IBinaryStream reader,
+            IBinaryReadStream reader,
             out int contentLength)
         {
             return ReadNextRecordType(
@@ -246,7 +246,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static RecordType ReadNextType(
-            IBinaryStream reader,
+            IBinaryReadStream reader,
             out int contentLength)
         {
             var ret = ReadNextRecordType(reader);
@@ -259,7 +259,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static RecordType GetNextType(
-            IBinaryStream reader,
+            IBinaryReadStream reader,
             out int contentLength,
             RecordTypeConverter recordTypeConverter = null,
             bool hopGroup = true)
@@ -276,7 +276,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static RecordType GetNextSubRecordType(
-            IBinaryStream reader,
+            IBinaryReadStream reader,
             out int contentLength,
             RecordTypeConverter recordTypeConverter = null)
         {
