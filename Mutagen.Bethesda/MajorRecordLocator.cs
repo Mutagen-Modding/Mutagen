@@ -16,32 +16,36 @@ namespace Mutagen.Bethesda
 
         public class FileLocations
         {
-            private Dictionary<FormID, RangeInt64> _fromFormIDs = new Dictionary<FormID, RangeInt64>();
+            private Dictionary<FormID, (RangeInt64 Range, IEnumerable<long> GroupPositions)> _fromFormIDs = new Dictionary<FormID, (RangeInt64 Range, IEnumerable<long> GroupPositions)>();
             private SortedList<long, FormID> _fromStart = new SortedList<long, FormID>();
             private SortedList<long, FormID> _fromEnd = new SortedList<long, FormID>();
-            private Dictionary<FormID, IEnumerable<long>> _parentGroupMapper = new Dictionary<FormID, IEnumerable<long>>();
             public SortingList<long> GrupLocations = new SortingList<long>();
             public SortedList<long, FormID> ListedRecords => _fromStart;
-            public RangeInt64 this[FormID id] => _fromFormIDs[id];
+            public RangeInt64 this[FormID id] => _fromFormIDs[id].Range;
             private FormID _lastParsed;
             private long _lastLoc;
 
-            public void Add(
+            internal void Add(
                 FormID id,
                 IEnumerable<long> parentGrupLocations,
                 RangeInt64 section)
             {
-                this._fromFormIDs[id] = section;
+                this._fromFormIDs[id] = (section, parentGrupLocations.Distinct().ToArray());
                 this._fromStart[section.Min] = id;
                 this._fromEnd[section.Max] = id;
-                this._parentGroupMapper[id] = parentGrupLocations.Distinct().ToArray();
                 this._lastParsed = id;
                 this._lastLoc = section.Min;
             }
 
             public bool TryGetSection(FormID id, out RangeInt64 section)
             {
-                return this._fromFormIDs.TryGetValue(id, out section);
+                if (this._fromFormIDs.TryGetValue(id, out var item))
+                {
+                    section = item.Range;
+                    return true;
+                }
+                section = default(RangeInt64);
+                return false;
             }
 
             public bool TryGetRecord(long loc, out FormID id)
@@ -108,7 +112,7 @@ namespace Mutagen.Bethesda
 
             public IEnumerable<long> GetContainingGroupLocations(FormID id)
             {
-                return _parentGroupMapper[id];
+                return _fromFormIDs[id].GroupPositions;
             }
         }
 
