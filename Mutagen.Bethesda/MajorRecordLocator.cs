@@ -30,7 +30,8 @@ namespace Mutagen.Bethesda
                 IEnumerable<long> parentGrupLocations,
                 RangeInt64 section)
             {
-                this._fromFormIDs[id] = (section, parentGrupLocations.Distinct().ToArray());
+                var grupArr = parentGrupLocations.ToArray();
+                this._fromFormIDs[id] = (section, grupArr);
                 this._fromStart[section.Min] = id;
                 this._fromEnd[section.Max] = id;
                 this._lastParsed = id;
@@ -299,7 +300,7 @@ namespace Mutagen.Bethesda
                         reader: frame.Reader,
                         fileLocs: fileLocs,
                         interest: interest,
-                        parentGroupLocations: grupLoc.And(parentGroupLocations),
+                        parentGroupLocations: parentGroupLocations,
                         checkOverallGrupType: false);
                     break;
                 default:
@@ -335,7 +336,7 @@ namespace Mutagen.Bethesda
                             reader: frame.Reader,
                             fileLocs: fileLocs,
                             interest: interest,
-                            parentGroupLocations: grupLoc.And(parentGroupLocations),
+                            parentGroupLocations: parentGroupLocations,
                             grupRecOverride: new RecordType("CELL"));
                         break;
                     default:
@@ -373,7 +374,7 @@ namespace Mutagen.Bethesda
                             reader: frame.Reader,
                             fileLocs: fileLocs,
                             interest: interest,
-                            parentGroupLocations: grupLoc.And(parentGroupLocations),
+                            parentGroupLocations: parentGroupLocations,
                             checkOverallGrupType: false);
                         break;
                     default:
