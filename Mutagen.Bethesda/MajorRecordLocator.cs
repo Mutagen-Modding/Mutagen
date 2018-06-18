@@ -14,28 +14,44 @@ namespace Mutagen.Bethesda
     {
         private readonly static RecordType GRUP = new RecordType("GRUP");
 
-        public class FileLocations
+        internal class FileLocationConstructor
         {
-            private Dictionary<FormID, (RangeInt64 Range, IEnumerable<long> GroupPositions)> _fromFormIDs = new Dictionary<FormID, (RangeInt64 Range, IEnumerable<long> GroupPositions)>();
-            private SortedList<long, FormID> _fromStart = new SortedList<long, FormID>();
-            private SortedList<long, FormID> _fromEnd = new SortedList<long, FormID>();
-            public SortingList<long> GrupLocations = new SortingList<long>();
-            public SortedList<long, FormID> ListedRecords => _fromStart;
-            public RangeInt64 this[FormID id] => _fromFormIDs[id].Range;
-            private FormID _lastParsed;
-            private long _lastLoc;
+            public Dictionary<FormID, (RangeInt64 Range, IEnumerable<long> GroupPositions)> FromFormIDs = new Dictionary<FormID, (RangeInt64 Range, IEnumerable<long> GroupPositions)>();
+            public SortedList<long, FormID> FromStart = new SortedList<long, FormID>();
+            public SortedList<long, FormID> FromEnd = new SortedList<long, FormID>();
+            public List<long> GrupLocations = new List<long>();
+            public FormID LastParsed;
+            public long LastLoc;
 
-            internal void Add(
+            public void Add(
                 FormID id,
                 Stack<long> parentGrupLocations,
                 RangeInt64 section)
             {
                 var grupArr = parentGrupLocations.ToArray();
-                this._fromFormIDs[id] = (section, grupArr);
-                this._fromStart[section.Min] = id;
-                this._fromEnd[section.Max] = id;
-                this._lastParsed = id;
-                this._lastLoc = section.Min;
+                this.FromFormIDs[id] = (section, grupArr);
+                this.FromStart[section.Min] = id;
+                this.FromEnd[section.Max] = id;
+                this.LastParsed = id;
+                this.LastLoc = section.Min;
+            }
+        }
+
+        public class FileLocations
+        {
+            private readonly Dictionary<FormID, (RangeInt64 Range, IEnumerable<long> GroupPositions)> _fromFormIDs;
+            private readonly SortedList<long, FormID> _fromStart;
+            private readonly SortedList<long, FormID> _fromEnd;
+            public readonly SortingList<long> GrupLocations;
+            public  SortedList<long, FormID> ListedRecords => _fromStart;
+            public RangeInt64 this[FormID id] => _fromFormIDs[id].Range;
+
+            internal FileLocations(FileLocationConstructor constructor)
+            {
+                _fromFormIDs = constructor.FromFormIDs;
+                _fromStart = constructor.FromStart;
+                _fromEnd = constructor.FromEnd;
+                GrupLocations = SortingList<long>.Factory_Wrap_AssumeSorted(constructor.GrupLocations);
             }
 
             public bool TryGetSection(FormID id, out RangeInt64 section)
@@ -132,7 +148,7 @@ namespace Mutagen.Bethesda
             RecordInterest interest = null,
             Func<IBinaryReadStream, RecordType, uint, bool> additionalCriteria = null)
         {
-            FileLocations ret = new FileLocations();
+            FileLocationConstructor ret = new FileLocationConstructor();
             // Skip header
             reader.Position += 4;
             var headerLen = reader.ReadUInt32();
@@ -157,12 +173,12 @@ namespace Mutagen.Bethesda
                     remainingTypes?.Remove(parsed.Value);
                 }
             }
-            return ret;
+            return new FileLocations(ret);
         }
 
         private static RecordType? ParseTopLevelGRUP(
             IBinaryReadStream reader,
-            FileLocations fileLocs,
+            FileLocationConstructor fileLocs,
             RecordInterest interest,
             Stack<long> parentGroupLocations,
             RecordType? grupRecOverride,
@@ -282,7 +298,7 @@ namespace Mutagen.Bethesda
 
         private static void HandleSubLevelGRUP(
             MutagenFrame frame,
-            FileLocations fileLocs,
+            FileLocationConstructor fileLocs,
             RecordType recordType,
             RecordInterest interest,
             Stack<long> parentGroupLocations,
@@ -340,7 +356,7 @@ namespace Mutagen.Bethesda
 
         private static void HandleCells(
             MutagenFrame frame,
-            FileLocations fileLocs,
+            FileLocationConstructor fileLocs,
             RecordInterest interest,
             Stack<long> parentGroupLocations,
             Func<IBinaryReadStream, RecordType, uint, bool> additionalCriteria)
@@ -380,7 +396,7 @@ namespace Mutagen.Bethesda
 
         private static void HandleCellSubchildren(
             MutagenFrame frame,
-            FileLocations fileLocs,
+            FileLocationConstructor fileLocs,
             RecordInterest interest,
             Stack<long> parentGroupLocations,
             Func<IBinaryReadStream, RecordType, uint, bool> additionalCriteria)
