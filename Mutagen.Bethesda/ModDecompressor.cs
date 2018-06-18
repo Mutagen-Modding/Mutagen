@@ -35,8 +35,7 @@ namespace Mutagen.Bethesda
                             });
 
                         // Construct group length container for later use
-                        Dictionary<long, long> grupLengths = new Dictionary<long, long>();
-                        Dictionary<long, long> grupOffsets = new Dictionary<long, long>();
+                        Dictionary<long, (long Length, long Offset)> grupMeta = new Dictionary<long, (long Length, long Offset)>();
 
                         inputStream.Position = 0;
                         while (!inputStream.Complete)
@@ -56,21 +55,18 @@ namespace Mutagen.Bethesda
                             {
                                 noRecordLength = inputStream.Length - inputStream.Position;
                             }
-                            writer.Write(inputStream.ReadBytes((int)noRecordLength));
+                            inputStream.WriteTo(writer.BaseStream, (int)noRecordLength);
 
                             // If complete overall, return
-                            if (inputStream.Complete) return;
+                            if (inputStream.Complete) break;
 
                             // Get compression status
-                            var recLengthLocation = writer.BaseStream.Position;
                             var len = inputStream.ReadUInt32();
-                            writer.Write(len);
                             var flags = (MajorRecord.MajorRecordFlag)inputStream.ReadInt32();
+
                             // Turn compressed flag off
                             flags &= ~MajorRecord.MajorRecordFlag.Compressed;
-                            writer.Write((int)flags);
-
-                            writer.Write(inputStream.ReadBytes(8));
+                            var restOfMeta = inputStream.ReadBytes(8);
                             using (var frame = MutagenFrame.ByLength(
                                 reader: inputStream,
                                 length: len,
@@ -79,36 +75,35 @@ namespace Mutagen.Bethesda
                                 // Decompress
                                 var decompressed = frame.Decompress();
                                 var decompressedLen = decompressed.TotalLength;
+                                var lengthDiff = decompressedLen - len;
+                                writer.Write((uint)(len + lengthDiff));
+                                writer.Write((int)flags);
+                                writer.Write(restOfMeta);
                                 writer.Write(decompressed.ReadRemaining());
 
                                 // If no difference in lengths, move on
-                                var lengthDiff = decompressedLen - len;
                                 if (lengthDiff == 0) continue;
-
-                                // Modify record length
-                                writer.BaseStream.Position = recLengthLocation;
-                                writer.Write((uint)(len + lengthDiff));
 
                                 // Modify parent group lengths
                                 foreach (var grupLoc in fileLocs.GetContainingGroupLocations(nextRec.Value))
                                 {
-                                    if (!grupOffsets.TryGetValue(grupLoc, out var offset))
+                                    if (!grupMeta.TryGetValue(grupLoc, out var meta))
                                     {
-                                        offset = runningDiff;
-                                        grupOffsets[grupLoc] = offset;
-                                    }
-                                    if (!grupLengths.TryGetValue(grupLoc, out var grupLen))
-                                    {
+                                        meta.Offset = runningDiff;
                                         inputStreamJumpback.Position = grupLoc + 4;
-                                        grupLen = inputStreamJumpback.ReadUInt32();
+                                        meta.Length = inputStreamJumpback.ReadUInt32();
                                     }
-                                    writer.BaseStream.Position = grupLoc + 4 + offset;
-                                    writer.Write((uint)(grupLen + lengthDiff));
-                                    grupLengths[grupLoc] = grupLen + lengthDiff;
+                                    grupMeta[grupLoc] = (meta.Length + lengthDiff, meta.Offset);
                                 }
                                 runningDiff += lengthDiff;
-                                writer.BaseStream.Position = writer.BaseStream.Length;
                             }
+                        }
+
+                        foreach (var item in grupMeta)
+                        {
+                            var grupLoc = item.Key;
+                            writer.BaseStream.Position = grupLoc + 4 + item.Value.Offset;
+                            writer.Write(item.Value.Length);
                         }
                     }
                 }
