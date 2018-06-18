@@ -147,6 +147,8 @@ namespace Mutagen.Bethesda
                     reader: reader,
                     fileLocs: ret,
                     interest: interest,
+                    grupRecOverride: null,
+                    checkOverallGrupType: true,
                     parentGroupLocations: grupPositions);
                 if (parsed.HasValue)
                 {
@@ -161,8 +163,8 @@ namespace Mutagen.Bethesda
             FileLocations fileLocs,
             RecordInterest interest,
             Stack<long> parentGroupLocations,
-            RecordType? grupRecOverride = null,
-            bool checkOverallGrupType = true)
+            RecordType? grupRecOverride,
+            bool checkOverallGrupType)
         {
             var grupLoc = reader.Position;
             var grup = HeaderTranslation.ReadNextRecordType(reader);
@@ -310,6 +312,7 @@ namespace Mutagen.Bethesda
                         fileLocs: fileLocs,
                         interest: interest,
                         parentGroupLocations: parentGroupLocations,
+                        grupRecOverride: null,
                         checkOverallGrupType: false);
                     break;
                 default:
@@ -346,6 +349,7 @@ namespace Mutagen.Bethesda
                             fileLocs: fileLocs,
                             interest: interest,
                             parentGroupLocations: parentGroupLocations,
+                            checkOverallGrupType: true,
                             grupRecOverride: new RecordType("CELL"));
                         break;
                     default:
@@ -384,6 +388,7 @@ namespace Mutagen.Bethesda
                             fileLocs: fileLocs,
                             interest: interest,
                             parentGroupLocations: parentGroupLocations,
+                            grupRecOverride: null,
                             checkOverallGrupType: false);
                         break;
                     default:
