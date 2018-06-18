@@ -173,8 +173,12 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public MutagenFrame Decompress()
-        { 
-            var resultLen = this.Reader.ReadUInt32();
+        {
+            return Decompress(this.Reader.ReadUInt32());
+        }
+
+        public MutagenFrame Decompress(uint resultLen)
+        {
             var bytes = this.Reader.ReadBytes((int)this.Remaining);
             try
             {
