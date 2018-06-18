@@ -24,8 +24,16 @@ namespace Mutagen.Bethesda
                     using (var writer = new System.IO.BinaryWriter(new FileStream(outputPath.Path, FileMode.Create, FileAccess.Write)))
                     {
                         long runningDiff = 0;
-                        var fileLocs = MajorRecordLocator.GetFileLocations(inputStream, interest);
-                        inputStream.Position = 0;
+                        var fileLocs = MajorRecordLocator.GetFileLocations(
+                            inputStream,
+                            interest,
+                            additionalCriteria: (stream, recType, len) =>
+                            {
+                                stream.Position += 8;
+                                var flags = (MajorRecord.MajorRecordFlag)inputStream.ReadInt32();
+                                return flags.HasFlag(MajorRecord.MajorRecordFlag.Compressed);
+                            });
+
                         // Construct group length container for later use
                         Dictionary<long, long> grupLengths = new Dictionary<long, long>();
                         Dictionary<long, long> grupOffsets = new Dictionary<long, long>();
@@ -58,13 +66,6 @@ namespace Mutagen.Bethesda
                             var len = inputStream.ReadUInt32();
                             writer.Write(len);
                             var flags = (MajorRecord.MajorRecordFlag)inputStream.ReadInt32();
-
-                            if (!flags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
-                            {
-                                writer.Write((int)flags);
-                                continue;
-                            }
-
                             // Turn compressed flag off
                             flags &= ~MajorRecord.MajorRecordFlag.Compressed;
                             writer.Write((int)flags);
