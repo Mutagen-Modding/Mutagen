@@ -17,8 +17,9 @@ namespace Mutagen.Bethesda
         internal class FileLocationConstructor
         {
             public Dictionary<FormID, (RangeInt64 Range, IEnumerable<long> GroupPositions)> FromFormIDs = new Dictionary<FormID, (RangeInt64 Range, IEnumerable<long> GroupPositions)>();
-            public SortedList<long, FormID> FromStart = new SortedList<long, FormID>();
-            public SortedList<long, FormID> FromEnd = new SortedList<long, FormID>();
+            public List<long> FromStartPositions = new List<long>();
+            public List<long> FromEndPositions = new List<long>();
+            public List<FormID> IDs = new List<FormID>();
             public List<long> GrupLocations = new List<long>();
             public FormID LastParsed;
             public long LastLoc;
@@ -30,8 +31,9 @@ namespace Mutagen.Bethesda
             {
                 var grupArr = parentGrupLocations.ToArray();
                 this.FromFormIDs[id] = (section, grupArr);
-                this.FromStart[section.Min] = id;
-                this.FromEnd[section.Max] = id;
+                this.FromStartPositions.Add(section.Min);
+                this.FromEndPositions.Add(section.Max);
+                this.IDs.Add(id);
                 this.LastParsed = id;
                 this.LastLoc = section.Min;
             }
@@ -40,17 +42,21 @@ namespace Mutagen.Bethesda
         public class FileLocations
         {
             private readonly Dictionary<FormID, (RangeInt64 Range, IEnumerable<long> GroupPositions)> _fromFormIDs;
-            private readonly SortedList<long, FormID> _fromStart;
-            private readonly SortedList<long, FormID> _fromEnd;
+            private readonly SortingListDictionary<long, FormID> _fromStart;
+            private readonly SortingListDictionary<long, FormID> _fromEnd;
             public readonly SortingList<long> GrupLocations;
-            public  SortedList<long, FormID> ListedRecords => _fromStart;
+            public SortingListDictionary<long, FormID> ListedRecords => _fromStart;
             public RangeInt64 this[FormID id] => _fromFormIDs[id].Range;
 
             internal FileLocations(FileLocationConstructor constructor)
             {
                 _fromFormIDs = constructor.FromFormIDs;
-                _fromStart = constructor.FromStart;
-                _fromEnd = constructor.FromEnd;
+                _fromStart = SortingListDictionary<long, FormID>.Factory_Wrap_AssumeSorted(
+                    constructor.FromStartPositions,
+                    constructor.IDs);
+                _fromEnd = SortingListDictionary<long, FormID>.Factory_Wrap_AssumeSorted(
+                    constructor.FromEndPositions,
+                    constructor.IDs);
                 GrupLocations = SortingList<long>.Factory_Wrap_AssumeSorted(constructor.GrupLocations);
             }
 

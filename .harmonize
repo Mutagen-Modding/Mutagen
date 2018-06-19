@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>d6cece446bb9e79708ab30596525ca930df59157</Sha>
+         <Sha>190fdebd9d0d6969dc7a1656b182155c2966a1a5</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>06-17-2018 23:49:11</CommitDate>
-         <Description>More binary writer stream work</Description>
+         <CommitDate>06-18-2018 21:04:41</CommitDate>
+         <Description>SortingListDictionary with some tests</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
