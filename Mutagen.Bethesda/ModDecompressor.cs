@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda
                             });
 
                         // Construct group length container for later use
-                        Dictionary<long, (long Length, long Offset)> grupMeta = new Dictionary<long, (long Length, long Offset)>();
+                        Dictionary<long, (uint Length, long Offset)> grupMeta = new Dictionary<long, (uint Length, long Offset)>();
 
                         inputStream.Position = 0;
                         while (!inputStream.Complete)
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda
                                         inputStreamJumpback.Position = grupLoc + 4;
                                         meta.Length = inputStreamJumpback.ReadUInt32();
                                     }
-                                    grupMeta[grupLoc] = (meta.Length + lengthDiff, meta.Offset);
+                                    grupMeta[grupLoc] = ((uint)(meta.Length + lengthDiff), meta.Offset);
                                 }
                                 runningDiff += lengthDiff;
                             }
