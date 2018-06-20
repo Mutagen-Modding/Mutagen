@@ -157,7 +157,6 @@ namespace Mutagen.Bethesda.Binary
         #endregion
 
         #region Write
-        [DebuggerStepThrough]
         public static WRITE_FUNC GetWriteFunc()
         {
             var method = typeof(T).GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)

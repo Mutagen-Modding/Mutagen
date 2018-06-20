@@ -2422,7 +2422,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public static Instruction_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Instruction_ErrorMask();
         }
         #endregion
 

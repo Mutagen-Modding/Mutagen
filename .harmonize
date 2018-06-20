@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>cdde894ca7e094e468a9cde3ab158c2bb841095a</Sha>
+         <Sha>1d54e37bdba0aa4469dbd3d5b7b6e409aecb73d5</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>06-19-2018 23:19:08</CommitDate>
-         <Description>Massive refactor of error mask systems via ErrorMaskBuilder.  Still some reconstruction and testing to be done</Description>
+         <CommitDate>06-19-2018 23:37:48</CommitDate>
+         <Description>Mask factories now generate shell instead of throwing exception</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

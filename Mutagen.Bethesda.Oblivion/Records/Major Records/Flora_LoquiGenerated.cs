@@ -2421,7 +2421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Flora_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Flora_ErrorMask();
         }
         #endregion
 

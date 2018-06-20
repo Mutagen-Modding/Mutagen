@@ -1797,7 +1797,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static FaceGenData_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new FaceGenData_ErrorMask();
         }
         #endregion
 

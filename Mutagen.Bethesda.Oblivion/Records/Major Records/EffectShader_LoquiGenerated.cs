@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static EffectShader_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new EffectShader_ErrorMask();
         }
         #endregion
 

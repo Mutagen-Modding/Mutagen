@@ -2041,7 +2041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static WorldspaceSubBlock_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new WorldspaceSubBlock_ErrorMask();
         }
         #endregion
 

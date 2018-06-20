@@ -1653,7 +1653,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static BodyPart_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new BodyPart_ErrorMask();
         }
         #endregion
 

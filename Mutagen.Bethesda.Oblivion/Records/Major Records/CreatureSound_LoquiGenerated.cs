@@ -1809,7 +1809,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static CreatureSound_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new CreatureSound_ErrorMask();
         }
         #endregion
 

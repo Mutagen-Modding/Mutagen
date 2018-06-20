@@ -2846,7 +2846,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Ammo_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Ammo_ErrorMask();
         }
         #endregion
 

@@ -1848,7 +1848,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static BodyData_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new BodyData_ErrorMask();
         }
         #endregion
 

@@ -1978,7 +1978,7 @@ namespace Mutagen.Bethesda.Internals
         public static ListGroup_ErrorMask<T_ErrMask> Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new ListGroup_ErrorMask<T_ErrMask>();
         }
         #endregion
 

@@ -1984,7 +1984,7 @@ namespace Mutagen.Bethesda.Internals
         public static Group_ErrorMask<T_ErrMask> Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Group_ErrorMask<T_ErrMask>();
         }
         #endregion
 

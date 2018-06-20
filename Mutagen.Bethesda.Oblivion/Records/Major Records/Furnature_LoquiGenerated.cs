@@ -1918,7 +1918,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Furnature_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Furnature_ErrorMask();
         }
         #endregion
 

@@ -1258,7 +1258,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public static Move_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Move_ErrorMask();
         }
         #endregion
 

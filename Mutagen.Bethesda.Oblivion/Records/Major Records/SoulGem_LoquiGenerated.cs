@@ -2474,7 +2474,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static SoulGem_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new SoulGem_ErrorMask();
         }
         #endregion
 

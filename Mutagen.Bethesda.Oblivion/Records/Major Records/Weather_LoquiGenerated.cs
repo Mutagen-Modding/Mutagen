@@ -6372,7 +6372,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Weather_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Weather_ErrorMask();
         }
         #endregion
 

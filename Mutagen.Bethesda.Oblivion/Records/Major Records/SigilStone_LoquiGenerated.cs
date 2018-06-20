@@ -2594,7 +2594,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static SigilStone_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new SigilStone_ErrorMask();
         }
         #endregion
 

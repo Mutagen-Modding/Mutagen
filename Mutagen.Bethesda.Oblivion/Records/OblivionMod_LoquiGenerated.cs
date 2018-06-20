@@ -9716,7 +9716,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static OblivionMod_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new OblivionMod_ErrorMask();
         }
         #endregion
 

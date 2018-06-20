@@ -2029,7 +2029,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Armor_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Armor_ErrorMask();
         }
         #endregion
 

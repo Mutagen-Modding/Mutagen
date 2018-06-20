@@ -3053,7 +3053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static SkillRecord_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new SkillRecord_ErrorMask();
         }
         #endregion
 

@@ -1772,7 +1772,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Subspace_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Subspace_ErrorMask();
         }
         #endregion
 

@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Water_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Water_ErrorMask();
         }
         #endregion
 

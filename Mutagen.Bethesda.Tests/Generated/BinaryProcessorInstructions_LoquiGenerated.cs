@@ -1486,7 +1486,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public static BinaryProcessorInstructions_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new BinaryProcessorInstructions_ErrorMask();
         }
         #endregion
 

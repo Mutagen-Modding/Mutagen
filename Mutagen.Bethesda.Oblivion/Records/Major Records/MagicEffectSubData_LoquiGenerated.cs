@@ -2155,7 +2155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static MagicEffectSubData_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new MagicEffectSubData_ErrorMask();
         }
         #endregion
 

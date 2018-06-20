@@ -1950,7 +1950,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Rank_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Rank_ErrorMask();
         }
         #endregion
 

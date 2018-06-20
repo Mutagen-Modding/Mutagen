@@ -1813,7 +1813,7 @@ namespace Mutagen.Bethesda.Internals
         public static MajorRecord_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new MajorRecord_ErrorMask();
         }
         #endregion
 

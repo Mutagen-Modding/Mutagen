@@ -3258,7 +3258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Tree_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Tree_ErrorMask();
         }
         #endregion
 

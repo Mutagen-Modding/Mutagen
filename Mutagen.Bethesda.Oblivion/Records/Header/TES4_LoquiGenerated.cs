@@ -2590,7 +2590,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static TES4_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new TES4_ErrorMask();
         }
         #endregion
 

@@ -1786,7 +1786,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static PathGridPoint_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new PathGridPoint_ErrorMask();
         }
         #endregion
 

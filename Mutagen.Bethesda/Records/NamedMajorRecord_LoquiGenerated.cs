@@ -1327,7 +1327,7 @@ namespace Mutagen.Bethesda.Internals
         public static NamedMajorRecord_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new NamedMajorRecord_ErrorMask();
         }
         #endregion
 

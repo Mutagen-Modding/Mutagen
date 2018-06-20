@@ -2428,7 +2428,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static AlchemicalApparatus_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new AlchemicalApparatus_ErrorMask();
         }
         #endregion
 

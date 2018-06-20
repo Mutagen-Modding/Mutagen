@@ -1262,7 +1262,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public static DataTarget_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new DataTarget_ErrorMask();
         }
         #endregion
 

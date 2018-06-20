@@ -1567,7 +1567,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static InterCellPoint_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new InterCellPoint_ErrorMask();
         }
         #endregion
 

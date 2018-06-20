@@ -1703,7 +1703,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static TeleportDestination_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new TeleportDestination_ErrorMask();
         }
         #endregion
 

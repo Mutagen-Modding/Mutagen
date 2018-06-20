@@ -3683,7 +3683,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Worldspace_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Worldspace_ErrorMask();
         }
         #endregion
 

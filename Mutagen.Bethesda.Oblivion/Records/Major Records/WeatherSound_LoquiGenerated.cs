@@ -1579,7 +1579,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static WeatherSound_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new WeatherSound_ErrorMask();
         }
         #endregion
 

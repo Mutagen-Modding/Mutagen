@@ -1925,7 +1925,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static MapMarker_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new MapMarker_ErrorMask();
         }
         #endregion
 

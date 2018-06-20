@@ -1689,7 +1689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Road_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Road_ErrorMask();
         }
         #endregion
 

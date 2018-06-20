@@ -2041,7 +2041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static CellSubBlock_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new CellSubBlock_ErrorMask();
         }
         #endregion
 

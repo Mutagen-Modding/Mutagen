@@ -2616,7 +2616,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Ingredient_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Ingredient_ErrorMask();
         }
         #endregion
 

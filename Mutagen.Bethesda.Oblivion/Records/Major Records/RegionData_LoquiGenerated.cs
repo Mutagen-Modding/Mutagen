@@ -1458,7 +1458,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static RegionData_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new RegionData_ErrorMask();
         }
         #endregion
 

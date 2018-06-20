@@ -2582,7 +2582,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Door_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Door_ErrorMask();
         }
         #endregion
 

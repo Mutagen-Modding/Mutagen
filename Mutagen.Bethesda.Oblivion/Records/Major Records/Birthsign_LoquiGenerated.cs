@@ -1970,7 +1970,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Birthsign_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Birthsign_ErrorMask();
         }
         #endregion
 

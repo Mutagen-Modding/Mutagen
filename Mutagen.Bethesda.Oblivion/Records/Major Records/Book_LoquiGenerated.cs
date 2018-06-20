@@ -2862,7 +2862,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Book_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Book_ErrorMask();
         }
         #endregion
 

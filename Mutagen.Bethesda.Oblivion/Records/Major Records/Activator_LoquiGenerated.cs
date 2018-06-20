@@ -1908,7 +1908,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Activator_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Activator_ErrorMask();
         }
         #endregion
 

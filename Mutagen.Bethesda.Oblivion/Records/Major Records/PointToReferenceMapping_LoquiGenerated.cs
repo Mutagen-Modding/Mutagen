@@ -1673,7 +1673,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static PointToReferenceMapping_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new PointToReferenceMapping_ErrorMask();
         }
         #endregion
 

@@ -3177,7 +3177,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Climate_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Climate_ErrorMask();
         }
         #endregion
 

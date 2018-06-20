@@ -1707,7 +1707,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static DistantLODData_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new DistantLODData_ErrorMask();
         }
         #endregion
 

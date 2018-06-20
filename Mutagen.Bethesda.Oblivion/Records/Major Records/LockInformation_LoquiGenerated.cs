@@ -1828,7 +1828,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static LockInformation_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new LockInformation_ErrorMask();
         }
         #endregion
 

@@ -1708,7 +1708,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static HavokData_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new HavokData_ErrorMask();
         }
         #endregion
 

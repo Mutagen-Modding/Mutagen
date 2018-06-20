@@ -1584,7 +1584,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Static_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Static_ErrorMask();
         }
         #endregion
 

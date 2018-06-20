@@ -2180,7 +2180,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Miscellaneous_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Miscellaneous_ErrorMask();
         }
         #endregion
 

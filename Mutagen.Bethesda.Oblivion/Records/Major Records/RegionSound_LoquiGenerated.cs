@@ -1689,7 +1689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static RegionSound_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new RegionSound_ErrorMask();
         }
         #endregion
 

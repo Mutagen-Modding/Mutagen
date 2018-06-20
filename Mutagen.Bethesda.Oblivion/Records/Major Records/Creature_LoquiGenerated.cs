@@ -8747,7 +8747,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Creature_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Creature_ErrorMask();
         }
         #endregion
 

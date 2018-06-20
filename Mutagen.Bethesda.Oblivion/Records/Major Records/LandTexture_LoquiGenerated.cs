@@ -2130,7 +2130,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static LandTexture_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new LandTexture_ErrorMask();
         }
         #endregion
 

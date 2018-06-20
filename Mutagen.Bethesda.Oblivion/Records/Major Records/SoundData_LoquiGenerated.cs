@@ -1883,7 +1883,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static SoundData_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new SoundData_ErrorMask();
         }
         #endregion
 

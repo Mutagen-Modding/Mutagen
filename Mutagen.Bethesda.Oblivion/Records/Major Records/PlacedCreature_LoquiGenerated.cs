@@ -2749,7 +2749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static PlacedCreature_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new PlacedCreature_ErrorMask();
         }
         #endregion
 

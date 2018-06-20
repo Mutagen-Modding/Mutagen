@@ -1569,7 +1569,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static RaceVoices_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new RaceVoices_ErrorMask();
         }
         #endregion
 

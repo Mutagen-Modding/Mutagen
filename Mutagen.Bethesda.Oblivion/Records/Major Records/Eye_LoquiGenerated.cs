@@ -1717,7 +1717,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Eye_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Eye_ErrorMask();
         }
         #endregion
 

@@ -1056,7 +1056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static ScriptReference_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new ScriptReference_ErrorMask();
         }
         #endregion
 

@@ -1568,7 +1568,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static GameSettingInt_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new GameSettingInt_ErrorMask();
         }
         #endregion
 

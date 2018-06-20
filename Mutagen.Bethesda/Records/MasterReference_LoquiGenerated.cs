@@ -1652,7 +1652,7 @@ namespace Mutagen.Bethesda.Internals
         public static MasterReference_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new MasterReference_ErrorMask();
         }
         #endregion
 

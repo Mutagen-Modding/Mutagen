@@ -2006,7 +2006,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static LeveledItem_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new LeveledItem_ErrorMask();
         }
         #endregion
 

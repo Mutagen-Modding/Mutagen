@@ -1419,7 +1419,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static SpellLeveled_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new SpellLeveled_ErrorMask();
         }
         #endregion
 

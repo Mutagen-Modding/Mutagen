@@ -2239,7 +2239,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Enchantment_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Enchantment_ErrorMask();
         }
         #endregion
 

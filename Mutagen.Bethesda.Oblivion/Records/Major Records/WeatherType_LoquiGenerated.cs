@@ -1826,7 +1826,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static WeatherType_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new WeatherType_ErrorMask();
         }
         #endregion
 

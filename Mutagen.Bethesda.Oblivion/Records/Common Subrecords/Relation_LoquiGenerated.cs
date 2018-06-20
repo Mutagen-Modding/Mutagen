@@ -1578,7 +1578,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Relation_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Relation_ErrorMask();
         }
         #endregion
 

@@ -1383,7 +1383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Global_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new Global_ErrorMask();
         }
         #endregion
 

@@ -1769,7 +1769,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static GenderedBodyData_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            throw new NotImplementedException();
+            return new GenderedBodyData_ErrorMask();
         }
         #endregion
 
