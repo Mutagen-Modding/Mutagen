@@ -20,6 +20,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 
@@ -344,12 +345,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<ClothingAbstract, ClothingAbstract_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<ClothingAbstract>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -358,13 +358,14 @@ namespace Mutagen.Bethesda.Oblivion
             out ClothingAbstract_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<ClothingAbstract, ClothingAbstract_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<ClothingAbstract>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -499,77 +500,162 @@ namespace Mutagen.Bethesda.Oblivion
             ClothingAbstract item,
             XElement root,
             string name,
-            Func<ClothingAbstract_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Script":
-                    item.Script_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.Script,
-                        errorMask: errorMask));
+                        item: item.Script_Property,
+                        errorMask: errorMask);
                     break;
                 case "Enchantment":
-                    item.Enchantment_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.Enchantment,
-                        errorMask: errorMask));
+                        item: item.Enchantment_Property,
+                        errorMask: errorMask);
                     break;
                 case "EnchantmentPoints":
-                    item._EnchantmentPoints.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    UInt16XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.EnchantmentPoints,
-                        errorMask: errorMask));
+                        item: item._EnchantmentPoints,
+                        errorMask: errorMask);
                     break;
                 case "BipedFlags":
-                    item._BipedFlags.SetIfSucceeded(EnumXmlTranslation<BipedFlag>.Instance.Parse(
+                    EnumXmlTranslation<BipedFlag>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._BipedFlags,
+                        errorMask: errorMask);
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<EquipmentFlag>.Instance.Parse(
+                    EnumXmlTranslation<EquipmentFlag>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._Flags,
+                        errorMask: errorMask);
                     break;
                 case "MaleBipedModel":
-                    item._MaleBipedModel.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.MaleBipedModel,
-                        errorMask: errorMask));
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleBipedModel);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            root: root,
+                            item: out var MaleBipedModelParse,
+                            errorMask: errorMask))
+                        {
+                            item._MaleBipedModel.Item = MaleBipedModelParse;
+                        }
+                        else
+                        {
+                            item._MaleBipedModel.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "MaleWorldModel":
-                    item._MaleWorldModel.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.MaleWorldModel,
-                        errorMask: errorMask));
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleWorldModel);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            root: root,
+                            item: out var MaleWorldModelParse,
+                            errorMask: errorMask))
+                        {
+                            item._MaleWorldModel.Item = MaleWorldModelParse;
+                        }
+                        else
+                        {
+                            item._MaleWorldModel.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "MaleIcon":
-                    item._MaleIcon.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                    FilePathXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.MaleIcon,
-                        errorMask: errorMask));
+                        item: item._MaleIcon,
+                        errorMask: errorMask);
                     break;
                 case "FemaleBipedModel":
-                    item._FemaleBipedModel.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleBipedModel,
-                        errorMask: errorMask));
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            root: root,
+                            item: out var FemaleBipedModelParse,
+                            errorMask: errorMask))
+                        {
+                            item._FemaleBipedModel.Item = FemaleBipedModelParse;
+                        }
+                        else
+                        {
+                            item._FemaleBipedModel.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "FemaleWorldModel":
-                    item._FemaleWorldModel.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleWorldModel,
-                        errorMask: errorMask));
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            root: root,
+                            item: out var FemaleWorldModelParse,
+                            errorMask: errorMask))
+                        {
+                            item._FemaleWorldModel.Item = FemaleWorldModelParse;
+                        }
+                        else
+                        {
+                            item._FemaleWorldModel.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "FemaleIcon":
-                    item._FemaleIcon.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                    FilePathXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleIcon,
-                        errorMask: errorMask));
+                        item: item._FemaleIcon,
+                        errorMask: errorMask);
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -656,7 +742,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<ClothingAbstract_FieldIndex?> Fill_Binary_RecordTypes(
             ClothingAbstract item,
             MutagenFrame frame,
-            Func<ClothingAbstract_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -667,79 +753,90 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item.Script_Property,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.Script,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.Script);
                 case "ENAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Enchantment_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item.Enchantment_Property,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.Enchantment,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.Enchantment);
                 case "ANAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._EnchantmentPoints.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._EnchantmentPoints,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.EnchantmentPoints,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.EnchantmentPoints);
                 case "BMDT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._BipedFlags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedFlag>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedFlag>.Instance.ParseInto(
                             frame: dataFrame.SpawnWithLength(2),
+                            item: item._BipedFlags,
                             fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
-                            errorMask: errorMask));
-                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<EquipmentFlag>.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<EquipmentFlag>.Instance.ParseInto(
                             frame: dataFrame.SpawnWithLength(2),
+                            item: item._Flags,
                             fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
                     }
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.Flags);
                 case "MODL":
-                    item._MaleBipedModel.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    LoquiBinaryTranslation<Model>.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)ClothingAbstract_FieldIndex.MaleBipedModel,
-                        errorMask: errorMask));
+                        errorMask: errorMask,
+                        item: item._MaleBipedModel);
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.MaleBipedModel);
                 case "MOD2":
-                    item._MaleWorldModel.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    LoquiBinaryTranslation<Model>.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)ClothingAbstract_FieldIndex.MaleWorldModel,
                         errorMask: errorMask,
-                        recordTypeConverter: ClothingAbstract_Registration.MaleWorldModelConverter));
+                        item: item._MaleWorldModel,
+                        recordTypeConverter: ClothingAbstract_Registration.MaleWorldModelConverter);
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.MaleWorldModel);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._MaleIcon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._MaleIcon,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.MaleIcon,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.MaleIcon);
                 case "MOD3":
-                    item._FemaleBipedModel.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    LoquiBinaryTranslation<Model>.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleBipedModel,
                         errorMask: errorMask,
-                        recordTypeConverter: ClothingAbstract_Registration.FemaleBipedModelConverter));
+                        item: item._FemaleBipedModel,
+                        recordTypeConverter: ClothingAbstract_Registration.FemaleBipedModelConverter);
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.FemaleBipedModel);
                 case "MOD4":
-                    item._FemaleWorldModel.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    LoquiBinaryTranslation<Model>.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleWorldModel,
                         errorMask: errorMask,
-                        recordTypeConverter: ClothingAbstract_Registration.FemaleWorldModelConverter));
+                        item: item._FemaleWorldModel,
+                        recordTypeConverter: ClothingAbstract_Registration.FemaleWorldModelConverter);
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.FemaleWorldModel);
                 case "ICO2":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._FemaleIcon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._FemaleIcon,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleIcon,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.FemaleIcon);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
@@ -811,24 +908,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            ClothingAbstract_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new ClothingAbstract_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ClothingAbstractCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IClothingAbstractGetter rhs,
+            ErrorMaskBuilder errorMask,
+            ClothingAbstract_CopyMask copyMask = null,
+            IClothingAbstractGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            ClothingAbstractCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1450,8 +1555,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClothingAbstract item,
             IClothingAbstractGetter rhs,
             IClothingAbstractGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             ClothingAbstract_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1459,12 +1563,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item,
                 rhs,
                 def,
-                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
             if (copyMask?.Script ?? true)
             {
+                errorMask.PushIndex((int)ClothingAbstract_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.SetToWithDefault(
@@ -1473,13 +1577,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)ClothingAbstract_FieldIndex.Script, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Enchantment ?? true)
             {
+                errorMask.PushIndex((int)ClothingAbstract_FieldIndex.Enchantment);
                 try
                 {
                     item.Enchantment_Property.SetToWithDefault(
@@ -1488,13 +1597,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)ClothingAbstract_FieldIndex.Enchantment, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.EnchantmentPoints ?? true)
             {
+                errorMask.PushIndex((int)ClothingAbstract_FieldIndex.EnchantmentPoints);
                 try
                 {
                     item.EnchantmentPoints_Property.SetToWithDefault(
@@ -1503,13 +1617,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)ClothingAbstract_FieldIndex.EnchantmentPoints, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.BipedFlags ?? true)
             {
+                errorMask.PushIndex((int)ClothingAbstract_FieldIndex.BipedFlags);
                 try
                 {
                     item.BipedFlags_Property.Set(
@@ -1517,13 +1636,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)ClothingAbstract_FieldIndex.BipedFlags, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
+                errorMask.PushIndex((int)ClothingAbstract_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -1531,13 +1655,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)ClothingAbstract_FieldIndex.Flags, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.MaleBipedModel.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)ClothingAbstract_FieldIndex.MaleBipedModel);
                 try
                 {
                     item.MaleBipedModel_Property.SetToWithDefault(
@@ -1555,15 +1684,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.MaleBipedModel,
                                         rhs: rhs.MaleBipedModel,
                                         def: def?.MaleBipedModel,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new Model_ErrorMask();
-                                            baseMask.SetNthMask((int)ClothingAbstract_FieldIndex.MaleBipedModel, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.MaleBipedModel.Specific,
                                         cmds: cmds);
                                     return r;
@@ -1580,13 +1701,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)ClothingAbstract_FieldIndex.MaleBipedModel, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.MaleWorldModel.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)ClothingAbstract_FieldIndex.MaleWorldModel);
                 try
                 {
                     item.MaleWorldModel_Property.SetToWithDefault(
@@ -1604,15 +1730,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.MaleWorldModel,
                                         rhs: rhs.MaleWorldModel,
                                         def: def?.MaleWorldModel,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new Model_ErrorMask();
-                                            baseMask.SetNthMask((int)ClothingAbstract_FieldIndex.MaleWorldModel, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.MaleWorldModel.Specific,
                                         cmds: cmds);
                                     return r;
@@ -1629,13 +1747,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)ClothingAbstract_FieldIndex.MaleWorldModel, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.MaleIcon ?? true)
             {
+                errorMask.PushIndex((int)ClothingAbstract_FieldIndex.MaleIcon);
                 try
                 {
                     item.MaleIcon_Property.SetToWithDefault(
@@ -1644,13 +1767,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)ClothingAbstract_FieldIndex.MaleIcon, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.FemaleBipedModel.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
                 try
                 {
                     item.FemaleBipedModel_Property.SetToWithDefault(
@@ -1668,15 +1796,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.FemaleBipedModel,
                                         rhs: rhs.FemaleBipedModel,
                                         def: def?.FemaleBipedModel,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new Model_ErrorMask();
-                                            baseMask.SetNthMask((int)ClothingAbstract_FieldIndex.FemaleBipedModel, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.FemaleBipedModel.Specific,
                                         cmds: cmds);
                                     return r;
@@ -1693,13 +1813,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)ClothingAbstract_FieldIndex.FemaleBipedModel, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.FemaleWorldModel.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
                 try
                 {
                     item.FemaleWorldModel_Property.SetToWithDefault(
@@ -1717,15 +1842,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.FemaleWorldModel,
                                         rhs: rhs.FemaleWorldModel,
                                         def: def?.FemaleWorldModel,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new Model_ErrorMask();
-                                            baseMask.SetNthMask((int)ClothingAbstract_FieldIndex.FemaleWorldModel, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.FemaleWorldModel.Specific,
                                         cmds: cmds);
                                     return r;
@@ -1742,13 +1859,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)ClothingAbstract_FieldIndex.FemaleWorldModel, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.FemaleIcon ?? true)
             {
+                errorMask.PushIndex((int)ClothingAbstract_FieldIndex.FemaleIcon);
                 try
                 {
                     item.FemaleIcon_Property.SetToWithDefault(
@@ -1757,9 +1879,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)ClothingAbstract_FieldIndex.FemaleIcon, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -2145,127 +2271,119 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out ClothingAbstract_ErrorMask errorMask,
             string name = null)
         {
-            ClothingAbstract_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ClothingAbstract_ErrorMask()) : default(Func<ClothingAbstract_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             IClothingAbstractGetter item,
-            Func<ClothingAbstract_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.ClothingAbstract");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.ClothingAbstract");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ClothingAbstract");
-                }
-                if (item.Script_Property.HasBeenSet)
-                {
-                    FormIDXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Script),
-                        item: item.Script?.FormID,
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.Script,
-                        errorMask: errorMask);
-                }
-                if (item.Enchantment_Property.HasBeenSet)
-                {
-                    FormIDXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Enchantment),
-                        item: item.Enchantment?.FormID,
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.Enchantment,
-                        errorMask: errorMask);
-                }
-                if (item.EnchantmentPoints_Property.HasBeenSet)
-                {
-                    UInt16XmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.EnchantmentPoints),
-                        item: item.EnchantmentPoints_Property,
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.EnchantmentPoints,
-                        errorMask: errorMask);
-                }
-                EnumXmlTranslation<BipedFlag>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.BipedFlags),
-                    item: item.BipedFlags_Property,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
-                    errorMask: errorMask);
-                EnumXmlTranslation<EquipmentFlag>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Flags),
-                    item: item.Flags_Property,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
-                    errorMask: errorMask);
-                if (item.MaleBipedModel_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.MaleBipedModel_Property,
-                        name: nameof(item.MaleBipedModel),
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.MaleBipedModel,
-                        errorMask: errorMask);
-                }
-                if (item.MaleWorldModel_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.MaleWorldModel_Property,
-                        name: nameof(item.MaleWorldModel),
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.MaleWorldModel,
-                        errorMask: errorMask);
-                }
-                if (item.MaleIcon_Property.HasBeenSet)
-                {
-                    FilePathXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.MaleIcon),
-                        item: item.MaleIcon_Property,
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.MaleIcon,
-                        errorMask: errorMask);
-                }
-                if (item.FemaleBipedModel_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.FemaleBipedModel_Property,
-                        name: nameof(item.FemaleBipedModel),
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleBipedModel,
-                        errorMask: errorMask);
-                }
-                if (item.FemaleWorldModel_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.FemaleWorldModel_Property,
-                        name: nameof(item.FemaleWorldModel),
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleWorldModel,
-                        errorMask: errorMask);
-                }
-                if (item.FemaleIcon_Property.HasBeenSet)
-                {
-                    FilePathXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.FemaleIcon),
-                        item: item.FemaleIcon_Property,
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleIcon,
-                        errorMask: errorMask);
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ClothingAbstract");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (item.Script_Property.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Script),
+                    item: item.Script?.FormID,
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.Script,
+                    errorMask: errorMask);
+            }
+            if (item.Enchantment_Property.HasBeenSet)
+            {
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Enchantment),
+                    item: item.Enchantment?.FormID,
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.Enchantment,
+                    errorMask: errorMask);
+            }
+            if (item.EnchantmentPoints_Property.HasBeenSet)
+            {
+                UInt16XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.EnchantmentPoints),
+                    item: item.EnchantmentPoints_Property,
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.EnchantmentPoints,
+                    errorMask: errorMask);
+            }
+            EnumXmlTranslation<BipedFlag>.Instance.Write(
+                node: elem,
+                name: nameof(item.BipedFlags),
+                item: item.BipedFlags_Property,
+                fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
+                errorMask: errorMask);
+            EnumXmlTranslation<EquipmentFlag>.Instance.Write(
+                node: elem,
+                name: nameof(item.Flags),
+                item: item.Flags_Property,
+                fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
+                errorMask: errorMask);
+            if (item.MaleBipedModel_Property.HasBeenSet)
+            {
+                LoquiXmlTranslation<Model>.Instance.Write(
+                    node: elem,
+                    item: item.MaleBipedModel_Property,
+                    name: nameof(item.MaleBipedModel),
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.MaleBipedModel,
+                    errorMask: errorMask);
+            }
+            if (item.MaleWorldModel_Property.HasBeenSet)
+            {
+                LoquiXmlTranslation<Model>.Instance.Write(
+                    node: elem,
+                    item: item.MaleWorldModel_Property,
+                    name: nameof(item.MaleWorldModel),
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.MaleWorldModel,
+                    errorMask: errorMask);
+            }
+            if (item.MaleIcon_Property.HasBeenSet)
+            {
+                FilePathXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.MaleIcon),
+                    item: item.MaleIcon_Property,
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.MaleIcon,
+                    errorMask: errorMask);
+            }
+            if (item.FemaleBipedModel_Property.HasBeenSet)
+            {
+                LoquiXmlTranslation<Model>.Instance.Write(
+                    node: elem,
+                    item: item.FemaleBipedModel_Property,
+                    name: nameof(item.FemaleBipedModel),
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleBipedModel,
+                    errorMask: errorMask);
+            }
+            if (item.FemaleWorldModel_Property.HasBeenSet)
+            {
+                LoquiXmlTranslation<Model>.Instance.Write(
+                    node: elem,
+                    item: item.FemaleWorldModel_Property,
+                    name: nameof(item.FemaleWorldModel),
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleWorldModel,
+                    errorMask: errorMask);
+            }
+            if (item.FemaleIcon_Property.HasBeenSet)
+            {
+                FilePathXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.FemaleIcon),
+                    item: item.FemaleIcon_Property,
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleIcon,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -2281,38 +2399,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out ClothingAbstract_ErrorMask errorMask)
         {
-            ClothingAbstract_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ClothingAbstract_ErrorMask()) : default(Func<ClothingAbstract_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             ClothingAbstract item,
             RecordTypeConverter recordTypeConverter,
-            Func<ClothingAbstract_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                MajorRecordCommon.Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask);
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            MajorRecordCommon.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask);
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -2320,7 +2430,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClothingAbstract item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<ClothingAbstract_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             NamedMajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
@@ -2363,12 +2473,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
+            LoquiBinaryTranslation<Model>.Instance.Write(
                 writer: writer,
                 item: item.MaleBipedModel_Property,
                 fieldIndex: (int)ClothingAbstract_FieldIndex.MaleBipedModel,
                 errorMask: errorMask);
-            LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
+            LoquiBinaryTranslation<Model>.Instance.Write(
                 writer: writer,
                 item: item.MaleWorldModel_Property,
                 fieldIndex: (int)ClothingAbstract_FieldIndex.MaleWorldModel,
@@ -2381,13 +2491,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(ClothingAbstract_Registration.ICON_HEADER),
                 nullable: false);
-            LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
+            LoquiBinaryTranslation<Model>.Instance.Write(
                 writer: writer,
                 item: item.FemaleBipedModel_Property,
                 fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleBipedModel,
                 errorMask: errorMask,
                 recordTypeConverter: ClothingAbstract_Registration.FemaleBipedModelConverter);
-            LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
+            LoquiBinaryTranslation<Model>.Instance.Write(
                 writer: writer,
                 item: item.FemaleWorldModel_Property,
                 fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleWorldModel,
@@ -2881,6 +2991,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static ClothingAbstract_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

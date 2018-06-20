@@ -1,4 +1,5 @@
 ﻿using Loqui;
+using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
@@ -11,56 +12,37 @@ namespace Mutagen.Bethesda
 {
     public static class UtilityTranslation
     {
-        public static M MajorRecordParse<M, E, I>(
+        public static M MajorRecordParse<M, I>(
             M record,
             MutagenFrame frame,
-            Func<E> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordType recType,
             RecordTypeConverter recordTypeConverter,
-            Action<M, MutagenFrame, Func<E>> fillStructs,
-            Func<M, MutagenFrame, Func<E>, RecordTypeConverter, TryGet<I?>> fillTyped)
+            Action<M, MutagenFrame, ErrorMaskBuilder> fillStructs,
+            Func<M, MutagenFrame, ErrorMaskBuilder, RecordTypeConverter, TryGet<I?>> fillTyped)
             where M : MajorRecord
-            where E : IErrorMask
             where I : struct
         {
-            try
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
+                frame.Reader,
+                recType));
+            fillStructs(
+                record,
+                frame,
+                errorMask);
+            if (fillTyped == null) return record;
+            if (record.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
             {
-                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
-                    frame.Reader,
-                    recType));
-                fillStructs(
-                    record,
-                    frame,
-                    errorMask);
-                if (fillTyped == null) return record;
-                if (record.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
+                using (frame)
                 {
-                    using (frame)
+                    var decompressed = frame.Decompress();
+                    using (decompressed)
                     {
-                        var decompressed = frame.Decompress();
-                        using (decompressed)
-                        {
-                            while (!decompressed.Complete)
-                            {
-                                var parsed = fillTyped(
-                                    record,
-                                    decompressed,
-                                    errorMask,
-                                    recordTypeConverter);
-                                if (parsed.Failed) break;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    using (frame)
-                    {
-                        while (!frame.Complete)
+                        while (!decompressed.Complete)
                         {
                             var parsed = fillTyped(
                                 record,
-                                frame,
+                                decompressed,
                                 errorMask,
                                 recordTypeConverter);
                             if (parsed.Failed) break;
@@ -68,10 +50,20 @@ namespace Mutagen.Bethesda
                     }
                 }
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask().Overall = ex;
+                using (frame)
+                {
+                    while (!frame.Complete)
+                    {
+                        var parsed = fillTyped(
+                            record,
+                            frame,
+                            errorMask,
+                            recordTypeConverter);
+                        if (parsed.Failed) break;
+                    }
+                }
             }
             return record;
         }

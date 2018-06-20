@@ -1,4 +1,5 @@
 ﻿using Loqui;
+using Loqui.Internal;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
@@ -15,10 +16,10 @@ namespace Mutagen.Bethesda.Oblivion
     {
         protected static readonly RecordType FNAM = new RecordType("FNAM");
         
-        public static (Global Object, Global_ErrorMask ErrorMask) Create_Binary(
+        public static Global Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
             // Skip to FNAM
             var initialPos = frame.Position;
@@ -31,21 +32,14 @@ namespace Mutagen.Bethesda.Oblivion
             var type = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var len);
             if (!type.Equals(FNAM))
             {
-                var ex = new ArgumentException($"Could not find FNAM in its expected location: {frame.Position}");
-                if (!doMasks) throw ex;
-                return (null, new Global_ErrorMask()
-                {
-                    Overall = ex
-                });
+                errorMask.ReportExceptionOrThrow(
+                    new ArgumentException($"Could not find FNAM in its expected location: {frame.Position}"));
+                return null;
             }
             if (len != 1)
             {
-                var ex = new ArgumentException($"FNAM had non 1 length: {len}");
-                if (!doMasks) throw ex;
-                return (null, new Global_ErrorMask()
-                {
-                    Overall = ex
-                });
+                errorMask.ReportExceptionOrThrow(
+                    new ArgumentException($"FNAM had non 1 length: {len}"));
             }
 
             // Create proper Global subclass
@@ -63,12 +57,9 @@ namespace Mutagen.Bethesda.Oblivion
                     g = new GlobalFloat();
                     break;
                 default:
-                    var ex = new ArgumentException($"Unknown trigger char: {triggerChar}");
-                    if (!doMasks) throw ex;
-                    return (null, new Global_ErrorMask()
-                    {
-                        Overall = ex
-                    });
+                    errorMask.ReportExceptionOrThrow(
+                        new ArgumentException($"Unknown trigger char: {triggerChar}"));
+                    return null;
             }
 
             // Fill with major record fields
@@ -76,45 +67,29 @@ namespace Mutagen.Bethesda.Oblivion
             MajorRecord.Fill_Binary(
                 frame,
                 g,
-                doMasks,
-                out var majorErrMask);
+                errorMask);
 
             // Skip to and read data
             frame.Reader.Position += 13;
-            var floatParse = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame,
-                doMasks,
-                out var floatMask);
-            if (floatParse.Succeeded)
+                out var rawFloat,
+                errorMask))
             {
-                g.RawFloat = floatParse.Value;
+                g.RawFloat = rawFloat;
             }
-            Global_ErrorMask errMask;
-            if (floatMask != null)
-            {
-                errMask = new Global_ErrorMask()
-                {
-                    RawFloat = floatMask
-                };
-            }
-            else
-            {
-                errMask = null;
-            }
-            return (g, errMask);
+            return g;
         }
 
         static partial void WriteBinary_TypeChar_Custom(
             MutagenWriter writer, 
             Global item, 
-            int fieldIndex,
-            Func<Global_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.CharBinaryTranslation.Instance.Write(
                 writer,
                 item.TypeChar,
                 header: Global_Registration.FNAM_HEADER,
-                fieldIndex: fieldIndex,
                 nullable: false,
                 errorMask: errorMask);
         }

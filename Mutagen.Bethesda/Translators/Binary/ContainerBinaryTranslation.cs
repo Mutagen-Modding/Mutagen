@@ -8,515 +8,615 @@ using Noggog.Notifying;
 using Mutagen.Bethesda.Binary;
 using Loqui;
 using System.IO;
+using Loqui.Internal;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public abstract class ContainerBinaryTranslation<T, M> : IBinaryTranslation<IEnumerable<T>, MaskItem<Exception, IEnumerable<M>>>
+    public abstract class ContainerBinaryTranslation<T> : IBinaryTranslation<IEnumerable<T>>
     {
-        TryGet<IEnumerable<T>> IBinaryTranslation<IEnumerable<T>, MaskItem<Exception, IEnumerable<M>>>.Parse(MutagenFrame reader, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
+        public static readonly bool IsLoqui;
+
+        static ContainerBinaryTranslation()
         {
-            throw new NotImplementedException();
+            IsLoqui = typeof(T).InheritsFrom(typeof(ILoquiObject));
         }
 
-        public TryGet<IEnumerable<T>> ParseRepeatedItem(
+        public bool ParseRepeatedItem(
             MutagenFrame frame,
-            bool doMasks,
+            out IEnumerable<T> enumer,
             RecordType triggeringRecord,
             int lengthLength,
-            out MaskItem<Exception, IEnumerable<M>> errorMask,
-            BinarySubParseDelegate<T, M> transl)
+            ErrorMaskBuilder errorMask,
+            BinarySubParseDelegate<T> transl)
         {
             var safeFrame = frame.Spawn(snapToFinalPosition: false);
-            try
+            var ret = new List<T>();
+            int i = 0;
+            while (!frame.Complete)
             {
-                List<M> maskList = null;
-                var ret = new List<T>();
-                while (!frame.Complete)
+                try
                 {
+                    errorMask?.PushIndex(i++);
                     if (!HeaderTranslation.TryGetRecordType(safeFrame.Reader, lengthLength, triggeringRecord)) break;
-                    var startingPos = frame.Position;
-                    var get = transl(safeFrame, doMasks, out var subMaskObj);
-                    if (get.Succeeded)
+                    if (!IsLoqui)
                     {
-                        ret.Add(get.Value);
+                        safeFrame.Position += Constants.SUBRECORD_LENGTH;
                     }
-                    if (subMaskObj != null)
+                    var startingPos = frame.Position;
+                    if (startingPos == 130037)
                     {
-                        if (!doMasks)
-                        { // This shouldn't actually throw, as subparse is expected to throw if doMasks is off
-                            throw new ArgumentException("Error parsing list.  Could not parse subitem.");
-                        }
-                        if (maskList == null)
-                        {
-                            maskList = new List<M>();
-                        }
-                        maskList.Add(subMaskObj);
+                        int wer = 23;
+                        wer++;
+                    }
+                    if (transl(safeFrame, out var subItem, errorMask))
+                    {
+                        ret.Add(subItem);
                     }
 
                     if (frame.Position == startingPos)
                     {
                         frame.Position += Constants.SUBRECORD_LENGTH;
-                        throw new ArgumentException($"Parsed item on the list consumed no data: {get.Value}");
+                        throw new ArgumentException($"Parsed item on the list consumed no data: {subItem}");
                     }
                 }
-                errorMask = maskList == null ? null : new MaskItem<Exception, IEnumerable<M>>(null, maskList);
-                return TryGet<IEnumerable<T>>.Succeed(ret);
-            }
-            catch (Exception ex)
-            when (doMasks)
-            {
-                errorMask = new MaskItem<Exception, IEnumerable<M>>(ex, null);
-                return TryGet<IEnumerable<T>>.Failure;
-            }
-        }
-
-        public TryGet<IEnumerable<T>> ParseRepeatedItem(
-            MutagenFrame frame,
-            bool doMasks,
-            long lengthLength,
-            out MaskItem<Exception, IEnumerable<M>> errorMask,
-            BinarySubParseRecordDelegate<T, M> transl,
-            ICollectionGetter<RecordType> triggeringRecord = null)
-        {
-            var safeFrame = frame.Spawn(snapToFinalPosition: false);
-            try
-            {
-                List<M> maskList = null;
-                var ret = new List<T>();
-                while (!frame.Complete)
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    var nextRecord = HeaderTranslation.GetNextRecordType(frame.Reader);
-                    if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
-                    var startingPos = frame.Position;
-                    var get = transl(safeFrame, nextRecord, doMasks, out var subMaskObj);
-                    if (get.Succeeded)
-                    {
-                        ret.Add(get.Value);
-                    }
-                    if (subMaskObj != null)
-                    {
-                        if (!doMasks)
-                        { // This shouldn't actually throw, as subparse is expected to throw if doMasks is off
-                            throw new ArgumentException("Error parsing list.  Could not parse subitem.");
-                        }
-                        if (maskList == null)
-                        {
-                            maskList = new List<M>();
-                        }
-                        maskList.Add(subMaskObj);
-                    }
-
-                    if (frame.Position == startingPos) throw new ArgumentException($"Parsed item on the list consumed no data: {get.Value}");
+                    errorMask.ReportException(ex);
                 }
-                errorMask = maskList == null ? null : new MaskItem<Exception, IEnumerable<M>>(null, maskList);
-                return TryGet<IEnumerable<T>>.Succeed(ret);
-            }
-            catch (Exception ex)
-            when (doMasks)
-            {
-                errorMask = new MaskItem<Exception, IEnumerable<M>>(ex, null);
-                return TryGet<IEnumerable<T>>.Failure;
-            }
-        }
-
-        public TryGet<IEnumerable<T>> ParseRepeatedItem(
-            MutagenFrame frame,
-            bool doMasks,
-            long lengthLength,
-            out MaskItem<Exception, IEnumerable<M>> errorMask,
-            BinarySubParseDelegate<T, M> transl)
-        {
-            try
-            {
-                using (frame)
+                finally
                 {
-                    List<M> maskList = null;
-                    var ret = new List<T>();
-                    while (!frame.Complete)
-                    {
-                        var get = transl(frame, doMasks, out var subMaskObj);
-                        if (get.Succeeded)
-                        {
-                            ret.Add(get.Value);
-                        }
-                        if (subMaskObj != null)
-                        {
-                            if (!doMasks)
-                            { // This shouldn't actually throw, as subparse is expected to throw if doMasks is off
-                                throw new ArgumentException("Error parsing list.  Could not parse subitem.");
-                            }
-                            if (maskList == null)
-                            {
-                                maskList = new List<M>();
-                            }
-                            maskList.Add(subMaskObj);
-                        }
-                    }
-                    errorMask = maskList == null ? null : new MaskItem<Exception, IEnumerable<M>>(null, maskList);
-                    return TryGet<IEnumerable<T>>.Succeed(ret);
+                    errorMask?.PopIndex();
                 }
             }
-            catch (Exception ex)
-            when (doMasks)
-            {
-                errorMask = new MaskItem<Exception, IEnumerable<M>>(ex, null);
-                return TryGet<IEnumerable<T>>.Failure;
-            }
+            enumer = ret;
+            return true;
         }
 
-        public TryGet<IEnumerable<T>> ParseRepeatedItem<Mask>(
+        public void ParseRepeatedItem(
             MutagenFrame frame,
             int fieldIndex,
+            INotifyingCollection<T> item,
             RecordType triggeringRecord,
             int lengthLength,
-            Func<Mask> errorMask,
-            BinarySubParseDelegate<T, M> transl)
-            where Mask : IErrorMask
-        {
-            var ret = this.ParseRepeatedItem(
-                frame: frame,
-                triggeringRecord: triggeringRecord,
-                doMasks: errorMask != null,
-                lengthLength: lengthLength,
-                errorMask: out var err,
-                transl: transl);
-            ErrorMask.HandleErrorMask(
-                errorMask,
-                fieldIndex,
-                err);
-            return ret;
-        }
-
-        public TryGet<IEnumerable<T>> ParseRepeatedItem<Mask>(
-            MutagenFrame frame,
-            int fieldIndex,
-            ICollectionGetter<RecordType> triggeringRecord,
-            long lengthLength,
-            Func<Mask> errorMask,
-            BinarySubParseRecordDelegate<T, M> transl)
-            where Mask : IErrorMask
-        {
-            var ret = this.ParseRepeatedItem(
-                frame: frame,
-                triggeringRecord: triggeringRecord,
-                doMasks: errorMask != null,
-                lengthLength: lengthLength,
-                errorMask: out var err,
-                transl: transl);
-            ErrorMask.HandleErrorMask(
-                errorMask,
-                fieldIndex,
-                err);
-            return ret;
-        }
-
-        public TryGet<IEnumerable<T>> ParseRepeatedItem<Mask>(
-            MutagenFrame frame,
-            int fieldIndex,
-            ICollectionGetter<RecordType> triggeringRecord,
-            long lengthLength,
-            Func<Mask> errorMask,
-            BinarySubParseDelegate<T, M> transl)
-            where Mask : IErrorMask
-        {
-            var ret = this.ParseRepeatedItem(
-                frame: frame,
-                triggeringRecord: triggeringRecord,
-                doMasks: errorMask != null,
-                lengthLength: lengthLength,
-                errorMask: out var err,
-                transl: (MutagenFrame reader, RecordType header, bool doMasks, out M maskObj) => transl(reader, doMasks, out maskObj));
-            ErrorMask.HandleErrorMask(
-                errorMask,
-                fieldIndex,
-                err);
-            return ret;
-        }
-
-        public TryGet<IEnumerable<T>> ParseRepeatedItem<Mask>(
-            MutagenFrame frame,
-            int fieldIndex,
-            long lengthLength,
-            Func<Mask> errorMask,
-            BinarySubParseDelegate<T, M> transl)
-            where Mask : IErrorMask
-        {
-            var ret = this.ParseRepeatedItem(
-                frame: frame,
-                doMasks: errorMask != null,
-                lengthLength: lengthLength,
-                errorMask: out var err,
-                transl: transl);
-            ErrorMask.HandleErrorMask(
-                errorMask,
-                fieldIndex,
-                err);
-            return ret;
-        }
-
-        public TryGet<IEnumerable<T>> ParseRepeatedItem<Mask>(
-            MutagenFrame frame,
-            int fieldIndex,
-            long lengthLength,
-            Func<Mask> errorMask,
-            BinarySubParseRecordDelegate<T, M> transl)
-            where Mask : IErrorMask
-        {
-            var ret = this.ParseRepeatedItem(
-                frame: frame,
-                doMasks: errorMask != null,
-                lengthLength: lengthLength,
-                errorMask: out var err,
-                transl: transl);
-            ErrorMask.HandleErrorMask(
-                errorMask,
-                fieldIndex,
-                err);
-            return ret;
-        }
-
-        public TryGet<IEnumerable<T>> ParseRepeatedItem(
-            MutagenFrame frame,
-            bool doMasks,
-            int amount,
-            out MaskItem<Exception, IEnumerable<M>> errorMask,
-            BinarySubParseDelegate<T, M> transl)
+            ErrorMaskBuilder errorMask,
+            BinarySubParseDelegate<T> transl)
         {
             try
             {
-                List<M> maskList = null;
-                var ret = new List<T>();
-                for (int i = 0; i < amount; i++)
+                errorMask?.PushIndex(fieldIndex);
+                if (ParseRepeatedItem(
+                    frame,
+                    out var enumer,
+                    triggeringRecord,
+                    lengthLength,
+                    errorMask,
+                    transl))
                 {
-                    var get = transl(frame, doMasks, out var subMaskObj);
-                    if (get.Succeeded)
-                    {
-                        ret.Add(get.Value);
-                    }
-                    else
-                    {
-                        if (!doMasks)
-                        { // This shouldn't actually throw, as subparse is expected to throw if doMasks is off
-                            throw new ArgumentException("Error parsing list.  Could not parse subitem.");
-                        }
-                        if (maskList == null)
-                        {
-                            maskList = new List<M>();
-                        }
-                        maskList.Add(subMaskObj);
-                    }
-                }
-                errorMask = maskList == null ? null : new MaskItem<Exception, IEnumerable<M>>(null, maskList);
-                return TryGet<IEnumerable<T>>.Succeed(ret);
-            }
-            catch (Exception ex)
-            when (doMasks)
-            {
-                errorMask = new MaskItem<Exception, IEnumerable<M>>(ex, null);
-                return TryGet<IEnumerable<T>>.Failure;
-            }
-        }
-
-        public TryGet<IEnumerable<T>> ParseRepeatedItem<Mask>(
-            MutagenFrame frame,
-            int fieldIndex,
-            int amount,
-            Func<Mask> errorMask,
-            BinarySubParseDelegate<T, M> transl)
-            where Mask : IErrorMask
-        {
-            var ret = this.ParseRepeatedItem(
-                frame: frame,
-                amount: amount,
-                doMasks: errorMask != null,
-                errorMask: out var err,
-                transl: transl);
-            ErrorMask.HandleErrorMask(
-                errorMask,
-                fieldIndex,
-                err);
-            return ret;
-        }
-
-        public abstract TryGet<T> ParseSingleItem(MutagenFrame frame, BinarySubParseDelegate<T, M> transl, bool doMasks, out M maskObj);
-
-        void IBinaryTranslation<IEnumerable<T>, MaskItem<Exception, IEnumerable<M>>>.Write(MutagenWriter writer, IEnumerable<T> item, long length, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
-        {
-            Write(writer, item, doMasks, out maskObj);
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            IEnumerable<T> item,
-            bool doMasks,
-            out MaskItem<Exception, IEnumerable<M>> maskObj)
-        {
-            try
-            {
-                var transl = BinaryTranslator<T, M>.Translator;
-                if (transl.Item.Failed)
-                {
-                    throw new ArgumentException($"No XML Translator available for {typeof(T)}. {transl.Item.Reason}");
-                }
-                this.Write(
-                    writer: writer,
-                    item: item,
-                    doMasks: doMasks,
-                    maskObj: out maskObj,
-                    transl: (MutagenWriter subWriter, T item1, bool internalDoMasks, out M obj) => transl.Item.Value.Write(writer: subWriter, item: item1, length: -1, doMasks: internalDoMasks, maskObj: out obj));
-            }
-            catch (Exception ex)
-            when (doMasks)
-            {
-                maskObj = new MaskItem<Exception, IEnumerable<M>>(ex, null);
-            }
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            IEnumerable<T> item,
-            bool doMasks,
-            out MaskItem<Exception, IEnumerable<M>> maskObj,
-            BinarySubWriteDelegate<T, M> transl)
-        {
-            try
-            {
-                List<M> maskList = null;
-                foreach (var i in item)
-                {
-                    this.WriteSingleItem(writer, transl, i, doMasks, out var errObj);
-                    if (errObj != null)
-                    {
-                        if (maskList == null)
-                        {
-                            maskList = new List<M>();
-                        }
-                        maskList.Add(errObj);
-                    }
-                }
-                if (maskList != null)
-                {
-                    maskObj = new MaskItem<Exception, IEnumerable<M>>(null, maskList);
+                    item.SetTo(enumer);
                 }
                 else
                 {
-                    maskObj = null;
+                    item.Unset();
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
-                maskObj = new MaskItem<Exception, IEnumerable<M>>(ex, null);
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
             }
         }
 
-        public void Write<Mask>(
-            MutagenWriter writer,
-            IEnumerable<T> item,
-            int fieldIndex,
-            Func<Mask> errorMask,
-            BinarySubWriteDelegate<T, M> transl)
-            where Mask : IErrorMask
+        public bool ParseRepeatedItem(
+            MutagenFrame frame,
+            out IEnumerable<T> enumer,
+            long lengthLength,
+            ErrorMaskBuilder errorMask,
+            BinarySubParseRecordDelegate<T> transl,
+            ICollectionGetter<RecordType> triggeringRecord = null)
         {
-            bool doMasks = errorMask != null;
-            try
+            var safeFrame = frame.Spawn(snapToFinalPosition: false);
+            int i = 0;
+            var ret = new List<T>();
+            while (!frame.Complete)
             {
-                List<M> maskList = null;
-                foreach (var i in item)
+                try
                 {
-                    this.WriteSingleItem(writer, transl, i, doMasks, out var errObj);
-                    if (errObj != null)
+                    errorMask?.PushIndex(i++);
+                    var nextRecord = HeaderTranslation.GetNextRecordType(frame.Reader);
+                    if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
+                    if (!IsLoqui)
                     {
-                        if (maskList == null)
-                        {
-                            maskList = new List<M>();
-                        }
-                        maskList.Add(errObj);
+                        safeFrame.Position += Constants.SUBRECORD_LENGTH;
+                    }
+                    var startingPos = frame.Position;
+                    if (transl(safeFrame, nextRecord, out var subIitem, errorMask))
+                    {
+                        ret.Add(subIitem);
+                    }
+                    if (frame.Position == startingPos)
+                    {
+                        errorMask.ReportExceptionOrThrow(
+                            new ArgumentException($"Parsed item on the list consumed no data: {subIitem}"));
                     }
                 }
-                if (maskList != null)
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        fieldIndex,
-                        new MaskItem<Exception, IEnumerable<M>>(null, maskList));
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            enumer = ret;
+            return true;
+        }
+
+        public void ParseRepeatedItem(
+            MutagenFrame frame,
+            int fieldIndex,
+            INotifyingCollection<T> item,
+            long lengthLength,
+            ErrorMaskBuilder errorMask,
+            BinarySubParseDelegate<T> transl,
+            ICollectionGetter<RecordType> triggeringRecord = null)
+        {
+            this.ParseRepeatedItem(
+                frame: frame,
+                triggeringRecord: triggeringRecord,
+                fieldIndex: fieldIndex,
+                item: item,
+                lengthLength: lengthLength,
+                errorMask: errorMask,
+                transl: (MutagenFrame reader, RecordType header, out T subItem, ErrorMaskBuilder subErrMask) => transl(reader, out subItem, subErrMask));
+        }
+
+        public void ParseRepeatedItem(
+            MutagenFrame frame,
+            int fieldIndex,
+            INotifyingCollection<T> item,
+            long lengthLength,
+            ErrorMaskBuilder errorMask,
+            BinarySubParseRecordDelegate<T> transl,
+            ICollectionGetter<RecordType> triggeringRecord = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                if (ParseRepeatedItem(
+                    frame,
+                    out var enumer,
+                    lengthLength,
+                    errorMask,
+                    transl,
+                    triggeringRecord))
+                {
+                    item.SetTo(enumer);
+                }
+                else
+                {
+                    item.Unset();
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
-                ErrorMask.HandleException(
-                    errorMask,
-                    fieldIndex,
-                    ex);
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
             }
         }
 
-        public void Write<Mask>(
+        public bool ParseRepeatedItem(
+            MutagenFrame frame,
+            out IEnumerable<T> enumer,
+            long lengthLength,
+            ErrorMaskBuilder errorMask,
+            BinarySubParseDelegate<T> transl)
+        {
+            using (frame)
+            {
+                var ret = new List<T>();
+                int i = 0; ;
+                while (!frame.Complete)
+                {
+                    try
+                    {
+                        errorMask?.PushIndex(i++);
+                        if (transl(frame, out var subItem, errorMask))
+                        {
+                            ret.Add(subItem);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                }
+                enumer = ret;
+                return true;
+            }
+        }
+
+        public void ParseRepeatedItem(
+            MutagenFrame frame,
+            int fieldIndex,
+            INotifyingCollection<T> item,
+            long lengthLength,
+            ErrorMaskBuilder errorMask,
+            BinarySubParseDelegate<T> transl)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                if (ParseRepeatedItem(
+                    frame,
+                    out var enumer,
+                    lengthLength,
+                    errorMask,
+                    transl))
+                {
+                    item.SetTo(enumer);
+                }
+                else
+                {
+                    item.Unset();
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+        public bool ParseRepeatedItem(
+            MutagenFrame frame,
+            out IEnumerable<T> enumer,
+            int amount,
+            ErrorMaskBuilder errorMask,
+            BinarySubParseDelegate<T> transl)
+        {
+            var ret = new List<T>();
+            var safeFrame = frame.Spawn(snapToFinalPosition: false);
+            for (int i = 0; i < amount; i++)
+            {
+                try
+                {
+                    errorMask?.PushIndex(i++);
+                    if (transl(safeFrame, out var subItem, errorMask))
+                    {
+                        ret.Add(subItem);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            enumer = ret;
+            return true;
+        }
+
+        public void ParseRepeatedItem(
+            MutagenFrame frame,
+            int fieldIndex,
+            INotifyingCollection<T> item,
+            int amount,
+            ErrorMaskBuilder errorMask,
+            BinarySubParseDelegate<T> transl)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                if (ParseRepeatedItem(
+                    frame,
+                    out var enumer,
+                    amount,
+                    errorMask,
+                    transl))
+                {
+                    item.SetTo(enumer);
+                }
+                else
+                {
+                    item.Unset();
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+        #region NotifyingKeyedCollection Helpers
+        public void ParseRepeatedItem<K>(
+            MutagenFrame frame,
+            int fieldIndex,
+            INotifyingKeyedCollection<K, T> item,
+            RecordType triggeringRecord,
+            int lengthLength,
+            ErrorMaskBuilder errorMask,
+            BinarySubParseDelegate<T> transl)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                if (ParseRepeatedItem(
+                    frame,
+                    out var enumer,
+                    triggeringRecord,
+                    lengthLength,
+                    errorMask,
+                    transl))
+                {
+                    item.SetTo(enumer);
+                }
+                else
+                {
+                    item.Unset();
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+        public void ParseRepeatedItem<K>(
+            MutagenFrame frame,
+            int fieldIndex,
+            INotifyingKeyedCollection<K, T> item,
+            int lengthLength,
+            ErrorMaskBuilder errorMask,
+            BinarySubParseRecordDelegate<T> transl,
+            ICollectionGetter<RecordType> triggeringRecord = null)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                if (ParseRepeatedItem(
+                    frame,
+                    out var enumer,
+                    lengthLength,
+                    errorMask,
+                    transl,
+                    triggeringRecord))
+                {
+                    item.SetTo(enumer);
+                }
+                else
+                {
+                    item.Unset();
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+        #endregion
+
+        void IBinaryTranslation<IEnumerable<T>>.Write(MutagenWriter writer, IEnumerable<T> item, long length, ErrorMaskBuilder errorMask)
+        {
+            Write(writer, item, errorMask);
+        }
+
+        public void Write(
+            MutagenWriter writer,
+            IEnumerable<T> items,
+            ErrorMaskBuilder errorMask)
+        {
+            var transl = BinaryTranslator<T>.Translator;
+            if (transl.Item.Failed)
+            {
+                errorMask.ReportExceptionOrThrow(
+                    new ArgumentException($"No binary Translator available for {typeof(T)}. {transl.Item.Reason}"));
+            }
+            this.Write(
+                writer: writer,
+                items: items,
+                errorMask: errorMask,
+                transl: (MutagenWriter subWriter, T item1, ErrorMaskBuilder errMask2) => transl.Item.Value.Write(writer: subWriter, item: item1, length: -1, errorMask: errMask2));
+        }
+
+        public void Write(
+            MutagenWriter writer,
+            IEnumerable<T> items,
+            ErrorMaskBuilder errorMask,
+            BinarySubWriteDelegate<T> transl)
+        {
+            int i = 0;
+            foreach (var item in items)
+            {
+                try
+                {
+                    errorMask?.PushIndex(i++);
+                    this.WriteSingleItem(writer, transl, item, errorMask);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+        }
+
+        public void Write(
             MutagenWriter writer,
             IHasBeenSetItemGetter<IEnumerable<T>> item,
-            int fieldIndex,
-            RecordType recordType,
-            Func<Mask> errorMask,
-            BinarySubWriteDelegate<T, M> transl)
-            where Mask : IErrorMask
+            ErrorMaskBuilder errorMask,
+            BinarySubWriteDelegate<T> transl)
         {
             if (!item.HasBeenSet) return;
             this.Write(
-                writer: writer,
-                item: item.Item,
-                fieldIndex: fieldIndex,
-                recordType: recordType,
+                writer,
+                items: item.Item,
                 errorMask: errorMask,
                 transl: transl);
         }
 
-        private void Write<Mask>(
+        public void Write(
             MutagenWriter writer,
-            IEnumerable<T> item,
+            IEnumerable<T> items,
             int fieldIndex,
             RecordType recordType,
-            Func<Mask> errorMask,
-            BinarySubWriteDelegate<T, M> transl)
-            where Mask : IErrorMask
+            ErrorMaskBuilder errorMask,
+            BinarySubWriteDelegate<T> transl)
         {
             try
             {
-                bool doMasks = errorMask != null;
-                List<M> maskList = null;
-                using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
-                {
-
-                    foreach (var i in item)
-                    {
-                        this.WriteSingleItem(writer, transl, i, doMasks, out var errObj);
-                        if (errObj != null)
-                        {
-                            if (maskList == null)
-                            {
-                                maskList = new List<M>();
-                            }
-                            maskList.Add(errObj);
-                        }
-                    }
-                }
-                if (maskList != null)
-                {
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        fieldIndex,
-                        new MaskItem<Exception, IEnumerable<M>>(null, maskList));
-                }
+                errorMask?.PushIndex(fieldIndex);
+                this.Write(
+                    writer: writer,
+                    items: items,
+                    recordType: recordType,
+                    errorMask: errorMask,
+                    transl: transl);
             }
             catch (Exception ex)
+            when (errorMask != null)
             {
-                ErrorMask.HandleException(
-                    errorMask,
-                    fieldIndex,
-                    ex);
+                errorMask?.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
             }
         }
 
-        public abstract void WriteSingleItem<ErrMask>(MutagenWriter writer, BinarySubWriteDelegate<T, ErrMask> transl, T item, bool doMasks, out ErrMask maskObj);
+        public void Write(
+            MutagenWriter writer,
+            IEnumerable<T> items,
+            int fieldIndex,
+            ErrorMaskBuilder errorMask,
+            BinarySubWriteDelegate<T> transl)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                this.Write(
+                    writer: writer,
+                    items: items,
+                    errorMask: errorMask,
+                    transl: transl);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask?.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+        private void Write(
+            MutagenWriter writer,
+            IEnumerable<T> items,
+            RecordType recordType,
+            int fieldIndex,
+            ErrorMaskBuilder errorMask,
+            BinarySubWriteDelegate<T> transl)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                this.Write(
+                    writer: writer,
+                    items: items,
+                    recordType: recordType,
+                    errorMask: errorMask,
+                    transl: transl);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask?.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+        private void Write(
+            MutagenWriter writer,
+            IEnumerable<T> items,
+            RecordType recordType,
+            ErrorMaskBuilder errorMask,
+            BinarySubWriteDelegate<T> transl)
+        {
+            using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
+            {
+                int i = 0;
+                foreach (var item in items)
+                {
+                    try
+                    {
+                        errorMask?.PushIndex(i++);
+                        this.WriteSingleItem(writer, transl, item, errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                }
+            }
+        }
+
+        public abstract void WriteSingleItem(MutagenWriter writer, BinarySubWriteDelegate<T> transl, T item, ErrorMaskBuilder errorMask);
+
+        bool IBinaryTranslation<IEnumerable<T>>.Parse(MutagenFrame reader, out IEnumerable<T> item, ErrorMaskBuilder errorMask)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

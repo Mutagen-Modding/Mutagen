@@ -10,13 +10,21 @@ namespace Mutagen.Bethesda.Generation
 {
     public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
     {
+        public override string GetTranslatorInstance(TypeGeneration typeGen)
+        {
+            var eType = typeGen as EnumType;
+            return $"EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance";
+        }
+
+        public override bool AllowDirectWrite => false;
+        public override bool AllowDirectParse => false;
+
         public override void GenerateWrite(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             string writerAccessor,
             Accessor itemAccessor,
-            string doMaskAccessor,
             string maskAccessor)
         {
             var eType = typeGen as EnumType;
@@ -30,13 +38,8 @@ namespace Mutagen.Bethesda.Generation
                 if (typeGen.HasIndex)
                 {
                     args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                    args.Add($"errorMask: {maskAccessor}");
                 }
-                else
-                {
-                    args.Add($"doMasks: {doMaskAccessor}");
-                    args.Add($"errorMask: out {maskAccessor}");
-                }
+                args.Add($"errorMask: {maskAccessor}");
                 if (data.RecordType.HasValue)
                 {
                     args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
@@ -51,7 +54,6 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string nodeAccessor,
             Accessor itemAccessor,
-            string doMaskAccessor,
             string maskAccessor)
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
@@ -63,8 +65,7 @@ namespace Mutagen.Bethesda.Generation
             ArgsWrapper args;
             if (itemAccessor.PropertyAccess != null)
             {
-                args = new ArgsWrapper(fg, $"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}({this.Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse",
-                    suffixLine: ")");
+                args = new ArgsWrapper(fg, $"{this.Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.ParseInto");
             }
             else
             {
@@ -79,6 +80,10 @@ namespace Mutagen.Bethesda.Generation
                 else
                 {
                     args.Add($"frame: {nodeAccessor}.SpawnWithLength({eType.ByteLength})");
+                }
+                if (itemAccessor.PropertyAccess != null)
+                {
+                    args.Add($"item: {itemAccessor.PropertyAccess}");
                 }
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 args.Add($"errorMask: {maskAccessor}");
@@ -100,17 +105,17 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string nodeAccessor,
             bool squashedRepeatedList,
-            Accessor retAccessor,
-            string doMaskAccessor,
+            string retAccessor,
+            Accessor outItemAccessor,
             string maskAccessor)
         {
             var eType = typeGen as EnumType;
             using (var args = new ArgsWrapper(fg,
-                $"{retAccessor.DirectAccess}{this.Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse"))
+                $"{retAccessor}{this.Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse"))
             {
                 args.Add($"frame: {nodeAccessor}.SpawnWithLength({eType.ByteLength})");
-                args.Add($"doMasks: {doMaskAccessor}");
-                args.Add($"errorMask: out {maskAccessor}");
+                args.Add($"item: out {outItemAccessor.DirectAccess}");
+                args.Add($"errorMask: {maskAccessor}");
             }
         }
     }

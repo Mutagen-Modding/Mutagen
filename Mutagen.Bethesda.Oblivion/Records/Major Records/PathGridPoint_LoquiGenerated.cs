@@ -17,6 +17,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
@@ -172,8 +173,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -182,23 +182,37 @@ namespace Mutagen.Bethesda.Oblivion
             out PathGridPoint_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = PathGridPoint_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (PathGridPoint Object, PathGridPoint_ErrorMask ErrorMask) Create_XML(
+        public static PathGridPoint Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            PathGridPoint_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PathGridPoint_ErrorMask()) : default(Func<PathGridPoint_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new PathGridPoint();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static PathGridPoint Create_XML(string path)
@@ -240,12 +254,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<PathGridPoint, PathGridPoint_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<PathGridPoint>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -254,13 +267,14 @@ namespace Mutagen.Bethesda.Oblivion
             out PathGridPoint_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<PathGridPoint, PathGridPoint_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<PathGridPoint>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = PathGridPoint_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -399,64 +413,35 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static PathGridPoint Create_XML_Internal(
-            XElement root,
-            Func<PathGridPoint_ErrorMask> errorMask)
-        {
-            var ret = new PathGridPoint();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             PathGridPoint item,
             XElement root,
             string name,
-            Func<PathGridPoint_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Point":
-                    item._Point.SetIfSucceeded(P3FloatXmlTranslation.Instance.ParseNonNull(
+                    P3FloatXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)PathGridPoint_FieldIndex.Point,
-                        errorMask: errorMask));
+                        item: item._Point,
+                        errorMask: errorMask);
                     break;
                 case "NumConnectionsFluffBytes":
-                    item._NumConnectionsFluffBytes.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    ByteArrayXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes,
-                        errorMask: errorMask));
+                        item: item._NumConnectionsFluffBytes,
+                        errorMask: errorMask);
                     break;
                 case "Connections":
-                    item._Connections.SetIfSucceeded(ListXmlTranslation<Int16, Exception>.Instance.Parse(
+                    ListXmlTranslation<Int16>.Instance.ParseInto(
                         root: root,
+                        item: item._Connections,
                         fieldIndex: (int)PathGridPoint_FieldIndex.Connections,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return Int16XmlTranslation.Instance.Parse(
-                                r,
-                                nullable: false,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => o.Value);
-                        }
-                        ));
+                        transl: Int16XmlTranslation.Instance.Parse);
                     break;
                 default:
                     break;
@@ -472,8 +457,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -482,26 +467,38 @@ namespace Mutagen.Bethesda.Oblivion
             out PathGridPoint_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = PathGridPoint_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (PathGridPoint Object, PathGridPoint_ErrorMask ErrorMask) Create_Binary(
+        public static PathGridPoint Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            PathGridPoint_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PathGridPoint_ErrorMask()) : default(Func<PathGridPoint_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new PathGridPoint();
+            try
+            {
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static PathGridPoint Create_Binary(string path)
@@ -629,58 +626,28 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static PathGridPoint Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<PathGridPoint_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            var ret = new PathGridPoint();
-            try
-            {
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_Binary_Structs(
             PathGridPoint item,
             MutagenFrame frame,
-            Func<PathGridPoint_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            item._Point.SetIfSucceeded(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._Point,
                 fieldIndex: (int)PathGridPoint_FieldIndex.Point,
-                errorMask: errorMask));
-            var NumConnectionsFluffBytestryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.ParseInto(
                 frame: frame.SpawnWithLength(3),
+                item: item._NumConnectionsFluffBytes,
                 fieldIndex: (int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes,
                 errorMask: errorMask);
-            item._NumConnectionsFluffBytes.SetIfSucceeded(NumConnectionsFluffBytestryGet);
-            var ConnectionstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16, Exception>.Instance.ParseRepeatedItem(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16>.Instance.ParseRepeatedItem(
                 frame: frame,
+                item: item._Connections,
                 fieldIndex: (int)PathGridPoint_FieldIndex.Connections,
                 lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                 errorMask: errorMask,
-                transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
-                {
-                    return Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
-                        r,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
-            item._Connections.SetIfSucceeded(ConnectionstryGet);
+                transl: Int16BinaryTranslation.Instance.Parse);
         }
 
         #endregion
@@ -773,24 +740,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            PathGridPoint_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new PathGridPoint_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             PathGridPointCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = PathGridPoint_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IPathGridPointGetter rhs,
+            ErrorMaskBuilder errorMask,
+            PathGridPoint_CopyMask copyMask = null,
+            IPathGridPointGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            PathGridPointCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1114,13 +1089,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPathGridPoint item,
             IPathGridPointGetter rhs,
             IPathGridPointGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             PathGridPoint_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.Point ?? true)
             {
+                errorMask.PushIndex((int)PathGridPoint_FieldIndex.Point);
                 try
                 {
                     item.Point_Property.Set(
@@ -1128,13 +1103,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)PathGridPoint_FieldIndex.Point, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.NumConnectionsFluffBytes ?? true)
             {
+                errorMask.PushIndex((int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes);
                 try
                 {
                     item.NumConnectionsFluffBytes_Property.Set(
@@ -1142,13 +1122,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Connections != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)PathGridPoint_FieldIndex.Connections);
                 try
                 {
                     item.Connections.SetToWithDefault(
@@ -1157,9 +1142,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)PathGridPoint_FieldIndex.Connections, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1355,63 +1344,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out PathGridPoint_ErrorMask errorMask,
             string name = null)
         {
-            PathGridPoint_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PathGridPoint_ErrorMask()) : default(Func<PathGridPoint_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = PathGridPoint_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             IPathGridPointGetter item,
-            Func<PathGridPoint_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.PathGridPoint");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.PathGridPoint");
-                node.Add(elem);
-                if (name != null)
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.PathGridPoint");
+            }
+            P3FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Point),
+                item: item.Point_Property,
+                fieldIndex: (int)PathGridPoint_FieldIndex.Point,
+                errorMask: errorMask);
+            ByteArrayXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.NumConnectionsFluffBytes),
+                item: item.NumConnectionsFluffBytes_Property,
+                fieldIndex: (int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes,
+                errorMask: errorMask);
+            ListXmlTranslation<Int16>.Instance.Write(
+                node: elem,
+                name: nameof(item.Connections),
+                item: item.Connections,
+                fieldIndex: (int)PathGridPoint_FieldIndex.Connections,
+                errorMask: errorMask,
+                transl: (XElement subNode, Int16 subItem, ErrorMaskBuilder listSubMask) =>
                 {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.PathGridPoint");
+                    Int16XmlTranslation.Instance.Write(
+                        node: subNode,
+                        name: "Item",
+                        item: subItem,
+                        errorMask: listSubMask);
                 }
-                P3FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Point),
-                    item: item.Point_Property,
-                    fieldIndex: (int)PathGridPoint_FieldIndex.Point,
-                    errorMask: errorMask);
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.NumConnectionsFluffBytes),
-                    item: item.NumConnectionsFluffBytes_Property,
-                    fieldIndex: (int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes,
-                    errorMask: errorMask);
-                ListXmlTranslation<Int16, Exception>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Connections),
-                    item: item.Connections,
-                    fieldIndex: (int)PathGridPoint_FieldIndex.Connections,
-                    errorMask: errorMask,
-                    transl: (XElement subNode, Int16 subItem, bool listDoMasks, out Exception listSubMask) =>
-                    {
-                        Int16XmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: "Item",
-                            item: subItem,
-                            doMasks: errorMask != null,
-                            errorMask: out listSubMask);
-                    }
-                    );
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+                );
         }
         #endregion
 
@@ -1426,40 +1406,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out PathGridPoint_ErrorMask errorMask)
         {
-            PathGridPoint_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PathGridPoint_ErrorMask()) : default(Func<PathGridPoint_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = PathGridPoint_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             PathGridPoint item,
             RecordTypeConverter recordTypeConverter,
-            Func<PathGridPoint_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask);
         }
         #endregion
 
         public static void Write_Binary_Embedded(
             PathGridPoint item,
             MutagenWriter writer,
-            Func<PathGridPoint_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -1471,20 +1443,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.NumConnectionsFluffBytes_Property,
                 fieldIndex: (int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16, Exception>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16>.Instance.Write(
                 writer: writer,
-                item: item.Connections,
+                items: item.Connections,
                 fieldIndex: (int)PathGridPoint_FieldIndex.Connections,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, Int16 subItem, bool listDoMasks, out Exception listSubMask) =>
-                {
-                    Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                transl: Int16BinaryTranslation.Instance.Write);
         }
 
         #endregion
@@ -1815,6 +1779,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static PathGridPoint_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

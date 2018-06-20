@@ -18,6 +18,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
@@ -166,8 +167,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -176,23 +176,37 @@ namespace Mutagen.Bethesda.Oblivion
             out LocalVariable_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = LocalVariable_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (LocalVariable Object, LocalVariable_ErrorMask ErrorMask) Create_XML(
+        public static LocalVariable Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            LocalVariable_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new LocalVariable_ErrorMask()) : default(Func<LocalVariable_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new LocalVariable();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static LocalVariable Create_XML(string path)
@@ -234,12 +248,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<LocalVariable, LocalVariable_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<LocalVariable>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -248,13 +261,14 @@ namespace Mutagen.Bethesda.Oblivion
             out LocalVariable_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<LocalVariable, LocalVariable_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<LocalVariable>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = LocalVariable_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -393,49 +407,46 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static LocalVariable Create_XML_Internal(
-            XElement root,
-            Func<LocalVariable_ErrorMask> errorMask)
-        {
-            var ret = new LocalVariable();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             LocalVariable item,
             XElement root,
             string name,
-            Func<LocalVariable_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Data":
-                    item._Data.SetIfSucceeded(LoquiXmlTranslation<LocalVariableData, LocalVariableData_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)LocalVariable_FieldIndex.Data,
-                        errorMask: errorMask));
+                    try
+                    {
+                        errorMask?.PushIndex((int)LocalVariable_FieldIndex.Data);
+                        if (LoquiXmlTranslation<LocalVariableData>.Instance.Parse(
+                            root: root,
+                            item: out var DataParse,
+                            errorMask: errorMask))
+                        {
+                            item._Data.Item = DataParse;
+                        }
+                        else
+                        {
+                            item._Data.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Name":
-                    item._Name.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    StringXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)LocalVariable_FieldIndex.Name,
-                        errorMask: errorMask));
+                        item: item._Name,
+                        errorMask: errorMask);
                     break;
                 default:
                     break;
@@ -451,8 +462,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -461,26 +472,50 @@ namespace Mutagen.Bethesda.Oblivion
             out LocalVariable_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = LocalVariable_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (LocalVariable Object, LocalVariable_ErrorMask ErrorMask) Create_Binary(
+        public static LocalVariable Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            LocalVariable_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new LocalVariable_ErrorMask()) : default(Func<LocalVariable_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new LocalVariable();
+            try
+            {
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                    LocalVariable_FieldIndex? lastParsed = null;
+                    while (!frame.Complete)
+                    {
+                        var parsed = Fill_Binary_RecordTypes(
+                            item: ret,
+                            frame: frame,
+                            lastParsed: lastParsed,
+                            errorMask: errorMask,
+                            recordTypeConverter: recordTypeConverter);
+                        if (parsed.Failed) break;
+                        lastParsed = parsed.Value;
+                    }
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static LocalVariable Create_Binary(string path)
@@ -608,46 +643,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static LocalVariable Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<LocalVariable_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            var ret = new LocalVariable();
-            try
-            {
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                    LocalVariable_FieldIndex? lastParsed = null;
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            lastParsed: lastParsed,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                        lastParsed = parsed.Value;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_Binary_Structs(
             LocalVariable item,
             MutagenFrame frame,
-            Func<LocalVariable_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
         }
 
@@ -655,7 +654,7 @@ namespace Mutagen.Bethesda.Oblivion
             LocalVariable item,
             MutagenFrame frame,
             LocalVariable_FieldIndex? lastParsed,
-            Func<LocalVariable_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -666,20 +665,21 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "SLSD":
                     if (lastParsed.HasValue && lastParsed.Value >= LocalVariable_FieldIndex.Data) return TryGet<LocalVariable_FieldIndex?>.Failure;
-                    item._Data.SetIfSucceeded(LoquiBinaryTranslation<LocalVariableData, LocalVariableData_ErrorMask>.Instance.Parse(
+                    LoquiBinaryTranslation<LocalVariableData>.Instance.ParseInto(
                         frame: frame,
                         fieldIndex: (int)LocalVariable_FieldIndex.Data,
-                        errorMask: errorMask));
+                        errorMask: errorMask,
+                        item: item._Data);
                     return TryGet<LocalVariable_FieldIndex?>.Succeed(LocalVariable_FieldIndex.Data);
                 case "SCVR":
                     if (lastParsed.HasValue && lastParsed.Value >= LocalVariable_FieldIndex.Name) return TryGet<LocalVariable_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var NametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._Name,
                         fieldIndex: (int)LocalVariable_FieldIndex.Name,
                         parseWhole: true,
                         errorMask: errorMask);
-                    item._Name.SetIfSucceeded(NametryGet);
                     return TryGet<LocalVariable_FieldIndex?>.Succeed(LocalVariable_FieldIndex.Name);
                 default:
                     return TryGet<LocalVariable_FieldIndex?>.Failure;
@@ -776,24 +776,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            LocalVariable_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new LocalVariable_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             LocalVariableCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = LocalVariable_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            ILocalVariableGetter rhs,
+            ErrorMaskBuilder errorMask,
+            LocalVariable_CopyMask copyMask = null,
+            ILocalVariableGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            LocalVariableCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1109,13 +1117,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILocalVariable item,
             ILocalVariableGetter rhs,
             ILocalVariableGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             LocalVariable_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.Data.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)LocalVariable_FieldIndex.Data);
                 try
                 {
                     item.Data_Property.SetToWithDefault(
@@ -1133,15 +1141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.Data,
                                         rhs: rhs.Data,
                                         def: def?.Data,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<LocalVariableData_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new LocalVariableData_ErrorMask();
-                                            baseMask.SetNthMask((int)LocalVariable_FieldIndex.Data, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.Data.Specific,
                                         cmds: cmds);
                                     return r;
@@ -1158,13 +1158,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)LocalVariable_FieldIndex.Data, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Name ?? true)
             {
+                errorMask.PushIndex((int)LocalVariable_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -1173,9 +1178,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)LocalVariable_FieldIndex.Name, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1346,52 +1355,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out LocalVariable_ErrorMask errorMask,
             string name = null)
         {
-            LocalVariable_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new LocalVariable_ErrorMask()) : default(Func<LocalVariable_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = LocalVariable_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             ILocalVariableGetter item,
-            Func<LocalVariable_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.LocalVariable");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.LocalVariable");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LocalVariable");
-                }
-                if (item.Data_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<LocalVariableData, LocalVariableData_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.Data_Property,
-                        name: nameof(item.Data),
-                        fieldIndex: (int)LocalVariable_FieldIndex.Data,
-                        errorMask: errorMask);
-                }
-                if (item.Name_Property.HasBeenSet)
-                {
-                    StringXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Name),
-                        item: item.Name_Property,
-                        fieldIndex: (int)LocalVariable_FieldIndex.Name,
-                        errorMask: errorMask);
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LocalVariable");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (item.Data_Property.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                LoquiXmlTranslation<LocalVariableData>.Instance.Write(
+                    node: elem,
+                    item: item.Data_Property,
+                    name: nameof(item.Data),
+                    fieldIndex: (int)LocalVariable_FieldIndex.Data,
+                    errorMask: errorMask);
+            }
+            if (item.Name_Property.HasBeenSet)
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Name),
+                    item: item.Name_Property,
+                    fieldIndex: (int)LocalVariable_FieldIndex.Name,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -1407,34 +1408,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out LocalVariable_ErrorMask errorMask)
         {
-            LocalVariable_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new LocalVariable_ErrorMask()) : default(Func<LocalVariable_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = LocalVariable_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             LocalVariable item,
             RecordTypeConverter recordTypeConverter,
-            Func<LocalVariable_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -1442,9 +1435,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LocalVariable item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<LocalVariable_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            LoquiBinaryTranslation<LocalVariableData, LocalVariableData_ErrorMask>.Instance.Write(
+            LoquiBinaryTranslation<LocalVariableData>.Instance.Write(
                 writer: writer,
                 item: item.Data_Property,
                 fieldIndex: (int)LocalVariable_FieldIndex.Data,
@@ -1708,6 +1701,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static LocalVariable_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

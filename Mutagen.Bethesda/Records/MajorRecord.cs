@@ -1,4 +1,5 @@
 ﻿using Loqui;
+using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Noggog;
@@ -42,30 +43,19 @@ namespace Mutagen.Bethesda
         public static void Fill_Binary(
             MutagenFrame frame,
             MajorRecord record,
-            bool doMasks,
-            out MajorRecord_ErrorMask errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            MajorRecord_ErrorMask errMask = null;
-            Func<MajorRecord_ErrorMask> errorMaskCreator = () =>
-            {
-                if (errMask == null)
-                {
-                    errMask = new MajorRecord_ErrorMask();
-                }
-                return errMask;
-            };
             Fill_Binary_Structs(
                 record,
                 frame,
-                errorMaskCreator);
+                errorMask);
             for (int i = 0; i < MajorRecord_Registration.NumTypedFields; i++)
             {
                 Fill_Binary_RecordTypes(
                     record,
                     frame,
-                    errorMaskCreator);
+                    errorMask);
             }
-            errorMask = errMask;
         }
     }
 }

@@ -17,6 +17,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 
@@ -166,8 +167,7 @@ namespace Mutagen.Bethesda
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -176,23 +176,37 @@ namespace Mutagen.Bethesda
             out MasterReference_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (MasterReference Object, MasterReference_ErrorMask ErrorMask) Create_XML(
+        public static MasterReference Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            MasterReference_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new MasterReference();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static MasterReference Create_XML(string path)
@@ -234,12 +248,11 @@ namespace Mutagen.Bethesda
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<MasterReference>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -248,13 +261,14 @@ namespace Mutagen.Bethesda
             out MasterReference_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<MasterReference>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -393,49 +407,27 @@ namespace Mutagen.Bethesda
         }
         #endregion
 
-        private static MasterReference Create_XML_Internal(
-            XElement root,
-            Func<MasterReference_ErrorMask> errorMask)
-        {
-            var ret = new MasterReference();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             MasterReference item,
             XElement root,
             string name,
-            Func<MasterReference_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Master":
-                    item._Master.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    StringXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)MasterReference_FieldIndex.Master,
-                        errorMask: errorMask));
+                        item: item._Master,
+                        errorMask: errorMask);
                     break;
                 case "FileSize":
-                    item._FileSize.SetIfSucceeded(UInt64XmlTranslation.Instance.ParseNonNull(
+                    UInt64XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)MasterReference_FieldIndex.FileSize,
-                        errorMask: errorMask));
+                        item: item._FileSize,
+                        errorMask: errorMask);
                     break;
                 default:
                     break;
@@ -451,8 +443,8 @@ namespace Mutagen.Bethesda
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -461,26 +453,50 @@ namespace Mutagen.Bethesda
             out MasterReference_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (MasterReference Object, MasterReference_ErrorMask ErrorMask) Create_Binary(
+        public static MasterReference Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            MasterReference_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new MasterReference();
+            try
+            {
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                    MasterReference_FieldIndex? lastParsed = null;
+                    while (!frame.Complete)
+                    {
+                        var parsed = Fill_Binary_RecordTypes(
+                            item: ret,
+                            frame: frame,
+                            lastParsed: lastParsed,
+                            errorMask: errorMask,
+                            recordTypeConverter: recordTypeConverter);
+                        if (parsed.Failed) break;
+                        lastParsed = parsed.Value;
+                    }
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static MasterReference Create_Binary(string path)
@@ -608,46 +624,10 @@ namespace Mutagen.Bethesda
         }
         #endregion
 
-        private static MasterReference Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<MasterReference_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            var ret = new MasterReference();
-            try
-            {
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                    MasterReference_FieldIndex? lastParsed = null;
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            lastParsed: lastParsed,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                        lastParsed = parsed.Value;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_Binary_Structs(
             MasterReference item,
             MutagenFrame frame,
-            Func<MasterReference_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
         }
 
@@ -655,7 +635,7 @@ namespace Mutagen.Bethesda
             MasterReference item,
             MutagenFrame frame,
             MasterReference_FieldIndex? lastParsed,
-            Func<MasterReference_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -667,20 +647,21 @@ namespace Mutagen.Bethesda
                 case "MAST":
                     if (lastParsed.HasValue && lastParsed.Value >= MasterReference_FieldIndex.Master) return TryGet<MasterReference_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var MastertryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._Master,
                         fieldIndex: (int)MasterReference_FieldIndex.Master,
                         parseWhole: true,
                         errorMask: errorMask);
-                    item._Master.SetIfSucceeded(MastertryGet);
                     return TryGet<MasterReference_FieldIndex?>.Succeed(MasterReference_FieldIndex.Master);
                 case "DATA":
                     if (lastParsed.HasValue && lastParsed.Value >= MasterReference_FieldIndex.FileSize) return TryGet<MasterReference_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._FileSize.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._FileSize,
                         fieldIndex: (int)MasterReference_FieldIndex.FileSize,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<MasterReference_FieldIndex?>.Succeed(MasterReference_FieldIndex.FileSize);
                 default:
                     return TryGet<MasterReference_FieldIndex?>.Failure;
@@ -777,24 +758,32 @@ namespace Mutagen.Bethesda
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            MasterReference_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new MasterReference_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             MasterReferenceCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IMasterReferenceGetter rhs,
+            ErrorMaskBuilder errorMask,
+            MasterReference_CopyMask copyMask = null,
+            IMasterReferenceGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            MasterReferenceCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1109,13 +1098,13 @@ namespace Mutagen.Bethesda.Internals
             IMasterReference item,
             IMasterReferenceGetter rhs,
             IMasterReferenceGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             MasterReference_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.Master ?? true)
             {
+                errorMask.PushIndex((int)MasterReference_FieldIndex.Master);
                 try
                 {
                     item.Master_Property.SetToWithDefault(
@@ -1124,13 +1113,18 @@ namespace Mutagen.Bethesda.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)MasterReference_FieldIndex.Master, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.FileSize ?? true)
             {
+                errorMask.PushIndex((int)MasterReference_FieldIndex.FileSize);
                 try
                 {
                     item.FileSize_Property.SetToWithDefault(
@@ -1139,9 +1133,13 @@ namespace Mutagen.Bethesda.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)MasterReference_FieldIndex.FileSize, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1311,52 +1309,44 @@ namespace Mutagen.Bethesda.Internals
             out MasterReference_ErrorMask errorMask,
             string name = null)
         {
-            MasterReference_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             IMasterReferenceGetter item,
-            Func<MasterReference_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.MasterReference");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.MasterReference");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.MasterReference");
-                }
-                if (item.Master_Property.HasBeenSet)
-                {
-                    StringXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Master),
-                        item: item.Master_Property,
-                        fieldIndex: (int)MasterReference_FieldIndex.Master,
-                        errorMask: errorMask);
-                }
-                if (item.FileSize_Property.HasBeenSet)
-                {
-                    UInt64XmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.FileSize),
-                        item: item.FileSize_Property,
-                        fieldIndex: (int)MasterReference_FieldIndex.FileSize,
-                        errorMask: errorMask);
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.MasterReference");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (item.Master_Property.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                StringXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Master),
+                    item: item.Master_Property,
+                    fieldIndex: (int)MasterReference_FieldIndex.Master,
+                    errorMask: errorMask);
+            }
+            if (item.FileSize_Property.HasBeenSet)
+            {
+                UInt64XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.FileSize),
+                    item: item.FileSize_Property,
+                    fieldIndex: (int)MasterReference_FieldIndex.FileSize,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -1372,34 +1362,26 @@ namespace Mutagen.Bethesda.Internals
             bool doMasks,
             out MasterReference_ErrorMask errorMask)
         {
-            MasterReference_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             MasterReference item,
             RecordTypeConverter recordTypeConverter,
-            Func<MasterReference_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -1407,7 +1389,7 @@ namespace Mutagen.Bethesda.Internals
             MasterReference item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<MasterReference_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -1663,6 +1645,14 @@ namespace Mutagen.Bethesda.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static MasterReference_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

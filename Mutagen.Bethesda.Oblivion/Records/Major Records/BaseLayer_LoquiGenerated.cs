@@ -17,6 +17,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
@@ -160,8 +161,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -170,23 +170,37 @@ namespace Mutagen.Bethesda.Oblivion
             out BaseLayer_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = BaseLayer_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (BaseLayer Object, BaseLayer_ErrorMask ErrorMask) Create_XML(
+        public static BaseLayer Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            BaseLayer_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new BaseLayer_ErrorMask()) : default(Func<BaseLayer_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new BaseLayer();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static BaseLayer Create_XML(string path)
@@ -228,12 +242,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<BaseLayer, BaseLayer_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<BaseLayer>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -242,13 +255,14 @@ namespace Mutagen.Bethesda.Oblivion
             out BaseLayer_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<BaseLayer, BaseLayer_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<BaseLayer>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = BaseLayer_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -387,56 +401,34 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static BaseLayer Create_XML_Internal(
-            XElement root,
-            Func<BaseLayer_ErrorMask> errorMask)
-        {
-            var ret = new BaseLayer();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             BaseLayer item,
             XElement root,
             string name,
-            Func<BaseLayer_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Texture":
-                    item.Texture_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)BaseLayer_FieldIndex.Texture,
-                        errorMask: errorMask));
+                        item: item.Texture_Property,
+                        errorMask: errorMask);
                     break;
                 case "Quadrant":
-                    item._Quadrant.SetIfSucceeded(EnumXmlTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
+                    EnumXmlTranslation<AlphaLayer.QuadrantEnum>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)BaseLayer_FieldIndex.Quadrant,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._Quadrant,
+                        errorMask: errorMask);
                     break;
                 case "LayerNumber":
-                    item._LayerNumber.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    UInt16XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)BaseLayer_FieldIndex.LayerNumber,
-                        errorMask: errorMask));
+                        item: item._LayerNumber,
+                        errorMask: errorMask);
                     break;
                 default:
                     break;
@@ -461,8 +453,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -471,26 +463,50 @@ namespace Mutagen.Bethesda.Oblivion
             out BaseLayer_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = BaseLayer_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (BaseLayer Object, BaseLayer_ErrorMask ErrorMask) Create_Binary(
+        public static BaseLayer Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            BaseLayer_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new BaseLayer_ErrorMask()) : default(Func<BaseLayer_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new BaseLayer();
+            try
+            {
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                    BaseLayer_FieldIndex? lastParsed = null;
+                    while (!frame.Complete)
+                    {
+                        var parsed = Fill_Binary_RecordTypes(
+                            item: ret,
+                            frame: frame,
+                            lastParsed: lastParsed,
+                            errorMask: errorMask,
+                            recordTypeConverter: recordTypeConverter);
+                        if (parsed.Failed) break;
+                        lastParsed = parsed.Value;
+                    }
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static BaseLayer Create_Binary(string path)
@@ -618,46 +634,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static BaseLayer Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<BaseLayer_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            var ret = new BaseLayer();
-            try
-            {
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                    BaseLayer_FieldIndex? lastParsed = null;
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            lastParsed: lastParsed,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                        lastParsed = parsed.Value;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_Binary_Structs(
             BaseLayer item,
             MutagenFrame frame,
-            Func<BaseLayer_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
         }
 
@@ -665,7 +645,7 @@ namespace Mutagen.Bethesda.Oblivion
             BaseLayer item,
             MutagenFrame frame,
             BaseLayer_FieldIndex? lastParsed,
-            Func<BaseLayer_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -679,18 +659,21 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item.Texture_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                        Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item.Texture_Property,
                             fieldIndex: (int)BaseLayer_FieldIndex.Texture,
-                            errorMask: errorMask));
-                        item._Quadrant.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.ParseInto(
                             frame: dataFrame.SpawnWithLength(2),
+                            item: item._Quadrant,
                             fieldIndex: (int)BaseLayer_FieldIndex.Quadrant,
-                            errorMask: errorMask));
-                        item._LayerNumber.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._LayerNumber,
                             fieldIndex: (int)BaseLayer_FieldIndex.LayerNumber,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
                     }
                     return TryGet<BaseLayer_FieldIndex?>.Succeed(BaseLayer_FieldIndex.LayerNumber);
                 default:
@@ -788,24 +771,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            BaseLayer_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new BaseLayer_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             BaseLayerCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = BaseLayer_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IBaseLayerGetter rhs,
+            ErrorMaskBuilder errorMask,
+            BaseLayer_CopyMask copyMask = null,
+            IBaseLayerGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            BaseLayerCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1146,13 +1137,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBaseLayer item,
             IBaseLayerGetter rhs,
             IBaseLayerGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             BaseLayer_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.Texture ?? true)
             {
+                errorMask.PushIndex((int)BaseLayer_FieldIndex.Texture);
                 try
                 {
                     item.Texture_Property.Set(
@@ -1160,13 +1151,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)BaseLayer_FieldIndex.Texture, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Quadrant ?? true)
             {
+                errorMask.PushIndex((int)BaseLayer_FieldIndex.Quadrant);
                 try
                 {
                     item.Quadrant_Property.Set(
@@ -1174,9 +1170,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)BaseLayer_FieldIndex.Quadrant, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1353,53 +1353,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out BaseLayer_ErrorMask errorMask,
             string name = null)
         {
-            BaseLayer_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new BaseLayer_ErrorMask()) : default(Func<BaseLayer_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = BaseLayer_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             IBaseLayerGetter item,
-            Func<BaseLayer_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.BaseLayer");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.BaseLayer");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.BaseLayer");
-                }
-                FormIDXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Texture),
-                    item: item.Texture?.FormID,
-                    fieldIndex: (int)BaseLayer_FieldIndex.Texture,
-                    errorMask: errorMask);
-                EnumXmlTranslation<AlphaLayer.QuadrantEnum>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Quadrant),
-                    item: item.Quadrant_Property,
-                    fieldIndex: (int)BaseLayer_FieldIndex.Quadrant,
-                    errorMask: errorMask);
-                UInt16XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.LayerNumber),
-                    item: item.LayerNumber_Property,
-                    fieldIndex: (int)BaseLayer_FieldIndex.LayerNumber,
-                    errorMask: errorMask);
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.BaseLayer");
             }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            FormIDXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Texture),
+                item: item.Texture?.FormID,
+                fieldIndex: (int)BaseLayer_FieldIndex.Texture,
+                errorMask: errorMask);
+            EnumXmlTranslation<AlphaLayer.QuadrantEnum>.Instance.Write(
+                node: elem,
+                name: nameof(item.Quadrant),
+                item: item.Quadrant_Property,
+                fieldIndex: (int)BaseLayer_FieldIndex.Quadrant,
+                errorMask: errorMask);
+            UInt16XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.LayerNumber),
+                item: item.LayerNumber_Property,
+                fieldIndex: (int)BaseLayer_FieldIndex.LayerNumber,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -1414,34 +1406,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out BaseLayer_ErrorMask errorMask)
         {
-            BaseLayer_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new BaseLayer_ErrorMask()) : default(Func<BaseLayer_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = BaseLayer_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             BaseLayer item,
             RecordTypeConverter recordTypeConverter,
-            Func<BaseLayer_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -1449,7 +1433,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BaseLayer item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<BaseLayer_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             using (HeaderExport.ExportSubRecordHeader(writer, BaseLayer_Registration.BTXT_HEADER))
             {
@@ -1732,6 +1716,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static BaseLayer_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;
@@ -15,7 +16,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType PGRR = new RecordType("PGRR");
         public const int POINT_LEN = 16;
 
-        static partial void FillBinary_Points_Custom(MutagenFrame frame, Road item, int fieldIndex, Func<Road_ErrorMask> errorMask)
+        static partial void FillBinary_Points_Custom(MutagenFrame frame, Road item, ErrorMaskBuilder errorMask)
         {
             var nextRec = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var len);
             if (!nextRec.Equals(PGRP))
@@ -81,7 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
             return pt;
         }
 
-        static partial void WriteBinary_Points_Custom(MutagenWriter writer, Road item, int fieldIndex, Func<Road_ErrorMask> errorMask)
+        static partial void WriteBinary_Points_Custom(MutagenWriter writer, Road item, ErrorMaskBuilder errorMask)
         {
             bool anyConnections = false;
             using (HeaderExport.ExportSubRecordHeader(writer, PGRP))

@@ -19,6 +19,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 
@@ -166,8 +167,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -176,23 +176,37 @@ namespace Mutagen.Bethesda.Oblivion
             out Eye_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = Eye_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (Eye Object, Eye_ErrorMask ErrorMask) Create_XML(
+        public static Eye Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            Eye_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Eye_ErrorMask()) : default(Func<Eye_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new Eye();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static Eye Create_XML(string path)
@@ -234,12 +248,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Eye, Eye_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Eye>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -248,13 +261,14 @@ namespace Mutagen.Bethesda.Oblivion
             out Eye_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Eye, Eye_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<Eye>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = Eye_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -417,50 +431,27 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static Eye Create_XML_Internal(
-            XElement root,
-            Func<Eye_ErrorMask> errorMask)
-        {
-            var ret = new Eye();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             Eye item,
             XElement root,
             string name,
-            Func<Eye_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Icon":
-                    item._Icon.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                    FilePathXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Eye_FieldIndex.Icon,
-                        errorMask: errorMask));
+                        item: item._Icon,
+                        errorMask: errorMask);
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<Eye.Flag>.Instance.Parse(
+                    EnumXmlTranslation<Eye.Flag>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)Eye_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._Flags,
+                        errorMask: errorMask);
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -485,8 +476,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -495,26 +486,29 @@ namespace Mutagen.Bethesda.Oblivion
             out Eye_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = Eye_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (Eye Object, Eye_ErrorMask ErrorMask) Create_Binary(
+        public static Eye Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            Eye_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
+            return UtilityTranslation.MajorRecordParse<Eye, Eye_FieldIndex>(
+                record: new Eye(),
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Eye_ErrorMask()) : default(Func<Eye_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+                errorMask: errorMask,
+                recType: Eye_Registration.EYES_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         public static Eye Create_Binary(string path)
@@ -642,25 +636,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static Eye Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<Eye_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            return UtilityTranslation.MajorRecordParse<Eye, Eye_ErrorMask, Eye_FieldIndex>(
-                record: new Eye(),
-                frame: frame,
-                errorMask: errorMask,
-                recType: Eye_Registration.EYES_HEADER,
-                recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
-        }
-
         protected static void Fill_Binary_Structs(
             Eye item,
             MutagenFrame frame,
-            Func<Eye_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             NamedMajorRecord.Fill_Binary_Structs(
                 item: item,
@@ -671,7 +650,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<Eye_FieldIndex?> Fill_Binary_RecordTypes(
             Eye item,
             MutagenFrame frame,
-            Func<Eye_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -682,17 +661,19 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._Icon,
                         fieldIndex: (int)Eye_FieldIndex.Icon,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<Eye_FieldIndex?>.Succeed(Eye_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Eye.Flag>.Instance.Parse(
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Eye.Flag>.Instance.ParseInto(
                         frame.SpawnWithLength(contentLength),
+                        item: item._Flags,
                         fieldIndex: (int)Eye_FieldIndex.Flags,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<Eye_FieldIndex?>.Succeed(Eye_FieldIndex.Flags);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
@@ -780,24 +761,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            Eye_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Eye_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             EyeCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = Eye_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IEyeGetter rhs,
+            ErrorMaskBuilder errorMask,
+            Eye_CopyMask copyMask = null,
+            IEyeGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            EyeCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1101,8 +1090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEye item,
             IEyeGetter rhs,
             IEyeGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             Eye_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1110,12 +1098,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item,
                 rhs,
                 def,
-                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
             if (copyMask?.Icon ?? true)
             {
+                errorMask.PushIndex((int)Eye_FieldIndex.Icon);
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
@@ -1124,13 +1112,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Eye_FieldIndex.Icon, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
+                errorMask.PushIndex((int)Eye_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.SetToWithDefault(
@@ -1139,9 +1132,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Eye_FieldIndex.Flags, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1366,52 +1363,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Eye_ErrorMask errorMask,
             string name = null)
         {
-            Eye_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Eye_ErrorMask()) : default(Func<Eye_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = Eye_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             IEyeGetter item,
-            Func<Eye_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Eye");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Eye");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Eye");
-                }
-                if (item.Icon_Property.HasBeenSet)
-                {
-                    FilePathXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Icon),
-                        item: item.Icon_Property,
-                        fieldIndex: (int)Eye_FieldIndex.Icon,
-                        errorMask: errorMask);
-                }
-                if (item.Flags_Property.HasBeenSet)
-                {
-                    EnumXmlTranslation<Eye.Flag>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Flags),
-                        item: item.Flags_Property,
-                        fieldIndex: (int)Eye_FieldIndex.Flags,
-                        errorMask: errorMask);
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Eye");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (item.Icon_Property.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                FilePathXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Icon),
+                    item: item.Icon_Property,
+                    fieldIndex: (int)Eye_FieldIndex.Icon,
+                    errorMask: errorMask);
+            }
+            if (item.Flags_Property.HasBeenSet)
+            {
+                EnumXmlTranslation<Eye.Flag>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Flags),
+                    item: item.Flags_Property,
+                    fieldIndex: (int)Eye_FieldIndex.Flags,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -1427,43 +1416,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out Eye_ErrorMask errorMask)
         {
-            Eye_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Eye_ErrorMask()) : default(Func<Eye_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = Eye_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             Eye item,
             RecordTypeConverter recordTypeConverter,
-            Func<Eye_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: Eye_Registration.EYES_HEADER,
+                type: ObjectType.Record))
             {
-                using (HeaderExport.ExportHeader(
+                MajorRecordCommon.Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: Eye_Registration.EYES_HEADER,
-                    type: ObjectType.Record))
-                {
-                    MajorRecordCommon.Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                    Write_Binary_RecordTypes(
-                        item: item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -1472,7 +1453,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Eye item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<Eye_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             NamedMajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
@@ -1729,6 +1710,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static Eye_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

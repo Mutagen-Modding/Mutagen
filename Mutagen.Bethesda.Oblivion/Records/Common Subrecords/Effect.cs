@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
 
@@ -16,8 +17,8 @@ namespace Mutagen.Bethesda.Oblivion
             Touch = 1,
             Target = 2
         }
-
-        static partial void SpecialParse_EffectInitial(Effect item, MutagenFrame frame, Func<Effect_ErrorMask> errorMask)
+        
+        static partial void SpecialParse_EffectInitial(Effect item, MutagenFrame frame, ErrorMaskBuilder errorMask)
         {
             var recType = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var contentLen);
             if (contentLen != 4)
@@ -42,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         static partial void SpecialWrite_EffectInitial(
             IEffectGetter item,
             MutagenWriter writer,
-            Func<Effect_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             using (HeaderExport.ExportSubRecordHeader(writer, Effect_Registration.EFID_HEADER))
             {

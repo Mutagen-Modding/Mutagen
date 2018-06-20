@@ -20,6 +20,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 
@@ -194,8 +195,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -204,23 +204,37 @@ namespace Mutagen.Bethesda.Oblivion
             out LeveledItem_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = LeveledItem_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (LeveledItem Object, LeveledItem_ErrorMask ErrorMask) Create_XML(
+        public static LeveledItem Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            LeveledItem_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new LeveledItem_ErrorMask()) : default(Func<LeveledItem_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new LeveledItem();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static LeveledItem Create_XML(string path)
@@ -262,12 +276,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<LeveledItem, LeveledItem_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<LeveledItem>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -276,13 +289,14 @@ namespace Mutagen.Bethesda.Oblivion
             out LeveledItem_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<LeveledItem, LeveledItem_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<LeveledItem>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = LeveledItem_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -433,64 +447,35 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static LeveledItem Create_XML_Internal(
-            XElement root,
-            Func<LeveledItem_ErrorMask> errorMask)
-        {
-            var ret = new LeveledItem();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             LeveledItem item,
             XElement root,
             string name,
-            Func<LeveledItem_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "ChanceNone":
-                    item._ChanceNone.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)LeveledItem_FieldIndex.ChanceNone,
-                        errorMask: errorMask));
+                        item: item._ChanceNone,
+                        errorMask: errorMask);
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<LeveledFlag>.Instance.Parse(
+                    EnumXmlTranslation<LeveledFlag>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)LeveledItem_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._Flags,
+                        errorMask: errorMask);
                     break;
                 case "Entries":
-                    item._Entries.SetIfSucceeded(ListXmlTranslation<LeveledEntry<ItemAbstract>, MaskItem<Exception, LeveledEntry_ErrorMask<ItemAbstract_ErrorMask>>>.Instance.Parse(
+                    ListXmlTranslation<LeveledEntry<ItemAbstract>>.Instance.ParseInto(
                         root: root,
+                        item: item._Entries,
                         fieldIndex: (int)LeveledItem_FieldIndex.Entries,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, LeveledEntry_ErrorMask<ItemAbstract_ErrorMask>> listSubMask) =>
-                        {
-                            return LoquiXmlTranslation<LeveledEntry<ItemAbstract>, LeveledEntry_ErrorMask<ItemAbstract_ErrorMask>>.Instance.Parse(
-                                root: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: LoquiXmlTranslation<LeveledEntry<ItemAbstract>>.Instance.Parse);
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(
@@ -509,15 +494,15 @@ namespace Mutagen.Bethesda.Oblivion
         static partial void SpecialParse_Vestigial(
             LeveledItem item,
             MutagenFrame frame,
-            Func<LeveledItem_ErrorMask> errorMask);
+            ErrorMaskBuilder errorMask);
         static partial void SpecialWrite_Vestigial(
             ILeveledItemGetter item,
             MutagenWriter writer,
-            Func<LeveledItem_ErrorMask> errorMask);
+            ErrorMaskBuilder errorMask);
         internal static void SpecialWrite_Vestigial_Internal(
             ILeveledItemGetter item,
             MutagenWriter writer,
-            Func<LeveledItem_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             SpecialWrite_Vestigial(
                 item: item,
@@ -546,8 +531,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -556,26 +541,29 @@ namespace Mutagen.Bethesda.Oblivion
             out LeveledItem_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = LeveledItem_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (LeveledItem Object, LeveledItem_ErrorMask ErrorMask) Create_Binary(
+        public static LeveledItem Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            LeveledItem_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
+            return UtilityTranslation.MajorRecordParse<LeveledItem, LeveledItem_FieldIndex>(
+                record: new LeveledItem(),
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new LeveledItem_ErrorMask()) : default(Func<LeveledItem_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+                errorMask: errorMask,
+                recType: LeveledItem_Registration.LVLI_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         public static LeveledItem Create_Binary(string path)
@@ -703,25 +691,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static LeveledItem Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<LeveledItem_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            return UtilityTranslation.MajorRecordParse<LeveledItem, LeveledItem_ErrorMask, LeveledItem_FieldIndex>(
-                record: new LeveledItem(),
-                frame: frame,
-                errorMask: errorMask,
-                recType: LeveledItem_Registration.LVLI_HEADER,
-                recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
-        }
-
         protected static void Fill_Binary_Structs(
             LeveledItem item,
             MutagenFrame frame,
-            Func<LeveledItem_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             MajorRecord.Fill_Binary_Structs(
                 item: item,
@@ -732,7 +705,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<LeveledItem_FieldIndex?> Fill_Binary_RecordTypes(
             LeveledItem item,
             MutagenFrame frame,
-            Func<LeveledItem_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -743,34 +716,29 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "LVLD":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._ChanceNone.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._ChanceNone,
                         fieldIndex: (int)LeveledItem_FieldIndex.ChanceNone,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<LeveledItem_FieldIndex?>.Succeed(LeveledItem_FieldIndex.ChanceNone);
                 case "LVLF":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<LeveledFlag>.Instance.Parse(
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<LeveledFlag>.Instance.ParseInto(
                         frame.SpawnWithLength(contentLength),
+                        item: item._Flags,
                         fieldIndex: (int)LeveledItem_FieldIndex.Flags,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<LeveledItem_FieldIndex?>.Succeed(LeveledItem_FieldIndex.Flags);
                 case "LVLO":
-                    var EntriestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<ItemAbstract>, MaskItem<Exception, LeveledEntry_ErrorMask<ItemAbstract_ErrorMask>>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<ItemAbstract>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: LeveledItem_Registration.LVLO_HEADER,
+                        item: item._Entries,
                         fieldIndex: (int)LeveledItem_FieldIndex.Entries,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, LeveledEntry_ErrorMask<ItemAbstract_ErrorMask>> listSubMask) =>
-                        {
-                            return LoquiBinaryTranslation<LeveledEntry<ItemAbstract>, LeveledEntry_ErrorMask<ItemAbstract_ErrorMask>>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    item._Entries.SetIfSucceeded(EntriestryGet);
+                        transl: LoquiBinaryTranslation<LeveledEntry<ItemAbstract>>.Instance.Parse);
                     return TryGet<LeveledItem_FieldIndex?>.Succeed(LeveledItem_FieldIndex.Entries);
                 case "DATA":
                     SpecialParse_Vestigial(
@@ -864,24 +832,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            LeveledItem_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new LeveledItem_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             LeveledItemCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = LeveledItem_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            ILeveledItemGetter rhs,
+            ErrorMaskBuilder errorMask,
+            LeveledItem_CopyMask copyMask = null,
+            ILeveledItemGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            LeveledItemCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1210,8 +1186,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILeveledItem item,
             ILeveledItemGetter rhs,
             ILeveledItemGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             LeveledItem_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1219,12 +1194,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item,
                 rhs,
                 def,
-                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
             if (copyMask?.ChanceNone ?? true)
             {
+                errorMask.PushIndex((int)LeveledItem_FieldIndex.ChanceNone);
                 try
                 {
                     item.ChanceNone_Property.SetToWithDefault(
@@ -1233,13 +1208,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)LeveledItem_FieldIndex.ChanceNone, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
+                errorMask.PushIndex((int)LeveledItem_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.SetToWithDefault(
@@ -1248,13 +1228,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)LeveledItem_FieldIndex.Flags, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Entries.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)LeveledItem_FieldIndex.Entries);
                 try
                 {
                     item.Entries.SetToWithDefault(
@@ -1280,9 +1265,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)LeveledItem_FieldIndex.Entries, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1536,71 +1525,62 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out LeveledItem_ErrorMask errorMask,
             string name = null)
         {
-            LeveledItem_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new LeveledItem_ErrorMask()) : default(Func<LeveledItem_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = LeveledItem_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             ILeveledItemGetter item,
-            Func<LeveledItem_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.LeveledItem");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.LeveledItem");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LeveledItem");
-                }
-                if (item.ChanceNone_Property.HasBeenSet)
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.ChanceNone),
-                        item: item.ChanceNone_Property,
-                        fieldIndex: (int)LeveledItem_FieldIndex.ChanceNone,
-                        errorMask: errorMask);
-                }
-                if (item.Flags_Property.HasBeenSet)
-                {
-                    EnumXmlTranslation<LeveledFlag>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Flags),
-                        item: item.Flags_Property,
-                        fieldIndex: (int)LeveledItem_FieldIndex.Flags,
-                        errorMask: errorMask);
-                }
-                if (item.Entries.HasBeenSet)
-                {
-                    ListXmlTranslation<LeveledEntry<ItemAbstract>, MaskItem<Exception, LeveledEntry_ErrorMask<ItemAbstract_ErrorMask>>>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Entries),
-                        item: item.Entries,
-                        fieldIndex: (int)LeveledItem_FieldIndex.Entries,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, LeveledEntry<ItemAbstract> subItem, bool listDoMasks, out MaskItem<Exception, LeveledEntry_ErrorMask<ItemAbstract_ErrorMask>> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<LeveledEntry<ItemAbstract>, LeveledEntry_ErrorMask<ItemAbstract_ErrorMask>>.Instance.Write(
-                                node: subNode,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LeveledItem");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (item.ChanceNone_Property.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.ChanceNone),
+                    item: item.ChanceNone_Property,
+                    fieldIndex: (int)LeveledItem_FieldIndex.ChanceNone,
+                    errorMask: errorMask);
+            }
+            if (item.Flags_Property.HasBeenSet)
+            {
+                EnumXmlTranslation<LeveledFlag>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Flags),
+                    item: item.Flags_Property,
+                    fieldIndex: (int)LeveledItem_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if (item.Entries.HasBeenSet)
+            {
+                ListXmlTranslation<LeveledEntry<ItemAbstract>>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Entries),
+                    item: item.Entries,
+                    fieldIndex: (int)LeveledItem_FieldIndex.Entries,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, LeveledEntry<ItemAbstract> subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        LoquiXmlTranslation<LeveledEntry<ItemAbstract>>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            errorMask: listSubMask);
+                    }
+                    );
             }
         }
         #endregion
@@ -1616,43 +1596,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out LeveledItem_ErrorMask errorMask)
         {
-            LeveledItem_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new LeveledItem_ErrorMask()) : default(Func<LeveledItem_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = LeveledItem_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             LeveledItem item,
             RecordTypeConverter recordTypeConverter,
-            Func<LeveledItem_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: LeveledItem_Registration.LVLI_HEADER,
+                type: ObjectType.Record))
             {
-                using (HeaderExport.ExportHeader(
+                MajorRecordCommon.Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: LeveledItem_Registration.LVLI_HEADER,
-                    type: ObjectType.Record))
-                {
-                    MajorRecordCommon.Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                    Write_Binary_RecordTypes(
-                        item: item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -1661,7 +1633,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LeveledItem item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<LeveledItem_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
@@ -1683,20 +1655,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(LeveledItem_Registration.LVLF_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<ItemAbstract>, MaskItem<Exception, LeveledEntry_ErrorMask<ItemAbstract_ErrorMask>>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<ItemAbstract>>.Instance.Write(
                 writer: writer,
-                item: item.Entries,
+                items: item.Entries,
                 fieldIndex: (int)LeveledItem_FieldIndex.Entries,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, LeveledEntry<ItemAbstract> subItem, bool listDoMasks, out MaskItem<Exception, LeveledEntry_ErrorMask<ItemAbstract_ErrorMask>> listSubMask) =>
-                {
-                    LoquiBinaryTranslation<LeveledEntry<ItemAbstract>, LeveledEntry_ErrorMask<ItemAbstract_ErrorMask>>.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                transl: LoquiBinaryTranslation<LeveledEntry<ItemAbstract>>.Instance.Write);
             LeveledItem.SpecialWrite_Vestigial_Internal(
                 item: item,
                 writer: writer,
@@ -2035,6 +1999,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static LeveledItem_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

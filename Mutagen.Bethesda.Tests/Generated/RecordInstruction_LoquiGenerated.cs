@@ -18,6 +18,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 
 namespace Mutagen.Bethesda.Tests
@@ -38,7 +39,8 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region Record
-        public FormID Record { get; set; }
+        private FormID _Record;
+        public FormID Record { get => _Record; set => _Record = value; }
         #endregion
 
         #region Loqui Getter Interface
@@ -121,8 +123,7 @@ namespace Mutagen.Bethesda.Tests
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -131,23 +132,37 @@ namespace Mutagen.Bethesda.Tests
             out RecordInstruction_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = RecordInstruction_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (RecordInstruction Object, RecordInstruction_ErrorMask ErrorMask) Create_XML(
+        public static RecordInstruction Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            RecordInstruction_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RecordInstruction_ErrorMask()) : default(Func<RecordInstruction_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new RecordInstruction();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static RecordInstruction Create_XML(string path)
@@ -189,12 +204,11 @@ namespace Mutagen.Bethesda.Tests
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<RecordInstruction, RecordInstruction_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<RecordInstruction>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -203,13 +217,14 @@ namespace Mutagen.Bethesda.Tests
             out RecordInstruction_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<RecordInstruction, RecordInstruction_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<RecordInstruction>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = RecordInstruction_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -373,43 +388,20 @@ namespace Mutagen.Bethesda.Tests
         }
         #endregion
 
-        private static RecordInstruction Create_XML_Internal(
-            XElement root,
-            Func<RecordInstruction_ErrorMask> errorMask)
-        {
-            var ret = new RecordInstruction();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             RecordInstruction item,
             XElement root,
             string name,
-            Func<RecordInstruction_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Record":
-                    item.Record = FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.Parse(
                         root,
                         fieldIndex: (int)RecordInstruction_FieldIndex.Record,
-                        errorMask: errorMask).GetOrDefault(item.Record);
+                        item: out item._Record,
+                        errorMask: errorMask);
                     break;
                 default:
                     Instruction.Fill_XML_Internal(
@@ -498,24 +490,32 @@ namespace Mutagen.Bethesda.Tests
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            RecordInstruction_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new RecordInstruction_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             RecordInstructionCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = RecordInstruction_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IRecordInstructionGetter rhs,
+            ErrorMaskBuilder errorMask,
+            RecordInstruction_CopyMask copyMask = null,
+            IRecordInstructionGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            RecordInstructionCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Tests
             switch (enu)
             {
                 case RecordInstruction_FieldIndex.Record:
-                    this.Record = (FormID)obj;
+                    this._Record = (FormID)obj;
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Tests
             switch (enu)
             {
                 case RecordInstruction_FieldIndex.Record:
-                    obj.Record = (FormID)pair.Value;
+                    obj._Record = (FormID)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -777,8 +777,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             IRecordInstruction item,
             IRecordInstructionGetter rhs,
             IRecordInstructionGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordInstruction_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -786,13 +785,14 @@ namespace Mutagen.Bethesda.Tests.Internals
                 item,
                 rhs,
                 def,
-                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
             if (copyMask?.Record ?? true)
             {
+                errorMask.PushIndex((int)RecordInstruction_FieldIndex.Record);
                 item.Record = rhs.Record;
+                errorMask.PopIndex();
             }
         }
 
@@ -972,41 +972,33 @@ namespace Mutagen.Bethesda.Tests.Internals
             out RecordInstruction_ErrorMask errorMask,
             string name = null)
         {
-            RecordInstruction_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RecordInstruction_ErrorMask()) : default(Func<RecordInstruction_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = RecordInstruction_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             IRecordInstructionGetter item,
-            Func<RecordInstruction_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.RecordInstruction");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.RecordInstruction");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.RecordInstruction");
-                }
-                FormIDXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Record),
-                    item: item.Record,
-                    fieldIndex: (int)RecordInstruction_FieldIndex.Record,
-                    errorMask: errorMask);
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.RecordInstruction");
             }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            FormIDXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Record),
+                item: item.Record,
+                fieldIndex: (int)RecordInstruction_FieldIndex.Record,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -1221,6 +1213,14 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static RecordInstruction_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

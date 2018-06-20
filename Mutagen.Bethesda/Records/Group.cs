@@ -8,39 +8,31 @@ using System.Text;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Internals;
 using Noggog;
+using Loqui.Internal;
 
 namespace Mutagen.Bethesda
 {
     public partial class Group<T>
         where T : ILoquiObject<T>, IFormID
     {
-        static partial void FillBinary_ContainedRecordType_Custom<T_ErrMask>(
+        static partial void FillBinary_ContainedRecordType_Custom(
             MutagenFrame frame,
             Group<T> item,
-            int fieldIndex,
-            Func<Group_ErrorMask<T_ErrMask>> errorMask)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            ErrorMaskBuilder errorMask)
         {
             frame.Reader.Position += 4;
         }
 
-        static partial void WriteBinary_ContainedRecordType_Custom<T_ErrMask>(
+        static partial void WriteBinary_ContainedRecordType_Custom(
             MutagenWriter writer,
             Group<T> item,
-            int fieldIndex,
-            Func<Group_ErrorMask<T_ErrMask>> errorMask)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer,
                 GRUP_RECORD_TYPE.Type,
-                doMasks: errorMask != null,
                 nullTerminate: false,
-                errorMask: out var err);
-            ErrorMask.HandleErrorMask(
-                errorMask,
-                fieldIndex,
-                err);
+                errorMask: errorMask);
         }
     }
 

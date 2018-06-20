@@ -20,6 +20,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 
@@ -263,8 +264,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -273,23 +273,37 @@ namespace Mutagen.Bethesda.Oblivion
             out SoulGem_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (SoulGem Object, SoulGem_ErrorMask ErrorMask) Create_XML(
+        public static SoulGem Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            SoulGem_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SoulGem_ErrorMask()) : default(Func<SoulGem_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new SoulGem();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static SoulGem Create_XML(string path)
@@ -331,12 +345,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<SoulGem, SoulGem_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<SoulGem>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -345,13 +358,14 @@ namespace Mutagen.Bethesda.Oblivion
             out SoulGem_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<SoulGem, SoulGem_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<SoulGem>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -514,81 +528,81 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static SoulGem Create_XML_Internal(
-            XElement root,
-            Func<SoulGem_ErrorMask> errorMask)
-        {
-            var ret = new SoulGem();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             SoulGem item,
             XElement root,
             string name,
-            Func<SoulGem_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)SoulGem_FieldIndex.Model,
-                        errorMask: errorMask));
+                    try
+                    {
+                        errorMask?.PushIndex((int)SoulGem_FieldIndex.Model);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            root: root,
+                            item: out var ModelParse,
+                            errorMask: errorMask))
+                        {
+                            item._Model.Item = ModelParse;
+                        }
+                        else
+                        {
+                            item._Model.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Icon":
-                    item._Icon.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                    FilePathXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)SoulGem_FieldIndex.Icon,
-                        errorMask: errorMask));
+                        item: item._Icon,
+                        errorMask: errorMask);
                     break;
                 case "Script":
-                    item.Script_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)SoulGem_FieldIndex.Script,
-                        errorMask: errorMask));
+                        item: item.Script_Property,
+                        errorMask: errorMask);
                     break;
                 case "Value":
-                    item._Value.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    UInt32XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)SoulGem_FieldIndex.Value,
-                        errorMask: errorMask));
+                        item: item._Value,
+                        errorMask: errorMask);
                     break;
                 case "Weight":
-                    item._Weight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    FloatXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)SoulGem_FieldIndex.Weight,
-                        errorMask: errorMask));
+                        item: item._Weight,
+                        errorMask: errorMask);
                     break;
                 case "ContainedSoul":
-                    item._ContainedSoul.SetIfSucceeded(EnumXmlTranslation<SoulLevel>.Instance.Parse(
+                    EnumXmlTranslation<SoulLevel>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)SoulGem_FieldIndex.ContainedSoul,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._ContainedSoul,
+                        errorMask: errorMask);
                     break;
                 case "MaximumCapacity":
-                    item._MaximumCapacity.SetIfSucceeded(EnumXmlTranslation<SoulLevel>.Instance.Parse(
+                    EnumXmlTranslation<SoulLevel>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)SoulGem_FieldIndex.MaximumCapacity,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._MaximumCapacity,
+                        errorMask: errorMask);
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -623,8 +637,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -633,26 +647,29 @@ namespace Mutagen.Bethesda.Oblivion
             out SoulGem_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (SoulGem Object, SoulGem_ErrorMask ErrorMask) Create_Binary(
+        public static SoulGem Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            SoulGem_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
+            return UtilityTranslation.MajorRecordParse<SoulGem, SoulGem_FieldIndex>(
+                record: new SoulGem(),
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SoulGem_ErrorMask()) : default(Func<SoulGem_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+                errorMask: errorMask,
+                recType: SoulGem_Registration.SLGM_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         public static SoulGem Create_Binary(string path)
@@ -780,25 +797,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static SoulGem Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<SoulGem_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            return UtilityTranslation.MajorRecordParse<SoulGem, SoulGem_ErrorMask, SoulGem_FieldIndex>(
-                record: new SoulGem(),
-                frame: frame,
-                errorMask: errorMask,
-                recType: SoulGem_Registration.SLGM_HEADER,
-                recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
-        }
-
         protected static void Fill_Binary_Structs(
             SoulGem item,
             MutagenFrame frame,
-            Func<SoulGem_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             NamedMajorRecord.Fill_Binary_Structs(
                 item: item,
@@ -809,7 +811,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<SoulGem_FieldIndex?> Fill_Binary_RecordTypes(
             SoulGem item,
             MutagenFrame frame,
-            Func<SoulGem_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -819,52 +821,59 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    LoquiBinaryTranslation<Model>.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)SoulGem_FieldIndex.Model,
-                        errorMask: errorMask));
+                        errorMask: errorMask,
+                        item: item._Model);
                     return TryGet<SoulGem_FieldIndex?>.Succeed(SoulGem_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._Icon,
                         fieldIndex: (int)SoulGem_FieldIndex.Icon,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<SoulGem_FieldIndex?>.Succeed(SoulGem_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item.Script_Property,
                         fieldIndex: (int)SoulGem_FieldIndex.Script,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<SoulGem_FieldIndex?>.Succeed(SoulGem_FieldIndex.Script);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Value,
                             fieldIndex: (int)SoulGem_FieldIndex.Value,
-                            errorMask: errorMask));
-                        item._Weight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Weight,
                             fieldIndex: (int)SoulGem_FieldIndex.Weight,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
                     }
                     return TryGet<SoulGem_FieldIndex?>.Succeed(SoulGem_FieldIndex.Weight);
                 case "SOUL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._ContainedSoul.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.Parse(
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.ParseInto(
                         frame.SpawnWithLength(contentLength),
+                        item: item._ContainedSoul,
                         fieldIndex: (int)SoulGem_FieldIndex.ContainedSoul,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<SoulGem_FieldIndex?>.Succeed(SoulGem_FieldIndex.ContainedSoul);
                 case "SLCP":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._MaximumCapacity.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.Parse(
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.ParseInto(
                         frame.SpawnWithLength(contentLength),
+                        item: item._MaximumCapacity,
                         fieldIndex: (int)SoulGem_FieldIndex.MaximumCapacity,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<SoulGem_FieldIndex?>.Succeed(SoulGem_FieldIndex.MaximumCapacity);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
@@ -952,24 +961,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            SoulGem_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new SoulGem_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             SoulGemCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            ISoulGemGetter rhs,
+            ErrorMaskBuilder errorMask,
+            SoulGem_CopyMask copyMask = null,
+            ISoulGemGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            SoulGemCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1426,8 +1443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoulGem item,
             ISoulGemGetter rhs,
             ISoulGemGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             SoulGem_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1435,12 +1451,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item,
                 rhs,
                 def,
-                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)SoulGem_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -1458,15 +1474,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.Model,
                                         rhs: rhs.Model,
                                         def: def?.Model,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new Model_ErrorMask();
-                                            baseMask.SetNthMask((int)SoulGem_FieldIndex.Model, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.Model.Specific,
                                         cmds: cmds);
                                     return r;
@@ -1483,13 +1491,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)SoulGem_FieldIndex.Model, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Icon ?? true)
             {
+                errorMask.PushIndex((int)SoulGem_FieldIndex.Icon);
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
@@ -1498,13 +1511,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)SoulGem_FieldIndex.Icon, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Script ?? true)
             {
+                errorMask.PushIndex((int)SoulGem_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.SetToWithDefault(
@@ -1513,13 +1531,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)SoulGem_FieldIndex.Script, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Value ?? true)
             {
+                errorMask.PushIndex((int)SoulGem_FieldIndex.Value);
                 try
                 {
                     item.Value_Property.Set(
@@ -1527,13 +1550,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)SoulGem_FieldIndex.Value, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Weight ?? true)
             {
+                errorMask.PushIndex((int)SoulGem_FieldIndex.Weight);
                 try
                 {
                     item.Weight_Property.Set(
@@ -1541,13 +1569,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)SoulGem_FieldIndex.Weight, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.ContainedSoul ?? true)
             {
+                errorMask.PushIndex((int)SoulGem_FieldIndex.ContainedSoul);
                 try
                 {
                     item.ContainedSoul_Property.SetToWithDefault(
@@ -1556,13 +1589,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)SoulGem_FieldIndex.ContainedSoul, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.MaximumCapacity ?? true)
             {
+                errorMask.PushIndex((int)SoulGem_FieldIndex.MaximumCapacity);
                 try
                 {
                     item.MaximumCapacity_Property.SetToWithDefault(
@@ -1571,9 +1609,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)SoulGem_FieldIndex.MaximumCapacity, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1884,91 +1926,83 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out SoulGem_ErrorMask errorMask,
             string name = null)
         {
-            SoulGem_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SoulGem_ErrorMask()) : default(Func<SoulGem_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             ISoulGemGetter item,
-            Func<SoulGem_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.SoulGem");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.SoulGem");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SoulGem");
-                }
-                if (item.Model_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.Model_Property,
-                        name: nameof(item.Model),
-                        fieldIndex: (int)SoulGem_FieldIndex.Model,
-                        errorMask: errorMask);
-                }
-                if (item.Icon_Property.HasBeenSet)
-                {
-                    FilePathXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Icon),
-                        item: item.Icon_Property,
-                        fieldIndex: (int)SoulGem_FieldIndex.Icon,
-                        errorMask: errorMask);
-                }
-                if (item.Script_Property.HasBeenSet)
-                {
-                    FormIDXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Script),
-                        item: item.Script?.FormID,
-                        fieldIndex: (int)SoulGem_FieldIndex.Script,
-                        errorMask: errorMask);
-                }
-                UInt32XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Value),
-                    item: item.Value_Property,
-                    fieldIndex: (int)SoulGem_FieldIndex.Value,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Weight),
-                    item: item.Weight_Property,
-                    fieldIndex: (int)SoulGem_FieldIndex.Weight,
-                    errorMask: errorMask);
-                if (item.ContainedSoul_Property.HasBeenSet)
-                {
-                    EnumXmlTranslation<SoulLevel>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.ContainedSoul),
-                        item: item.ContainedSoul_Property,
-                        fieldIndex: (int)SoulGem_FieldIndex.ContainedSoul,
-                        errorMask: errorMask);
-                }
-                if (item.MaximumCapacity_Property.HasBeenSet)
-                {
-                    EnumXmlTranslation<SoulLevel>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.MaximumCapacity),
-                        item: item.MaximumCapacity_Property,
-                        fieldIndex: (int)SoulGem_FieldIndex.MaximumCapacity,
-                        errorMask: errorMask);
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SoulGem");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (item.Model_Property.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                LoquiXmlTranslation<Model>.Instance.Write(
+                    node: elem,
+                    item: item.Model_Property,
+                    name: nameof(item.Model),
+                    fieldIndex: (int)SoulGem_FieldIndex.Model,
+                    errorMask: errorMask);
+            }
+            if (item.Icon_Property.HasBeenSet)
+            {
+                FilePathXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Icon),
+                    item: item.Icon_Property,
+                    fieldIndex: (int)SoulGem_FieldIndex.Icon,
+                    errorMask: errorMask);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Script),
+                    item: item.Script?.FormID,
+                    fieldIndex: (int)SoulGem_FieldIndex.Script,
+                    errorMask: errorMask);
+            }
+            UInt32XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Value),
+                item: item.Value_Property,
+                fieldIndex: (int)SoulGem_FieldIndex.Value,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Weight),
+                item: item.Weight_Property,
+                fieldIndex: (int)SoulGem_FieldIndex.Weight,
+                errorMask: errorMask);
+            if (item.ContainedSoul_Property.HasBeenSet)
+            {
+                EnumXmlTranslation<SoulLevel>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.ContainedSoul),
+                    item: item.ContainedSoul_Property,
+                    fieldIndex: (int)SoulGem_FieldIndex.ContainedSoul,
+                    errorMask: errorMask);
+            }
+            if (item.MaximumCapacity_Property.HasBeenSet)
+            {
+                EnumXmlTranslation<SoulLevel>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.MaximumCapacity),
+                    item: item.MaximumCapacity_Property,
+                    fieldIndex: (int)SoulGem_FieldIndex.MaximumCapacity,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -1984,43 +2018,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out SoulGem_ErrorMask errorMask)
         {
-            SoulGem_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SoulGem_ErrorMask()) : default(Func<SoulGem_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             SoulGem item,
             RecordTypeConverter recordTypeConverter,
-            Func<SoulGem_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: SoulGem_Registration.SLGM_HEADER,
+                type: ObjectType.Record))
             {
-                using (HeaderExport.ExportHeader(
+                MajorRecordCommon.Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: SoulGem_Registration.SLGM_HEADER,
-                    type: ObjectType.Record))
-                {
-                    MajorRecordCommon.Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                    Write_Binary_RecordTypes(
-                        item: item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -2029,14 +2055,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SoulGem item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<SoulGem_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             NamedMajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
+            LoquiBinaryTranslation<Model>.Instance.Write(
                 writer: writer,
                 item: item.Model_Property,
                 fieldIndex: (int)SoulGem_FieldIndex.Model,
@@ -2441,6 +2467,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static SoulGem_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

@@ -18,6 +18,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
@@ -141,8 +142,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -151,23 +151,37 @@ namespace Mutagen.Bethesda.Oblivion
             out AlphaLayer_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (AlphaLayer Object, AlphaLayer_ErrorMask ErrorMask) Create_XML(
+        public static AlphaLayer Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            AlphaLayer_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new AlphaLayer_ErrorMask()) : default(Func<AlphaLayer_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new AlphaLayer();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static AlphaLayer Create_XML(string path)
@@ -209,12 +223,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<AlphaLayer, AlphaLayer_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<AlphaLayer>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -223,13 +236,14 @@ namespace Mutagen.Bethesda.Oblivion
             out AlphaLayer_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<AlphaLayer, AlphaLayer_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<AlphaLayer>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -393,43 +407,20 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static AlphaLayer Create_XML_Internal(
-            XElement root,
-            Func<AlphaLayer_ErrorMask> errorMask)
-        {
-            var ret = new AlphaLayer();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             AlphaLayer item,
             XElement root,
             string name,
-            Func<AlphaLayer_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "AlphaLayerData":
-                    item._AlphaLayerData.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    ByteArrayXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)AlphaLayer_FieldIndex.AlphaLayerData,
-                        errorMask: errorMask));
+                        item: item._AlphaLayerData,
+                        errorMask: errorMask);
                     break;
                 default:
                     BaseLayer.Fill_XML_Internal(
@@ -454,8 +445,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -464,26 +455,50 @@ namespace Mutagen.Bethesda.Oblivion
             out AlphaLayer_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (AlphaLayer Object, AlphaLayer_ErrorMask ErrorMask) Create_Binary(
+        public static AlphaLayer Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            AlphaLayer_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new AlphaLayer_ErrorMask()) : default(Func<AlphaLayer_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new AlphaLayer();
+            try
+            {
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                    AlphaLayer_FieldIndex? lastParsed = null;
+                    while (!frame.Complete)
+                    {
+                        var parsed = Fill_Binary_RecordTypes(
+                            item: ret,
+                            frame: frame,
+                            lastParsed: lastParsed,
+                            errorMask: errorMask,
+                            recordTypeConverter: recordTypeConverter);
+                        if (parsed.Failed) break;
+                        lastParsed = parsed.Value;
+                    }
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static AlphaLayer Create_Binary(string path)
@@ -626,47 +641,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static AlphaLayer Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<AlphaLayer_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            var ret = new AlphaLayer();
-            try
-            {
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                    AlphaLayer_FieldIndex? lastParsed = null;
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            lastParsed: lastParsed,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                        lastParsed = parsed.Value;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static TryGet<AlphaLayer_FieldIndex?> Fill_Binary_RecordTypes(
             AlphaLayer item,
             MutagenFrame frame,
             AlphaLayer_FieldIndex? lastParsed,
-            Func<AlphaLayer_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -677,11 +656,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "VTXT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var AlphaLayerDatatryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.ParseInto(
                         frame.SpawnWithLength(contentLength),
+                        item: item._AlphaLayerData,
                         fieldIndex: (int)AlphaLayer_FieldIndex.AlphaLayerData,
                         errorMask: errorMask);
-                    item._AlphaLayerData.SetIfSucceeded(AlphaLayerDatatryGet);
                     return TryGet<AlphaLayer_FieldIndex?>.Succeed(AlphaLayer_FieldIndex.AlphaLayerData);
                 default:
                     return BaseLayer.Fill_Binary_RecordTypes(
@@ -770,24 +749,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            AlphaLayer_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new AlphaLayer_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             AlphaLayerCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IAlphaLayerGetter rhs,
+            ErrorMaskBuilder errorMask,
+            AlphaLayer_CopyMask copyMask = null,
+            IAlphaLayerGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            AlphaLayerCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1062,8 +1049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAlphaLayer item,
             IAlphaLayerGetter rhs,
             IAlphaLayerGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             AlphaLayer_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1071,12 +1057,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item,
                 rhs,
                 def,
-                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
             if (copyMask?.AlphaLayerData ?? true)
             {
+                errorMask.PushIndex((int)AlphaLayer_FieldIndex.AlphaLayerData);
                 try
                 {
                     item.AlphaLayerData_Property.SetToWithDefault(
@@ -1085,9 +1071,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)AlphaLayer_FieldIndex.AlphaLayerData, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1263,43 +1253,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out AlphaLayer_ErrorMask errorMask,
             string name = null)
         {
-            AlphaLayer_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new AlphaLayer_ErrorMask()) : default(Func<AlphaLayer_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             IAlphaLayerGetter item,
-            Func<AlphaLayer_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.AlphaLayer");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.AlphaLayer");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.AlphaLayer");
-                }
-                if (item.AlphaLayerData_Property.HasBeenSet)
-                {
-                    ByteArrayXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.AlphaLayerData),
-                        item: item.AlphaLayerData_Property,
-                        fieldIndex: (int)AlphaLayer_FieldIndex.AlphaLayerData,
-                        errorMask: errorMask);
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.AlphaLayer");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (item.AlphaLayerData_Property.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.AlphaLayerData),
+                    item: item.AlphaLayerData_Property,
+                    fieldIndex: (int)AlphaLayer_FieldIndex.AlphaLayerData,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -1315,34 +1297,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out AlphaLayer_ErrorMask errorMask)
         {
-            AlphaLayer_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new AlphaLayer_ErrorMask()) : default(Func<AlphaLayer_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             AlphaLayer item,
             RecordTypeConverter recordTypeConverter,
-            Func<AlphaLayer_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -1350,7 +1324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AlphaLayer item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<AlphaLayer_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             BaseLayerCommon.Write_Binary_RecordTypes(
                 item: item,
@@ -1577,6 +1551,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static AlphaLayer_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

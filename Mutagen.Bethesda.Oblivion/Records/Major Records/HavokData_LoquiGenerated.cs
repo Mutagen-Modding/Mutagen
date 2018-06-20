@@ -17,6 +17,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
@@ -170,8 +171,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -180,23 +180,37 @@ namespace Mutagen.Bethesda.Oblivion
             out HavokData_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = HavokData_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (HavokData Object, HavokData_ErrorMask ErrorMask) Create_XML(
+        public static HavokData Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            HavokData_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new HavokData_ErrorMask()) : default(Func<HavokData_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new HavokData();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static HavokData Create_XML(string path)
@@ -238,12 +252,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<HavokData, HavokData_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<HavokData>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -252,13 +265,14 @@ namespace Mutagen.Bethesda.Oblivion
             out HavokData_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<HavokData, HavokData_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<HavokData>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = HavokData_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -397,56 +411,34 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static HavokData Create_XML_Internal(
-            XElement root,
-            Func<HavokData_ErrorMask> errorMask)
-        {
-            var ret = new HavokData();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             HavokData item,
             XElement root,
             string name,
-            Func<HavokData_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Material":
-                    item._Material.SetIfSucceeded(EnumXmlTranslation<HavokData.MaterialType>.Instance.Parse(
+                    EnumXmlTranslation<HavokData.MaterialType>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)HavokData_FieldIndex.Material,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._Material,
+                        errorMask: errorMask);
                     break;
                 case "Friction":
-                    item._Friction.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)HavokData_FieldIndex.Friction,
-                        errorMask: errorMask));
+                        item: item._Friction,
+                        errorMask: errorMask);
                     break;
                 case "Restitution":
-                    item._Restitution.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)HavokData_FieldIndex.Restitution,
-                        errorMask: errorMask));
+                        item: item._Restitution,
+                        errorMask: errorMask);
                     break;
                 default:
                     break;
@@ -466,8 +458,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -476,26 +468,41 @@ namespace Mutagen.Bethesda.Oblivion
             out HavokData_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = HavokData_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (HavokData Object, HavokData_ErrorMask ErrorMask) Create_Binary(
+        public static HavokData Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            HavokData_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new HavokData_ErrorMask()) : default(Func<HavokData_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new HavokData();
+            try
+            {
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                    frame.Reader,
+                    HavokData_Registration.HNAM_HEADER));
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static HavokData Create_Binary(string path)
@@ -623,50 +630,26 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static HavokData Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<HavokData_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            var ret = new HavokData();
-            try
-            {
-                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                    frame.Reader,
-                    HavokData_Registration.HNAM_HEADER));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_Binary_Structs(
             HavokData item,
             MutagenFrame frame,
-            Func<HavokData_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            item._Material.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<HavokData.MaterialType>.Instance.Parse(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<HavokData.MaterialType>.Instance.ParseInto(
                 frame: frame.SpawnWithLength(1),
+                item: item._Material,
                 fieldIndex: (int)HavokData_FieldIndex.Material,
-                errorMask: errorMask));
-            item._Friction.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._Friction,
                 fieldIndex: (int)HavokData_FieldIndex.Friction,
-                errorMask: errorMask));
-            item._Restitution.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._Restitution,
                 fieldIndex: (int)HavokData_FieldIndex.Restitution,
-                errorMask: errorMask));
+                errorMask: errorMask);
         }
 
         #endregion
@@ -759,24 +742,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            HavokData_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new HavokData_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             HavokDataCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = HavokData_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IHavokDataGetter rhs,
+            ErrorMaskBuilder errorMask,
+            HavokData_CopyMask copyMask = null,
+            IHavokDataGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            HavokDataCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1109,13 +1100,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IHavokData item,
             IHavokDataGetter rhs,
             IHavokDataGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             HavokData_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.Material ?? true)
             {
+                errorMask.PushIndex((int)HavokData_FieldIndex.Material);
                 try
                 {
                     item.Material_Property.Set(
@@ -1123,13 +1114,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)HavokData_FieldIndex.Material, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Friction ?? true)
             {
+                errorMask.PushIndex((int)HavokData_FieldIndex.Friction);
                 try
                 {
                     item.Friction_Property.Set(
@@ -1137,13 +1133,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)HavokData_FieldIndex.Friction, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Restitution ?? true)
             {
+                errorMask.PushIndex((int)HavokData_FieldIndex.Restitution);
                 try
                 {
                     item.Restitution_Property.Set(
@@ -1151,9 +1152,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)HavokData_FieldIndex.Restitution, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1332,53 +1337,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out HavokData_ErrorMask errorMask,
             string name = null)
         {
-            HavokData_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new HavokData_ErrorMask()) : default(Func<HavokData_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = HavokData_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             IHavokDataGetter item,
-            Func<HavokData_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.HavokData");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.HavokData");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.HavokData");
-                }
-                EnumXmlTranslation<HavokData.MaterialType>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Material),
-                    item: item.Material_Property,
-                    fieldIndex: (int)HavokData_FieldIndex.Material,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Friction),
-                    item: item.Friction_Property,
-                    fieldIndex: (int)HavokData_FieldIndex.Friction,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Restitution),
-                    item: item.Restitution_Property,
-                    fieldIndex: (int)HavokData_FieldIndex.Restitution,
-                    errorMask: errorMask);
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.HavokData");
             }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            EnumXmlTranslation<HavokData.MaterialType>.Instance.Write(
+                node: elem,
+                name: nameof(item.Material),
+                item: item.Material_Property,
+                fieldIndex: (int)HavokData_FieldIndex.Material,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Friction),
+                item: item.Friction_Property,
+                fieldIndex: (int)HavokData_FieldIndex.Friction,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Restitution),
+                item: item.Restitution_Property,
+                fieldIndex: (int)HavokData_FieldIndex.Restitution,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -1393,38 +1390,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out HavokData_ErrorMask errorMask)
         {
-            HavokData_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new HavokData_ErrorMask()) : default(Func<HavokData_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = HavokData_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             HavokData item,
             RecordTypeConverter recordTypeConverter,
-            Func<HavokData_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: HavokData_Registration.HNAM_HEADER,
+                type: ObjectType.Subrecord))
             {
-                using (HeaderExport.ExportHeader(
+                Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: HavokData_Registration.HNAM_HEADER,
-                    type: ObjectType.Subrecord))
-                {
-                    Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -1432,7 +1421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary_Embedded(
             HavokData item,
             MutagenWriter writer,
-            Func<HavokData_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<HavokData.MaterialType>.Instance.Write(
                 writer,
@@ -1712,6 +1701,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static HavokData_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

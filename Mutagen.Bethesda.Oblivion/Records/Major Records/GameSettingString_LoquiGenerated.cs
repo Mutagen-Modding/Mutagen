@@ -20,6 +20,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 
@@ -143,8 +144,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -153,23 +153,37 @@ namespace Mutagen.Bethesda.Oblivion
             out GameSettingString_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (GameSettingString Object, GameSettingString_ErrorMask ErrorMask) Create_XML(
+        public static GameSettingString Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            GameSettingString_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new GameSettingString_ErrorMask()) : default(Func<GameSettingString_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new GameSettingString();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static GameSettingString Create_XML(string path)
@@ -211,12 +225,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<GameSettingString, GameSettingString_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<GameSettingString>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -225,13 +238,14 @@ namespace Mutagen.Bethesda.Oblivion
             out GameSettingString_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<GameSettingString, GameSettingString_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<GameSettingString>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -394,43 +408,20 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static GameSettingString Create_XML_Internal(
-            XElement root,
-            Func<GameSettingString_ErrorMask> errorMask)
-        {
-            var ret = new GameSettingString();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             GameSettingString item,
             XElement root,
             string name,
-            Func<GameSettingString_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Data":
-                    item._Data.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    StringXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)GameSettingString_FieldIndex.Data,
-                        errorMask: errorMask));
+                        item: item._Data,
+                        errorMask: errorMask);
                     break;
                 default:
                     GameSetting.Fill_XML_Internal(
@@ -455,8 +446,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -465,26 +456,29 @@ namespace Mutagen.Bethesda.Oblivion
             out GameSettingString_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (GameSettingString Object, GameSettingString_ErrorMask ErrorMask) Create_Binary(
+        public static GameSettingString Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            GameSettingString_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
+            return UtilityTranslation.MajorRecordParse<GameSettingString, GameSettingString_FieldIndex>(
+                record: new GameSettingString(),
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new GameSettingString_ErrorMask()) : default(Func<GameSettingString_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+                errorMask: errorMask,
+                recType: GameSettingString_Registration.GMST_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         public static GameSettingString Create_Binary(string path)
@@ -612,25 +606,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static GameSettingString Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<GameSettingString_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            return UtilityTranslation.MajorRecordParse<GameSettingString, GameSettingString_ErrorMask, GameSettingString_FieldIndex>(
-                record: new GameSettingString(),
-                frame: frame,
-                errorMask: errorMask,
-                recType: GameSettingString_Registration.GMST_HEADER,
-                recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
-        }
-
         protected static void Fill_Binary_Structs(
             GameSettingString item,
             MutagenFrame frame,
-            Func<GameSettingString_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             GameSetting.Fill_Binary_Structs(
                 item: item,
@@ -641,7 +620,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<GameSettingString_FieldIndex?> Fill_Binary_RecordTypes(
             GameSettingString item,
             MutagenFrame frame,
-            Func<GameSettingString_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -652,12 +631,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var DatatryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._Data,
                         fieldIndex: (int)GameSettingString_FieldIndex.Data,
                         parseWhole: true,
                         errorMask: errorMask);
-                    item._Data.SetIfSucceeded(DatatryGet);
                     return TryGet<GameSettingString_FieldIndex?>.Succeed(GameSettingString_FieldIndex.Data);
                 default:
                     return GameSetting.Fill_Binary_RecordTypes(
@@ -745,24 +724,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            GameSettingString_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new GameSettingString_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             GameSettingStringCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IGameSettingStringGetter rhs,
+            ErrorMaskBuilder errorMask,
+            GameSettingString_CopyMask copyMask = null,
+            IGameSettingStringGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            GameSettingStringCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1034,8 +1021,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGameSettingString item,
             IGameSettingStringGetter rhs,
             IGameSettingStringGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             GameSettingString_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1043,12 +1029,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item,
                 rhs,
                 def,
-                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
             if (copyMask?.Data ?? true)
             {
+                errorMask.PushIndex((int)GameSettingString_FieldIndex.Data);
                 try
                 {
                     item.Data_Property.SetToWithDefault(
@@ -1057,9 +1043,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)GameSettingString_FieldIndex.Data, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1264,43 +1254,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out GameSettingString_ErrorMask errorMask,
             string name = null)
         {
-            GameSettingString_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new GameSettingString_ErrorMask()) : default(Func<GameSettingString_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             IGameSettingStringGetter item,
-            Func<GameSettingString_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.GameSettingString");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.GameSettingString");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.GameSettingString");
-                }
-                if (item.Data_Property.HasBeenSet)
-                {
-                    StringXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Data),
-                        item: item.Data_Property,
-                        fieldIndex: (int)GameSettingString_FieldIndex.Data,
-                        errorMask: errorMask);
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.GameSettingString");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (item.Data_Property.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                StringXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Data),
+                    item: item.Data_Property,
+                    fieldIndex: (int)GameSettingString_FieldIndex.Data,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -1316,43 +1298,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out GameSettingString_ErrorMask errorMask)
         {
-            GameSettingString_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new GameSettingString_ErrorMask()) : default(Func<GameSettingString_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             GameSettingString item,
             RecordTypeConverter recordTypeConverter,
-            Func<GameSettingString_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: GameSettingString_Registration.GMST_HEADER,
+                type: ObjectType.Record))
             {
-                using (HeaderExport.ExportHeader(
+                MajorRecordCommon.Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: GameSettingString_Registration.GMST_HEADER,
-                    type: ObjectType.Record))
-                {
-                    MajorRecordCommon.Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                    Write_Binary_RecordTypes(
-                        item: item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -1361,7 +1335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             GameSettingString item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<GameSettingString_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
@@ -1588,6 +1562,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static GameSettingString_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

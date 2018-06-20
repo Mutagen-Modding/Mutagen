@@ -18,6 +18,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
@@ -196,8 +197,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -206,23 +206,37 @@ namespace Mutagen.Bethesda.Oblivion
             out CellBlock_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = CellBlock_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (CellBlock Object, CellBlock_ErrorMask ErrorMask) Create_XML(
+        public static CellBlock Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            CellBlock_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new CellBlock_ErrorMask()) : default(Func<CellBlock_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new CellBlock();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static CellBlock Create_XML(string path)
@@ -264,12 +278,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<CellBlock, CellBlock_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<CellBlock>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -278,13 +291,14 @@ namespace Mutagen.Bethesda.Oblivion
             out CellBlock_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<CellBlock, CellBlock_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<CellBlock>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = CellBlock_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -423,70 +437,42 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static CellBlock Create_XML_Internal(
-            XElement root,
-            Func<CellBlock_ErrorMask> errorMask)
-        {
-            var ret = new CellBlock();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             CellBlock item,
             XElement root,
             string name,
-            Func<CellBlock_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "BlockNumber":
-                    item._BlockNumber.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    ByteArrayXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)CellBlock_FieldIndex.BlockNumber,
-                        errorMask: errorMask));
+                        item: item._BlockNumber,
+                        errorMask: errorMask);
                     break;
                 case "GroupType":
-                    item._GroupType.SetIfSucceeded(EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
+                    EnumXmlTranslation<GroupTypeEnum>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)CellBlock_FieldIndex.GroupType,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._GroupType,
+                        errorMask: errorMask);
                     break;
                 case "LastModified":
-                    item._LastModified.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    ByteArrayXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)CellBlock_FieldIndex.LastModified,
-                        errorMask: errorMask));
+                        item: item._LastModified,
+                        errorMask: errorMask);
                     break;
                 case "Items":
-                    item._Items.SetIfSucceeded(ListXmlTranslation<CellSubBlock, MaskItem<Exception, CellSubBlock_ErrorMask>>.Instance.Parse(
+                    ListXmlTranslation<CellSubBlock>.Instance.ParseInto(
                         root: root,
+                        item: item._Items,
                         fieldIndex: (int)CellBlock_FieldIndex.Items,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, CellSubBlock_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiXmlTranslation<CellSubBlock, CellSubBlock_ErrorMask>.Instance.Parse(
-                                root: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: LoquiXmlTranslation<CellSubBlock>.Instance.Parse);
                     break;
                 default:
                     break;
@@ -515,8 +501,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -525,26 +511,48 @@ namespace Mutagen.Bethesda.Oblivion
             out CellBlock_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = CellBlock_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (CellBlock Object, CellBlock_ErrorMask ErrorMask) Create_Binary(
+        public static CellBlock Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            CellBlock_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new CellBlock_ErrorMask()) : default(Func<CellBlock_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new CellBlock();
+            try
+            {
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseGroup(frame.Reader));
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                    while (!frame.Complete)
+                    {
+                        var parsed = Fill_Binary_RecordTypes(
+                            item: ret,
+                            frame: frame,
+                            errorMask: errorMask,
+                            recordTypeConverter: recordTypeConverter);
+                        if (parsed.Failed) break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static CellBlock Create_Binary(string path)
@@ -672,65 +680,32 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static CellBlock Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<CellBlock_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            var ret = new CellBlock();
-            try
-            {
-                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseGroup(frame.Reader));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_Binary_Structs(
             CellBlock item,
             MutagenFrame frame,
-            Func<CellBlock_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            var BlockNumbertryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.ParseInto(
                 frame: frame.SpawnWithLength(4),
+                item: item._BlockNumber,
                 fieldIndex: (int)CellBlock_FieldIndex.BlockNumber,
                 errorMask: errorMask);
-            item._BlockNumber.SetIfSucceeded(BlockNumbertryGet);
-            item._GroupType.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseInto(
                 frame: frame.SpawnWithLength(4),
+                item: item._GroupType,
                 fieldIndex: (int)CellBlock_FieldIndex.GroupType,
-                errorMask: errorMask));
-            var LastModifiedtryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.ParseInto(
                 frame: frame.SpawnWithLength(4),
+                item: item._LastModified,
                 fieldIndex: (int)CellBlock_FieldIndex.LastModified,
                 errorMask: errorMask);
-            item._LastModified.SetIfSucceeded(LastModifiedtryGet);
         }
 
         protected static TryGet<CellBlock_FieldIndex?> Fill_Binary_RecordTypes(
             CellBlock item,
             MutagenFrame frame,
-            Func<CellBlock_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextRecordType(
@@ -740,24 +715,17 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "GRUP":
-                    var ItemstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<CellSubBlock, MaskItem<Exception, CellSubBlock_ErrorMask>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<CellSubBlock>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: CellBlock_Registration.GRUP_HEADER,
+                        item: item._Items,
                         fieldIndex: (int)CellBlock_FieldIndex.Items,
                         lengthLength: Mutagen.Bethesda.Constants.RECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, CellSubBlock_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiBinaryTranslation<CellSubBlock, CellSubBlock_ErrorMask>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    item._Items.SetIfSucceeded(ItemstryGet);
+                        transl: LoquiBinaryTranslation<CellSubBlock>.Instance.Parse);
                     return TryGet<CellBlock_FieldIndex?>.Succeed(CellBlock_FieldIndex.Items);
                 default:
-                    errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    errorMask.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + Constants.RECORD_LENGTH;
                     return TryGet<CellBlock_FieldIndex?>.Succeed(null);
             }
@@ -853,24 +821,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            CellBlock_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new CellBlock_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             CellBlockCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = CellBlock_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            ICellBlockGetter rhs,
+            ErrorMaskBuilder errorMask,
+            CellBlock_CopyMask copyMask = null,
+            ICellBlockGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            CellBlockCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1227,13 +1203,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICellBlock item,
             ICellBlockGetter rhs,
             ICellBlockGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             CellBlock_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.BlockNumber ?? true)
             {
+                errorMask.PushIndex((int)CellBlock_FieldIndex.BlockNumber);
                 try
                 {
                     item.BlockNumber_Property.Set(
@@ -1241,13 +1217,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)CellBlock_FieldIndex.BlockNumber, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.GroupType ?? true)
             {
+                errorMask.PushIndex((int)CellBlock_FieldIndex.GroupType);
                 try
                 {
                     item.GroupType_Property.Set(
@@ -1255,13 +1236,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)CellBlock_FieldIndex.GroupType, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.LastModified ?? true)
             {
+                errorMask.PushIndex((int)CellBlock_FieldIndex.LastModified);
                 try
                 {
                     item.LastModified_Property.Set(
@@ -1269,13 +1255,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)CellBlock_FieldIndex.LastModified, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Items.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)CellBlock_FieldIndex.Items);
                 try
                 {
                     item.Items.SetToWithDefault(
@@ -1301,9 +1292,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)CellBlock_FieldIndex.Items, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1538,71 +1533,62 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out CellBlock_ErrorMask errorMask,
             string name = null)
         {
-            CellBlock_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new CellBlock_ErrorMask()) : default(Func<CellBlock_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = CellBlock_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             ICellBlockGetter item,
-            Func<CellBlock_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.CellBlock");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.CellBlock");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.CellBlock");
-                }
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.BlockNumber),
-                    item: item.BlockNumber_Property,
-                    fieldIndex: (int)CellBlock_FieldIndex.BlockNumber,
-                    errorMask: errorMask);
-                EnumXmlTranslation<GroupTypeEnum>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.GroupType),
-                    item: item.GroupType_Property,
-                    fieldIndex: (int)CellBlock_FieldIndex.GroupType,
-                    errorMask: errorMask);
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.LastModified),
-                    item: item.LastModified_Property,
-                    fieldIndex: (int)CellBlock_FieldIndex.LastModified,
-                    errorMask: errorMask);
-                if (item.Items.HasBeenSet)
-                {
-                    ListXmlTranslation<CellSubBlock, MaskItem<Exception, CellSubBlock_ErrorMask>>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Items),
-                        item: item.Items,
-                        fieldIndex: (int)CellBlock_FieldIndex.Items,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, CellSubBlock subItem, bool listDoMasks, out MaskItem<Exception, CellSubBlock_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<CellSubBlock, CellSubBlock_ErrorMask>.Instance.Write(
-                                node: subNode,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.CellBlock");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            ByteArrayXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.BlockNumber),
+                item: item.BlockNumber_Property,
+                fieldIndex: (int)CellBlock_FieldIndex.BlockNumber,
+                errorMask: errorMask);
+            EnumXmlTranslation<GroupTypeEnum>.Instance.Write(
+                node: elem,
+                name: nameof(item.GroupType),
+                item: item.GroupType_Property,
+                fieldIndex: (int)CellBlock_FieldIndex.GroupType,
+                errorMask: errorMask);
+            ByteArrayXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.LastModified),
+                item: item.LastModified_Property,
+                fieldIndex: (int)CellBlock_FieldIndex.LastModified,
+                errorMask: errorMask);
+            if (item.Items.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                ListXmlTranslation<CellSubBlock>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Items),
+                    item: item.Items,
+                    fieldIndex: (int)CellBlock_FieldIndex.Items,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, CellSubBlock subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        LoquiXmlTranslation<CellSubBlock>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            errorMask: listSubMask);
+                    }
+                    );
             }
         }
         #endregion
@@ -1618,43 +1604,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out CellBlock_ErrorMask errorMask)
         {
-            CellBlock_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new CellBlock_ErrorMask()) : default(Func<CellBlock_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = CellBlock_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             CellBlock item,
             RecordTypeConverter recordTypeConverter,
-            Func<CellBlock_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: CellBlock_Registration.GRUP_HEADER,
+                type: ObjectType.Group))
             {
-                using (HeaderExport.ExportHeader(
+                Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: CellBlock_Registration.GRUP_HEADER,
-                    type: ObjectType.Group))
-                {
-                    Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                    Write_Binary_RecordTypes(
-                        item: item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -1662,7 +1640,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary_Embedded(
             CellBlock item,
             MutagenWriter writer,
-            Func<CellBlock_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -1686,22 +1664,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CellBlock item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<CellBlock_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<CellSubBlock, MaskItem<Exception, CellSubBlock_ErrorMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<CellSubBlock>.Instance.Write(
                 writer: writer,
-                item: item.Items,
+                items: item.Items,
                 fieldIndex: (int)CellBlock_FieldIndex.Items,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, CellSubBlock subItem, bool listDoMasks, out MaskItem<Exception, CellSubBlock_ErrorMask> listSubMask) =>
-                {
-                    LoquiBinaryTranslation<CellSubBlock, CellSubBlock_ErrorMask>.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                transl: LoquiBinaryTranslation<CellSubBlock>.Instance.Write);
         }
 
         #endregion
@@ -2063,6 +2033,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static CellBlock_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

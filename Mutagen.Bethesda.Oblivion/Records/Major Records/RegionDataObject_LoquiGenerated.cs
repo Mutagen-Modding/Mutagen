@@ -17,6 +17,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
@@ -398,8 +399,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -408,23 +408,37 @@ namespace Mutagen.Bethesda.Oblivion
             out RegionDataObject_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = RegionDataObject_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (RegionDataObject Object, RegionDataObject_ErrorMask ErrorMask) Create_XML(
+        public static RegionDataObject Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            RegionDataObject_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RegionDataObject_ErrorMask()) : default(Func<RegionDataObject_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new RegionDataObject();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static RegionDataObject Create_XML(string path)
@@ -466,12 +480,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<RegionDataObject, RegionDataObject_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<RegionDataObject>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -480,13 +493,14 @@ namespace Mutagen.Bethesda.Oblivion
             out RegionDataObject_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<RegionDataObject, RegionDataObject_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<RegionDataObject>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = RegionDataObject_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -625,140 +639,132 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static RegionDataObject Create_XML_Internal(
-            XElement root,
-            Func<RegionDataObject_ErrorMask> errorMask)
-        {
-            var ret = new RegionDataObject();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             RegionDataObject item,
             XElement root,
             string name,
-            Func<RegionDataObject_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Object":
-                    item.Object_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.Object,
-                        errorMask: errorMask));
+                        item: item.Object_Property,
+                        errorMask: errorMask);
                     break;
                 case "ParentIndex":
-                    item._ParentIndex.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    UInt16XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.ParentIndex,
-                        errorMask: errorMask));
+                        item: item._ParentIndex,
+                        errorMask: errorMask);
                     break;
                 case "Unknown1":
-                    item._Unknown1.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    ByteArrayXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.Unknown1,
-                        errorMask: errorMask));
+                        item: item._Unknown1,
+                        errorMask: errorMask);
                     break;
                 case "Density":
-                    item._Density.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    FloatXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.Density,
-                        errorMask: errorMask));
+                        item: item._Density,
+                        errorMask: errorMask);
                     break;
                 case "Clustering":
-                    item._Clustering.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.Clustering,
-                        errorMask: errorMask));
+                        item: item._Clustering,
+                        errorMask: errorMask);
                     break;
                 case "MinSlope":
-                    item._MinSlope.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.MinSlope,
-                        errorMask: errorMask));
+                        item: item._MinSlope,
+                        errorMask: errorMask);
                     break;
                 case "MaxSlope":
-                    item._MaxSlope.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.MaxSlope,
-                        errorMask: errorMask));
+                        item: item._MaxSlope,
+                        errorMask: errorMask);
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<RegionDataObject.Flag>.Instance.Parse(
+                    EnumXmlTranslation<RegionDataObject.Flag>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)RegionDataObject_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._Flags,
+                        errorMask: errorMask);
                     break;
                 case "RadiusWrtPercent":
-                    item._RadiusWrtPercent.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    UInt16XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.RadiusWrtPercent,
-                        errorMask: errorMask));
+                        item: item._RadiusWrtPercent,
+                        errorMask: errorMask);
                     break;
                 case "Radius":
-                    item._Radius.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    UInt16XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.Radius,
-                        errorMask: errorMask));
+                        item: item._Radius,
+                        errorMask: errorMask);
                     break;
                 case "MinHeight":
-                    item._MinHeight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    FloatXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.MinHeight,
-                        errorMask: errorMask));
+                        item: item._MinHeight,
+                        errorMask: errorMask);
                     break;
                 case "MaxHeight":
-                    item._MaxHeight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    FloatXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.MaxHeight,
-                        errorMask: errorMask));
+                        item: item._MaxHeight,
+                        errorMask: errorMask);
                     break;
                 case "Sink":
-                    item._Sink.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    FloatXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.Sink,
-                        errorMask: errorMask));
+                        item: item._Sink,
+                        errorMask: errorMask);
                     break;
                 case "SinkVariance":
-                    item._SinkVariance.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    FloatXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.SinkVariance,
-                        errorMask: errorMask));
+                        item: item._SinkVariance,
+                        errorMask: errorMask);
                     break;
                 case "SizeVariance":
-                    item._SizeVariance.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    FloatXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.SizeVariance,
-                        errorMask: errorMask));
+                        item: item._SizeVariance,
+                        errorMask: errorMask);
                     break;
                 case "AngleVariance":
-                    item._AngleVariance.SetIfSucceeded(P3UInt16XmlTranslation.Instance.ParseNonNull(
+                    P3UInt16XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.AngleVariance,
-                        errorMask: errorMask));
+                        item: item._AngleVariance,
+                        errorMask: errorMask);
                     break;
                 case "Unknow2n":
-                    item._Unknow2n.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    ByteArrayXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RegionDataObject_FieldIndex.Unknow2n,
-                        errorMask: errorMask));
+                        item: item._Unknow2n,
+                        errorMask: errorMask);
                     break;
                 default:
                     break;
@@ -783,8 +789,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -793,26 +799,38 @@ namespace Mutagen.Bethesda.Oblivion
             out RegionDataObject_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = RegionDataObject_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (RegionDataObject Object, RegionDataObject_ErrorMask ErrorMask) Create_Binary(
+        public static RegionDataObject Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            RegionDataObject_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RegionDataObject_ErrorMask()) : default(Func<RegionDataObject_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new RegionDataObject();
+            try
+            {
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static RegionDataObject Create_Binary(string path)
@@ -940,105 +958,96 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static RegionDataObject Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<RegionDataObject_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            var ret = new RegionDataObject();
-            try
-            {
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_Binary_Structs(
             RegionDataObject item,
             MutagenFrame frame,
-            Func<RegionDataObject_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            item.Object_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item.Object_Property,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Object,
-                errorMask: errorMask));
-            item._ParentIndex.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._ParentIndex,
                 fieldIndex: (int)RegionDataObject_FieldIndex.ParentIndex,
-                errorMask: errorMask));
-            var Unknown1tryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.ParseInto(
                 frame: frame.SpawnWithLength(2),
+                item: item._Unknown1,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Unknown1,
                 errorMask: errorMask);
-            item._Unknown1.SetIfSucceeded(Unknown1tryGet);
-            item._Density.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._Density,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Density,
-                errorMask: errorMask));
-            item._Clustering.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._Clustering,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Clustering,
-                errorMask: errorMask));
-            item._MinSlope.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._MinSlope,
                 fieldIndex: (int)RegionDataObject_FieldIndex.MinSlope,
-                errorMask: errorMask));
-            item._MaxSlope.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._MaxSlope,
                 fieldIndex: (int)RegionDataObject_FieldIndex.MaxSlope,
-                errorMask: errorMask));
-            item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionDataObject.Flag>.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionDataObject.Flag>.Instance.ParseInto(
                 frame: frame.SpawnWithLength(1),
+                item: item._Flags,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Flags,
-                errorMask: errorMask));
-            item._RadiusWrtPercent.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._RadiusWrtPercent,
                 fieldIndex: (int)RegionDataObject_FieldIndex.RadiusWrtPercent,
-                errorMask: errorMask));
-            item._Radius.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._Radius,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Radius,
-                errorMask: errorMask));
-            item._MinHeight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._MinHeight,
                 fieldIndex: (int)RegionDataObject_FieldIndex.MinHeight,
-                errorMask: errorMask));
-            item._MaxHeight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._MaxHeight,
                 fieldIndex: (int)RegionDataObject_FieldIndex.MaxHeight,
-                errorMask: errorMask));
-            item._Sink.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._Sink,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Sink,
-                errorMask: errorMask));
-            item._SinkVariance.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._SinkVariance,
                 fieldIndex: (int)RegionDataObject_FieldIndex.SinkVariance,
-                errorMask: errorMask));
-            item._SizeVariance.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._SizeVariance,
                 fieldIndex: (int)RegionDataObject_FieldIndex.SizeVariance,
-                errorMask: errorMask));
-            item._AngleVariance.SetIfSucceeded(Mutagen.Bethesda.Binary.P3UInt16BinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.P3UInt16BinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._AngleVariance,
                 fieldIndex: (int)RegionDataObject_FieldIndex.AngleVariance,
-                errorMask: errorMask));
-            var Unknow2ntryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.ParseInto(
                 frame: frame.SpawnWithLength(6),
+                item: item._Unknow2n,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Unknow2n,
                 errorMask: errorMask);
-            item._Unknow2n.SetIfSucceeded(Unknow2ntryGet);
         }
 
         #endregion
@@ -1131,24 +1140,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            RegionDataObject_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new RegionDataObject_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             RegionDataObjectCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = RegionDataObject_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IRegionDataObjectGetter rhs,
+            ErrorMaskBuilder errorMask,
+            RegionDataObject_CopyMask copyMask = null,
+            IRegionDataObjectGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            RegionDataObjectCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1897,13 +1914,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataObject item,
             IRegionDataObjectGetter rhs,
             IRegionDataObjectGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RegionDataObject_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.Object ?? true)
             {
+                errorMask.PushIndex((int)RegionDataObject_FieldIndex.Object);
                 try
                 {
                     item.Object_Property.Set(
@@ -1911,13 +1928,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RegionDataObject_FieldIndex.Object, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.ParentIndex ?? true)
             {
+                errorMask.PushIndex((int)RegionDataObject_FieldIndex.ParentIndex);
                 try
                 {
                     item.ParentIndex_Property.Set(
@@ -1925,13 +1947,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RegionDataObject_FieldIndex.ParentIndex, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Unknown1 ?? true)
             {
+                errorMask.PushIndex((int)RegionDataObject_FieldIndex.Unknown1);
                 try
                 {
                     item.Unknown1_Property.Set(
@@ -1939,13 +1966,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RegionDataObject_FieldIndex.Unknown1, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Density ?? true)
             {
+                errorMask.PushIndex((int)RegionDataObject_FieldIndex.Density);
                 try
                 {
                     item.Density_Property.Set(
@@ -1953,13 +1985,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RegionDataObject_FieldIndex.Density, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Clustering ?? true)
             {
+                errorMask.PushIndex((int)RegionDataObject_FieldIndex.Clustering);
                 try
                 {
                     item.Clustering_Property.Set(
@@ -1967,13 +2004,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RegionDataObject_FieldIndex.Clustering, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.MinSlope ?? true)
             {
+                errorMask.PushIndex((int)RegionDataObject_FieldIndex.MinSlope);
                 try
                 {
                     item.MinSlope_Property.Set(
@@ -1981,13 +2023,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RegionDataObject_FieldIndex.MinSlope, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.MaxSlope ?? true)
             {
+                errorMask.PushIndex((int)RegionDataObject_FieldIndex.MaxSlope);
                 try
                 {
                     item.MaxSlope_Property.Set(
@@ -1995,13 +2042,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RegionDataObject_FieldIndex.MaxSlope, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
+                errorMask.PushIndex((int)RegionDataObject_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -2009,13 +2061,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RegionDataObject_FieldIndex.Flags, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.RadiusWrtPercent ?? true)
             {
+                errorMask.PushIndex((int)RegionDataObject_FieldIndex.RadiusWrtPercent);
                 try
                 {
                     item.RadiusWrtPercent_Property.Set(
@@ -2023,13 +2080,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RegionDataObject_FieldIndex.RadiusWrtPercent, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Radius ?? true)
             {
+                errorMask.PushIndex((int)RegionDataObject_FieldIndex.Radius);
                 try
                 {
                     item.Radius_Property.Set(
@@ -2037,13 +2099,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RegionDataObject_FieldIndex.Radius, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.MinHeight ?? true)
             {
+                errorMask.PushIndex((int)RegionDataObject_FieldIndex.MinHeight);
                 try
                 {
                     item.MinHeight_Property.Set(
@@ -2051,13 +2118,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RegionDataObject_FieldIndex.MinHeight, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.MaxHeight ?? true)
             {
+                errorMask.PushIndex((int)RegionDataObject_FieldIndex.MaxHeight);
                 try
                 {
                     item.MaxHeight_Property.Set(
@@ -2065,13 +2137,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RegionDataObject_FieldIndex.MaxHeight, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Sink ?? true)
             {
+                errorMask.PushIndex((int)RegionDataObject_FieldIndex.Sink);
                 try
                 {
                     item.Sink_Property.Set(
@@ -2079,13 +2156,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RegionDataObject_FieldIndex.Sink, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.SinkVariance ?? true)
             {
+                errorMask.PushIndex((int)RegionDataObject_FieldIndex.SinkVariance);
                 try
                 {
                     item.SinkVariance_Property.Set(
@@ -2093,13 +2175,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RegionDataObject_FieldIndex.SinkVariance, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.SizeVariance ?? true)
             {
+                errorMask.PushIndex((int)RegionDataObject_FieldIndex.SizeVariance);
                 try
                 {
                     item.SizeVariance_Property.Set(
@@ -2107,13 +2194,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RegionDataObject_FieldIndex.SizeVariance, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.AngleVariance ?? true)
             {
+                errorMask.PushIndex((int)RegionDataObject_FieldIndex.AngleVariance);
                 try
                 {
                     item.AngleVariance_Property.Set(
@@ -2121,13 +2213,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RegionDataObject_FieldIndex.AngleVariance, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Unknow2n ?? true)
             {
+                errorMask.PushIndex((int)RegionDataObject_FieldIndex.Unknow2n);
                 try
                 {
                     item.Unknow2n_Property.Set(
@@ -2135,9 +2232,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RegionDataObject_FieldIndex.Unknow2n, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -2512,137 +2613,129 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out RegionDataObject_ErrorMask errorMask,
             string name = null)
         {
-            RegionDataObject_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RegionDataObject_ErrorMask()) : default(Func<RegionDataObject_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = RegionDataObject_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             IRegionDataObjectGetter item,
-            Func<RegionDataObject_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RegionDataObject");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RegionDataObject");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionDataObject");
-                }
-                FormIDXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Object),
-                    item: item.Object?.FormID,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.Object,
-                    errorMask: errorMask);
-                UInt16XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.ParentIndex),
-                    item: item.ParentIndex_Property,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.ParentIndex,
-                    errorMask: errorMask);
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Unknown1),
-                    item: item.Unknown1_Property,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.Unknown1,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Density),
-                    item: item.Density_Property,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.Density,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Clustering),
-                    item: item.Clustering_Property,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.Clustering,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.MinSlope),
-                    item: item.MinSlope_Property,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.MinSlope,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.MaxSlope),
-                    item: item.MaxSlope_Property,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.MaxSlope,
-                    errorMask: errorMask);
-                EnumXmlTranslation<RegionDataObject.Flag>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Flags),
-                    item: item.Flags_Property,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.Flags,
-                    errorMask: errorMask);
-                UInt16XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.RadiusWrtPercent),
-                    item: item.RadiusWrtPercent_Property,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.RadiusWrtPercent,
-                    errorMask: errorMask);
-                UInt16XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Radius),
-                    item: item.Radius_Property,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.Radius,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.MinHeight),
-                    item: item.MinHeight_Property,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.MinHeight,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.MaxHeight),
-                    item: item.MaxHeight_Property,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.MaxHeight,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Sink),
-                    item: item.Sink_Property,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.Sink,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.SinkVariance),
-                    item: item.SinkVariance_Property,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.SinkVariance,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.SizeVariance),
-                    item: item.SizeVariance_Property,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.SizeVariance,
-                    errorMask: errorMask);
-                P3UInt16XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.AngleVariance),
-                    item: item.AngleVariance_Property,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.AngleVariance,
-                    errorMask: errorMask);
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Unknow2n),
-                    item: item.Unknow2n_Property,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.Unknow2n,
-                    errorMask: errorMask);
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionDataObject");
             }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            FormIDXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Object),
+                item: item.Object?.FormID,
+                fieldIndex: (int)RegionDataObject_FieldIndex.Object,
+                errorMask: errorMask);
+            UInt16XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.ParentIndex),
+                item: item.ParentIndex_Property,
+                fieldIndex: (int)RegionDataObject_FieldIndex.ParentIndex,
+                errorMask: errorMask);
+            ByteArrayXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Unknown1),
+                item: item.Unknown1_Property,
+                fieldIndex: (int)RegionDataObject_FieldIndex.Unknown1,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Density),
+                item: item.Density_Property,
+                fieldIndex: (int)RegionDataObject_FieldIndex.Density,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Clustering),
+                item: item.Clustering_Property,
+                fieldIndex: (int)RegionDataObject_FieldIndex.Clustering,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.MinSlope),
+                item: item.MinSlope_Property,
+                fieldIndex: (int)RegionDataObject_FieldIndex.MinSlope,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.MaxSlope),
+                item: item.MaxSlope_Property,
+                fieldIndex: (int)RegionDataObject_FieldIndex.MaxSlope,
+                errorMask: errorMask);
+            EnumXmlTranslation<RegionDataObject.Flag>.Instance.Write(
+                node: elem,
+                name: nameof(item.Flags),
+                item: item.Flags_Property,
+                fieldIndex: (int)RegionDataObject_FieldIndex.Flags,
+                errorMask: errorMask);
+            UInt16XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.RadiusWrtPercent),
+                item: item.RadiusWrtPercent_Property,
+                fieldIndex: (int)RegionDataObject_FieldIndex.RadiusWrtPercent,
+                errorMask: errorMask);
+            UInt16XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Radius),
+                item: item.Radius_Property,
+                fieldIndex: (int)RegionDataObject_FieldIndex.Radius,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.MinHeight),
+                item: item.MinHeight_Property,
+                fieldIndex: (int)RegionDataObject_FieldIndex.MinHeight,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.MaxHeight),
+                item: item.MaxHeight_Property,
+                fieldIndex: (int)RegionDataObject_FieldIndex.MaxHeight,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Sink),
+                item: item.Sink_Property,
+                fieldIndex: (int)RegionDataObject_FieldIndex.Sink,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.SinkVariance),
+                item: item.SinkVariance_Property,
+                fieldIndex: (int)RegionDataObject_FieldIndex.SinkVariance,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.SizeVariance),
+                item: item.SizeVariance_Property,
+                fieldIndex: (int)RegionDataObject_FieldIndex.SizeVariance,
+                errorMask: errorMask);
+            P3UInt16XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.AngleVariance),
+                item: item.AngleVariance_Property,
+                fieldIndex: (int)RegionDataObject_FieldIndex.AngleVariance,
+                errorMask: errorMask);
+            ByteArrayXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Unknow2n),
+                item: item.Unknow2n_Property,
+                fieldIndex: (int)RegionDataObject_FieldIndex.Unknow2n,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -2657,40 +2750,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out RegionDataObject_ErrorMask errorMask)
         {
-            RegionDataObject_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RegionDataObject_ErrorMask()) : default(Func<RegionDataObject_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = RegionDataObject_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             RegionDataObject item,
             RecordTypeConverter recordTypeConverter,
-            Func<RegionDataObject_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask);
         }
         #endregion
 
         public static void Write_Binary_Embedded(
             RegionDataObject item,
             MutagenWriter writer,
-            Func<RegionDataObject_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -3348,6 +3433,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static RegionDataObject_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

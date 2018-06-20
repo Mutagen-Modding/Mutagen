@@ -20,6 +20,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 
@@ -290,8 +291,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -300,23 +300,37 @@ namespace Mutagen.Bethesda.Oblivion
             out TES4_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = TES4_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (TES4 Object, TES4_ErrorMask ErrorMask) Create_XML(
+        public static TES4 Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            TES4_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new TES4_ErrorMask()) : default(Func<TES4_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new TES4();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static TES4 Create_XML(string path)
@@ -358,12 +372,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<TES4>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -372,13 +385,14 @@ namespace Mutagen.Bethesda.Oblivion
             out TES4_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<TES4>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = TES4_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -517,87 +531,82 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static TES4 Create_XML_Internal(
-            XElement root,
-            Func<TES4_ErrorMask> errorMask)
-        {
-            var ret = new TES4();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             TES4 item,
             XElement root,
             string name,
-            Func<TES4_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Fluff":
-                    item._Fluff.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    ByteArrayXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)TES4_FieldIndex.Fluff,
-                        errorMask: errorMask));
+                        item: item._Fluff,
+                        errorMask: errorMask);
                     break;
                 case "Header":
-                    item._Header.SetIfSucceeded(LoquiXmlTranslation<Header, Header_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)TES4_FieldIndex.Header,
-                        errorMask: errorMask));
+                    try
+                    {
+                        errorMask?.PushIndex((int)TES4_FieldIndex.Header);
+                        if (LoquiXmlTranslation<Header>.Instance.Parse(
+                            root: root,
+                            item: out var HeaderParse,
+                            errorMask: errorMask))
+                        {
+                            item._Header.Item = HeaderParse;
+                        }
+                        else
+                        {
+                            item._Header.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "TypeOffsets":
-                    item._TypeOffsets.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    ByteArrayXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
-                        errorMask: errorMask));
+                        item: item._TypeOffsets,
+                        errorMask: errorMask);
                     break;
                 case "Deleted":
-                    item._Deleted.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    ByteArrayXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)TES4_FieldIndex.Deleted,
-                        errorMask: errorMask));
+                        item: item._Deleted,
+                        errorMask: errorMask);
                     break;
                 case "Author":
-                    item._Author.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    StringXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)TES4_FieldIndex.Author,
-                        errorMask: errorMask));
+                        item: item._Author,
+                        errorMask: errorMask);
                     break;
                 case "Description":
-                    item._Description.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    StringXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)TES4_FieldIndex.Description,
-                        errorMask: errorMask));
+                        item: item._Description,
+                        errorMask: errorMask);
                     break;
                 case "MasterReferences":
-                    item._MasterReferences.SetIfSucceeded(ListXmlTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.Parse(
+                    ListXmlTranslation<MasterReference>.Instance.ParseInto(
                         root: root,
+                        item: item._MasterReferences,
                         fieldIndex: (int)TES4_FieldIndex.MasterReferences,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.Parse(
-                                root: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: LoquiXmlTranslation<MasterReference>.Instance.Parse);
                     break;
                 default:
                     break;
@@ -627,8 +636,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -637,26 +646,50 @@ namespace Mutagen.Bethesda.Oblivion
             out TES4_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = TES4_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (TES4 Object, TES4_ErrorMask ErrorMask) Create_Binary(
+        public static TES4 Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            TES4_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new TES4_ErrorMask()) : default(Func<TES4_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new TES4();
+            try
+            {
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
+                    frame.Reader,
+                    TES4_Registration.TES4_HEADER));
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                    while (!frame.Complete)
+                    {
+                        var parsed = Fill_Binary_RecordTypes(
+                            item: ret,
+                            frame: frame,
+                            errorMask: errorMask,
+                            recordTypeConverter: recordTypeConverter);
+                        if (parsed.Failed) break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static TES4 Create_Binary(string path)
@@ -784,58 +817,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static TES4 Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<TES4_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            var ret = new TES4();
-            try
-            {
-                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
-                    frame.Reader,
-                    TES4_Registration.TES4_HEADER));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_Binary_Structs(
             TES4 item,
             MutagenFrame frame,
-            Func<TES4_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.ParseInto(
                 frame: frame.SpawnWithLength(12),
+                item: item._Fluff,
                 fieldIndex: (int)TES4_FieldIndex.Fluff,
                 errorMask: errorMask);
-            item._Fluff.SetIfSucceeded(FlufftryGet);
         }
 
         protected static TryGet<TES4_FieldIndex?> Fill_Binary_RecordTypes(
             TES4 item,
             MutagenFrame frame,
-            Func<TES4_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -845,65 +842,59 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "HEDR":
-                    item._Header.SetIfSucceeded(LoquiBinaryTranslation<Header, Header_ErrorMask>.Instance.Parse(
+                    LoquiBinaryTranslation<Header>.Instance.ParseInto(
                         frame: frame,
                         fieldIndex: (int)TES4_FieldIndex.Header,
-                        errorMask: errorMask));
+                        errorMask: errorMask,
+                        item: item._Header);
                     return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.Header);
                 case "OFST":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var TypeOffsetstryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.ParseInto(
                         frame.SpawnWithLength(contentLength),
+                        item: item._TypeOffsets,
                         fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
                         errorMask: errorMask);
-                    item._TypeOffsets.SetIfSucceeded(TypeOffsetstryGet);
                     return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.TypeOffsets);
                 case "DELE":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var DeletedtryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.ParseInto(
                         frame.SpawnWithLength(contentLength),
+                        item: item._Deleted,
                         fieldIndex: (int)TES4_FieldIndex.Deleted,
                         errorMask: errorMask);
-                    item._Deleted.SetIfSucceeded(DeletedtryGet);
                     return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.Deleted);
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var AuthortryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._Author,
                         fieldIndex: (int)TES4_FieldIndex.Author,
                         parseWhole: true,
                         errorMask: errorMask);
-                    item._Author.SetIfSucceeded(AuthortryGet);
                     return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.Author);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var DescriptiontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._Description,
                         fieldIndex: (int)TES4_FieldIndex.Description,
                         parseWhole: true,
                         errorMask: errorMask);
-                    item._Description.SetIfSucceeded(DescriptiontryGet);
                     return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.Description);
                 case "MAST":
                 case "DATA":
-                    var MasterReferencestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: MasterReference_Registration.TriggeringRecordTypes,
+                        item: item._MasterReferences,
                         fieldIndex: (int)TES4_FieldIndex.MasterReferences,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    item._MasterReferences.SetIfSucceeded(MasterReferencestryGet);
+                        transl: LoquiBinaryTranslation<MasterReference>.Instance.Parse);
                     return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.MasterReferences);
                 default:
-                    errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    errorMask.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + Constants.SUBRECORD_LENGTH;
                     return TryGet<TES4_FieldIndex?>.Succeed(null);
             }
@@ -999,24 +990,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            TES4_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new TES4_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             TES4Common.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = TES4_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            ITES4Getter rhs,
+            ErrorMaskBuilder errorMask,
+            TES4_CopyMask copyMask = null,
+            ITES4Getter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            TES4Common.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1470,13 +1469,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITES4 item,
             ITES4Getter rhs,
             ITES4Getter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             TES4_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.Fluff ?? true)
             {
+                errorMask.PushIndex((int)TES4_FieldIndex.Fluff);
                 try
                 {
                     item.Fluff_Property.Set(
@@ -1484,13 +1483,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)TES4_FieldIndex.Fluff, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Header.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)TES4_FieldIndex.Header);
                 try
                 {
                     item.Header_Property.SetToWithDefault(
@@ -1508,15 +1512,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.Header,
                                         rhs: rhs.Header,
                                         def: def?.Header,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<Header_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new Header_ErrorMask();
-                                            baseMask.SetNthMask((int)TES4_FieldIndex.Header, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.Header.Specific,
                                         cmds: cmds);
                                     return r;
@@ -1533,13 +1529,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)TES4_FieldIndex.Header, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.TypeOffsets ?? true)
             {
+                errorMask.PushIndex((int)TES4_FieldIndex.TypeOffsets);
                 try
                 {
                     item.TypeOffsets_Property.SetToWithDefault(
@@ -1548,13 +1549,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)TES4_FieldIndex.TypeOffsets, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Deleted ?? true)
             {
+                errorMask.PushIndex((int)TES4_FieldIndex.Deleted);
                 try
                 {
                     item.Deleted_Property.SetToWithDefault(
@@ -1563,13 +1569,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)TES4_FieldIndex.Deleted, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Author ?? true)
             {
+                errorMask.PushIndex((int)TES4_FieldIndex.Author);
                 try
                 {
                     item.Author_Property.SetToWithDefault(
@@ -1578,13 +1589,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)TES4_FieldIndex.Author, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Description ?? true)
             {
+                errorMask.PushIndex((int)TES4_FieldIndex.Description);
                 try
                 {
                     item.Description_Property.SetToWithDefault(
@@ -1593,13 +1609,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)TES4_FieldIndex.Description, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.MasterReferences.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)TES4_FieldIndex.MasterReferences);
                 try
                 {
                     item.MasterReferences.SetToWithDefault(
@@ -1625,9 +1646,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)TES4_FieldIndex.MasterReferences, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1925,104 +1950,95 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out TES4_ErrorMask errorMask,
             string name = null)
         {
-            TES4_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new TES4_ErrorMask()) : default(Func<TES4_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = TES4_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             ITES4Getter item,
-            Func<TES4_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.TES4");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.TES4");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.TES4");
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.TES4");
+            }
+            ByteArrayXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Fluff),
+                item: item.Fluff_Property,
+                fieldIndex: (int)TES4_FieldIndex.Fluff,
+                errorMask: errorMask);
+            if (item.Header_Property.HasBeenSet)
+            {
+                LoquiXmlTranslation<Header>.Instance.Write(
+                    node: elem,
+                    item: item.Header_Property,
+                    name: nameof(item.Header),
+                    fieldIndex: (int)TES4_FieldIndex.Header,
+                    errorMask: errorMask);
+            }
+            if (item.TypeOffsets_Property.HasBeenSet)
+            {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
-                    name: nameof(item.Fluff),
-                    item: item.Fluff_Property,
-                    fieldIndex: (int)TES4_FieldIndex.Fluff,
+                    name: nameof(item.TypeOffsets),
+                    item: item.TypeOffsets_Property,
+                    fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
                     errorMask: errorMask);
-                if (item.Header_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<Header, Header_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.Header_Property,
-                        name: nameof(item.Header),
-                        fieldIndex: (int)TES4_FieldIndex.Header,
-                        errorMask: errorMask);
-                }
-                if (item.TypeOffsets_Property.HasBeenSet)
-                {
-                    ByteArrayXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.TypeOffsets),
-                        item: item.TypeOffsets_Property,
-                        fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
-                        errorMask: errorMask);
-                }
-                if (item.Deleted_Property.HasBeenSet)
-                {
-                    ByteArrayXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Deleted),
-                        item: item.Deleted_Property,
-                        fieldIndex: (int)TES4_FieldIndex.Deleted,
-                        errorMask: errorMask);
-                }
-                if (item.Author_Property.HasBeenSet)
-                {
-                    StringXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Author),
-                        item: item.Author_Property,
-                        fieldIndex: (int)TES4_FieldIndex.Author,
-                        errorMask: errorMask);
-                }
-                if (item.Description_Property.HasBeenSet)
-                {
-                    StringXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Description),
-                        item: item.Description_Property,
-                        fieldIndex: (int)TES4_FieldIndex.Description,
-                        errorMask: errorMask);
-                }
-                if (item.MasterReferences.HasBeenSet)
-                {
-                    ListXmlTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.MasterReferences),
-                        item: item.MasterReferences,
-                        fieldIndex: (int)TES4_FieldIndex.MasterReferences,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, MasterReference subItem, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.Write(
-                                node: subNode,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (item.Deleted_Property.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Deleted),
+                    item: item.Deleted_Property,
+                    fieldIndex: (int)TES4_FieldIndex.Deleted,
+                    errorMask: errorMask);
+            }
+            if (item.Author_Property.HasBeenSet)
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Author),
+                    item: item.Author_Property,
+                    fieldIndex: (int)TES4_FieldIndex.Author,
+                    errorMask: errorMask);
+            }
+            if (item.Description_Property.HasBeenSet)
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Description),
+                    item: item.Description_Property,
+                    fieldIndex: (int)TES4_FieldIndex.Description,
+                    errorMask: errorMask);
+            }
+            if (item.MasterReferences.HasBeenSet)
+            {
+                ListXmlTranslation<MasterReference>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.MasterReferences),
+                    item: item.MasterReferences,
+                    fieldIndex: (int)TES4_FieldIndex.MasterReferences,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, MasterReference subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        LoquiXmlTranslation<MasterReference>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            errorMask: listSubMask);
+                    }
+                    );
             }
         }
         #endregion
@@ -2038,43 +2054,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out TES4_ErrorMask errorMask)
         {
-            TES4_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new TES4_ErrorMask()) : default(Func<TES4_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = TES4_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             TES4 item,
             RecordTypeConverter recordTypeConverter,
-            Func<TES4_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: TES4_Registration.TES4_HEADER,
+                type: ObjectType.Record))
             {
-                using (HeaderExport.ExportHeader(
+                Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: TES4_Registration.TES4_HEADER,
-                    type: ObjectType.Record))
-                {
-                    Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                    Write_Binary_RecordTypes(
-                        item: item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -2082,7 +2090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary_Embedded(
             TES4 item,
             MutagenWriter writer,
-            Func<TES4_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -2095,9 +2103,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TES4 item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<TES4_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            LoquiBinaryTranslation<Header, Header_ErrorMask>.Instance.Write(
+            LoquiBinaryTranslation<Header>.Instance.Write(
                 writer: writer,
                 item: item.Header_Property,
                 fieldIndex: (int)TES4_FieldIndex.Header,
@@ -2130,20 +2138,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(TES4_Registration.SNAM_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.Write(
                 writer: writer,
-                item: item.MasterReferences,
+                items: item.MasterReferences,
                 fieldIndex: (int)TES4_FieldIndex.MasterReferences,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, MasterReference subItem, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
-                {
-                    LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                transl: LoquiBinaryTranslation<MasterReference>.Instance.Write);
         }
 
         #endregion
@@ -2583,6 +2583,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static TES4_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

@@ -21,21 +21,21 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"{obj.ObjectName} item");
                     args.Add($"{nameof(MutagenFrame)} frame");
-                    args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
+                    args.Add($"ErrorMaskBuilder errorMask");
                 }
                 using (var args = new ArgsWrapper(fg,
                     $"static partial void SpecialWrite_{field.Name}"))
                 {
                     args.Add($"{obj.Getter_InterfaceStr} item");
                     args.Add($"{nameof(MutagenWriter)} writer");
-                    args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
+                    args.Add($"ErrorMaskBuilder errorMask");
                 }
                 using (var args = new FunctionWrapper(fg,
                     $"internal static void SpecialWrite_{field.Name}_Internal"))
                 {
                     args.Add($"{obj.Getter_InterfaceStr} item");
                     args.Add($"{nameof(MutagenWriter)} writer");
-                    args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
+                    args.Add($"ErrorMaskBuilder errorMask");
                 }
                 using (new BraceWrapper(fg))
                 {

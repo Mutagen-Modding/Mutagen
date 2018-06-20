@@ -17,6 +17,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
@@ -153,8 +154,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -163,23 +163,37 @@ namespace Mutagen.Bethesda.Oblivion
             out InterCellPoint_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = InterCellPoint_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (InterCellPoint Object, InterCellPoint_ErrorMask ErrorMask) Create_XML(
+        public static InterCellPoint Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            InterCellPoint_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new InterCellPoint_ErrorMask()) : default(Func<InterCellPoint_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new InterCellPoint();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static InterCellPoint Create_XML(string path)
@@ -221,12 +235,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<InterCellPoint, InterCellPoint_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<InterCellPoint>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -235,13 +248,14 @@ namespace Mutagen.Bethesda.Oblivion
             out InterCellPoint_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<InterCellPoint, InterCellPoint_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<InterCellPoint>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = InterCellPoint_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -380,49 +394,27 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static InterCellPoint Create_XML_Internal(
-            XElement root,
-            Func<InterCellPoint_ErrorMask> errorMask)
-        {
-            var ret = new InterCellPoint();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             InterCellPoint item,
             XElement root,
             string name,
-            Func<InterCellPoint_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "PointID":
-                    item._PointID.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                    Int32XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)InterCellPoint_FieldIndex.PointID,
-                        errorMask: errorMask));
+                        item: item._PointID,
+                        errorMask: errorMask);
                     break;
                 case "Point":
-                    item._Point.SetIfSucceeded(P3FloatXmlTranslation.Instance.ParseNonNull(
+                    P3FloatXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)InterCellPoint_FieldIndex.Point,
-                        errorMask: errorMask));
+                        item: item._Point,
+                        errorMask: errorMask);
                     break;
                 default:
                     break;
@@ -438,8 +430,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -448,26 +440,38 @@ namespace Mutagen.Bethesda.Oblivion
             out InterCellPoint_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = InterCellPoint_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (InterCellPoint Object, InterCellPoint_ErrorMask ErrorMask) Create_Binary(
+        public static InterCellPoint Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            InterCellPoint_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new InterCellPoint_ErrorMask()) : default(Func<InterCellPoint_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new InterCellPoint();
+            try
+            {
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static InterCellPoint Create_Binary(string path)
@@ -595,43 +599,21 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static InterCellPoint Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<InterCellPoint_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            var ret = new InterCellPoint();
-            try
-            {
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_Binary_Structs(
             InterCellPoint item,
             MutagenFrame frame,
-            Func<InterCellPoint_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            item._PointID.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._PointID,
                 fieldIndex: (int)InterCellPoint_FieldIndex.PointID,
-                errorMask: errorMask));
-            item._Point.SetIfSucceeded(Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._Point,
                 fieldIndex: (int)InterCellPoint_FieldIndex.Point,
-                errorMask: errorMask));
+                errorMask: errorMask);
         }
 
         #endregion
@@ -724,24 +706,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            InterCellPoint_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new InterCellPoint_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             InterCellPointCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = InterCellPoint_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IInterCellPointGetter rhs,
+            ErrorMaskBuilder errorMask,
+            InterCellPoint_CopyMask copyMask = null,
+            IInterCellPointGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            InterCellPointCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1042,13 +1032,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IInterCellPoint item,
             IInterCellPointGetter rhs,
             IInterCellPointGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             InterCellPoint_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.PointID ?? true)
             {
+                errorMask.PushIndex((int)InterCellPoint_FieldIndex.PointID);
                 try
                 {
                     item.PointID_Property.Set(
@@ -1056,13 +1046,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)InterCellPoint_FieldIndex.PointID, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Point ?? true)
             {
+                errorMask.PushIndex((int)InterCellPoint_FieldIndex.Point);
                 try
                 {
                     item.Point_Property.Set(
@@ -1070,9 +1065,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)InterCellPoint_FieldIndex.Point, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1237,47 +1236,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out InterCellPoint_ErrorMask errorMask,
             string name = null)
         {
-            InterCellPoint_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new InterCellPoint_ErrorMask()) : default(Func<InterCellPoint_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = InterCellPoint_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             IInterCellPointGetter item,
-            Func<InterCellPoint_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.InterCellPoint");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.InterCellPoint");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.InterCellPoint");
-                }
-                Int32XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.PointID),
-                    item: item.PointID_Property,
-                    fieldIndex: (int)InterCellPoint_FieldIndex.PointID,
-                    errorMask: errorMask);
-                P3FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Point),
-                    item: item.Point_Property,
-                    fieldIndex: (int)InterCellPoint_FieldIndex.Point,
-                    errorMask: errorMask);
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.InterCellPoint");
             }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            Int32XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.PointID),
+                item: item.PointID_Property,
+                fieldIndex: (int)InterCellPoint_FieldIndex.PointID,
+                errorMask: errorMask);
+            P3FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Point),
+                item: item.Point_Property,
+                fieldIndex: (int)InterCellPoint_FieldIndex.Point,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -1292,40 +1283,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out InterCellPoint_ErrorMask errorMask)
         {
-            InterCellPoint_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new InterCellPoint_ErrorMask()) : default(Func<InterCellPoint_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = InterCellPoint_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             InterCellPoint item,
             RecordTypeConverter recordTypeConverter,
-            Func<InterCellPoint_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask);
         }
         #endregion
 
         public static void Write_Binary_Embedded(
             InterCellPoint item,
             MutagenWriter writer,
-            Func<InterCellPoint_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
@@ -1577,6 +1560,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static InterCellPoint_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

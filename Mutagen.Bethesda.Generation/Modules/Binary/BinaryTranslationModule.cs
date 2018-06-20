@@ -208,201 +208,15 @@ namespace Mutagen.Bethesda.Generation
         {
             var data = obj.GetObjectData();
             bool typelessStruct = obj.IsTypelessStruct();
-            if (!obj.Abstract)
-            {
-                ObjectType objType = obj.GetObjectType();
-
-                using (var args = new FunctionWrapper(fg,
-                    $"private static {obj.ObjectName} Create_{ModuleNickname}_Internal{obj.Mask_GenericClause(MaskType.Error)}",
-                    wheres: obj.GenericTypes_ErrorMaskWheres))
-                {
-                    args.Add("MutagenFrame frame");
-                    args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
-                    if (obj.GetObjectType() == ObjectType.Mod)
-                    {
-                        args.Add($"GroupMask importMask");
-                    }
-                    args.Add($"{nameof(RecordTypeConverter)} recordTypeConverter");
-                }
-                using (new BraceWrapper(fg))
-                {
-                    if (obj.BaseClassTrail().Any((b) => b.Name == "MajorRecord"))
-                    {
-                        if (data.CustomBinaryEnd)
-                        {
-                            using (var args = new ArgsWrapper(fg,
-                                $"var ret = UtilityTranslation.MajorRecordParse<{obj.Name}, {obj.Mask(MaskType.Error)}, {obj.FieldIndexName}>"))
-                            {
-                                args.Add($"record: new {obj.Name}()");
-                                args.Add($"frame: frame");
-                                args.Add($"errorMask: errorMask");
-                                args.Add($"recType: {obj.GetTriggeringSource()}");
-                                args.Add($"recordTypeConverter: recordTypeConverter");
-                                args.Add($"fillStructs: Fill_Binary_Structs");
-                                args.Add($"fillTyped: {(HasRecordTypeFields(obj) ? "Fill_Binary_RecordTypes" : "null")}");
-                            }
-                            fg.AppendLine("try");
-                            using (new BraceWrapper(fg))
-                            {
-                                if (data.CustomBinaryEnd)
-                                {
-                                    using (var args = new ArgsWrapper(fg,
-                                        "CustomBinaryEnd_Import"))
-                                    {
-                                        args.Add("frame: frame");
-                                        args.Add("obj: ret");
-                                        args.Add("errorMask: errorMask");
-                                    }
-                                }
-                            }
-                            fg.AppendLine("catch (Exception ex)");
-                            fg.AppendLine("when (errorMask != null)");
-                            using (new BraceWrapper(fg))
-                            {
-                                fg.AppendLine("errorMask().Overall = ex;");
-                            }
-                            fg.AppendLine("return ret;");
-                        }
-                        else
-                        {
-                            using (var args = new ArgsWrapper(fg,
-                            $"return UtilityTranslation.MajorRecordParse<{obj.Name}, {obj.Mask(MaskType.Error)}, {obj.FieldIndexName}>"))
-                            {
-                                args.Add($"record: new {obj.Name}()");
-                                args.Add($"frame: frame");
-                                args.Add($"errorMask: errorMask");
-                                args.Add($"recType: {obj.GetTriggeringSource()}");
-                                args.Add($"recordTypeConverter: recordTypeConverter");
-                                args.Add($"fillStructs: Fill_Binary_Structs");
-                                args.Add($"fillTyped: {(HasRecordTypeFields(obj) ? "Fill_Binary_RecordTypes" : "null")}");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        fg.AppendLine($"var ret = new {obj.Name}{obj.GenericTypes}();");
-                        fg.AppendLine("try");
-                        using (new BraceWrapper(fg))
-                        {
-                            IEnumerable<RecordType> recordTypes = await obj.GetTriggeringRecordTypes();
-                            var frameMod = (objType != ObjectType.Subrecord || recordTypes.Any())
-                                && objType != ObjectType.Mod;
-                            if (frameMod)
-                            {
-                                switch (objType)
-                                {
-                                    case ObjectType.Subrecord:
-                                        if (obj.TryGetRecordType(out var recType))
-                                        {
-                                            using (var args = new ArgsWrapper(fg,
-                                                $"frame = frame.SpawnWithFinalPosition({nameof(HeaderTranslation)}.ParseSubrecord",
-                                                suffixLine: ")"))
-                                            {
-                                                args.Add("frame.Reader");
-                                                args.Add($"{obj.GetTriggeringSource()}");
-                                            }
-                                        }
-                                        break;
-                                    case ObjectType.Record:
-                                        using (var args = new ArgsWrapper(fg,
-                                            $"frame = frame.SpawnWithFinalPosition({nameof(HeaderTranslation)}.ParseRecord",
-                                            suffixLine: ")"))
-                                        {
-                                            args.Add("frame.Reader");
-                                            args.Add($"{obj.GetTriggeringSource()}");
-                                        }
-                                        break;
-                                    case ObjectType.Group:
-                                        using (var args = new ArgsWrapper(fg,
-                                            $"frame = frame.SpawnWithFinalPosition({nameof(HeaderTranslation)}.ParseGroup",
-                                            suffixLine: ")"))
-                                        {
-                                            args.Add("frame.Reader");
-                                        }
-                                        break;
-                                    case ObjectType.Mod:
-                                    default:
-                                        throw new NotImplementedException();
-                                }
-                            }
-                            fg.AppendLine("using (frame)");
-                            using (new BraceWrapper(fg))
-                            {
-                                using (var args = new ArgsWrapper(fg,
-                                    $"Fill_{ModuleNickname}_Structs"))
-                                {
-                                    args.Add("item: ret");
-                                    args.Add("frame: frame");
-                                    args.Add("errorMask: errorMask");
-                                }
-                                if (HasRecordTypeFields(obj))
-                                {
-                                    if (typelessStruct)
-                                    {
-                                        fg.AppendLine($"{obj.FieldIndexName}? lastParsed = null;");
-                                    }
-                                    fg.AppendLine($"while (!frame.Complete)");
-                                    using (new BraceWrapper(fg))
-                                    {
-                                        using (var args = new ArgsWrapper(fg,
-                                            $"var parsed = Fill_{ModuleNickname}_RecordTypes"))
-                                        {
-                                            args.Add("item: ret");
-                                            args.Add("frame: frame");
-                                            if (typelessStruct)
-                                            {
-                                                args.Add("lastParsed: lastParsed");
-                                            }
-                                            if (obj.GetObjectType() == ObjectType.Mod)
-                                            {
-                                                args.Add("importMask: importMask");
-                                            }
-                                            args.Add("errorMask: errorMask");
-                                            args.Add($"recordTypeConverter: recordTypeConverter");
-                                        }
-                                        fg.AppendLine("if (parsed.Failed) break;");
-                                        if (typelessStruct)
-                                        {
-                                            fg.AppendLine("lastParsed = parsed.Value;");
-                                        }
-                                    }
-                                }
-                            }
-                            GenerateDataStateSubscriptions(obj, fg);
-                            GenerateStructStateSubscriptions(obj, fg);
-                            GenerateModLinking(obj, fg);
-                            if (data.CustomBinaryEnd)
-                            {
-                                using (var args = new ArgsWrapper(fg,
-                                    "CustomBinaryEnd_Import"))
-                                {
-                                    args.Add("frame: frame");
-                                    args.Add("obj: ret");
-                                    args.Add("errorMask: errorMask");
-                                }
-                            }
-                        }
-                        fg.AppendLine("catch (Exception ex)");
-                        fg.AppendLine("when (errorMask != null)");
-                        using (new BraceWrapper(fg))
-                        {
-                            fg.AppendLine("errorMask().Overall = ex;");
-                        }
-                        fg.AppendLine("return ret;");
-                    }
-                }
-                fg.AppendLine();
-            }
 
             if ((!obj.Abstract && obj.BaseClassTrail().All((b) => b.Abstract)) || HasEmbeddedFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"protected static void Fill_{ModuleNickname}_Structs{obj.Mask_GenericClause(MaskType.Error)}",
-                    wheres: obj.GenericTypes_ErrorMaskWheres))
+                    $"protected static void Fill_{ModuleNickname}_Structs"))
                 {
                     args.Add($"{obj.ObjectName} item");
                     args.Add("MutagenFrame frame");
-                    args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
+                    args.Add($"ErrorMaskBuilder errorMask");
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -441,8 +255,7 @@ namespace Mutagen.Bethesda.Generation
             if (HasRecordTypeFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"protected static TryGet<{obj.FieldIndexName}?> Fill_{ModuleNickname}_RecordTypes{obj.Mask_GenericClause(MaskType.Error)}",
-                    wheres: obj.GenericTypes_ErrorMaskWheres))
+                    $"protected static TryGet<{obj.FieldIndexName}?> Fill_{ModuleNickname}_RecordTypes"))
                 {
                     args.Add($"{obj.ObjectName} item");
                     args.Add("MutagenFrame frame");
@@ -450,7 +263,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"{obj.FieldIndexName}? lastParsed");
                     }
-                    args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
+                    args.Add($"ErrorMaskBuilder errorMask");
                     if (data.ObjectType == ObjectType.Mod)
                     {
                         args.Add($"GroupMask importMask");
@@ -642,7 +455,7 @@ namespace Mutagen.Bethesda.Generation
                                 }
                                 else
                                 {
-                                    fg.AppendLine($"errorMask().Warnings.Add($\"Unexpected header {{nextRecordType.Type}} at position {{frame.Position}}\");");
+                                    fg.AppendLine($"errorMask.ReportWarning($\"Unexpected header {{nextRecordType.Type}} at position {{frame.Position}}\");");
                                     string addString;
                                     switch (obj.GetObjectType())
                                     {
@@ -679,21 +492,21 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add("MutagenFrame frame");
                 args.Add($"{obj.ObjectName} obj");
-                args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
+                args.Add($"ErrorMaskBuilder errorMask");
             }
             using (var args = new ArgsWrapper(fg,
                 $"static partial void CustomBinaryEnd_Export"))
             {
                 args.Add("MutagenWriter writer");
                 args.Add($"{obj.ObjectName} obj");
-                args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
+                args.Add($"ErrorMaskBuilder errorMask");
             }
             using (var args = new FunctionWrapper(fg,
                 $"public static void CustomBinaryEnd_ExportInternal"))
             {
                 args.Add("MutagenWriter writer");
                 args.Add($"{obj.ObjectName} obj");
-                args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
+                args.Add($"ErrorMaskBuilder errorMask");
             }
             using (new BraceWrapper(fg))
             {
@@ -873,7 +686,6 @@ namespace Mutagen.Bethesda.Generation
                     DirectAccess = $"item.{field.ProtectedName}",
                     PropertyAccess = field.Bare ? null : $"item.{field.ProtectedProperty}"
                 },
-                doMaskAccessor: "doMasks",
                 maskAccessor: $"errorMask");
         }
 
@@ -922,21 +734,176 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        protected override void GenerateCreateSnippet(ObjectGeneration obj, FileGeneration fg)
+        protected override async Task GenerateCreateSnippet(ObjectGeneration obj, FileGeneration fg)
         {
-            fg.AppendLine($"{obj.Mask(MaskType.Error)} errMaskRet = null;");
-            using (var args = new ArgsWrapper(fg,
-                $"var ret = Create_{ModuleNickname}_Internal"))
+            var data = obj.GetObjectData();
+            bool typelessStruct = obj.IsTypelessStruct();
+            ObjectType objType = obj.GetObjectType();
+
+            if (obj.BaseClassTrail().Any((b) => b.Name == "MajorRecord"))
             {
-                args.Add("frame: frame");
-                if (obj.GetObjectType() == ObjectType.Mod)
+                if (data.CustomBinaryEnd)
                 {
-                    args.Add("importMask: importMask");
+                    using (var args = new ArgsWrapper(fg,
+                        $"var ret = UtilityTranslation.MajorRecordParse<{obj.Name}, {obj.FieldIndexName}>"))
+                    {
+                        args.Add($"record: new {obj.Name}()");
+                        args.Add($"frame: frame");
+                        args.Add($"errorMask: errorMask");
+                        args.Add($"recType: {obj.GetTriggeringSource()}");
+                        args.Add($"recordTypeConverter: recordTypeConverter");
+                        args.Add($"fillStructs: Fill_Binary_Structs");
+                        args.Add($"fillTyped: {(HasRecordTypeFields(obj) ? "Fill_Binary_RecordTypes" : "null")}");
+                    }
+                    fg.AppendLine("try");
+                    using (new BraceWrapper(fg))
+                    {
+                        if (data.CustomBinaryEnd)
+                        {
+                            using (var args = new ArgsWrapper(fg,
+                                "CustomBinaryEnd_Import"))
+                            {
+                                args.Add("frame: frame");
+                                args.Add("obj: ret");
+                                args.Add("errorMask: errorMask");
+                            }
+                        }
+                    }
+                    fg.AppendLine("catch (Exception ex)");
+                    fg.AppendLine("when (errorMask != null)");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine("errorMask.ReportException(ex);");
+                    }
+                    fg.AppendLine("return ret;");
                 }
-                args.Add($"errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new {obj.Mask(MaskType.Error)}()) : default(Func<{obj.Mask(MaskType.Error)}>)");
-                args.Add($"recordTypeConverter: recordTypeConverter");
+                else
+                {
+                    using (var args = new ArgsWrapper(fg,
+                    $"return UtilityTranslation.MajorRecordParse<{obj.Name}, {obj.FieldIndexName}>"))
+                    {
+                        args.Add($"record: new {obj.Name}()");
+                        args.Add($"frame: frame");
+                        args.Add($"errorMask: errorMask");
+                        args.Add($"recType: {obj.GetTriggeringSource()}");
+                        args.Add($"recordTypeConverter: recordTypeConverter");
+                        args.Add($"fillStructs: Fill_Binary_Structs");
+                        args.Add($"fillTyped: {(HasRecordTypeFields(obj) ? "Fill_Binary_RecordTypes" : "null")}");
+                    }
+                }
             }
-            fg.AppendLine($"return (ret, errMaskRet);");
+            else
+            {
+                fg.AppendLine($"var ret = new {obj.Name}{obj.GenericTypes}();");
+                fg.AppendLine("try");
+                using (new BraceWrapper(fg))
+                {
+                    IEnumerable<RecordType> recordTypes = await obj.GetTriggeringRecordTypes();
+                    var frameMod = (objType != ObjectType.Subrecord || recordTypes.Any())
+                        && objType != ObjectType.Mod;
+                    if (frameMod)
+                    {
+                        switch (objType)
+                        {
+                            case ObjectType.Subrecord:
+                                if (obj.TryGetRecordType(out var recType))
+                                {
+                                    using (var args = new ArgsWrapper(fg,
+                                        $"frame = frame.SpawnWithFinalPosition({nameof(HeaderTranslation)}.ParseSubrecord",
+                                        suffixLine: ")"))
+                                    {
+                                        args.Add("frame.Reader");
+                                        args.Add($"{obj.GetTriggeringSource()}");
+                                    }
+                                }
+                                break;
+                            case ObjectType.Record:
+                                using (var args = new ArgsWrapper(fg,
+                                    $"frame = frame.SpawnWithFinalPosition({nameof(HeaderTranslation)}.ParseRecord",
+                                    suffixLine: ")"))
+                                {
+                                    args.Add("frame.Reader");
+                                    args.Add($"{obj.GetTriggeringSource()}");
+                                }
+                                break;
+                            case ObjectType.Group:
+                                using (var args = new ArgsWrapper(fg,
+                                    $"frame = frame.SpawnWithFinalPosition({nameof(HeaderTranslation)}.ParseGroup",
+                                    suffixLine: ")"))
+                                {
+                                    args.Add("frame.Reader");
+                                }
+                                break;
+                            case ObjectType.Mod:
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
+                    fg.AppendLine("using (frame)");
+                    using (new BraceWrapper(fg))
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            $"Fill_{ModuleNickname}_Structs"))
+                        {
+                            args.Add("item: ret");
+                            args.Add("frame: frame");
+                            args.Add("errorMask: errorMask");
+                        }
+                        if (HasRecordTypeFields(obj))
+                        {
+                            if (typelessStruct)
+                            {
+                                fg.AppendLine($"{obj.FieldIndexName}? lastParsed = null;");
+                            }
+                            fg.AppendLine($"while (!frame.Complete)");
+                            using (new BraceWrapper(fg))
+                            {
+                                using (var args = new ArgsWrapper(fg,
+                                    $"var parsed = Fill_{ModuleNickname}_RecordTypes"))
+                                {
+                                    args.Add("item: ret");
+                                    args.Add("frame: frame");
+                                    if (typelessStruct)
+                                    {
+                                        args.Add("lastParsed: lastParsed");
+                                    }
+                                    if (obj.GetObjectType() == ObjectType.Mod)
+                                    {
+                                        args.Add("importMask: importMask");
+                                    }
+                                    args.Add("errorMask: errorMask");
+                                    args.Add($"recordTypeConverter: recordTypeConverter");
+                                }
+                                fg.AppendLine("if (parsed.Failed) break;");
+                                if (typelessStruct)
+                                {
+                                    fg.AppendLine("lastParsed = parsed.Value;");
+                                }
+                            }
+                        }
+                    }
+                    GenerateDataStateSubscriptions(obj, fg);
+                    GenerateStructStateSubscriptions(obj, fg);
+                    GenerateModLinking(obj, fg);
+                    if (data.CustomBinaryEnd)
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            "CustomBinaryEnd_Import"))
+                        {
+                            args.Add("frame: frame");
+                            args.Add("obj: ret");
+                            args.Add("errorMask: errorMask");
+                        }
+                    }
+                }
+                fg.AppendLine("catch (Exception ex)");
+                fg.AppendLine("when (errorMask != null)");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine("errorMask.ReportException(ex);");
+                }
+                fg.AppendLine("return ret;");
+            }
         }
 
         protected override void GenerateWriteSnippet(ObjectGeneration obj, FileGeneration fg)
@@ -1030,12 +997,12 @@ namespace Mutagen.Bethesda.Generation
             if (HasEmbeddedFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"public static void Write_{ModuleNickname}_Embedded{obj.GenericTypes_ErrMask}",
-                    wheres: obj.GenerateWhereClauses().And(obj.GenericTypes_ErrorMaskWheres).ToArray()))
+                    $"public static void Write_{ModuleNickname}_Embedded{obj.GenericTypes}",
+                    wheres: obj.GenerateWhereClauses().ToArray()))
                 {
                     args.Add($"{obj.ObjectName} item");
                     args.Add("MutagenWriter writer");
-                    args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
+                    args.Add($"ErrorMaskBuilder errorMask");
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -1078,7 +1045,6 @@ namespace Mutagen.Bethesda.Generation
                             typeGen: field,
                             writerAccessor: "writer",
                             itemAccessor: new Accessor(field, "item."),
-                            doMaskAccessor: null,
                             maskAccessor: "errorMask");
                     }
                 }
@@ -1088,8 +1054,8 @@ namespace Mutagen.Bethesda.Generation
             if (HasRecordTypeFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"public static void Write_{ModuleNickname}_RecordTypes{obj.GenericTypes_ErrMask}",
-                    wheres: obj.GenerateWhereClauses().And(obj.GenericTypes_ErrorMaskWheres).ToArray()))
+                    $"public static void Write_{ModuleNickname}_RecordTypes{obj.GenericTypes}",
+                    wheres: obj.GenerateWhereClauses().ToArray()))
                 {
                     args.Add($"{obj.ObjectName} item");
                     args.Add("MutagenWriter writer");
@@ -1098,7 +1064,7 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"GroupMask importMask");
                     }
                     args.Add("RecordTypeConverter recordTypeConverter");
-                    args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
+                    args.Add($"ErrorMaskBuilder errorMask");
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -1158,7 +1124,6 @@ namespace Mutagen.Bethesda.Generation
                                         {
                                             args.Add("writer: writer");
                                             args.Add("item: item");
-                                            args.Add($"fieldIndex: (int){subField.Field.IndexEnumName}");
                                             args.Add("errorMask: errorMask");
                                         }
                                         continue;
@@ -1188,7 +1153,6 @@ namespace Mutagen.Bethesda.Generation
                                         typeGen: subField.Field,
                                         writerAccessor: "writer",
                                         itemAccessor: new Accessor(subField.Field, "item."),
-                                        doMaskAccessor: "errorMask != null",
                                         maskAccessor: $"errorMask");
                                 }
                                 for (int i = 0; i < dataType.BreakIndices.Count; i++)
@@ -1218,7 +1182,6 @@ namespace Mutagen.Bethesda.Generation
                                     typeGen: field,
                                     writerAccessor: "writer",
                                     itemAccessor: new Accessor(field, "item."),
-                                    doMaskAccessor: "errorMask != null",
                                     maskAccessor: $"errorMask");
                             }
                         }

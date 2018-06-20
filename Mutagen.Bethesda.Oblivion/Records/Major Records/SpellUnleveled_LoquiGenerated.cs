@@ -20,6 +20,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 
@@ -214,8 +215,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -224,23 +224,37 @@ namespace Mutagen.Bethesda.Oblivion
             out SpellUnleveled_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (SpellUnleveled Object, SpellUnleveled_ErrorMask ErrorMask) Create_XML(
+        public static SpellUnleveled Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            SpellUnleveled_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SpellUnleveled_ErrorMask()) : default(Func<SpellUnleveled_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new SpellUnleveled();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static SpellUnleveled Create_XML(string path)
@@ -282,12 +296,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<SpellUnleveled, SpellUnleveled_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<SpellUnleveled>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -296,13 +309,14 @@ namespace Mutagen.Bethesda.Oblivion
             out SpellUnleveled_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<SpellUnleveled, SpellUnleveled_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<SpellUnleveled>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -477,78 +491,49 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static SpellUnleveled Create_XML_Internal(
-            XElement root,
-            Func<SpellUnleveled_ErrorMask> errorMask)
-        {
-            var ret = new SpellUnleveled();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             SpellUnleveled item,
             XElement root,
             string name,
-            Func<SpellUnleveled_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Type":
-                    item._Type.SetIfSucceeded(EnumXmlTranslation<Spell.SpellType>.Instance.Parse(
+                    EnumXmlTranslation<Spell.SpellType>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)SpellUnleveled_FieldIndex.Type,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._Type,
+                        errorMask: errorMask);
                     break;
                 case "Cost":
-                    item._Cost.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    UInt32XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)SpellUnleveled_FieldIndex.Cost,
-                        errorMask: errorMask));
+                        item: item._Cost,
+                        errorMask: errorMask);
                     break;
                 case "Level":
-                    item._Level.SetIfSucceeded(EnumXmlTranslation<Spell.SpellLevel>.Instance.Parse(
+                    EnumXmlTranslation<Spell.SpellLevel>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)SpellUnleveled_FieldIndex.Level,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._Level,
+                        errorMask: errorMask);
                     break;
                 case "Flag":
-                    item._Flag.SetIfSucceeded(EnumXmlTranslation<Spell.SpellFlag>.Instance.Parse(
+                    EnumXmlTranslation<Spell.SpellFlag>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)SpellUnleveled_FieldIndex.Flag,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._Flag,
+                        errorMask: errorMask);
                     break;
                 case "Effects":
-                    item._Effects.SetIfSucceeded(ListXmlTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Parse(
+                    ListXmlTranslation<Effect>.Instance.ParseInto(
                         root: root,
+                        item: item._Effects,
                         fieldIndex: (int)SpellUnleveled_FieldIndex.Effects,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiXmlTranslation<Effect, Effect_ErrorMask>.Instance.Parse(
-                                root: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: LoquiXmlTranslation<Effect>.Instance.Parse);
                     break;
                 default:
                     Spell.Fill_XML_Internal(
@@ -586,8 +571,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -596,26 +581,29 @@ namespace Mutagen.Bethesda.Oblivion
             out SpellUnleveled_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (SpellUnleveled Object, SpellUnleveled_ErrorMask ErrorMask) Create_Binary(
+        public static SpellUnleveled Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            SpellUnleveled_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
+            return UtilityTranslation.MajorRecordParse<SpellUnleveled, SpellUnleveled_FieldIndex>(
+                record: new SpellUnleveled(),
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SpellUnleveled_ErrorMask()) : default(Func<SpellUnleveled_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+                errorMask: errorMask,
+                recType: SpellUnleveled_Registration.SPEL_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         public static SpellUnleveled Create_Binary(string path)
@@ -743,25 +731,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static SpellUnleveled Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<SpellUnleveled_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            return UtilityTranslation.MajorRecordParse<SpellUnleveled, SpellUnleveled_ErrorMask, SpellUnleveled_FieldIndex>(
-                record: new SpellUnleveled(),
-                frame: frame,
-                errorMask: errorMask,
-                recType: SpellUnleveled_Registration.SPEL_HEADER,
-                recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
-        }
-
         protected static void Fill_Binary_Structs(
             SpellUnleveled item,
             MutagenFrame frame,
-            Func<SpellUnleveled_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             Spell.Fill_Binary_Structs(
                 item: item,
@@ -772,7 +745,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<SpellUnleveled_FieldIndex?> Fill_Binary_RecordTypes(
             SpellUnleveled item,
             MutagenFrame frame,
-            Func<SpellUnleveled_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -785,40 +758,37 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Type.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellType>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellType>.Instance.ParseInto(
                             frame: dataFrame.SpawnWithLength(4),
+                            item: item._Type,
                             fieldIndex: (int)SpellUnleveled_FieldIndex.Type,
-                            errorMask: errorMask));
-                        item._Cost.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Cost,
                             fieldIndex: (int)SpellUnleveled_FieldIndex.Cost,
-                            errorMask: errorMask));
-                        item._Level.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellLevel>.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellLevel>.Instance.ParseInto(
                             frame: dataFrame.SpawnWithLength(4),
+                            item: item._Level,
                             fieldIndex: (int)SpellUnleveled_FieldIndex.Level,
-                            errorMask: errorMask));
-                        item._Flag.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellFlag>.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellFlag>.Instance.ParseInto(
                             frame: dataFrame.SpawnWithLength(4),
+                            item: item._Flag,
                             fieldIndex: (int)SpellUnleveled_FieldIndex.Flag,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
                     }
                     return TryGet<SpellUnleveled_FieldIndex?>.Succeed(SpellUnleveled_FieldIndex.Flag);
                 case "EFID":
-                    var EffectstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: SpellUnleveled_Registration.EFID_HEADER,
+                        item: item._Effects,
                         fieldIndex: (int)SpellUnleveled_FieldIndex.Effects,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiBinaryTranslation<Effect, Effect_ErrorMask>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    item._Effects.SetIfSucceeded(EffectstryGet);
+                        transl: LoquiBinaryTranslation<Effect>.Instance.Parse);
                     return TryGet<SpellUnleveled_FieldIndex?>.Succeed(SpellUnleveled_FieldIndex.Effects);
                 default:
                     return Spell.Fill_Binary_RecordTypes(
@@ -906,24 +876,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            SpellUnleveled_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new SpellUnleveled_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             SpellUnleveledCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            ISpellUnleveledGetter rhs,
+            ErrorMaskBuilder errorMask,
+            SpellUnleveled_CopyMask copyMask = null,
+            ISpellUnleveledGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            SpellUnleveledCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1311,8 +1289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISpellUnleveled item,
             ISpellUnleveledGetter rhs,
             ISpellUnleveledGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             SpellUnleveled_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1320,12 +1297,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item,
                 rhs,
                 def,
-                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
             if (copyMask?.Type ?? true)
             {
+                errorMask.PushIndex((int)SpellUnleveled_FieldIndex.Type);
                 try
                 {
                     item.Type_Property.Set(
@@ -1333,13 +1310,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)SpellUnleveled_FieldIndex.Type, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Cost ?? true)
             {
+                errorMask.PushIndex((int)SpellUnleveled_FieldIndex.Cost);
                 try
                 {
                     item.Cost_Property.Set(
@@ -1347,13 +1329,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)SpellUnleveled_FieldIndex.Cost, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Level ?? true)
             {
+                errorMask.PushIndex((int)SpellUnleveled_FieldIndex.Level);
                 try
                 {
                     item.Level_Property.Set(
@@ -1361,13 +1348,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)SpellUnleveled_FieldIndex.Level, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Flag ?? true)
             {
+                errorMask.PushIndex((int)SpellUnleveled_FieldIndex.Flag);
                 try
                 {
                     item.Flag_Property.Set(
@@ -1375,13 +1367,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)SpellUnleveled_FieldIndex.Flag, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Effects.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)SpellUnleveled_FieldIndex.Effects);
                 try
                 {
                     item.Effects.SetToWithDefault(
@@ -1407,9 +1404,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)SpellUnleveled_FieldIndex.Effects, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1740,77 +1741,68 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out SpellUnleveled_ErrorMask errorMask,
             string name = null)
         {
-            SpellUnleveled_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SpellUnleveled_ErrorMask()) : default(Func<SpellUnleveled_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             ISpellUnleveledGetter item,
-            Func<SpellUnleveled_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.SpellUnleveled");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.SpellUnleveled");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SpellUnleveled");
-                }
-                EnumXmlTranslation<Spell.SpellType>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Type),
-                    item: item.Type_Property,
-                    fieldIndex: (int)SpellUnleveled_FieldIndex.Type,
-                    errorMask: errorMask);
-                UInt32XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Cost),
-                    item: item.Cost_Property,
-                    fieldIndex: (int)SpellUnleveled_FieldIndex.Cost,
-                    errorMask: errorMask);
-                EnumXmlTranslation<Spell.SpellLevel>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Level),
-                    item: item.Level_Property,
-                    fieldIndex: (int)SpellUnleveled_FieldIndex.Level,
-                    errorMask: errorMask);
-                EnumXmlTranslation<Spell.SpellFlag>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Flag),
-                    item: item.Flag_Property,
-                    fieldIndex: (int)SpellUnleveled_FieldIndex.Flag,
-                    errorMask: errorMask);
-                if (item.Effects.HasBeenSet)
-                {
-                    ListXmlTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Effects),
-                        item: item.Effects,
-                        fieldIndex: (int)SpellUnleveled_FieldIndex.Effects,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, Effect subItem, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<Effect, Effect_ErrorMask>.Instance.Write(
-                                node: subNode,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SpellUnleveled");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            EnumXmlTranslation<Spell.SpellType>.Instance.Write(
+                node: elem,
+                name: nameof(item.Type),
+                item: item.Type_Property,
+                fieldIndex: (int)SpellUnleveled_FieldIndex.Type,
+                errorMask: errorMask);
+            UInt32XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Cost),
+                item: item.Cost_Property,
+                fieldIndex: (int)SpellUnleveled_FieldIndex.Cost,
+                errorMask: errorMask);
+            EnumXmlTranslation<Spell.SpellLevel>.Instance.Write(
+                node: elem,
+                name: nameof(item.Level),
+                item: item.Level_Property,
+                fieldIndex: (int)SpellUnleveled_FieldIndex.Level,
+                errorMask: errorMask);
+            EnumXmlTranslation<Spell.SpellFlag>.Instance.Write(
+                node: elem,
+                name: nameof(item.Flag),
+                item: item.Flag_Property,
+                fieldIndex: (int)SpellUnleveled_FieldIndex.Flag,
+                errorMask: errorMask);
+            if (item.Effects.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                ListXmlTranslation<Effect>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Effects),
+                    item: item.Effects,
+                    fieldIndex: (int)SpellUnleveled_FieldIndex.Effects,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, Effect subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        LoquiXmlTranslation<Effect>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            errorMask: listSubMask);
+                    }
+                    );
             }
         }
         #endregion
@@ -1826,43 +1818,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out SpellUnleveled_ErrorMask errorMask)
         {
-            SpellUnleveled_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SpellUnleveled_ErrorMask()) : default(Func<SpellUnleveled_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             SpellUnleveled item,
             RecordTypeConverter recordTypeConverter,
-            Func<SpellUnleveled_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: SpellUnleveled_Registration.SPEL_HEADER,
+                type: ObjectType.Record))
             {
-                using (HeaderExport.ExportHeader(
+                MajorRecordCommon.Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: SpellUnleveled_Registration.SPEL_HEADER,
-                    type: ObjectType.Record))
-                {
-                    MajorRecordCommon.Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                    Write_Binary_RecordTypes(
-                        item: item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -1871,7 +1855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SpellUnleveled item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<SpellUnleveled_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             NamedMajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
@@ -1904,20 +1888,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)SpellUnleveled_FieldIndex.Flag,
                     errorMask: errorMask);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Write(
                 writer: writer,
-                item: item.Effects,
+                items: item.Effects,
                 fieldIndex: (int)SpellUnleveled_FieldIndex.Effects,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, Effect subItem, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
-                {
-                    LoquiBinaryTranslation<Effect, Effect_ErrorMask>.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                transl: LoquiBinaryTranslation<Effect>.Instance.Write);
         }
 
         #endregion
@@ -2296,6 +2272,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static SpellUnleveled_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

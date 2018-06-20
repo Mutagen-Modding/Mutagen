@@ -12,6 +12,8 @@ namespace Mutagen.Bethesda.Generation
     {
         public TranslationModule<BinaryTranslationGeneration> Module;
         public string Namespace => Module.Namespace;
+        public virtual bool AllowDirectWrite => true;
+        public virtual bool AllowDirectParse => true;
 
         public abstract void GenerateWrite(
             FileGeneration fg,
@@ -19,8 +21,9 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string writerAccessor,
             Accessor itemAccessor,
-            string doMaskAccessor,
             string maskAccessor);
+
+        public abstract string GetTranslatorInstance(TypeGeneration typeGen);
 
         public abstract void GenerateCopyIn(
             FileGeneration fg,
@@ -28,7 +31,6 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string readerAccessor,
             Accessor itemAccessor,
-            string doMaskAccessor,
             string maskAccessor);
 
         public abstract void GenerateCopyInRet(
@@ -38,8 +40,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string readerAccessor,
             bool squashedRepeatedList,
-            Accessor retAccessor,
-            string doMaskAccessor,
+            string retAccessor,
+            Accessor outItemAccessor,
             string maskAccessor);
     }
 }

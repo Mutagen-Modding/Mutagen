@@ -21,6 +21,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 
@@ -382,8 +383,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -392,23 +392,37 @@ namespace Mutagen.Bethesda.Oblivion
             out Light_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = Light_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (Light Object, Light_ErrorMask ErrorMask) Create_XML(
+        public static Light Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            Light_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Light_ErrorMask()) : default(Func<Light_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new Light();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static Light Create_XML(string path)
@@ -450,12 +464,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Light, Light_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Light>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -464,13 +477,14 @@ namespace Mutagen.Bethesda.Oblivion
             out Light_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Light, Light_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<Light>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = Light_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -621,122 +635,130 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static Light Create_XML_Internal(
-            XElement root,
-            Func<Light_ErrorMask> errorMask)
-        {
-            var ret = new Light();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             Light item,
             XElement root,
             string name,
-            Func<Light_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)Light_FieldIndex.Model,
-                        errorMask: errorMask));
+                    try
+                    {
+                        errorMask?.PushIndex((int)Light_FieldIndex.Model);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            root: root,
+                            item: out var ModelParse,
+                            errorMask: errorMask))
+                        {
+                            item._Model.Item = ModelParse;
+                        }
+                        else
+                        {
+                            item._Model.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Script":
-                    item.Script_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Script,
-                        errorMask: errorMask));
+                        item: item.Script_Property,
+                        errorMask: errorMask);
                     break;
                 case "Name":
-                    item._Name.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    StringXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Name,
-                        errorMask: errorMask));
+                        item: item._Name,
+                        errorMask: errorMask);
                     break;
                 case "Icon":
-                    item._Icon.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                    FilePathXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Icon,
-                        errorMask: errorMask));
+                        item: item._Icon,
+                        errorMask: errorMask);
                     break;
                 case "Time":
-                    item._Time.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                    Int32XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Time,
-                        errorMask: errorMask));
+                        item: item._Time,
+                        errorMask: errorMask);
                     break;
                 case "Radius":
-                    item._Radius.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    UInt32XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Radius,
-                        errorMask: errorMask));
+                        item: item._Radius,
+                        errorMask: errorMask);
                     break;
                 case "Color":
-                    item._Color.SetIfSucceeded(ColorXmlTranslation.Instance.ParseNonNull(
+                    ColorXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Color,
-                        errorMask: errorMask));
+                        item: item._Color,
+                        errorMask: errorMask);
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<Light.LightFlag>.Instance.Parse(
+                    EnumXmlTranslation<Light.LightFlag>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)Light_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._Flags,
+                        errorMask: errorMask);
                     break;
                 case "FalloffExponent":
-                    item._FalloffExponent.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    FloatXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Light_FieldIndex.FalloffExponent,
-                        errorMask: errorMask));
+                        item: item._FalloffExponent,
+                        errorMask: errorMask);
                     break;
                 case "FOV":
-                    item._FOV.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    FloatXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Light_FieldIndex.FOV,
-                        errorMask: errorMask));
+                        item: item._FOV,
+                        errorMask: errorMask);
                     break;
                 case "Value":
-                    item._Value.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    UInt32XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Value,
-                        errorMask: errorMask));
+                        item: item._Value,
+                        errorMask: errorMask);
                     break;
                 case "Weight":
-                    item._Weight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    FloatXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Weight,
-                        errorMask: errorMask));
+                        item: item._Weight,
+                        errorMask: errorMask);
                     break;
                 case "Fade":
-                    item._Fade.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    FloatXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Fade,
-                        errorMask: errorMask));
+                        item: item._Fade,
+                        errorMask: errorMask);
                     break;
                 case "Sound":
-                    item.Sound_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Sound,
-                        errorMask: errorMask));
+                        item: item.Sound_Property,
+                        errorMask: errorMask);
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(
@@ -778,8 +800,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -788,26 +810,29 @@ namespace Mutagen.Bethesda.Oblivion
             out Light_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = Light_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (Light Object, Light_ErrorMask ErrorMask) Create_Binary(
+        public static Light Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            Light_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
+            return UtilityTranslation.MajorRecordParse<Light, Light_FieldIndex>(
+                record: new Light(),
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Light_ErrorMask()) : default(Func<Light_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+                errorMask: errorMask,
+                recType: Light_Registration.LIGH_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         public static Light Create_Binary(string path)
@@ -935,25 +960,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static Light Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<Light_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            return UtilityTranslation.MajorRecordParse<Light, Light_ErrorMask, Light_FieldIndex>(
-                record: new Light(),
-                frame: frame,
-                errorMask: errorMask,
-                recType: Light_Registration.LIGH_HEADER,
-                recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
-        }
-
         protected static void Fill_Binary_Structs(
             Light item,
             MutagenFrame frame,
-            Func<Light_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             MajorRecord.Fill_Binary_Structs(
                 item: item,
@@ -964,7 +974,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<Light_FieldIndex?> Fill_Binary_RecordTypes(
             Light item,
             MutagenFrame frame,
-            Func<Light_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -974,90 +984,103 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    LoquiBinaryTranslation<Model>.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)Light_FieldIndex.Model,
-                        errorMask: errorMask));
+                        errorMask: errorMask,
+                        item: item._Model);
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Model);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item.Script_Property,
                         fieldIndex: (int)Light_FieldIndex.Script,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Script);
                 case "FULL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var NametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._Name,
                         fieldIndex: (int)Light_FieldIndex.Name,
                         parseWhole: true,
                         errorMask: errorMask);
-                    item._Name.SetIfSucceeded(NametryGet);
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Name);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._Icon,
                         fieldIndex: (int)Light_FieldIndex.Icon,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Time.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                        Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Time,
                             fieldIndex: (int)Light_FieldIndex.Time,
-                            errorMask: errorMask));
-                        item._Radius.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Radius,
                             fieldIndex: (int)Light_FieldIndex.Radius,
-                            errorMask: errorMask));
-                        item._Color.SetIfSucceeded(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Color,
                             fieldIndex: (int)Light_FieldIndex.Color,
                             errorMask: errorMask,
-                            extraByte: true));
-                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Light.LightFlag>.Instance.Parse(
+                            extraByte: true);
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<Light.LightFlag>.Instance.ParseInto(
                             frame: dataFrame.SpawnWithLength(4),
+                            item: item._Flags,
                             fieldIndex: (int)Light_FieldIndex.Flags,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
                         if (dataFrame.TotalLength > 24)
                         {
                             item.DATADataTypeState |= DATADataType.Range0;
-                            item._FalloffExponent.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
                                 frame: dataFrame,
+                                item: item._FalloffExponent,
                                 fieldIndex: (int)Light_FieldIndex.FalloffExponent,
-                                errorMask: errorMask));
-                            item._FOV.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                                errorMask: errorMask);
+                            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
                                 frame: dataFrame,
+                                item: item._FOV,
                                 fieldIndex: (int)Light_FieldIndex.FOV,
-                                errorMask: errorMask));
+                                errorMask: errorMask);
                         }
-                        item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Value,
                             fieldIndex: (int)Light_FieldIndex.Value,
-                            errorMask: errorMask));
-                        item._Weight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Weight,
                             fieldIndex: (int)Light_FieldIndex.Weight,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
                     }
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Weight);
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Fade.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._Fade,
                         fieldIndex: (int)Light_FieldIndex.Fade,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Fade);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Sound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item.Sound_Property,
                         fieldIndex: (int)Light_FieldIndex.Sound,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Sound);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
@@ -1145,24 +1168,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            Light_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Light_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             LightCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = Light_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            ILightGetter rhs,
+            ErrorMaskBuilder errorMask,
+            Light_CopyMask copyMask = null,
+            ILightGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            LightCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1827,8 +1858,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILight item,
             ILightGetter rhs,
             ILightGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             Light_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1836,12 +1866,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item,
                 rhs,
                 def,
-                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Light_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -1859,15 +1889,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.Model,
                                         rhs: rhs.Model,
                                         def: def?.Model,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new Model_ErrorMask();
-                                            baseMask.SetNthMask((int)Light_FieldIndex.Model, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.Model.Specific,
                                         cmds: cmds);
                                     return r;
@@ -1884,13 +1906,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Light_FieldIndex.Model, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Script ?? true)
             {
+                errorMask.PushIndex((int)Light_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.SetToWithDefault(
@@ -1899,13 +1926,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Light_FieldIndex.Script, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Name ?? true)
             {
+                errorMask.PushIndex((int)Light_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -1914,13 +1946,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Light_FieldIndex.Name, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Icon ?? true)
             {
+                errorMask.PushIndex((int)Light_FieldIndex.Icon);
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
@@ -1929,13 +1966,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Light_FieldIndex.Icon, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Time ?? true)
             {
+                errorMask.PushIndex((int)Light_FieldIndex.Time);
                 try
                 {
                     item.Time_Property.Set(
@@ -1943,13 +1985,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Light_FieldIndex.Time, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Radius ?? true)
             {
+                errorMask.PushIndex((int)Light_FieldIndex.Radius);
                 try
                 {
                     item.Radius_Property.Set(
@@ -1957,13 +2004,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Light_FieldIndex.Radius, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Color ?? true)
             {
+                errorMask.PushIndex((int)Light_FieldIndex.Color);
                 try
                 {
                     item.Color_Property.Set(
@@ -1971,13 +2023,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Light_FieldIndex.Color, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
+                errorMask.PushIndex((int)Light_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -1985,13 +2042,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Light_FieldIndex.Flags, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.FalloffExponent ?? true)
             {
+                errorMask.PushIndex((int)Light_FieldIndex.FalloffExponent);
                 try
                 {
                     item.FalloffExponent_Property.Set(
@@ -1999,13 +2061,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Light_FieldIndex.FalloffExponent, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.FOV ?? true)
             {
+                errorMask.PushIndex((int)Light_FieldIndex.FOV);
                 try
                 {
                     item.FOV_Property.Set(
@@ -2013,13 +2080,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Light_FieldIndex.FOV, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Value ?? true)
             {
+                errorMask.PushIndex((int)Light_FieldIndex.Value);
                 try
                 {
                     item.Value_Property.Set(
@@ -2027,13 +2099,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Light_FieldIndex.Value, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Weight ?? true)
             {
+                errorMask.PushIndex((int)Light_FieldIndex.Weight);
                 try
                 {
                     item.Weight_Property.Set(
@@ -2041,13 +2118,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Light_FieldIndex.Weight, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Fade ?? true)
             {
+                errorMask.PushIndex((int)Light_FieldIndex.Fade);
                 try
                 {
                     item.Fade_Property.SetToWithDefault(
@@ -2056,13 +2138,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Light_FieldIndex.Fade, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Sound ?? true)
             {
+                errorMask.PushIndex((int)Light_FieldIndex.Sound);
                 try
                 {
                     item.Sound_Property.SetToWithDefault(
@@ -2071,9 +2158,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Light_FieldIndex.Sound, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -2459,136 +2550,128 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Light_ErrorMask errorMask,
             string name = null)
         {
-            Light_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Light_ErrorMask()) : default(Func<Light_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = Light_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             ILightGetter item,
-            Func<Light_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Light");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Light");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Light");
-                }
-                if (item.Model_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.Model_Property,
-                        name: nameof(item.Model),
-                        fieldIndex: (int)Light_FieldIndex.Model,
-                        errorMask: errorMask);
-                }
-                if (item.Script_Property.HasBeenSet)
-                {
-                    FormIDXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Script),
-                        item: item.Script?.FormID,
-                        fieldIndex: (int)Light_FieldIndex.Script,
-                        errorMask: errorMask);
-                }
-                if (item.Name_Property.HasBeenSet)
-                {
-                    StringXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Name),
-                        item: item.Name_Property,
-                        fieldIndex: (int)Light_FieldIndex.Name,
-                        errorMask: errorMask);
-                }
-                if (item.Icon_Property.HasBeenSet)
-                {
-                    FilePathXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Icon),
-                        item: item.Icon_Property,
-                        fieldIndex: (int)Light_FieldIndex.Icon,
-                        errorMask: errorMask);
-                }
-                Int32XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Time),
-                    item: item.Time_Property,
-                    fieldIndex: (int)Light_FieldIndex.Time,
-                    errorMask: errorMask);
-                UInt32XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Radius),
-                    item: item.Radius_Property,
-                    fieldIndex: (int)Light_FieldIndex.Radius,
-                    errorMask: errorMask);
-                ColorXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Color),
-                    item: item.Color_Property,
-                    fieldIndex: (int)Light_FieldIndex.Color,
-                    errorMask: errorMask);
-                EnumXmlTranslation<Light.LightFlag>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Flags),
-                    item: item.Flags_Property,
-                    fieldIndex: (int)Light_FieldIndex.Flags,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.FalloffExponent),
-                    item: item.FalloffExponent_Property,
-                    fieldIndex: (int)Light_FieldIndex.FalloffExponent,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.FOV),
-                    item: item.FOV_Property,
-                    fieldIndex: (int)Light_FieldIndex.FOV,
-                    errorMask: errorMask);
-                UInt32XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Value),
-                    item: item.Value_Property,
-                    fieldIndex: (int)Light_FieldIndex.Value,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Weight),
-                    item: item.Weight_Property,
-                    fieldIndex: (int)Light_FieldIndex.Weight,
-                    errorMask: errorMask);
-                if (item.Fade_Property.HasBeenSet)
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Fade),
-                        item: item.Fade_Property,
-                        fieldIndex: (int)Light_FieldIndex.Fade,
-                        errorMask: errorMask);
-                }
-                if (item.Sound_Property.HasBeenSet)
-                {
-                    FormIDXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Sound),
-                        item: item.Sound?.FormID,
-                        fieldIndex: (int)Light_FieldIndex.Sound,
-                        errorMask: errorMask);
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Light");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (item.Model_Property.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                LoquiXmlTranslation<Model>.Instance.Write(
+                    node: elem,
+                    item: item.Model_Property,
+                    name: nameof(item.Model),
+                    fieldIndex: (int)Light_FieldIndex.Model,
+                    errorMask: errorMask);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Script),
+                    item: item.Script?.FormID,
+                    fieldIndex: (int)Light_FieldIndex.Script,
+                    errorMask: errorMask);
+            }
+            if (item.Name_Property.HasBeenSet)
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Name),
+                    item: item.Name_Property,
+                    fieldIndex: (int)Light_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if (item.Icon_Property.HasBeenSet)
+            {
+                FilePathXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Icon),
+                    item: item.Icon_Property,
+                    fieldIndex: (int)Light_FieldIndex.Icon,
+                    errorMask: errorMask);
+            }
+            Int32XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Time),
+                item: item.Time_Property,
+                fieldIndex: (int)Light_FieldIndex.Time,
+                errorMask: errorMask);
+            UInt32XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Radius),
+                item: item.Radius_Property,
+                fieldIndex: (int)Light_FieldIndex.Radius,
+                errorMask: errorMask);
+            ColorXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Color),
+                item: item.Color_Property,
+                fieldIndex: (int)Light_FieldIndex.Color,
+                errorMask: errorMask);
+            EnumXmlTranslation<Light.LightFlag>.Instance.Write(
+                node: elem,
+                name: nameof(item.Flags),
+                item: item.Flags_Property,
+                fieldIndex: (int)Light_FieldIndex.Flags,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.FalloffExponent),
+                item: item.FalloffExponent_Property,
+                fieldIndex: (int)Light_FieldIndex.FalloffExponent,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.FOV),
+                item: item.FOV_Property,
+                fieldIndex: (int)Light_FieldIndex.FOV,
+                errorMask: errorMask);
+            UInt32XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Value),
+                item: item.Value_Property,
+                fieldIndex: (int)Light_FieldIndex.Value,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Weight),
+                item: item.Weight_Property,
+                fieldIndex: (int)Light_FieldIndex.Weight,
+                errorMask: errorMask);
+            if (item.Fade_Property.HasBeenSet)
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Fade),
+                    item: item.Fade_Property,
+                    fieldIndex: (int)Light_FieldIndex.Fade,
+                    errorMask: errorMask);
+            }
+            if (item.Sound_Property.HasBeenSet)
+            {
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Sound),
+                    item: item.Sound?.FormID,
+                    fieldIndex: (int)Light_FieldIndex.Sound,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -2604,43 +2687,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out Light_ErrorMask errorMask)
         {
-            Light_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Light_ErrorMask()) : default(Func<Light_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = Light_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             Light item,
             RecordTypeConverter recordTypeConverter,
-            Func<Light_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: Light_Registration.LIGH_HEADER,
+                type: ObjectType.Record))
             {
-                using (HeaderExport.ExportHeader(
+                MajorRecordCommon.Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: Light_Registration.LIGH_HEADER,
-                    type: ObjectType.Record))
-                {
-                    MajorRecordCommon.Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                    Write_Binary_RecordTypes(
-                        item: item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -2649,14 +2724,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Light item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<Light_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
+            LoquiBinaryTranslation<Model>.Instance.Write(
                 writer: writer,
                 item: item.Model_Property,
                 fieldIndex: (int)Light_FieldIndex.Model,
@@ -3255,6 +3330,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static Light_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

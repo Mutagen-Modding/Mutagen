@@ -21,6 +21,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 
@@ -321,8 +322,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -331,23 +331,37 @@ namespace Mutagen.Bethesda.Oblivion
             out Region_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = Region_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (Region Object, Region_ErrorMask ErrorMask) Create_XML(
+        public static Region Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            Region_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Region_ErrorMask()) : default(Func<Region_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new Region();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static Region Create_XML(string path)
@@ -389,12 +403,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Region, Region_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Region>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -403,13 +416,14 @@ namespace Mutagen.Bethesda.Oblivion
             out Region_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Region, Region_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<Region>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = Region_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -560,99 +574,172 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static Region Create_XML_Internal(
-            XElement root,
-            Func<Region_ErrorMask> errorMask)
-        {
-            var ret = new Region();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             Region item,
             XElement root,
             string name,
-            Func<Region_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Icon":
-                    item._Icon.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                    FilePathXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Region_FieldIndex.Icon,
-                        errorMask: errorMask));
+                        item: item._Icon,
+                        errorMask: errorMask);
                     break;
                 case "MapColor":
-                    item._MapColor.SetIfSucceeded(ColorXmlTranslation.Instance.ParseNonNull(
+                    ColorXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Region_FieldIndex.MapColor,
-                        errorMask: errorMask));
+                        item: item._MapColor,
+                        errorMask: errorMask);
                     break;
                 case "Worldspace":
-                    item.Worldspace_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Region_FieldIndex.Worldspace,
-                        errorMask: errorMask));
+                        item: item.Worldspace_Property,
+                        errorMask: errorMask);
                     break;
                 case "Areas":
-                    item._Areas.SetIfSucceeded(ListXmlTranslation<RegionArea, MaskItem<Exception, RegionArea_ErrorMask>>.Instance.Parse(
+                    ListXmlTranslation<RegionArea>.Instance.ParseInto(
                         root: root,
+                        item: item._Areas,
                         fieldIndex: (int)Region_FieldIndex.Areas,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, RegionArea_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiXmlTranslation<RegionArea, RegionArea_ErrorMask>.Instance.Parse(
-                                root: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: LoquiXmlTranslation<RegionArea>.Instance.Parse);
                     break;
                 case "Objects":
-                    item._Objects.SetIfSucceeded(LoquiXmlTranslation<RegionDataObjects, RegionDataObjects_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)Region_FieldIndex.Objects,
-                        errorMask: errorMask));
+                    try
+                    {
+                        errorMask?.PushIndex((int)Region_FieldIndex.Objects);
+                        if (LoquiXmlTranslation<RegionDataObjects>.Instance.Parse(
+                            root: root,
+                            item: out var ObjectsParse,
+                            errorMask: errorMask))
+                        {
+                            item._Objects.Item = ObjectsParse;
+                        }
+                        else
+                        {
+                            item._Objects.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Weather":
-                    item._Weather.SetIfSucceeded(LoquiXmlTranslation<RegionDataWeather, RegionDataWeather_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)Region_FieldIndex.Weather,
-                        errorMask: errorMask));
+                    try
+                    {
+                        errorMask?.PushIndex((int)Region_FieldIndex.Weather);
+                        if (LoquiXmlTranslation<RegionDataWeather>.Instance.Parse(
+                            root: root,
+                            item: out var WeatherParse,
+                            errorMask: errorMask))
+                        {
+                            item._Weather.Item = WeatherParse;
+                        }
+                        else
+                        {
+                            item._Weather.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "MapName":
-                    item._MapName.SetIfSucceeded(LoquiXmlTranslation<RegionDataMapName, RegionDataMapName_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)Region_FieldIndex.MapName,
-                        errorMask: errorMask));
+                    try
+                    {
+                        errorMask?.PushIndex((int)Region_FieldIndex.MapName);
+                        if (LoquiXmlTranslation<RegionDataMapName>.Instance.Parse(
+                            root: root,
+                            item: out var MapNameParse,
+                            errorMask: errorMask))
+                        {
+                            item._MapName.Item = MapNameParse;
+                        }
+                        else
+                        {
+                            item._MapName.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Grasses":
-                    item._Grasses.SetIfSucceeded(LoquiXmlTranslation<RegionDataGrasses, RegionDataGrasses_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)Region_FieldIndex.Grasses,
-                        errorMask: errorMask));
+                    try
+                    {
+                        errorMask?.PushIndex((int)Region_FieldIndex.Grasses);
+                        if (LoquiXmlTranslation<RegionDataGrasses>.Instance.Parse(
+                            root: root,
+                            item: out var GrassesParse,
+                            errorMask: errorMask))
+                        {
+                            item._Grasses.Item = GrassesParse;
+                        }
+                        else
+                        {
+                            item._Grasses.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Sounds":
-                    item._Sounds.SetIfSucceeded(LoquiXmlTranslation<RegionDataSounds, RegionDataSounds_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)Region_FieldIndex.Sounds,
-                        errorMask: errorMask));
+                    try
+                    {
+                        errorMask?.PushIndex((int)Region_FieldIndex.Sounds);
+                        if (LoquiXmlTranslation<RegionDataSounds>.Instance.Parse(
+                            root: root,
+                            item: out var SoundsParse,
+                            errorMask: errorMask))
+                        {
+                            item._Sounds.Item = SoundsParse;
+                        }
+                        else
+                        {
+                            item._Sounds.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(
@@ -708,8 +795,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -718,26 +805,29 @@ namespace Mutagen.Bethesda.Oblivion
             out Region_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = Region_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (Region Object, Region_ErrorMask ErrorMask) Create_Binary(
+        public static Region Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            Region_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
+            return UtilityTranslation.MajorRecordParse<Region, Region_FieldIndex>(
+                record: new Region(),
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Region_ErrorMask()) : default(Func<Region_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+                errorMask: errorMask,
+                recType: Region_Registration.REGN_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         public static Region Create_Binary(string path)
@@ -868,51 +958,28 @@ namespace Mutagen.Bethesda.Oblivion
         static partial void FillBinary_RegionAreaLogic_Custom(
             MutagenFrame frame,
             Region item,
-            Func<Region_ErrorMask> errorMask);
+            ErrorMaskBuilder errorMask);
 
         static partial void WriteBinary_RegionAreaLogic_Custom(
             MutagenWriter writer,
             Region item,
-            Func<Region_ErrorMask> errorMask);
+            ErrorMaskBuilder errorMask);
 
         public static void WriteBinary_RegionAreaLogic(
             MutagenWriter writer,
             Region item,
-            Func<Region_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                WriteBinary_RegionAreaLogic_Custom(
-                    writer: writer,
-                    item: item,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-        }
-
-        private static Region Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<Region_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            return UtilityTranslation.MajorRecordParse<Region, Region_ErrorMask, Region_FieldIndex>(
-                record: new Region(),
-                frame: frame,
-                errorMask: errorMask,
-                recType: Region_Registration.REGN_HEADER,
-                recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
+            WriteBinary_RegionAreaLogic_Custom(
+                writer: writer,
+                item: item,
+                errorMask: errorMask);
         }
 
         protected static void Fill_Binary_Structs(
             Region item,
             MutagenFrame frame,
-            Func<Region_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             MajorRecord.Fill_Binary_Structs(
                 item: item,
@@ -923,7 +990,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<Region_FieldIndex?> Fill_Binary_RecordTypes(
             Region item,
             MutagenFrame frame,
-            Func<Region_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -934,59 +1001,47 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._Icon,
                         fieldIndex: (int)Region_FieldIndex.Icon,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<Region_FieldIndex?>.Succeed(Region_FieldIndex.Icon);
                 case "RCLR":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._MapColor.SetIfSucceeded(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._MapColor,
                         fieldIndex: (int)Region_FieldIndex.MapColor,
                         errorMask: errorMask,
-                        extraByte: true));
+                        extraByte: true);
                     return TryGet<Region_FieldIndex?>.Succeed(Region_FieldIndex.MapColor);
                 case "WNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Worldspace_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item.Worldspace_Property,
                         fieldIndex: (int)Region_FieldIndex.Worldspace,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<Region_FieldIndex?>.Succeed(Region_FieldIndex.Worldspace);
                 case "RPLI":
                 case "RPLD":
-                    var AreastryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionArea, MaskItem<Exception, RegionArea_ErrorMask>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionArea>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: RegionArea_Registration.TriggeringRecordTypes,
+                        item: item._Areas,
                         fieldIndex: (int)Region_FieldIndex.Areas,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, RegionArea_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiBinaryTranslation<RegionArea, RegionArea_ErrorMask>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    item._Areas.SetIfSucceeded(AreastryGet);
+                        transl: LoquiBinaryTranslation<RegionArea>.Instance.Parse);
                     return TryGet<Region_FieldIndex?>.Succeed(Region_FieldIndex.Areas);
                 case "RDAT":
-                    try
+                    using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
                     {
-                        using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
-                        {
-                            FillBinary_RegionAreaLogic_Custom(
-                                frame: subFrame,
-                                item: item,
-                                errorMask: errorMask);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask().Overall = ex;
+                        FillBinary_RegionAreaLogic_Custom(
+                            frame: subFrame,
+                            item: item,
+                            errorMask: errorMask);
                     }
                     return TryGet<Region_FieldIndex?>.Succeed(null);
                 default:
@@ -1075,24 +1130,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            Region_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Region_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             RegionCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = Region_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IRegionGetter rhs,
+            ErrorMaskBuilder errorMask,
+            Region_CopyMask copyMask = null,
+            IRegionGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            RegionCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1601,8 +1664,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegion item,
             IRegionGetter rhs,
             IRegionGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             Region_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1610,12 +1672,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item,
                 rhs,
                 def,
-                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
             if (copyMask?.Icon ?? true)
             {
+                errorMask.PushIndex((int)Region_FieldIndex.Icon);
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
@@ -1624,13 +1686,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Region_FieldIndex.Icon, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.MapColor ?? true)
             {
+                errorMask.PushIndex((int)Region_FieldIndex.MapColor);
                 try
                 {
                     item.MapColor_Property.SetToWithDefault(
@@ -1639,13 +1706,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Region_FieldIndex.MapColor, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Worldspace ?? true)
             {
+                errorMask.PushIndex((int)Region_FieldIndex.Worldspace);
                 try
                 {
                     item.Worldspace_Property.SetToWithDefault(
@@ -1654,13 +1726,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Region_FieldIndex.Worldspace, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Areas.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Region_FieldIndex.Areas);
                 try
                 {
                     item.Areas.SetToWithDefault(
@@ -1686,13 +1763,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Region_FieldIndex.Areas, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Objects.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Region_FieldIndex.Objects);
                 try
                 {
                     item.Objects_Property.SetToWithDefault(
@@ -1710,15 +1792,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.Objects,
                                         rhs: rhs.Objects,
                                         def: def?.Objects,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<RegionDataObjects_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new RegionDataObjects_ErrorMask();
-                                            baseMask.SetNthMask((int)Region_FieldIndex.Objects, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.Objects.Specific,
                                         cmds: cmds);
                                     return r;
@@ -1735,13 +1809,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Region_FieldIndex.Objects, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Weather.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Region_FieldIndex.Weather);
                 try
                 {
                     item.Weather_Property.SetToWithDefault(
@@ -1759,15 +1838,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.Weather,
                                         rhs: rhs.Weather,
                                         def: def?.Weather,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<RegionDataWeather_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new RegionDataWeather_ErrorMask();
-                                            baseMask.SetNthMask((int)Region_FieldIndex.Weather, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.Weather.Specific,
                                         cmds: cmds);
                                     return r;
@@ -1784,13 +1855,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Region_FieldIndex.Weather, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.MapName.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Region_FieldIndex.MapName);
                 try
                 {
                     item.MapName_Property.SetToWithDefault(
@@ -1808,15 +1884,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.MapName,
                                         rhs: rhs.MapName,
                                         def: def?.MapName,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<RegionDataMapName_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new RegionDataMapName_ErrorMask();
-                                            baseMask.SetNthMask((int)Region_FieldIndex.MapName, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.MapName.Specific,
                                         cmds: cmds);
                                     return r;
@@ -1833,13 +1901,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Region_FieldIndex.MapName, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Grasses.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Region_FieldIndex.Grasses);
                 try
                 {
                     item.Grasses_Property.SetToWithDefault(
@@ -1857,15 +1930,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.Grasses,
                                         rhs: rhs.Grasses,
                                         def: def?.Grasses,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<RegionDataGrasses_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new RegionDataGrasses_ErrorMask();
-                                            baseMask.SetNthMask((int)Region_FieldIndex.Grasses, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.Grasses.Specific,
                                         cmds: cmds);
                                     return r;
@@ -1882,13 +1947,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Region_FieldIndex.Grasses, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Sounds.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Region_FieldIndex.Sounds);
                 try
                 {
                     item.Sounds_Property.SetToWithDefault(
@@ -1906,15 +1976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.Sounds,
                                         rhs: rhs.Sounds,
                                         def: def?.Sounds,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<RegionDataSounds_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new RegionDataSounds_ErrorMask();
-                                            baseMask.SetNthMask((int)Region_FieldIndex.Sounds, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.Sounds.Specific,
                                         cmds: cmds);
                                     return r;
@@ -1931,9 +1993,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Region_FieldIndex.Sounds, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -2300,125 +2366,116 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Region_ErrorMask errorMask,
             string name = null)
         {
-            Region_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Region_ErrorMask()) : default(Func<Region_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = Region_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             IRegionGetter item,
-            Func<Region_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Region");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Region");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Region");
-                }
-                if (item.Icon_Property.HasBeenSet)
-                {
-                    FilePathXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Icon),
-                        item: item.Icon_Property,
-                        fieldIndex: (int)Region_FieldIndex.Icon,
-                        errorMask: errorMask);
-                }
-                if (item.MapColor_Property.HasBeenSet)
-                {
-                    ColorXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.MapColor),
-                        item: item.MapColor_Property,
-                        fieldIndex: (int)Region_FieldIndex.MapColor,
-                        errorMask: errorMask);
-                }
-                if (item.Worldspace_Property.HasBeenSet)
-                {
-                    FormIDXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Worldspace),
-                        item: item.Worldspace?.FormID,
-                        fieldIndex: (int)Region_FieldIndex.Worldspace,
-                        errorMask: errorMask);
-                }
-                if (item.Areas.HasBeenSet)
-                {
-                    ListXmlTranslation<RegionArea, MaskItem<Exception, RegionArea_ErrorMask>>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Areas),
-                        item: item.Areas,
-                        fieldIndex: (int)Region_FieldIndex.Areas,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, RegionArea subItem, bool listDoMasks, out MaskItem<Exception, RegionArea_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<RegionArea, RegionArea_ErrorMask>.Instance.Write(
-                                node: subNode,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                if (item.Objects_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<RegionDataObjects, RegionDataObjects_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.Objects_Property,
-                        name: nameof(item.Objects),
-                        fieldIndex: (int)Region_FieldIndex.Objects,
-                        errorMask: errorMask);
-                }
-                if (item.Weather_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<RegionDataWeather, RegionDataWeather_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.Weather_Property,
-                        name: nameof(item.Weather),
-                        fieldIndex: (int)Region_FieldIndex.Weather,
-                        errorMask: errorMask);
-                }
-                if (item.MapName_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<RegionDataMapName, RegionDataMapName_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.MapName_Property,
-                        name: nameof(item.MapName),
-                        fieldIndex: (int)Region_FieldIndex.MapName,
-                        errorMask: errorMask);
-                }
-                if (item.Grasses_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<RegionDataGrasses, RegionDataGrasses_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.Grasses_Property,
-                        name: nameof(item.Grasses),
-                        fieldIndex: (int)Region_FieldIndex.Grasses,
-                        errorMask: errorMask);
-                }
-                if (item.Sounds_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<RegionDataSounds, RegionDataSounds_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.Sounds_Property,
-                        name: nameof(item.Sounds),
-                        fieldIndex: (int)Region_FieldIndex.Sounds,
-                        errorMask: errorMask);
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Region");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (item.Icon_Property.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                FilePathXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Icon),
+                    item: item.Icon_Property,
+                    fieldIndex: (int)Region_FieldIndex.Icon,
+                    errorMask: errorMask);
+            }
+            if (item.MapColor_Property.HasBeenSet)
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.MapColor),
+                    item: item.MapColor_Property,
+                    fieldIndex: (int)Region_FieldIndex.MapColor,
+                    errorMask: errorMask);
+            }
+            if (item.Worldspace_Property.HasBeenSet)
+            {
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Worldspace),
+                    item: item.Worldspace?.FormID,
+                    fieldIndex: (int)Region_FieldIndex.Worldspace,
+                    errorMask: errorMask);
+            }
+            if (item.Areas.HasBeenSet)
+            {
+                ListXmlTranslation<RegionArea>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Areas),
+                    item: item.Areas,
+                    fieldIndex: (int)Region_FieldIndex.Areas,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, RegionArea subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        LoquiXmlTranslation<RegionArea>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if (item.Objects_Property.HasBeenSet)
+            {
+                LoquiXmlTranslation<RegionDataObjects>.Instance.Write(
+                    node: elem,
+                    item: item.Objects_Property,
+                    name: nameof(item.Objects),
+                    fieldIndex: (int)Region_FieldIndex.Objects,
+                    errorMask: errorMask);
+            }
+            if (item.Weather_Property.HasBeenSet)
+            {
+                LoquiXmlTranslation<RegionDataWeather>.Instance.Write(
+                    node: elem,
+                    item: item.Weather_Property,
+                    name: nameof(item.Weather),
+                    fieldIndex: (int)Region_FieldIndex.Weather,
+                    errorMask: errorMask);
+            }
+            if (item.MapName_Property.HasBeenSet)
+            {
+                LoquiXmlTranslation<RegionDataMapName>.Instance.Write(
+                    node: elem,
+                    item: item.MapName_Property,
+                    name: nameof(item.MapName),
+                    fieldIndex: (int)Region_FieldIndex.MapName,
+                    errorMask: errorMask);
+            }
+            if (item.Grasses_Property.HasBeenSet)
+            {
+                LoquiXmlTranslation<RegionDataGrasses>.Instance.Write(
+                    node: elem,
+                    item: item.Grasses_Property,
+                    name: nameof(item.Grasses),
+                    fieldIndex: (int)Region_FieldIndex.Grasses,
+                    errorMask: errorMask);
+            }
+            if (item.Sounds_Property.HasBeenSet)
+            {
+                LoquiXmlTranslation<RegionDataSounds>.Instance.Write(
+                    node: elem,
+                    item: item.Sounds_Property,
+                    name: nameof(item.Sounds),
+                    fieldIndex: (int)Region_FieldIndex.Sounds,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -2434,43 +2491,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out Region_ErrorMask errorMask)
         {
-            Region_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Region_ErrorMask()) : default(Func<Region_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = Region_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             Region item,
             RecordTypeConverter recordTypeConverter,
-            Func<Region_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: Region_Registration.REGN_HEADER,
+                type: ObjectType.Record))
             {
-                using (HeaderExport.ExportHeader(
+                MajorRecordCommon.Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: Region_Registration.REGN_HEADER,
-                    type: ObjectType.Record))
-                {
-                    MajorRecordCommon.Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                    Write_Binary_RecordTypes(
-                        item: item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -2479,7 +2528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Region item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<Region_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
@@ -2508,20 +2557,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Region_Registration.WNAM_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionArea, MaskItem<Exception, RegionArea_ErrorMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionArea>.Instance.Write(
                 writer: writer,
-                item: item.Areas,
+                items: item.Areas,
                 fieldIndex: (int)Region_FieldIndex.Areas,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, RegionArea subItem, bool listDoMasks, out MaskItem<Exception, RegionArea_ErrorMask> listSubMask) =>
-                {
-                    LoquiBinaryTranslation<RegionArea, RegionArea_ErrorMask>.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                transl: LoquiBinaryTranslation<RegionArea>.Instance.Write);
             Region.WriteBinary_RegionAreaLogic(
                 writer: writer,
                 item: item,
@@ -3052,6 +3093,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static Region_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

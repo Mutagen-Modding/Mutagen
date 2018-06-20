@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>94860c2000c4f17e228503651d2328cc0728c173</Sha>
+         <Sha>c1dd7ef13ed9f4a2b5c24864677c426b21aaa717</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>05-09-2018 19:26:35</CommitDate>
-         <Description>Removed ObjectPool usage from notifying systems</Description>
+         <CommitDate>06-19-2018 22:28:50</CommitDate>
+         <Description>Removed a vestigial Unset function from NotifyingSetItem</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>89f9b14db08fb42cb48b9a98ab3ae4200298d196</Sha>
+         <Sha>cdde894ca7e094e468a9cde3ab158c2bb841095a</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>05-09-2018 18:13:16</CommitDate>
-         <Description>GenerateForEquals Accessor parameters.  Float/Double fields now use EqualsWithin when comparing.</Description>
+         <CommitDate>06-19-2018 23:19:08</CommitDate>
+         <Description>Massive refactor of error mask systems via ErrorMaskBuilder.  Still some reconstruction and testing to be done</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

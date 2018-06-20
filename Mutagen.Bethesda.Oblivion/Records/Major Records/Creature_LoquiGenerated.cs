@@ -20,6 +20,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 
@@ -1054,8 +1055,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -1064,23 +1064,37 @@ namespace Mutagen.Bethesda.Oblivion
             out Creature_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (Creature Object, Creature_ErrorMask ErrorMask) Create_XML(
+        public static Creature Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            Creature_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Creature_ErrorMask()) : default(Func<Creature_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new Creature();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static Creature Create_XML(string path)
@@ -1122,12 +1136,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Creature, Creature_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Creature>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -1136,13 +1149,14 @@ namespace Mutagen.Bethesda.Oblivion
             out Creature_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Creature, Creature_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<Creature>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -1305,388 +1319,375 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static Creature Create_XML_Internal(
-            XElement root,
-            Func<Creature_ErrorMask> errorMask)
-        {
-            var ret = new Creature();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             Creature item,
             XElement root,
             string name,
-            Func<Creature_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)Creature_FieldIndex.Model,
-                        errorMask: errorMask));
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Model);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            root: root,
+                            item: out var ModelParse,
+                            errorMask: errorMask))
+                        {
+                            item._Model.Item = ModelParse;
+                        }
+                        else
+                        {
+                            item._Model.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Items":
-                    item._Items.SetIfSucceeded(ListXmlTranslation<ItemEntry, MaskItem<Exception, ItemEntry_ErrorMask>>.Instance.Parse(
+                    ListXmlTranslation<ItemEntry>.Instance.ParseInto(
                         root: root,
+                        item: item._Items,
                         fieldIndex: (int)Creature_FieldIndex.Items,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, ItemEntry_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiXmlTranslation<ItemEntry, ItemEntry_ErrorMask>.Instance.Parse(
-                                root: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: LoquiXmlTranslation<ItemEntry>.Instance.Parse);
                     break;
                 case "Spells":
-                    item._Spells.SetIfSucceeded(ListXmlTranslation<FormIDSetLink<Spell>, Exception>.Instance.Parse(
+                    ListXmlTranslation<FormIDSetLink<Spell>>.Instance.ParseInto(
                         root: root,
+                        item: item._Spells,
                         fieldIndex: (int)Creature_FieldIndex.Spells,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return FormIDXmlTranslation.Instance.Parse(
-                                r,
-                                nullable: false,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<Spell>(o.Value));
-                        }
-                        ));
+                        transl: FormIDXmlTranslation.Instance.Parse);
                     break;
                 case "Models":
-                    item._Models.SetIfSucceeded(ListXmlTranslation<String, Exception>.Instance.Parse(
+                    ListXmlTranslation<String>.Instance.ParseInto(
                         root: root,
+                        item: item._Models,
                         fieldIndex: (int)Creature_FieldIndex.Models,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return StringXmlTranslation.Instance.Parse(
-                                r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: StringXmlTranslation.Instance.Parse);
                     break;
                 case "NIFT":
-                    item._NIFT.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    ByteArrayXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.NIFT,
-                        errorMask: errorMask));
+                        item: item._NIFT,
+                        errorMask: errorMask);
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<Creature.CreatureFlag>.Instance.Parse(
+                    EnumXmlTranslation<Creature.CreatureFlag>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)Creature_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._Flags,
+                        errorMask: errorMask);
                     break;
                 case "BaseSpellPoints":
-                    item._BaseSpellPoints.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    UInt16XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.BaseSpellPoints,
-                        errorMask: errorMask));
+                        item: item._BaseSpellPoints,
+                        errorMask: errorMask);
                     break;
                 case "Fatigue":
-                    item._Fatigue.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    UInt16XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Fatigue,
-                        errorMask: errorMask));
+                        item: item._Fatigue,
+                        errorMask: errorMask);
                     break;
                 case "BarterGold":
-                    item._BarterGold.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    UInt16XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.BarterGold,
-                        errorMask: errorMask));
+                        item: item._BarterGold,
+                        errorMask: errorMask);
                     break;
                 case "LevelOffset":
-                    item._LevelOffset.SetIfSucceeded(Int16XmlTranslation.Instance.ParseNonNull(
+                    Int16XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.LevelOffset,
-                        errorMask: errorMask));
+                        item: item._LevelOffset,
+                        errorMask: errorMask);
                     break;
                 case "CalcMin":
-                    item._CalcMin.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    UInt16XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.CalcMin,
-                        errorMask: errorMask));
+                        item: item._CalcMin,
+                        errorMask: errorMask);
                     break;
                 case "CalcMax":
-                    item._CalcMax.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    UInt16XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.CalcMax,
-                        errorMask: errorMask));
+                        item: item._CalcMax,
+                        errorMask: errorMask);
                     break;
                 case "Factions":
-                    item._Factions.SetIfSucceeded(ListXmlTranslation<RankPlacement, MaskItem<Exception, RankPlacement_ErrorMask>>.Instance.Parse(
+                    ListXmlTranslation<RankPlacement>.Instance.ParseInto(
                         root: root,
+                        item: item._Factions,
                         fieldIndex: (int)Creature_FieldIndex.Factions,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, RankPlacement_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiXmlTranslation<RankPlacement, RankPlacement_ErrorMask>.Instance.Parse(
-                                root: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: LoquiXmlTranslation<RankPlacement>.Instance.Parse);
                     break;
                 case "DeathItem":
-                    item.DeathItem_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.DeathItem,
-                        errorMask: errorMask));
+                        item: item.DeathItem_Property,
+                        errorMask: errorMask);
                     break;
                 case "Script":
-                    item.Script_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Script,
-                        errorMask: errorMask));
+                        item: item.Script_Property,
+                        errorMask: errorMask);
                     break;
                 case "Aggression":
-                    item._Aggression.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Aggression,
-                        errorMask: errorMask));
+                        item: item._Aggression,
+                        errorMask: errorMask);
                     break;
                 case "Confidence":
-                    item._Confidence.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Confidence,
-                        errorMask: errorMask));
+                        item: item._Confidence,
+                        errorMask: errorMask);
                     break;
                 case "EnergyLevel":
-                    item._EnergyLevel.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.EnergyLevel,
-                        errorMask: errorMask));
+                        item: item._EnergyLevel,
+                        errorMask: errorMask);
                     break;
                 case "Responsibility":
-                    item._Responsibility.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Responsibility,
-                        errorMask: errorMask));
+                        item: item._Responsibility,
+                        errorMask: errorMask);
                     break;
                 case "BuySellServices":
-                    item._BuySellServices.SetIfSucceeded(EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
+                    EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)Creature_FieldIndex.BuySellServices,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._BuySellServices,
+                        errorMask: errorMask);
                     break;
                 case "Teaches":
-                    item._Teaches.SetIfSucceeded(EnumXmlTranslation<Skill>.Instance.Parse(
+                    EnumXmlTranslation<Skill>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)Creature_FieldIndex.Teaches,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._Teaches,
+                        errorMask: errorMask);
                     break;
                 case "MaximumTrainingLevel":
-                    item._MaximumTrainingLevel.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.MaximumTrainingLevel,
-                        errorMask: errorMask));
+                        item: item._MaximumTrainingLevel,
+                        errorMask: errorMask);
                     break;
                 case "AIPackages":
-                    item._AIPackages.SetIfSucceeded(ListXmlTranslation<FormIDSetLink<AIPackage>, Exception>.Instance.Parse(
+                    ListXmlTranslation<FormIDSetLink<AIPackage>>.Instance.ParseInto(
                         root: root,
+                        item: item._AIPackages,
                         fieldIndex: (int)Creature_FieldIndex.AIPackages,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return FormIDXmlTranslation.Instance.Parse(
-                                r,
-                                nullable: false,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<AIPackage>(o.Value));
-                        }
-                        ));
+                        transl: FormIDXmlTranslation.Instance.Parse);
                     break;
                 case "Animations":
-                    item._Animations.SetIfSucceeded(ListXmlTranslation<String, Exception>.Instance.Parse(
+                    ListXmlTranslation<String>.Instance.ParseInto(
                         root: root,
+                        item: item._Animations,
                         fieldIndex: (int)Creature_FieldIndex.Animations,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return StringXmlTranslation.Instance.Parse(
-                                r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: StringXmlTranslation.Instance.Parse);
                     break;
                 case "CreatureType":
-                    item._CreatureType.SetIfSucceeded(EnumXmlTranslation<Creature.CreatureTypeEnum>.Instance.Parse(
+                    EnumXmlTranslation<Creature.CreatureTypeEnum>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)Creature_FieldIndex.CreatureType,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._CreatureType,
+                        errorMask: errorMask);
                     break;
                 case "CombatSKill":
-                    item._CombatSKill.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.CombatSKill,
-                        errorMask: errorMask));
+                        item: item._CombatSKill,
+                        errorMask: errorMask);
                     break;
                 case "MagicSKill":
-                    item._MagicSKill.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.MagicSKill,
-                        errorMask: errorMask));
+                        item: item._MagicSKill,
+                        errorMask: errorMask);
                     break;
                 case "StealthSKill":
-                    item._StealthSKill.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.StealthSKill,
-                        errorMask: errorMask));
+                        item: item._StealthSKill,
+                        errorMask: errorMask);
                     break;
                 case "SoulLevel":
-                    item._SoulLevel.SetIfSucceeded(EnumXmlTranslation<SoulLevel>.Instance.Parse(
+                    EnumXmlTranslation<SoulLevel>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)Creature_FieldIndex.SoulLevel,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._SoulLevel,
+                        errorMask: errorMask);
                     break;
                 case "Health":
-                    item._Health.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    UInt32XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Health,
-                        errorMask: errorMask));
+                        item: item._Health,
+                        errorMask: errorMask);
                     break;
                 case "AttackDamage":
-                    item._AttackDamage.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    UInt16XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.AttackDamage,
-                        errorMask: errorMask));
+                        item: item._AttackDamage,
+                        errorMask: errorMask);
                     break;
                 case "Strength":
-                    item._Strength.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Strength,
-                        errorMask: errorMask));
+                        item: item._Strength,
+                        errorMask: errorMask);
                     break;
                 case "Intelligence":
-                    item._Intelligence.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Intelligence,
-                        errorMask: errorMask));
+                        item: item._Intelligence,
+                        errorMask: errorMask);
                     break;
                 case "Willpower":
-                    item._Willpower.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Willpower,
-                        errorMask: errorMask));
+                        item: item._Willpower,
+                        errorMask: errorMask);
                     break;
                 case "Agility":
-                    item._Agility.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Agility,
-                        errorMask: errorMask));
+                        item: item._Agility,
+                        errorMask: errorMask);
                     break;
                 case "Speed":
-                    item._Speed.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Speed,
-                        errorMask: errorMask));
+                        item: item._Speed,
+                        errorMask: errorMask);
                     break;
                 case "Endurance":
-                    item._Endurance.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Endurance,
-                        errorMask: errorMask));
+                        item: item._Endurance,
+                        errorMask: errorMask);
                     break;
                 case "Personality":
-                    item._Personality.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Personality,
-                        errorMask: errorMask));
+                        item: item._Personality,
+                        errorMask: errorMask);
                     break;
                 case "Luck":
-                    item._Luck.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Luck,
-                        errorMask: errorMask));
+                        item: item._Luck,
+                        errorMask: errorMask);
                     break;
                 case "AttackReach":
-                    item._AttackReach.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.AttackReach,
-                        errorMask: errorMask));
+                        item: item._AttackReach,
+                        errorMask: errorMask);
                     break;
                 case "CombatStyle":
-                    item.CombatStyle_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.CombatStyle,
-                        errorMask: errorMask));
+                        item: item.CombatStyle_Property,
+                        errorMask: errorMask);
                     break;
                 case "TurningSpeed":
-                    item._TurningSpeed.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    FloatXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.TurningSpeed,
-                        errorMask: errorMask));
+                        item: item._TurningSpeed,
+                        errorMask: errorMask);
                     break;
                 case "BaseScale":
-                    item._BaseScale.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    FloatXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.BaseScale,
-                        errorMask: errorMask));
+                        item: item._BaseScale,
+                        errorMask: errorMask);
                     break;
                 case "FootWeight":
-                    item._FootWeight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    FloatXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.FootWeight,
-                        errorMask: errorMask));
+                        item: item._FootWeight,
+                        errorMask: errorMask);
                     break;
                 case "BloodSpray":
-                    item._BloodSpray.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                    FilePathXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.BloodSpray,
-                        errorMask: errorMask));
+                        item: item._BloodSpray,
+                        errorMask: errorMask);
                     break;
                 case "BloodDecal":
-                    item._BloodDecal.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                    FilePathXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.BloodDecal,
-                        errorMask: errorMask));
+                        item: item._BloodDecal,
+                        errorMask: errorMask);
                     break;
                 case "InheritsSoundFrom":
-                    item.InheritsSoundFrom_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.InheritsSoundFrom,
-                        errorMask: errorMask));
+                        item: item.InheritsSoundFrom_Property,
+                        errorMask: errorMask);
                     break;
                 case "Sounds":
-                    item._Sounds.SetIfSucceeded(ListXmlTranslation<CreatureSound, MaskItem<Exception, CreatureSound_ErrorMask>>.Instance.Parse(
+                    ListXmlTranslation<CreatureSound>.Instance.ParseInto(
                         root: root,
+                        item: item._Sounds,
                         fieldIndex: (int)Creature_FieldIndex.Sounds,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, CreatureSound_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiXmlTranslation<CreatureSound, CreatureSound_ErrorMask>.Instance.Parse(
-                                root: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: LoquiXmlTranslation<CreatureSound>.Instance.Parse);
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -1736,8 +1737,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -1746,26 +1747,29 @@ namespace Mutagen.Bethesda.Oblivion
             out Creature_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (Creature Object, Creature_ErrorMask ErrorMask) Create_Binary(
+        public static Creature Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            Creature_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
+            return UtilityTranslation.MajorRecordParse<Creature, Creature_FieldIndex>(
+                record: new Creature(),
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Creature_ErrorMask()) : default(Func<Creature_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+                errorMask: errorMask,
+                recType: Creature_Registration.CREA_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         public static Creature Create_Binary(string path)
@@ -1893,25 +1897,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static Creature Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<Creature_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            return UtilityTranslation.MajorRecordParse<Creature, Creature_ErrorMask, Creature_FieldIndex>(
-                record: new Creature(),
-                frame: frame,
-                errorMask: errorMask,
-                recType: Creature_Registration.CREA_HEADER,
-                recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
-        }
-
         protected static void Fill_Binary_Structs(
             Creature item,
             MutagenFrame frame,
-            Func<Creature_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             NamedMajorRecord.Fill_Binary_Structs(
                 item: item,
@@ -1922,7 +1911,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<Creature_FieldIndex?> Fill_Binary_RecordTypes(
             Creature item,
             MutagenFrame frame,
-            Func<Creature_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -1932,348 +1921,335 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    LoquiBinaryTranslation<Model>.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)Creature_FieldIndex.Model,
-                        errorMask: errorMask));
+                        errorMask: errorMask,
+                        item: item._Model);
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Model);
                 case "CNTO":
-                    var ItemstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry, MaskItem<Exception, ItemEntry_ErrorMask>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Creature_Registration.CNTO_HEADER,
+                        item: item._Items,
                         fieldIndex: (int)Creature_FieldIndex.Items,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, ItemEntry_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiBinaryTranslation<ItemEntry, ItemEntry_ErrorMask>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    item._Items.SetIfSucceeded(ItemstryGet);
+                        transl: LoquiBinaryTranslation<ItemEntry>.Instance.Parse);
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Items);
                 case "SPLO":
-                    var SpellstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>, Exception>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Creature_Registration.SPLO_HEADER,
+                        item: item._Spells,
                         fieldIndex: (int)Creature_FieldIndex.Spells,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            r.Position += Constants.SUBRECORD_LENGTH;
-                            return Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                                r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<Spell>(o));
-                        }
-                        );
-                    item._Spells.SetIfSucceeded(SpellstryGet);
+                        transl: FormIDBinaryTranslation.Instance.Parse);
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Spells);
                 case "NIFZ":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var ModelstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<String, Exception>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._Models,
                         fieldIndex: (int)Creature_FieldIndex.Models,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                                r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask,
-                                parseWhole: false);
-                        }
-                        );
-                    item._Models.SetIfSucceeded(ModelstryGet);
+                        transl: StringBinaryTranslation.Instance.Parse);
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Models);
                 case "NIFT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var NIFTtryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.ParseInto(
                         frame.SpawnWithLength(contentLength),
+                        item: item._NIFT,
                         fieldIndex: (int)Creature_FieldIndex.NIFT,
                         errorMask: errorMask);
-                    item._NIFT.SetIfSucceeded(NIFTtryGet);
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.NIFT);
                 case "ACBS":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureFlag>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureFlag>.Instance.ParseInto(
                             frame: dataFrame.SpawnWithLength(4),
+                            item: item._Flags,
                             fieldIndex: (int)Creature_FieldIndex.Flags,
-                            errorMask: errorMask));
-                        item._BaseSpellPoints.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._BaseSpellPoints,
                             fieldIndex: (int)Creature_FieldIndex.BaseSpellPoints,
-                            errorMask: errorMask));
-                        item._Fatigue.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Fatigue,
                             fieldIndex: (int)Creature_FieldIndex.Fatigue,
-                            errorMask: errorMask));
-                        item._BarterGold.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._BarterGold,
                             fieldIndex: (int)Creature_FieldIndex.BarterGold,
-                            errorMask: errorMask));
-                        item._LevelOffset.SetIfSucceeded(Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._LevelOffset,
                             fieldIndex: (int)Creature_FieldIndex.LevelOffset,
-                            errorMask: errorMask));
-                        item._CalcMin.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._CalcMin,
                             fieldIndex: (int)Creature_FieldIndex.CalcMin,
-                            errorMask: errorMask));
-                        item._CalcMax.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._CalcMax,
                             fieldIndex: (int)Creature_FieldIndex.CalcMax,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
                     }
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.CalcMax);
                 case "SNAM":
-                    var FactionstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement, MaskItem<Exception, RankPlacement_ErrorMask>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Creature_Registration.SNAM_HEADER,
+                        item: item._Factions,
                         fieldIndex: (int)Creature_FieldIndex.Factions,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, RankPlacement_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiBinaryTranslation<RankPlacement, RankPlacement_ErrorMask>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    item._Factions.SetIfSucceeded(FactionstryGet);
+                        transl: LoquiBinaryTranslation<RankPlacement>.Instance.Parse);
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Factions);
                 case "INAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.DeathItem_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item.DeathItem_Property,
                         fieldIndex: (int)Creature_FieldIndex.DeathItem,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.DeathItem);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item.Script_Property,
                         fieldIndex: (int)Creature_FieldIndex.Script,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Script);
                 case "AIDT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Aggression.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Aggression,
                             fieldIndex: (int)Creature_FieldIndex.Aggression,
-                            errorMask: errorMask));
-                        item._Confidence.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Confidence,
                             fieldIndex: (int)Creature_FieldIndex.Confidence,
-                            errorMask: errorMask));
-                        item._EnergyLevel.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._EnergyLevel,
                             fieldIndex: (int)Creature_FieldIndex.EnergyLevel,
-                            errorMask: errorMask));
-                        item._Responsibility.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Responsibility,
                             fieldIndex: (int)Creature_FieldIndex.Responsibility,
-                            errorMask: errorMask));
-                        item._BuySellServices.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.ParseInto(
                             frame: dataFrame.SpawnWithLength(4),
+                            item: item._BuySellServices,
                             fieldIndex: (int)Creature_FieldIndex.BuySellServices,
-                            errorMask: errorMask));
-                        item._Teaches.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.ParseInto(
                             frame: dataFrame.SpawnWithLength(1),
+                            item: item._Teaches,
                             fieldIndex: (int)Creature_FieldIndex.Teaches,
-                            errorMask: errorMask));
-                        item._MaximumTrainingLevel.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._MaximumTrainingLevel,
                             fieldIndex: (int)Creature_FieldIndex.MaximumTrainingLevel,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
                         dataFrame.SetPosition(dataFrame.Position + 2);
                     }
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.MaximumTrainingLevel);
                 case "PKID":
-                    var AIPackagestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<AIPackage>, Exception>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<AIPackage>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Creature_Registration.PKID_HEADER,
+                        item: item._AIPackages,
                         fieldIndex: (int)Creature_FieldIndex.AIPackages,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            r.Position += Constants.SUBRECORD_LENGTH;
-                            return Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                                r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<AIPackage>(o));
-                        }
-                        );
-                    item._AIPackages.SetIfSucceeded(AIPackagestryGet);
+                        transl: FormIDBinaryTranslation.Instance.Parse);
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.AIPackages);
                 case "KFFZ":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var AnimationstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<String, Exception>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._Animations,
                         fieldIndex: (int)Creature_FieldIndex.Animations,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                                r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask,
-                                parseWhole: false);
-                        }
-                        );
-                    item._Animations.SetIfSucceeded(AnimationstryGet);
+                        transl: StringBinaryTranslation.Instance.Parse);
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Animations);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._CreatureType.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureTypeEnum>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureTypeEnum>.Instance.ParseInto(
                             frame: dataFrame.SpawnWithLength(1),
+                            item: item._CreatureType,
                             fieldIndex: (int)Creature_FieldIndex.CreatureType,
-                            errorMask: errorMask));
-                        item._CombatSKill.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._CombatSKill,
                             fieldIndex: (int)Creature_FieldIndex.CombatSKill,
-                            errorMask: errorMask));
-                        item._MagicSKill.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._MagicSKill,
                             fieldIndex: (int)Creature_FieldIndex.MagicSKill,
-                            errorMask: errorMask));
-                        item._StealthSKill.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._StealthSKill,
                             fieldIndex: (int)Creature_FieldIndex.StealthSKill,
-                            errorMask: errorMask));
-                        item._SoulLevel.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.ParseInto(
                             frame: dataFrame.SpawnWithLength(2),
+                            item: item._SoulLevel,
                             fieldIndex: (int)Creature_FieldIndex.SoulLevel,
-                            errorMask: errorMask));
-                        item._Health.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Health,
                             fieldIndex: (int)Creature_FieldIndex.Health,
-                            errorMask: errorMask));
-                        item._AttackDamage.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._AttackDamage,
                             fieldIndex: (int)Creature_FieldIndex.AttackDamage,
-                            errorMask: errorMask));
-                        item._Strength.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Strength,
                             fieldIndex: (int)Creature_FieldIndex.Strength,
-                            errorMask: errorMask));
-                        item._Intelligence.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Intelligence,
                             fieldIndex: (int)Creature_FieldIndex.Intelligence,
-                            errorMask: errorMask));
-                        item._Willpower.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Willpower,
                             fieldIndex: (int)Creature_FieldIndex.Willpower,
-                            errorMask: errorMask));
-                        item._Agility.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Agility,
                             fieldIndex: (int)Creature_FieldIndex.Agility,
-                            errorMask: errorMask));
-                        item._Speed.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Speed,
                             fieldIndex: (int)Creature_FieldIndex.Speed,
-                            errorMask: errorMask));
-                        item._Endurance.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Endurance,
                             fieldIndex: (int)Creature_FieldIndex.Endurance,
-                            errorMask: errorMask));
-                        item._Personality.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Personality,
                             fieldIndex: (int)Creature_FieldIndex.Personality,
-                            errorMask: errorMask));
-                        item._Luck.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Luck,
                             fieldIndex: (int)Creature_FieldIndex.Luck,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
                     }
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Luck);
                 case "RNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._AttackReach.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._AttackReach,
                         fieldIndex: (int)Creature_FieldIndex.AttackReach,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.AttackReach);
                 case "ZNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.CombatStyle_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item.CombatStyle_Property,
                         fieldIndex: (int)Creature_FieldIndex.CombatStyle,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.CombatStyle);
                 case "TNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._TurningSpeed.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._TurningSpeed,
                         fieldIndex: (int)Creature_FieldIndex.TurningSpeed,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.TurningSpeed);
                 case "BNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._BaseScale.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._BaseScale,
                         fieldIndex: (int)Creature_FieldIndex.BaseScale,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.BaseScale);
                 case "WNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._FootWeight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._FootWeight,
                         fieldIndex: (int)Creature_FieldIndex.FootWeight,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.FootWeight);
                 case "NAM0":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._BloodSpray.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._BloodSpray,
                         fieldIndex: (int)Creature_FieldIndex.BloodSpray,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.BloodSpray);
                 case "NAM1":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._BloodDecal.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._BloodDecal,
                         fieldIndex: (int)Creature_FieldIndex.BloodDecal,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.BloodDecal);
                 case "CSCR":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.InheritsSoundFrom_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item.InheritsSoundFrom_Property,
                         fieldIndex: (int)Creature_FieldIndex.InheritsSoundFrom,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.InheritsSoundFrom);
                 case "CSDT":
                 case "CSDI":
                 case "CSDC":
-                    var SoundstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<CreatureSound, MaskItem<Exception, CreatureSound_ErrorMask>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<CreatureSound>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: CreatureSound_Registration.TriggeringRecordTypes,
+                        item: item._Sounds,
                         fieldIndex: (int)Creature_FieldIndex.Sounds,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, CreatureSound_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiBinaryTranslation<CreatureSound, CreatureSound_ErrorMask>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    item._Sounds.SetIfSucceeded(SoundstryGet);
+                        transl: LoquiBinaryTranslation<CreatureSound>.Instance.Parse);
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Sounds);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
@@ -2361,24 +2337,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            Creature_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Creature_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             CreatureCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            ICreatureGetter rhs,
+            ErrorMaskBuilder errorMask,
+            Creature_CopyMask copyMask = null,
+            ICreatureGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            CreatureCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -4022,8 +4006,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICreature item,
             ICreatureGetter rhs,
             ICreatureGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             Creature_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -4031,12 +4014,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item,
                 rhs,
                 def,
-                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -4054,15 +4037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.Model,
                                         rhs: rhs.Model,
                                         def: def?.Model,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new Model_ErrorMask();
-                                            baseMask.SetNthMask((int)Creature_FieldIndex.Model, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.Model.Specific,
                                         cmds: cmds);
                                     return r;
@@ -4079,13 +4054,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.Model, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Items.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.Items);
                 try
                 {
                     item.Items.SetToWithDefault(
@@ -4111,13 +4091,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.Items, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Spells != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.Spells);
                 try
                 {
                     item.Spells.SetToWithDefault(
@@ -4126,13 +4111,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.Spells, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Models != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.Models);
                 try
                 {
                     item.Models.SetToWithDefault(
@@ -4141,13 +4131,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.Models, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.NIFT ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.NIFT);
                 try
                 {
                     item.NIFT_Property.SetToWithDefault(
@@ -4156,13 +4151,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.NIFT, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -4170,13 +4170,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.Flags, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.BaseSpellPoints ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.BaseSpellPoints);
                 try
                 {
                     item.BaseSpellPoints_Property.Set(
@@ -4184,13 +4189,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.BaseSpellPoints, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Fatigue ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.Fatigue);
                 try
                 {
                     item.Fatigue_Property.Set(
@@ -4198,13 +4208,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.Fatigue, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.BarterGold ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.BarterGold);
                 try
                 {
                     item.BarterGold_Property.Set(
@@ -4212,13 +4227,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.BarterGold, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.LevelOffset ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.LevelOffset);
                 try
                 {
                     item.LevelOffset_Property.Set(
@@ -4226,13 +4246,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.LevelOffset, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.CalcMin ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.CalcMin);
                 try
                 {
                     item.CalcMin_Property.Set(
@@ -4240,13 +4265,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.CalcMin, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.CalcMax ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.CalcMax);
                 try
                 {
                     item.CalcMax_Property.Set(
@@ -4254,13 +4284,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.CalcMax, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Factions.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.Factions);
                 try
                 {
                     item.Factions.SetToWithDefault(
@@ -4286,13 +4321,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.Factions, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.DeathItem ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.DeathItem);
                 try
                 {
                     item.DeathItem_Property.SetToWithDefault(
@@ -4301,13 +4341,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.DeathItem, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Script ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.SetToWithDefault(
@@ -4316,13 +4361,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.Script, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Aggression ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.Aggression);
                 try
                 {
                     item.Aggression_Property.Set(
@@ -4330,13 +4380,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.Aggression, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Confidence ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.Confidence);
                 try
                 {
                     item.Confidence_Property.Set(
@@ -4344,13 +4399,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.Confidence, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.EnergyLevel ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.EnergyLevel);
                 try
                 {
                     item.EnergyLevel_Property.Set(
@@ -4358,13 +4418,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.EnergyLevel, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Responsibility ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.Responsibility);
                 try
                 {
                     item.Responsibility_Property.Set(
@@ -4372,13 +4437,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.Responsibility, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.BuySellServices ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.BuySellServices);
                 try
                 {
                     item.BuySellServices_Property.Set(
@@ -4386,13 +4456,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.BuySellServices, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Teaches ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.Teaches);
                 try
                 {
                     item.Teaches_Property.Set(
@@ -4400,13 +4475,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.Teaches, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.MaximumTrainingLevel ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.MaximumTrainingLevel);
                 try
                 {
                     item.MaximumTrainingLevel_Property.Set(
@@ -4414,13 +4494,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.MaximumTrainingLevel, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.AIPackages != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.AIPackages);
                 try
                 {
                     item.AIPackages.SetToWithDefault(
@@ -4429,13 +4514,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.AIPackages, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Animations != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.Animations);
                 try
                 {
                     item.Animations.SetToWithDefault(
@@ -4444,13 +4534,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.Animations, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.CreatureType ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.CreatureType);
                 try
                 {
                     item.CreatureType_Property.Set(
@@ -4458,13 +4553,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.CreatureType, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.CombatSKill ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.CombatSKill);
                 try
                 {
                     item.CombatSKill_Property.Set(
@@ -4472,13 +4572,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.CombatSKill, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.MagicSKill ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.MagicSKill);
                 try
                 {
                     item.MagicSKill_Property.Set(
@@ -4486,13 +4591,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.MagicSKill, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.StealthSKill ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.StealthSKill);
                 try
                 {
                     item.StealthSKill_Property.Set(
@@ -4500,13 +4610,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.StealthSKill, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.SoulLevel ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.SoulLevel);
                 try
                 {
                     item.SoulLevel_Property.Set(
@@ -4514,13 +4629,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.SoulLevel, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Health ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.Health);
                 try
                 {
                     item.Health_Property.Set(
@@ -4528,13 +4648,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.Health, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.AttackDamage ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.AttackDamage);
                 try
                 {
                     item.AttackDamage_Property.Set(
@@ -4542,13 +4667,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.AttackDamage, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Strength ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.Strength);
                 try
                 {
                     item.Strength_Property.Set(
@@ -4556,13 +4686,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.Strength, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Intelligence ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.Intelligence);
                 try
                 {
                     item.Intelligence_Property.Set(
@@ -4570,13 +4705,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.Intelligence, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Willpower ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.Willpower);
                 try
                 {
                     item.Willpower_Property.Set(
@@ -4584,13 +4724,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.Willpower, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Agility ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.Agility);
                 try
                 {
                     item.Agility_Property.Set(
@@ -4598,13 +4743,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.Agility, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Speed ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.Speed);
                 try
                 {
                     item.Speed_Property.Set(
@@ -4612,13 +4762,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.Speed, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Endurance ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.Endurance);
                 try
                 {
                     item.Endurance_Property.Set(
@@ -4626,13 +4781,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.Endurance, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Personality ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.Personality);
                 try
                 {
                     item.Personality_Property.Set(
@@ -4640,13 +4800,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.Personality, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Luck ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.Luck);
                 try
                 {
                     item.Luck_Property.Set(
@@ -4654,13 +4819,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.Luck, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.AttackReach ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.AttackReach);
                 try
                 {
                     item.AttackReach_Property.SetToWithDefault(
@@ -4669,13 +4839,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.AttackReach, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.CombatStyle ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.CombatStyle);
                 try
                 {
                     item.CombatStyle_Property.SetToWithDefault(
@@ -4684,13 +4859,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.CombatStyle, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.TurningSpeed ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.TurningSpeed);
                 try
                 {
                     item.TurningSpeed_Property.SetToWithDefault(
@@ -4699,13 +4879,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.TurningSpeed, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.BaseScale ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.BaseScale);
                 try
                 {
                     item.BaseScale_Property.SetToWithDefault(
@@ -4714,13 +4899,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.BaseScale, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.FootWeight ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.FootWeight);
                 try
                 {
                     item.FootWeight_Property.SetToWithDefault(
@@ -4729,13 +4919,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.FootWeight, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.BloodSpray ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.BloodSpray);
                 try
                 {
                     item.BloodSpray_Property.SetToWithDefault(
@@ -4744,13 +4939,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.BloodSpray, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.BloodDecal ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.BloodDecal);
                 try
                 {
                     item.BloodDecal_Property.SetToWithDefault(
@@ -4759,13 +4959,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.BloodDecal, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.InheritsSoundFrom ?? true)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.InheritsSoundFrom);
                 try
                 {
                     item.InheritsSoundFrom_Property.SetToWithDefault(
@@ -4774,13 +4979,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.InheritsSoundFrom, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Sounds.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Creature_FieldIndex.Sounds);
                 try
                 {
                     item.Sounds.SetToWithDefault(
@@ -4806,9 +5016,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Creature_FieldIndex.Sounds, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -5991,449 +6205,434 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Creature_ErrorMask errorMask,
             string name = null)
         {
-            Creature_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Creature_ErrorMask()) : default(Func<Creature_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             ICreatureGetter item,
-            Func<Creature_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Creature");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Creature");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Creature");
-                }
-                if (item.Model_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.Model_Property,
-                        name: nameof(item.Model),
-                        fieldIndex: (int)Creature_FieldIndex.Model,
-                        errorMask: errorMask);
-                }
-                if (item.Items.HasBeenSet)
-                {
-                    ListXmlTranslation<ItemEntry, MaskItem<Exception, ItemEntry_ErrorMask>>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Items),
-                        item: item.Items,
-                        fieldIndex: (int)Creature_FieldIndex.Items,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, ItemEntry subItem, bool listDoMasks, out MaskItem<Exception, ItemEntry_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<ItemEntry, ItemEntry_ErrorMask>.Instance.Write(
-                                node: subNode,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                if (item.Spells.HasBeenSet)
-                {
-                    ListXmlTranslation<FormIDSetLink<Spell>, Exception>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Spells),
-                        item: item.Spells,
-                        fieldIndex: (int)Creature_FieldIndex.Spells,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, FormIDSetLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            FormIDXmlTranslation.Instance.Write(
-                                node: subNode,
-                                name: "Item",
-                                item: subItem?.FormID,
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                if (item.Models.HasBeenSet)
-                {
-                    ListXmlTranslation<String, Exception>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Models),
-                        item: item.Models,
-                        fieldIndex: (int)Creature_FieldIndex.Models,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, String subItem, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            StringXmlTranslation.Instance.Write(
-                                node: subNode,
-                                name: "Item",
-                                item: subItem,
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                if (item.NIFT_Property.HasBeenSet)
-                {
-                    ByteArrayXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.NIFT),
-                        item: item.NIFT_Property,
-                        fieldIndex: (int)Creature_FieldIndex.NIFT,
-                        errorMask: errorMask);
-                }
-                EnumXmlTranslation<Creature.CreatureFlag>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Flags),
-                    item: item.Flags_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Flags,
-                    errorMask: errorMask);
-                UInt16XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.BaseSpellPoints),
-                    item: item.BaseSpellPoints_Property,
-                    fieldIndex: (int)Creature_FieldIndex.BaseSpellPoints,
-                    errorMask: errorMask);
-                UInt16XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Fatigue),
-                    item: item.Fatigue_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Fatigue,
-                    errorMask: errorMask);
-                UInt16XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.BarterGold),
-                    item: item.BarterGold_Property,
-                    fieldIndex: (int)Creature_FieldIndex.BarterGold,
-                    errorMask: errorMask);
-                Int16XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.LevelOffset),
-                    item: item.LevelOffset_Property,
-                    fieldIndex: (int)Creature_FieldIndex.LevelOffset,
-                    errorMask: errorMask);
-                UInt16XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.CalcMin),
-                    item: item.CalcMin_Property,
-                    fieldIndex: (int)Creature_FieldIndex.CalcMin,
-                    errorMask: errorMask);
-                UInt16XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.CalcMax),
-                    item: item.CalcMax_Property,
-                    fieldIndex: (int)Creature_FieldIndex.CalcMax,
-                    errorMask: errorMask);
-                if (item.Factions.HasBeenSet)
-                {
-                    ListXmlTranslation<RankPlacement, MaskItem<Exception, RankPlacement_ErrorMask>>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Factions),
-                        item: item.Factions,
-                        fieldIndex: (int)Creature_FieldIndex.Factions,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, RankPlacement subItem, bool listDoMasks, out MaskItem<Exception, RankPlacement_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<RankPlacement, RankPlacement_ErrorMask>.Instance.Write(
-                                node: subNode,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                if (item.DeathItem_Property.HasBeenSet)
-                {
-                    FormIDXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.DeathItem),
-                        item: item.DeathItem?.FormID,
-                        fieldIndex: (int)Creature_FieldIndex.DeathItem,
-                        errorMask: errorMask);
-                }
-                if (item.Script_Property.HasBeenSet)
-                {
-                    FormIDXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Script),
-                        item: item.Script?.FormID,
-                        fieldIndex: (int)Creature_FieldIndex.Script,
-                        errorMask: errorMask);
-                }
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Aggression),
-                    item: item.Aggression_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Aggression,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Confidence),
-                    item: item.Confidence_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Confidence,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.EnergyLevel),
-                    item: item.EnergyLevel_Property,
-                    fieldIndex: (int)Creature_FieldIndex.EnergyLevel,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Responsibility),
-                    item: item.Responsibility_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Responsibility,
-                    errorMask: errorMask);
-                EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.BuySellServices),
-                    item: item.BuySellServices_Property,
-                    fieldIndex: (int)Creature_FieldIndex.BuySellServices,
-                    errorMask: errorMask);
-                EnumXmlTranslation<Skill>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Teaches),
-                    item: item.Teaches_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Teaches,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.MaximumTrainingLevel),
-                    item: item.MaximumTrainingLevel_Property,
-                    fieldIndex: (int)Creature_FieldIndex.MaximumTrainingLevel,
-                    errorMask: errorMask);
-                if (item.AIPackages.HasBeenSet)
-                {
-                    ListXmlTranslation<FormIDSetLink<AIPackage>, Exception>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.AIPackages),
-                        item: item.AIPackages,
-                        fieldIndex: (int)Creature_FieldIndex.AIPackages,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, FormIDSetLink<AIPackage> subItem, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            FormIDXmlTranslation.Instance.Write(
-                                node: subNode,
-                                name: "Item",
-                                item: subItem?.FormID,
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                if (item.Animations.HasBeenSet)
-                {
-                    ListXmlTranslation<String, Exception>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Animations),
-                        item: item.Animations,
-                        fieldIndex: (int)Creature_FieldIndex.Animations,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, String subItem, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            StringXmlTranslation.Instance.Write(
-                                node: subNode,
-                                name: "Item",
-                                item: subItem,
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                EnumXmlTranslation<Creature.CreatureTypeEnum>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.CreatureType),
-                    item: item.CreatureType_Property,
-                    fieldIndex: (int)Creature_FieldIndex.CreatureType,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.CombatSKill),
-                    item: item.CombatSKill_Property,
-                    fieldIndex: (int)Creature_FieldIndex.CombatSKill,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.MagicSKill),
-                    item: item.MagicSKill_Property,
-                    fieldIndex: (int)Creature_FieldIndex.MagicSKill,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.StealthSKill),
-                    item: item.StealthSKill_Property,
-                    fieldIndex: (int)Creature_FieldIndex.StealthSKill,
-                    errorMask: errorMask);
-                EnumXmlTranslation<SoulLevel>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.SoulLevel),
-                    item: item.SoulLevel_Property,
-                    fieldIndex: (int)Creature_FieldIndex.SoulLevel,
-                    errorMask: errorMask);
-                UInt32XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Health),
-                    item: item.Health_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Health,
-                    errorMask: errorMask);
-                UInt16XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.AttackDamage),
-                    item: item.AttackDamage_Property,
-                    fieldIndex: (int)Creature_FieldIndex.AttackDamage,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Strength),
-                    item: item.Strength_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Strength,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Intelligence),
-                    item: item.Intelligence_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Intelligence,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Willpower),
-                    item: item.Willpower_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Willpower,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Agility),
-                    item: item.Agility_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Agility,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Speed),
-                    item: item.Speed_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Speed,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Endurance),
-                    item: item.Endurance_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Endurance,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Personality),
-                    item: item.Personality_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Personality,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Luck),
-                    item: item.Luck_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Luck,
-                    errorMask: errorMask);
-                if (item.AttackReach_Property.HasBeenSet)
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.AttackReach),
-                        item: item.AttackReach_Property,
-                        fieldIndex: (int)Creature_FieldIndex.AttackReach,
-                        errorMask: errorMask);
-                }
-                if (item.CombatStyle_Property.HasBeenSet)
-                {
-                    FormIDXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.CombatStyle),
-                        item: item.CombatStyle?.FormID,
-                        fieldIndex: (int)Creature_FieldIndex.CombatStyle,
-                        errorMask: errorMask);
-                }
-                if (item.TurningSpeed_Property.HasBeenSet)
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.TurningSpeed),
-                        item: item.TurningSpeed_Property,
-                        fieldIndex: (int)Creature_FieldIndex.TurningSpeed,
-                        errorMask: errorMask);
-                }
-                if (item.BaseScale_Property.HasBeenSet)
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.BaseScale),
-                        item: item.BaseScale_Property,
-                        fieldIndex: (int)Creature_FieldIndex.BaseScale,
-                        errorMask: errorMask);
-                }
-                if (item.FootWeight_Property.HasBeenSet)
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.FootWeight),
-                        item: item.FootWeight_Property,
-                        fieldIndex: (int)Creature_FieldIndex.FootWeight,
-                        errorMask: errorMask);
-                }
-                if (item.BloodSpray_Property.HasBeenSet)
-                {
-                    FilePathXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.BloodSpray),
-                        item: item.BloodSpray_Property,
-                        fieldIndex: (int)Creature_FieldIndex.BloodSpray,
-                        errorMask: errorMask);
-                }
-                if (item.BloodDecal_Property.HasBeenSet)
-                {
-                    FilePathXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.BloodDecal),
-                        item: item.BloodDecal_Property,
-                        fieldIndex: (int)Creature_FieldIndex.BloodDecal,
-                        errorMask: errorMask);
-                }
-                if (item.InheritsSoundFrom_Property.HasBeenSet)
-                {
-                    FormIDXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.InheritsSoundFrom),
-                        item: item.InheritsSoundFrom?.FormID,
-                        fieldIndex: (int)Creature_FieldIndex.InheritsSoundFrom,
-                        errorMask: errorMask);
-                }
-                if (item.Sounds.HasBeenSet)
-                {
-                    ListXmlTranslation<CreatureSound, MaskItem<Exception, CreatureSound_ErrorMask>>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Sounds),
-                        item: item.Sounds,
-                        fieldIndex: (int)Creature_FieldIndex.Sounds,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, CreatureSound subItem, bool listDoMasks, out MaskItem<Exception, CreatureSound_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<CreatureSound, CreatureSound_ErrorMask>.Instance.Write(
-                                node: subNode,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Creature");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (item.Model_Property.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                LoquiXmlTranslation<Model>.Instance.Write(
+                    node: elem,
+                    item: item.Model_Property,
+                    name: nameof(item.Model),
+                    fieldIndex: (int)Creature_FieldIndex.Model,
+                    errorMask: errorMask);
+            }
+            if (item.Items.HasBeenSet)
+            {
+                ListXmlTranslation<ItemEntry>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Items),
+                    item: item.Items,
+                    fieldIndex: (int)Creature_FieldIndex.Items,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, ItemEntry subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        LoquiXmlTranslation<ItemEntry>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if (item.Spells.HasBeenSet)
+            {
+                ListXmlTranslation<FormIDSetLink<Spell>>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Spells),
+                    item: item.Spells,
+                    fieldIndex: (int)Creature_FieldIndex.Spells,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, FormIDSetLink<Spell> subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        FormIDXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Item",
+                            item: subItem?.FormID,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if (item.Models.HasBeenSet)
+            {
+                ListXmlTranslation<String>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Models),
+                    item: item.Models,
+                    fieldIndex: (int)Creature_FieldIndex.Models,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, String subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        StringXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Item",
+                            item: subItem,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if (item.NIFT_Property.HasBeenSet)
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.NIFT),
+                    item: item.NIFT_Property,
+                    fieldIndex: (int)Creature_FieldIndex.NIFT,
+                    errorMask: errorMask);
+            }
+            EnumXmlTranslation<Creature.CreatureFlag>.Instance.Write(
+                node: elem,
+                name: nameof(item.Flags),
+                item: item.Flags_Property,
+                fieldIndex: (int)Creature_FieldIndex.Flags,
+                errorMask: errorMask);
+            UInt16XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.BaseSpellPoints),
+                item: item.BaseSpellPoints_Property,
+                fieldIndex: (int)Creature_FieldIndex.BaseSpellPoints,
+                errorMask: errorMask);
+            UInt16XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Fatigue),
+                item: item.Fatigue_Property,
+                fieldIndex: (int)Creature_FieldIndex.Fatigue,
+                errorMask: errorMask);
+            UInt16XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.BarterGold),
+                item: item.BarterGold_Property,
+                fieldIndex: (int)Creature_FieldIndex.BarterGold,
+                errorMask: errorMask);
+            Int16XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.LevelOffset),
+                item: item.LevelOffset_Property,
+                fieldIndex: (int)Creature_FieldIndex.LevelOffset,
+                errorMask: errorMask);
+            UInt16XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.CalcMin),
+                item: item.CalcMin_Property,
+                fieldIndex: (int)Creature_FieldIndex.CalcMin,
+                errorMask: errorMask);
+            UInt16XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.CalcMax),
+                item: item.CalcMax_Property,
+                fieldIndex: (int)Creature_FieldIndex.CalcMax,
+                errorMask: errorMask);
+            if (item.Factions.HasBeenSet)
+            {
+                ListXmlTranslation<RankPlacement>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Factions),
+                    item: item.Factions,
+                    fieldIndex: (int)Creature_FieldIndex.Factions,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, RankPlacement subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        LoquiXmlTranslation<RankPlacement>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if (item.DeathItem_Property.HasBeenSet)
+            {
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.DeathItem),
+                    item: item.DeathItem?.FormID,
+                    fieldIndex: (int)Creature_FieldIndex.DeathItem,
+                    errorMask: errorMask);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Script),
+                    item: item.Script?.FormID,
+                    fieldIndex: (int)Creature_FieldIndex.Script,
+                    errorMask: errorMask);
+            }
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Aggression),
+                item: item.Aggression_Property,
+                fieldIndex: (int)Creature_FieldIndex.Aggression,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Confidence),
+                item: item.Confidence_Property,
+                fieldIndex: (int)Creature_FieldIndex.Confidence,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.EnergyLevel),
+                item: item.EnergyLevel_Property,
+                fieldIndex: (int)Creature_FieldIndex.EnergyLevel,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Responsibility),
+                item: item.Responsibility_Property,
+                fieldIndex: (int)Creature_FieldIndex.Responsibility,
+                errorMask: errorMask);
+            EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Write(
+                node: elem,
+                name: nameof(item.BuySellServices),
+                item: item.BuySellServices_Property,
+                fieldIndex: (int)Creature_FieldIndex.BuySellServices,
+                errorMask: errorMask);
+            EnumXmlTranslation<Skill>.Instance.Write(
+                node: elem,
+                name: nameof(item.Teaches),
+                item: item.Teaches_Property,
+                fieldIndex: (int)Creature_FieldIndex.Teaches,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.MaximumTrainingLevel),
+                item: item.MaximumTrainingLevel_Property,
+                fieldIndex: (int)Creature_FieldIndex.MaximumTrainingLevel,
+                errorMask: errorMask);
+            if (item.AIPackages.HasBeenSet)
+            {
+                ListXmlTranslation<FormIDSetLink<AIPackage>>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.AIPackages),
+                    item: item.AIPackages,
+                    fieldIndex: (int)Creature_FieldIndex.AIPackages,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, FormIDSetLink<AIPackage> subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        FormIDXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Item",
+                            item: subItem?.FormID,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if (item.Animations.HasBeenSet)
+            {
+                ListXmlTranslation<String>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Animations),
+                    item: item.Animations,
+                    fieldIndex: (int)Creature_FieldIndex.Animations,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, String subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        StringXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Item",
+                            item: subItem,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            EnumXmlTranslation<Creature.CreatureTypeEnum>.Instance.Write(
+                node: elem,
+                name: nameof(item.CreatureType),
+                item: item.CreatureType_Property,
+                fieldIndex: (int)Creature_FieldIndex.CreatureType,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.CombatSKill),
+                item: item.CombatSKill_Property,
+                fieldIndex: (int)Creature_FieldIndex.CombatSKill,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.MagicSKill),
+                item: item.MagicSKill_Property,
+                fieldIndex: (int)Creature_FieldIndex.MagicSKill,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.StealthSKill),
+                item: item.StealthSKill_Property,
+                fieldIndex: (int)Creature_FieldIndex.StealthSKill,
+                errorMask: errorMask);
+            EnumXmlTranslation<SoulLevel>.Instance.Write(
+                node: elem,
+                name: nameof(item.SoulLevel),
+                item: item.SoulLevel_Property,
+                fieldIndex: (int)Creature_FieldIndex.SoulLevel,
+                errorMask: errorMask);
+            UInt32XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Health),
+                item: item.Health_Property,
+                fieldIndex: (int)Creature_FieldIndex.Health,
+                errorMask: errorMask);
+            UInt16XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.AttackDamage),
+                item: item.AttackDamage_Property,
+                fieldIndex: (int)Creature_FieldIndex.AttackDamage,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Strength),
+                item: item.Strength_Property,
+                fieldIndex: (int)Creature_FieldIndex.Strength,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Intelligence),
+                item: item.Intelligence_Property,
+                fieldIndex: (int)Creature_FieldIndex.Intelligence,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Willpower),
+                item: item.Willpower_Property,
+                fieldIndex: (int)Creature_FieldIndex.Willpower,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Agility),
+                item: item.Agility_Property,
+                fieldIndex: (int)Creature_FieldIndex.Agility,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Speed),
+                item: item.Speed_Property,
+                fieldIndex: (int)Creature_FieldIndex.Speed,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Endurance),
+                item: item.Endurance_Property,
+                fieldIndex: (int)Creature_FieldIndex.Endurance,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Personality),
+                item: item.Personality_Property,
+                fieldIndex: (int)Creature_FieldIndex.Personality,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Luck),
+                item: item.Luck_Property,
+                fieldIndex: (int)Creature_FieldIndex.Luck,
+                errorMask: errorMask);
+            if (item.AttackReach_Property.HasBeenSet)
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.AttackReach),
+                    item: item.AttackReach_Property,
+                    fieldIndex: (int)Creature_FieldIndex.AttackReach,
+                    errorMask: errorMask);
+            }
+            if (item.CombatStyle_Property.HasBeenSet)
+            {
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.CombatStyle),
+                    item: item.CombatStyle?.FormID,
+                    fieldIndex: (int)Creature_FieldIndex.CombatStyle,
+                    errorMask: errorMask);
+            }
+            if (item.TurningSpeed_Property.HasBeenSet)
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.TurningSpeed),
+                    item: item.TurningSpeed_Property,
+                    fieldIndex: (int)Creature_FieldIndex.TurningSpeed,
+                    errorMask: errorMask);
+            }
+            if (item.BaseScale_Property.HasBeenSet)
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.BaseScale),
+                    item: item.BaseScale_Property,
+                    fieldIndex: (int)Creature_FieldIndex.BaseScale,
+                    errorMask: errorMask);
+            }
+            if (item.FootWeight_Property.HasBeenSet)
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.FootWeight),
+                    item: item.FootWeight_Property,
+                    fieldIndex: (int)Creature_FieldIndex.FootWeight,
+                    errorMask: errorMask);
+            }
+            if (item.BloodSpray_Property.HasBeenSet)
+            {
+                FilePathXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.BloodSpray),
+                    item: item.BloodSpray_Property,
+                    fieldIndex: (int)Creature_FieldIndex.BloodSpray,
+                    errorMask: errorMask);
+            }
+            if (item.BloodDecal_Property.HasBeenSet)
+            {
+                FilePathXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.BloodDecal),
+                    item: item.BloodDecal_Property,
+                    fieldIndex: (int)Creature_FieldIndex.BloodDecal,
+                    errorMask: errorMask);
+            }
+            if (item.InheritsSoundFrom_Property.HasBeenSet)
+            {
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.InheritsSoundFrom),
+                    item: item.InheritsSoundFrom?.FormID,
+                    fieldIndex: (int)Creature_FieldIndex.InheritsSoundFrom,
+                    errorMask: errorMask);
+            }
+            if (item.Sounds.HasBeenSet)
+            {
+                ListXmlTranslation<CreatureSound>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Sounds),
+                    item: item.Sounds,
+                    fieldIndex: (int)Creature_FieldIndex.Sounds,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, CreatureSound subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        LoquiXmlTranslation<CreatureSound>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            errorMask: listSubMask);
+                    }
+                    );
             }
         }
         #endregion
@@ -6449,43 +6648,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out Creature_ErrorMask errorMask)
         {
-            Creature_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Creature_ErrorMask()) : default(Func<Creature_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             Creature item,
             RecordTypeConverter recordTypeConverter,
-            Func<Creature_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: Creature_Registration.CREA_HEADER,
+                type: ObjectType.Record))
             {
-                using (HeaderExport.ExportHeader(
+                MajorRecordCommon.Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: Creature_Registration.CREA_HEADER,
-                    type: ObjectType.Record))
-                {
-                    MajorRecordCommon.Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                    Write_Binary_RecordTypes(
-                        item: item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -6494,63 +6685,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Creature item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<Creature_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             NamedMajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
+            LoquiBinaryTranslation<Model>.Instance.Write(
                 writer: writer,
                 item: item.Model_Property,
                 fieldIndex: (int)Creature_FieldIndex.Model,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry, MaskItem<Exception, ItemEntry_ErrorMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry>.Instance.Write(
                 writer: writer,
-                item: item.Items,
+                items: item.Items,
                 fieldIndex: (int)Creature_FieldIndex.Items,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, ItemEntry subItem, bool listDoMasks, out MaskItem<Exception, ItemEntry_ErrorMask> listSubMask) =>
-                {
-                    LoquiBinaryTranslation<ItemEntry, ItemEntry_ErrorMask>.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>, Exception>.Instance.Write(
+                transl: LoquiBinaryTranslation<ItemEntry>.Instance.Write);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>>.Instance.Write(
                 writer: writer,
-                item: item.Spells,
+                items: item.Spells,
                 fieldIndex: (int)Creature_FieldIndex.Spells,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, FormIDSetLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
-                {
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask,
-                        header: recordTypeConverter.ConvertToCustom(Creature_Registration.SPLO_HEADER),
-                        nullable: false);
-                }
-                );
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<String, Exception>.Instance.Write(
+                transl: FormIDBinaryTranslation.Instance.Write);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Write(
                 writer: writer,
-                item: item.Models,
+                items: item.Models,
                 fieldIndex: (int)Creature_FieldIndex.Models,
                 recordType: Creature_Registration.NIFZ_HEADER,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, String subItem, bool listDoMasks, out Exception listSubMask) =>
-                {
-                    Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                transl: StringBinaryTranslation.Instance.Write);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.NIFT_Property,
@@ -6597,20 +6762,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Creature_FieldIndex.CalcMax,
                     errorMask: errorMask);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement, MaskItem<Exception, RankPlacement_ErrorMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement>.Instance.Write(
                 writer: writer,
-                item: item.Factions,
+                items: item.Factions,
                 fieldIndex: (int)Creature_FieldIndex.Factions,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, RankPlacement subItem, bool listDoMasks, out MaskItem<Exception, RankPlacement_ErrorMask> listSubMask) =>
-                {
-                    LoquiBinaryTranslation<RankPlacement, RankPlacement_ErrorMask>.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                transl: LoquiBinaryTranslation<RankPlacement>.Instance.Write);
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DeathItem_Property,
@@ -6666,37 +6823,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask);
                 writer.WriteZeros(2);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<AIPackage>, Exception>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<AIPackage>>.Instance.Write(
                 writer: writer,
-                item: item.AIPackages,
+                items: item.AIPackages,
                 fieldIndex: (int)Creature_FieldIndex.AIPackages,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, FormIDSetLink<AIPackage> subItem, bool listDoMasks, out Exception listSubMask) =>
-                {
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask,
-                        header: recordTypeConverter.ConvertToCustom(Creature_Registration.PKID_HEADER),
-                        nullable: false);
-                }
-                );
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<String, Exception>.Instance.Write(
+                transl: FormIDBinaryTranslation.Instance.Write);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Write(
                 writer: writer,
-                item: item.Animations,
+                items: item.Animations,
                 fieldIndex: (int)Creature_FieldIndex.Animations,
                 recordType: Creature_Registration.KFFZ_HEADER,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, String subItem, bool listDoMasks, out Exception listSubMask) =>
-                {
-                    Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                transl: StringBinaryTranslation.Instance.Write);
             using (HeaderExport.ExportSubRecordHeader(writer, Creature_Registration.DATA_HEADER))
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureTypeEnum>.Instance.Write(
@@ -6833,20 +6972,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Creature_Registration.CSCR_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<CreatureSound, MaskItem<Exception, CreatureSound_ErrorMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<CreatureSound>.Instance.Write(
                 writer: writer,
-                item: item.Sounds,
+                items: item.Sounds,
                 fieldIndex: (int)Creature_FieldIndex.Sounds,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, CreatureSound subItem, bool listDoMasks, out MaskItem<Exception, CreatureSound_ErrorMask> listSubMask) =>
-                {
-                    LoquiBinaryTranslation<CreatureSound, CreatureSound_ErrorMask>.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                transl: LoquiBinaryTranslation<CreatureSound>.Instance.Write);
         }
 
         #endregion
@@ -8609,6 +8740,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static Creature_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

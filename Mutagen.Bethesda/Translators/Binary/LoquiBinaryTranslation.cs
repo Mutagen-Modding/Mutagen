@@ -1,4 +1,5 @@
 ﻿using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Noggog.Notifying;
 using Noggog.Utility;
@@ -13,181 +14,145 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public class LoquiBinaryTranslation<T, M> : IBinaryTranslation<T, M>
+    public class LoquiBinaryTranslation<T> : IBinaryTranslation<T>
         where T : ILoquiObjectGetter
-        where M : class, IErrorMask, new()
     {
-        public static readonly LoquiBinaryTranslation<T, M> Instance = new LoquiBinaryTranslation<T, M>();
+        public static readonly LoquiBinaryTranslation<T> Instance = new LoquiBinaryTranslation<T>();
         private static readonly ILoquiRegistration Registration = LoquiRegistration.GetRegister(typeof(T));
-        public delegate T CREATE_FUNC(MutagenFrame reader, RecordTypeConverter recordTypeConverter, bool doMasks, out M errorMask);
+        public delegate T CREATE_FUNC(MutagenFrame reader, RecordTypeConverter recordTypeConverter, ErrorMaskBuilder errorMask);
         public static readonly Lazy<CREATE_FUNC> CREATE = new Lazy<CREATE_FUNC>(GetCreateFunc);
-        public delegate void WRITE_FUNC(MutagenWriter writer, T item, RecordTypeConverter recordTypeConverter, bool doMasks, out M errorMask);
+        public delegate void WRITE_FUNC(MutagenWriter writer, T item, RecordTypeConverter recordTypeConverter, ErrorMaskBuilder errorMask);
         public static readonly Lazy<WRITE_FUNC> WRITE = new Lazy<WRITE_FUNC>(GetWriteFunc);
 
         private IEnumerable<KeyValuePair<ushort, object>> EnumerateObjects(
             ILoquiRegistration registration,
             MutagenFrame reader,
             bool skipProtected,
-            bool doMasks,
-            Func<IErrorMask> mask)
+            ErrorMaskBuilder errorMask)
         {
             var ret = new List<KeyValuePair<ushort, object>>();
-            try
-            {
-                throw new NotImplementedException();
-            }
-            catch (Exception ex)
-            {
-                if (doMasks)
-                {
-                    mask().Overall = ex;
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            errorMask.ReportExceptionOrThrow(
+                new NotImplementedException());
             return ret;
-        }
-
-        public void CopyIn<C>(
-            MutagenFrame frame,
-            C item,
-            bool skipProtected,
-            bool doMasks,
-            out M mask,
-            NotifyingFireParameters cmds)
-            where C : T, ILoquiObject
-        {
-            var maskObj = default(M);
-            Func<IErrorMask> maskGet;
-            if (doMasks)
-            {
-                maskGet = () =>
-                {
-                    if (maskObj == null)
-                    {
-                        maskObj = new M();
-                    }
-                    return maskObj;
-                };
-            }
-            else
-            {
-                maskGet = null;
-            }
-            var fields = EnumerateObjects(
-                item.Registration,
-                frame,
-                skipProtected,
-                doMasks,
-                maskGet);
-            var copyIn = LoquiRegistration.GetCopyInFunc<C>();
-            copyIn(fields, item);
-            mask = maskObj;
         }
 
         #region Parse
         public static CREATE_FUNC GetCreateFunc()
         {
             var tType = typeof(T);
-            var mType = typeof(M);
             var options = tType.GetMethods()
                 .Where((methodInfo) => methodInfo.Name.Equals("Create_Binary"))
                 .Where((methodInfo) => methodInfo.IsStatic
                     && methodInfo.IsPublic)
-                .Where((methodInfo) => methodInfo.ReturnType.InheritsFrom(typeof(ValueTuple<,>)))
-                .Where((methodInfo) => methodInfo.ReturnType.GenericTypeArguments[0].Equals(tType))
+                .Where((methodInfo) => methodInfo.ReturnType.Equals(tType))
+                .Where((methodInfo) => methodInfo.GetParameters().Length == 3)
+                .Where((methodInfo) => methodInfo.GetParameters()[0].ParameterType.Equals(typeof(MutagenFrame)))
+                .Where((methodInfo) => methodInfo.GetParameters()[1].ParameterType.Equals(typeof(RecordTypeConverter)))
+                .Where((methodInfo) => methodInfo.GetParameters()[2].ParameterType.Equals(typeof(ErrorMaskBuilder)))
                 .ToArray();
             var method = options
-                .Where((methodInfo) => mType.InheritsFrom(methodInfo.ReturnType.GenericTypeArguments[1]))
-                .Where((methodInfo) => methodInfo.ReturnType.Equals(typeof(ValueTuple<T, M>)))
                 .FirstOrDefault();
             if (method != null)
             {
-                var func = DelegateBuilder.BuildDelegate<Func<MutagenFrame, RecordTypeConverter, bool, (T item, M mask)>>(method);
-                return (MutagenFrame reader, RecordTypeConverter converterDictionary, bool doMasks, out M errorMask) =>
-                {
-                    var ret = func(reader, converterDictionary, doMasks);
-                    errorMask = ret.mask;
-                    return ret.item;
-                };
+                return DelegateBuilder.BuildDelegate<CREATE_FUNC>(method);
             }
-            method = options
-                .Where((methodInfo) => typeof(M).InheritsFrom(methodInfo.ReturnType.GenericTypeArguments[1], couldInherit: true)).First();
-            var f = DelegateBuilder.BuildGenericDelegate<Func<MutagenFrame, RecordTypeConverter, bool, (T item, M mask)>>(tType, new Type[] { mType.GenericTypeArguments[0] }, method);
-            return (MutagenFrame reader, RecordTypeConverter converterDictionary, bool doMasks, out M errorMask) =>
+            else
             {
-                var ret = f(reader, converterDictionary, doMasks);
-                errorMask = ret.mask;
-                return ret.item;
-            };
+                throw new NotImplementedException();
+            }
         }
 
-        [DebuggerStepThrough]
-        public TryGet<T> Parse(
+        public void ParseInto(
             MutagenFrame frame,
-            bool doMasks,
-            out MaskItem<Exception, M> errorMask,
-            RecordTypeConverter recordTypeConverter = null)
+            int fieldIndex,
+            IHasItem<T> item,
+            ErrorMaskBuilder errorMask)
         {
             try
             {
-                var ret = TryGet<T>.Succeed(CREATE.Value(
-                    reader: frame,
-                    doMasks: doMasks,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: out var subMask));
-                errorMask = subMask == null ? null : new MaskItem<Exception, M>(null, subMask);
-                return ret;
+                errorMask?.PushIndex(fieldIndex);
+                if (Parse(
+                    frame,
+                    out T subItem,
+                    errorMask))
+                {
+                    item.Item = subItem;
+                }
+                else
+                {
+                    item.Unset();
+                }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
-                errorMask = new MaskItem<Exception, M>(ex, default(M));
-                return TryGet<T>.Failure;
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
             }
         }
 
         [DebuggerStepThrough]
-        public TryGet<T> Parse<Mask>(
+        public bool Parse(
+            MutagenFrame frame,
+            out T item,
+            ErrorMaskBuilder errorMask)
+        {
+            return Parse(
+                frame: frame,
+                item: out item,
+                errorMask: errorMask,
+                recordTypeConverter: null);
+        }
+
+        public void ParseInto(
             MutagenFrame frame,
             int fieldIndex,
-            Func<Mask> errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-            where Mask : IErrorMask
+            IHasItem<T> item,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter)
         {
-            var ret = this.Parse(
-                frame,
-                errorMask != null,
-                out MaskItem<Exception, M> ex,
-                recordTypeConverter: recordTypeConverter);
-            ErrorMask.HandleErrorMask(
-                errorMask,
-                fieldIndex,
-                ex);
-            return ret;
-        }
-
-        public TryGet<T> Parse(MutagenFrame reader, bool doMasks, out M mask)
-        {
-            var ret = Parse(reader, doMasks, out MaskItem<Exception, M> subMask);
-            if (subMask?.Overall != null)
+            try
             {
-                throw subMask.Overall;
+                errorMask?.PushIndex(fieldIndex);
+                if (Parse(
+                    frame,
+                    out T subItem,
+                    errorMask,
+                    recordTypeConverter))
+                {
+                    item.Item = subItem;
+                }
+                else
+                {
+                    item.Unset();
+                }
             }
-            mask = subMask?.Specific;
-            return ret;
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
         }
 
-        public TryGet<T> Parse(MutagenFrame reader, long length, bool doMasks, out M maskObj)
+        [DebuggerStepThrough]
+        public bool Parse(
+            MutagenFrame frame,
+            out T item,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter)
         {
-            throw new NotImplementedException();
-        }
-
-        public TryGet<T> Parse(MutagenFrame reader, RecordType header, long lengthLength, bool doMasks, out M maskObj)
-        {
-            throw new NotImplementedException();
+            item = CREATE.Value(
+                reader: frame,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+            return true;
         }
         #endregion
 
@@ -200,31 +165,24 @@ namespace Mutagen.Bethesda.Binary
                 .First();
             if (!method.IsGenericMethod)
             {
-                var f = DelegateBuilder.BuildDelegate<Func<T, MutagenWriter, RecordTypeConverter, bool, object>>(method);
-                return (MutagenWriter writer, T item, RecordTypeConverter recordTypeConverter, bool doMasks, out M errorMask) =>
+                var f = DelegateBuilder.BuildDelegate<Action<T, MutagenWriter, RecordTypeConverter, ErrorMaskBuilder>>(method);
+                return (MutagenWriter writer, T item, RecordTypeConverter recordTypeConverter, ErrorMaskBuilder errorMask) =>
                 {
                     if (item == null)
                     {
-                        throw new NullReferenceException("Cannot write for a null item.");
+                        errorMask.ReportExceptionOrThrow(
+                            new NullReferenceException("Cannot write for a null item."));
                     }
-                    errorMask = (M)f(item, writer, recordTypeConverter, doMasks);
+                    f(item, writer, recordTypeConverter, errorMask);
                 };
             }
             else
             {
-                var f = DelegateBuilder.BuildGenericDelegate<Func<T, MutagenWriter, RecordTypeConverter, bool, object>>(typeof(T), new Type[] { typeof(M).GenericTypeArguments[0] }, method);
-                return (MutagenWriter writer, T item, RecordTypeConverter recordTypeConverter, bool doMasks, out M errorMask) =>
-                {
-                    if (item == null)
-                    {
-                        throw new NullReferenceException("Cannot write for a null item.");
-                    }
-                    errorMask = (M)f(item, writer, recordTypeConverter, doMasks);
-                };
+                throw new NotImplementedException();
             }
         }
 
-        void IBinaryTranslation<T, M>.Write(MutagenWriter writer, T item, long length, bool doMasks, out M mask)
+        void IBinaryTranslation<T>.Write(MutagenWriter writer, T item, long length, ErrorMaskBuilder errorMask)
         {
             throw new NotImplementedException();
         }
@@ -232,84 +190,61 @@ namespace Mutagen.Bethesda.Binary
         public void Write(
             MutagenWriter writer,
             T item,
-            bool doMasks,
-            out MaskItem<Exception, M> errorMask,
-            RecordTypeConverter recordTypeConverter = null)
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter)
         {
-            try
-            {
-                WRITE.Value(
-                    writer: writer,
-                    item: item,
-                    recordTypeConverter: recordTypeConverter,
-                    doMasks: doMasks,
-                    errorMask: out var subMask);
-                errorMask = subMask == null ? null : new MaskItem<Exception, M>(null, subMask);
-            }
-            catch (Exception ex)
-            when (doMasks)
-            {
-                errorMask = new MaskItem<Exception, M>(ex, default(M));
-            }
+            WRITE.Value(
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public void Write(
+            MutagenWriter writer,
+            T item,
+            ErrorMaskBuilder errorMask)
+        {
+            WRITE.Value(
+                writer: writer,
+                item: item,
+                recordTypeConverter: null,
+                errorMask: errorMask);
         }
 
         public void Write(
             MutagenWriter writer,
             T item,
             int fieldIndex,
-            Func<M> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             try
             {
+                errorMask?.PushIndex(fieldIndex);
                 WRITE.Value(
                     writer: writer,
                     item: item,
                     recordTypeConverter: recordTypeConverter,
-                    doMasks: errorMask != null,
-                    errorMask: out var subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    fieldIndex,
-                    subMask == null ? null : new MaskItem<Exception, M>(null, subMask));
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (errorMask != null)
             {
-                ErrorMask.HandleException(
-                    errorMask,
-                    fieldIndex,
-                    ex);
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
             }
         }
 
-        public void Write<Mask>(
-            MutagenWriter writer,
-            T item,
-            int fieldIndex,
-            Func<Mask> errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-            where Mask : IErrorMask
-        {
-            this.Write(
-                writer,
-                item,
-                errorMask != null,
-                out var subMask,
-                recordTypeConverter: recordTypeConverter);
-            ErrorMask.HandleErrorMask(
-                errorMask,
-                fieldIndex,
-                subMask);
-        }
-
-        public void Write<Mask>(
+        public void Write(
             MutagenWriter writer,
             IHasBeenSetItemGetter<T> item,
             int fieldIndex,
-            Func<Mask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
-            where Mask : IErrorMask
         {
             if (!item.HasBeenSet) return;
             this.Write(
@@ -320,13 +255,12 @@ namespace Mutagen.Bethesda.Binary
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public void Write<Mask>(
+        public void Write(
             MutagenWriter writer,
             IHasItemGetter<T> item,
             int fieldIndex,
-            Func<Mask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
-            where Mask : IErrorMask
         {
             this.Write(
                 writer,
@@ -340,33 +274,58 @@ namespace Mutagen.Bethesda.Binary
 
     public static class LoquiBinaryTranslationExt
     {
-        [DebuggerStepThrough]
-        public static TryGet<T> Parse<T, M, C>(
-            this LoquiBinaryTranslation<T, M> loqTrans,
+        public static void ParseInto<T, B>(
+            this LoquiBinaryTranslation<T> loquiTrans,
             MutagenFrame frame,
-            bool doMasks,
-            out MaskItem<Exception, C> errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-            where T : ILoquiObjectGetter
-            where C : class
-            where M : class, C, IErrorMask, new()
+            int fieldIndex,
+            IHasItem<B> item,
+            ErrorMaskBuilder errorMask)
+            where T : ILoquiObjectGetter, B
         {
             try
             {
-                var ret = TryGet<T>.Succeed(LoquiBinaryTranslation<T, M>.CREATE.Value(
-                    reader: frame,
-                    doMasks: doMasks,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: out var subMask));
-                errorMask = subMask == null ? null : new MaskItem<Exception, C>(null, subMask);
-                return ret;
+                errorMask?.PushIndex(fieldIndex);
+                if (loquiTrans.Parse(
+                    frame,
+                    out T subItem,
+                    errorMask))
+                {
+                    item.Item = subItem;
+                }
+                else
+                {
+                    item.Unset();
+                }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
-                errorMask = new MaskItem<Exception, C>(ex, default(C));
-                return TryGet<T>.Failure;
+                errorMask.ReportException(ex);
             }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+        [DebuggerStepThrough]
+        public static bool Parse<T, B>(
+            this LoquiBinaryTranslation<T> loquiTrans,
+            MutagenFrame frame,
+            out B item,
+            ErrorMaskBuilder errorMask)
+            where T : ILoquiObjectGetter, B
+        {
+            if (loquiTrans.Parse(
+                frame: frame,
+                item: out T tItem,
+                errorMask: errorMask))
+            {
+                item = tItem;
+                return true;
+            }
+            item = default(B);
+            return false;
         }
     }
 }

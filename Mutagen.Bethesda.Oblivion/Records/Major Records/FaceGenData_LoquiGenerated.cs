@@ -17,6 +17,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
@@ -188,8 +189,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -198,23 +198,37 @@ namespace Mutagen.Bethesda.Oblivion
             out FaceGenData_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = FaceGenData_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (FaceGenData Object, FaceGenData_ErrorMask ErrorMask) Create_XML(
+        public static FaceGenData Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            FaceGenData_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new FaceGenData_ErrorMask()) : default(Func<FaceGenData_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new FaceGenData();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static FaceGenData Create_XML(string path)
@@ -256,12 +270,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<FaceGenData, FaceGenData_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<FaceGenData>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -270,13 +283,14 @@ namespace Mutagen.Bethesda.Oblivion
             out FaceGenData_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<FaceGenData, FaceGenData_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<FaceGenData>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = FaceGenData_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -415,55 +429,34 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static FaceGenData Create_XML_Internal(
-            XElement root,
-            Func<FaceGenData_ErrorMask> errorMask)
-        {
-            var ret = new FaceGenData();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             FaceGenData item,
             XElement root,
             string name,
-            Func<FaceGenData_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "SymmetricGeometry":
-                    item._SymmetricGeometry.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    ByteArrayXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)FaceGenData_FieldIndex.SymmetricGeometry,
-                        errorMask: errorMask));
+                        item: item._SymmetricGeometry,
+                        errorMask: errorMask);
                     break;
                 case "AsymmetricGeometry":
-                    item._AsymmetricGeometry.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    ByteArrayXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
-                        errorMask: errorMask));
+                        item: item._AsymmetricGeometry,
+                        errorMask: errorMask);
                     break;
                 case "SymmetricTexture":
-                    item._SymmetricTexture.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    ByteArrayXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,
-                        errorMask: errorMask));
+                        item: item._SymmetricTexture,
+                        errorMask: errorMask);
                     break;
                 default:
                     break;
@@ -479,8 +472,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -489,26 +482,50 @@ namespace Mutagen.Bethesda.Oblivion
             out FaceGenData_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = FaceGenData_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (FaceGenData Object, FaceGenData_ErrorMask ErrorMask) Create_Binary(
+        public static FaceGenData Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            FaceGenData_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new FaceGenData_ErrorMask()) : default(Func<FaceGenData_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new FaceGenData();
+            try
+            {
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                    FaceGenData_FieldIndex? lastParsed = null;
+                    while (!frame.Complete)
+                    {
+                        var parsed = Fill_Binary_RecordTypes(
+                            item: ret,
+                            frame: frame,
+                            lastParsed: lastParsed,
+                            errorMask: errorMask,
+                            recordTypeConverter: recordTypeConverter);
+                        if (parsed.Failed) break;
+                        lastParsed = parsed.Value;
+                    }
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static FaceGenData Create_Binary(string path)
@@ -636,46 +653,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static FaceGenData Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<FaceGenData_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            var ret = new FaceGenData();
-            try
-            {
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                    FaceGenData_FieldIndex? lastParsed = null;
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            lastParsed: lastParsed,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                        lastParsed = parsed.Value;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_Binary_Structs(
             FaceGenData item,
             MutagenFrame frame,
-            Func<FaceGenData_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
         }
 
@@ -683,7 +664,7 @@ namespace Mutagen.Bethesda.Oblivion
             FaceGenData item,
             MutagenFrame frame,
             FaceGenData_FieldIndex? lastParsed,
-            Func<FaceGenData_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -695,29 +676,29 @@ namespace Mutagen.Bethesda.Oblivion
                 case "FGGS":
                     if (lastParsed.HasValue && lastParsed.Value >= FaceGenData_FieldIndex.SymmetricGeometry) return TryGet<FaceGenData_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var SymmetricGeometrytryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.ParseInto(
                         frame.SpawnWithLength(contentLength),
+                        item: item._SymmetricGeometry,
                         fieldIndex: (int)FaceGenData_FieldIndex.SymmetricGeometry,
                         errorMask: errorMask);
-                    item._SymmetricGeometry.SetIfSucceeded(SymmetricGeometrytryGet);
                     return TryGet<FaceGenData_FieldIndex?>.Succeed(FaceGenData_FieldIndex.SymmetricGeometry);
                 case "FGGA":
                     if (lastParsed.HasValue && lastParsed.Value >= FaceGenData_FieldIndex.AsymmetricGeometry) return TryGet<FaceGenData_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var AsymmetricGeometrytryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.ParseInto(
                         frame.SpawnWithLength(contentLength),
+                        item: item._AsymmetricGeometry,
                         fieldIndex: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
                         errorMask: errorMask);
-                    item._AsymmetricGeometry.SetIfSucceeded(AsymmetricGeometrytryGet);
                     return TryGet<FaceGenData_FieldIndex?>.Succeed(FaceGenData_FieldIndex.AsymmetricGeometry);
                 case "FGTS":
                     if (lastParsed.HasValue && lastParsed.Value >= FaceGenData_FieldIndex.SymmetricTexture) return TryGet<FaceGenData_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var SymmetricTexturetryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.ParseInto(
                         frame.SpawnWithLength(contentLength),
+                        item: item._SymmetricTexture,
                         fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,
                         errorMask: errorMask);
-                    item._SymmetricTexture.SetIfSucceeded(SymmetricTexturetryGet);
                     return TryGet<FaceGenData_FieldIndex?>.Succeed(FaceGenData_FieldIndex.SymmetricTexture);
                 default:
                     return TryGet<FaceGenData_FieldIndex?>.Failure;
@@ -814,24 +795,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            FaceGenData_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new FaceGenData_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             FaceGenDataCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = FaceGenData_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IFaceGenDataGetter rhs,
+            ErrorMaskBuilder errorMask,
+            FaceGenData_CopyMask copyMask = null,
+            IFaceGenDataGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            FaceGenDataCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1178,13 +1167,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFaceGenData item,
             IFaceGenDataGetter rhs,
             IFaceGenDataGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             FaceGenData_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.SymmetricGeometry ?? true)
             {
+                errorMask.PushIndex((int)FaceGenData_FieldIndex.SymmetricGeometry);
                 try
                 {
                     item.SymmetricGeometry_Property.SetToWithDefault(
@@ -1193,13 +1182,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)FaceGenData_FieldIndex.SymmetricGeometry, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.AsymmetricGeometry ?? true)
             {
+                errorMask.PushIndex((int)FaceGenData_FieldIndex.AsymmetricGeometry);
                 try
                 {
                     item.AsymmetricGeometry_Property.SetToWithDefault(
@@ -1208,13 +1202,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)FaceGenData_FieldIndex.AsymmetricGeometry, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.SymmetricTexture ?? true)
             {
+                errorMask.PushIndex((int)FaceGenData_FieldIndex.SymmetricTexture);
                 try
                 {
                     item.SymmetricTexture_Property.SetToWithDefault(
@@ -1223,9 +1222,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)FaceGenData_FieldIndex.SymmetricTexture, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1413,61 +1416,53 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out FaceGenData_ErrorMask errorMask,
             string name = null)
         {
-            FaceGenData_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new FaceGenData_ErrorMask()) : default(Func<FaceGenData_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = FaceGenData_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             IFaceGenDataGetter item,
-            Func<FaceGenData_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.FaceGenData");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.FaceGenData");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.FaceGenData");
-                }
-                if (item.SymmetricGeometry_Property.HasBeenSet)
-                {
-                    ByteArrayXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.SymmetricGeometry),
-                        item: item.SymmetricGeometry_Property,
-                        fieldIndex: (int)FaceGenData_FieldIndex.SymmetricGeometry,
-                        errorMask: errorMask);
-                }
-                if (item.AsymmetricGeometry_Property.HasBeenSet)
-                {
-                    ByteArrayXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.AsymmetricGeometry),
-                        item: item.AsymmetricGeometry_Property,
-                        fieldIndex: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
-                        errorMask: errorMask);
-                }
-                if (item.SymmetricTexture_Property.HasBeenSet)
-                {
-                    ByteArrayXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.SymmetricTexture),
-                        item: item.SymmetricTexture_Property,
-                        fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,
-                        errorMask: errorMask);
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.FaceGenData");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (item.SymmetricGeometry_Property.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.SymmetricGeometry),
+                    item: item.SymmetricGeometry_Property,
+                    fieldIndex: (int)FaceGenData_FieldIndex.SymmetricGeometry,
+                    errorMask: errorMask);
+            }
+            if (item.AsymmetricGeometry_Property.HasBeenSet)
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.AsymmetricGeometry),
+                    item: item.AsymmetricGeometry_Property,
+                    fieldIndex: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
+                    errorMask: errorMask);
+            }
+            if (item.SymmetricTexture_Property.HasBeenSet)
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.SymmetricTexture),
+                    item: item.SymmetricTexture_Property,
+                    fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -1483,34 +1478,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out FaceGenData_ErrorMask errorMask)
         {
-            FaceGenData_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new FaceGenData_ErrorMask()) : default(Func<FaceGenData_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = FaceGenData_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             FaceGenData item,
             RecordTypeConverter recordTypeConverter,
-            Func<FaceGenData_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -1518,7 +1505,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FaceGenData item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<FaceGenData_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -1803,6 +1790,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static FaceGenData_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

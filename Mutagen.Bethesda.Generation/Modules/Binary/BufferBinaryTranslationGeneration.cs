@@ -10,13 +10,17 @@ namespace Mutagen.Bethesda.Generation
 {
     public class BufferBinaryTranslationGeneration : BinaryTranslationGeneration
     {
+        public override string GetTranslatorInstance(TypeGeneration typeGen)
+        {
+            return $"ByteArrayBinaryTranslation.Instance";
+        }
+
         public override void GenerateCopyIn(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             string readerAccessor,
             Accessor itemAccessor,
-            string doMaskAccessor,
             string maskAccessor)
         {
             BufferType zero = typeGen as BufferType;
@@ -30,8 +34,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string readerAccessor,
             bool squashedRepeatedList,
-            Accessor retAccessor,
-            string doMaskAccessor,
+            string retAccessor,
+            Accessor outItemAccessor,
             string maskAccessor)
         {
             if (squashedRepeatedList)
@@ -48,7 +52,6 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string writerAccessor,
             Accessor itemAccessor,
-            string doMaskAccessor,
             string maskAccessor)
         {
             BufferType zero = typeGen as BufferType;

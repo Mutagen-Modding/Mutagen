@@ -20,6 +20,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 
@@ -606,8 +607,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -616,23 +616,37 @@ namespace Mutagen.Bethesda.Oblivion
             out Race_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = Race_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (Race Object, Race_ErrorMask ErrorMask) Create_XML(
+        public static Race Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            Race_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Race_ErrorMask()) : default(Func<Race_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new Race();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static Race Create_XML(string path)
@@ -674,12 +688,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Race, Race_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Race>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -688,13 +701,14 @@ namespace Mutagen.Bethesda.Oblivion
             out Race_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Race, Race_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<Race>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = Race_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -857,221 +871,268 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static Race Create_XML_Internal(
-            XElement root,
-            Func<Race_ErrorMask> errorMask)
-        {
-            var ret = new Race();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             Race item,
             XElement root,
             string name,
-            Func<Race_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Description":
-                    item._Description.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    StringXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Race_FieldIndex.Description,
-                        errorMask: errorMask));
+                        item: item._Description,
+                        errorMask: errorMask);
                     break;
                 case "Spells":
-                    item._Spells.SetIfSucceeded(ListXmlTranslation<FormIDSetLink<Spell>, Exception>.Instance.Parse(
+                    ListXmlTranslation<FormIDSetLink<Spell>>.Instance.ParseInto(
                         root: root,
+                        item: item._Spells,
                         fieldIndex: (int)Race_FieldIndex.Spells,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return FormIDXmlTranslation.Instance.Parse(
-                                r,
-                                nullable: false,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<Spell>(o.Value));
-                        }
-                        ));
+                        transl: FormIDXmlTranslation.Instance.Parse);
                     break;
                 case "Relations":
-                    item._Relations.SetIfSucceeded(ListXmlTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.Parse(
+                    ListXmlTranslation<Relation>.Instance.ParseInto(
                         root: root,
+                        item: item._Relations,
                         fieldIndex: (int)Race_FieldIndex.Relations,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, Relation_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiXmlTranslation<Relation, Relation_ErrorMask>.Instance.Parse(
-                                root: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: LoquiXmlTranslation<Relation>.Instance.Parse);
                     break;
                 case "SkillBoosts":
-                    item._SkillBoosts.SetIfSucceeded(ListXmlTranslation<SkillBoost, MaskItem<Exception, SkillBoost_ErrorMask>>.Instance.Parse(
+                    ListXmlTranslation<SkillBoost>.Instance.ParseInto(
                         root: root,
+                        item: item._SkillBoosts,
                         fieldIndex: (int)Race_FieldIndex.SkillBoosts,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, SkillBoost_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiXmlTranslation<SkillBoost, SkillBoost_ErrorMask>.Instance.Parse(
-                                root: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: LoquiXmlTranslation<SkillBoost>.Instance.Parse);
                     break;
                 case "Fluff":
-                    item._Fluff.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    ByteArrayXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Race_FieldIndex.Fluff,
-                        errorMask: errorMask));
+                        item: item._Fluff,
+                        errorMask: errorMask);
                     break;
                 case "MaleHeight":
-                    item._MaleHeight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    FloatXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Race_FieldIndex.MaleHeight,
-                        errorMask: errorMask));
+                        item: item._MaleHeight,
+                        errorMask: errorMask);
                     break;
                 case "FemaleHeight":
-                    item._FemaleHeight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    FloatXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Race_FieldIndex.FemaleHeight,
-                        errorMask: errorMask));
+                        item: item._FemaleHeight,
+                        errorMask: errorMask);
                     break;
                 case "MaleWeight":
-                    item._MaleWeight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    FloatXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Race_FieldIndex.MaleWeight,
-                        errorMask: errorMask));
+                        item: item._MaleWeight,
+                        errorMask: errorMask);
                     break;
                 case "FemaleWeight":
-                    item._FemaleWeight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    FloatXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Race_FieldIndex.FemaleWeight,
-                        errorMask: errorMask));
+                        item: item._FemaleWeight,
+                        errorMask: errorMask);
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<Race.Flag>.Instance.Parse(
+                    EnumXmlTranslation<Race.Flag>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)Race_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._Flags,
+                        errorMask: errorMask);
                     break;
                 case "Voices":
-                    item._Voices.SetIfSucceeded(LoquiXmlTranslation<RaceVoices, RaceVoices_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)Race_FieldIndex.Voices,
-                        errorMask: errorMask));
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.Voices);
+                        if (LoquiXmlTranslation<RaceVoices>.Instance.Parse(
+                            root: root,
+                            item: out var VoicesParse,
+                            errorMask: errorMask))
+                        {
+                            item._Voices.Item = VoicesParse;
+                        }
+                        else
+                        {
+                            item._Voices.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "DefaultHair":
-                    item._DefaultHair.SetIfSucceeded(LoquiXmlTranslation<RaceHair, RaceHair_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)Race_FieldIndex.DefaultHair,
-                        errorMask: errorMask));
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.DefaultHair);
+                        if (LoquiXmlTranslation<RaceHair>.Instance.Parse(
+                            root: root,
+                            item: out var DefaultHairParse,
+                            errorMask: errorMask))
+                        {
+                            item._DefaultHair.Item = DefaultHairParse;
+                        }
+                        else
+                        {
+                            item._DefaultHair.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "DefaultHairColor":
-                    item._DefaultHairColor.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Race_FieldIndex.DefaultHairColor,
-                        errorMask: errorMask));
+                        item: item._DefaultHairColor,
+                        errorMask: errorMask);
                     break;
                 case "FaceGenMainClamp":
-                    item._FaceGenMainClamp.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                    Int32XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Race_FieldIndex.FaceGenMainClamp,
-                        errorMask: errorMask));
+                        item: item._FaceGenMainClamp,
+                        errorMask: errorMask);
                     break;
                 case "FaceGenFaceClamp":
-                    item._FaceGenFaceClamp.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                    Int32XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Race_FieldIndex.FaceGenFaceClamp,
-                        errorMask: errorMask));
+                        item: item._FaceGenFaceClamp,
+                        errorMask: errorMask);
                     break;
                 case "RaceStats":
-                    item._RaceStats.SetIfSucceeded(LoquiXmlTranslation<RaceStatsGendered, RaceStatsGendered_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)Race_FieldIndex.RaceStats,
-                        errorMask: errorMask));
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.RaceStats);
+                        if (LoquiXmlTranslation<RaceStatsGendered>.Instance.Parse(
+                            root: root,
+                            item: out var RaceStatsParse,
+                            errorMask: errorMask))
+                        {
+                            item._RaceStats.Item = RaceStatsParse;
+                        }
+                        else
+                        {
+                            item._RaceStats.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "FaceData":
-                    item._FaceData.SetIfSucceeded(ListXmlTranslation<FacePart, MaskItem<Exception, FacePart_ErrorMask>>.Instance.Parse(
+                    ListXmlTranslation<FacePart>.Instance.ParseInto(
                         root: root,
+                        item: item._FaceData,
                         fieldIndex: (int)Race_FieldIndex.FaceData,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, FacePart_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiXmlTranslation<FacePart, FacePart_ErrorMask>.Instance.Parse(
-                                root: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: LoquiXmlTranslation<FacePart>.Instance.Parse);
                     break;
                 case "BodyData":
-                    item._BodyData.SetIfSucceeded(LoquiXmlTranslation<GenderedBodyData, GenderedBodyData_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)Race_FieldIndex.BodyData,
-                        errorMask: errorMask));
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.BodyData);
+                        if (LoquiXmlTranslation<GenderedBodyData>.Instance.Parse(
+                            root: root,
+                            item: out var BodyDataParse,
+                            errorMask: errorMask))
+                        {
+                            item._BodyData.Item = BodyDataParse;
+                        }
+                        else
+                        {
+                            item._BodyData.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Hairs":
-                    item._Hairs.SetIfSucceeded(ListXmlTranslation<FormIDLink<Hair>, Exception>.Instance.Parse(
+                    ListXmlTranslation<FormIDLink<Hair>>.Instance.ParseInto(
                         root: root,
+                        item: item._Hairs,
                         fieldIndex: (int)Race_FieldIndex.Hairs,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return FormIDXmlTranslation.Instance.Parse(
-                                r,
-                                nullable: false,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDLink<Hair>(o.Value));
-                        }
-                        ));
+                        transl: FormIDXmlTranslation.Instance.Parse);
                     break;
                 case "Eyes":
-                    item._Eyes.SetIfSucceeded(ListXmlTranslation<FormIDLink<Eye>, Exception>.Instance.Parse(
+                    ListXmlTranslation<FormIDLink<Eye>>.Instance.ParseInto(
                         root: root,
+                        item: item._Eyes,
                         fieldIndex: (int)Race_FieldIndex.Eyes,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return FormIDXmlTranslation.Instance.Parse(
-                                r,
-                                nullable: false,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDLink<Eye>(o.Value));
-                        }
-                        ));
+                        transl: FormIDXmlTranslation.Instance.Parse);
                     break;
                 case "FaceGenData":
-                    item._FaceGenData.SetIfSucceeded(LoquiXmlTranslation<FaceGenData, FaceGenData_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)Race_FieldIndex.FaceGenData,
-                        errorMask: errorMask));
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.FaceGenData);
+                        if (LoquiXmlTranslation<FaceGenData>.Instance.Parse(
+                            root: root,
+                            item: out var FaceGenDataParse,
+                            errorMask: errorMask))
+                        {
+                            item._FaceGenData.Item = FaceGenDataParse;
+                        }
+                        else
+                        {
+                            item._FaceGenData.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Unknown":
-                    item._Unknown.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    ByteArrayXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Race_FieldIndex.Unknown,
-                        errorMask: errorMask));
+                        item: item._Unknown,
+                        errorMask: errorMask);
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -1123,8 +1184,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -1133,26 +1194,29 @@ namespace Mutagen.Bethesda.Oblivion
             out Race_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = Race_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (Race Object, Race_ErrorMask ErrorMask) Create_Binary(
+        public static Race Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            Race_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
+            return UtilityTranslation.MajorRecordParse<Race, Race_FieldIndex>(
+                record: new Race(),
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Race_ErrorMask()) : default(Func<Race_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+                errorMask: errorMask,
+                recType: Race_Registration.RACE_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         public static Race Create_Binary(string path)
@@ -1280,25 +1344,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static Race Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<Race_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            return UtilityTranslation.MajorRecordParse<Race, Race_ErrorMask, Race_FieldIndex>(
-                record: new Race(),
-                frame: frame,
-                errorMask: errorMask,
-                recType: Race_Registration.RACE_HEADER,
-                recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
-        }
-
         protected static void Fill_Binary_Structs(
             Race item,
             MutagenFrame frame,
-            Func<Race_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             NamedMajorRecord.Fill_Binary_Structs(
                 item: item,
@@ -1309,7 +1358,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<Race_FieldIndex?> Fill_Binary_RecordTypes(
             Race item,
             MutagenFrame frame,
-            Func<Race_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -1320,206 +1369,176 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "DESC":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var DescriptiontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._Description,
                         fieldIndex: (int)Race_FieldIndex.Description,
                         parseWhole: true,
                         errorMask: errorMask);
-                    item._Description.SetIfSucceeded(DescriptiontryGet);
                     return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.Description);
                 case "SPLO":
-                    var SpellstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>, Exception>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Race_Registration.SPLO_HEADER,
+                        item: item._Spells,
                         fieldIndex: (int)Race_FieldIndex.Spells,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            r.Position += Constants.SUBRECORD_LENGTH;
-                            return Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                                r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<Spell>(o));
-                        }
-                        );
-                    item._Spells.SetIfSucceeded(SpellstryGet);
+                        transl: FormIDBinaryTranslation.Instance.Parse);
                     return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.Spells);
                 case "XNAM":
-                    var RelationstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Race_Registration.XNAM_HEADER,
+                        item: item._Relations,
                         fieldIndex: (int)Race_FieldIndex.Relations,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, Relation_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiBinaryTranslation<Relation, Relation_ErrorMask>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    item._Relations.SetIfSucceeded(RelationstryGet);
+                        transl: LoquiBinaryTranslation<Relation>.Instance.Parse);
                     return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.Relations);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        var SkillBooststryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<SkillBoost, MaskItem<Exception, SkillBoost_ErrorMask>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<SkillBoost>.Instance.ParseRepeatedItem(
                             frame: frame,
                             amount: 7,
+                            item: item._SkillBoosts,
                             fieldIndex: (int)Race_FieldIndex.SkillBoosts,
                             errorMask: errorMask,
-                            transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, SkillBoost_ErrorMask> listSubMask) =>
-                            {
-                                return LoquiBinaryTranslation<SkillBoost, SkillBoost_ErrorMask>.Instance.Parse(
-                                    frame: r.Spawn(snapToFinalPosition: false),
-                                    doMasks: listDoMasks,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                        item._SkillBoosts.SetIfSucceeded(SkillBooststryGet);
-                        var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                            transl: LoquiBinaryTranslation<SkillBoost>.Instance.Parse);
+                        Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame.SpawnWithLength(4),
+                            item: item._Fluff,
                             fieldIndex: (int)Race_FieldIndex.Fluff,
                             errorMask: errorMask);
-                        item._Fluff.SetIfSucceeded(FlufftryGet);
-                        item._MaleHeight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._MaleHeight,
                             fieldIndex: (int)Race_FieldIndex.MaleHeight,
-                            errorMask: errorMask));
-                        item._FemaleHeight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._FemaleHeight,
                             fieldIndex: (int)Race_FieldIndex.FemaleHeight,
-                            errorMask: errorMask));
-                        item._MaleWeight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._MaleWeight,
                             fieldIndex: (int)Race_FieldIndex.MaleWeight,
-                            errorMask: errorMask));
-                        item._FemaleWeight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._FemaleWeight,
                             fieldIndex: (int)Race_FieldIndex.FemaleWeight,
-                            errorMask: errorMask));
-                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.Flag>.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.Flag>.Instance.ParseInto(
                             frame: dataFrame.SpawnWithLength(2),
+                            item: item._Flags,
                             fieldIndex: (int)Race_FieldIndex.Flags,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
                     }
                     return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.Flags);
                 case "VNAM":
-                    item._Voices.SetIfSucceeded(LoquiBinaryTranslation<RaceVoices, RaceVoices_ErrorMask>.Instance.Parse(
+                    LoquiBinaryTranslation<RaceVoices>.Instance.ParseInto(
                         frame: frame,
                         fieldIndex: (int)Race_FieldIndex.Voices,
-                        errorMask: errorMask));
+                        errorMask: errorMask,
+                        item: item._Voices);
                     return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.Voices);
                 case "DNAM":
-                    item._DefaultHair.SetIfSucceeded(LoquiBinaryTranslation<RaceHair, RaceHair_ErrorMask>.Instance.Parse(
+                    LoquiBinaryTranslation<RaceHair>.Instance.ParseInto(
                         frame: frame,
                         fieldIndex: (int)Race_FieldIndex.DefaultHair,
-                        errorMask: errorMask));
+                        errorMask: errorMask,
+                        item: item._DefaultHair);
                     return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.DefaultHair);
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._DefaultHairColor.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._DefaultHairColor,
                         fieldIndex: (int)Race_FieldIndex.DefaultHairColor,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.DefaultHairColor);
                 case "PNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._FaceGenMainClamp.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._FaceGenMainClamp,
                         fieldIndex: (int)Race_FieldIndex.FaceGenMainClamp,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.FaceGenMainClamp);
                 case "UNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._FaceGenFaceClamp.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._FaceGenFaceClamp,
                         fieldIndex: (int)Race_FieldIndex.FaceGenFaceClamp,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.FaceGenFaceClamp);
                 case "ATTR":
-                    item._RaceStats.SetIfSucceeded(LoquiBinaryTranslation<RaceStatsGendered, RaceStatsGendered_ErrorMask>.Instance.Parse(
+                    LoquiBinaryTranslation<RaceStatsGendered>.Instance.ParseInto(
                         frame: frame,
                         fieldIndex: (int)Race_FieldIndex.RaceStats,
-                        errorMask: errorMask));
+                        errorMask: errorMask,
+                        item: item._RaceStats);
                     return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.RaceStats);
                 case "NAM0":
                     frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
-                    var FaceDatatryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FacePart, MaskItem<Exception, FacePart_ErrorMask>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<FacePart>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: FacePart_Registration.TriggeringRecordTypes,
+                        item: item._FaceData,
                         fieldIndex: (int)Race_FieldIndex.FaceData,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, FacePart_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiBinaryTranslation<FacePart, FacePart_ErrorMask>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    item._FaceData.SetIfSucceeded(FaceDatatryGet);
+                        transl: LoquiBinaryTranslation<FacePart>.Instance.Parse);
                     return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.FaceData);
                 case "NAM1":
                     frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
-                    item._BodyData.SetIfSucceeded(LoquiBinaryTranslation<GenderedBodyData, GenderedBodyData_ErrorMask>.Instance.Parse(
+                    LoquiBinaryTranslation<GenderedBodyData>.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)Race_FieldIndex.BodyData,
-                        errorMask: errorMask));
+                        errorMask: errorMask,
+                        item: item._BodyData);
                     return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.BodyData);
                 case "HNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var HairstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Hair>, Exception>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Hair>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._Hairs,
                         fieldIndex: (int)Race_FieldIndex.Hairs,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                                r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDLink<Hair>(o));
-                        }
-                        );
-                    item._Hairs.SetIfSucceeded(HairstryGet);
+                        transl: FormIDBinaryTranslation.Instance.Parse);
                     return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.Hairs);
                 case "ENAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var EyestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Eye>, Exception>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Eye>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._Eyes,
                         fieldIndex: (int)Race_FieldIndex.Eyes,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                                r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDLink<Eye>(o));
-                        }
-                        );
-                    item._Eyes.SetIfSucceeded(EyestryGet);
+                        transl: FormIDBinaryTranslation.Instance.Parse);
                     return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.Eyes);
                 case "FGGS":
                 case "FGGA":
                 case "FGTS":
-                    item._FaceGenData.SetIfSucceeded(LoquiBinaryTranslation<FaceGenData, FaceGenData_ErrorMask>.Instance.Parse(
+                    LoquiBinaryTranslation<FaceGenData>.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)Race_FieldIndex.FaceGenData,
-                        errorMask: errorMask));
+                        errorMask: errorMask,
+                        item: item._FaceGenData);
                     return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.FaceGenData);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var UnknowntryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.ParseInto(
                         frame.SpawnWithLength(contentLength),
+                        item: item._Unknown,
                         fieldIndex: (int)Race_FieldIndex.Unknown,
                         errorMask: errorMask);
-                    item._Unknown.SetIfSucceeded(UnknowntryGet);
                     return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.Unknown);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
@@ -1607,24 +1626,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            Race_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Race_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             RaceCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = Race_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IRaceGetter rhs,
+            ErrorMaskBuilder errorMask,
+            Race_CopyMask copyMask = null,
+            IRaceGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            RaceCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -2501,8 +2528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRace item,
             IRaceGetter rhs,
             IRaceGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             Race_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -2510,12 +2536,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item,
                 rhs,
                 def,
-                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
             if (copyMask?.Description ?? true)
             {
+                errorMask.PushIndex((int)Race_FieldIndex.Description);
                 try
                 {
                     item.Description_Property.SetToWithDefault(
@@ -2524,13 +2550,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Race_FieldIndex.Description, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Spells != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Race_FieldIndex.Spells);
                 try
                 {
                     item.Spells.SetToWithDefault(
@@ -2539,13 +2570,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Race_FieldIndex.Spells, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Relations.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Race_FieldIndex.Relations);
                 try
                 {
                     item.Relations.SetToWithDefault(
@@ -2571,13 +2607,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Race_FieldIndex.Relations, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.SkillBoosts.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Race_FieldIndex.SkillBoosts);
                 try
                 {
                     item.SkillBoosts.SetToWithDefault(
@@ -2603,13 +2644,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Race_FieldIndex.SkillBoosts, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Fluff ?? true)
             {
+                errorMask.PushIndex((int)Race_FieldIndex.Fluff);
                 try
                 {
                     item.Fluff_Property.Set(
@@ -2617,13 +2663,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Race_FieldIndex.Fluff, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.MaleHeight ?? true)
             {
+                errorMask.PushIndex((int)Race_FieldIndex.MaleHeight);
                 try
                 {
                     item.MaleHeight_Property.Set(
@@ -2631,13 +2682,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Race_FieldIndex.MaleHeight, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.FemaleHeight ?? true)
             {
+                errorMask.PushIndex((int)Race_FieldIndex.FemaleHeight);
                 try
                 {
                     item.FemaleHeight_Property.Set(
@@ -2645,13 +2701,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Race_FieldIndex.FemaleHeight, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.MaleWeight ?? true)
             {
+                errorMask.PushIndex((int)Race_FieldIndex.MaleWeight);
                 try
                 {
                     item.MaleWeight_Property.Set(
@@ -2659,13 +2720,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Race_FieldIndex.MaleWeight, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.FemaleWeight ?? true)
             {
+                errorMask.PushIndex((int)Race_FieldIndex.FemaleWeight);
                 try
                 {
                     item.FemaleWeight_Property.Set(
@@ -2673,13 +2739,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Race_FieldIndex.FemaleWeight, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
+                errorMask.PushIndex((int)Race_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -2687,13 +2758,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Race_FieldIndex.Flags, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Voices.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Race_FieldIndex.Voices);
                 try
                 {
                     item.Voices_Property.SetToWithDefault(
@@ -2711,15 +2787,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.Voices,
                                         rhs: rhs.Voices,
                                         def: def?.Voices,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<RaceVoices_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new RaceVoices_ErrorMask();
-                                            baseMask.SetNthMask((int)Race_FieldIndex.Voices, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.Voices.Specific,
                                         cmds: cmds);
                                     return r;
@@ -2736,13 +2804,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Race_FieldIndex.Voices, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.DefaultHair.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Race_FieldIndex.DefaultHair);
                 try
                 {
                     item.DefaultHair_Property.SetToWithDefault(
@@ -2760,15 +2833,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.DefaultHair,
                                         rhs: rhs.DefaultHair,
                                         def: def?.DefaultHair,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<RaceHair_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new RaceHair_ErrorMask();
-                                            baseMask.SetNthMask((int)Race_FieldIndex.DefaultHair, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.DefaultHair.Specific,
                                         cmds: cmds);
                                     return r;
@@ -2785,13 +2850,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Race_FieldIndex.DefaultHair, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.DefaultHairColor ?? true)
             {
+                errorMask.PushIndex((int)Race_FieldIndex.DefaultHairColor);
                 try
                 {
                     item.DefaultHairColor_Property.SetToWithDefault(
@@ -2800,13 +2870,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Race_FieldIndex.DefaultHairColor, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.FaceGenMainClamp ?? true)
             {
+                errorMask.PushIndex((int)Race_FieldIndex.FaceGenMainClamp);
                 try
                 {
                     item.FaceGenMainClamp_Property.SetToWithDefault(
@@ -2815,13 +2890,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Race_FieldIndex.FaceGenMainClamp, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.FaceGenFaceClamp ?? true)
             {
+                errorMask.PushIndex((int)Race_FieldIndex.FaceGenFaceClamp);
                 try
                 {
                     item.FaceGenFaceClamp_Property.SetToWithDefault(
@@ -2830,13 +2910,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Race_FieldIndex.FaceGenFaceClamp, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.RaceStats.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Race_FieldIndex.RaceStats);
                 try
                 {
                     item.RaceStats_Property.SetToWithDefault(
@@ -2854,15 +2939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.RaceStats,
                                         rhs: rhs.RaceStats,
                                         def: def?.RaceStats,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<RaceStatsGendered_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new RaceStatsGendered_ErrorMask();
-                                            baseMask.SetNthMask((int)Race_FieldIndex.RaceStats, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.RaceStats.Specific,
                                         cmds: cmds);
                                     return r;
@@ -2879,13 +2956,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Race_FieldIndex.RaceStats, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.FaceData.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Race_FieldIndex.FaceData);
                 try
                 {
                     item.FaceData.SetToWithDefault(
@@ -2911,13 +2993,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Race_FieldIndex.FaceData, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.BodyData.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Race_FieldIndex.BodyData);
                 try
                 {
                     item.BodyData_Property.SetToWithDefault(
@@ -2935,15 +3022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.BodyData,
                                         rhs: rhs.BodyData,
                                         def: def?.BodyData,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<GenderedBodyData_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new GenderedBodyData_ErrorMask();
-                                            baseMask.SetNthMask((int)Race_FieldIndex.BodyData, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.BodyData.Specific,
                                         cmds: cmds);
                                     return r;
@@ -2960,13 +3039,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Race_FieldIndex.BodyData, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Hairs != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Race_FieldIndex.Hairs);
                 try
                 {
                     item.Hairs.SetToWithDefault(
@@ -2975,13 +3059,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Race_FieldIndex.Hairs, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Eyes != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Race_FieldIndex.Eyes);
                 try
                 {
                     item.Eyes.SetToWithDefault(
@@ -2990,13 +3079,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Race_FieldIndex.Eyes, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.FaceGenData.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Race_FieldIndex.FaceGenData);
                 try
                 {
                     item.FaceGenData_Property.SetToWithDefault(
@@ -3014,15 +3108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.FaceGenData,
                                         rhs: rhs.FaceGenData,
                                         def: def?.FaceGenData,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<FaceGenData_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new FaceGenData_ErrorMask();
-                                            baseMask.SetNthMask((int)Race_FieldIndex.FaceGenData, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.FaceGenData.Specific,
                                         cmds: cmds);
                                     return r;
@@ -3039,13 +3125,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Race_FieldIndex.FaceGenData, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Unknown ?? true)
             {
+                errorMask.PushIndex((int)Race_FieldIndex.Unknown);
                 try
                 {
                     item.Unknown_Property.SetToWithDefault(
@@ -3054,9 +3145,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Race_FieldIndex.Unknown, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -3818,271 +3913,257 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Race_ErrorMask errorMask,
             string name = null)
         {
-            Race_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Race_ErrorMask()) : default(Func<Race_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = Race_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             IRaceGetter item,
-            Func<Race_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Race");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Race");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Race");
-                }
-                if (item.Description_Property.HasBeenSet)
-                {
-                    StringXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Description),
-                        item: item.Description_Property,
-                        fieldIndex: (int)Race_FieldIndex.Description,
-                        errorMask: errorMask);
-                }
-                if (item.Spells.HasBeenSet)
-                {
-                    ListXmlTranslation<FormIDSetLink<Spell>, Exception>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Spells),
-                        item: item.Spells,
-                        fieldIndex: (int)Race_FieldIndex.Spells,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, FormIDSetLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            FormIDXmlTranslation.Instance.Write(
-                                node: subNode,
-                                name: "Item",
-                                item: subItem?.FormID,
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                if (item.Relations.HasBeenSet)
-                {
-                    ListXmlTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Relations),
-                        item: item.Relations,
-                        fieldIndex: (int)Race_FieldIndex.Relations,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, Relation subItem, bool listDoMasks, out MaskItem<Exception, Relation_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<Relation, Relation_ErrorMask>.Instance.Write(
-                                node: subNode,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                ListXmlTranslation<SkillBoost, MaskItem<Exception, SkillBoost_ErrorMask>>.Instance.Write(
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Race");
+            }
+            if (item.Description_Property.HasBeenSet)
+            {
+                StringXmlTranslation.Instance.Write(
                     node: elem,
-                    name: nameof(item.SkillBoosts),
-                    item: item.SkillBoosts,
-                    fieldIndex: (int)Race_FieldIndex.SkillBoosts,
+                    name: nameof(item.Description),
+                    item: item.Description_Property,
+                    fieldIndex: (int)Race_FieldIndex.Description,
+                    errorMask: errorMask);
+            }
+            if (item.Spells.HasBeenSet)
+            {
+                ListXmlTranslation<FormIDSetLink<Spell>>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Spells),
+                    item: item.Spells,
+                    fieldIndex: (int)Race_FieldIndex.Spells,
                     errorMask: errorMask,
-                    transl: (XElement subNode, SkillBoost subItem, bool listDoMasks, out MaskItem<Exception, SkillBoost_ErrorMask> listSubMask) =>
+                    transl: (XElement subNode, FormIDSetLink<Spell> subItem, ErrorMaskBuilder listSubMask) =>
                     {
-                        LoquiXmlTranslation<SkillBoost, SkillBoost_ErrorMask>.Instance.Write(
+                        FormIDXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Item",
+                            item: subItem?.FormID,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if (item.Relations.HasBeenSet)
+            {
+                ListXmlTranslation<Relation>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Relations),
+                    item: item.Relations,
+                    fieldIndex: (int)Race_FieldIndex.Relations,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, Relation subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        LoquiXmlTranslation<Relation>.Instance.Write(
                             node: subNode,
                             item: subItem,
                             name: "Item",
-                            doMasks: errorMask != null,
-                            errorMask: out listSubMask);
+                            errorMask: listSubMask);
                     }
                     );
+            }
+            ListXmlTranslation<SkillBoost>.Instance.Write(
+                node: elem,
+                name: nameof(item.SkillBoosts),
+                item: item.SkillBoosts,
+                fieldIndex: (int)Race_FieldIndex.SkillBoosts,
+                errorMask: errorMask,
+                transl: (XElement subNode, SkillBoost subItem, ErrorMaskBuilder listSubMask) =>
+                {
+                    LoquiXmlTranslation<SkillBoost>.Instance.Write(
+                        node: subNode,
+                        item: subItem,
+                        name: "Item",
+                        errorMask: listSubMask);
+                }
+                );
+            ByteArrayXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Fluff),
+                item: item.Fluff_Property,
+                fieldIndex: (int)Race_FieldIndex.Fluff,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.MaleHeight),
+                item: item.MaleHeight_Property,
+                fieldIndex: (int)Race_FieldIndex.MaleHeight,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.FemaleHeight),
+                item: item.FemaleHeight_Property,
+                fieldIndex: (int)Race_FieldIndex.FemaleHeight,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.MaleWeight),
+                item: item.MaleWeight_Property,
+                fieldIndex: (int)Race_FieldIndex.MaleWeight,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.FemaleWeight),
+                item: item.FemaleWeight_Property,
+                fieldIndex: (int)Race_FieldIndex.FemaleWeight,
+                errorMask: errorMask);
+            EnumXmlTranslation<Race.Flag>.Instance.Write(
+                node: elem,
+                name: nameof(item.Flags),
+                item: item.Flags_Property,
+                fieldIndex: (int)Race_FieldIndex.Flags,
+                errorMask: errorMask);
+            if (item.Voices_Property.HasBeenSet)
+            {
+                LoquiXmlTranslation<RaceVoices>.Instance.Write(
+                    node: elem,
+                    item: item.Voices_Property,
+                    name: nameof(item.Voices),
+                    fieldIndex: (int)Race_FieldIndex.Voices,
+                    errorMask: errorMask);
+            }
+            if (item.DefaultHair_Property.HasBeenSet)
+            {
+                LoquiXmlTranslation<RaceHair>.Instance.Write(
+                    node: elem,
+                    item: item.DefaultHair_Property,
+                    name: nameof(item.DefaultHair),
+                    fieldIndex: (int)Race_FieldIndex.DefaultHair,
+                    errorMask: errorMask);
+            }
+            if (item.DefaultHairColor_Property.HasBeenSet)
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.DefaultHairColor),
+                    item: item.DefaultHairColor_Property,
+                    fieldIndex: (int)Race_FieldIndex.DefaultHairColor,
+                    errorMask: errorMask);
+            }
+            if (item.FaceGenMainClamp_Property.HasBeenSet)
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.FaceGenMainClamp),
+                    item: item.FaceGenMainClamp_Property,
+                    fieldIndex: (int)Race_FieldIndex.FaceGenMainClamp,
+                    errorMask: errorMask);
+            }
+            if (item.FaceGenFaceClamp_Property.HasBeenSet)
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.FaceGenFaceClamp),
+                    item: item.FaceGenFaceClamp_Property,
+                    fieldIndex: (int)Race_FieldIndex.FaceGenFaceClamp,
+                    errorMask: errorMask);
+            }
+            if (item.RaceStats_Property.HasBeenSet)
+            {
+                LoquiXmlTranslation<RaceStatsGendered>.Instance.Write(
+                    node: elem,
+                    item: item.RaceStats_Property,
+                    name: nameof(item.RaceStats),
+                    fieldIndex: (int)Race_FieldIndex.RaceStats,
+                    errorMask: errorMask);
+            }
+            if (item.FaceData.HasBeenSet)
+            {
+                ListXmlTranslation<FacePart>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.FaceData),
+                    item: item.FaceData,
+                    fieldIndex: (int)Race_FieldIndex.FaceData,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, FacePart subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        LoquiXmlTranslation<FacePart>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if (item.BodyData_Property.HasBeenSet)
+            {
+                LoquiXmlTranslation<GenderedBodyData>.Instance.Write(
+                    node: elem,
+                    item: item.BodyData_Property,
+                    name: nameof(item.BodyData),
+                    fieldIndex: (int)Race_FieldIndex.BodyData,
+                    errorMask: errorMask);
+            }
+            if (item.Hairs.HasBeenSet)
+            {
+                ListXmlTranslation<FormIDLink<Hair>>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Hairs),
+                    item: item.Hairs,
+                    fieldIndex: (int)Race_FieldIndex.Hairs,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, FormIDLink<Hair> subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        FormIDXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Item",
+                            item: subItem?.FormID,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if (item.Eyes.HasBeenSet)
+            {
+                ListXmlTranslation<FormIDLink<Eye>>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Eyes),
+                    item: item.Eyes,
+                    fieldIndex: (int)Race_FieldIndex.Eyes,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, FormIDLink<Eye> subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        FormIDXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Item",
+                            item: subItem?.FormID,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if (item.FaceGenData_Property.HasBeenSet)
+            {
+                LoquiXmlTranslation<FaceGenData>.Instance.Write(
+                    node: elem,
+                    item: item.FaceGenData_Property,
+                    name: nameof(item.FaceGenData),
+                    fieldIndex: (int)Race_FieldIndex.FaceGenData,
+                    errorMask: errorMask);
+            }
+            if (item.Unknown_Property.HasBeenSet)
+            {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
-                    name: nameof(item.Fluff),
-                    item: item.Fluff_Property,
-                    fieldIndex: (int)Race_FieldIndex.Fluff,
+                    name: nameof(item.Unknown),
+                    item: item.Unknown_Property,
+                    fieldIndex: (int)Race_FieldIndex.Unknown,
                     errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.MaleHeight),
-                    item: item.MaleHeight_Property,
-                    fieldIndex: (int)Race_FieldIndex.MaleHeight,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.FemaleHeight),
-                    item: item.FemaleHeight_Property,
-                    fieldIndex: (int)Race_FieldIndex.FemaleHeight,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.MaleWeight),
-                    item: item.MaleWeight_Property,
-                    fieldIndex: (int)Race_FieldIndex.MaleWeight,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.FemaleWeight),
-                    item: item.FemaleWeight_Property,
-                    fieldIndex: (int)Race_FieldIndex.FemaleWeight,
-                    errorMask: errorMask);
-                EnumXmlTranslation<Race.Flag>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Flags),
-                    item: item.Flags_Property,
-                    fieldIndex: (int)Race_FieldIndex.Flags,
-                    errorMask: errorMask);
-                if (item.Voices_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<RaceVoices, RaceVoices_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.Voices_Property,
-                        name: nameof(item.Voices),
-                        fieldIndex: (int)Race_FieldIndex.Voices,
-                        errorMask: errorMask);
-                }
-                if (item.DefaultHair_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<RaceHair, RaceHair_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.DefaultHair_Property,
-                        name: nameof(item.DefaultHair),
-                        fieldIndex: (int)Race_FieldIndex.DefaultHair,
-                        errorMask: errorMask);
-                }
-                if (item.DefaultHairColor_Property.HasBeenSet)
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.DefaultHairColor),
-                        item: item.DefaultHairColor_Property,
-                        fieldIndex: (int)Race_FieldIndex.DefaultHairColor,
-                        errorMask: errorMask);
-                }
-                if (item.FaceGenMainClamp_Property.HasBeenSet)
-                {
-                    Int32XmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.FaceGenMainClamp),
-                        item: item.FaceGenMainClamp_Property,
-                        fieldIndex: (int)Race_FieldIndex.FaceGenMainClamp,
-                        errorMask: errorMask);
-                }
-                if (item.FaceGenFaceClamp_Property.HasBeenSet)
-                {
-                    Int32XmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.FaceGenFaceClamp),
-                        item: item.FaceGenFaceClamp_Property,
-                        fieldIndex: (int)Race_FieldIndex.FaceGenFaceClamp,
-                        errorMask: errorMask);
-                }
-                if (item.RaceStats_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<RaceStatsGendered, RaceStatsGendered_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.RaceStats_Property,
-                        name: nameof(item.RaceStats),
-                        fieldIndex: (int)Race_FieldIndex.RaceStats,
-                        errorMask: errorMask);
-                }
-                if (item.FaceData.HasBeenSet)
-                {
-                    ListXmlTranslation<FacePart, MaskItem<Exception, FacePart_ErrorMask>>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.FaceData),
-                        item: item.FaceData,
-                        fieldIndex: (int)Race_FieldIndex.FaceData,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, FacePart subItem, bool listDoMasks, out MaskItem<Exception, FacePart_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<FacePart, FacePart_ErrorMask>.Instance.Write(
-                                node: subNode,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                if (item.BodyData_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<GenderedBodyData, GenderedBodyData_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.BodyData_Property,
-                        name: nameof(item.BodyData),
-                        fieldIndex: (int)Race_FieldIndex.BodyData,
-                        errorMask: errorMask);
-                }
-                if (item.Hairs.HasBeenSet)
-                {
-                    ListXmlTranslation<FormIDLink<Hair>, Exception>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Hairs),
-                        item: item.Hairs,
-                        fieldIndex: (int)Race_FieldIndex.Hairs,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, FormIDLink<Hair> subItem, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            FormIDXmlTranslation.Instance.Write(
-                                node: subNode,
-                                name: "Item",
-                                item: subItem?.FormID,
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                if (item.Eyes.HasBeenSet)
-                {
-                    ListXmlTranslation<FormIDLink<Eye>, Exception>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Eyes),
-                        item: item.Eyes,
-                        fieldIndex: (int)Race_FieldIndex.Eyes,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, FormIDLink<Eye> subItem, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            FormIDXmlTranslation.Instance.Write(
-                                node: subNode,
-                                name: "Item",
-                                item: subItem?.FormID,
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                if (item.FaceGenData_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<FaceGenData, FaceGenData_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.FaceGenData_Property,
-                        name: nameof(item.FaceGenData),
-                        fieldIndex: (int)Race_FieldIndex.FaceGenData,
-                        errorMask: errorMask);
-                }
-                if (item.Unknown_Property.HasBeenSet)
-                {
-                    ByteArrayXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Unknown),
-                        item: item.Unknown_Property,
-                        fieldIndex: (int)Race_FieldIndex.Unknown,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
             }
         }
         #endregion
@@ -4098,43 +4179,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out Race_ErrorMask errorMask)
         {
-            Race_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Race_ErrorMask()) : default(Func<Race_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = Race_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             Race item,
             RecordTypeConverter recordTypeConverter,
-            Func<Race_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: Race_Registration.RACE_HEADER,
+                type: ObjectType.Record))
             {
-                using (HeaderExport.ExportHeader(
+                MajorRecordCommon.Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: Race_Registration.RACE_HEADER,
-                    type: ObjectType.Record))
-                {
-                    MajorRecordCommon.Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                    Write_Binary_RecordTypes(
-                        item: item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -4143,7 +4216,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Race item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<Race_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             NamedMajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
@@ -4157,52 +4230,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Race_Registration.DESC_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>, Exception>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>>.Instance.Write(
                 writer: writer,
-                item: item.Spells,
+                items: item.Spells,
                 fieldIndex: (int)Race_FieldIndex.Spells,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, FormIDSetLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
-                {
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask,
-                        header: recordTypeConverter.ConvertToCustom(Race_Registration.SPLO_HEADER),
-                        nullable: false);
-                }
-                );
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.Write(
+                transl: FormIDBinaryTranslation.Instance.Write);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation>.Instance.Write(
                 writer: writer,
-                item: item.Relations,
+                items: item.Relations,
                 fieldIndex: (int)Race_FieldIndex.Relations,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, Relation subItem, bool listDoMasks, out MaskItem<Exception, Relation_ErrorMask> listSubMask) =>
-                {
-                    LoquiBinaryTranslation<Relation, Relation_ErrorMask>.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                transl: LoquiBinaryTranslation<Relation>.Instance.Write);
             using (HeaderExport.ExportSubRecordHeader(writer, Race_Registration.DATA_HEADER))
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<SkillBoost, MaskItem<Exception, SkillBoost_ErrorMask>>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<SkillBoost>.Instance.Write(
                     writer: writer,
-                    item: item.SkillBoosts,
+                    items: item.SkillBoosts,
                     fieldIndex: (int)Race_FieldIndex.SkillBoosts,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, SkillBoost subItem, bool listDoMasks, out MaskItem<Exception, SkillBoost_ErrorMask> listSubMask) =>
-                    {
-                        LoquiBinaryTranslation<SkillBoost, SkillBoost_ErrorMask>.Instance.Write(
-                            writer: subWriter,
-                            item: subItem,
-                            doMasks: listDoMasks,
-                            errorMask: out listSubMask);
-                    }
-                    );
+                    transl: LoquiBinaryTranslation<SkillBoost>.Instance.Write);
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Fluff_Property,
@@ -4235,12 +4282,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Race_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            LoquiBinaryTranslation<RaceVoices, RaceVoices_ErrorMask>.Instance.Write(
+            LoquiBinaryTranslation<RaceVoices>.Instance.Write(
                 writer: writer,
                 item: item.Voices_Property,
                 fieldIndex: (int)Race_FieldIndex.Voices,
                 errorMask: errorMask);
-            LoquiBinaryTranslation<RaceHair, RaceHair_ErrorMask>.Instance.Write(
+            LoquiBinaryTranslation<RaceHair>.Instance.Write(
                 writer: writer,
                 item: item.DefaultHair_Property,
                 fieldIndex: (int)Race_FieldIndex.DefaultHair,
@@ -4266,66 +4313,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Race_Registration.UNAM_HEADER),
                 nullable: false);
-            LoquiBinaryTranslation<RaceStatsGendered, RaceStatsGendered_ErrorMask>.Instance.Write(
+            LoquiBinaryTranslation<RaceStatsGendered>.Instance.Write(
                 writer: writer,
                 item: item.RaceStats_Property,
                 fieldIndex: (int)Race_FieldIndex.RaceStats,
                 errorMask: errorMask);
             using (HeaderExport.ExportHeader(writer, Race_Registration.NAM0_HEADER, ObjectType.Subrecord)) { }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FacePart, MaskItem<Exception, FacePart_ErrorMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<FacePart>.Instance.Write(
                 writer: writer,
-                item: item.FaceData,
+                items: item.FaceData,
                 fieldIndex: (int)Race_FieldIndex.FaceData,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, FacePart subItem, bool listDoMasks, out MaskItem<Exception, FacePart_ErrorMask> listSubMask) =>
-                {
-                    LoquiBinaryTranslation<FacePart, FacePart_ErrorMask>.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                transl: LoquiBinaryTranslation<FacePart>.Instance.Write);
             if (item.BodyData_Property.HasBeenSet)
             {
                 using (HeaderExport.ExportHeader(writer, Race_Registration.NAM1_HEADER, ObjectType.Subrecord)) { }
             }
-            LoquiBinaryTranslation<GenderedBodyData, GenderedBodyData_ErrorMask>.Instance.Write(
+            LoquiBinaryTranslation<GenderedBodyData>.Instance.Write(
                 writer: writer,
                 item: item.BodyData_Property,
                 fieldIndex: (int)Race_FieldIndex.BodyData,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Hair>, Exception>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Hair>>.Instance.Write(
                 writer: writer,
-                item: item.Hairs,
+                items: item.Hairs,
                 fieldIndex: (int)Race_FieldIndex.Hairs,
                 recordType: Race_Registration.HNAM_HEADER,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, FormIDLink<Hair> subItem, bool listDoMasks, out Exception listSubMask) =>
-                {
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Eye>, Exception>.Instance.Write(
+                transl: FormIDBinaryTranslation.Instance.Write);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Eye>>.Instance.Write(
                 writer: writer,
-                item: item.Eyes,
+                items: item.Eyes,
                 fieldIndex: (int)Race_FieldIndex.Eyes,
                 recordType: Race_Registration.ENAM_HEADER,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, FormIDLink<Eye> subItem, bool listDoMasks, out Exception listSubMask) =>
-                {
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
-            LoquiBinaryTranslation<FaceGenData, FaceGenData_ErrorMask>.Instance.Write(
+                transl: FormIDBinaryTranslation.Instance.Write);
+            LoquiBinaryTranslation<FaceGenData>.Instance.Write(
                 writer: writer,
                 item: item.FaceGenData_Property,
                 fieldIndex: (int)Race_FieldIndex.FaceGenData,
@@ -5507,6 +5530,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static Race_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

@@ -18,6 +18,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 
@@ -140,12 +141,11 @@ namespace Mutagen.Bethesda
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<NamedMajorRecord, NamedMajorRecord_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<NamedMajorRecord>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -154,13 +154,14 @@ namespace Mutagen.Bethesda
             out NamedMajorRecord_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<NamedMajorRecord, NamedMajorRecord_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<NamedMajorRecord>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = NamedMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -283,15 +284,16 @@ namespace Mutagen.Bethesda
             NamedMajorRecord item,
             XElement root,
             string name,
-            Func<NamedMajorRecord_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Name":
-                    item._Name.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    StringXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
-                        errorMask: errorMask));
+                        item: item._Name,
+                        errorMask: errorMask);
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(
@@ -364,7 +366,7 @@ namespace Mutagen.Bethesda
         protected static TryGet<NamedMajorRecord_FieldIndex?> Fill_Binary_RecordTypes(
             NamedMajorRecord item,
             MutagenFrame frame,
-            Func<NamedMajorRecord_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -375,12 +377,12 @@ namespace Mutagen.Bethesda
             {
                 case "FULL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var NametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._Name,
                         fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
                         parseWhole: true,
                         errorMask: errorMask);
-                    item._Name.SetIfSucceeded(NametryGet);
                     return TryGet<NamedMajorRecord_FieldIndex?>.Succeed(NamedMajorRecord_FieldIndex.Name);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
@@ -452,24 +454,32 @@ namespace Mutagen.Bethesda
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            NamedMajorRecord_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new NamedMajorRecord_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             NamedMajorRecordCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = NamedMajorRecord_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            INamedMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            NamedMajorRecord_CopyMask copyMask = null,
+            INamedMajorRecordGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            NamedMajorRecordCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -800,8 +810,7 @@ namespace Mutagen.Bethesda.Internals
             INamedMajorRecord item,
             INamedMajorRecordGetter rhs,
             INamedMajorRecordGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             NamedMajorRecord_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -809,12 +818,12 @@ namespace Mutagen.Bethesda.Internals
                 item,
                 rhs,
                 def,
-                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
             if (copyMask?.Name ?? true)
             {
+                errorMask.PushIndex((int)NamedMajorRecord_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -823,9 +832,13 @@ namespace Mutagen.Bethesda.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NamedMajorRecord_FieldIndex.Name, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1005,43 +1018,35 @@ namespace Mutagen.Bethesda.Internals
             out NamedMajorRecord_ErrorMask errorMask,
             string name = null)
         {
-            NamedMajorRecord_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new NamedMajorRecord_ErrorMask()) : default(Func<NamedMajorRecord_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = NamedMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             INamedMajorRecordGetter item,
-            Func<NamedMajorRecord_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.NamedMajorRecord");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.NamedMajorRecord");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.NamedMajorRecord");
-                }
-                if (item.Name_Property.HasBeenSet)
-                {
-                    StringXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Name),
-                        item: item.Name_Property,
-                        fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
-                        errorMask: errorMask);
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.NamedMajorRecord");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (item.Name_Property.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                StringXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Name),
+                    item: item.Name_Property,
+                    fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -1057,38 +1062,30 @@ namespace Mutagen.Bethesda.Internals
             bool doMasks,
             out NamedMajorRecord_ErrorMask errorMask)
         {
-            NamedMajorRecord_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new NamedMajorRecord_ErrorMask()) : default(Func<NamedMajorRecord_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = NamedMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             NamedMajorRecord item,
             RecordTypeConverter recordTypeConverter,
-            Func<NamedMajorRecord_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                MajorRecordCommon.Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask);
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            MajorRecordCommon.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask);
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -1096,7 +1093,7 @@ namespace Mutagen.Bethesda.Internals
             NamedMajorRecord item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<NamedMajorRecord_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
@@ -1323,6 +1320,14 @@ namespace Mutagen.Bethesda.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static NamedMajorRecord_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

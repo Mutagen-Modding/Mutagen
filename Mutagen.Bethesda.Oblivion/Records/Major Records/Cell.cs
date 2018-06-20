@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Loqui;
+using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;
+using Noggog.Notifying;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -30,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
             BehaveLikeExteriod = 0x0080,
         }
 
-        static partial void CustomBinaryEnd_Import(MutagenFrame frame, Cell obj, Func<Cell_ErrorMask> errorMask)
+        static partial void CustomBinaryEnd_Import(MutagenFrame frame, Cell obj, ErrorMaskBuilder errorMask)
         {
             if (frame.Reader.Complete) return;
             var next = HeaderTranslation.GetNextType(frame.Reader, out var len, hopGroup: false);
@@ -68,13 +70,28 @@ namespace Mutagen.Bethesda.Oblivion
                         switch (type)
                         {
                             case GroupTypeEnum.CellPersistentChildren:
-                                obj.Persistent.SetIfSucceeded(ParseTypical(itemFrame, obj, errorMask, persistentParse: true));
+                                ParseTypical(
+                                    frame: itemFrame, 
+                                    obj: obj,
+                                    fieldIndex: (int)Cell_FieldIndex.Persistent,
+                                    coll: obj.Persistent,
+                                    errorMask: errorMask, 
+                                    persistentParse: true);
                                 break;
                             case GroupTypeEnum.CellTemporaryChildren:
-                                ParseTemporary(itemFrame, obj, errorMask);
+                                ParseTemporary(
+                                    itemFrame, 
+                                    obj,
+                                    errorMask);
                                 break;
                             case GroupTypeEnum.CellVisibleDistantChildren:
-                                obj.VisibleWhenDistant.SetIfSucceeded(ParseTypical(itemFrame, obj, errorMask, persistentParse: false));
+                                ParseTypical(
+                                    frame: itemFrame, 
+                                    obj: obj, 
+                                    fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistant,
+                                    coll: obj.VisibleWhenDistant,
+                                    errorMask: errorMask, 
+                                    persistentParse: false);
                                 break;
                             default:
                                 throw new NotImplementedException();
@@ -84,10 +101,12 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        static TryGet<IEnumerable<Placed>> ParseTypical(
+        static void ParseTypical(
             MutagenFrame frame,
-            Cell obj, 
-            Func<Cell_ErrorMask> errorMask,
+            Cell obj,
+            int fieldIndex,
+            INotifyingCollection<Placed> coll,
+            ErrorMaskBuilder errorMask,
             bool persistentParse)
         {
             frame.Reader.Position += 8;
@@ -105,38 +124,56 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 obj._visibleWhenDistantTimeStamp = frame.Reader.ReadBytes(4);
             }
-            return Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.ParseRepeatedItem(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed>.Instance.ParseRepeatedItem(
                 frame: frame,
-                fieldIndex: (int)Cell_FieldIndex.Persistent,
+                fieldIndex: fieldIndex,
+                item: coll,
                 lengthLength: 4,
                 errorMask: errorMask,
-                transl: (MutagenFrame r, RecordType header, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
+                transl: (MutagenFrame r, RecordType header, out Placed placed, ErrorMaskBuilder errMaskInternal) =>
                 {
                     switch (header.Type)
                     {
                         case "ACRE":
-                            return LoquiBinaryTranslation<PlacedCreature, PlacedCreature_ErrorMask>.Instance.Parse(
+                            if (LoquiBinaryTranslation<PlacedCreature>.Instance.Parse(
                                 frame: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble<PlacedCreature, Placed>();
+                                item: out var placedCrea,
+                                errorMask: errMaskInternal))
+                            {
+                                placed = placedCrea;
+                                return true;
+                            }
+                            break;
                         case "ACHR":
-                            return LoquiBinaryTranslation<PlacedNPC, PlacedNPC_ErrorMask>.Instance.Parse(
+                            if (LoquiBinaryTranslation<PlacedNPC>.Instance.Parse(
                                 frame: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble<PlacedNPC, Placed>();
+                                item: out var placedNPC,
+                                errorMask: errMaskInternal))
+                            {
+                                placed = placedNPC;
+                                return true;
+                            }
+                            break;
                         case "REFR":
-                            return LoquiBinaryTranslation<PlacedObject, PlacedObject_ErrorMask>.Instance.Parse(
+                            if (LoquiBinaryTranslation<PlacedObject>.Instance.Parse(
                                 frame: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble<PlacedObject, Placed>();
+                                item: out var placedObj,
+                                errorMask: errMaskInternal))
+                            {
+                                placed = placedObj;
+                                return true;
+                            }
+                            break;
                         default:
                             throw new NotImplementedException();
                     }
+                    placed = null;
+                    return false;
                 }
                 );
         }
 
-        static void ParseTemporaryOutliers(MutagenFrame frame, Cell obj, Func<Cell_ErrorMask> errorMask)
+        static void ParseTemporaryOutliers(MutagenFrame frame, Cell obj, ErrorMaskBuilder errorMask)
         {
             for (int i = 0; i < 2; i++)
             {
@@ -145,12 +182,12 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     using (var subFrame = frame.SpawnWithLength(pathLen + Constants.RECORD_HEADER_LENGTH))
                     {
-                        obj.PathGrid = PathGrid.Create_Binary(
-                            subFrame,
-                            out var subMask);
-                        if (subMask != null)
+                        using (errorMask.PushIndex((int)Cell_FieldIndex.PathGrid))
                         {
-                            errorMask().PathGrid = new MaskItem<Exception, PathGrid_ErrorMask>(null, subMask);
+                            obj.PathGrid = PathGrid.Create_Binary(
+                                subFrame,
+                                errorMask: errorMask,
+                                recordTypeConverter: null);
                         }
                     }
                 }
@@ -158,12 +195,12 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     using (var subFrame = frame.SpawnWithLength(pathLen + Constants.RECORD_HEADER_LENGTH))
                     {
-                        obj.Landscape = Landscape.Create_Binary(
-                            subFrame,
-                            out var subMask);
-                        if (subMask != null)
+                        using (errorMask.PushIndex((int)Cell_FieldIndex.Landscape))
                         {
-                            errorMask().Landscape = new MaskItem<Exception, Landscape_ErrorMask>(null, subMask);
+                            obj.Landscape = Landscape.Create_Binary(
+                                subFrame,
+                                errorMask: errorMask,
+                                recordTypeConverter: null);
                         }
                     }
                 }
@@ -174,7 +211,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        static void ParseTemporary(MutagenFrame frame, Cell obj, Func<Cell_ErrorMask> errorMask)
+        static void ParseTemporary(MutagenFrame frame, Cell obj, ErrorMaskBuilder errorMask)
         {
             frame.Reader.Position += 8;
             var id = frame.Reader.ReadUInt32();
@@ -185,39 +222,56 @@ namespace Mutagen.Bethesda.Oblivion
             frame.Reader.Position += 4;
             obj._temporaryTimeStamp = frame.Reader.ReadBytes(4);
             ParseTemporaryOutliers(frame, obj, errorMask);
-            var persistentTryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.ParseRepeatedItem(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed>.Instance.ParseRepeatedItem(
                 frame: frame,
+                item: obj.Temporary,
                 fieldIndex: (int)Cell_FieldIndex.Persistent,
                 lengthLength: 4,
                 errorMask: errorMask,
-                transl: (MutagenFrame r, RecordType header, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
+                transl: (MutagenFrame r, RecordType header, out Placed placed, ErrorMaskBuilder listSubMask) =>
                 {
                     switch (header.Type)
                     {
                         case "ACRE":
-                            return LoquiBinaryTranslation<PlacedCreature, PlacedCreature_ErrorMask>.Instance.Parse(
+                            if (LoquiBinaryTranslation<PlacedCreature>.Instance.Parse(
                                 frame: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble<PlacedCreature, Placed>();
+                                item: out var placedCrea,
+                                errorMask: errorMask))
+                            {
+                                placed = placedCrea;
+                                return true;
+                            }
+                            break;
                         case "ACHR":
-                            return LoquiBinaryTranslation<PlacedNPC, PlacedNPC_ErrorMask>.Instance.Parse(
+                            if (LoquiBinaryTranslation<PlacedNPC>.Instance.Parse(
                                 frame: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble<PlacedNPC, Placed>();
+                                item: out var placedNPC,
+                                errorMask: errorMask))
+                            {
+                                placed = placedNPC;
+                                return true;
+                            }
+                            break;
                         case "REFR":
-                            return LoquiBinaryTranslation<PlacedObject, PlacedObject_ErrorMask>.Instance.Parse(
+                            if (LoquiBinaryTranslation<PlacedObject>.Instance.Parse(
                                 frame: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble<PlacedObject, Placed>();
+                                item: out var placedObj,
+                                errorMask: errorMask))
+                            {
+                                placed = placedObj;
+                                return true;
+                            }
+                            break;
                         default:
                             throw new NotImplementedException();
                     }
+                    placed = null;
+                    return false;
                 }
                 );
-            obj.Temporary.SetIfSucceeded(persistentTryGet);
         }
 
-        static partial void CustomBinaryEnd_Export(MutagenWriter writer, Cell obj, Func<Cell_ErrorMask> errorMask)
+        static partial void CustomBinaryEnd_Export(MutagenWriter writer, Cell obj, ErrorMaskBuilder errorMask)
         {
             if (obj.Persistent.Count == 0
                 && obj.Temporary.Count == 0
@@ -250,19 +304,12 @@ namespace Mutagen.Bethesda.Oblivion
                         {
                             writer.WriteZeros(4);
                         }
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.Write(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed>.Instance.Write(
                             writer: writer,
-                            item: obj.Persistent,
+                            items: obj.Persistent,
                             fieldIndex: (int)Cell_FieldIndex.Persistent,
                             errorMask: errorMask,
-                            transl: (MutagenWriter subWriter, Placed subItem, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
-                            {
-                                LoquiBinaryTranslation<Placed, Placed_ErrorMask>.Instance.Write(
-                                    writer: subWriter,
-                                    item: subItem,
-                                    doMasks: listDoMasks,
-                                    errorMask: out listSubMask);
-                            });
+                            transl: LoquiBinaryTranslation<Placed>.Instance.Write);
                     }
                 }
                 if (obj.Temporary.Count > 0
@@ -283,7 +330,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         if (obj.Landscape_Property.HasBeenSet)
                         {
-                            LoquiBinaryTranslation<Landscape, Landscape_ErrorMask>.Instance.Write(
+                            LoquiBinaryTranslation<Landscape>.Instance.Write(
                                 writer,
                                 obj.Landscape,
                                 (int)Cell_FieldIndex.Landscape,
@@ -291,25 +338,18 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         if (obj.PathGrid_Property.HasBeenSet)
                         {
-                            LoquiBinaryTranslation<PathGrid, PathGrid_ErrorMask>.Instance.Write(
+                            LoquiBinaryTranslation<PathGrid>.Instance.Write(
                                 writer,
                                 obj.PathGrid,
                                 (int)Cell_FieldIndex.PathGrid,
                                 errorMask);
                         }
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.Write(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed>.Instance.Write(
                             writer: writer,
-                            item: obj.Temporary,
+                            items: obj.Temporary,
                             fieldIndex: (int)Cell_FieldIndex.Temporary,
                             errorMask: errorMask,
-                            transl: (MutagenWriter subWriter, Placed subItem, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
-                            {
-                                LoquiBinaryTranslation<Placed, Placed_ErrorMask>.Instance.Write(
-                                    writer: subWriter,
-                                    item: subItem,
-                                    doMasks: listDoMasks,
-                                    errorMask: out listSubMask);
-                            });
+                            transl: LoquiBinaryTranslation<Placed>.Instance.Write);
                     }
                 }
                 if (obj.VisibleWhenDistant.Count > 0)
@@ -326,19 +366,12 @@ namespace Mutagen.Bethesda.Oblivion
                         {
                             writer.WriteZeros(4);
                         }
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed, MaskItem<Exception, Placed_ErrorMask>>.Instance.Write(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed>.Instance.Write(
                             writer: writer,
-                            item: obj.VisibleWhenDistant,
+                            items: obj.VisibleWhenDistant,
                             fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistant,
                             errorMask: errorMask,
-                            transl: (MutagenWriter subWriter, Placed subItem, bool listDoMasks, out MaskItem<Exception, Placed_ErrorMask> listSubMask) =>
-                            {
-                                LoquiBinaryTranslation<Placed, Placed_ErrorMask>.Instance.Write(
-                                    writer: subWriter,
-                                    item: subItem,
-                                    doMasks: listDoMasks,
-                                    errorMask: out listSubMask);
-                            });
+                            transl: LoquiBinaryTranslation<Placed>.Instance.Write);
                     }
                 }
             }

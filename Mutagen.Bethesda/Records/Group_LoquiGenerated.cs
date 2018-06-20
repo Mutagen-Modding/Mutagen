@@ -17,6 +17,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 
@@ -193,24 +194,37 @@ namespace Mutagen.Bethesda
             bool doMasks = true)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
-            var ret = Create_XML<T_ErrMask>(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (Group<T> Object, Group_ErrorMask<T_ErrMask> ErrorMask) Create_XML<T_ErrMask>(
+        public static Group<T> Create_XML(
             XElement root,
-            bool doMasks)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            ErrorMaskBuilder errorMask)
         {
-            Group_ErrorMask<T_ErrMask> errMaskRet = null;
-            var ret = Create_XML_Internal<T_ErrMask>(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Group_ErrorMask<T_ErrMask>()) : default(Func<Group_ErrorMask<T_ErrMask>>));
-            return (ret, errMaskRet);
+            var ret = new Group<T>();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static Group<T> Create_XML<T_ErrMask>(
@@ -244,13 +258,14 @@ namespace Mutagen.Bethesda
             NotifyingFireParameters cmds = null)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
-            LoquiXmlTranslation<Group<T>, Group_ErrorMask<T_ErrMask>>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<Group<T>>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML<T_ErrMask>(
@@ -378,72 +393,35 @@ namespace Mutagen.Bethesda
         }
         #endregion
 
-        private static Group<T> Create_XML_Internal<T_ErrMask>(
-            XElement root,
-            Func<Group_ErrorMask<T_ErrMask>> errorMask)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-        {
-            var ret = new Group<T>();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal<T_ErrMask>(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
-        protected static void Fill_XML_Internal<T_ErrMask>(
+        protected static void Fill_XML_Internal(
             Group<T> item,
             XElement root,
             string name,
-            Func<Group_ErrorMask<T_ErrMask>> errorMask)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
-                case "ContainedRecordType":
-                    item._ContainedRecordType.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
-                        root,
-                        fieldIndex: (int)Group_FieldIndex.ContainedRecordType,
-                        errorMask: errorMask));
-                    break;
                 case "GroupType":
-                    item._GroupType.SetIfSucceeded(EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
+                    EnumXmlTranslation<GroupTypeEnum>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)Group_FieldIndex.GroupType,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._GroupType,
+                        errorMask: errorMask);
                     break;
                 case "LastModified":
-                    item._LastModified.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    ByteArrayXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)Group_FieldIndex.LastModified,
-                        errorMask: errorMask));
+                        item: item._LastModified,
+                        errorMask: errorMask);
                     break;
                 case "Items":
-                    item._Items.SetIfSucceeded(KeyedDictXmlTranslation<FormID, T, MaskItem<Exception, T_ErrMask>>.Instance.Parse(
+                    KeyedDictXmlTranslation<FormID, T>.Instance.ParseInto(
                         root: root,
+                        item: item._Items,
                         fieldIndex: (int)Group_FieldIndex.Items,
                         errorMask: errorMask,
-                        valTransl: (XElement r, bool dictDoMasks, out MaskItem<Exception, T_ErrMask> dictSubMask) =>
-                        {
-                            return LoquiXmlTranslation<T, T_ErrMask>.Instance.Parse(
-                                root: r,
-                                doMasks: dictDoMasks,
-                                errorMask: out dictSubMask);
-                        }
-                        ));
+                        valTransl: LoquiXmlTranslation<T>.Instance.Parse);
                     break;
                 default:
                     break;
@@ -476,27 +454,48 @@ namespace Mutagen.Bethesda
             bool doMasks = true)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
-            var ret = Create_Binary<T_ErrMask>(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (Group<T> Object, Group_ErrorMask<T_ErrMask> ErrorMask) Create_Binary<T_ErrMask>(
+        public static Group<T> Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            ErrorMaskBuilder errorMask)
         {
-            Group_ErrorMask<T_ErrMask> errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Group_ErrorMask<T_ErrMask>()) : default(Func<Group_ErrorMask<T_ErrMask>>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new Group<T>();
+            try
+            {
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseGroup(frame.Reader));
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                    while (!frame.Complete)
+                    {
+                        var parsed = Fill_Binary_RecordTypes(
+                            item: ret,
+                            frame: frame,
+                            errorMask: errorMask,
+                            recordTypeConverter: recordTypeConverter);
+                        if (parsed.Failed) break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static Group<T> Create_Binary<T_ErrMask>(
@@ -615,113 +614,53 @@ namespace Mutagen.Bethesda
         }
         #endregion
 
-        static partial void FillBinary_ContainedRecordType_Custom<T_ErrMask>(
+        static partial void FillBinary_ContainedRecordType_Custom(
             MutagenFrame frame,
             Group<T> item,
-            int fieldIndex,
-            Func<Group_ErrorMask<T_ErrMask>> errorMask)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new();
+            ErrorMaskBuilder errorMask);
 
-        static partial void WriteBinary_ContainedRecordType_Custom<T_ErrMask>(
+        static partial void WriteBinary_ContainedRecordType_Custom(
             MutagenWriter writer,
             Group<T> item,
-            int fieldIndex,
-            Func<Group_ErrorMask<T_ErrMask>> errorMask)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new();
+            ErrorMaskBuilder errorMask);
 
-        public static void WriteBinary_ContainedRecordType<T_ErrMask>(
+        public static void WriteBinary_ContainedRecordType(
             MutagenWriter writer,
             Group<T> item,
-            int fieldIndex,
-            Func<Group_ErrorMask<T_ErrMask>> errorMask)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                WriteBinary_ContainedRecordType_Custom(
-                    writer: writer,
-                    item: item,
-                    fieldIndex: fieldIndex,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            WriteBinary_ContainedRecordType_Custom(
+                writer: writer,
+                item: item,
+                errorMask: errorMask);
         }
 
-        private static Group<T> Create_Binary_Internal<T_ErrMask>(
-            MutagenFrame frame,
-            Func<Group_ErrorMask<T_ErrMask>> errorMask,
-            RecordTypeConverter recordTypeConverter)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-        {
-            var ret = new Group<T>();
-            try
-            {
-                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseGroup(frame.Reader));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
-        protected static void Fill_Binary_Structs<T_ErrMask>(
+        protected static void Fill_Binary_Structs(
             Group<T> item,
             MutagenFrame frame,
-            Func<Group_ErrorMask<T_ErrMask>> errorMask)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                FillBinary_ContainedRecordType_Custom(
-                    frame: frame,
-                    item: item,
-                    fieldIndex: (int)Group_FieldIndex.ContainedRecordType,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            item._GroupType.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
+            FillBinary_ContainedRecordType_Custom(
+                frame: frame,
+                item: item,
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseInto(
                 frame: frame.SpawnWithLength(4),
+                item: item._GroupType,
                 fieldIndex: (int)Group_FieldIndex.GroupType,
-                errorMask: errorMask));
-            var LastModifiedtryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.ParseInto(
                 frame: frame.SpawnWithLength(4),
+                item: item._LastModified,
                 fieldIndex: (int)Group_FieldIndex.LastModified,
                 errorMask: errorMask);
-            item._LastModified.SetIfSucceeded(LastModifiedtryGet);
         }
 
-        protected static TryGet<Group_FieldIndex?> Fill_Binary_RecordTypes<T_ErrMask>(
+        protected static TryGet<Group_FieldIndex?> Fill_Binary_RecordTypes(
             Group<T> item,
             MutagenFrame frame,
-            Func<Group_ErrorMask<T_ErrMask>> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
             var nextRecordType = HeaderTranslation.GetNextRecordType(
                 reader: frame.Reader,
@@ -732,24 +671,17 @@ namespace Mutagen.Bethesda
                 default:
                     if (nextRecordType.Equals(T_RecordType))
                     {
-                        var ItemstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.ParseRepeatedItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: T_RecordType,
+                            item: item._Items,
                             fieldIndex: (int)Group_FieldIndex.Items,
                             lengthLength: 4,
                             errorMask: errorMask,
-                            transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
-                            {
-                                return LoquiBinaryTranslation<T, T_ErrMask>.Instance.Parse(
-                                    frame: r.Spawn(snapToFinalPosition: false),
-                                    doMasks: listDoMasks,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                        item._Items.SetIfSucceeded(ItemstryGet);
+                            transl: LoquiBinaryTranslation<T>.Instance.Parse);
                         return TryGet<Group_FieldIndex?>.Failure;
                     }
-                    errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    errorMask.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + Constants.RECORD_LENGTH;
                     return TryGet<Group_FieldIndex?>.Succeed(null);
             }
@@ -852,24 +784,33 @@ namespace Mutagen.Bethesda
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
             where T_CopyMask : new()
         {
-            Group_ErrorMask<T_ErrMask> retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Group_ErrorMask<T_ErrMask>();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             GroupCommon.CopyFieldsFrom<T, T_CopyMask>(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom<T_CopyMask>(
+            IGroupGetter<T> rhs,
+            ErrorMaskBuilder errorMask,
+            Group_CopyMask<T_CopyMask> copyMask = null,
+            IGroupGetter<T> def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+            where T_CopyMask : new()
+        {
+            GroupCommon.CopyFieldsFrom<T, T_CopyMask>(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1230,8 +1171,7 @@ namespace Mutagen.Bethesda.Internals
             IGroup<T> item,
             IGroupGetter<T> rhs,
             IGroupGetter<T> def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             Group_CopyMask<T_CopyMask> copyMask,
             NotifyingFireParameters cmds = null)
             where T : IFormID, ILoquiObject<T>
@@ -1239,6 +1179,7 @@ namespace Mutagen.Bethesda.Internals
         {
             if (copyMask?.GroupType ?? true)
             {
+                errorMask.PushIndex((int)Group_FieldIndex.GroupType);
                 try
                 {
                     item.GroupType_Property.Set(
@@ -1246,13 +1187,18 @@ namespace Mutagen.Bethesda.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Group_FieldIndex.GroupType, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.LastModified ?? true)
             {
+                errorMask.PushIndex((int)Group_FieldIndex.LastModified);
                 try
                 {
                     item.LastModified_Property.Set(
@@ -1260,13 +1206,18 @@ namespace Mutagen.Bethesda.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Group_FieldIndex.LastModified, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Items.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Group_FieldIndex.Items);
                 try
                 {
                     item.Items.SetToWithDefault(
@@ -1290,9 +1241,13 @@ namespace Mutagen.Bethesda.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Group_FieldIndex.Items, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1523,67 +1478,58 @@ namespace Mutagen.Bethesda.Internals
             where T : IFormID, ILoquiObject<T>
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
-            Group_ErrorMask<T_ErrMask> errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal<T, T_ErrMask>(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Group_ErrorMask<T_ErrMask>()) : default(Func<Group_ErrorMask<T_ErrMask>>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal<T, T_ErrMask>(
             XElement node,
             IGroupGetter<T> item,
-            Func<Group_ErrorMask<T_ErrMask>> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
             where T : IFormID, ILoquiObject<T>
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Group");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Group");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Group");
-                }
-                EnumXmlTranslation<GroupTypeEnum>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.GroupType),
-                    item: item.GroupType_Property,
-                    fieldIndex: (int)Group_FieldIndex.GroupType,
-                    errorMask: errorMask);
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.LastModified),
-                    item: item.LastModified_Property,
-                    fieldIndex: (int)Group_FieldIndex.LastModified,
-                    errorMask: errorMask);
-                if (item.Items.HasBeenSet)
-                {
-                    KeyedDictXmlTranslation<FormID, T, MaskItem<Exception, T_ErrMask>>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Items),
-                        items: item.Items.Values,
-                        fieldIndex: (int)Group_FieldIndex.Items,
-                        errorMask: errorMask,
-                        valTransl: (XElement subNode, T subItem, bool dictDoMask, out MaskItem<Exception, T_ErrMask> dictSubMask) =>
-                        {
-                            LoquiXmlTranslation<T, T_ErrMask>.Instance.Write(
-                                node: subNode,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: dictDoMask,
-                                errorMask: out dictSubMask);
-                        }
-                        );
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Group");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            EnumXmlTranslation<GroupTypeEnum>.Instance.Write(
+                node: elem,
+                name: nameof(item.GroupType),
+                item: item.GroupType_Property,
+                fieldIndex: (int)Group_FieldIndex.GroupType,
+                errorMask: errorMask);
+            ByteArrayXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.LastModified),
+                item: item.LastModified_Property,
+                fieldIndex: (int)Group_FieldIndex.LastModified,
+                errorMask: errorMask);
+            if (item.Items.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                KeyedDictXmlTranslation<FormID, T>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Items),
+                    items: item.Items.Values,
+                    fieldIndex: (int)Group_FieldIndex.Items,
+                    errorMask: errorMask,
+                    valTransl: (XElement subNode, T subItem, ErrorMaskBuilder dictSubMask) =>
+                    {
+                        LoquiXmlTranslation<T>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            errorMask: dictSubMask);
+                    }
+                    );
             }
         }
         #endregion
@@ -1601,60 +1547,50 @@ namespace Mutagen.Bethesda.Internals
             where T : IFormID, ILoquiObject<T>
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
-            Group_ErrorMask<T_ErrMask> errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal<T, T_ErrMask>(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Group_ErrorMask<T_ErrMask>()) : default(Func<Group_ErrorMask<T_ErrMask>>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal<T, T_ErrMask>(
             MutagenWriter writer,
             Group<T> item,
             RecordTypeConverter recordTypeConverter,
-            Func<Group_ErrorMask<T_ErrMask>> errorMask)
+            ErrorMaskBuilder errorMask)
             where T : IFormID, ILoquiObject<T>
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: Group_Registration.GRUP_HEADER,
+                type: ObjectType.Group))
             {
-                using (HeaderExport.ExportHeader(
+                Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: Group_Registration.GRUP_HEADER,
-                    type: ObjectType.Group))
-                {
-                    Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                    Write_Binary_RecordTypes(
-                        item: item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask);
             }
         }
         #endregion
 
-        public static void Write_Binary_Embedded<T, T_ErrMask>(
+        public static void Write_Binary_Embedded<T>(
             Group<T> item,
             MutagenWriter writer,
-            Func<Group_ErrorMask<T_ErrMask>> errorMask)
+            ErrorMaskBuilder errorMask)
             where T : IFormID, ILoquiObject<T>
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
             Group<T>.WriteBinary_ContainedRecordType(
                 writer: writer,
                 item: item,
-                fieldIndex: (int)Group_FieldIndex.ContainedRecordType,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
                 writer,
@@ -1669,28 +1605,19 @@ namespace Mutagen.Bethesda.Internals
                 errorMask: errorMask);
         }
 
-        public static void Write_Binary_RecordTypes<T, T_ErrMask>(
+        public static void Write_Binary_RecordTypes<T>(
             Group<T> item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<Group_ErrorMask<T_ErrMask>> errorMask)
+            ErrorMaskBuilder errorMask)
             where T : IFormID, ILoquiObject<T>
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Write(
                 writer: writer,
-                item: item.Items.Values,
+                items: item.Items.Values,
                 fieldIndex: (int)Group_FieldIndex.Items,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, T subItem, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
-                {
-                    LoquiBinaryTranslation<T, T_ErrMask>.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                transl: LoquiBinaryTranslation<T>.Instance.Write);
         }
 
         #endregion
@@ -2050,6 +1977,14 @@ namespace Mutagen.Bethesda.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static Group_ErrorMask<T_ErrMask> Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

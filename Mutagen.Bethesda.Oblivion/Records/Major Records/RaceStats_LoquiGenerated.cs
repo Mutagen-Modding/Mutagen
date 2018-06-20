@@ -17,6 +17,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
@@ -255,8 +256,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -265,23 +265,37 @@ namespace Mutagen.Bethesda.Oblivion
             out RaceStats_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = RaceStats_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (RaceStats Object, RaceStats_ErrorMask ErrorMask) Create_XML(
+        public static RaceStats Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            RaceStats_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RaceStats_ErrorMask()) : default(Func<RaceStats_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new RaceStats();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static RaceStats Create_XML(string path)
@@ -323,12 +337,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<RaceStats, RaceStats_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<RaceStats>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -337,13 +350,14 @@ namespace Mutagen.Bethesda.Oblivion
             out RaceStats_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<RaceStats, RaceStats_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<RaceStats>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = RaceStats_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -482,85 +496,69 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static RaceStats Create_XML_Internal(
-            XElement root,
-            Func<RaceStats_ErrorMask> errorMask)
-        {
-            var ret = new RaceStats();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             RaceStats item,
             XElement root,
             string name,
-            Func<RaceStats_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Strength":
-                    item._Strength.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RaceStats_FieldIndex.Strength,
-                        errorMask: errorMask));
+                        item: item._Strength,
+                        errorMask: errorMask);
                     break;
                 case "Intelligence":
-                    item._Intelligence.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RaceStats_FieldIndex.Intelligence,
-                        errorMask: errorMask));
+                        item: item._Intelligence,
+                        errorMask: errorMask);
                     break;
                 case "Willpower":
-                    item._Willpower.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RaceStats_FieldIndex.Willpower,
-                        errorMask: errorMask));
+                        item: item._Willpower,
+                        errorMask: errorMask);
                     break;
                 case "Agility":
-                    item._Agility.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RaceStats_FieldIndex.Agility,
-                        errorMask: errorMask));
+                        item: item._Agility,
+                        errorMask: errorMask);
                     break;
                 case "Speed":
-                    item._Speed.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RaceStats_FieldIndex.Speed,
-                        errorMask: errorMask));
+                        item: item._Speed,
+                        errorMask: errorMask);
                     break;
                 case "Endurance":
-                    item._Endurance.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RaceStats_FieldIndex.Endurance,
-                        errorMask: errorMask));
+                        item: item._Endurance,
+                        errorMask: errorMask);
                     break;
                 case "Personality":
-                    item._Personality.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RaceStats_FieldIndex.Personality,
-                        errorMask: errorMask));
+                        item: item._Personality,
+                        errorMask: errorMask);
                     break;
                 case "Luck":
-                    item._Luck.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)RaceStats_FieldIndex.Luck,
-                        errorMask: errorMask));
+                        item: item._Luck,
+                        errorMask: errorMask);
                     break;
                 default:
                     break;
@@ -576,8 +574,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -586,26 +584,38 @@ namespace Mutagen.Bethesda.Oblivion
             out RaceStats_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = RaceStats_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (RaceStats Object, RaceStats_ErrorMask ErrorMask) Create_Binary(
+        public static RaceStats Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            RaceStats_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RaceStats_ErrorMask()) : default(Func<RaceStats_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new RaceStats();
+            try
+            {
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static RaceStats Create_Binary(string path)
@@ -733,67 +743,51 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static RaceStats Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<RaceStats_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            var ret = new RaceStats();
-            try
-            {
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_Binary_Structs(
             RaceStats item,
             MutagenFrame frame,
-            Func<RaceStats_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            item._Strength.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._Strength,
                 fieldIndex: (int)RaceStats_FieldIndex.Strength,
-                errorMask: errorMask));
-            item._Intelligence.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._Intelligence,
                 fieldIndex: (int)RaceStats_FieldIndex.Intelligence,
-                errorMask: errorMask));
-            item._Willpower.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._Willpower,
                 fieldIndex: (int)RaceStats_FieldIndex.Willpower,
-                errorMask: errorMask));
-            item._Agility.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._Agility,
                 fieldIndex: (int)RaceStats_FieldIndex.Agility,
-                errorMask: errorMask));
-            item._Speed.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._Speed,
                 fieldIndex: (int)RaceStats_FieldIndex.Speed,
-                errorMask: errorMask));
-            item._Endurance.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._Endurance,
                 fieldIndex: (int)RaceStats_FieldIndex.Endurance,
-                errorMask: errorMask));
-            item._Personality.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._Personality,
                 fieldIndex: (int)RaceStats_FieldIndex.Personality,
-                errorMask: errorMask));
-            item._Luck.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                 frame: frame,
+                item: item._Luck,
                 fieldIndex: (int)RaceStats_FieldIndex.Luck,
-                errorMask: errorMask));
+                errorMask: errorMask);
         }
 
         #endregion
@@ -886,24 +880,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            RaceStats_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new RaceStats_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             RaceStatsCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = RaceStats_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IRaceStatsGetter rhs,
+            ErrorMaskBuilder errorMask,
+            RaceStats_CopyMask copyMask = null,
+            IRaceStatsGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            RaceStatsCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1384,13 +1386,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceStats item,
             IRaceStatsGetter rhs,
             IRaceStatsGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RaceStats_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.Strength ?? true)
             {
+                errorMask.PushIndex((int)RaceStats_FieldIndex.Strength);
                 try
                 {
                     item.Strength_Property.Set(
@@ -1398,13 +1400,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RaceStats_FieldIndex.Strength, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Intelligence ?? true)
             {
+                errorMask.PushIndex((int)RaceStats_FieldIndex.Intelligence);
                 try
                 {
                     item.Intelligence_Property.Set(
@@ -1412,13 +1419,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RaceStats_FieldIndex.Intelligence, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Willpower ?? true)
             {
+                errorMask.PushIndex((int)RaceStats_FieldIndex.Willpower);
                 try
                 {
                     item.Willpower_Property.Set(
@@ -1426,13 +1438,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RaceStats_FieldIndex.Willpower, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Agility ?? true)
             {
+                errorMask.PushIndex((int)RaceStats_FieldIndex.Agility);
                 try
                 {
                     item.Agility_Property.Set(
@@ -1440,13 +1457,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RaceStats_FieldIndex.Agility, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Speed ?? true)
             {
+                errorMask.PushIndex((int)RaceStats_FieldIndex.Speed);
                 try
                 {
                     item.Speed_Property.Set(
@@ -1454,13 +1476,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RaceStats_FieldIndex.Speed, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Endurance ?? true)
             {
+                errorMask.PushIndex((int)RaceStats_FieldIndex.Endurance);
                 try
                 {
                     item.Endurance_Property.Set(
@@ -1468,13 +1495,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RaceStats_FieldIndex.Endurance, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Personality ?? true)
             {
+                errorMask.PushIndex((int)RaceStats_FieldIndex.Personality);
                 try
                 {
                     item.Personality_Property.Set(
@@ -1482,13 +1514,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RaceStats_FieldIndex.Personality, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Luck ?? true)
             {
+                errorMask.PushIndex((int)RaceStats_FieldIndex.Luck);
                 try
                 {
                     item.Luck_Property.Set(
@@ -1496,9 +1533,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RaceStats_FieldIndex.Luck, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1747,83 +1788,75 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out RaceStats_ErrorMask errorMask,
             string name = null)
         {
-            RaceStats_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RaceStats_ErrorMask()) : default(Func<RaceStats_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = RaceStats_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             IRaceStatsGetter item,
-            Func<RaceStats_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RaceStats");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RaceStats");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RaceStats");
-                }
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Strength),
-                    item: item.Strength_Property,
-                    fieldIndex: (int)RaceStats_FieldIndex.Strength,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Intelligence),
-                    item: item.Intelligence_Property,
-                    fieldIndex: (int)RaceStats_FieldIndex.Intelligence,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Willpower),
-                    item: item.Willpower_Property,
-                    fieldIndex: (int)RaceStats_FieldIndex.Willpower,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Agility),
-                    item: item.Agility_Property,
-                    fieldIndex: (int)RaceStats_FieldIndex.Agility,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Speed),
-                    item: item.Speed_Property,
-                    fieldIndex: (int)RaceStats_FieldIndex.Speed,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Endurance),
-                    item: item.Endurance_Property,
-                    fieldIndex: (int)RaceStats_FieldIndex.Endurance,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Personality),
-                    item: item.Personality_Property,
-                    fieldIndex: (int)RaceStats_FieldIndex.Personality,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Luck),
-                    item: item.Luck_Property,
-                    fieldIndex: (int)RaceStats_FieldIndex.Luck,
-                    errorMask: errorMask);
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RaceStats");
             }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Strength),
+                item: item.Strength_Property,
+                fieldIndex: (int)RaceStats_FieldIndex.Strength,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Intelligence),
+                item: item.Intelligence_Property,
+                fieldIndex: (int)RaceStats_FieldIndex.Intelligence,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Willpower),
+                item: item.Willpower_Property,
+                fieldIndex: (int)RaceStats_FieldIndex.Willpower,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Agility),
+                item: item.Agility_Property,
+                fieldIndex: (int)RaceStats_FieldIndex.Agility,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Speed),
+                item: item.Speed_Property,
+                fieldIndex: (int)RaceStats_FieldIndex.Speed,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Endurance),
+                item: item.Endurance_Property,
+                fieldIndex: (int)RaceStats_FieldIndex.Endurance,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Personality),
+                item: item.Personality_Property,
+                fieldIndex: (int)RaceStats_FieldIndex.Personality,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Luck),
+                item: item.Luck_Property,
+                fieldIndex: (int)RaceStats_FieldIndex.Luck,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -1838,40 +1871,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out RaceStats_ErrorMask errorMask)
         {
-            RaceStats_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RaceStats_ErrorMask()) : default(Func<RaceStats_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = RaceStats_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             RaceStats item,
             RecordTypeConverter recordTypeConverter,
-            Func<RaceStats_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask);
         }
         #endregion
 
         public static void Write_Binary_Embedded(
             RaceStats item,
             MutagenWriter writer,
-            Func<RaceStats_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -2285,6 +2310,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static RaceStats_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

@@ -18,6 +18,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
@@ -164,8 +165,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -174,23 +174,37 @@ namespace Mutagen.Bethesda.Oblivion
             out GenderedBodyData_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = GenderedBodyData_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (GenderedBodyData Object, GenderedBodyData_ErrorMask ErrorMask) Create_XML(
+        public static GenderedBodyData Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            GenderedBodyData_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new GenderedBodyData_ErrorMask()) : default(Func<GenderedBodyData_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new GenderedBodyData();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static GenderedBodyData Create_XML(string path)
@@ -232,12 +246,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<GenderedBodyData, GenderedBodyData_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<GenderedBodyData>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -246,13 +259,14 @@ namespace Mutagen.Bethesda.Oblivion
             out GenderedBodyData_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<GenderedBodyData, GenderedBodyData_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<GenderedBodyData>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = GenderedBodyData_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -391,49 +405,65 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static GenderedBodyData Create_XML_Internal(
-            XElement root,
-            Func<GenderedBodyData_ErrorMask> errorMask)
-        {
-            var ret = new GenderedBodyData();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             GenderedBodyData item,
             XElement root,
             string name,
-            Func<GenderedBodyData_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Male":
-                    item._Male.SetIfSucceeded(LoquiXmlTranslation<BodyData, BodyData_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
-                        errorMask: errorMask));
+                    try
+                    {
+                        errorMask?.PushIndex((int)GenderedBodyData_FieldIndex.Male);
+                        if (LoquiXmlTranslation<BodyData>.Instance.Parse(
+                            root: root,
+                            item: out var MaleParse,
+                            errorMask: errorMask))
+                        {
+                            item._Male.Item = MaleParse;
+                        }
+                        else
+                        {
+                            item._Male.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Female":
-                    item._Female.SetIfSucceeded(LoquiXmlTranslation<BodyData, BodyData_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
-                        errorMask: errorMask));
+                    try
+                    {
+                        errorMask?.PushIndex((int)GenderedBodyData_FieldIndex.Female);
+                        if (LoquiXmlTranslation<BodyData>.Instance.Parse(
+                            root: root,
+                            item: out var FemaleParse,
+                            errorMask: errorMask))
+                        {
+                            item._Female.Item = FemaleParse;
+                        }
+                        else
+                        {
+                            item._Female.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     break;
@@ -449,8 +479,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -459,26 +489,50 @@ namespace Mutagen.Bethesda.Oblivion
             out GenderedBodyData_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = GenderedBodyData_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (GenderedBodyData Object, GenderedBodyData_ErrorMask ErrorMask) Create_Binary(
+        public static GenderedBodyData Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            GenderedBodyData_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new GenderedBodyData_ErrorMask()) : default(Func<GenderedBodyData_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new GenderedBodyData();
+            try
+            {
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                    GenderedBodyData_FieldIndex? lastParsed = null;
+                    while (!frame.Complete)
+                    {
+                        var parsed = Fill_Binary_RecordTypes(
+                            item: ret,
+                            frame: frame,
+                            lastParsed: lastParsed,
+                            errorMask: errorMask,
+                            recordTypeConverter: recordTypeConverter);
+                        if (parsed.Failed) break;
+                        lastParsed = parsed.Value;
+                    }
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static GenderedBodyData Create_Binary(string path)
@@ -606,46 +660,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static GenderedBodyData Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<GenderedBodyData_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            var ret = new GenderedBodyData();
-            try
-            {
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                    GenderedBodyData_FieldIndex? lastParsed = null;
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            lastParsed: lastParsed,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                        lastParsed = parsed.Value;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_Binary_Structs(
             GenderedBodyData item,
             MutagenFrame frame,
-            Func<GenderedBodyData_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
         }
 
@@ -653,7 +671,7 @@ namespace Mutagen.Bethesda.Oblivion
             GenderedBodyData item,
             MutagenFrame frame,
             GenderedBodyData_FieldIndex? lastParsed,
-            Func<GenderedBodyData_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -665,18 +683,20 @@ namespace Mutagen.Bethesda.Oblivion
                 case "MNAM":
                     if (lastParsed.HasValue && lastParsed.Value >= GenderedBodyData_FieldIndex.Male) return TryGet<GenderedBodyData_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
-                    item._Male.SetIfSucceeded(LoquiBinaryTranslation<BodyData, BodyData_ErrorMask>.Instance.Parse(
+                    LoquiBinaryTranslation<BodyData>.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
-                        errorMask: errorMask));
+                        errorMask: errorMask,
+                        item: item._Male);
                     return TryGet<GenderedBodyData_FieldIndex?>.Succeed(GenderedBodyData_FieldIndex.Male);
                 case "FNAM":
                     if (lastParsed.HasValue && lastParsed.Value >= GenderedBodyData_FieldIndex.Female) return TryGet<GenderedBodyData_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
-                    item._Female.SetIfSucceeded(LoquiBinaryTranslation<BodyData, BodyData_ErrorMask>.Instance.Parse(
+                    LoquiBinaryTranslation<BodyData>.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
-                        errorMask: errorMask));
+                        errorMask: errorMask,
+                        item: item._Female);
                     return TryGet<GenderedBodyData_FieldIndex?>.Succeed(GenderedBodyData_FieldIndex.Female);
                 default:
                     return TryGet<GenderedBodyData_FieldIndex?>.Failure;
@@ -773,24 +793,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            GenderedBodyData_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new GenderedBodyData_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             GenderedBodyDataCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = GenderedBodyData_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IGenderedBodyDataGetter rhs,
+            ErrorMaskBuilder errorMask,
+            GenderedBodyData_CopyMask copyMask = null,
+            IGenderedBodyDataGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            GenderedBodyDataCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1105,13 +1133,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGenderedBodyData item,
             IGenderedBodyDataGetter rhs,
             IGenderedBodyDataGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             GenderedBodyData_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.Male.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)GenderedBodyData_FieldIndex.Male);
                 try
                 {
                     item.Male_Property.SetToWithDefault(
@@ -1129,15 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.Male,
                                         rhs: rhs.Male,
                                         def: def?.Male,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<BodyData_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new BodyData_ErrorMask();
-                                            baseMask.SetNthMask((int)GenderedBodyData_FieldIndex.Male, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.Male.Specific,
                                         cmds: cmds);
                                     return r;
@@ -1154,13 +1174,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)GenderedBodyData_FieldIndex.Male, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Female.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)GenderedBodyData_FieldIndex.Female);
                 try
                 {
                     item.Female_Property.SetToWithDefault(
@@ -1178,15 +1203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.Female,
                                         rhs: rhs.Female,
                                         def: def?.Female,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<BodyData_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new BodyData_ErrorMask();
-                                            baseMask.SetNthMask((int)GenderedBodyData_FieldIndex.Female, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.Female.Specific,
                                         cmds: cmds);
                                     return r;
@@ -1203,9 +1220,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)GenderedBodyData_FieldIndex.Female, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1377,52 +1398,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out GenderedBodyData_ErrorMask errorMask,
             string name = null)
         {
-            GenderedBodyData_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new GenderedBodyData_ErrorMask()) : default(Func<GenderedBodyData_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = GenderedBodyData_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             IGenderedBodyDataGetter item,
-            Func<GenderedBodyData_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.GenderedBodyData");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.GenderedBodyData");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.GenderedBodyData");
-                }
-                if (item.Male_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<BodyData, BodyData_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.Male_Property,
-                        name: nameof(item.Male),
-                        fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
-                        errorMask: errorMask);
-                }
-                if (item.Female_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<BodyData, BodyData_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.Female_Property,
-                        name: nameof(item.Female),
-                        fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
-                        errorMask: errorMask);
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.GenderedBodyData");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (item.Male_Property.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                LoquiXmlTranslation<BodyData>.Instance.Write(
+                    node: elem,
+                    item: item.Male_Property,
+                    name: nameof(item.Male),
+                    fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
+                    errorMask: errorMask);
+            }
+            if (item.Female_Property.HasBeenSet)
+            {
+                LoquiXmlTranslation<BodyData>.Instance.Write(
+                    node: elem,
+                    item: item.Female_Property,
+                    name: nameof(item.Female),
+                    fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -1438,34 +1451,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out GenderedBodyData_ErrorMask errorMask)
         {
-            GenderedBodyData_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new GenderedBodyData_ErrorMask()) : default(Func<GenderedBodyData_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = GenderedBodyData_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             GenderedBodyData item,
             RecordTypeConverter recordTypeConverter,
-            Func<GenderedBodyData_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -1473,13 +1478,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             GenderedBodyData item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<GenderedBodyData_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             if (item.Male_Property.HasBeenSet)
             {
                 using (HeaderExport.ExportHeader(writer, GenderedBodyData_Registration.MNAM_HEADER, ObjectType.Subrecord)) { }
             }
-            LoquiBinaryTranslation<BodyData, BodyData_ErrorMask>.Instance.Write(
+            LoquiBinaryTranslation<BodyData>.Instance.Write(
                 writer: writer,
                 item: item.Male_Property,
                 fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
@@ -1488,7 +1493,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 using (HeaderExport.ExportHeader(writer, GenderedBodyData_Registration.FNAM_HEADER, ObjectType.Subrecord)) { }
             }
-            LoquiBinaryTranslation<BodyData, BodyData_ErrorMask>.Instance.Write(
+            LoquiBinaryTranslation<BodyData>.Instance.Write(
                 writer: writer,
                 item: item.Female_Property,
                 fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
@@ -1757,6 +1762,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static GenderedBodyData_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 

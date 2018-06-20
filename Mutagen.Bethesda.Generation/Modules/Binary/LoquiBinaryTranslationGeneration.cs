@@ -12,6 +12,12 @@ namespace Mutagen.Bethesda.Generation
     {
         public string ModNickname;
 
+        public override string GetTranslatorInstance(TypeGeneration typeGen)
+        {
+            var loquiGen = typeGen as LoquiType;
+            return $"LoquiBinaryTranslation<{loquiGen.TypeName}>.Instance";
+        }
+
         public LoquiBinaryTranslationGeneration(string modNickname)
         {
             this.ModNickname = modNickname;
@@ -23,7 +29,6 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string writerAccessor,
             Accessor itemAccessor,
-            string doMaskAccessor,
             string maskAccessor)
         {
             var loquiGen = typeGen as LoquiType;
@@ -45,20 +50,15 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg, doIt: isGroup))
             {
                 using (var args = new ArgsWrapper(fg,
-                $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.Mask(MaskType.Error)}>.Instance.Write"))
+                $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}>.Instance.Write"))
                 {
                     args.Add($"writer: {writerAccessor}");
                     args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
                     if (loquiGen.HasIndex)
                     {
                         args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                        args.Add($"errorMask: {maskAccessor}");
                     }
-                    else
-                    {
-                        args.Add($"doMasks: {doMaskAccessor}");
-                        args.Add($"errorMask: out {maskAccessor}");
-                    }
+                    args.Add($"errorMask: {maskAccessor}");
                     if (data?.RecordTypeConverter != null
                         && data.RecordTypeConverter.FromConversions.Count > 0)
                     {
@@ -80,7 +80,6 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string frameAccessor,
             Accessor itemAccessor,
-            string doMaskAccessor,
             string maskAccessor)
         {
             var loquiGen = typeGen as LoquiType;
@@ -95,30 +94,25 @@ namespace Mutagen.Bethesda.Generation
                 if (loquiGen.SingletonType == SingletonLevel.Singleton)
                 {
                     if (loquiGen.InterfaceType == LoquiInterfaceType.IGetter) return;
-                    using (var args = new ArgsWrapper(fg,
-                        $"var tmp{typeGen.Name} = {loquiGen.TypeName}.Create_{ModNickname}"))
+                    fg.AppendLine($"using (errorMask.PushIndex((int){typeGen.IndexEnumName}))");
+                    using (new BraceWrapper(fg))
                     {
-                        args.Add($"frame: {frameAccessor}");
-                        args.Add($"doMasks: errorMask != null");
-                        args.Add($"errorMask: out {loquiGen.Mask(MaskType.Error)} {loquiGen.Name}createMask");
-                    }
-                    using (var args = new ArgsWrapper(fg,
-                        $"{itemAccessor.DirectAccess}.CopyFieldsFrom{loquiGen.GetGenericTypes(MaskType.Error, MaskType.Copy)}"))
-                    {
-                        args.Add($"rhs: tmp{typeGen.Name}");
-                        args.Add("def: null");
-                        args.Add("cmds: null");
-                        args.Add("copyMask: null");
-                        args.Add("doMasks: errorMask != null");
-                        args.Add($"errorMask: out {loquiGen.Mask(MaskType.Error)} {loquiGen.Name}errorMask");
-                    }
-                    fg.AppendLine($"var combined{typeGen.Name} = {loquiGen.Mask(MaskType.Error)}.Combine({loquiGen.Name}createMask, {loquiGen.Name}errorMask);");
-                    using (var args = new ArgsWrapper(fg,
-                        $"ErrorMask.HandleErrorMask"))
-                    {
-                        args.Add($"creator: {maskAccessor}");
-                        args.Add($"index: (int){typeGen.IndexEnumName}");
-                        args.Add($"errMaskObj: combined{typeGen.Name} == null ? null : new MaskItem<Exception, {loquiGen.Mask(MaskType.Error)}>(null, combined{typeGen.Name})");
+                        using (var args = new ArgsWrapper(fg,
+                            $"var tmp{typeGen.Name} = {loquiGen.TypeName}.Create_{ModNickname}"))
+                        {
+                            args.Add($"frame: {frameAccessor}");
+                            args.Add($"errorMask: errorMask");
+                            args.Add($"recordTypeConverter: null");
+                        }
+                        using (var args = new ArgsWrapper(fg,
+                            $"{itemAccessor.DirectAccess}.CopyFieldsFrom{loquiGen.GetGenericTypes(MaskType.Copy)}"))
+                        {
+                            args.Add($"rhs: tmp{typeGen.Name}");
+                            args.Add("def: null");
+                            args.Add("cmds: null");
+                            args.Add("copyMask: null");
+                            args.Add($"errorMask: errorMask");
+                        }
                     }
                 }
                 else
@@ -126,12 +120,11 @@ namespace Mutagen.Bethesda.Generation
                     ArgsWrapper args;
                     if (itemAccessor.PropertyAccess != null)
                     {
-                        args = new ArgsWrapper(fg, $"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}(LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.Mask(MaskType.Error)}>.Instance.Parse",
-                            suffixLine: ")");
+                        args = new ArgsWrapper(fg, $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}>.Instance.ParseInto");
                     }
                     else
                     {
-                        args = new ArgsWrapper(fg, $"var {typeGen.Name}tryGet = LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.Mask(MaskType.Error)}>.Instance.Parse");
+                        args = new ArgsWrapper(fg, $"var {typeGen.Name}tryGet = LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}>.Instance.Parse");
                     }
                     using (args)
                     {
@@ -139,12 +132,11 @@ namespace Mutagen.Bethesda.Generation
                         if (loquiGen.HasIndex)
                         {
                             args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                            args.Add($"errorMask: {maskAccessor}");
                         }
-                        else
+                        args.Add($"errorMask: {maskAccessor}");
+                        if (itemAccessor.PropertyAccess != null)
                         {
-                            args.Add($"doMasks: {doMaskAccessor}");
-                            args.Add($"errorMask: out {maskAccessor}");
+                            args.Add($"item: {itemAccessor.PropertyAccess}");
                         }
                         if (data?.RecordTypeConverter != null
                             && data.RecordTypeConverter.FromConversions.Count > 0)
@@ -164,18 +156,7 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                UnsafeXmlTranslationGeneration unsafeXml = new UnsafeXmlTranslationGeneration()
-                {
-                    ErrMaskString = $"MaskItem<Exception, {loquiGen.Mask(MaskType.Error)}>"
-                };
-                unsafeXml.GenerateCopyIn(
-                    fg: fg,
-                    typeGen: typeGen,
-                    nodeAccessor: frameAccessor,
-                    itemAccessor: itemAccessor,
-                    doMaskAccessor: doMaskAccessor,
-                    maskAccessor: "var unsafeMask");
-                fg.AppendLine($"{maskAccessor} = unsafeMask == null ? null : new MaskItem<Exception, object>(null, unsafeMask);");
+                throw new NotImplementedException();
             }
         }
 
@@ -186,28 +167,23 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string readerAccessor,
             bool squashedRepeatedList,
-            Accessor retAccessor,
-            string doMaskAccessor,
+            string retAccessor,
+            Accessor outItemAccessor,
             string maskAccessor)
         {
             var targetLoquiGen = targetGen as LoquiType;
             var loquiGen = typeGen as LoquiType;
             var data = loquiGen.GetFieldData();
             using (var args = new ArgsWrapper(fg,
-                $"{retAccessor.DirectAccess}LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.Mask(MaskType.Error)}>.Instance.Parse",
-                suffixLine: (targetGen == typeGen ? string.Empty : $".Bubble<{typeGen.TypeName}, {targetGen.TypeName}>()")))
+                $"{retAccessor}LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}>.Instance.Parse"))
             {
                 args.Add($"frame: {readerAccessor}.Spawn(snapToFinalPosition: false)");
                 if (loquiGen.HasIndex)
                 {
                     args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                    args.Add($"errorMask: {maskAccessor}");
                 }
-                else
-                {
-                    args.Add($"doMasks: {doMaskAccessor}");
-                    args.Add($"errorMask: out {maskAccessor}");
-                }
+                args.Add($"item: out {outItemAccessor.DirectAccess}");
+                args.Add($"errorMask: {maskAccessor}");
                 if (data?.RecordTypeConverter != null
                     && data.RecordTypeConverter.FromConversions.Count > 0)
                 {

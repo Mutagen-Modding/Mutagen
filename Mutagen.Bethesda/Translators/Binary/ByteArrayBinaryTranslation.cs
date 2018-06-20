@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Binary
     {
         public readonly static ByteArrayBinaryTranslation Instance = new ByteArrayBinaryTranslation();
 
-        protected override void WriteValue(MutagenWriter writer, byte[] item)
+        public override void Write(MutagenWriter writer, byte[] item)
         {
             writer.Write(item);
         }

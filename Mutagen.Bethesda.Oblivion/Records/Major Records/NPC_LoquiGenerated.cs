@@ -21,6 +21,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 
@@ -1304,8 +1305,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -1314,23 +1314,37 @@ namespace Mutagen.Bethesda.Oblivion
             out NPC_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (NPC Object, NPC_ErrorMask ErrorMask) Create_XML(
+        public static NPC Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            NPC_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new NPC_ErrorMask()) : default(Func<NPC_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new NPC();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static NPC Create_XML(string path)
@@ -1372,12 +1386,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<NPC, NPC_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<NPC>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -1386,13 +1399,14 @@ namespace Mutagen.Bethesda.Oblivion
             out NPC_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<NPC, NPC_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<NPC>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -1555,475 +1569,486 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static NPC Create_XML_Internal(
-            XElement root,
-            Func<NPC_ErrorMask> errorMask)
-        {
-            var ret = new NPC();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             NPC item,
             XElement root,
             string name,
-            Func<NPC_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Model":
-                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)NPC_FieldIndex.Model,
-                        errorMask: errorMask));
+                    try
+                    {
+                        errorMask?.PushIndex((int)NPC_FieldIndex.Model);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            root: root,
+                            item: out var ModelParse,
+                            errorMask: errorMask))
+                        {
+                            item._Model.Item = ModelParse;
+                        }
+                        else
+                        {
+                            item._Model.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "NPCFlags":
-                    item._NPCFlags.SetIfSucceeded(EnumXmlTranslation<NPC.NPCFlag>.Instance.Parse(
+                    EnumXmlTranslation<NPC.NPCFlag>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)NPC_FieldIndex.NPCFlags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._NPCFlags,
+                        errorMask: errorMask);
                     break;
                 case "BaseSpellPoints":
-                    item._BaseSpellPoints.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    UInt16XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.BaseSpellPoints,
-                        errorMask: errorMask));
+                        item: item._BaseSpellPoints,
+                        errorMask: errorMask);
                     break;
                 case "Fatigue":
-                    item._Fatigue.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    UInt16XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Fatigue,
-                        errorMask: errorMask));
+                        item: item._Fatigue,
+                        errorMask: errorMask);
                     break;
                 case "BarterGold":
-                    item._BarterGold.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    UInt16XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.BarterGold,
-                        errorMask: errorMask));
+                        item: item._BarterGold,
+                        errorMask: errorMask);
                     break;
                 case "LevelOffset":
-                    item._LevelOffset.SetIfSucceeded(Int16XmlTranslation.Instance.ParseNonNull(
+                    Int16XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.LevelOffset,
-                        errorMask: errorMask));
+                        item: item._LevelOffset,
+                        errorMask: errorMask);
                     break;
                 case "CalcMin":
-                    item._CalcMin.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    UInt16XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.CalcMin,
-                        errorMask: errorMask));
+                        item: item._CalcMin,
+                        errorMask: errorMask);
                     break;
                 case "CalcMax":
-                    item._CalcMax.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    UInt16XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.CalcMax,
-                        errorMask: errorMask));
+                        item: item._CalcMax,
+                        errorMask: errorMask);
                     break;
                 case "Factions":
-                    item._Factions.SetIfSucceeded(ListXmlTranslation<RankPlacement, MaskItem<Exception, RankPlacement_ErrorMask>>.Instance.Parse(
+                    ListXmlTranslation<RankPlacement>.Instance.ParseInto(
                         root: root,
+                        item: item._Factions,
                         fieldIndex: (int)NPC_FieldIndex.Factions,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, RankPlacement_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiXmlTranslation<RankPlacement, RankPlacement_ErrorMask>.Instance.Parse(
-                                root: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: LoquiXmlTranslation<RankPlacement>.Instance.Parse);
                     break;
                 case "DeathItem":
-                    item.DeathItem_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.DeathItem,
-                        errorMask: errorMask));
+                        item: item.DeathItem_Property,
+                        errorMask: errorMask);
                     break;
                 case "Race":
-                    item.Race_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Race,
-                        errorMask: errorMask));
+                        item: item.Race_Property,
+                        errorMask: errorMask);
                     break;
                 case "Spells":
-                    item._Spells.SetIfSucceeded(ListXmlTranslation<FormIDSetLink<Spell>, Exception>.Instance.Parse(
+                    ListXmlTranslation<FormIDSetLink<Spell>>.Instance.ParseInto(
                         root: root,
+                        item: item._Spells,
                         fieldIndex: (int)NPC_FieldIndex.Spells,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return FormIDXmlTranslation.Instance.Parse(
-                                r,
-                                nullable: false,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<Spell>(o.Value));
-                        }
-                        ));
+                        transl: FormIDXmlTranslation.Instance.Parse);
                     break;
                 case "Script":
-                    item.Script_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Script,
-                        errorMask: errorMask));
+                        item: item.Script_Property,
+                        errorMask: errorMask);
                     break;
                 case "Items":
-                    item._Items.SetIfSucceeded(ListXmlTranslation<ItemEntry, MaskItem<Exception, ItemEntry_ErrorMask>>.Instance.Parse(
+                    ListXmlTranslation<ItemEntry>.Instance.ParseInto(
                         root: root,
+                        item: item._Items,
                         fieldIndex: (int)NPC_FieldIndex.Items,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, ItemEntry_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiXmlTranslation<ItemEntry, ItemEntry_ErrorMask>.Instance.Parse(
-                                root: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: LoquiXmlTranslation<ItemEntry>.Instance.Parse);
                     break;
                 case "Aggression":
-                    item._Aggression.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Aggression,
-                        errorMask: errorMask));
+                        item: item._Aggression,
+                        errorMask: errorMask);
                     break;
                 case "Confidence":
-                    item._Confidence.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Confidence,
-                        errorMask: errorMask));
+                        item: item._Confidence,
+                        errorMask: errorMask);
                     break;
                 case "EnergyLevel":
-                    item._EnergyLevel.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.EnergyLevel,
-                        errorMask: errorMask));
+                        item: item._EnergyLevel,
+                        errorMask: errorMask);
                     break;
                 case "Responsibility":
-                    item._Responsibility.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Responsibility,
-                        errorMask: errorMask));
+                        item: item._Responsibility,
+                        errorMask: errorMask);
                     break;
                 case "BuySellServices":
-                    item._BuySellServices.SetIfSucceeded(EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
+                    EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)NPC_FieldIndex.BuySellServices,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._BuySellServices,
+                        errorMask: errorMask);
                     break;
                 case "Teaches":
-                    item._Teaches.SetIfSucceeded(EnumXmlTranslation<Skill>.Instance.Parse(
+                    EnumXmlTranslation<Skill>.Instance.ParseInto(
                         root,
-                        nullable: false,
                         fieldIndex: (int)NPC_FieldIndex.Teaches,
-                        errorMask: errorMask).Bubble((o) => o.Value));
+                        item: item._Teaches,
+                        errorMask: errorMask);
                     break;
                 case "MaximumTrainingLevel":
-                    item._MaximumTrainingLevel.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.MaximumTrainingLevel,
-                        errorMask: errorMask));
+                        item: item._MaximumTrainingLevel,
+                        errorMask: errorMask);
                     break;
                 case "Fluff":
-                    item._Fluff.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    ByteArrayXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Fluff,
-                        errorMask: errorMask));
+                        item: item._Fluff,
+                        errorMask: errorMask);
                     break;
                 case "AIPackages":
-                    item._AIPackages.SetIfSucceeded(ListXmlTranslation<FormIDSetLink<AIPackage>, Exception>.Instance.Parse(
+                    ListXmlTranslation<FormIDSetLink<AIPackage>>.Instance.ParseInto(
                         root: root,
+                        item: item._AIPackages,
                         fieldIndex: (int)NPC_FieldIndex.AIPackages,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return FormIDXmlTranslation.Instance.Parse(
-                                r,
-                                nullable: false,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<AIPackage>(o.Value));
-                        }
-                        ));
+                        transl: FormIDXmlTranslation.Instance.Parse);
                     break;
                 case "Animations":
-                    item._Animations.SetIfSucceeded(ListXmlTranslation<String, Exception>.Instance.Parse(
+                    ListXmlTranslation<String>.Instance.ParseInto(
                         root: root,
+                        item: item._Animations,
                         fieldIndex: (int)NPC_FieldIndex.Animations,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return StringXmlTranslation.Instance.Parse(
-                                r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: StringXmlTranslation.Instance.Parse);
                     break;
                 case "Class":
-                    item.Class_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Class,
-                        errorMask: errorMask));
+                        item: item.Class_Property,
+                        errorMask: errorMask);
                     break;
                 case "Armorer":
-                    item._Armorer.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Armorer,
-                        errorMask: errorMask));
+                        item: item._Armorer,
+                        errorMask: errorMask);
                     break;
                 case "Athletics":
-                    item._Athletics.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Athletics,
-                        errorMask: errorMask));
+                        item: item._Athletics,
+                        errorMask: errorMask);
                     break;
                 case "Blade":
-                    item._Blade.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Blade,
-                        errorMask: errorMask));
+                        item: item._Blade,
+                        errorMask: errorMask);
                     break;
                 case "Block":
-                    item._Block.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Block,
-                        errorMask: errorMask));
+                        item: item._Block,
+                        errorMask: errorMask);
                     break;
                 case "Blunt":
-                    item._Blunt.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Blunt,
-                        errorMask: errorMask));
+                        item: item._Blunt,
+                        errorMask: errorMask);
                     break;
                 case "HandToHand":
-                    item._HandToHand.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.HandToHand,
-                        errorMask: errorMask));
+                        item: item._HandToHand,
+                        errorMask: errorMask);
                     break;
                 case "HeavyArmor":
-                    item._HeavyArmor.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.HeavyArmor,
-                        errorMask: errorMask));
+                        item: item._HeavyArmor,
+                        errorMask: errorMask);
                     break;
                 case "Alchemy":
-                    item._Alchemy.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Alchemy,
-                        errorMask: errorMask));
+                        item: item._Alchemy,
+                        errorMask: errorMask);
                     break;
                 case "Alteration":
-                    item._Alteration.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Alteration,
-                        errorMask: errorMask));
+                        item: item._Alteration,
+                        errorMask: errorMask);
                     break;
                 case "Conjuration":
-                    item._Conjuration.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Conjuration,
-                        errorMask: errorMask));
+                        item: item._Conjuration,
+                        errorMask: errorMask);
                     break;
                 case "Destruction":
-                    item._Destruction.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Destruction,
-                        errorMask: errorMask));
+                        item: item._Destruction,
+                        errorMask: errorMask);
                     break;
                 case "Illusion":
-                    item._Illusion.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Illusion,
-                        errorMask: errorMask));
+                        item: item._Illusion,
+                        errorMask: errorMask);
                     break;
                 case "Mysticism":
-                    item._Mysticism.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Mysticism,
-                        errorMask: errorMask));
+                        item: item._Mysticism,
+                        errorMask: errorMask);
                     break;
                 case "Restoration":
-                    item._Restoration.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Restoration,
-                        errorMask: errorMask));
+                        item: item._Restoration,
+                        errorMask: errorMask);
                     break;
                 case "Acrobatics":
-                    item._Acrobatics.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Acrobatics,
-                        errorMask: errorMask));
+                        item: item._Acrobatics,
+                        errorMask: errorMask);
                     break;
                 case "LightArmor":
-                    item._LightArmor.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.LightArmor,
-                        errorMask: errorMask));
+                        item: item._LightArmor,
+                        errorMask: errorMask);
                     break;
                 case "Marksman":
-                    item._Marksman.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Marksman,
-                        errorMask: errorMask));
+                        item: item._Marksman,
+                        errorMask: errorMask);
                     break;
                 case "Mercantile":
-                    item._Mercantile.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Mercantile,
-                        errorMask: errorMask));
+                        item: item._Mercantile,
+                        errorMask: errorMask);
                     break;
                 case "Security":
-                    item._Security.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Security,
-                        errorMask: errorMask));
+                        item: item._Security,
+                        errorMask: errorMask);
                     break;
                 case "Sneak":
-                    item._Sneak.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Sneak,
-                        errorMask: errorMask));
+                        item: item._Sneak,
+                        errorMask: errorMask);
                     break;
                 case "Speechcraft":
-                    item._Speechcraft.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Speechcraft,
-                        errorMask: errorMask));
+                        item: item._Speechcraft,
+                        errorMask: errorMask);
                     break;
                 case "Health":
-                    item._Health.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                    UInt32XmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Health,
-                        errorMask: errorMask));
+                        item: item._Health,
+                        errorMask: errorMask);
                     break;
                 case "Strength":
-                    item._Strength.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Strength,
-                        errorMask: errorMask));
+                        item: item._Strength,
+                        errorMask: errorMask);
                     break;
                 case "Intelligence":
-                    item._Intelligence.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Intelligence,
-                        errorMask: errorMask));
+                        item: item._Intelligence,
+                        errorMask: errorMask);
                     break;
                 case "Willpower":
-                    item._Willpower.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Willpower,
-                        errorMask: errorMask));
+                        item: item._Willpower,
+                        errorMask: errorMask);
                     break;
                 case "Agility":
-                    item._Agility.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Agility,
-                        errorMask: errorMask));
+                        item: item._Agility,
+                        errorMask: errorMask);
                     break;
                 case "Speed":
-                    item._Speed.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Speed,
-                        errorMask: errorMask));
+                        item: item._Speed,
+                        errorMask: errorMask);
                     break;
                 case "Endurance":
-                    item._Endurance.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Endurance,
-                        errorMask: errorMask));
+                        item: item._Endurance,
+                        errorMask: errorMask);
                     break;
                 case "Personality":
-                    item._Personality.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Personality,
-                        errorMask: errorMask));
+                        item: item._Personality,
+                        errorMask: errorMask);
                     break;
                 case "Luck":
-                    item._Luck.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                    ByteXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Luck,
-                        errorMask: errorMask));
+                        item: item._Luck,
+                        errorMask: errorMask);
                     break;
                 case "Hair":
-                    item.Hair_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Hair,
-                        errorMask: errorMask));
+                        item: item.Hair_Property,
+                        errorMask: errorMask);
                     break;
                 case "HairLength":
-                    item._HairLength.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                    FloatXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.HairLength,
-                        errorMask: errorMask));
+                        item: item._HairLength,
+                        errorMask: errorMask);
                     break;
                 case "Eyes":
-                    item._Eyes.SetIfSucceeded(ListXmlTranslation<FormIDLink<Eye>, Exception>.Instance.Parse(
+                    ListXmlTranslation<FormIDLink<Eye>>.Instance.ParseInto(
                         root: root,
+                        item: item._Eyes,
                         fieldIndex: (int)NPC_FieldIndex.Eyes,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return FormIDXmlTranslation.Instance.Parse(
-                                r,
-                                nullable: false,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDLink<Eye>(o.Value));
-                        }
-                        ));
+                        transl: FormIDXmlTranslation.Instance.Parse);
                     break;
                 case "HairColor":
-                    item._HairColor.SetIfSucceeded(ColorXmlTranslation.Instance.ParseNonNull(
+                    ColorXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.HairColor,
-                        errorMask: errorMask));
+                        item: item._HairColor,
+                        errorMask: errorMask);
                     break;
                 case "CombatStyle":
-                    item.CombatStyle_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.CombatStyle,
-                        errorMask: errorMask));
+                        item: item.CombatStyle_Property,
+                        errorMask: errorMask);
                     break;
                 case "FaceGenGeometrySymmetric":
-                    item._FaceGenGeometrySymmetric.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    ByteArrayXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.FaceGenGeometrySymmetric,
-                        errorMask: errorMask));
+                        item: item._FaceGenGeometrySymmetric,
+                        errorMask: errorMask);
                     break;
                 case "FaceGenGeometryAsymmetric":
-                    item._FaceGenGeometryAsymmetric.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    ByteArrayXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.FaceGenGeometryAsymmetric,
-                        errorMask: errorMask));
+                        item: item._FaceGenGeometryAsymmetric,
+                        errorMask: errorMask);
                     break;
                 case "FaceGenTextureSymmetric":
-                    item._FaceGenTextureSymmetric.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    ByteArrayXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.FaceGenTextureSymmetric,
-                        errorMask: errorMask));
+                        item: item._FaceGenTextureSymmetric,
+                        errorMask: errorMask);
                     break;
                 case "Unknown":
-                    item._Unknown.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    ByteArrayXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Unknown,
-                        errorMask: errorMask));
+                        item: item._Unknown,
+                        errorMask: errorMask);
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -2071,8 +2096,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -2081,26 +2106,29 @@ namespace Mutagen.Bethesda.Oblivion
             out NPC_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (NPC Object, NPC_ErrorMask ErrorMask) Create_Binary(
+        public static NPC Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            NPC_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
+            return UtilityTranslation.MajorRecordParse<NPC, NPC_FieldIndex>(
+                record: new NPC(),
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new NPC_ErrorMask()) : default(Func<NPC_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+                errorMask: errorMask,
+                recType: NPC_Registration.NPC__HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         public static NPC Create_Binary(string path)
@@ -2228,25 +2256,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static NPC Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<NPC_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            return UtilityTranslation.MajorRecordParse<NPC, NPC_ErrorMask, NPC_FieldIndex>(
-                record: new NPC(),
-                frame: frame,
-                errorMask: errorMask,
-                recType: NPC_Registration.NPC__HEADER,
-                recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
-        }
-
         protected static void Fill_Binary_Structs(
             NPC item,
             MutagenFrame frame,
-            Func<NPC_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             NamedMajorRecord.Fill_Binary_Structs(
                 item: item,
@@ -2257,7 +2270,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<NPC_FieldIndex?> Fill_Binary_RecordTypes(
             NPC item,
             MutagenFrame frame,
-            Func<NPC_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -2267,403 +2280,411 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    LoquiBinaryTranslation<Model>.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)NPC_FieldIndex.Model,
-                        errorMask: errorMask));
+                        errorMask: errorMask,
+                        item: item._Model);
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Model);
                 case "ACBS":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._NPCFlags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.NPCFlag>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.NPCFlag>.Instance.ParseInto(
                             frame: dataFrame.SpawnWithLength(4),
+                            item: item._NPCFlags,
                             fieldIndex: (int)NPC_FieldIndex.NPCFlags,
-                            errorMask: errorMask));
-                        item._BaseSpellPoints.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._BaseSpellPoints,
                             fieldIndex: (int)NPC_FieldIndex.BaseSpellPoints,
-                            errorMask: errorMask));
-                        item._Fatigue.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Fatigue,
                             fieldIndex: (int)NPC_FieldIndex.Fatigue,
-                            errorMask: errorMask));
-                        item._BarterGold.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._BarterGold,
                             fieldIndex: (int)NPC_FieldIndex.BarterGold,
-                            errorMask: errorMask));
-                        item._LevelOffset.SetIfSucceeded(Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._LevelOffset,
                             fieldIndex: (int)NPC_FieldIndex.LevelOffset,
-                            errorMask: errorMask));
-                        item._CalcMin.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._CalcMin,
                             fieldIndex: (int)NPC_FieldIndex.CalcMin,
-                            errorMask: errorMask));
-                        item._CalcMax.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._CalcMax,
                             fieldIndex: (int)NPC_FieldIndex.CalcMax,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
                     }
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.CalcMax);
                 case "SNAM":
-                    var FactionstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement, MaskItem<Exception, RankPlacement_ErrorMask>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: NPC_Registration.SNAM_HEADER,
+                        item: item._Factions,
                         fieldIndex: (int)NPC_FieldIndex.Factions,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, RankPlacement_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiBinaryTranslation<RankPlacement, RankPlacement_ErrorMask>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    item._Factions.SetIfSucceeded(FactionstryGet);
+                        transl: LoquiBinaryTranslation<RankPlacement>.Instance.Parse);
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Factions);
                 case "INAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.DeathItem_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item.DeathItem_Property,
                         fieldIndex: (int)NPC_FieldIndex.DeathItem,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.DeathItem);
                 case "RNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Race_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item.Race_Property,
                         fieldIndex: (int)NPC_FieldIndex.Race,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Race);
                 case "SPLO":
-                    var SpellstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>, Exception>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: NPC_Registration.SPLO_HEADER,
+                        item: item._Spells,
                         fieldIndex: (int)NPC_FieldIndex.Spells,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            r.Position += Constants.SUBRECORD_LENGTH;
-                            return Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                                r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<Spell>(o));
-                        }
-                        );
-                    item._Spells.SetIfSucceeded(SpellstryGet);
+                        transl: FormIDBinaryTranslation.Instance.Parse);
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Spells);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item.Script_Property,
                         fieldIndex: (int)NPC_FieldIndex.Script,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Script);
                 case "CNTO":
-                    var ItemstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry, MaskItem<Exception, ItemEntry_ErrorMask>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: NPC_Registration.CNTO_HEADER,
+                        item: item._Items,
                         fieldIndex: (int)NPC_FieldIndex.Items,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, ItemEntry_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiBinaryTranslation<ItemEntry, ItemEntry_ErrorMask>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    item._Items.SetIfSucceeded(ItemstryGet);
+                        transl: LoquiBinaryTranslation<ItemEntry>.Instance.Parse);
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Items);
                 case "AIDT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Aggression.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Aggression,
                             fieldIndex: (int)NPC_FieldIndex.Aggression,
-                            errorMask: errorMask));
-                        item._Confidence.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Confidence,
                             fieldIndex: (int)NPC_FieldIndex.Confidence,
-                            errorMask: errorMask));
-                        item._EnergyLevel.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._EnergyLevel,
                             fieldIndex: (int)NPC_FieldIndex.EnergyLevel,
-                            errorMask: errorMask));
-                        item._Responsibility.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Responsibility,
                             fieldIndex: (int)NPC_FieldIndex.Responsibility,
-                            errorMask: errorMask));
-                        item._BuySellServices.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.ParseInto(
                             frame: dataFrame.SpawnWithLength(4),
+                            item: item._BuySellServices,
                             fieldIndex: (int)NPC_FieldIndex.BuySellServices,
-                            errorMask: errorMask));
-                        item._Teaches.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.ParseInto(
                             frame: dataFrame.SpawnWithLength(1),
+                            item: item._Teaches,
                             fieldIndex: (int)NPC_FieldIndex.Teaches,
-                            errorMask: errorMask));
-                        item._MaximumTrainingLevel.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._MaximumTrainingLevel,
                             fieldIndex: (int)NPC_FieldIndex.MaximumTrainingLevel,
-                            errorMask: errorMask));
-                        var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame.SpawnWithLength(2),
+                            item: item._Fluff,
                             fieldIndex: (int)NPC_FieldIndex.Fluff,
                             errorMask: errorMask);
-                        item._Fluff.SetIfSucceeded(FlufftryGet);
                     }
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Fluff);
                 case "PKID":
-                    var AIPackagestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<AIPackage>, Exception>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<AIPackage>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: NPC_Registration.PKID_HEADER,
+                        item: item._AIPackages,
                         fieldIndex: (int)NPC_FieldIndex.AIPackages,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            r.Position += Constants.SUBRECORD_LENGTH;
-                            return Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                                r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<AIPackage>(o));
-                        }
-                        );
-                    item._AIPackages.SetIfSucceeded(AIPackagestryGet);
+                        transl: FormIDBinaryTranslation.Instance.Parse);
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.AIPackages);
                 case "KFFZ":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var AnimationstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<String, Exception>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._Animations,
                         fieldIndex: (int)NPC_FieldIndex.Animations,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                                r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask,
-                                parseWhole: false);
-                        }
-                        );
-                    item._Animations.SetIfSucceeded(AnimationstryGet);
+                        transl: StringBinaryTranslation.Instance.Parse);
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Animations);
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Class_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item.Class_Property,
                         fieldIndex: (int)NPC_FieldIndex.Class,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Class);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        item._Armorer.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Armorer,
                             fieldIndex: (int)NPC_FieldIndex.Armorer,
-                            errorMask: errorMask));
-                        item._Athletics.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Athletics,
                             fieldIndex: (int)NPC_FieldIndex.Athletics,
-                            errorMask: errorMask));
-                        item._Blade.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Blade,
                             fieldIndex: (int)NPC_FieldIndex.Blade,
-                            errorMask: errorMask));
-                        item._Block.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Block,
                             fieldIndex: (int)NPC_FieldIndex.Block,
-                            errorMask: errorMask));
-                        item._Blunt.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Blunt,
                             fieldIndex: (int)NPC_FieldIndex.Blunt,
-                            errorMask: errorMask));
-                        item._HandToHand.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._HandToHand,
                             fieldIndex: (int)NPC_FieldIndex.HandToHand,
-                            errorMask: errorMask));
-                        item._HeavyArmor.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._HeavyArmor,
                             fieldIndex: (int)NPC_FieldIndex.HeavyArmor,
-                            errorMask: errorMask));
-                        item._Alchemy.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Alchemy,
                             fieldIndex: (int)NPC_FieldIndex.Alchemy,
-                            errorMask: errorMask));
-                        item._Alteration.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Alteration,
                             fieldIndex: (int)NPC_FieldIndex.Alteration,
-                            errorMask: errorMask));
-                        item._Conjuration.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Conjuration,
                             fieldIndex: (int)NPC_FieldIndex.Conjuration,
-                            errorMask: errorMask));
-                        item._Destruction.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Destruction,
                             fieldIndex: (int)NPC_FieldIndex.Destruction,
-                            errorMask: errorMask));
-                        item._Illusion.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Illusion,
                             fieldIndex: (int)NPC_FieldIndex.Illusion,
-                            errorMask: errorMask));
-                        item._Mysticism.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Mysticism,
                             fieldIndex: (int)NPC_FieldIndex.Mysticism,
-                            errorMask: errorMask));
-                        item._Restoration.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Restoration,
                             fieldIndex: (int)NPC_FieldIndex.Restoration,
-                            errorMask: errorMask));
-                        item._Acrobatics.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Acrobatics,
                             fieldIndex: (int)NPC_FieldIndex.Acrobatics,
-                            errorMask: errorMask));
-                        item._LightArmor.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._LightArmor,
                             fieldIndex: (int)NPC_FieldIndex.LightArmor,
-                            errorMask: errorMask));
-                        item._Marksman.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Marksman,
                             fieldIndex: (int)NPC_FieldIndex.Marksman,
-                            errorMask: errorMask));
-                        item._Mercantile.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Mercantile,
                             fieldIndex: (int)NPC_FieldIndex.Mercantile,
-                            errorMask: errorMask));
-                        item._Security.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Security,
                             fieldIndex: (int)NPC_FieldIndex.Security,
-                            errorMask: errorMask));
-                        item._Sneak.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Sneak,
                             fieldIndex: (int)NPC_FieldIndex.Sneak,
-                            errorMask: errorMask));
-                        item._Speechcraft.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Speechcraft,
                             fieldIndex: (int)NPC_FieldIndex.Speechcraft,
-                            errorMask: errorMask));
-                        item._Health.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Health,
                             fieldIndex: (int)NPC_FieldIndex.Health,
-                            errorMask: errorMask));
-                        item._Strength.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Strength,
                             fieldIndex: (int)NPC_FieldIndex.Strength,
-                            errorMask: errorMask));
-                        item._Intelligence.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Intelligence,
                             fieldIndex: (int)NPC_FieldIndex.Intelligence,
-                            errorMask: errorMask));
-                        item._Willpower.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Willpower,
                             fieldIndex: (int)NPC_FieldIndex.Willpower,
-                            errorMask: errorMask));
-                        item._Agility.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Agility,
                             fieldIndex: (int)NPC_FieldIndex.Agility,
-                            errorMask: errorMask));
-                        item._Speed.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Speed,
                             fieldIndex: (int)NPC_FieldIndex.Speed,
-                            errorMask: errorMask));
-                        item._Endurance.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Endurance,
                             fieldIndex: (int)NPC_FieldIndex.Endurance,
-                            errorMask: errorMask));
-                        item._Personality.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Personality,
                             fieldIndex: (int)NPC_FieldIndex.Personality,
-                            errorMask: errorMask));
-                        item._Luck.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame,
+                            item: item._Luck,
                             fieldIndex: (int)NPC_FieldIndex.Luck,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
                     }
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Luck);
                 case "HNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Hair_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item.Hair_Property,
                         fieldIndex: (int)NPC_FieldIndex.Hair,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Hair);
                 case "LNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._HairLength.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._HairLength,
                         fieldIndex: (int)NPC_FieldIndex.HairLength,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.HairLength);
                 case "ENAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var EyestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Eye>, Exception>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Eye>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._Eyes,
                         fieldIndex: (int)NPC_FieldIndex.Eyes,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                                r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDLink<Eye>(o));
-                        }
-                        );
-                    item._Eyes.SetIfSucceeded(EyestryGet);
+                        transl: FormIDBinaryTranslation.Instance.Parse);
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Eyes);
                 case "HCLR":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._HairColor.SetIfSucceeded(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._HairColor,
                         fieldIndex: (int)NPC_FieldIndex.HairColor,
                         errorMask: errorMask,
-                        extraByte: true));
+                        extraByte: true);
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.HairColor);
                 case "ZNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.CombatStyle_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item.CombatStyle_Property,
                         fieldIndex: (int)NPC_FieldIndex.CombatStyle,
-                        errorMask: errorMask));
+                        errorMask: errorMask);
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.CombatStyle);
                 case "FGGS":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var FaceGenGeometrySymmetrictryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.ParseInto(
                         frame.SpawnWithLength(contentLength),
+                        item: item._FaceGenGeometrySymmetric,
                         fieldIndex: (int)NPC_FieldIndex.FaceGenGeometrySymmetric,
                         errorMask: errorMask);
-                    item._FaceGenGeometrySymmetric.SetIfSucceeded(FaceGenGeometrySymmetrictryGet);
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.FaceGenGeometrySymmetric);
                 case "FGGA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var FaceGenGeometryAsymmetrictryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.ParseInto(
                         frame.SpawnWithLength(contentLength),
+                        item: item._FaceGenGeometryAsymmetric,
                         fieldIndex: (int)NPC_FieldIndex.FaceGenGeometryAsymmetric,
                         errorMask: errorMask);
-                    item._FaceGenGeometryAsymmetric.SetIfSucceeded(FaceGenGeometryAsymmetrictryGet);
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.FaceGenGeometryAsymmetric);
                 case "FGTS":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var FaceGenTextureSymmetrictryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.ParseInto(
                         frame.SpawnWithLength(contentLength),
+                        item: item._FaceGenTextureSymmetric,
                         fieldIndex: (int)NPC_FieldIndex.FaceGenTextureSymmetric,
                         errorMask: errorMask);
-                    item._FaceGenTextureSymmetric.SetIfSucceeded(FaceGenTextureSymmetrictryGet);
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.FaceGenTextureSymmetric);
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var UnknowntryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.ParseInto(
                         frame.SpawnWithLength(contentLength),
+                        item: item._Unknown,
                         fieldIndex: (int)NPC_FieldIndex.Unknown,
                         errorMask: errorMask);
-                    item._Unknown.SetIfSucceeded(UnknowntryGet);
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Unknown);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
@@ -2751,24 +2772,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            NPC_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new NPC_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             NPCCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            INPCGetter rhs,
+            ErrorMaskBuilder errorMask,
+            NPC_CopyMask copyMask = null,
+            INPCGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            NPCCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -4894,8 +4923,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             INPC item,
             INPCGetter rhs,
             INPCGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             NPC_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -4903,12 +4931,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item,
                 rhs,
                 def,
-                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -4926,15 +4954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.Model,
                                         rhs: rhs.Model,
                                         def: def?.Model,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new Model_ErrorMask();
-                                            baseMask.SetNthMask((int)NPC_FieldIndex.Model, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.Model.Specific,
                                         cmds: cmds);
                                     return r;
@@ -4951,13 +4971,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Model, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.NPCFlags ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.NPCFlags);
                 try
                 {
                     item.NPCFlags_Property.Set(
@@ -4965,13 +4990,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.NPCFlags, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.BaseSpellPoints ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.BaseSpellPoints);
                 try
                 {
                     item.BaseSpellPoints_Property.Set(
@@ -4979,13 +5009,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.BaseSpellPoints, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Fatigue ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Fatigue);
                 try
                 {
                     item.Fatigue_Property.Set(
@@ -4993,13 +5028,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Fatigue, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.BarterGold ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.BarterGold);
                 try
                 {
                     item.BarterGold_Property.Set(
@@ -5007,13 +5047,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.BarterGold, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.LevelOffset ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.LevelOffset);
                 try
                 {
                     item.LevelOffset_Property.Set(
@@ -5021,13 +5066,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.LevelOffset, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.CalcMin ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.CalcMin);
                 try
                 {
                     item.CalcMin_Property.Set(
@@ -5035,13 +5085,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.CalcMin, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.CalcMax ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.CalcMax);
                 try
                 {
                     item.CalcMax_Property.Set(
@@ -5049,13 +5104,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.CalcMax, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Factions.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Factions);
                 try
                 {
                     item.Factions.SetToWithDefault(
@@ -5081,13 +5141,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Factions, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.DeathItem ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.DeathItem);
                 try
                 {
                     item.DeathItem_Property.SetToWithDefault(
@@ -5096,13 +5161,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.DeathItem, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Race ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Race);
                 try
                 {
                     item.Race_Property.SetToWithDefault(
@@ -5111,13 +5181,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Race, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Spells != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Spells);
                 try
                 {
                     item.Spells.SetToWithDefault(
@@ -5126,13 +5201,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Spells, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Script ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.SetToWithDefault(
@@ -5141,13 +5221,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Script, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Items.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Items);
                 try
                 {
                     item.Items.SetToWithDefault(
@@ -5173,13 +5258,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Items, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Aggression ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Aggression);
                 try
                 {
                     item.Aggression_Property.Set(
@@ -5187,13 +5277,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Aggression, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Confidence ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Confidence);
                 try
                 {
                     item.Confidence_Property.Set(
@@ -5201,13 +5296,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Confidence, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.EnergyLevel ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.EnergyLevel);
                 try
                 {
                     item.EnergyLevel_Property.Set(
@@ -5215,13 +5315,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.EnergyLevel, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Responsibility ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Responsibility);
                 try
                 {
                     item.Responsibility_Property.Set(
@@ -5229,13 +5334,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Responsibility, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.BuySellServices ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.BuySellServices);
                 try
                 {
                     item.BuySellServices_Property.Set(
@@ -5243,13 +5353,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.BuySellServices, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Teaches ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Teaches);
                 try
                 {
                     item.Teaches_Property.Set(
@@ -5257,13 +5372,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Teaches, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.MaximumTrainingLevel ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.MaximumTrainingLevel);
                 try
                 {
                     item.MaximumTrainingLevel_Property.Set(
@@ -5271,13 +5391,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.MaximumTrainingLevel, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Fluff ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Fluff);
                 try
                 {
                     item.Fluff_Property.Set(
@@ -5285,13 +5410,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Fluff, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.AIPackages != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.AIPackages);
                 try
                 {
                     item.AIPackages.SetToWithDefault(
@@ -5300,13 +5430,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.AIPackages, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Animations != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Animations);
                 try
                 {
                     item.Animations.SetToWithDefault(
@@ -5315,13 +5450,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Animations, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Class ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Class);
                 try
                 {
                     item.Class_Property.SetToWithDefault(
@@ -5330,13 +5470,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Class, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Armorer ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Armorer);
                 try
                 {
                     item.Armorer_Property.Set(
@@ -5344,13 +5489,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Armorer, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Athletics ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Athletics);
                 try
                 {
                     item.Athletics_Property.Set(
@@ -5358,13 +5508,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Athletics, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Blade ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Blade);
                 try
                 {
                     item.Blade_Property.Set(
@@ -5372,13 +5527,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Blade, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Block ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Block);
                 try
                 {
                     item.Block_Property.Set(
@@ -5386,13 +5546,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Block, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Blunt ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Blunt);
                 try
                 {
                     item.Blunt_Property.Set(
@@ -5400,13 +5565,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Blunt, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.HandToHand ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.HandToHand);
                 try
                 {
                     item.HandToHand_Property.Set(
@@ -5414,13 +5584,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.HandToHand, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.HeavyArmor ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.HeavyArmor);
                 try
                 {
                     item.HeavyArmor_Property.Set(
@@ -5428,13 +5603,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.HeavyArmor, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Alchemy ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Alchemy);
                 try
                 {
                     item.Alchemy_Property.Set(
@@ -5442,13 +5622,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Alchemy, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Alteration ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Alteration);
                 try
                 {
                     item.Alteration_Property.Set(
@@ -5456,13 +5641,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Alteration, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Conjuration ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Conjuration);
                 try
                 {
                     item.Conjuration_Property.Set(
@@ -5470,13 +5660,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Conjuration, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Destruction ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Destruction);
                 try
                 {
                     item.Destruction_Property.Set(
@@ -5484,13 +5679,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Destruction, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Illusion ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Illusion);
                 try
                 {
                     item.Illusion_Property.Set(
@@ -5498,13 +5698,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Illusion, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Mysticism ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Mysticism);
                 try
                 {
                     item.Mysticism_Property.Set(
@@ -5512,13 +5717,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Mysticism, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Restoration ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Restoration);
                 try
                 {
                     item.Restoration_Property.Set(
@@ -5526,13 +5736,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Restoration, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Acrobatics ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Acrobatics);
                 try
                 {
                     item.Acrobatics_Property.Set(
@@ -5540,13 +5755,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Acrobatics, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.LightArmor ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.LightArmor);
                 try
                 {
                     item.LightArmor_Property.Set(
@@ -5554,13 +5774,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.LightArmor, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Marksman ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Marksman);
                 try
                 {
                     item.Marksman_Property.Set(
@@ -5568,13 +5793,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Marksman, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Mercantile ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Mercantile);
                 try
                 {
                     item.Mercantile_Property.Set(
@@ -5582,13 +5812,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Mercantile, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Security ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Security);
                 try
                 {
                     item.Security_Property.Set(
@@ -5596,13 +5831,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Security, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Sneak ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Sneak);
                 try
                 {
                     item.Sneak_Property.Set(
@@ -5610,13 +5850,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Sneak, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Speechcraft ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Speechcraft);
                 try
                 {
                     item.Speechcraft_Property.Set(
@@ -5624,13 +5869,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Speechcraft, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Health ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Health);
                 try
                 {
                     item.Health_Property.Set(
@@ -5638,13 +5888,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Health, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Strength ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Strength);
                 try
                 {
                     item.Strength_Property.Set(
@@ -5652,13 +5907,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Strength, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Intelligence ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Intelligence);
                 try
                 {
                     item.Intelligence_Property.Set(
@@ -5666,13 +5926,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Intelligence, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Willpower ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Willpower);
                 try
                 {
                     item.Willpower_Property.Set(
@@ -5680,13 +5945,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Willpower, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Agility ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Agility);
                 try
                 {
                     item.Agility_Property.Set(
@@ -5694,13 +5964,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Agility, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Speed ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Speed);
                 try
                 {
                     item.Speed_Property.Set(
@@ -5708,13 +5983,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Speed, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Endurance ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Endurance);
                 try
                 {
                     item.Endurance_Property.Set(
@@ -5722,13 +6002,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Endurance, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Personality ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Personality);
                 try
                 {
                     item.Personality_Property.Set(
@@ -5736,13 +6021,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Personality, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Luck ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Luck);
                 try
                 {
                     item.Luck_Property.Set(
@@ -5750,13 +6040,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Luck, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Hair ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Hair);
                 try
                 {
                     item.Hair_Property.SetToWithDefault(
@@ -5765,13 +6060,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Hair, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.HairLength ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.HairLength);
                 try
                 {
                     item.HairLength_Property.SetToWithDefault(
@@ -5780,13 +6080,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.HairLength, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Eyes != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Eyes);
                 try
                 {
                     item.Eyes.SetToWithDefault(
@@ -5795,13 +6100,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Eyes, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.HairColor ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.HairColor);
                 try
                 {
                     item.HairColor_Property.SetToWithDefault(
@@ -5810,13 +6120,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.HairColor, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.CombatStyle ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.CombatStyle);
                 try
                 {
                     item.CombatStyle_Property.SetToWithDefault(
@@ -5825,13 +6140,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.CombatStyle, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.FaceGenGeometrySymmetric ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.FaceGenGeometrySymmetric);
                 try
                 {
                     item.FaceGenGeometrySymmetric_Property.SetToWithDefault(
@@ -5840,13 +6160,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.FaceGenGeometrySymmetric, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.FaceGenGeometryAsymmetric ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.FaceGenGeometryAsymmetric);
                 try
                 {
                     item.FaceGenGeometryAsymmetric_Property.SetToWithDefault(
@@ -5855,13 +6180,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.FaceGenGeometryAsymmetric, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.FaceGenTextureSymmetric ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.FaceGenTextureSymmetric);
                 try
                 {
                     item.FaceGenTextureSymmetric_Property.SetToWithDefault(
@@ -5870,13 +6200,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.FaceGenTextureSymmetric, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Unknown ?? true)
             {
+                errorMask.PushIndex((int)NPC_FieldIndex.Unknown);
                 try
                 {
                     item.Unknown_Property.SetToWithDefault(
@@ -5885,9 +6220,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)NPC_FieldIndex.Unknown, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -7256,535 +7595,521 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out NPC_ErrorMask errorMask,
             string name = null)
         {
-            NPC_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_XML_Internal(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new NPC_ErrorMask()) : default(Func<NPC_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_XML_Internal(
             XElement node,
             INPCGetter item,
-            Func<NPC_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.NPC");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.NPC");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.NPC");
-                }
-                if (item.Model_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.Model_Property,
-                        name: nameof(item.Model),
-                        fieldIndex: (int)NPC_FieldIndex.Model,
-                        errorMask: errorMask);
-                }
-                EnumXmlTranslation<NPC.NPCFlag>.Instance.Write(
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.NPC");
+            }
+            if (item.Model_Property.HasBeenSet)
+            {
+                LoquiXmlTranslation<Model>.Instance.Write(
                     node: elem,
-                    name: nameof(item.NPCFlags),
-                    item: item.NPCFlags_Property,
-                    fieldIndex: (int)NPC_FieldIndex.NPCFlags,
+                    item: item.Model_Property,
+                    name: nameof(item.Model),
+                    fieldIndex: (int)NPC_FieldIndex.Model,
                     errorMask: errorMask);
-                UInt16XmlTranslation.Instance.Write(
+            }
+            EnumXmlTranslation<NPC.NPCFlag>.Instance.Write(
+                node: elem,
+                name: nameof(item.NPCFlags),
+                item: item.NPCFlags_Property,
+                fieldIndex: (int)NPC_FieldIndex.NPCFlags,
+                errorMask: errorMask);
+            UInt16XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.BaseSpellPoints),
+                item: item.BaseSpellPoints_Property,
+                fieldIndex: (int)NPC_FieldIndex.BaseSpellPoints,
+                errorMask: errorMask);
+            UInt16XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Fatigue),
+                item: item.Fatigue_Property,
+                fieldIndex: (int)NPC_FieldIndex.Fatigue,
+                errorMask: errorMask);
+            UInt16XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.BarterGold),
+                item: item.BarterGold_Property,
+                fieldIndex: (int)NPC_FieldIndex.BarterGold,
+                errorMask: errorMask);
+            Int16XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.LevelOffset),
+                item: item.LevelOffset_Property,
+                fieldIndex: (int)NPC_FieldIndex.LevelOffset,
+                errorMask: errorMask);
+            UInt16XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.CalcMin),
+                item: item.CalcMin_Property,
+                fieldIndex: (int)NPC_FieldIndex.CalcMin,
+                errorMask: errorMask);
+            UInt16XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.CalcMax),
+                item: item.CalcMax_Property,
+                fieldIndex: (int)NPC_FieldIndex.CalcMax,
+                errorMask: errorMask);
+            if (item.Factions.HasBeenSet)
+            {
+                ListXmlTranslation<RankPlacement>.Instance.Write(
                     node: elem,
-                    name: nameof(item.BaseSpellPoints),
-                    item: item.BaseSpellPoints_Property,
-                    fieldIndex: (int)NPC_FieldIndex.BaseSpellPoints,
-                    errorMask: errorMask);
-                UInt16XmlTranslation.Instance.Write(
+                    name: nameof(item.Factions),
+                    item: item.Factions,
+                    fieldIndex: (int)NPC_FieldIndex.Factions,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, RankPlacement subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        LoquiXmlTranslation<RankPlacement>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if (item.DeathItem_Property.HasBeenSet)
+            {
+                FormIDXmlTranslation.Instance.Write(
                     node: elem,
-                    name: nameof(item.Fatigue),
-                    item: item.Fatigue_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Fatigue,
+                    name: nameof(item.DeathItem),
+                    item: item.DeathItem?.FormID,
+                    fieldIndex: (int)NPC_FieldIndex.DeathItem,
                     errorMask: errorMask);
-                UInt16XmlTranslation.Instance.Write(
+            }
+            if (item.Race_Property.HasBeenSet)
+            {
+                FormIDXmlTranslation.Instance.Write(
                     node: elem,
-                    name: nameof(item.BarterGold),
-                    item: item.BarterGold_Property,
-                    fieldIndex: (int)NPC_FieldIndex.BarterGold,
+                    name: nameof(item.Race),
+                    item: item.Race?.FormID,
+                    fieldIndex: (int)NPC_FieldIndex.Race,
                     errorMask: errorMask);
-                Int16XmlTranslation.Instance.Write(
+            }
+            if (item.Spells.HasBeenSet)
+            {
+                ListXmlTranslation<FormIDSetLink<Spell>>.Instance.Write(
                     node: elem,
-                    name: nameof(item.LevelOffset),
-                    item: item.LevelOffset_Property,
-                    fieldIndex: (int)NPC_FieldIndex.LevelOffset,
-                    errorMask: errorMask);
-                UInt16XmlTranslation.Instance.Write(
+                    name: nameof(item.Spells),
+                    item: item.Spells,
+                    fieldIndex: (int)NPC_FieldIndex.Spells,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, FormIDSetLink<Spell> subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        FormIDXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Item",
+                            item: subItem?.FormID,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                FormIDXmlTranslation.Instance.Write(
                     node: elem,
-                    name: nameof(item.CalcMin),
-                    item: item.CalcMin_Property,
-                    fieldIndex: (int)NPC_FieldIndex.CalcMin,
+                    name: nameof(item.Script),
+                    item: item.Script?.FormID,
+                    fieldIndex: (int)NPC_FieldIndex.Script,
                     errorMask: errorMask);
-                UInt16XmlTranslation.Instance.Write(
+            }
+            if (item.Items.HasBeenSet)
+            {
+                ListXmlTranslation<ItemEntry>.Instance.Write(
                     node: elem,
-                    name: nameof(item.CalcMax),
-                    item: item.CalcMax_Property,
-                    fieldIndex: (int)NPC_FieldIndex.CalcMax,
-                    errorMask: errorMask);
-                if (item.Factions.HasBeenSet)
-                {
-                    ListXmlTranslation<RankPlacement, MaskItem<Exception, RankPlacement_ErrorMask>>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Factions),
-                        item: item.Factions,
-                        fieldIndex: (int)NPC_FieldIndex.Factions,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, RankPlacement subItem, bool listDoMasks, out MaskItem<Exception, RankPlacement_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<RankPlacement, RankPlacement_ErrorMask>.Instance.Write(
-                                node: subNode,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                if (item.DeathItem_Property.HasBeenSet)
-                {
-                    FormIDXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.DeathItem),
-                        item: item.DeathItem?.FormID,
-                        fieldIndex: (int)NPC_FieldIndex.DeathItem,
-                        errorMask: errorMask);
-                }
-                if (item.Race_Property.HasBeenSet)
-                {
-                    FormIDXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Race),
-                        item: item.Race?.FormID,
-                        fieldIndex: (int)NPC_FieldIndex.Race,
-                        errorMask: errorMask);
-                }
-                if (item.Spells.HasBeenSet)
-                {
-                    ListXmlTranslation<FormIDSetLink<Spell>, Exception>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Spells),
-                        item: item.Spells,
-                        fieldIndex: (int)NPC_FieldIndex.Spells,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, FormIDSetLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            FormIDXmlTranslation.Instance.Write(
-                                node: subNode,
-                                name: "Item",
-                                item: subItem?.FormID,
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                if (item.Script_Property.HasBeenSet)
-                {
-                    FormIDXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Script),
-                        item: item.Script?.FormID,
-                        fieldIndex: (int)NPC_FieldIndex.Script,
-                        errorMask: errorMask);
-                }
-                if (item.Items.HasBeenSet)
-                {
-                    ListXmlTranslation<ItemEntry, MaskItem<Exception, ItemEntry_ErrorMask>>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Items),
-                        item: item.Items,
-                        fieldIndex: (int)NPC_FieldIndex.Items,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, ItemEntry subItem, bool listDoMasks, out MaskItem<Exception, ItemEntry_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<ItemEntry, ItemEntry_ErrorMask>.Instance.Write(
-                                node: subNode,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                ByteXmlTranslation.Instance.Write(
+                    name: nameof(item.Items),
+                    item: item.Items,
+                    fieldIndex: (int)NPC_FieldIndex.Items,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, ItemEntry subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        LoquiXmlTranslation<ItemEntry>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Aggression),
+                item: item.Aggression_Property,
+                fieldIndex: (int)NPC_FieldIndex.Aggression,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Confidence),
+                item: item.Confidence_Property,
+                fieldIndex: (int)NPC_FieldIndex.Confidence,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.EnergyLevel),
+                item: item.EnergyLevel_Property,
+                fieldIndex: (int)NPC_FieldIndex.EnergyLevel,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Responsibility),
+                item: item.Responsibility_Property,
+                fieldIndex: (int)NPC_FieldIndex.Responsibility,
+                errorMask: errorMask);
+            EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Write(
+                node: elem,
+                name: nameof(item.BuySellServices),
+                item: item.BuySellServices_Property,
+                fieldIndex: (int)NPC_FieldIndex.BuySellServices,
+                errorMask: errorMask);
+            EnumXmlTranslation<Skill>.Instance.Write(
+                node: elem,
+                name: nameof(item.Teaches),
+                item: item.Teaches_Property,
+                fieldIndex: (int)NPC_FieldIndex.Teaches,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.MaximumTrainingLevel),
+                item: item.MaximumTrainingLevel_Property,
+                fieldIndex: (int)NPC_FieldIndex.MaximumTrainingLevel,
+                errorMask: errorMask);
+            ByteArrayXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Fluff),
+                item: item.Fluff_Property,
+                fieldIndex: (int)NPC_FieldIndex.Fluff,
+                errorMask: errorMask);
+            if (item.AIPackages.HasBeenSet)
+            {
+                ListXmlTranslation<FormIDSetLink<AIPackage>>.Instance.Write(
                     node: elem,
-                    name: nameof(item.Aggression),
-                    item: item.Aggression_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Aggression,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
+                    name: nameof(item.AIPackages),
+                    item: item.AIPackages,
+                    fieldIndex: (int)NPC_FieldIndex.AIPackages,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, FormIDSetLink<AIPackage> subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        FormIDXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Item",
+                            item: subItem?.FormID,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if (item.Animations.HasBeenSet)
+            {
+                ListXmlTranslation<String>.Instance.Write(
                     node: elem,
-                    name: nameof(item.Confidence),
-                    item: item.Confidence_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Confidence,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
+                    name: nameof(item.Animations),
+                    item: item.Animations,
+                    fieldIndex: (int)NPC_FieldIndex.Animations,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, String subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        StringXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Item",
+                            item: subItem,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if (item.Class_Property.HasBeenSet)
+            {
+                FormIDXmlTranslation.Instance.Write(
                     node: elem,
-                    name: nameof(item.EnergyLevel),
-                    item: item.EnergyLevel_Property,
-                    fieldIndex: (int)NPC_FieldIndex.EnergyLevel,
+                    name: nameof(item.Class),
+                    item: item.Class?.FormID,
+                    fieldIndex: (int)NPC_FieldIndex.Class,
                     errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
+            }
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Armorer),
+                item: item.Armorer_Property,
+                fieldIndex: (int)NPC_FieldIndex.Armorer,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Athletics),
+                item: item.Athletics_Property,
+                fieldIndex: (int)NPC_FieldIndex.Athletics,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Blade),
+                item: item.Blade_Property,
+                fieldIndex: (int)NPC_FieldIndex.Blade,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Block),
+                item: item.Block_Property,
+                fieldIndex: (int)NPC_FieldIndex.Block,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Blunt),
+                item: item.Blunt_Property,
+                fieldIndex: (int)NPC_FieldIndex.Blunt,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.HandToHand),
+                item: item.HandToHand_Property,
+                fieldIndex: (int)NPC_FieldIndex.HandToHand,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.HeavyArmor),
+                item: item.HeavyArmor_Property,
+                fieldIndex: (int)NPC_FieldIndex.HeavyArmor,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Alchemy),
+                item: item.Alchemy_Property,
+                fieldIndex: (int)NPC_FieldIndex.Alchemy,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Alteration),
+                item: item.Alteration_Property,
+                fieldIndex: (int)NPC_FieldIndex.Alteration,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Conjuration),
+                item: item.Conjuration_Property,
+                fieldIndex: (int)NPC_FieldIndex.Conjuration,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Destruction),
+                item: item.Destruction_Property,
+                fieldIndex: (int)NPC_FieldIndex.Destruction,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Illusion),
+                item: item.Illusion_Property,
+                fieldIndex: (int)NPC_FieldIndex.Illusion,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Mysticism),
+                item: item.Mysticism_Property,
+                fieldIndex: (int)NPC_FieldIndex.Mysticism,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Restoration),
+                item: item.Restoration_Property,
+                fieldIndex: (int)NPC_FieldIndex.Restoration,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Acrobatics),
+                item: item.Acrobatics_Property,
+                fieldIndex: (int)NPC_FieldIndex.Acrobatics,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.LightArmor),
+                item: item.LightArmor_Property,
+                fieldIndex: (int)NPC_FieldIndex.LightArmor,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Marksman),
+                item: item.Marksman_Property,
+                fieldIndex: (int)NPC_FieldIndex.Marksman,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Mercantile),
+                item: item.Mercantile_Property,
+                fieldIndex: (int)NPC_FieldIndex.Mercantile,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Security),
+                item: item.Security_Property,
+                fieldIndex: (int)NPC_FieldIndex.Security,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Sneak),
+                item: item.Sneak_Property,
+                fieldIndex: (int)NPC_FieldIndex.Sneak,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Speechcraft),
+                item: item.Speechcraft_Property,
+                fieldIndex: (int)NPC_FieldIndex.Speechcraft,
+                errorMask: errorMask);
+            UInt32XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Health),
+                item: item.Health_Property,
+                fieldIndex: (int)NPC_FieldIndex.Health,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Strength),
+                item: item.Strength_Property,
+                fieldIndex: (int)NPC_FieldIndex.Strength,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Intelligence),
+                item: item.Intelligence_Property,
+                fieldIndex: (int)NPC_FieldIndex.Intelligence,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Willpower),
+                item: item.Willpower_Property,
+                fieldIndex: (int)NPC_FieldIndex.Willpower,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Agility),
+                item: item.Agility_Property,
+                fieldIndex: (int)NPC_FieldIndex.Agility,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Speed),
+                item: item.Speed_Property,
+                fieldIndex: (int)NPC_FieldIndex.Speed,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Endurance),
+                item: item.Endurance_Property,
+                fieldIndex: (int)NPC_FieldIndex.Endurance,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Personality),
+                item: item.Personality_Property,
+                fieldIndex: (int)NPC_FieldIndex.Personality,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Luck),
+                item: item.Luck_Property,
+                fieldIndex: (int)NPC_FieldIndex.Luck,
+                errorMask: errorMask);
+            if (item.Hair_Property.HasBeenSet)
+            {
+                FormIDXmlTranslation.Instance.Write(
                     node: elem,
-                    name: nameof(item.Responsibility),
-                    item: item.Responsibility_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Responsibility,
+                    name: nameof(item.Hair),
+                    item: item.Hair?.FormID,
+                    fieldIndex: (int)NPC_FieldIndex.Hair,
                     errorMask: errorMask);
-                EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Write(
+            }
+            if (item.HairLength_Property.HasBeenSet)
+            {
+                FloatXmlTranslation.Instance.Write(
                     node: elem,
-                    name: nameof(item.BuySellServices),
-                    item: item.BuySellServices_Property,
-                    fieldIndex: (int)NPC_FieldIndex.BuySellServices,
+                    name: nameof(item.HairLength),
+                    item: item.HairLength_Property,
+                    fieldIndex: (int)NPC_FieldIndex.HairLength,
                     errorMask: errorMask);
-                EnumXmlTranslation<Skill>.Instance.Write(
+            }
+            if (item.Eyes.HasBeenSet)
+            {
+                ListXmlTranslation<FormIDLink<Eye>>.Instance.Write(
                     node: elem,
-                    name: nameof(item.Teaches),
-                    item: item.Teaches_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Teaches,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
+                    name: nameof(item.Eyes),
+                    item: item.Eyes,
+                    fieldIndex: (int)NPC_FieldIndex.Eyes,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, FormIDLink<Eye> subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        FormIDXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Item",
+                            item: subItem?.FormID,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if (item.HairColor_Property.HasBeenSet)
+            {
+                ColorXmlTranslation.Instance.Write(
                     node: elem,
-                    name: nameof(item.MaximumTrainingLevel),
-                    item: item.MaximumTrainingLevel_Property,
-                    fieldIndex: (int)NPC_FieldIndex.MaximumTrainingLevel,
+                    name: nameof(item.HairColor),
+                    item: item.HairColor_Property,
+                    fieldIndex: (int)NPC_FieldIndex.HairColor,
                     errorMask: errorMask);
+            }
+            if (item.CombatStyle_Property.HasBeenSet)
+            {
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.CombatStyle),
+                    item: item.CombatStyle?.FormID,
+                    fieldIndex: (int)NPC_FieldIndex.CombatStyle,
+                    errorMask: errorMask);
+            }
+            if (item.FaceGenGeometrySymmetric_Property.HasBeenSet)
+            {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
-                    name: nameof(item.Fluff),
-                    item: item.Fluff_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Fluff,
+                    name: nameof(item.FaceGenGeometrySymmetric),
+                    item: item.FaceGenGeometrySymmetric_Property,
+                    fieldIndex: (int)NPC_FieldIndex.FaceGenGeometrySymmetric,
                     errorMask: errorMask);
-                if (item.AIPackages.HasBeenSet)
-                {
-                    ListXmlTranslation<FormIDSetLink<AIPackage>, Exception>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.AIPackages),
-                        item: item.AIPackages,
-                        fieldIndex: (int)NPC_FieldIndex.AIPackages,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, FormIDSetLink<AIPackage> subItem, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            FormIDXmlTranslation.Instance.Write(
-                                node: subNode,
-                                name: "Item",
-                                item: subItem?.FormID,
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                if (item.Animations.HasBeenSet)
-                {
-                    ListXmlTranslation<String, Exception>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Animations),
-                        item: item.Animations,
-                        fieldIndex: (int)NPC_FieldIndex.Animations,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, String subItem, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            StringXmlTranslation.Instance.Write(
-                                node: subNode,
-                                name: "Item",
-                                item: subItem,
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                if (item.Class_Property.HasBeenSet)
-                {
-                    FormIDXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Class),
-                        item: item.Class?.FormID,
-                        fieldIndex: (int)NPC_FieldIndex.Class,
-                        errorMask: errorMask);
-                }
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Armorer),
-                    item: item.Armorer_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Armorer,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Athletics),
-                    item: item.Athletics_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Athletics,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Blade),
-                    item: item.Blade_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Blade,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Block),
-                    item: item.Block_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Block,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Blunt),
-                    item: item.Blunt_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Blunt,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.HandToHand),
-                    item: item.HandToHand_Property,
-                    fieldIndex: (int)NPC_FieldIndex.HandToHand,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.HeavyArmor),
-                    item: item.HeavyArmor_Property,
-                    fieldIndex: (int)NPC_FieldIndex.HeavyArmor,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Alchemy),
-                    item: item.Alchemy_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Alchemy,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Alteration),
-                    item: item.Alteration_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Alteration,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Conjuration),
-                    item: item.Conjuration_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Conjuration,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Destruction),
-                    item: item.Destruction_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Destruction,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Illusion),
-                    item: item.Illusion_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Illusion,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Mysticism),
-                    item: item.Mysticism_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Mysticism,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Restoration),
-                    item: item.Restoration_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Restoration,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Acrobatics),
-                    item: item.Acrobatics_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Acrobatics,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.LightArmor),
-                    item: item.LightArmor_Property,
-                    fieldIndex: (int)NPC_FieldIndex.LightArmor,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Marksman),
-                    item: item.Marksman_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Marksman,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Mercantile),
-                    item: item.Mercantile_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Mercantile,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Security),
-                    item: item.Security_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Security,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Sneak),
-                    item: item.Sneak_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Sneak,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Speechcraft),
-                    item: item.Speechcraft_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Speechcraft,
-                    errorMask: errorMask);
-                UInt32XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Health),
-                    item: item.Health_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Health,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Strength),
-                    item: item.Strength_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Strength,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Intelligence),
-                    item: item.Intelligence_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Intelligence,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Willpower),
-                    item: item.Willpower_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Willpower,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Agility),
-                    item: item.Agility_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Agility,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Speed),
-                    item: item.Speed_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Speed,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Endurance),
-                    item: item.Endurance_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Endurance,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Personality),
-                    item: item.Personality_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Personality,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Luck),
-                    item: item.Luck_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Luck,
-                    errorMask: errorMask);
-                if (item.Hair_Property.HasBeenSet)
-                {
-                    FormIDXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Hair),
-                        item: item.Hair?.FormID,
-                        fieldIndex: (int)NPC_FieldIndex.Hair,
-                        errorMask: errorMask);
-                }
-                if (item.HairLength_Property.HasBeenSet)
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.HairLength),
-                        item: item.HairLength_Property,
-                        fieldIndex: (int)NPC_FieldIndex.HairLength,
-                        errorMask: errorMask);
-                }
-                if (item.Eyes.HasBeenSet)
-                {
-                    ListXmlTranslation<FormIDLink<Eye>, Exception>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Eyes),
-                        item: item.Eyes,
-                        fieldIndex: (int)NPC_FieldIndex.Eyes,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, FormIDLink<Eye> subItem, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            FormIDXmlTranslation.Instance.Write(
-                                node: subNode,
-                                name: "Item",
-                                item: subItem?.FormID,
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                if (item.HairColor_Property.HasBeenSet)
-                {
-                    ColorXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.HairColor),
-                        item: item.HairColor_Property,
-                        fieldIndex: (int)NPC_FieldIndex.HairColor,
-                        errorMask: errorMask);
-                }
-                if (item.CombatStyle_Property.HasBeenSet)
-                {
-                    FormIDXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.CombatStyle),
-                        item: item.CombatStyle?.FormID,
-                        fieldIndex: (int)NPC_FieldIndex.CombatStyle,
-                        errorMask: errorMask);
-                }
-                if (item.FaceGenGeometrySymmetric_Property.HasBeenSet)
-                {
-                    ByteArrayXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.FaceGenGeometrySymmetric),
-                        item: item.FaceGenGeometrySymmetric_Property,
-                        fieldIndex: (int)NPC_FieldIndex.FaceGenGeometrySymmetric,
-                        errorMask: errorMask);
-                }
-                if (item.FaceGenGeometryAsymmetric_Property.HasBeenSet)
-                {
-                    ByteArrayXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.FaceGenGeometryAsymmetric),
-                        item: item.FaceGenGeometryAsymmetric_Property,
-                        fieldIndex: (int)NPC_FieldIndex.FaceGenGeometryAsymmetric,
-                        errorMask: errorMask);
-                }
-                if (item.FaceGenTextureSymmetric_Property.HasBeenSet)
-                {
-                    ByteArrayXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.FaceGenTextureSymmetric),
-                        item: item.FaceGenTextureSymmetric_Property,
-                        fieldIndex: (int)NPC_FieldIndex.FaceGenTextureSymmetric,
-                        errorMask: errorMask);
-                }
-                if (item.Unknown_Property.HasBeenSet)
-                {
-                    ByteArrayXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Unknown),
-                        item: item.Unknown_Property,
-                        fieldIndex: (int)NPC_FieldIndex.Unknown,
-                        errorMask: errorMask);
-                }
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (item.FaceGenGeometryAsymmetric_Property.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.FaceGenGeometryAsymmetric),
+                    item: item.FaceGenGeometryAsymmetric_Property,
+                    fieldIndex: (int)NPC_FieldIndex.FaceGenGeometryAsymmetric,
+                    errorMask: errorMask);
+            }
+            if (item.FaceGenTextureSymmetric_Property.HasBeenSet)
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.FaceGenTextureSymmetric),
+                    item: item.FaceGenTextureSymmetric_Property,
+                    fieldIndex: (int)NPC_FieldIndex.FaceGenTextureSymmetric,
+                    errorMask: errorMask);
+            }
+            if (item.Unknown_Property.HasBeenSet)
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Unknown),
+                    item: item.Unknown_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Unknown,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -7800,43 +8125,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out NPC_ErrorMask errorMask)
         {
-            NPC_ErrorMask errMaskRet = null;
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new NPC_ErrorMask()) : default(Func<NPC_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             NPC item,
             RecordTypeConverter recordTypeConverter,
-            Func<NPC_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: NPC_Registration.NPC__HEADER,
+                type: ObjectType.Record))
             {
-                using (HeaderExport.ExportHeader(
+                MajorRecordCommon.Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: NPC_Registration.NPC__HEADER,
-                    type: ObjectType.Record))
-                {
-                    MajorRecordCommon.Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                    Write_Binary_RecordTypes(
-                        item: item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -7845,14 +8162,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NPC item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<NPC_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             NamedMajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
+            LoquiBinaryTranslation<Model>.Instance.Write(
                 writer: writer,
                 item: item.Model_Property,
                 fieldIndex: (int)NPC_FieldIndex.Model,
@@ -7896,20 +8213,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)NPC_FieldIndex.CalcMax,
                     errorMask: errorMask);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement, MaskItem<Exception, RankPlacement_ErrorMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement>.Instance.Write(
                 writer: writer,
-                item: item.Factions,
+                items: item.Factions,
                 fieldIndex: (int)NPC_FieldIndex.Factions,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, RankPlacement subItem, bool listDoMasks, out MaskItem<Exception, RankPlacement_ErrorMask> listSubMask) =>
-                {
-                    LoquiBinaryTranslation<RankPlacement, RankPlacement_ErrorMask>.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                transl: LoquiBinaryTranslation<RankPlacement>.Instance.Write);
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DeathItem_Property,
@@ -7924,22 +8233,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(NPC_Registration.RNAM_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>, Exception>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>>.Instance.Write(
                 writer: writer,
-                item: item.Spells,
+                items: item.Spells,
                 fieldIndex: (int)NPC_FieldIndex.Spells,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, FormIDSetLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
-                {
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask,
-                        header: recordTypeConverter.ConvertToCustom(NPC_Registration.SPLO_HEADER),
-                        nullable: false);
-                }
-                );
+                transl: FormIDBinaryTranslation.Instance.Write);
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Script_Property,
@@ -7947,20 +8246,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(NPC_Registration.SCRI_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry, MaskItem<Exception, ItemEntry_ErrorMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry>.Instance.Write(
                 writer: writer,
-                item: item.Items,
+                items: item.Items,
                 fieldIndex: (int)NPC_FieldIndex.Items,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, ItemEntry subItem, bool listDoMasks, out MaskItem<Exception, ItemEntry_ErrorMask> listSubMask) =>
-                {
-                    LoquiBinaryTranslation<ItemEntry, ItemEntry_ErrorMask>.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                transl: LoquiBinaryTranslation<ItemEntry>.Instance.Write);
             using (HeaderExport.ExportSubRecordHeader(writer, NPC_Registration.AIDT_HEADER))
             {
                 Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
@@ -8006,37 +8297,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)NPC_FieldIndex.Fluff,
                     errorMask: errorMask);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<AIPackage>, Exception>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<AIPackage>>.Instance.Write(
                 writer: writer,
-                item: item.AIPackages,
+                items: item.AIPackages,
                 fieldIndex: (int)NPC_FieldIndex.AIPackages,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, FormIDSetLink<AIPackage> subItem, bool listDoMasks, out Exception listSubMask) =>
-                {
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask,
-                        header: recordTypeConverter.ConvertToCustom(NPC_Registration.PKID_HEADER),
-                        nullable: false);
-                }
-                );
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<String, Exception>.Instance.Write(
+                transl: FormIDBinaryTranslation.Instance.Write);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Write(
                 writer: writer,
-                item: item.Animations,
+                items: item.Animations,
                 fieldIndex: (int)NPC_FieldIndex.Animations,
                 recordType: NPC_Registration.KFFZ_HEADER,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, String subItem, bool listDoMasks, out Exception listSubMask) =>
-                {
-                    Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                transl: StringBinaryTranslation.Instance.Write);
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Class_Property,
@@ -8211,21 +8484,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(NPC_Registration.LNAM_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Eye>, Exception>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Eye>>.Instance.Write(
                 writer: writer,
-                item: item.Eyes,
+                items: item.Eyes,
                 fieldIndex: (int)NPC_FieldIndex.Eyes,
                 recordType: NPC_Registration.ENAM_HEADER,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, FormIDLink<Eye> subItem, bool listDoMasks, out Exception listSubMask) =>
-                {
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                transl: FormIDBinaryTranslation.Instance.Write);
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.HairColor_Property,
@@ -10306,6 +10571,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static NPC_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            throw new NotImplementedException();
         }
         #endregion
 
