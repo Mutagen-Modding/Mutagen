@@ -48,13 +48,13 @@ namespace Mutagen.Bethesda.Binary
 
         public virtual bool Parse(
             MutagenFrame frame,
-            out string str,
+            out string item,
             ErrorMaskBuilder errorMask)
         {
             return Parse(
                 frame: frame,
                 parseWhole: true,
-                str: out str,
+                item: out item,
                 errorMask: errorMask);
         }
 
@@ -95,18 +95,18 @@ namespace Mutagen.Bethesda.Binary
         public virtual bool Parse(
             MutagenFrame frame,
             bool parseWhole,
-            out string str,
+            out string item,
             ErrorMaskBuilder errorMask)
         {
             errorMask = null;
             if (parseWhole)
             {
-                str = frame.Reader.ReadString(checked((int)frame.Remaining));
-                str = str.TrimEnd('\0');
+                item = frame.Reader.ReadString(checked((int)frame.Remaining));
+                item = item.TrimEnd('\0');
             }
             else
             {
-                str = ReadStringUntil(frame.Reader, '\0', include: false);
+                item = ReadStringUntil(frame.Reader, '\0', include: false);
                 frame.Reader.Position += 1;
             }
             return true;

@@ -292,10 +292,12 @@ namespace Mutagen.Bethesda.Tests
             bool doMasks = true,
             string name = null)
         {
-            errorMask = this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as RecordInstruction_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = RecordInstruction_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
@@ -373,18 +375,16 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        protected override object Write_XML_Internal(
+        protected override void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
             RecordInstructionCommon.Write_XML(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
 
@@ -973,7 +973,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_XML_Internal(
+            Write_XML(
                 node: node,
                 name: name,
                 item: item,
@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             errorMask = RecordInstruction_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal(
+        public static void Write_XML(
             XElement node,
             IRecordInstructionGetter item,
             ErrorMaskBuilder errorMask,

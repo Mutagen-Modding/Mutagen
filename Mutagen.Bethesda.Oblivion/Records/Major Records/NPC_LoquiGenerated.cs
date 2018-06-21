@@ -1486,10 +1486,12 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            errorMask = this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as NPC_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
@@ -1529,7 +1531,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: false);
+                errorMask: null);
         }
 
         public override void Write_XML(
@@ -1554,18 +1556,16 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
-        protected override object Write_XML_Internal(
+        protected override void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
             NPCCommon.Write_XML(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
 
@@ -2183,10 +2183,12 @@ namespace Mutagen.Bethesda.Oblivion
             out NPC_ErrorMask errorMask,
             bool doMasks = true)
         {
-            errorMask = this.Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: doMasks) as NPC_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Binary(
@@ -2222,7 +2224,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: false);
+                errorMask: null);
         }
 
         public override void Write_Binary(string path)
@@ -2241,18 +2243,16 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected override object Write_Binary_Internal(
+        protected override void Write_Binary_Internal(
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
             NPCCommon.Write_Binary(
                 item: this,
-                doMasks: doMasks,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
 
@@ -2445,7 +2445,15 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)NPC_FieldIndex.Animations,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: StringBinaryTranslation.Instance.Parse);
+                        transl: (MutagenFrame r, out String listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                                r,
+                                errorMask: listErrMask,
+                                item: out listSubItem,
+                                parseWhole: false);
+                        }
+                        );
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Animations);
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -7596,7 +7604,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_XML_Internal(
+            Write_XML(
                 node: node,
                 name: name,
                 item: item,
@@ -7604,7 +7612,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal(
+        public static void Write_XML(
             XElement node,
             INPCGetter item,
             ErrorMaskBuilder errorMask,
@@ -8126,7 +8134,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out NPC_ErrorMask errorMask)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary_Internal(
+            Write_Binary(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
@@ -8134,7 +8142,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_Binary_Internal(
+        public static void Write_Binary(
             MutagenWriter writer,
             NPC item,
             RecordTypeConverter recordTypeConverter,
@@ -8233,10 +8241,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(NPC_Registration.RNAM_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>>.Instance.WriteListOfRecords(
                 writer: writer,
                 items: item.Spells,
                 fieldIndex: (int)NPC_FieldIndex.Spells,
+                recordType: NPC_Registration.SPLO_HEADER,
                 errorMask: errorMask,
                 transl: FormIDBinaryTranslation.Instance.Write);
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
@@ -8297,10 +8306,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)NPC_FieldIndex.Fluff,
                     errorMask: errorMask);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<AIPackage>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<AIPackage>>.Instance.WriteListOfRecords(
                 writer: writer,
                 items: item.AIPackages,
                 fieldIndex: (int)NPC_FieldIndex.AIPackages,
+                recordType: NPC_Registration.PKID_HEADER,
                 errorMask: errorMask,
                 transl: FormIDBinaryTranslation.Instance.Write);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Write(

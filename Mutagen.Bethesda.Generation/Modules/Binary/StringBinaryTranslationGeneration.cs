@@ -10,6 +10,14 @@ namespace Mutagen.Bethesda.Generation
 {
     public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<string>
     {
+        public override bool AllowDirectParse(
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            bool squashedRepeatedList)
+        {
+            return !squashedRepeatedList;
+        }
+
         public StringBinaryTranslationGeneration()
             : base(nullable: true)
         {

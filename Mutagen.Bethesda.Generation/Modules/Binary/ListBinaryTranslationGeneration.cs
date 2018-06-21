@@ -79,8 +79,11 @@ namespace Mutagen.Bethesda.Generation
 
             ListBinaryType listBinaryType = GetListType(list, data, subData);
 
+            var isLoqui = list.SubTypeGeneration is LoquiType;
+            var listOfRecords = !isLoqui && listBinaryType == ListBinaryType.SubTrigger;
+
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}>.Instance.Write"))
+                $"{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}>.Instance.Write{(listOfRecords ? "ListOfRecords" : null)}"))
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"items: {itemAccessor.PropertyOrDirectAccess}");
@@ -89,8 +92,12 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"recordType: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
                 }
+                if (listOfRecords)
+                {
+                    args.Add($"recordType: {subData.TriggeringRecordSetAccessor}");
+                }
                 args.Add($"errorMask: {maskAccessor}");
-                if (subTransl.AllowDirectWrite)
+                if (subTransl.AllowDirectWrite(objGen, typeGen))
                 {
                     args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration)}.Write");
                 }
@@ -199,7 +206,10 @@ namespace Mutagen.Bethesda.Generation
                 args.Add($"errorMask: {maskAccessor}");
                 var subGenTypes = subData.GenerationTypes.ToList();
                 var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
-                if (subGenTypes.Count <= 1 && subTransl.AllowDirectParse)
+                if (subGenTypes.Count <= 1 && subTransl.AllowDirectParse(
+                    objGen,
+                    typeGen: typeGen,
+                    squashedRepeatedList: listBinaryType == ListBinaryType.Trigger))
                 {
                     args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration)}.Parse");
                 }

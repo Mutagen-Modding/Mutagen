@@ -376,10 +376,12 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
-            errorMask = this.Write_XML_Internal<T_ErrMask>(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as LeveledEntry_ErrorMask<T_ErrMask>;
+                errorMask: errorMaskBuilder);
+            errorMask = LeveledEntry_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML<T_ErrMask>(
@@ -418,38 +420,18 @@ namespace Mutagen.Bethesda.Oblivion
             XElement node,
             string name = null)
         {
-            Write_XML<MajorRecord_ErrorMask>(
-                node: node,
-                name: name);
-        }
-
-        public void Write_XML<T_ErrMask>(
-            XElement node,
-            string name = null)
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-        {
-            this.Write_XML_Internal<T_ErrMask>(
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_XML(
             string path,
             string name = null)
         {
-            Write_XML<MajorRecord_ErrorMask>(
-                path: path,
-                name: name);
-        }
-
-        public void Write_XML<T_ErrMask>(
-            string path,
-            string name = null)
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-        {
             XElement topNode = new XElement("topnode");
-            Write_XML<T_ErrMask>(
+            Write_XML(
                 node: topNode,
                 name: name);
             topNode.Elements().First().Save(path);
@@ -459,36 +441,23 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             string name = null)
         {
-            Write_XML<MajorRecord_ErrorMask>(
-                stream: stream,
-                name: name);
-        }
-
-        public void Write_XML<T_ErrMask>(
-            Stream stream,
-            string name = null)
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-        {
             XElement topNode = new XElement("topnode");
-            Write_XML<T_ErrMask>(
+            Write_XML(
                 node: topNode,
                 name: name);
             topNode.Elements().First().Save(stream);
         }
 
-        protected object Write_XML_Internal<T_ErrMask>(
+        protected void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
-            LeveledEntryCommon.Write_XML<T, T_ErrMask>(
+            LeveledEntryCommon.Write_XML<T>(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
 
@@ -681,10 +650,12 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
-            errorMask = this.Write_Binary_Internal<T_ErrMask>(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: doMasks) as LeveledEntry_ErrorMask<T_ErrMask>;
+                errorMask: errorMaskBuilder);
+            errorMask = LeveledEntry_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Binary<T_ErrMask>(
@@ -719,59 +690,38 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Write_Binary(MutagenWriter writer)
         {
-            Write_Binary<MajorRecord_ErrorMask>(writer: writer);
-        }
-
-        public void Write_Binary<T_ErrMask>(MutagenWriter writer)
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-        {
-            this.Write_Binary_Internal<T_ErrMask>(
+            this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_Binary(string path)
         {
-            Write_Binary<MajorRecord_ErrorMask>(path: path);
-        }
-
-        public void Write_Binary<T_ErrMask>(string path)
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-        {
             using (var writer = new MutagenWriter(path))
             {
-                Write_Binary<T_ErrMask>(writer: writer);
+                Write_Binary(writer: writer);
             }
         }
 
         public void Write_Binary(Stream stream)
         {
-            Write_Binary<MajorRecord_ErrorMask>(stream: stream);
-        }
-
-        public void Write_Binary<T_ErrMask>(Stream stream)
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-        {
             using (var writer = new MutagenWriter(stream))
             {
-                Write_Binary<T_ErrMask>(writer: writer);
+                Write_Binary(writer: writer);
             }
         }
 
-        protected object Write_Binary_Internal<T_ErrMask>(
+        protected void Write_Binary_Internal(
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            ErrorMaskBuilder errorMask)
         {
-            LeveledEntryCommon.Write_Binary<T, T_ErrMask>(
+            LeveledEntryCommon.Write_Binary<T>(
                 item: this,
-                doMasks: doMasks,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
 
@@ -1663,7 +1613,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_XML_Internal<T, T_ErrMask>(
+            Write_XML<T>(
                 node: node,
                 name: name,
                 item: item,
@@ -1671,13 +1621,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = LeveledEntry_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal<T, T_ErrMask>(
+        public static void Write_XML<T>(
             XElement node,
             ILeveledEntryGetter<T> item,
             ErrorMaskBuilder errorMask,
             string name = null)
             where T : Bethesda.MajorRecord, ILoquiObject<T>
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.LeveledEntry");
             node.Add(elem);
@@ -1738,7 +1687,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary_Internal<T, T_ErrMask>(
+            Write_Binary<T>(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
@@ -1746,13 +1695,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             errorMask = LeveledEntry_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
-        private static void Write_Binary_Internal<T, T_ErrMask>(
+        public static void Write_Binary<T>(
             MutagenWriter writer,
             LeveledEntry<T> item,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
             where T : Bethesda.MajorRecord, ILoquiObject<T>
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,

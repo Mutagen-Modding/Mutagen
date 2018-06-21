@@ -16,8 +16,13 @@ namespace Mutagen.Bethesda.Generation
             return $"EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance";
         }
 
-        public override bool AllowDirectWrite => false;
-        public override bool AllowDirectParse => false;
+        public override bool AllowDirectWrite(
+            ObjectGeneration objGen,
+            TypeGeneration typeGen) => false;
+        public override bool AllowDirectParse(
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            bool squashedRepeatedList) => false;
 
         public override void GenerateWrite(
             FileGeneration fg,

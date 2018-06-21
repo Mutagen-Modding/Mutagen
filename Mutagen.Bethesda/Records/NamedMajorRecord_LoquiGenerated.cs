@@ -229,10 +229,12 @@ namespace Mutagen.Bethesda
             bool doMasks = true,
             string name = null)
         {
-            errorMask = this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as NamedMajorRecord_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = NamedMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
@@ -265,18 +267,16 @@ namespace Mutagen.Bethesda
             topNode.Elements().First().Save(stream);
         }
 
-        protected override object Write_XML_Internal(
+        protected override void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
             NamedMajorRecordCommon.Write_XML(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
 
@@ -314,10 +314,12 @@ namespace Mutagen.Bethesda
             out NamedMajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
-            errorMask = this.Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: doMasks) as NamedMajorRecord_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = NamedMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Binary(
@@ -348,18 +350,16 @@ namespace Mutagen.Bethesda
             }
         }
 
-        protected override object Write_Binary_Internal(
+        protected override void Write_Binary_Internal(
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
             NamedMajorRecordCommon.Write_Binary(
                 item: this,
-                doMasks: doMasks,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
 
@@ -1019,7 +1019,7 @@ namespace Mutagen.Bethesda.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_XML_Internal(
+            Write_XML(
                 node: node,
                 name: name,
                 item: item,
@@ -1027,7 +1027,7 @@ namespace Mutagen.Bethesda.Internals
             errorMask = NamedMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal(
+        public static void Write_XML(
             XElement node,
             INamedMajorRecordGetter item,
             ErrorMaskBuilder errorMask,
@@ -1063,7 +1063,7 @@ namespace Mutagen.Bethesda.Internals
             out NamedMajorRecord_ErrorMask errorMask)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary_Internal(
+            Write_Binary(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
@@ -1071,7 +1071,7 @@ namespace Mutagen.Bethesda.Internals
             errorMask = NamedMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_Binary_Internal(
+        public static void Write_Binary(
             MutagenWriter writer,
             NamedMajorRecord item,
             RecordTypeConverter recordTypeConverter,

@@ -12,8 +12,13 @@ namespace Mutagen.Bethesda.Generation
     {
         public TranslationModule<BinaryTranslationGeneration> Module;
         public string Namespace => Module.Namespace;
-        public virtual bool AllowDirectWrite => true;
-        public virtual bool AllowDirectParse => true;
+        public virtual bool AllowDirectWrite(
+            ObjectGeneration objGen,
+            TypeGeneration typeGen) => true;
+        public virtual bool AllowDirectParse(
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            bool squashedRepeatedList) => true;
 
         public abstract void GenerateWrite(
             FileGeneration fg,

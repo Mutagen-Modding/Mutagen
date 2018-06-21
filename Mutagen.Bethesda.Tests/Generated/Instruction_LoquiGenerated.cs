@@ -396,10 +396,12 @@ namespace Mutagen.Bethesda.Tests
             bool doMasks = true,
             string name = null)
         {
-            errorMask = this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as Instruction_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = Instruction_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
@@ -439,7 +441,7 @@ namespace Mutagen.Bethesda.Tests
             this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: false);
+                errorMask: null);
         }
 
         public virtual void Write_XML(
@@ -464,18 +466,16 @@ namespace Mutagen.Bethesda.Tests
             topNode.Elements().First().Save(stream);
         }
 
-        protected virtual object Write_XML_Internal(
+        protected virtual void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
             InstructionCommon.Write_XML(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
 
@@ -1541,7 +1541,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_XML_Internal(
+            Write_XML(
                 node: node,
                 name: name,
                 item: item,
@@ -1549,7 +1549,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             errorMask = Instruction_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal(
+        public static void Write_XML(
             XElement node,
             IInstructionGetter item,
             ErrorMaskBuilder errorMask,

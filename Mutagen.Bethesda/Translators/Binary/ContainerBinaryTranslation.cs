@@ -224,14 +224,15 @@ namespace Mutagen.Bethesda.Binary
         {
             using (frame)
             {
+                var safeFrame = frame.Spawn(snapToFinalPosition: false);
                 var ret = new List<T>();
-                int i = 0; ;
-                while (!frame.Complete)
+                int i = 0;
+                while (!safeFrame.Complete)
                 {
                     try
                     {
                         errorMask?.PushIndex(i++);
-                        if (transl(frame, out var subItem, errorMask))
+                        if (transl(safeFrame, out var subItem, errorMask))
                         {
                             ret.Add(subItem);
                         }
@@ -300,7 +301,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 try
                 {
-                    errorMask?.PushIndex(i++);
+                    errorMask?.PushIndex(i);
                     if (transl(safeFrame, out var subItem, errorMask))
                     {
                         ret.Add(subItem);
@@ -499,6 +500,35 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write(
             MutagenWriter writer,
+            INotifyingCollection<T> items,
+            int fieldIndex,
+            RecordType recordType,
+            ErrorMaskBuilder errorMask,
+            BinarySubWriteDelegate<T> transl)
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                this.WriteRecordList(
+                    writer: writer,
+                    items: items,
+                    recordType: recordType,
+                    errorMask: errorMask,
+                    transl: transl);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask?.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+        public void WriteListOfRecords(
+            MutagenWriter writer,
             IEnumerable<T> items,
             int fieldIndex,
             RecordType recordType,
@@ -508,7 +538,7 @@ namespace Mutagen.Bethesda.Binary
             try
             {
                 errorMask?.PushIndex(fieldIndex);
-                this.Write(
+                this.WriteListOfRecords(
                     writer: writer,
                     items: items,
                     recordType: recordType,
@@ -555,7 +585,7 @@ namespace Mutagen.Bethesda.Binary
 
         private void Write(
             MutagenWriter writer,
-            IEnumerable<T> items,
+            INotifyingCollection<T> items,
             RecordType recordType,
             int fieldIndex,
             ErrorMaskBuilder errorMask,
@@ -564,7 +594,7 @@ namespace Mutagen.Bethesda.Binary
             try
             {
                 errorMask?.PushIndex(fieldIndex);
-                this.Write(
+                this.WriteRecordList(
                     writer: writer,
                     items: items,
                     recordType: recordType,
@@ -582,13 +612,14 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        private void Write(
+        private void WriteRecordList(
             MutagenWriter writer,
-            IEnumerable<T> items,
+            INotifyingCollection<T> items,
             RecordType recordType,
             ErrorMaskBuilder errorMask,
             BinarySubWriteDelegate<T> transl)
         {
+            if (!items.HasBeenSet) return;
             using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
             {
                 int i = 0;
@@ -608,6 +639,43 @@ namespace Mutagen.Bethesda.Binary
                     {
                         errorMask?.PopIndex();
                     }
+                }
+            }
+        }
+
+        private void WriteListOfRecords(
+            MutagenWriter writer,
+            IEnumerable<T> items,
+            RecordType recordType,
+            ErrorMaskBuilder errorMask,
+            BinarySubWriteDelegate<T> transl)
+        {
+            int i = 0;
+            foreach (var item in items)
+            {
+                try
+                {
+                    errorMask?.PushIndex(i++);
+                    if (IsLoqui)
+                    {
+                        this.WriteSingleItem(writer, transl, item, errorMask);
+                    }
+                    else
+                    {
+                        using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
+                        {
+                            this.WriteSingleItem(writer, transl, item, errorMask);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
         }
