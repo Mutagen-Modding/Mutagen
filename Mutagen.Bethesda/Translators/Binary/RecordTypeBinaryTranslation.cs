@@ -1,4 +1,5 @@
 ﻿using Loqui;
+using Loqui.Internal;
 using Noggog;
 using System;
 using System.IO;
@@ -10,6 +11,58 @@ namespace Mutagen.Bethesda.Binary
         public readonly static RecordTypeBinaryTranslation Instance = new RecordTypeBinaryTranslation();
         public override int? ExpectedLength => 4;
 
+        public void ParseInto<T>(MutagenFrame frame, int fieldIndex, EDIDSetLink<T> item, ErrorMaskBuilder errorMask)
+            where T : MajorRecord
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                if (Parse(frame, ExpectedLength.Value, out RecordType val, errorMask))
+                {
+                    item.Set(val);
+                }
+                else
+                {
+                    item.Unset();
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+        public void ParseInto<T>(MutagenFrame frame, int fieldIndex, EDIDLink<T> item, ErrorMaskBuilder errorMask)
+            where T : MajorRecord
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                if (Parse(frame, ExpectedLength.Value, out RecordType val, errorMask))
+                {
+                    item.Set(val);
+                }
+                else
+                {
+                    item.Unset();
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
         protected override RecordType ParseValue(MutagenFrame reader)
         {
             return HeaderTranslation.ReadNextRecordType(reader.Reader);
@@ -20,53 +73,65 @@ namespace Mutagen.Bethesda.Binary
             writer.Write(item.Type);
         }
 
-        public void Write<T>(MutagenWriter writer, IEDIDLink<T> item, bool doMasks, out Exception errorMask)
+        public void Write<T>(MutagenWriter writer, IEDIDLink<T> item, ErrorMaskBuilder errorMask)
             where T : MajorRecord
         {
-            this.Write(
+            this.WriteValue(
                 writer,
-                item.EDID,
-                doMasks: doMasks,
-                errorMask: out errorMask);
+                item.EDID);
         }
 
-        public void Write<M, T>(
+        public void Write<T>(
             MutagenWriter writer,
             IEDIDLink<T> item,
             int fieldIndex,
-            Func<M> errorMask)
-            where M : IErrorMask
+            ErrorMaskBuilder errorMask)
             where T : MajorRecord
         {
-            this.Write(
-                writer,
-                item,
-                errorMask != null,
-                out var subMask);
-            ErrorMask.HandleException(
-                errorMask,
-                fieldIndex,
-                subMask);
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                this.Write(
+                    writer,
+                    item,
+                    errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
         }
 
-        public void Write<M, T>(
+        public void Write<T>(
             MutagenWriter writer,
             EDIDSetLink<T> item,
             int fieldIndex,
-            Func<M> errorMask)
-            where M : IErrorMask
+            ErrorMaskBuilder errorMask)
             where T : MajorRecord
         {
-            if (!item.HasBeenSet) return;
-            this.Write(
-                writer,
-                item,
-                errorMask != null,
-                out var subMask);
-            ErrorMask.HandleException(
-                errorMask,
-                fieldIndex,
-                subMask);
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                if (!item.HasBeenSet) return;
+                this.Write(
+                    writer,
+                    item,
+                    errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
         }
 
         public void Write<M, T>(
@@ -74,46 +139,60 @@ namespace Mutagen.Bethesda.Binary
             IEDIDLink<T> item,
             RecordType header,
             int fieldIndex,
-            Func<M> errorMask,
+            ErrorMaskBuilder errorMask,
             bool nullable = false)
-            where M : IErrorMask
             where T : MajorRecord
         {
-            this.Write(
-                writer,
-                item.EDID,
-                header,
-                nullable: nullable,
-                doMasks: errorMask != null,
-                errorMask: out var subMask);
-            ErrorMask.HandleException(
-                errorMask,
-                fieldIndex,
-                subMask);
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                this.Write(
+                    writer,
+                    item.EDID,
+                    header,
+                    nullable: nullable,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
         }
 
-        public void Write<M, T>(
+        public void Write<T>(
             MutagenWriter writer,
             EDIDSetLink<T> item,
             RecordType header,
             int fieldIndex,
-            Func<M> errorMask,
+            ErrorMaskBuilder errorMask,
             bool nullable = false)
-            where M : IErrorMask
             where T : MajorRecord
         {
-            if (!item.HasBeenSet) return;
-            this.Write(
-                writer,
-                item.EDID,
-                header,
-                nullable: nullable,
-                doMasks: errorMask != null,
-                errorMask: out var subMask);
-            ErrorMask.HandleException(
-                errorMask,
-                fieldIndex,
-                subMask);
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                if (!item.HasBeenSet) return;
+                this.Write(
+                    writer,
+                    item.EDID,
+                    header,
+                    nullable: nullable,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
         }
 
         public void Write<T>(
@@ -121,8 +200,7 @@ namespace Mutagen.Bethesda.Binary
             IEDIDLink<T> item,
             RecordType header,
             bool nullable,
-            bool doMasks,
-            out Exception errorMask)
+            ErrorMaskBuilder errorMask)
             where T : MajorRecord
         {
             this.Write(
@@ -130,8 +208,7 @@ namespace Mutagen.Bethesda.Binary
                 item.EDID,
                 header,
                 nullable,
-                doMasks,
-                out errorMask);
+                errorMask);
         }
 
         public void Write<T>(
@@ -139,13 +216,11 @@ namespace Mutagen.Bethesda.Binary
             EDIDSetLink<T> item,
             RecordType header,
             bool nullable,
-            bool doMasks,
-            out Exception errorMask)
+            ErrorMaskBuilder errorMask)
             where T : MajorRecord
         {
             if (!item.HasBeenSet)
             {
-                errorMask = null;
                 return;
             }
             this.Write(
@@ -153,8 +228,7 @@ namespace Mutagen.Bethesda.Binary
                 item.EDID,
                 header,
                 nullable,
-                doMasks,
-                out errorMask);
+                errorMask);
         }
     }
 }

@@ -1,29 +1,33 @@
-﻿using Noggog;
+﻿using Loqui.Internal;
+using Noggog;
 using System;
 using System.IO;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public class BinaryTranslationCaster<T, M> : IBinaryTranslation<Object, Object>
+    public class BinaryTranslationCaster<T> : IBinaryTranslation<Object>
     {
-        public IBinaryTranslation<T, M> Source { get; }
+        public IBinaryTranslation<T> Source { get; }
 
-        public BinaryTranslationCaster(IBinaryTranslation<T, M> src)
+        public BinaryTranslationCaster(IBinaryTranslation<T> src)
         {
             this.Source = src;
         }
 
-        void IBinaryTranslation<object, object>.Write(MutagenWriter writer, object item, long length, bool doMasks, out object maskObj)
+        void IBinaryTranslation<object>.Write(MutagenWriter writer, object item, long length, ErrorMaskBuilder errorMask)
         {
-            Source.Write(writer, (T)item, length, doMasks, out var subMaskObj);
-            maskObj = subMaskObj;
+            Source.Write(writer, (T)item, length, errorMask);
         }
-
-        TryGet<object> IBinaryTranslation<object, object>.Parse(MutagenFrame frame, bool doMasks, out object maskObj)
+        
+        bool IBinaryTranslation<object>.Parse(MutagenFrame reader, out object item, ErrorMaskBuilder errorMask)
         {
-            var ret = Source.Parse(frame, doMasks, out var subMaskObj).Bubble<object>((i) => i);
-            maskObj = subMaskObj;
-            return ret;
+            if (Source.Parse(reader, out var subObj, errorMask))
+            {
+                item = subObj;
+                return true;
+            }
+            item = null;
+            return false;
         }
     }
 }

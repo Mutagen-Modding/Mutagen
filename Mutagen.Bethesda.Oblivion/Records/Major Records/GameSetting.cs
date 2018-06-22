@@ -1,4 +1,5 @@
-﻿using Mutagen.Bethesda.Binary;
+﻿using Loqui.Internal;
+using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog.Notifying;
@@ -29,41 +30,46 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static (GameSetting Object, GameSetting_ErrorMask ErrorMask) Create_Binary(
+        public static GameSetting Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
             var initialPos = frame.Position;
             frame.Position += 20;
             if (!MajorRecord_Registration.EDID_HEADER.Equals(HeaderTranslation.GetNextSubRecordType(frame.Reader, out var edidLength)))
             {
-                throw new ArgumentException($"EDID was not located in expected position: {frame.Position}");
+                errorMask.ReportExceptionOrThrow(
+                    new ArgumentException($"EDID was not located in expected position: {frame.Position}"));
+                return null;
             }
             frame.Position += 6;
-            var edid = StringBinaryTranslation.Instance.Parse(
+            if (!StringBinaryTranslation.Instance.Parse(
                 frame.SpawnWithLength(edidLength),
-                doMasks,
-                out var err);
-            if (err != null)
+                out var edid,
+                errorMask))
             {
-                throw new ArgumentException($"Error parsing EDID: {err}");
+                errorMask.ReportExceptionOrThrow(
+                    new ArgumentException($"EDID was parsed in expected position: {frame.Position}"));
+                return null;
             }
-            if (edid.Failed || edid.Value.Length == 0)
+            if (edid.Length == 0)
             {
-                throw new ArgumentException("No EDID parsed.");
+                errorMask.ReportExceptionOrThrow(new ArgumentException("No EDID parsed."));
+                return null;
             }
             frame.Position = initialPos;
-            switch (edid.Value[0])
+            switch (edid[0])
             {
                 case GameSettingInt.TRIGGER_CHAR:
-                    return GameSettingInt.Create_Binary(frame, recordTypeConverter, doMasks);
+                    return GameSettingInt.Create_Binary(frame, recordTypeConverter, errorMask);
                 case GameSettingString.TRIGGER_CHAR:
-                    return GameSettingString.Create_Binary(frame, recordTypeConverter, doMasks);
+                    return GameSettingString.Create_Binary(frame, recordTypeConverter, errorMask);
                 case GameSettingFloat.TRIGGER_CHAR:
-                    return GameSettingFloat.Create_Binary(frame, recordTypeConverter, doMasks);
+                    return GameSettingFloat.Create_Binary(frame, recordTypeConverter, errorMask);
                 default:
-                    throw new ArgumentException($"Unknown game setting type: {edid.Value[0]}");
+                    errorMask.ReportExceptionOrThrow(new ArgumentException($"Unknown game setting type: {edid[0]}"));
+                    return null;
             }
         }
     }

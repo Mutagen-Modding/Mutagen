@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
 
@@ -15,17 +16,16 @@ namespace Mutagen.Bethesda.Oblivion
             set => this.CompiledSize = value;
         }
 
-        static partial void FillBinary_CompiledSize_Custom(MutagenFrame frame, ScriptMetaSummary item, int fieldIndex, Func<ScriptMetaSummary_ErrorMask> errorMask)
+        static partial void FillBinary_CompiledSize_Custom(MutagenFrame frame, ScriptMetaSummary item, ErrorMaskBuilder errorMask)
         {
             frame.Position += 4;
         }
 
-        static partial void WriteBinary_CompiledSize_Custom(MutagenWriter writer, ScriptMetaSummary item, int fieldIndex, Func<ScriptMetaSummary_ErrorMask> errorMask)
+        static partial void WriteBinary_CompiledSize_Custom(MutagenWriter writer, ScriptMetaSummary item, ErrorMaskBuilder errorMask)
         {
             Int32BinaryTranslation.Instance.Write(
                 writer,
                 item.CompiledSize,
-                fieldIndex,
                 errorMask);
         }
     }

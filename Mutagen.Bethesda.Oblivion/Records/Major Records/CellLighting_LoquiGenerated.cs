@@ -18,6 +18,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Loqui.Internal;
 using System.Collections.Specialized;
@@ -580,8 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -590,23 +590,37 @@ namespace Mutagen.Bethesda.Oblivion
             out CellLighting_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (CellLighting Object, CellLighting_ErrorMask ErrorMask) Create_XML(
+        public static CellLighting Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            CellLighting_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new CellLighting_ErrorMask()) : default(Func<CellLighting_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new CellLighting();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static CellLighting Create_XML(string path)
@@ -648,12 +662,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<CellLighting, CellLighting_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<CellLighting>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -662,13 +675,14 @@ namespace Mutagen.Bethesda.Oblivion
             out CellLighting_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<CellLighting, CellLighting_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<CellLighting>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -724,10 +738,12 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            errorMask = this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as CellLighting_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
@@ -767,7 +783,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_XML(
@@ -792,54 +808,29 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
-        protected object Write_XML_Internal(
+        protected void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
             CellLightingCommon.Write_XML(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static CellLighting Create_XML_Internal(
-            XElement root,
-            Func<CellLighting_ErrorMask> errorMask)
-        {
-            var ret = new CellLighting();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
 
         protected static void Fill_XML_Internal(
             CellLighting item,
             XElement root,
             string name,
-            Func<CellLighting_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "AmbientColor":
+<<<<<<< HEAD
                     var AmbientColortryGet = ColorXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)CellLighting_FieldIndex.AmbientColor,
@@ -1182,6 +1173,69 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case CellLighting_FieldIndex.FogClipDistance:
                     SetFogClipDistance(item, hasBeenSet, cmds);
+=======
+                    ColorXmlTranslation.Instance.ParseInto(
+                        root,
+                        fieldIndex: (int)CellLighting_FieldIndex.AmbientColor,
+                        item: item._AmbientColor,
+                        errorMask: errorMask);
+                    break;
+                case "DirectionalColor":
+                    ColorXmlTranslation.Instance.ParseInto(
+                        root,
+                        fieldIndex: (int)CellLighting_FieldIndex.DirectionalColor,
+                        item: item._DirectionalColor,
+                        errorMask: errorMask);
+                    break;
+                case "FogColor":
+                    ColorXmlTranslation.Instance.ParseInto(
+                        root,
+                        fieldIndex: (int)CellLighting_FieldIndex.FogColor,
+                        item: item._FogColor,
+                        errorMask: errorMask);
+                    break;
+                case "FogNear":
+                    FloatXmlTranslation.Instance.ParseInto(
+                        root,
+                        fieldIndex: (int)CellLighting_FieldIndex.FogNear,
+                        item: item._FogNear,
+                        errorMask: errorMask);
+                    break;
+                case "FogFar":
+                    FloatXmlTranslation.Instance.ParseInto(
+                        root,
+                        fieldIndex: (int)CellLighting_FieldIndex.FogFar,
+                        item: item._FogFar,
+                        errorMask: errorMask);
+                    break;
+                case "DirectionalRotationXY":
+                    Int32XmlTranslation.Instance.ParseInto(
+                        root,
+                        fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationXY,
+                        item: item._DirectionalRotationXY,
+                        errorMask: errorMask);
+                    break;
+                case "DirectionalRotationZ":
+                    Int32XmlTranslation.Instance.ParseInto(
+                        root,
+                        fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationZ,
+                        item: item._DirectionalRotationZ,
+                        errorMask: errorMask);
+                    break;
+                case "DirectionalFade":
+                    FloatXmlTranslation.Instance.ParseInto(
+                        root,
+                        fieldIndex: (int)CellLighting_FieldIndex.DirectionalFade,
+                        item: item._DirectionalFade,
+                        errorMask: errorMask);
+                    break;
+                case "FogClipDistance":
+                    FloatXmlTranslation.Instance.ParseInto(
+                        root,
+                        fieldIndex: (int)CellLighting_FieldIndex.FogClipDistance,
+                        item: item._FogClipDistance,
+                        errorMask: errorMask);
+>>>>>>> ErrorMaskRevamp
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");
@@ -1443,8 +1497,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -1453,26 +1507,41 @@ namespace Mutagen.Bethesda.Oblivion
             out CellLighting_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (CellLighting Object, CellLighting_ErrorMask ErrorMask) Create_Binary(
+        public static CellLighting Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            CellLighting_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new CellLighting_ErrorMask()) : default(Func<CellLighting_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new CellLighting();
+            try
+            {
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                    frame.Reader,
+                    CellLighting_Registration.XCLL_HEADER));
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static CellLighting Create_Binary(string path)
@@ -1527,10 +1596,12 @@ namespace Mutagen.Bethesda.Oblivion
             out CellLighting_ErrorMask errorMask,
             bool doMasks = true)
         {
-            errorMask = this.Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: doMasks) as CellLighting_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Binary(
@@ -1566,7 +1637,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_Binary(string path)
@@ -1585,21 +1656,20 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected object Write_Binary_Internal(
+        protected void Write_Binary_Internal(
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
             CellLightingCommon.Write_Binary(
                 item: this,
-                doMasks: doMasks,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
 
+<<<<<<< HEAD
         private static CellLighting Create_Binary_Internal(
             MutagenFrame frame,
             Func<CellLighting_ErrorMask> errorMask,
@@ -1627,11 +1697,14 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+=======
+>>>>>>> ErrorMaskRevamp
         protected static void Fill_Binary_Structs(
             CellLighting item,
             MutagenFrame frame,
-            Func<CellLighting_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
+<<<<<<< HEAD
             var AmbientColortryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)CellLighting_FieldIndex.AmbientColor,
@@ -1743,6 +1816,56 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.UnsetFogClipDistance();
             }
+=======
+            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.ParseInto(
+                frame: frame,
+                item: item._AmbientColor,
+                fieldIndex: (int)CellLighting_FieldIndex.AmbientColor,
+                errorMask: errorMask,
+                extraByte: true);
+            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.ParseInto(
+                frame: frame,
+                item: item._DirectionalColor,
+                fieldIndex: (int)CellLighting_FieldIndex.DirectionalColor,
+                errorMask: errorMask,
+                extraByte: true);
+            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.ParseInto(
+                frame: frame,
+                item: item._FogColor,
+                fieldIndex: (int)CellLighting_FieldIndex.FogColor,
+                errorMask: errorMask,
+                extraByte: true);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
+                frame: frame,
+                item: item._FogNear,
+                fieldIndex: (int)CellLighting_FieldIndex.FogNear,
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
+                frame: frame,
+                item: item._FogFar,
+                fieldIndex: (int)CellLighting_FieldIndex.FogFar,
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.ParseInto(
+                frame: frame,
+                item: item._DirectionalRotationXY,
+                fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationXY,
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.ParseInto(
+                frame: frame,
+                item: item._DirectionalRotationZ,
+                fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationZ,
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
+                frame: frame,
+                item: item._DirectionalFade,
+                fieldIndex: (int)CellLighting_FieldIndex.DirectionalFade,
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
+                frame: frame,
+                item: item._FogClipDistance,
+                fieldIndex: (int)CellLighting_FieldIndex.FogClipDistance,
+                errorMask: errorMask);
+>>>>>>> ErrorMaskRevamp
         }
 
         #endregion
@@ -1835,24 +1958,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            CellLighting_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new CellLighting_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             CellLightingCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            ICellLightingGetter rhs,
+            ErrorMaskBuilder errorMask,
+            CellLighting_CopyMask copyMask = null,
+            ICellLightingGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            CellLightingCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -2368,13 +2499,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICellLighting item,
             ICellLightingGetter rhs,
             ICellLightingGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             CellLighting_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.AmbientColor ?? true)
             {
+                errorMask.PushIndex((int)CellLighting_FieldIndex.AmbientColor);
                 try
                 {
                     item.AmbientColor_Property.Set(
@@ -2382,13 +2513,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)CellLighting_FieldIndex.AmbientColor, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.DirectionalColor ?? true)
             {
+                errorMask.PushIndex((int)CellLighting_FieldIndex.DirectionalColor);
                 try
                 {
                     item.DirectionalColor_Property.Set(
@@ -2396,13 +2532,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)CellLighting_FieldIndex.DirectionalColor, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.FogColor ?? true)
             {
+                errorMask.PushIndex((int)CellLighting_FieldIndex.FogColor);
                 try
                 {
                     item.FogColor_Property.Set(
@@ -2410,13 +2551,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)CellLighting_FieldIndex.FogColor, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.FogNear ?? true)
             {
+                errorMask.PushIndex((int)CellLighting_FieldIndex.FogNear);
                 try
                 {
                     item.FogNear_Property.Set(
@@ -2424,13 +2570,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)CellLighting_FieldIndex.FogNear, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.FogFar ?? true)
             {
+                errorMask.PushIndex((int)CellLighting_FieldIndex.FogFar);
                 try
                 {
                     item.FogFar_Property.Set(
@@ -2438,13 +2589,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)CellLighting_FieldIndex.FogFar, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.DirectionalRotationXY ?? true)
             {
+                errorMask.PushIndex((int)CellLighting_FieldIndex.DirectionalRotationXY);
                 try
                 {
                     item.DirectionalRotationXY_Property.Set(
@@ -2452,13 +2608,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)CellLighting_FieldIndex.DirectionalRotationXY, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.DirectionalRotationZ ?? true)
             {
+                errorMask.PushIndex((int)CellLighting_FieldIndex.DirectionalRotationZ);
                 try
                 {
                     item.DirectionalRotationZ_Property.Set(
@@ -2466,13 +2627,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)CellLighting_FieldIndex.DirectionalRotationZ, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.DirectionalFade ?? true)
             {
+                errorMask.PushIndex((int)CellLighting_FieldIndex.DirectionalFade);
                 try
                 {
                     item.DirectionalFade_Property.Set(
@@ -2480,13 +2646,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)CellLighting_FieldIndex.DirectionalFade, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.FogClipDistance ?? true)
             {
+                errorMask.PushIndex((int)CellLighting_FieldIndex.FogClipDistance);
                 try
                 {
                     item.FogClipDistance_Property.Set(
@@ -2494,9 +2665,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)CellLighting_FieldIndex.FogClipDistance, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -2759,89 +2934,81 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out CellLighting_ErrorMask errorMask,
             string name = null)
         {
-            CellLighting_ErrorMask errMaskRet = null;
-            Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_XML(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new CellLighting_ErrorMask()) : default(Func<CellLighting_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal(
+        public static void Write_XML(
             XElement node,
             ICellLightingGetter item,
-            Func<CellLighting_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.CellLighting");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.CellLighting");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.CellLighting");
-                }
-                ColorXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.AmbientColor),
-                    item: item.AmbientColor_Property,
-                    fieldIndex: (int)CellLighting_FieldIndex.AmbientColor,
-                    errorMask: errorMask);
-                ColorXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.DirectionalColor),
-                    item: item.DirectionalColor_Property,
-                    fieldIndex: (int)CellLighting_FieldIndex.DirectionalColor,
-                    errorMask: errorMask);
-                ColorXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.FogColor),
-                    item: item.FogColor_Property,
-                    fieldIndex: (int)CellLighting_FieldIndex.FogColor,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.FogNear),
-                    item: item.FogNear_Property,
-                    fieldIndex: (int)CellLighting_FieldIndex.FogNear,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.FogFar),
-                    item: item.FogFar_Property,
-                    fieldIndex: (int)CellLighting_FieldIndex.FogFar,
-                    errorMask: errorMask);
-                Int32XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.DirectionalRotationXY),
-                    item: item.DirectionalRotationXY_Property,
-                    fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationXY,
-                    errorMask: errorMask);
-                Int32XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.DirectionalRotationZ),
-                    item: item.DirectionalRotationZ_Property,
-                    fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationZ,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.DirectionalFade),
-                    item: item.DirectionalFade_Property,
-                    fieldIndex: (int)CellLighting_FieldIndex.DirectionalFade,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.FogClipDistance),
-                    item: item.FogClipDistance_Property,
-                    fieldIndex: (int)CellLighting_FieldIndex.FogClipDistance,
-                    errorMask: errorMask);
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.CellLighting");
             }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            ColorXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.AmbientColor),
+                item: item.AmbientColor_Property,
+                fieldIndex: (int)CellLighting_FieldIndex.AmbientColor,
+                errorMask: errorMask);
+            ColorXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.DirectionalColor),
+                item: item.DirectionalColor_Property,
+                fieldIndex: (int)CellLighting_FieldIndex.DirectionalColor,
+                errorMask: errorMask);
+            ColorXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.FogColor),
+                item: item.FogColor_Property,
+                fieldIndex: (int)CellLighting_FieldIndex.FogColor,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.FogNear),
+                item: item.FogNear_Property,
+                fieldIndex: (int)CellLighting_FieldIndex.FogNear,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.FogFar),
+                item: item.FogFar_Property,
+                fieldIndex: (int)CellLighting_FieldIndex.FogFar,
+                errorMask: errorMask);
+            Int32XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.DirectionalRotationXY),
+                item: item.DirectionalRotationXY_Property,
+                fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationXY,
+                errorMask: errorMask);
+            Int32XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.DirectionalRotationZ),
+                item: item.DirectionalRotationZ_Property,
+                fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationZ,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.DirectionalFade),
+                item: item.DirectionalFade_Property,
+                fieldIndex: (int)CellLighting_FieldIndex.DirectionalFade,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.FogClipDistance),
+                item: item.FogClipDistance_Property,
+                fieldIndex: (int)CellLighting_FieldIndex.FogClipDistance,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -2856,38 +3023,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out CellLighting_ErrorMask errorMask)
         {
-            CellLighting_ErrorMask errMaskRet = null;
-            Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new CellLighting_ErrorMask()) : default(Func<CellLighting_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_Binary_Internal(
+        public static void Write_Binary(
             MutagenWriter writer,
             CellLighting item,
             RecordTypeConverter recordTypeConverter,
-            Func<CellLighting_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: CellLighting_Registration.XCLL_HEADER,
+                type: ObjectType.Subrecord))
             {
-                using (HeaderExport.ExportHeader(
+                Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: CellLighting_Registration.XCLL_HEADER,
-                    type: ObjectType.Subrecord))
-                {
-                    Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -2895,7 +3054,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary_Embedded(
             CellLighting item,
             MutagenWriter writer,
-            Func<CellLighting_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -3339,6 +3498,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static CellLighting_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            return new CellLighting_ErrorMask();
         }
         #endregion
 

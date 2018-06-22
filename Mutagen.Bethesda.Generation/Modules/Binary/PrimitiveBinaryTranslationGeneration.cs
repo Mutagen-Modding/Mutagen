@@ -14,6 +14,11 @@ namespace Mutagen.Bethesda.Generation
         protected bool? nullable;
         public bool Nullable => nullable ?? false || typeof(T).GetName().EndsWith("?");
 
+        public override string GetTranslatorInstance(TypeGeneration typeGen)
+        {
+            return $"{typeName}BinaryTranslation.Instance";
+        }
+
         public PrimitiveBinaryTranslationGeneration(string typeName = null, bool? nullable = null)
         {
             this.nullable = nullable;
@@ -33,7 +38,6 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string writerAccessor,
             Accessor itemAccessor,
-            string doMaskAccessor,
             string maskAccessor)
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
@@ -45,13 +49,8 @@ namespace Mutagen.Bethesda.Generation
                 if (typeGen.HasIndex)
                 {
                     args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                    args.Add($"errorMask: {maskAccessor}");
                 }
-                else
-                {
-                    args.Add($"doMasks: {doMaskAccessor}");
-                    args.Add($"errorMask: out {maskAccessor}");
-                }
+                args.Add($"errorMask: {maskAccessor}");
                 if (data.RecordType.HasValue)
                 {
                     args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
@@ -63,7 +62,6 @@ namespace Mutagen.Bethesda.Generation
                     typeGen: typeGen,
                     writerAccessor: writerAccessor,
                     itemAccessor: itemAccessor,
-                    doMaskAccessor: doMaskAccessor,
                     maskAccessor: maskAccessor))
                 {
                     args.Add(arg);
@@ -77,7 +75,6 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string writerAccessor,
             Accessor itemAccessor,
-            string doMaskAccessor,
             string maskAccessor)
         {
             yield break;
@@ -89,7 +86,6 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string nodeAccessor,
             Accessor itemAccessor,
-            string doMaskAccessor,
             string maskAccessor)
         {
             var prim = typeGen as PrimitiveType;
@@ -101,8 +97,7 @@ namespace Mutagen.Bethesda.Generation
             ArgsWrapper args;
             if (typeGen.PrefersProperty)
             {
-                args = new ArgsWrapper(fg, $"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceededOrDefault)}({this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse",
-                    suffixLine: ")");
+                args = new ArgsWrapper(fg, $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.ParseInto");
             }
             else
             {
@@ -118,6 +113,10 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"frame: {nodeAccessor}.Spawn(snapToFinalPosition: false)");
                 }
+                if (itemAccessor.PropertyAccess != null)
+                {
+                    args.Add($"item: {itemAccessor.PropertyAccess}");
+                }
                 if (typeGen.HasIndex)
                 {
                     args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
@@ -125,8 +124,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else
                 {
-                    args.Add($"doMasks: {doMaskAccessor}");
-                    args.Add($"errorMask: out {maskAccessor}");
+                    throw new NotImplementedException();
                 }
                 foreach (var arg in AdditionCopyInParameters(
                     fg: fg,
@@ -134,7 +132,6 @@ namespace Mutagen.Bethesda.Generation
                     typeGen: typeGen,
                     nodeAccessor: nodeAccessor,
                     itemAccessor: itemAccessor,
-                    doMaskAccessor: doMaskAccessor,
                     maskAccessor: maskAccessor))
                 {
                     args.Add(arg);
@@ -149,7 +146,6 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string nodeAccessor,
             Accessor itemAccessor,
-            string doMaskAccessor,
             string maskAccessor)
         {
             yield break;
@@ -162,8 +158,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string nodeAccessor,
             bool squashedRepeatedList,
-            Accessor retAccessor,
-            string doMaskAccessor,
+            string retAccessor,
+            Accessor outItemAccessor,
             string maskAccessor)
         {
             if (typeGen.TryGetFieldData(out var data)
@@ -172,18 +168,17 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine("r.Position += Constants.SUBRECORD_LENGTH;");
             }
             using (var args = new ArgsWrapper(fg,
-                $"{retAccessor.DirectAccess}{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
+                $"{retAccessor}{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
             {
                 args.Add(nodeAccessor);
-                args.Add($"doMasks: {doMaskAccessor}");
-                args.Add($"errorMask: out {maskAccessor}");
+                args.Add($"errorMask: {maskAccessor}");
                 foreach (var arg in AdditionCopyInRetParameters(
                     fg: fg,
                     objGen: objGen,
                     typeGen: typeGen,
                     nodeAccessor: nodeAccessor,
                     retAccessor: retAccessor,
-                    doMaskAccessor: doMaskAccessor,
+                    outItemAccessor: outItemAccessor,
                     maskAccessor: maskAccessor))
                 {
                     args.Add(arg);
@@ -196,8 +191,8 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             string nodeAccessor,
-            Accessor retAccessor,
-            string doMaskAccessor,
+            string retAccessor,
+            Accessor outItemAccessor,
             string maskAccessor)
         {
             yield break;

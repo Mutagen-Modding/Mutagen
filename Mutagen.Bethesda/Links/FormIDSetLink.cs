@@ -56,7 +56,12 @@ namespace Mutagen.Bethesda
                 this.Unset();
                 return;
             }
-            this.UnlinkedForm = formID.Value;
+            this.Set(formID.Value);
+        }
+
+        public void Set(FormID formID)
+        {
+            this.UnlinkedForm = formID;
             this.HasBeenSet = true;
         }
 

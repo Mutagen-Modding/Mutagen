@@ -18,6 +18,20 @@ namespace Mutagen.Bethesda.Generation
 
     public class ListBinaryTranslationGeneration : BinaryTranslationGeneration
     {
+        public virtual string TranslatorName => $"ListBinaryTranslation";
+
+        public override string GetTranslatorInstance(TypeGeneration typeGen)
+        {
+            var list = typeGen as ListType;
+            if (!Module.TryGetTypeGeneration(list.SubTypeGeneration.GetType(), out var subTransl))
+            {
+                throw new ArgumentException("Unsupported type generator: " + list.SubTypeGeneration);
+            }
+
+            var subMaskStr = subTransl.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration);
+            return $"{TranslatorName}<{list.SubTypeGeneration.TypeName}, {subMaskStr}>.Instance";
+        }
+
         private ListBinaryType GetListType(
             ListType list,
             MutagenFieldData data,
@@ -47,7 +61,6 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string writerAccessor,
             Accessor itemAccessor,
-            string doMaskAccessor,
             string maskAccessor)
         {
             var list = typeGen as ListType;
@@ -66,33 +79,46 @@ namespace Mutagen.Bethesda.Generation
 
             ListBinaryType listBinaryType = GetListType(list, data, subData);
 
-            var subMaskStr = subTransl.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration);
+            var isLoqui = list.SubTypeGeneration is LoquiType;
+            var listOfRecords = !isLoqui && listBinaryType == ListBinaryType.SubTrigger;
+
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}, {subMaskStr}>.Instance.Write"))
+                $"{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}>.Instance.Write{(listOfRecords ? "ListOfRecords" : null)}"))
             {
                 args.Add($"writer: {writerAccessor}");
-                args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
+                args.Add($"items: {itemAccessor.PropertyOrDirectAccess}");
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 if (listBinaryType == ListBinaryType.Trigger)
                 {
                     args.Add($"recordType: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
                 }
-                args.Add($"errorMask: {maskAccessor}");
-                args.Add((gen) =>
+                if (listOfRecords)
                 {
-                    gen.AppendLine($"transl: (MutagenWriter subWriter, {list.SubTypeGeneration.TypeName} subItem, bool listDoMasks, out {subMaskStr} listSubMask) =>");
-                    using (new BraceWrapper(gen))
+                    args.Add($"recordType: {subData.TriggeringRecordSetAccessor}");
+                }
+                args.Add($"errorMask: {maskAccessor}");
+                if (subTransl.AllowDirectWrite(objGen, typeGen))
+                {
+                    args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration)}.Write");
+                }
+                else
+                {
+                    args.Add((gen) =>
                     {
-                        subTransl.GenerateWrite(
-                            fg: gen,
-                            objGen: objGen,
-                            typeGen: list.SubTypeGeneration,
-                            writerAccessor: "subWriter",
-                            itemAccessor: new Accessor($"subItem"),
-                            doMaskAccessor: $"listDoMasks",
-                            maskAccessor: $"listSubMask");
-                    }
-                });
+                        gen.AppendLine($"transl: (MutagenWriter subWriter, {list.SubTypeGeneration.TypeName} subItem, ErrorMaskBuilder listErrorMask) =>");
+                        using (new BraceWrapper(gen))
+                        {
+                            subTransl.GenerateWrite(
+                                fg: gen,
+                                objGen: objGen,
+                                typeGen: list.SubTypeGeneration,
+                                writerAccessor: "subWriter",
+                                itemAccessor: new Accessor($"subItem"),
+                                maskAccessor: $"listErrorMask");
+                        }
+                    });
+
+                }
             }
         }
 
@@ -102,38 +128,6 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string nodeAccessor,
             Accessor itemAccessor,
-            string doMaskAccessor,
-            string maskAccessor)
-        {
-            GenerateCopyInRet(
-                fg: fg, 
-                objGen: objGen, 
-                targetGen: typeGen, 
-                typeGen: typeGen, 
-                nodeAccessor: nodeAccessor, 
-                squashedRepeatedList: false,
-                retAccessor: new Accessor(typeGen, "item."), 
-                doMaskAccessor: doMaskAccessor, 
-                maskAccessor: maskAccessor);
-            if (itemAccessor.PropertyAccess == null)
-            {
-                fg.AppendLine($"if ({typeGen.Name}tryGet.Succeeded)");
-                using (new BraceWrapper(fg))
-                {
-                    fg.AppendLine($"{itemAccessor.DirectAccess}.SetTo({typeGen.Name}tryGet.Value);");
-                }
-            }
-        }
-
-        public override void GenerateCopyInRet(
-            FileGeneration fg,
-            ObjectGeneration objGen,
-            TypeGeneration targetGen,
-            TypeGeneration typeGen,
-            string nodeAccessor,
-            bool squashedRepeatedList,
-            Accessor retAccessor,
-            string doMaskAccessor,
             string maskAccessor)
         {
             var list = typeGen as ListType;
@@ -155,18 +149,8 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH;");
             }
 
-            var subMaskStr = subTransl.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration);
-            ArgsWrapper args;
-            if (retAccessor.PropertyAccess != null)
-            {
-                args = new ArgsWrapper(fg, $"{retAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceededOrDefault)}({this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}, {subMaskStr}>.Instance.ParseRepeatedItem",
-                    suffixLine: ")");
-            }
-            else
-            {
-                args = new ArgsWrapper(fg, $"var {typeGen.Name}tryGet = {this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}, {subMaskStr}>.Instance.ParseRepeatedItem");
-            }
-            using (args)
+            using (var args = new ArgsWrapper(fg,
+                $"{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}>.Instance.ParseRepeatedItem"))
             {
                 if (listBinaryType == ListBinaryType.Amount)
                 {
@@ -190,6 +174,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     throw new NotImplementedException();
                 }
+                args.Add($"item: {itemAccessor.PropertyAccess}");
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 if (list.CustomData.TryGetValue("lengthLength", out object len))
                 {
@@ -219,68 +204,87 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
                 args.Add($"errorMask: {maskAccessor}");
-                args.Add((gen) =>
+                var subGenTypes = subData.GenerationTypes.ToList();
+                var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
+                if (subGenTypes.Count <= 1 && subTransl.AllowDirectParse(
+                    objGen,
+                    typeGen: typeGen,
+                    squashedRepeatedList: listBinaryType == ListBinaryType.Trigger))
                 {
-                    var subGenTypes = subData.GenerationTypes.ToList();
-                    gen.AppendLine($"transl: (MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}, bool listDoMasks, out {typeGen.ProtoGen.Gen.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration)} listSubMask) =>");
-                    using (new BraceWrapper(gen))
+                    args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration)}.Parse");
+                }
+                else
+                {
+                    args.Add((gen) =>
                     {
-                        var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
-                        if (subGenTypes.Count <= 1)
+                        gen.AppendLine($"transl: (MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}, out {list.SubTypeGeneration.TypeName} listSubItem, ErrorMaskBuilder listErrMask) =>");
+                        using (new BraceWrapper(gen))
                         {
-                            subGen.GenerateCopyInRet(
+                            if (subGenTypes.Count <= 1)
+                            {
+                                subGen.GenerateCopyInRet(
                                 fg: gen,
                                 objGen: objGen,
                                 targetGen: list.SubTypeGeneration,
                                 typeGen: list.SubTypeGeneration,
                                 readerAccessor: "r",
                                 squashedRepeatedList: listBinaryType == ListBinaryType.Trigger,
-                                retAccessor: new Accessor("return "),
-                                doMaskAccessor: "listDoMasks",
-                                maskAccessor: "listSubMask");
-                        }
-                        else
-                        {
-                            gen.AppendLine($"TryGet<{list.SubTypeGeneration.TypeName}> ret;");
-                            gen.AppendLine("switch (header.Type)");
-                            using (new BraceWrapper(gen))
+                                retAccessor: "return ",
+                                outItemAccessor: new Accessor("listSubItem"),
+                                maskAccessor: "listErrMask");
+                            }
+                            else
                             {
-                                foreach (var item in subGenTypes)
+                                gen.AppendLine("switch (header.Type)");
+                                using (new BraceWrapper(gen))
                                 {
-                                    foreach (var trigger in item.Key)
+                                    foreach (var item in subGenTypes)
                                     {
-                                        gen.AppendLine($"case \"{trigger.Type}\":");
+                                        foreach (var trigger in item.Key)
+                                        {
+                                            gen.AppendLine($"case \"{trigger.Type}\":");
+                                        }
+                                        LoquiType targetLoqui = list.SubTypeGeneration as LoquiType;
+                                        LoquiType specificLoqui = item.Value as LoquiType;
+                                        using (new DepthWrapper(gen))
+                                        {
+                                            subGen.GenerateCopyInRet(
+                                                fg: gen,
+                                                objGen: objGen,
+                                                targetGen: list.SubTypeGeneration,
+                                                typeGen: item.Value,
+                                                readerAccessor: "r",
+                                                squashedRepeatedList: listBinaryType == ListBinaryType.Trigger,
+                                                retAccessor: "return ",
+                                                outItemAccessor: new Accessor("listSubItem"),
+                                                maskAccessor: $"listErrMask");
+                                        }
                                     }
-                                    LoquiType targetLoqui = list.SubTypeGeneration as LoquiType;
-                                    LoquiType specificLoqui = item.Value as LoquiType;
-                                    var submaskName = $"{item.Key.First()}SubMask";
+                                    gen.AppendLine("default:");
                                     using (new DepthWrapper(gen))
                                     {
-                                        subGen.GenerateCopyInRet(
-                                            fg: gen,
-                                            objGen: objGen,
-                                            targetGen: list.SubTypeGeneration,
-                                            typeGen: item.Value,
-                                            readerAccessor: "r",
-                                            squashedRepeatedList: listBinaryType == ListBinaryType.Trigger,
-                                            retAccessor: new Accessor("ret = "),
-                                            doMaskAccessor: "listDoMasks",
-                                            maskAccessor: $"var {submaskName}");
-                                        gen.AppendLine($"listSubMask = {submaskName}.Bubble<{specificLoqui.Mask(MaskType.Error)}, {targetLoqui.Mask(MaskType.Error)}>();");
-                                        gen.AppendLine($"break;");
+                                        gen.AppendLine("throw new NotImplementedException();");
                                     }
                                 }
-                                gen.AppendLine("default:");
-                                using (new DepthWrapper(gen))
-                                {
-                                    gen.AppendLine("throw new NotImplementedException();");
-                                }
                             }
-                            gen.AppendLine($"return ret;");
                         }
-                    }
-                });
+                    });
+                }
             }
+        }
+
+        public override void GenerateCopyInRet(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration targetGen,
+            TypeGeneration typeGen,
+            string nodeAccessor,
+            bool squashedRepeatedList,
+            string retAccessor,
+            Accessor outItemAccessor,
+            string maskAccessor)
+        {
+            throw new NotImplementedException();
         }
     }
 }

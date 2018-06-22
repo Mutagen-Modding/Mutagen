@@ -1,4 +1,5 @@
 ﻿using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Noggog.Notifying;
 using System;
@@ -10,109 +11,96 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public abstract class TypicalBinaryTranslation<T> : IBinaryTranslation<T, Exception>
+    public abstract class TypicalBinaryTranslation<T> : IBinaryTranslation<T>
         where T : class
     {
         protected abstract T ParseBytes(byte[] bytes);
 
         protected abstract T ParseValue(MutagenFrame reader);
 
-        public TryGet<T> Parse(MutagenFrame frame, bool doMasks, out Exception errorMask)
-        {
-            try
-            {
-                var parse = ParseValue(frame);
-                if (parse == null)
-                {
-                    throw new ArgumentException("Value was unexpectedly null.");
-                }
-                errorMask = null;
-                return TryGet<T>.Succeed(parse);
-            }
-            catch (Exception ex)
-            {
-                if (doMasks)
-                {
-                    errorMask = ex;
-                    return TryGet<T>.Failure;
-                }
-                throw;
-            }
-        }
-
-        public TryGet<T> Parse<M>(
+        public void ParseInto(
             MutagenFrame frame,
             int fieldIndex,
-            Func<M> errorMask)
-            where M : IErrorMask
-        {
-            var ret = this.Parse(
-                frame,
-                errorMask != null,
-                out var ex);
-            ErrorMask.HandleErrorMask(
-                errorMask,
-                fieldIndex,
-                ex);
-            return ret;
-        }
-
-        protected abstract void WriteValue(MutagenWriter writer, T item);
-
-        TryGet<T> IBinaryTranslation<T, Exception>.Parse(MutagenFrame reader, bool doMasks, out Exception errorMask)
-        {
-            return Parse(reader, doMasks: doMasks, errorMask: out errorMask);
-        }
-
-        public void Write(MutagenWriter writer, T item)
-        {
-            Write(writer, item, doMasks: false, errorMask: out var ex);
-        }
-
-        public void Write(MutagenWriter writer, T item, bool doMasks, out Exception errorMask)
+            IHasItem<T> item,
+            ErrorMaskBuilder errorMask)
         {
             try
             {
-                WriteValue(writer, item);
-                errorMask = null;
+                errorMask?.PushIndex(fieldIndex);
+
+                if (Parse(
+                    frame,
+                    out T subItem,
+                    errorMask))
+                {
+                    item.Item = subItem;
+                }
+                else
+                {
+                    item.Unset();
+                }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
-                errorMask = ex;
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
             }
         }
 
-        public void Write<M>(
+        public bool Parse(MutagenFrame frame, out T item, ErrorMaskBuilder errorMask)
+        {
+            item = ParseValue(frame);
+            if (item == null)
+            {
+                errorMask.ReportExceptionOrThrow(
+                    new ArgumentException("Value was unexpectedly null."));
+                return false;
+            }
+            return true;
+        }
+
+        public abstract void Write(MutagenWriter writer, T item);
+
+        public void Write(
             MutagenWriter writer,
             T item,
             RecordType header,
             int fieldIndex,
             bool nullable,
-            Func<M> errorMask)
-            where M : IErrorMask
+            ErrorMaskBuilder errorMask)
         {
-            this.Write(
-                writer,
-                item,
-                header,
-                nullable,
-                errorMask != null,
-                out var subMask);
-            ErrorMask.HandleException(
-                errorMask,
-                fieldIndex,
-                subMask);
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                this.Write(
+                    writer,
+                    item,
+                    header,
+                    nullable,
+                    errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
         }
 
-        public void Write<M>(
+        public void Write(
             MutagenWriter writer,
             IHasBeenSetItemGetter<T> item,
             RecordType header,
             int fieldIndex,
             bool nullable,
-            Func<M> errorMask)
-            where M : IErrorMask
+            ErrorMaskBuilder errorMask)
         {
             if (!item.HasBeenSet) return;
             this.Write(
@@ -124,14 +112,13 @@ namespace Mutagen.Bethesda.Binary
                 errorMask);
         }
 
-        public void Write<M>(
+        public void Write(
             MutagenWriter writer,
             IHasItemGetter<T> item,
             RecordType header,
             int fieldIndex,
             bool nullable,
-            Func<M> errorMask)
-            where M : IErrorMask
+            ErrorMaskBuilder errorMask)
         {
             this.Write(
                 writer,
@@ -142,30 +129,35 @@ namespace Mutagen.Bethesda.Binary
                 errorMask);
         }
 
-        public void Write<M>(
+        public void Write(
             MutagenWriter writer,
             T item,
             int fieldIndex,
-            Func<M> errorMask)
-            where M : IErrorMask
+            ErrorMaskBuilder errorMask)
         {
-            this.Write(
-                writer,
-                item,
-                errorMask != null,
-                out var subMask);
-            ErrorMask.HandleErrorMask(
-                errorMask,
-                fieldIndex,
-                subMask);
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                this.Write(
+                    writer,
+                    item);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
         }
 
-        public void Write<M>(
+        public void Write(
             MutagenWriter writer,
             IHasBeenSetItemGetter<T> item,
             int fieldIndex,
-            Func<M> errorMask)
-            where M : IErrorMask
+            ErrorMaskBuilder errorMask)
         {
             if (!item.HasBeenSet) return;
             this.Write(
@@ -175,12 +167,11 @@ namespace Mutagen.Bethesda.Binary
                 errorMask);
         }
 
-        public void Write<M>(
+        public void Write(
             MutagenWriter writer,
             IHasItemGetter<T> item,
             int fieldIndex,
-            Func<M> errorMask)
-            where M : IErrorMask
+            ErrorMaskBuilder errorMask )
         {
             this.Write(
                 writer,
@@ -189,9 +180,9 @@ namespace Mutagen.Bethesda.Binary
                 errorMask);
         }
 
-        void IBinaryTranslation<T, Exception>.Write(MutagenWriter writer, T item, long length, bool doMasks, out Exception maskObj)
+        void IBinaryTranslation<T>.Write(MutagenWriter writer, T item, long length, ErrorMaskBuilder errorMask)
         {
-            Write(writer, item, doMasks, out maskObj);
+            Write(writer, item);
         }
 
         public void Write(
@@ -199,8 +190,7 @@ namespace Mutagen.Bethesda.Binary
             T item,
             RecordType header,
             bool nullable,
-            bool doMasks,
-            out Exception errorMask)
+            ErrorMaskBuilder errorMask)
         {
             if (item == null)
             {
@@ -209,20 +199,13 @@ namespace Mutagen.Bethesda.Binary
                     errorMask = null;
                     return;
                 }
-                throw new ArgumentException("Non optional string was null.");
+                errorMask.ReportExceptionOrThrow(
+                    new ArgumentException("Non optional string was null."));
             }
-            try
+            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
             {
-                using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
-                {
-                    WriteValue(writer, item);
-                    errorMask = null;
-                }
-            }
-            catch (Exception ex)
-            when (doMasks)
-            {
-                errorMask = ex;
+                Write(writer, item);
+                errorMask = null;
             }
         }
     }

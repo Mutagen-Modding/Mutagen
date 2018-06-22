@@ -51,13 +51,23 @@ namespace Mutagen.Bethesda
         public void SetIfSucceeded(TryGet<RecordType> item)
         {
             if (item.Failed) return;
-            this.EDID = item.Value;
+            Set(item.Value);
+        }
+
+        public void Set(RecordType item)
+        {
+            this.EDID = item;
         }
 
         public void SetIfSuccessful(TryGet<string> item)
         {
             if (!item.Succeeded) return;
-            this.EDID = new RecordType(item.Value);
+            Set(item.Value);
+        }
+
+        public void Set(string item)
+        {
+            this.EDID = new RecordType(item);
         }
 
         public void SetIfSucceededOrDefault(TryGet<RecordType> item)

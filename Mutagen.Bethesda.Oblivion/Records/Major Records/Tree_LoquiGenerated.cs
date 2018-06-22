@@ -20,6 +20,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Loqui.Internal;
 using System.Diagnostics;
 using Loqui.Internal;
 using System.Collections.Specialized;
@@ -771,8 +772,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -781,23 +781,37 @@ namespace Mutagen.Bethesda.Oblivion
             out Tree_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (Tree Object, Tree_ErrorMask ErrorMask) Create_XML(
+        public static Tree Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            Tree_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Tree_ErrorMask()) : default(Func<Tree_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new Tree();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static Tree Create_XML(string path)
@@ -839,12 +853,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Tree, Tree_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Tree>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -853,13 +866,14 @@ namespace Mutagen.Bethesda.Oblivion
             out Tree_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Tree, Tree_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<Tree>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -927,10 +941,12 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            errorMask = this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as Tree_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
@@ -1747,11 +1763,18 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet,
             NotifyingFireParameters cmds)
         {
+<<<<<<< HEAD
             SetInt32(
                 index: index,
                 item: item,
                 hasBeenSet: hasBeenSet,
                 cmds: cmds);
+=======
+            this.Write_XML_Internal(
+                node: node,
+                name: name,
+                errorMask: null);
+>>>>>>> ErrorMaskRevamp
         }
 
         protected void SetInt32(
@@ -1775,13 +1798,27 @@ namespace Mutagen.Bethesda.Oblivion
             return _hasBeenSetTracker[index];
         }
 
+<<<<<<< HEAD
         void IPropertySupporter<Int32>.SetHasBeenSet(
             int index,
             bool on)
         {
             _hasBeenSetTracker[index] = on;
+=======
+        protected override void Write_XML_Internal(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            string name = null)
+        {
+            TreeCommon.Write_XML(
+                item: this,
+                node: node,
+                name: name,
+                errorMask: errorMask);
+>>>>>>> ErrorMaskRevamp
         }
 
+<<<<<<< HEAD
         void IPropertySupporter<Int32>.Unset(
             int index,
             NotifyingUnsetParameters cmds)
@@ -1829,6 +1866,13 @@ namespace Mutagen.Bethesda.Oblivion
         void IPropertySupporter<Int32>.Unsubscribe(
             int index,
             object owner)
+=======
+        protected static void Fill_XML_Internal(
+            Tree item,
+            XElement root,
+            string name,
+            ErrorMaskBuilder errorMask)
+>>>>>>> ErrorMaskRevamp
         {
             _Int32_subscriptions?.Unsubscribe(index, owner);
         }
@@ -1847,8 +1891,122 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((Tree_FieldIndex)index)
             {
+<<<<<<< HEAD
                 case Tree_FieldIndex.ShadowRadius:
                     return default(Int32);
+=======
+                case "Model":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Tree_FieldIndex.Model);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            root: root,
+                            item: out var ModelParse,
+                            errorMask: errorMask))
+                        {
+                            item._Model.Item = ModelParse;
+                        }
+                        else
+                        {
+                            item._Model.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Icon":
+                    FilePathXmlTranslation.Instance.ParseInto(
+                        root,
+                        fieldIndex: (int)Tree_FieldIndex.Icon,
+                        item: item._Icon,
+                        errorMask: errorMask);
+                    break;
+                case "SpeedTreeSeeds":
+                    ListXmlTranslation<UInt32>.Instance.ParseInto(
+                        root: root,
+                        item: item._SpeedTreeSeeds,
+                        fieldIndex: (int)Tree_FieldIndex.SpeedTreeSeeds,
+                        errorMask: errorMask,
+                        transl: UInt32XmlTranslation.Instance.Parse);
+                    break;
+                case "LeafCurvature":
+                    FloatXmlTranslation.Instance.ParseInto(
+                        root,
+                        fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
+                        item: item._LeafCurvature,
+                        errorMask: errorMask);
+                    break;
+                case "MinimumLeafAngle":
+                    FloatXmlTranslation.Instance.ParseInto(
+                        root,
+                        fieldIndex: (int)Tree_FieldIndex.MinimumLeafAngle,
+                        item: item._MinimumLeafAngle,
+                        errorMask: errorMask);
+                    break;
+                case "MaximumLeafAngle":
+                    FloatXmlTranslation.Instance.ParseInto(
+                        root,
+                        fieldIndex: (int)Tree_FieldIndex.MaximumLeafAngle,
+                        item: item._MaximumLeafAngle,
+                        errorMask: errorMask);
+                    break;
+                case "BranchDimmingValue":
+                    FloatXmlTranslation.Instance.ParseInto(
+                        root,
+                        fieldIndex: (int)Tree_FieldIndex.BranchDimmingValue,
+                        item: item._BranchDimmingValue,
+                        errorMask: errorMask);
+                    break;
+                case "LeafDimmingValue":
+                    FloatXmlTranslation.Instance.ParseInto(
+                        root,
+                        fieldIndex: (int)Tree_FieldIndex.LeafDimmingValue,
+                        item: item._LeafDimmingValue,
+                        errorMask: errorMask);
+                    break;
+                case "ShadowRadius":
+                    Int32XmlTranslation.Instance.ParseInto(
+                        root,
+                        fieldIndex: (int)Tree_FieldIndex.ShadowRadius,
+                        item: item._ShadowRadius,
+                        errorMask: errorMask);
+                    break;
+                case "RockingSpeed":
+                    FloatXmlTranslation.Instance.ParseInto(
+                        root,
+                        fieldIndex: (int)Tree_FieldIndex.RockingSpeed,
+                        item: item._RockingSpeed,
+                        errorMask: errorMask);
+                    break;
+                case "RustleSpeed":
+                    FloatXmlTranslation.Instance.ParseInto(
+                        root,
+                        fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
+                        item: item._RustleSpeed,
+                        errorMask: errorMask);
+                    break;
+                case "BillboardWidth":
+                    FloatXmlTranslation.Instance.ParseInto(
+                        root,
+                        fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
+                        item: item._BillboardWidth,
+                        errorMask: errorMask);
+                    break;
+                case "BillboardHeight":
+                    FloatXmlTranslation.Instance.ParseInto(
+                        root,
+                        fieldIndex: (int)Tree_FieldIndex.BillboardHeight,
+                        item: item._BillboardHeight,
+                        errorMask: errorMask);
+                    break;
+>>>>>>> ErrorMaskRevamp
                 default:
                     throw new ArgumentException($"Unknown index for field type Int32: {index}");
             }
@@ -1867,8 +2025,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -1877,26 +2035,29 @@ namespace Mutagen.Bethesda.Oblivion
             out Tree_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (Tree Object, Tree_ErrorMask ErrorMask) Create_Binary(
+        public static Tree Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            Tree_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
+            return UtilityTranslation.MajorRecordParse<Tree, Tree_FieldIndex>(
+                record: new Tree(),
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Tree_ErrorMask()) : default(Func<Tree_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+                errorMask: errorMask,
+                recType: Tree_Registration.TREE_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         public static Tree Create_Binary(string path)
@@ -1951,10 +2112,12 @@ namespace Mutagen.Bethesda.Oblivion
             out Tree_ErrorMask errorMask,
             bool doMasks = true)
         {
-            errorMask = this.Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: doMasks) as Tree_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Binary(
@@ -1990,7 +2153,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: false);
+                errorMask: null);
         }
 
         public override void Write_Binary(string path)
@@ -2009,21 +2172,20 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected override object Write_Binary_Internal(
+        protected override void Write_Binary_Internal(
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
             TreeCommon.Write_Binary(
                 item: this,
-                doMasks: doMasks,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
 
+<<<<<<< HEAD
         private static Tree Create_Binary_Internal(
             MutagenFrame frame,
             Func<Tree_ErrorMask> errorMask,
@@ -2039,10 +2201,12 @@ namespace Mutagen.Bethesda.Oblivion
                 fillTyped: Fill_Binary_RecordTypes);
         }
 
+=======
+>>>>>>> ErrorMaskRevamp
         protected static void Fill_Binary_Structs(
             Tree item,
             MutagenFrame frame,
-            Func<Tree_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             MajorRecord.Fill_Binary_Structs(
                 item: item,
@@ -2053,7 +2217,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             Tree item,
             MutagenFrame frame,
-            Func<Tree_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -2063,6 +2227,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
+<<<<<<< HEAD
                     {
                         var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                             frame: frame.Spawn(snapToFinalPosition: false),
@@ -2081,8 +2246,21 @@ namespace Mutagen.Bethesda.Oblivion
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var IcontryGet = StringBinaryTranslation.Instance.Parse(
+=======
+                    LoquiBinaryTranslation<Model>.Instance.ParseInto(
+                        frame: frame.Spawn(snapToFinalPosition: false),
+                        fieldIndex: (int)Tree_FieldIndex.Model,
+                        errorMask: errorMask,
+                        item: item._Model);
+                    return TryGet<Tree_FieldIndex?>.Succeed(Tree_FieldIndex.Model);
+                case "ICON":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.ParseInto(
+>>>>>>> ErrorMaskRevamp
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._Icon,
                         fieldIndex: (int)Tree_FieldIndex.Icon,
+<<<<<<< HEAD
                         parseWhole: true,
                         errorMask: errorMask);
                     if (IcontryGet.Succeeded)
@@ -2097,10 +2275,19 @@ namespace Mutagen.Bethesda.Oblivion
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.SpeedTreeSeeds.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32, Exception>.Instance.ParseRepeatedItem(
+=======
+                        errorMask: errorMask);
+                    return TryGet<Tree_FieldIndex?>.Succeed(Tree_FieldIndex.Icon);
+                case "SNAM":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32>.Instance.ParseRepeatedItem(
+>>>>>>> ErrorMaskRevamp
                         frame: frame.SpawnWithLength(contentLength),
+                        item: item._SpeedTreeSeeds,
                         fieldIndex: (int)Tree_FieldIndex.SpeedTreeSeeds,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
+<<<<<<< HEAD
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {
                             return Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
@@ -2110,10 +2297,15 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         ));
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.SpeedTreeSeeds);
+=======
+                        transl: UInt32BinaryTranslation.Instance.Parse);
+                    return TryGet<Tree_FieldIndex?>.Succeed(Tree_FieldIndex.SpeedTreeSeeds);
+>>>>>>> ErrorMaskRevamp
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+<<<<<<< HEAD
                         var LeafCurvaturetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
@@ -2210,12 +2402,55 @@ namespace Mutagen.Bethesda.Oblivion
                         {
                             item.UnsetRustleSpeed();
                         }
+=======
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
+                            frame: dataFrame,
+                            item: item._LeafCurvature,
+                            fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
+                            frame: dataFrame,
+                            item: item._MinimumLeafAngle,
+                            fieldIndex: (int)Tree_FieldIndex.MinimumLeafAngle,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
+                            frame: dataFrame,
+                            item: item._MaximumLeafAngle,
+                            fieldIndex: (int)Tree_FieldIndex.MaximumLeafAngle,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
+                            frame: dataFrame,
+                            item: item._BranchDimmingValue,
+                            fieldIndex: (int)Tree_FieldIndex.BranchDimmingValue,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
+                            frame: dataFrame,
+                            item: item._LeafDimmingValue,
+                            fieldIndex: (int)Tree_FieldIndex.LeafDimmingValue,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.ParseInto(
+                            frame: dataFrame,
+                            item: item._ShadowRadius,
+                            fieldIndex: (int)Tree_FieldIndex.ShadowRadius,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
+                            frame: dataFrame,
+                            item: item._RockingSpeed,
+                            fieldIndex: (int)Tree_FieldIndex.RockingSpeed,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
+                            frame: dataFrame,
+                            item: item._RustleSpeed,
+                            fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
+                            errorMask: errorMask);
+>>>>>>> ErrorMaskRevamp
                     }
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.RustleSpeed);
                 case "BNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+<<<<<<< HEAD
                         var BillboardWidthtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
@@ -2240,6 +2475,18 @@ namespace Mutagen.Bethesda.Oblivion
                         {
                             item.UnsetBillboardHeight();
                         }
+=======
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
+                            frame: dataFrame,
+                            item: item._BillboardWidth,
+                            fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
+                            frame: dataFrame,
+                            item: item._BillboardHeight,
+                            fieldIndex: (int)Tree_FieldIndex.BillboardHeight,
+                            errorMask: errorMask);
+>>>>>>> ErrorMaskRevamp
                     }
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.BillboardHeight);
                 default:
@@ -2328,24 +2575,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            Tree_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Tree_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             TreeCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            ITreeGetter rhs,
+            ErrorMaskBuilder errorMask,
+            Tree_CopyMask copyMask = null,
+            ITreeGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            TreeCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -2978,8 +3233,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITree item,
             ITreeGetter rhs,
             ITreeGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             Tree_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -2987,12 +3241,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item,
                 rhs,
                 def,
-                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Tree_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -3010,15 +3264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.Model,
                                         rhs: rhs.Model,
                                         def: def?.Model,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new Model_ErrorMask();
-                                            baseMask.SetNthMask((int)Tree_FieldIndex.Model, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.Model.Specific,
                                         cmds: cmds);
                                     return r;
@@ -3035,13 +3281,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Tree_FieldIndex.Model, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Icon ?? true)
             {
+                errorMask.PushIndex((int)Tree_FieldIndex.Icon);
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
@@ -3049,13 +3300,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         def: def?.Icon_Property);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Tree_FieldIndex.Icon, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.SpeedTreeSeeds != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Tree_FieldIndex.SpeedTreeSeeds);
                 try
                 {
                     item.SpeedTreeSeeds.SetToWithDefault(
@@ -3064,13 +3320,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Tree_FieldIndex.SpeedTreeSeeds, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.LeafCurvature ?? true)
             {
+                errorMask.PushIndex((int)Tree_FieldIndex.LeafCurvature);
                 try
                 {
                     item.LeafCurvature_Property.Set(
@@ -3078,13 +3339,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Tree_FieldIndex.LeafCurvature, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.MinimumLeafAngle ?? true)
             {
+                errorMask.PushIndex((int)Tree_FieldIndex.MinimumLeafAngle);
                 try
                 {
                     item.MinimumLeafAngle_Property.Set(
@@ -3092,13 +3358,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Tree_FieldIndex.MinimumLeafAngle, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.MaximumLeafAngle ?? true)
             {
+                errorMask.PushIndex((int)Tree_FieldIndex.MaximumLeafAngle);
                 try
                 {
                     item.MaximumLeafAngle_Property.Set(
@@ -3106,13 +3377,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Tree_FieldIndex.MaximumLeafAngle, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.BranchDimmingValue ?? true)
             {
+                errorMask.PushIndex((int)Tree_FieldIndex.BranchDimmingValue);
                 try
                 {
                     item.BranchDimmingValue_Property.Set(
@@ -3120,13 +3396,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Tree_FieldIndex.BranchDimmingValue, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.LeafDimmingValue ?? true)
             {
+                errorMask.PushIndex((int)Tree_FieldIndex.LeafDimmingValue);
                 try
                 {
                     item.LeafDimmingValue_Property.Set(
@@ -3134,13 +3415,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Tree_FieldIndex.LeafDimmingValue, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.ShadowRadius ?? true)
             {
+                errorMask.PushIndex((int)Tree_FieldIndex.ShadowRadius);
                 try
                 {
                     item.ShadowRadius_Property.Set(
@@ -3148,13 +3434,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Tree_FieldIndex.ShadowRadius, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.RockingSpeed ?? true)
             {
+                errorMask.PushIndex((int)Tree_FieldIndex.RockingSpeed);
                 try
                 {
                     item.RockingSpeed_Property.Set(
@@ -3162,13 +3453,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Tree_FieldIndex.RockingSpeed, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.RustleSpeed ?? true)
             {
+                errorMask.PushIndex((int)Tree_FieldIndex.RustleSpeed);
                 try
                 {
                     item.RustleSpeed_Property.Set(
@@ -3176,13 +3472,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Tree_FieldIndex.RustleSpeed, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.BillboardWidth ?? true)
             {
+                errorMask.PushIndex((int)Tree_FieldIndex.BillboardWidth);
                 try
                 {
                     item.BillboardWidth_Property.Set(
@@ -3190,13 +3491,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Tree_FieldIndex.BillboardWidth, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.BillboardHeight ?? true)
             {
+                errorMask.PushIndex((int)Tree_FieldIndex.BillboardHeight);
                 try
                 {
                     item.BillboardHeight_Property.Set(
@@ -3204,9 +3510,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Tree_FieldIndex.BillboardHeight, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -3598,23 +3908,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Tree_ErrorMask errorMask,
             string name = null)
         {
-            Tree_ErrorMask errMaskRet = null;
-            Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_XML(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Tree_ErrorMask()) : default(Func<Tree_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal(
+        public static void Write_XML(
             XElement node,
             ITreeGetter item,
-            Func<Tree_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Tree");
+            node.Add(elem);
+            if (name != null)
             {
+<<<<<<< HEAD
                 var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Tree");
                 node.Add(elem);
                 if (name != null)
@@ -3707,23 +4020,106 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
                     errorMask: errorMask);
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.BillboardWidth),
-                    item: item.BillboardWidth_Property,
-                    fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.BillboardHeight),
-                    item: item.BillboardHeight_Property,
-                    fieldIndex: (int)Tree_FieldIndex.BillboardHeight,
-                    errorMask: errorMask);
+=======
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Tree");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (item.Model_Property.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                LoquiXmlTranslation<Model>.Instance.Write(
+>>>>>>> ErrorMaskRevamp
+                    node: elem,
+                    item: item.Model_Property,
+                    name: nameof(item.Model),
+                    fieldIndex: (int)Tree_FieldIndex.Model,
+                    errorMask: errorMask);
             }
+            if (item.Icon_Property.HasBeenSet)
+            {
+                FilePathXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Icon),
+                    item: item.Icon_Property,
+                    fieldIndex: (int)Tree_FieldIndex.Icon,
+                    errorMask: errorMask);
+            }
+            if (item.SpeedTreeSeeds.HasBeenSet)
+            {
+                ListXmlTranslation<UInt32>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.SpeedTreeSeeds),
+                    item: item.SpeedTreeSeeds,
+                    fieldIndex: (int)Tree_FieldIndex.SpeedTreeSeeds,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, UInt32 subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        UInt32XmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Item",
+                            item: subItem,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.LeafCurvature),
+                item: item.LeafCurvature_Property,
+                fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.MinimumLeafAngle),
+                item: item.MinimumLeafAngle_Property,
+                fieldIndex: (int)Tree_FieldIndex.MinimumLeafAngle,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.MaximumLeafAngle),
+                item: item.MaximumLeafAngle_Property,
+                fieldIndex: (int)Tree_FieldIndex.MaximumLeafAngle,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.BranchDimmingValue),
+                item: item.BranchDimmingValue_Property,
+                fieldIndex: (int)Tree_FieldIndex.BranchDimmingValue,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.LeafDimmingValue),
+                item: item.LeafDimmingValue_Property,
+                fieldIndex: (int)Tree_FieldIndex.LeafDimmingValue,
+                errorMask: errorMask);
+            Int32XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.ShadowRadius),
+                item: item.ShadowRadius_Property,
+                fieldIndex: (int)Tree_FieldIndex.ShadowRadius,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.RockingSpeed),
+                item: item.RockingSpeed_Property,
+                fieldIndex: (int)Tree_FieldIndex.RockingSpeed,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.RustleSpeed),
+                item: item.RustleSpeed_Property,
+                fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.BillboardWidth),
+                item: item.BillboardWidth_Property,
+                fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.BillboardHeight),
+                item: item.BillboardHeight_Property,
+                fieldIndex: (int)Tree_FieldIndex.BillboardHeight,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -3738,43 +4134,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out Tree_ErrorMask errorMask)
         {
-            Tree_ErrorMask errMaskRet = null;
-            Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Tree_ErrorMask()) : default(Func<Tree_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_Binary_Internal(
+        public static void Write_Binary(
             MutagenWriter writer,
             Tree item,
             RecordTypeConverter recordTypeConverter,
-            Func<Tree_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: Tree_Registration.TREE_HEADER,
+                type: ObjectType.Record))
             {
-                using (HeaderExport.ExportHeader(
+                MajorRecordCommon.Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: Tree_Registration.TREE_HEADER,
-                    type: ObjectType.Record))
-                {
-                    MajorRecordCommon.Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                    Write_Binary_RecordTypes(
-                        item: item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -3783,14 +4171,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Tree item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<Tree_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
+            LoquiBinaryTranslation<Model>.Instance.Write(
                 writer: writer,
                 item: item.Model_Property,
                 fieldIndex: (int)Tree_FieldIndex.Model,
@@ -3802,12 +4190,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Tree_Registration.ICON_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32, Exception>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32>.Instance.Write(
                 writer: writer,
-                item: item.SpeedTreeSeeds,
+                items: item.SpeedTreeSeeds,
                 fieldIndex: (int)Tree_FieldIndex.SpeedTreeSeeds,
                 recordType: Tree_Registration.SNAM_HEADER,
                 errorMask: errorMask,
+<<<<<<< HEAD
                 transl: (MutagenWriter subWriter, UInt32 subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
                     Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
@@ -3818,6 +4207,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 );
             using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Tree_Registration.CNAM_HEADER)))
+=======
+                transl: UInt32BinaryTranslation.Instance.Write);
+            using (HeaderExport.ExportSubRecordHeader(writer, Tree_Registration.CNAM_HEADER))
+>>>>>>> ErrorMaskRevamp
             {
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -4430,6 +4823,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static Tree_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            return new Tree_ErrorMask();
         }
         #endregion
 

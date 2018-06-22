@@ -7,21 +7,17 @@ using Noggog;
 using Loqui;
 using Noggog.Notifying;
 using System.IO;
+using Loqui.Internal;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public class ListBinaryTranslation<T, M> : ContainerBinaryTranslation<T, M>
+    public class ListBinaryTranslation<T> : ContainerBinaryTranslation<T>
     {
-        public static readonly ListBinaryTranslation<T, M> Instance = new ListBinaryTranslation<T, M>();
+        public static readonly ListBinaryTranslation<T> Instance = new ListBinaryTranslation<T>();
 
-        public override void WriteSingleItem<ErrMask>(MutagenWriter writer, BinarySubWriteDelegate<T, ErrMask> transl, T item, bool doMasks, out ErrMask maskObj)
+        public override void WriteSingleItem(MutagenWriter writer, BinarySubWriteDelegate<T> transl, T item, ErrorMaskBuilder errorMask)
         {
-            transl(writer, item, doMasks, out maskObj);
-        }
-
-        public override TryGet<T> ParseSingleItem(MutagenFrame reader, BinarySubParseDelegate<T, M> transl, bool doMasks, out M maskObj)
-        {
-            return transl(reader, doMasks, out maskObj);
+            transl(writer, item, errorMask);
         }
     }
 }

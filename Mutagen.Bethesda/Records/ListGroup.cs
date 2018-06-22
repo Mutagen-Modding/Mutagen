@@ -1,4 +1,5 @@
 ﻿using Loqui;
+using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using System;
@@ -12,33 +13,24 @@ namespace Mutagen.Bethesda
     public partial class ListGroup<T>
         where T : ILoquiObject<T>
     {
-        static partial void FillBinary_ContainedRecordType_Custom<T_ErrMask>(
+        static partial void FillBinary_ContainedRecordType_Custom(
             MutagenFrame frame, 
-            ListGroup<T> item, 
-            int fieldIndex,
-            Func<ListGroup_ErrorMask<T_ErrMask>> errorMask) 
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            ListGroup<T> item,
+            ErrorMaskBuilder errorMask) 
         {
             frame.Reader.Position += 4;
         }
 
-        static partial void WriteBinary_ContainedRecordType_Custom<T_ErrMask>(
+        static partial void WriteBinary_ContainedRecordType_Custom(
             MutagenWriter writer,
-            ListGroup<T> item, 
-            int fieldIndex,
-            Func<ListGroup_ErrorMask<T_ErrMask>> errorMask) 
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            ListGroup<T> item,
+            ErrorMaskBuilder errorMask) 
         {
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer,
                 GRUP_RECORD_TYPE.Type,
-                doMasks: errorMask != null,
                 nullTerminate: false,
-                errorMask: out var err);
-            ErrorMask.HandleErrorMask(
-                errorMask,
-                fieldIndex,
-                err);
+                errorMask: errorMask);
         }
     }
 }

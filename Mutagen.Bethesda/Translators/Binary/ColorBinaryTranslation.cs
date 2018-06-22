@@ -1,4 +1,5 @@
 ﻿using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Noggog.Notifying;
 using System;
@@ -14,6 +15,20 @@ namespace Mutagen.Bethesda.Binary
     {
         public readonly static ColorBinaryTranslation Instance = new ColorBinaryTranslation();
         public override int? ExpectedLength => 3;
+        
+        public void ParseInto(
+            MutagenFrame frame,
+            int fieldIndex,
+            IHasItem<Color> item,
+            bool extraByte,
+            ErrorMaskBuilder errorMask)
+        {
+            this.ParseInto(
+                frame,
+                fieldIndex,
+                item,
+                errorMask);
+        }
 
         protected override Color ParseValue(MutagenFrame reader)
         {
@@ -25,40 +40,24 @@ namespace Mutagen.Bethesda.Binary
             writer.Write(item);
         }
 
-        protected Func<MutagenWriter, Color?, bool, Exception> GetWriter(bool extraByte)
+        protected Action<MutagenWriter, Color?> GetWriter(bool extraByte)
         {
-            if (!extraByte) return Write_Internal;
-            return (w, c, doM) =>
+            if (!extraByte) return WriteValue;
+            return (w, c) =>
             {
-                var ret = Write_Internal(w, c, doM);
+                WriteValue(w, c);
                 w.WriteZeros(1);
-                return ret;
             };
         }
-        
-        public TryGet<Color> Parse<M>(
-            MutagenFrame frame,
-            int fieldIndex,
-            bool extraByte,
-            Func<M> errorMask)
-            where M : IErrorMask
-        {
-            var ret = this.Parse(
-                frame,
-                fieldIndex,
-                errorMask);
-            return ret;
-        }
 
-        public void Write<M>(
+        public void Write(
             MutagenWriter writer,
             IHasBeenSetItemGetter<Color> item,
             RecordType header,
             int fieldIndex,
             bool nullable,
             bool extraByte,
-            Func<M> errorMask)
-            where M : IErrorMask
+            ErrorMaskBuilder errorMask)
         {
             if (!item.HasBeenSet) return;
             this.Write(
@@ -71,7 +70,7 @@ namespace Mutagen.Bethesda.Binary
                 write: GetWriter(extraByte));
         }
 
-        public void Write<M>(
+        public void Write(
             MutagenWriter writer,
             Color item,
             RecordType header,
@@ -96,8 +95,7 @@ namespace Mutagen.Bethesda.Binary
             IHasBeenSetItemGetter<Color> item,
             int fieldIndex,
             bool extraByte,
-            Func<M> errorMask)
-            where M : IErrorMask
+            ErrorMaskBuilder errorMask)
         {
             if (!item.HasBeenSet) return;
             this.Write(
@@ -108,13 +106,12 @@ namespace Mutagen.Bethesda.Binary
                 write: GetWriter(extraByte));
         }
 
-        public void Write<M>(
+        public void Write(
             MutagenWriter writer,
             IHasItemGetter<Color> item,
             int fieldIndex,
             bool extraByte,
-            Func<M> errorMask)
-            where M : IErrorMask
+            ErrorMaskBuilder errorMask)
         {
             this.Write(
                 writer,

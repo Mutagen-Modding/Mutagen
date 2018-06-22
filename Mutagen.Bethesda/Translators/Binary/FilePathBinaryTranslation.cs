@@ -6,62 +6,78 @@ using System.Threading.Tasks;
 using Noggog;
 using Loqui;
 using Noggog.Notifying;
+using Loqui.Internal;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public class FilePathBinaryTranslation : IBinaryTranslation<FilePath, Exception>
+    public class FilePathBinaryTranslation : IBinaryTranslation<FilePath>
     {
         public static readonly FilePathBinaryTranslation Instance = new FilePathBinaryTranslation();
 
-        public TryGet<FilePath> Parse(MutagenFrame frame, bool doMasks, out Exception errorMask)
-        {
-            var ret = StringBinaryTranslation.Instance.Parse(frame, doMasks, out errorMask);
-            if (ret.Failed) return ret.BubbleFailure<FilePath>();
-            try
-            {
-                return TryGet<FilePath>.Succeed(new FilePath(ret.Value));
-            }
-            catch (Exception ex)
-            {
-                if (doMasks)
-                {
-                    errorMask = ex;
-                    return TryGet<FilePath>.Failure;
-                }
-                throw;
-            }
-        }
-
-        public TryGet<FilePath> Parse<M>(
+        public void ParseInto(
             MutagenFrame frame,
             int fieldIndex,
-            Func<M> errorMask)
-            where M : IErrorMask
+            IHasItem<FilePath> item,
+            ErrorMaskBuilder errorMask)
         {
-            var ret = this.Parse(
-                frame,
-                errorMask != null,
-                out var ex);
-            ErrorMask.HandleErrorMask(
-                errorMask,
-                fieldIndex,
-                ex);
-            return ret;
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                if (Parse(
+                    frame,
+                    out FilePath subItem,
+                    errorMask))
+                {
+                    item.Item = subItem;
+                }
+                else
+                {
+                    item.Unset();
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
         }
 
-        void IBinaryTranslation<FilePath, Exception>.Write(
-            MutagenWriter writer, 
-            FilePath item, 
-            long length,
-            bool doMasks,
-            out Exception maskObj)
+        public bool Parse(MutagenFrame frame, out FilePath item, ErrorMaskBuilder errorMask)
         {
-            ((IBinaryTranslation<string, Exception>)StringBinaryTranslation.Instance).Write(
+            if (!StringBinaryTranslation.Instance.Parse(frame, out var str, errorMask))
+            {
+                item = default(FilePath);
+                return false;
+            }
+            try
+            {
+                item = new FilePath(str);
+                return true;
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+                item = default(FilePath);
+                return false;
+            }
+        }
+
+        void IBinaryTranslation<FilePath>.Write(
+            MutagenWriter writer,
+            FilePath item,
+            long length,
+            ErrorMaskBuilder errorMask)
+        {
+            ((IBinaryTranslation<string>)StringBinaryTranslation.Instance).Write(
                 writer,
                 item.RelativePath,
                 length,
-                doMasks,
-                out maskObj);
+                errorMask);
         }
 
         public void Write(
@@ -69,48 +85,52 @@ namespace Mutagen.Bethesda.Binary
             FilePath item,
             RecordType header,
             bool nullable,
-            bool doMasks,
-            out Exception errorMask)
+            ErrorMaskBuilder errorMask)
         {
             StringBinaryTranslation.Instance.Write(
                 writer,
                 item.RelativePath,
                 header,
                 nullable,
-                doMasks,
-                out errorMask);
+                errorMask);
         }
 
-        public void Write<M>(
+        public void Write(
             MutagenWriter writer,
             FilePath item,
             RecordType header,
             int fieldIndex,
             bool nullable,
-            Func<M> errorMask)
-            where M : IErrorMask
+            ErrorMaskBuilder errorMask)
         {
-            this.Write(
-                writer,
-                item,
-                header,
-                nullable,
-                errorMask != null,
-                out var subMask);
-            ErrorMask.HandleException(
-                errorMask,
-                fieldIndex,
-                subMask);
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                this.Write(
+                    writer,
+                    item,
+                    header,
+                    nullable,
+                    errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
         }
 
-        public void Write<M>(
+        public void Write(
             MutagenWriter writer,
             IHasBeenSetItemGetter<FilePath> item,
             RecordType header,
             int fieldIndex,
             bool nullable,
-            Func<M> errorMask)
-            where M : IErrorMask
+            ErrorMaskBuilder errorMask)
         {
             if (!item.HasBeenSet) return;
             this.Write(
@@ -128,7 +148,7 @@ namespace Mutagen.Bethesda.Binary
             RecordType header,
             int fieldIndex,
             bool nullable,
-            Func<M> errorMask)
+            ErrorMaskBuilder errorMask)
             where M : IErrorMask
         {
             this.Write(

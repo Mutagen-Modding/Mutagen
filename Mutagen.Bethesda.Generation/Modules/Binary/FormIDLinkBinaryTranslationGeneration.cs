@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string nodeAccessor,
             bool squashedRepeatedList,
-            Accessor retAccessor,
-            string doMaskAccessor,
+            string retAccessor,
+            Accessor outItemAccessor,
             string maskAccessor)
         {
             FormIDLinkType linkType = typeGen as FormIDLinkType;
@@ -45,19 +45,18 @@ namespace Mutagen.Bethesda.Generation
             {
                 case FormIDLinkType.FormIDTypeEnum.Normal:
                     using (var args = new ArgsWrapper(fg,
-                        $"{retAccessor.DirectAccess}{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse",
+                        $"{retAccessor}{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse",
                         suffixLine: $".Bubble((o) => new {linkType.TypeName}(o))"))
                     {
                         args.Add(nodeAccessor);
-                        args.Add($"doMasks: {doMaskAccessor}");
-                        args.Add($"errorMask: out {maskAccessor}");
+                        args.Add($"errorMask: {maskAccessor}");
                         foreach (var arg in AdditionCopyInRetParameters(
                             fg: fg,
                             objGen: objGen,
                             typeGen: typeGen,
                             nodeAccessor: nodeAccessor,
                             retAccessor: retAccessor,
-                            doMaskAccessor: doMaskAccessor,
+                            outItemAccessor: outItemAccessor,
                             maskAccessor: maskAccessor))
                         {
                             args.Add(arg);
@@ -79,14 +78,13 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen, 
             string writerAccessor,
             Accessor itemAccessor,
-            string doMaskAccessor,
             string maskAccessor)
         {
             FormIDLinkType linkType = typeGen as FormIDLinkType;
             switch (linkType.FormIDType)
             {
                 case FormIDLinkType.FormIDTypeEnum.Normal:
-                    base.GenerateWrite(fg, objGen, typeGen, writerAccessor, itemAccessor, doMaskAccessor, maskAccessor);
+                    base.GenerateWrite(fg, objGen, typeGen, writerAccessor, itemAccessor, maskAccessor);
                     break;
                 case FormIDLinkType.FormIDTypeEnum.EDIDChars:
                     var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
@@ -98,13 +96,8 @@ namespace Mutagen.Bethesda.Generation
                         if (typeGen.HasIndex)
                         {
                             args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                            args.Add($"errorMask: {maskAccessor}");
                         }
-                        else
-                        {
-                            args.Add($"doMasks: {doMaskAccessor}");
-                            args.Add($"errorMask: out {maskAccessor}");
-                        }
+                        args.Add($"errorMask: {maskAccessor}");
                         if (data.RecordType.HasValue)
                         {
                             args.Add($"header: recordTypeConverter.Convert({objGen.RecordTypeHeaderName(data.RecordType.Value)})");

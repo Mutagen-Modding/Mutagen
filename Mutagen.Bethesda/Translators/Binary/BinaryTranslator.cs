@@ -9,24 +9,24 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public class BinaryTranslator : Translator<IBinaryTranslation<object, object>>
+    public class BinaryTranslator : Translator<IBinaryTranslation<object>>
     {
         public readonly static BinaryTranslator Instance = new BinaryTranslator();
 
         public BinaryTranslator() 
             : base(
                   nullTranslator: null,
-                  genericCaster: typeof(BinaryTranslationCaster<,>),
-                  loquiTranslation: typeof(LoquiBinaryTranslation<,>), 
+                  genericCaster: typeof(BinaryTranslationCaster<>),
+                  loquiTranslation: typeof(LoquiBinaryTranslation<>), 
                   enumTranslation: null)
         {
         }
     }
 
-    public class BinaryTranslator<T, M>
+    public class BinaryTranslator<T>
     {
-        private static NotifyingItem<GetResponse<IBinaryTranslation<T, M>>> _translator = new NotifyingItem<GetResponse<IBinaryTranslation<T, M>>>();
-        public static INotifyingItemGetter<GetResponse<IBinaryTranslation<T, M>>> Translator => _translator;
+        private static NotifyingItem<GetResponse<IBinaryTranslation<T>>> _translator = new NotifyingItem<GetResponse<IBinaryTranslation<T>>>();
+        public static INotifyingItemGetter<GetResponse<IBinaryTranslation<T>>> Translator => _translator;
 
         static BinaryTranslator()
         {
@@ -37,11 +37,11 @@ namespace Mutagen.Bethesda.Binary
                 {
                     if (change.New.Failed)
                     {
-                        _translator.Item = change.New.BubbleFailure<IBinaryTranslation<T, M>>();
+                        _translator.Item = change.New.BubbleFailure<IBinaryTranslation<T>>();
                         return;
                     }
-                    var caster = change.New.Value as BinaryTranslationCaster<T, M>;
-                    _translator.Item = GetResponse<IBinaryTranslation<T, M>>.Succeed(caster.Source);
+                    var caster = change.New.Value as BinaryTranslationCaster<T>;
+                    _translator.Item = GetResponse<IBinaryTranslation<T>>.Succeed(caster.Source);
                 });
         }
     }

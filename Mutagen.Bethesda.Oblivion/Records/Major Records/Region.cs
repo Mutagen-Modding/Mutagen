@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
 
@@ -12,7 +13,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static readonly int RDAT_LEN = 14;
 
-        static partial void FillBinary_RegionAreaLogic_Custom(MutagenFrame frame, Region item, Func<Region_ErrorMask> errorMask)
+        static partial void FillBinary_RegionAreaLogic_Custom(MutagenFrame frame, Region item, ErrorMaskBuilder errorMask)
         {
             var rdat = HeaderTranslation.GetNextSubRecordType(frame.Reader, out var rdatType);
             while (rdat.Type.Equals("RDAT"))
@@ -22,7 +23,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        static void ParseRegionData(MutagenFrame frame, Region item, Func<Region_ErrorMask> errorMask)
+        static void ParseRegionData(MutagenFrame frame, Region item, ErrorMaskBuilder errorMask)
         {
             var origPos = frame.Position;
             frame.Reader.Position += 6;
@@ -119,17 +120,24 @@ namespace Mutagen.Bethesda.Oblivion
                 case RegionData.RegionDataType.Icon:
                     frame.Position += 6 + RDAT_LEN;
                     len = len - 6 - RDAT_LEN;
-                    item.Icon = StringBinaryTranslation.Instance.Parse(
+                    if (StringBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(len),
-                        doMasks: false,
-                        errorMask: out var ex).Value;
+                        out var iconVal,
+                        errorMask))
+                    {
+                        item.Icon = iconVal;
+                    }
+                    else
+                    {
+                        item.Icon_Property.Unset();
+                    }
                     break;
                 default:
                     throw new NotImplementedException();
             }
         }
 
-        static partial void WriteBinary_RegionAreaLogic_Custom(MutagenWriter writer, Region item, Func<Region_ErrorMask> errorMask)
+        static partial void WriteBinary_RegionAreaLogic_Custom(MutagenWriter writer, Region item, ErrorMaskBuilder errorMask)
         {
             if (item.Objects_Property.HasBeenSet)
             {

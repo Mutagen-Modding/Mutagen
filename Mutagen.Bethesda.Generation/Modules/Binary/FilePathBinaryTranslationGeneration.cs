@@ -21,7 +21,6 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string writerAccessor,
             Accessor itemAccessor,
-            string doMaskAccessor,
             string maskAccessor)
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
@@ -50,7 +49,6 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string nodeAccessor,
             Accessor itemAccessor,
-            string doMaskAccessor,
             string maskAccessor)
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
@@ -61,8 +59,7 @@ namespace Mutagen.Bethesda.Generation
             ArgsWrapper args;
             if (itemAccessor.PropertyAccess != null)
             {
-                args = new ArgsWrapper(fg, $"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}({this.Namespace}FilePathBinaryTranslation.Instance.Parse",
-                    suffixLine: ")");
+                args = new ArgsWrapper(fg, $"{this.Namespace}FilePathBinaryTranslation.Instance.ParseInto");
             }
             else
             {
@@ -78,16 +75,15 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"frame: {nodeAccessor}");
                 }
+                if (itemAccessor.PropertyAccess != null)
+                {
+                    args.Add($"item: {itemAccessor.PropertyAccess}");
+                }
                 if (typeGen.HasIndex)
                 {
                     args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                    args.Add($"errorMask: {maskAccessor}");
                 }
-                else
-                {
-                    args.Add($"doMasks: {doMaskAccessor}");
-                    args.Add($"errorMask: out {maskAccessor}");
-                }
+                args.Add($"errorMask: {maskAccessor}");
             }
             if (itemAccessor.PropertyAccess == null)
             {
@@ -106,16 +102,17 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string nodeAccessor,
             bool squashedRepeatedList,
-            Accessor retAccessor,
-            string doMaskAccessor,
+            string retAccessor,
+            Accessor outItemAccessor,
             string maskAccessor)
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
-                $"{retAccessor.DirectAccess}{this.Namespace}FilePathBinaryTranslation.Instance.Parse"))
+                $"{retAccessor}{this.Namespace}FilePathBinaryTranslation.Instance.Parse"))
             {
                 args.Add(nodeAccessor);
                 args.Add($"errorMask: out {maskAccessor}");
+                args.Add($"item: out {outItemAccessor.DirectAccess}");
                 if (data.RecordType.HasValue)
                 {
                     args.Add($"header: recordTypeConverter.Convert({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
