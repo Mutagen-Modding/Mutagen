@@ -17,8 +17,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using System.Diagnostics;
 using Loqui.Internal;
+using System.Diagnostics;
 using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
@@ -495,8 +495,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -505,23 +504,37 @@ namespace Mutagen.Bethesda.Oblivion
             out DialogResponse_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (DialogResponse Object, DialogResponse_ErrorMask ErrorMask) Create_XML(
+        public static DialogResponse Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            DialogResponse_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new DialogResponse_ErrorMask()) : default(Func<DialogResponse_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new DialogResponse();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static DialogResponse Create_XML(string path)
@@ -563,12 +576,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<DialogResponse, DialogResponse_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<DialogResponse>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -577,13 +589,14 @@ namespace Mutagen.Bethesda.Oblivion
             out DialogResponse_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<DialogResponse, DialogResponse_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<DialogResponse>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -639,10 +652,12 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            errorMask = this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as DialogResponse_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
@@ -682,7 +697,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_XML(
@@ -707,150 +722,207 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
-        protected object Write_XML_Internal(
+        protected void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
             DialogResponseCommon.Write_XML(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static DialogResponse Create_XML_Internal(
-            XElement root,
-            Func<DialogResponse_ErrorMask> errorMask)
-        {
-            var ret = new DialogResponse();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
 
         protected static void Fill_XML_Internal(
             DialogResponse item,
             XElement root,
             string name,
-            Func<DialogResponse_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Emotion":
-                    var EmotiontryGet = EnumXmlTranslation<EmotionType>.Instance.Parse(
-                        root,
-                        nullable: false,
-                        fieldIndex: (int)DialogResponse_FieldIndex.Emotion,
-                        errorMask: errorMask).Bubble((o) => o.Value);
-                    if (EmotiontryGet.Succeeded)
+                    try
                     {
-                        item.SetEmotion(item: EmotiontryGet.Value);
+                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.Emotion);
+                        if (EnumXmlTranslation<EmotionType>.Instance.Parse(
+                            root: root,
+                            item: out EmotionType EmotionParse,
+                            errorMask: errorMask))
+                        {
+                            item.Emotion = EmotionParse;
+                        }
+                        else
+                        {
+                            item.UnsetEmotion();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetEmotion();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "EmotionValue":
-                    var EmotionValuetryGet = Int32XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)DialogResponse_FieldIndex.EmotionValue,
-                        errorMask: errorMask);
-                    if (EmotionValuetryGet.Succeeded)
+                    try
                     {
-                        item.SetEmotionValue(item: EmotionValuetryGet.Value);
+                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.EmotionValue);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Int32 EmotionValueParse,
+                            errorMask: errorMask))
+                        {
+                            item.EmotionValue = EmotionValueParse;
+                        }
+                        else
+                        {
+                            item.UnsetEmotionValue();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetEmotionValue();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Fluff1":
-                    var Fluff1tryGet = ByteArrayXmlTranslation.Instance.Parse(
-                        root,
-                        fieldIndex: (int)DialogResponse_FieldIndex.Fluff1,
-                        errorMask: errorMask);
-                    if (Fluff1tryGet.Succeeded)
+                    try
                     {
-                        item.SetFluff1(item: Fluff1tryGet.Value);
+                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff1);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Byte[] Fluff1Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Fluff1 = Fluff1Parse;
+                        }
+                        else
+                        {
+                            item.UnsetFluff1();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetFluff1();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "ResponseNumber":
-                    var ResponseNumbertryGet = ByteXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)DialogResponse_FieldIndex.ResponseNumber,
-                        errorMask: errorMask);
-                    if (ResponseNumbertryGet.Succeeded)
+                    try
                     {
-                        item.SetResponseNumber(item: ResponseNumbertryGet.Value);
+                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseNumber);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Byte ResponseNumberParse,
+                            errorMask: errorMask))
+                        {
+                            item.ResponseNumber = ResponseNumberParse;
+                        }
+                        else
+                        {
+                            item.UnsetResponseNumber();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetResponseNumber();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Fluff2":
-                    var Fluff2tryGet = ByteArrayXmlTranslation.Instance.Parse(
-                        root,
-                        fieldIndex: (int)DialogResponse_FieldIndex.Fluff2,
-                        errorMask: errorMask);
-                    if (Fluff2tryGet.Succeeded)
+                    try
                     {
-                        item.SetFluff2(item: Fluff2tryGet.Value);
+                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff2);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Byte[] Fluff2Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Fluff2 = Fluff2Parse;
+                        }
+                        else
+                        {
+                            item.UnsetFluff2();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetFluff2();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "ResponseText":
-                    var ResponseTexttryGet = StringXmlTranslation.Instance.Parse(
-                        root,
-                        fieldIndex: (int)DialogResponse_FieldIndex.ResponseText,
-                        errorMask: errorMask);
-                    if (ResponseTexttryGet.Succeeded)
+                    try
                     {
-                        item.SetResponseText(item: ResponseTexttryGet.Value);
+                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseText);
+                        if (StringXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out String ResponseTextParse,
+                            errorMask: errorMask))
+                        {
+                            item.ResponseText = ResponseTextParse;
+                        }
+                        else
+                        {
+                            item.UnsetResponseText();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetResponseText();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "ActorNotes":
-                    var ActorNotestryGet = StringXmlTranslation.Instance.Parse(
-                        root,
-                        fieldIndex: (int)DialogResponse_FieldIndex.ActorNotes,
-                        errorMask: errorMask);
-                    if (ActorNotestryGet.Succeeded)
+                    try
                     {
-                        item.SetActorNotes(item: ActorNotestryGet.Value);
+                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.ActorNotes);
+                        if (StringXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out String ActorNotesParse,
+                            errorMask: errorMask))
+                        {
+                            item.ActorNotes = ActorNotesParse;
+                        }
+                        else
+                        {
+                            item.UnsetActorNotes();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetActorNotes();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 default:
@@ -1557,8 +1629,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -1567,26 +1639,50 @@ namespace Mutagen.Bethesda.Oblivion
             out DialogResponse_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (DialogResponse Object, DialogResponse_ErrorMask ErrorMask) Create_Binary(
+        public static DialogResponse Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            DialogResponse_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new DialogResponse_ErrorMask()) : default(Func<DialogResponse_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new DialogResponse();
+            try
+            {
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                    int? lastParsed = null;
+                    while (!frame.Complete)
+                    {
+                        var parsed = Fill_Binary_RecordTypes(
+                            item: ret,
+                            frame: frame,
+                            lastParsed: lastParsed,
+                            errorMask: errorMask,
+                            recordTypeConverter: recordTypeConverter);
+                        if (parsed.Failed) break;
+                        lastParsed = parsed.Value;
+                    }
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static DialogResponse Create_Binary(string path)
@@ -1641,10 +1737,12 @@ namespace Mutagen.Bethesda.Oblivion
             out DialogResponse_ErrorMask errorMask,
             bool doMasks = true)
         {
-            errorMask = this.Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: doMasks) as DialogResponse_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Binary(
@@ -1680,7 +1778,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_Binary(string path)
@@ -1699,61 +1797,23 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected object Write_Binary_Internal(
+        protected void Write_Binary_Internal(
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
             DialogResponseCommon.Write_Binary(
                 item: this,
-                doMasks: doMasks,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static DialogResponse Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<DialogResponse_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            var ret = new DialogResponse();
-            try
-            {
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                    int? lastParsed = null;
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            lastParsed: lastParsed,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                        lastParsed = parsed.Value;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
 
         protected static void Fill_Binary_Structs(
             DialogResponse item,
             MutagenFrame frame,
-            Func<DialogResponse_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
         }
 
@@ -1761,7 +1821,7 @@ namespace Mutagen.Bethesda.Oblivion
             DialogResponse item,
             MutagenFrame frame,
             int? lastParsed,
-            Func<DialogResponse_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -1775,98 +1835,182 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        var EmotiontryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<EmotionType>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(4),
-                            fieldIndex: (int)DialogResponse_FieldIndex.Emotion,
-                            errorMask: errorMask);
-                        if (EmotiontryGet.Succeeded)
+                        try
                         {
-                            item.SetEmotion(item: EmotiontryGet.Value);
+                            errorMask?.PushIndex((int)DialogResponse_FieldIndex.Emotion);
+                            if (EnumBinaryTranslation<EmotionType>.Instance.Parse(
+                                frame: dataFrame.SpawnWithLength(4),
+                                item: out EmotionType EmotionParse,
+                                errorMask: errorMask))
+                            {
+                                item.Emotion = EmotionParse;
+                            }
+                            else
+                            {
+                                item.UnsetEmotion();
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.UnsetEmotion();
+                            errorMask.ReportException(ex);
                         }
-                        var EmotionValuetryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)DialogResponse_FieldIndex.EmotionValue,
-                            errorMask: errorMask);
-                        if (EmotionValuetryGet.Succeeded)
+                        finally
                         {
-                            item.SetEmotionValue(item: EmotionValuetryGet.Value);
+                            errorMask?.PopIndex();
                         }
-                        else
+                        try
                         {
-                            item.UnsetEmotionValue();
+                            errorMask?.PushIndex((int)DialogResponse_FieldIndex.EmotionValue);
+                            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out Int32 EmotionValueParse,
+                                errorMask: errorMask))
+                            {
+                                item.EmotionValue = EmotionValueParse;
+                            }
+                            else
+                            {
+                                item.UnsetEmotionValue();
+                            }
                         }
-                        var Fluff1tryGet = ByteArrayBinaryTranslation.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(4),
-                            fieldIndex: (int)DialogResponse_FieldIndex.Fluff1,
-                            errorMask: errorMask);
-                        if (Fluff1tryGet.Succeeded)
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.SetFluff1(item: Fluff1tryGet.Value);
+                            errorMask.ReportException(ex);
                         }
-                        else
+                        finally
                         {
-                            item.UnsetFluff1();
+                            errorMask?.PopIndex();
                         }
-                        var ResponseNumbertryGet = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)DialogResponse_FieldIndex.ResponseNumber,
-                            errorMask: errorMask);
-                        if (ResponseNumbertryGet.Succeeded)
+                        try
                         {
-                            item.SetResponseNumber(item: ResponseNumbertryGet.Value);
+                            errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff1);
+                            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                                frame: dataFrame.SpawnWithLength(4),
+                                item: out Byte[] Fluff1Parse,
+                                errorMask: errorMask))
+                            {
+                                item.Fluff1 = Fluff1Parse;
+                            }
+                            else
+                            {
+                                item.UnsetFluff1();
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.UnsetResponseNumber();
+                            errorMask.ReportException(ex);
                         }
-                        var Fluff2tryGet = ByteArrayBinaryTranslation.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(3),
-                            fieldIndex: (int)DialogResponse_FieldIndex.Fluff2,
-                            errorMask: errorMask);
-                        if (Fluff2tryGet.Succeeded)
+                        finally
                         {
-                            item.SetFluff2(item: Fluff2tryGet.Value);
+                            errorMask?.PopIndex();
                         }
-                        else
+                        try
                         {
-                            item.UnsetFluff2();
+                            errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseNumber);
+                            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out Byte ResponseNumberParse,
+                                errorMask: errorMask))
+                            {
+                                item.ResponseNumber = ResponseNumberParse;
+                            }
+                            else
+                            {
+                                item.UnsetResponseNumber();
+                            }
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                        try
+                        {
+                            errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff2);
+                            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                                frame: dataFrame.SpawnWithLength(3),
+                                item: out Byte[] Fluff2Parse,
+                                errorMask: errorMask))
+                            {
+                                item.Fluff2 = Fluff2Parse;
+                            }
+                            else
+                            {
+                                item.UnsetFluff2();
+                            }
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Fluff2);
                 case "NAM1":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var ResponseTexttryGet = StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        fieldIndex: (int)DialogResponse_FieldIndex.ResponseText,
-                        parseWhole: true,
-                        errorMask: errorMask);
-                    if (ResponseTexttryGet.Succeeded)
+                    try
                     {
-                        item.SetResponseText(item: ResponseTexttryGet.Value);
+                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseText);
+                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            parseWhole: true,
+                            item: out String ResponseTextParse,
+                            errorMask: errorMask))
+                        {
+                            item.ResponseText = ResponseTextParse;
+                        }
+                        else
+                        {
+                            item.UnsetResponseText();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetResponseText();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ResponseText);
                 case "NAM2":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var ActorNotestryGet = StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        fieldIndex: (int)DialogResponse_FieldIndex.ActorNotes,
-                        parseWhole: true,
-                        errorMask: errorMask);
-                    if (ActorNotestryGet.Succeeded)
+                    try
                     {
-                        item.SetActorNotes(item: ActorNotestryGet.Value);
+                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.ActorNotes);
+                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            parseWhole: true,
+                            item: out String ActorNotesParse,
+                            errorMask: errorMask))
+                        {
+                            item.ActorNotes = ActorNotesParse;
+                        }
+                        else
+                        {
+                            item.UnsetActorNotes();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetActorNotes();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ActorNotes);
                 default:
@@ -1964,24 +2108,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            DialogResponse_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new DialogResponse_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             DialogResponseCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IDialogResponseGetter rhs,
+            ErrorMaskBuilder errorMask,
+            DialogResponse_CopyMask copyMask = null,
+            IDialogResponseGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            DialogResponseCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -2439,13 +2591,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogResponse item,
             IDialogResponseGetter rhs,
             IDialogResponseGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             DialogResponse_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.Emotion ?? true)
             {
+                errorMask.PushIndex((int)DialogResponse_FieldIndex.Emotion);
                 try
                 {
                     item.Emotion_Property.Set(
@@ -2453,13 +2605,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogResponse_FieldIndex.Emotion, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.EmotionValue ?? true)
             {
+                errorMask.PushIndex((int)DialogResponse_FieldIndex.EmotionValue);
                 try
                 {
                     item.EmotionValue_Property.Set(
@@ -2467,13 +2624,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogResponse_FieldIndex.EmotionValue, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Fluff1 ?? true)
             {
+                errorMask.PushIndex((int)DialogResponse_FieldIndex.Fluff1);
                 try
                 {
                     item.Fluff1_Property.Set(
@@ -2481,13 +2643,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogResponse_FieldIndex.Fluff1, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.ResponseNumber ?? true)
             {
+                errorMask.PushIndex((int)DialogResponse_FieldIndex.ResponseNumber);
                 try
                 {
                     item.ResponseNumber_Property.Set(
@@ -2495,13 +2662,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogResponse_FieldIndex.ResponseNumber, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Fluff2 ?? true)
             {
+                errorMask.PushIndex((int)DialogResponse_FieldIndex.Fluff2);
                 try
                 {
                     item.Fluff2_Property.Set(
@@ -2509,13 +2681,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogResponse_FieldIndex.Fluff2, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.ResponseText ?? true)
             {
+                errorMask.PushIndex((int)DialogResponse_FieldIndex.ResponseText);
                 try
                 {
                     item.ResponseText_Property.SetToWithDefault(
@@ -2523,13 +2700,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         def: def?.ResponseText_Property);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogResponse_FieldIndex.ResponseText, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.ActorNotes ?? true)
             {
+                errorMask.PushIndex((int)DialogResponse_FieldIndex.ActorNotes);
                 try
                 {
                     item.ActorNotes_Property.SetToWithDefault(
@@ -2537,9 +2719,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         def: def?.ActorNotes_Property);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogResponse_FieldIndex.ActorNotes, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -2782,82 +2968,74 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out DialogResponse_ErrorMask errorMask,
             string name = null)
         {
-            DialogResponse_ErrorMask errMaskRet = null;
-            Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_XML(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new DialogResponse_ErrorMask()) : default(Func<DialogResponse_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal(
+        public static void Write_XML(
             XElement node,
             IDialogResponseGetter item,
-            Func<DialogResponse_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.DialogResponse");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.DialogResponse");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.DialogResponse");
-                }
-                EnumXmlTranslation<EmotionType>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Emotion),
-                    item: item.Emotion_Property,
-                    fieldIndex: (int)DialogResponse_FieldIndex.Emotion,
-                    errorMask: errorMask);
-                Int32XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.EmotionValue),
-                    item: item.EmotionValue_Property,
-                    fieldIndex: (int)DialogResponse_FieldIndex.EmotionValue,
-                    errorMask: errorMask);
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Fluff1),
-                    item: item.Fluff1_Property,
-                    fieldIndex: (int)DialogResponse_FieldIndex.Fluff1,
-                    errorMask: errorMask);
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.ResponseNumber),
-                    item: item.ResponseNumber_Property,
-                    fieldIndex: (int)DialogResponse_FieldIndex.ResponseNumber,
-                    errorMask: errorMask);
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Fluff2),
-                    item: item.Fluff2_Property,
-                    fieldIndex: (int)DialogResponse_FieldIndex.Fluff2,
-                    errorMask: errorMask);
-                if (item.ResponseText_Property.HasBeenSet)
-                {
-                    StringXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.ResponseText),
-                        item: item.ResponseText_Property,
-                        fieldIndex: (int)DialogResponse_FieldIndex.ResponseText,
-                        errorMask: errorMask);
-                }
-                if (item.ActorNotes_Property.HasBeenSet)
-                {
-                    StringXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.ActorNotes),
-                        item: item.ActorNotes_Property,
-                        fieldIndex: (int)DialogResponse_FieldIndex.ActorNotes,
-                        errorMask: errorMask);
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.DialogResponse");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            EnumXmlTranslation<EmotionType>.Instance.Write(
+                node: elem,
+                name: nameof(item.Emotion),
+                item: item.Emotion_Property,
+                fieldIndex: (int)DialogResponse_FieldIndex.Emotion,
+                errorMask: errorMask);
+            Int32XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.EmotionValue),
+                item: item.EmotionValue_Property,
+                fieldIndex: (int)DialogResponse_FieldIndex.EmotionValue,
+                errorMask: errorMask);
+            ByteArrayXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Fluff1),
+                item: item.Fluff1_Property,
+                fieldIndex: (int)DialogResponse_FieldIndex.Fluff1,
+                errorMask: errorMask);
+            ByteXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.ResponseNumber),
+                item: item.ResponseNumber_Property,
+                fieldIndex: (int)DialogResponse_FieldIndex.ResponseNumber,
+                errorMask: errorMask);
+            ByteArrayXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Fluff2),
+                item: item.Fluff2_Property,
+                fieldIndex: (int)DialogResponse_FieldIndex.Fluff2,
+                errorMask: errorMask);
+            if (item.ResponseText_Property.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                StringXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.ResponseText),
+                    item: item.ResponseText_Property,
+                    fieldIndex: (int)DialogResponse_FieldIndex.ResponseText,
+                    errorMask: errorMask);
+            }
+            if (item.ActorNotes_Property.HasBeenSet)
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.ActorNotes),
+                    item: item.ActorNotes_Property,
+                    fieldIndex: (int)DialogResponse_FieldIndex.ActorNotes,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -2873,34 +3051,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out DialogResponse_ErrorMask errorMask)
         {
-            DialogResponse_ErrorMask errMaskRet = null;
-            Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new DialogResponse_ErrorMask()) : default(Func<DialogResponse_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_Binary_Internal(
+        public static void Write_Binary(
             MutagenWriter writer,
             DialogResponse item,
             RecordTypeConverter recordTypeConverter,
-            Func<DialogResponse_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -2908,7 +3078,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogResponse item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<DialogResponse_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(DialogResponse_Registration.TRDT_HEADER)))
             {
@@ -3303,6 +3473,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static DialogResponse_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            return new DialogResponse_ErrorMask();
         }
         #endregion
 

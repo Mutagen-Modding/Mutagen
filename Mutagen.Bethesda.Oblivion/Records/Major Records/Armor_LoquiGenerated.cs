@@ -20,8 +20,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using System.Diagnostics;
 using Loqui.Internal;
+using System.Diagnostics;
 using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
@@ -328,8 +328,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -338,23 +337,37 @@ namespace Mutagen.Bethesda.Oblivion
             out Armor_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = Armor_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (Armor Object, Armor_ErrorMask ErrorMask) Create_XML(
+        public static Armor Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            Armor_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Armor_ErrorMask()) : default(Func<Armor_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new Armor();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static Armor Create_XML(string path)
@@ -396,12 +409,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Armor, Armor_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Armor>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -410,13 +422,14 @@ namespace Mutagen.Bethesda.Oblivion
             out Armor_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Armor, Armor_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<Armor>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = Armor_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -508,10 +521,12 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            errorMask = this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as Armor_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = Armor_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
@@ -551,7 +566,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: false);
+                errorMask: null);
         }
 
         public override void Write_XML(
@@ -576,107 +591,129 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
-        protected override object Write_XML_Internal(
+        protected override void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
             ArmorCommon.Write_XML(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static Armor Create_XML_Internal(
-            XElement root,
-            Func<Armor_ErrorMask> errorMask)
-        {
-            var ret = new Armor();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
 
         protected static void Fill_XML_Internal(
             Armor item,
             XElement root,
             string name,
-            Func<Armor_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "ArmorValue":
-                    var ArmorValuetryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Armor_FieldIndex.ArmorValue,
-                        errorMask: errorMask);
-                    if (ArmorValuetryGet.Succeeded)
+                    try
                     {
-                        item.SetArmorValue(item: ArmorValuetryGet.Value);
+                        errorMask?.PushIndex((int)Armor_FieldIndex.ArmorValue);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Single ArmorValueParse,
+                            errorMask: errorMask))
+                        {
+                            item.ArmorValue = ArmorValueParse;
+                        }
+                        else
+                        {
+                            item.UnsetArmorValue();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetArmorValue();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Value":
-                    var ValuetryGet = UInt32XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Armor_FieldIndex.Value,
-                        errorMask: errorMask);
-                    if (ValuetryGet.Succeeded)
+                    try
                     {
-                        item.SetValue(item: ValuetryGet.Value);
+                        errorMask?.PushIndex((int)Armor_FieldIndex.Value);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out UInt32 ValueParse,
+                            errorMask: errorMask))
+                        {
+                            item.Value = ValueParse;
+                        }
+                        else
+                        {
+                            item.UnsetValue();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetValue();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Health":
-                    var HealthtryGet = UInt32XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Armor_FieldIndex.Health,
-                        errorMask: errorMask);
-                    if (HealthtryGet.Succeeded)
+                    try
                     {
-                        item.SetHealth(item: HealthtryGet.Value);
+                        errorMask?.PushIndex((int)Armor_FieldIndex.Health);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out UInt32 HealthParse,
+                            errorMask: errorMask))
+                        {
+                            item.Health = HealthParse;
+                        }
+                        else
+                        {
+                            item.UnsetHealth();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetHealth();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Weight":
-                    var WeighttryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Armor_FieldIndex.Weight,
-                        errorMask: errorMask);
-                    if (WeighttryGet.Succeeded)
+                    try
                     {
-                        item.SetWeight(item: WeighttryGet.Value);
+                        errorMask?.PushIndex((int)Armor_FieldIndex.Weight);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Single WeightParse,
+                            errorMask: errorMask))
+                        {
+                            item.Weight = WeightParse;
+                        }
+                        else
+                        {
+                            item.UnsetWeight();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetWeight();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 default:
@@ -988,8 +1025,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -998,26 +1035,29 @@ namespace Mutagen.Bethesda.Oblivion
             out Armor_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = Armor_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (Armor Object, Armor_ErrorMask ErrorMask) Create_Binary(
+        public static Armor Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            Armor_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
+            return UtilityTranslation.MajorRecordParse<Armor>(
+                record: new Armor(),
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Armor_ErrorMask()) : default(Func<Armor_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+                errorMask: errorMask,
+                recType: Armor_Registration.ARMO_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         public static Armor Create_Binary(string path)
@@ -1072,10 +1112,12 @@ namespace Mutagen.Bethesda.Oblivion
             out Armor_ErrorMask errorMask,
             bool doMasks = true)
         {
-            errorMask = this.Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: doMasks) as Armor_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = Armor_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Binary(
@@ -1111,7 +1153,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: false);
+                errorMask: null);
         }
 
         public override void Write_Binary(string path)
@@ -1130,73 +1172,44 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected override object Write_Binary_Internal(
+        protected override void Write_Binary_Internal(
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
             ArmorCommon.Write_Binary(
                 item: this,
-                doMasks: doMasks,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
 
         static partial void FillBinary_ArmorValue_Custom(
             MutagenFrame frame,
             Armor item,
-            int fieldIndex,
-            Func<Armor_ErrorMask> errorMask);
+            ErrorMaskBuilder errorMask);
 
         static partial void WriteBinary_ArmorValue_Custom(
             MutagenWriter writer,
             Armor item,
-            int fieldIndex,
-            Func<Armor_ErrorMask> errorMask);
+            ErrorMaskBuilder errorMask);
 
         public static void WriteBinary_ArmorValue(
             MutagenWriter writer,
             Armor item,
-            int fieldIndex,
-            Func<Armor_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                WriteBinary_ArmorValue_Custom(
-                    writer: writer,
-                    item: item,
-                    fieldIndex: fieldIndex,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-        }
-
-        private static Armor Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<Armor_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            return UtilityTranslation.MajorRecordParse<Armor, Armor_ErrorMask>(
-                record: new Armor(),
-                frame: frame,
-                errorMask: errorMask,
-                recType: Armor_Registration.ARMO_HEADER,
-                recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
+            WriteBinary_ArmorValue_Custom(
+                writer: writer,
+                item: item,
+                errorMask: errorMask);
         }
 
         protected static void Fill_Binary_Structs(
             Armor item,
             MutagenFrame frame,
-            Func<Armor_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             ClothingAbstract.Fill_Binary_Structs(
                 item: item,
@@ -1207,7 +1220,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             Armor item,
             MutagenFrame frame,
-            Func<Armor_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -1220,54 +1233,81 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        FillBinary_ArmorValue_Custom(
+                            frame: dataFrame,
+                            item: item,
+                            errorMask: errorMask);
                         try
                         {
-                            FillBinary_ArmorValue_Custom(
-                                frame: dataFrame,
-                                item: item,
-                                fieldIndex: (int)Armor_FieldIndex.ArmorValue,
-                                errorMask: errorMask);
+                            errorMask?.PushIndex((int)Armor_FieldIndex.Value);
+                            if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out UInt32 ValueParse,
+                                errorMask: errorMask))
+                            {
+                                item.Value = ValueParse;
+                            }
+                            else
+                            {
+                                item.UnsetValue();
+                            }
                         }
                         catch (Exception ex)
                         when (errorMask != null)
                         {
-                            errorMask().Overall = ex;
+                            errorMask.ReportException(ex);
                         }
-                        var ValuetryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)Armor_FieldIndex.Value,
-                            errorMask: errorMask);
-                        if (ValuetryGet.Succeeded)
+                        finally
                         {
-                            item.SetValue(item: ValuetryGet.Value);
+                            errorMask?.PopIndex();
                         }
-                        else
+                        try
                         {
-                            item.UnsetValue();
+                            errorMask?.PushIndex((int)Armor_FieldIndex.Health);
+                            if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out UInt32 HealthParse,
+                                errorMask: errorMask))
+                            {
+                                item.Health = HealthParse;
+                            }
+                            else
+                            {
+                                item.UnsetHealth();
+                            }
                         }
-                        var HealthtryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)Armor_FieldIndex.Health,
-                            errorMask: errorMask);
-                        if (HealthtryGet.Succeeded)
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.SetHealth(item: HealthtryGet.Value);
+                            errorMask.ReportException(ex);
                         }
-                        else
+                        finally
                         {
-                            item.UnsetHealth();
+                            errorMask?.PopIndex();
                         }
-                        var WeighttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)Armor_FieldIndex.Weight,
-                            errorMask: errorMask);
-                        if (WeighttryGet.Succeeded)
+                        try
                         {
-                            item.SetWeight(item: WeighttryGet.Value);
+                            errorMask?.PushIndex((int)Armor_FieldIndex.Weight);
+                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out Single WeightParse,
+                                errorMask: errorMask))
+                            {
+                                item.Weight = WeightParse;
+                            }
+                            else
+                            {
+                                item.UnsetWeight();
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.UnsetWeight();
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.Weight);
@@ -1357,24 +1397,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            Armor_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Armor_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ArmorCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = Armor_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IArmorGetter rhs,
+            ErrorMaskBuilder errorMask,
+            Armor_CopyMask copyMask = null,
+            IArmorGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            ArmorCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1751,8 +1799,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IArmor item,
             IArmorGetter rhs,
             IArmorGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             Armor_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1760,12 +1807,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item,
                 rhs,
                 def,
-                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
             if (copyMask?.ArmorValue ?? true)
             {
+                errorMask.PushIndex((int)Armor_FieldIndex.ArmorValue);
                 try
                 {
                     item.ArmorValue_Property.Set(
@@ -1773,13 +1820,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Armor_FieldIndex.ArmorValue, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Value ?? true)
             {
+                errorMask.PushIndex((int)Armor_FieldIndex.Value);
                 try
                 {
                     item.Value_Property.Set(
@@ -1787,13 +1839,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Armor_FieldIndex.Value, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Health ?? true)
             {
+                errorMask.PushIndex((int)Armor_FieldIndex.Health);
                 try
                 {
                     item.Health_Property.Set(
@@ -1801,13 +1858,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Armor_FieldIndex.Health, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Weight ?? true)
             {
+                errorMask.PushIndex((int)Armor_FieldIndex.Weight);
                 try
                 {
                     item.Weight_Property.Set(
@@ -1815,9 +1877,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Armor_FieldIndex.Weight, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -2114,59 +2180,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Armor_ErrorMask errorMask,
             string name = null)
         {
-            Armor_ErrorMask errMaskRet = null;
-            Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_XML(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Armor_ErrorMask()) : default(Func<Armor_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = Armor_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal(
+        public static void Write_XML(
             XElement node,
             IArmorGetter item,
-            Func<Armor_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Armor");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Armor");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Armor");
-                }
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.ArmorValue),
-                    item: item.ArmorValue_Property,
-                    fieldIndex: (int)Armor_FieldIndex.ArmorValue,
-                    errorMask: errorMask);
-                UInt32XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Value),
-                    item: item.Value_Property,
-                    fieldIndex: (int)Armor_FieldIndex.Value,
-                    errorMask: errorMask);
-                UInt32XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Health),
-                    item: item.Health_Property,
-                    fieldIndex: (int)Armor_FieldIndex.Health,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Weight),
-                    item: item.Weight_Property,
-                    fieldIndex: (int)Armor_FieldIndex.Weight,
-                    errorMask: errorMask);
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Armor");
             }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.ArmorValue),
+                item: item.ArmorValue_Property,
+                fieldIndex: (int)Armor_FieldIndex.ArmorValue,
+                errorMask: errorMask);
+            UInt32XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Value),
+                item: item.Value_Property,
+                fieldIndex: (int)Armor_FieldIndex.Value,
+                errorMask: errorMask);
+            UInt32XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Health),
+                item: item.Health_Property,
+                fieldIndex: (int)Armor_FieldIndex.Health,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Weight),
+                item: item.Weight_Property,
+                fieldIndex: (int)Armor_FieldIndex.Weight,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -2181,43 +2239,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out Armor_ErrorMask errorMask)
         {
-            Armor_ErrorMask errMaskRet = null;
-            Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Armor_ErrorMask()) : default(Func<Armor_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = Armor_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_Binary_Internal(
+        public static void Write_Binary(
             MutagenWriter writer,
             Armor item,
             RecordTypeConverter recordTypeConverter,
-            Func<Armor_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: Armor_Registration.ARMO_HEADER,
+                type: ObjectType.Record))
             {
-                using (HeaderExport.ExportHeader(
+                MajorRecordCommon.Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: Armor_Registration.ARMO_HEADER,
-                    type: ObjectType.Record))
-                {
-                    MajorRecordCommon.Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                    Write_Binary_RecordTypes(
-                        item: item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -2226,7 +2276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Armor item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<Armor_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             ClothingAbstractCommon.Write_Binary_RecordTypes(
                 item: item,
@@ -2238,7 +2288,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Armor.WriteBinary_ArmorValue(
                     writer: writer,
                     item: item,
-                    fieldIndex: (int)Armor_FieldIndex.ArmorValue,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                     writer: writer,
@@ -2535,6 +2584,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static Armor_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            return new Armor_ErrorMask();
         }
         #endregion
 

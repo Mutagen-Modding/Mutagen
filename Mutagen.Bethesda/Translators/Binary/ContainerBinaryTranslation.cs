@@ -43,11 +43,6 @@ namespace Mutagen.Bethesda.Binary
                         safeFrame.Position += Constants.SUBRECORD_LENGTH;
                     }
                     var startingPos = frame.Position;
-                    if (startingPos == 130037)
-                    {
-                        int wer = 23;
-                        wer++;
-                    }
                     if (transl(safeFrame, out var subItem, errorMask))
                     {
                         ret.Add(subItem);

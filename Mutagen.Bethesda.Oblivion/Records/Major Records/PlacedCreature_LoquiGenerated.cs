@@ -20,8 +20,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using System.Diagnostics;
 using Loqui.Internal;
+using System.Diagnostics;
 using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
@@ -507,8 +507,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -517,23 +516,37 @@ namespace Mutagen.Bethesda.Oblivion
             out PlacedCreature_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = PlacedCreature_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (PlacedCreature Object, PlacedCreature_ErrorMask ErrorMask) Create_XML(
+        public static PlacedCreature Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            PlacedCreature_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PlacedCreature_ErrorMask()) : default(Func<PlacedCreature_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new PlacedCreature();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static PlacedCreature Create_XML(string path)
@@ -575,12 +588,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<PlacedCreature, PlacedCreature_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<PlacedCreature>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -589,13 +601,14 @@ namespace Mutagen.Bethesda.Oblivion
             out PlacedCreature_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<PlacedCreature, PlacedCreature_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<PlacedCreature>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = PlacedCreature_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -675,10 +688,12 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            errorMask = this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as PlacedCreature_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = PlacedCreature_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
@@ -718,7 +733,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: false);
+                errorMask: null);
         }
 
         public override void Write_XML(
@@ -743,153 +758,202 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
-        protected override object Write_XML_Internal(
+        protected override void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
             PlacedCreatureCommon.Write_XML(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static PlacedCreature Create_XML_Internal(
-            XElement root,
-            Func<PlacedCreature_ErrorMask> errorMask)
-        {
-            var ret = new PlacedCreature();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
 
         protected static void Fill_XML_Internal(
             PlacedCreature item,
             XElement root,
             string name,
-            Func<PlacedCreature_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Base":
-                    item.Base_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)PlacedCreature_FieldIndex.Base,
-                        errorMask: errorMask));
+                        item: item.Base_Property,
+                        errorMask: errorMask);
                     break;
                 case "Owner":
-                    item.Owner_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)PlacedCreature_FieldIndex.Owner,
-                        errorMask: errorMask));
+                        item: item.Owner_Property,
+                        errorMask: errorMask);
                     break;
                 case "FactionRank":
-                    var FactionRanktryGet = Int32XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.FactionRank,
-                        errorMask: errorMask);
-                    if (FactionRanktryGet.Succeeded)
+                    try
                     {
-                        item.SetFactionRank(item: FactionRanktryGet.Value);
+                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.FactionRank);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Int32 FactionRankParse,
+                            errorMask: errorMask))
+                        {
+                            item.FactionRank = FactionRankParse;
+                        }
+                        else
+                        {
+                            item.UnsetFactionRank();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetFactionRank();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "GlobalVariable":
-                    item.GlobalVariable_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)PlacedCreature_FieldIndex.GlobalVariable,
-                        errorMask: errorMask));
+                        item: item.GlobalVariable_Property,
+                        errorMask: errorMask);
                     break;
                 case "EnableParent":
-                    var EnableParenttryGet = LoquiXmlTranslation<EnableParent, EnableParent_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.EnableParent,
-                        errorMask: errorMask);
-                    if (EnableParenttryGet.Succeeded)
+                    try
                     {
-                        item.SetEnableParent(item: EnableParenttryGet.Value);
+                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.EnableParent);
+                        if (LoquiXmlTranslation<EnableParent>.Instance.Parse(
+                            root: root,
+                            item: out EnableParent EnableParentParse,
+                            errorMask: errorMask))
+                        {
+                            item.EnableParent = EnableParentParse;
+                        }
+                        else
+                        {
+                            item.UnsetEnableParent();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetEnableParent();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "RagdollData":
-                    var RagdollDatatryGet = ByteArrayXmlTranslation.Instance.Parse(
-                        root,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.RagdollData,
-                        errorMask: errorMask);
-                    if (RagdollDatatryGet.Succeeded)
+                    try
                     {
-                        item.SetRagdollData(item: RagdollDatatryGet.Value);
+                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.RagdollData);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Byte[] RagdollDataParse,
+                            errorMask: errorMask))
+                        {
+                            item.RagdollData = RagdollDataParse;
+                        }
+                        else
+                        {
+                            item.UnsetRagdollData();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetRagdollData();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Scale":
-                    var ScaletryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.Scale,
-                        errorMask: errorMask);
-                    if (ScaletryGet.Succeeded)
+                    try
                     {
-                        item.SetScale(item: ScaletryGet.Value);
+                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Scale);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Single ScaleParse,
+                            errorMask: errorMask))
+                        {
+                            item.Scale = ScaleParse;
+                        }
+                        else
+                        {
+                            item.UnsetScale();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetScale();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Position":
-                    var PositiontryGet = P3FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.Position,
-                        errorMask: errorMask);
-                    if (PositiontryGet.Succeeded)
+                    try
                     {
-                        item.SetPosition(item: PositiontryGet.Value);
+                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Position);
+                        if (P3FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out P3Float PositionParse,
+                            errorMask: errorMask))
+                        {
+                            item.Position = PositionParse;
+                        }
+                        else
+                        {
+                            item.UnsetPosition();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetPosition();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Rotation":
-                    var RotationtryGet = P3FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.Rotation,
-                        errorMask: errorMask);
-                    if (RotationtryGet.Succeeded)
+                    try
                     {
-                        item.SetRotation(item: RotationtryGet.Value);
+                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Rotation);
+                        if (P3FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out P3Float RotationParse,
+                            errorMask: errorMask))
+                        {
+                            item.Rotation = RotationParse;
+                        }
+                        else
+                        {
+                            item.UnsetRotation();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetRotation();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 default:
@@ -1616,8 +1680,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -1626,26 +1690,29 @@ namespace Mutagen.Bethesda.Oblivion
             out PlacedCreature_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = PlacedCreature_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (PlacedCreature Object, PlacedCreature_ErrorMask ErrorMask) Create_Binary(
+        public static PlacedCreature Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            PlacedCreature_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
+            return UtilityTranslation.MajorRecordParse<PlacedCreature>(
+                record: new PlacedCreature(),
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PlacedCreature_ErrorMask()) : default(Func<PlacedCreature_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+                errorMask: errorMask,
+                recType: PlacedCreature_Registration.ACRE_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         public static PlacedCreature Create_Binary(string path)
@@ -1700,10 +1767,12 @@ namespace Mutagen.Bethesda.Oblivion
             out PlacedCreature_ErrorMask errorMask,
             bool doMasks = true)
         {
-            errorMask = this.Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: doMasks) as PlacedCreature_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = PlacedCreature_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Binary(
@@ -1739,7 +1808,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: false);
+                errorMask: null);
         }
 
         public override void Write_Binary(string path)
@@ -1758,40 +1827,23 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected override object Write_Binary_Internal(
+        protected override void Write_Binary_Internal(
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
             PlacedCreatureCommon.Write_Binary(
                 item: this,
-                doMasks: doMasks,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static PlacedCreature Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<PlacedCreature_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            return UtilityTranslation.MajorRecordParse<PlacedCreature, PlacedCreature_ErrorMask>(
-                record: new PlacedCreature(),
-                frame: frame,
-                errorMask: errorMask,
-                recType: PlacedCreature_Registration.ACRE_HEADER,
-                recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
-        }
 
         protected static void Fill_Binary_Structs(
             PlacedCreature item,
             MutagenFrame frame,
-            Func<PlacedCreature_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             Placed.Fill_Binary_Structs(
                 item: item,
@@ -1802,7 +1854,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             PlacedCreature item,
             MutagenFrame frame,
-            Func<PlacedCreature_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -1813,113 +1865,186 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "NAME":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Base_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                        frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)PlacedCreature_FieldIndex.Base,
-                        errorMask: errorMask));
+                        item: item.Base_Property,
+                        errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Base);
                 case "XOWN":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Owner_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                        frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)PlacedCreature_FieldIndex.Owner,
-                        errorMask: errorMask));
+                        item: item.Owner_Property,
+                        errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Owner);
                 case "XRNK":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var FactionRanktryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        fieldIndex: (int)PlacedCreature_FieldIndex.FactionRank,
-                        errorMask: errorMask);
-                    if (FactionRanktryGet.Succeeded)
+                    try
                     {
-                        item.SetFactionRank(item: FactionRanktryGet.Value);
+                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.FactionRank);
+                        if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            item: out Int32 FactionRankParse,
+                            errorMask: errorMask))
+                        {
+                            item.FactionRank = FactionRankParse;
+                        }
+                        else
+                        {
+                            item.UnsetFactionRank();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetFactionRank();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.FactionRank);
                 case "XGLB":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.GlobalVariable_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                        frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)PlacedCreature_FieldIndex.GlobalVariable,
-                        errorMask: errorMask));
+                        item: item.GlobalVariable_Property,
+                        errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.GlobalVariable);
                 case "XESP":
+                    try
                     {
-                        var EnableParenttryGet = LoquiBinaryTranslation<EnableParent, EnableParent_ErrorMask>.Instance.Parse(
+                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.EnableParent);
+                        if (LoquiBinaryTranslation<EnableParent>.Instance.Parse(
                             frame: frame,
-                            fieldIndex: (int)PlacedCreature_FieldIndex.EnableParent,
-                            errorMask: errorMask);
-                        if (EnableParenttryGet.Succeeded)
+                            item: out EnableParent EnableParentParse,
+                            errorMask: errorMask))
                         {
-                            item.SetEnableParent(item: EnableParenttryGet.Value);
+                            item.EnableParent = EnableParentParse;
                         }
                         else
                         {
                             item.UnsetEnableParent();
                         }
                     }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.EnableParent);
                 case "XRGD":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var RagdollDatatryGet = ByteArrayBinaryTranslation.Instance.Parse(
-                        frame.SpawnWithLength(contentLength),
-                        fieldIndex: (int)PlacedCreature_FieldIndex.RagdollData,
-                        errorMask: errorMask);
-                    if (RagdollDatatryGet.Succeeded)
+                    try
                     {
-                        item.SetRagdollData(item: RagdollDatatryGet.Value);
+                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.RagdollData);
+                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            item: out Byte[] RagdollDataParse,
+                            errorMask: errorMask))
+                        {
+                            item.RagdollData = RagdollDataParse;
+                        }
+                        else
+                        {
+                            item.UnsetRagdollData();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetRagdollData();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.RagdollData);
                 case "XSCL":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var ScaletryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        fieldIndex: (int)PlacedCreature_FieldIndex.Scale,
-                        errorMask: errorMask);
-                    if (ScaletryGet.Succeeded)
+                    try
                     {
-                        item.SetScale(item: ScaletryGet.Value);
+                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Scale);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            item: out Single ScaleParse,
+                            errorMask: errorMask))
+                        {
+                            item.Scale = ScaleParse;
+                        }
+                        else
+                        {
+                            item.UnsetScale();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetScale();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Scale);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        var PositiontryGet = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)PlacedCreature_FieldIndex.Position,
-                            errorMask: errorMask);
-                        if (PositiontryGet.Succeeded)
+                        try
                         {
-                            item.SetPosition(item: PositiontryGet.Value);
+                            errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Position);
+                            if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out P3Float PositionParse,
+                                errorMask: errorMask))
+                            {
+                                item.Position = PositionParse;
+                            }
+                            else
+                            {
+                                item.UnsetPosition();
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.UnsetPosition();
+                            errorMask.ReportException(ex);
                         }
-                        var RotationtryGet = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)PlacedCreature_FieldIndex.Rotation,
-                            errorMask: errorMask);
-                        if (RotationtryGet.Succeeded)
+                        finally
                         {
-                            item.SetRotation(item: RotationtryGet.Value);
+                            errorMask?.PopIndex();
                         }
-                        else
+                        try
                         {
-                            item.UnsetRotation();
+                            errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Rotation);
+                            if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out P3Float RotationParse,
+                                errorMask: errorMask))
+                            {
+                                item.Rotation = RotationParse;
+                            }
+                            else
+                            {
+                                item.UnsetRotation();
+                            }
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Rotation);
@@ -2009,24 +2134,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            PlacedCreature_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new PlacedCreature_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             PlacedCreatureCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = PlacedCreature_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IPlacedCreatureGetter rhs,
+            ErrorMaskBuilder errorMask,
+            PlacedCreature_CopyMask copyMask = null,
+            IPlacedCreatureGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            PlacedCreatureCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -2543,8 +2676,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlacedCreature item,
             IPlacedCreatureGetter rhs,
             IPlacedCreatureGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             PlacedCreature_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -2552,12 +2684,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item,
                 rhs,
                 def,
-                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
             if (copyMask?.Base ?? true)
             {
+                errorMask.PushIndex((int)PlacedCreature_FieldIndex.Base);
                 try
                 {
                     item.Base_Property.SetToWithDefault(
@@ -2566,13 +2698,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)PlacedCreature_FieldIndex.Base, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Owner ?? true)
             {
+                errorMask.PushIndex((int)PlacedCreature_FieldIndex.Owner);
                 try
                 {
                     item.Owner_Property.SetToWithDefault(
@@ -2581,13 +2718,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)PlacedCreature_FieldIndex.Owner, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.FactionRank ?? true)
             {
+                errorMask.PushIndex((int)PlacedCreature_FieldIndex.FactionRank);
                 try
                 {
                     item.FactionRank_Property.SetToWithDefault(
@@ -2595,13 +2737,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         def: def?.FactionRank_Property);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)PlacedCreature_FieldIndex.FactionRank, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.GlobalVariable ?? true)
             {
+                errorMask.PushIndex((int)PlacedCreature_FieldIndex.GlobalVariable);
                 try
                 {
                     item.GlobalVariable_Property.SetToWithDefault(
@@ -2610,13 +2757,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)PlacedCreature_FieldIndex.GlobalVariable, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.EnableParent.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)PlacedCreature_FieldIndex.EnableParent);
                 try
                 {
                     item.EnableParent_Property.SetToWithDefault(
@@ -2634,15 +2786,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.EnableParent,
                                         rhs: rhs.EnableParent,
                                         def: def?.EnableParent,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<EnableParent_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new EnableParent_ErrorMask();
-                                            baseMask.SetNthMask((int)PlacedCreature_FieldIndex.EnableParent, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.EnableParent.Specific,
                                         cmds: cmds);
                                     return r;
@@ -2659,13 +2803,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)PlacedCreature_FieldIndex.EnableParent, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.RagdollData ?? true)
             {
+                errorMask.PushIndex((int)PlacedCreature_FieldIndex.RagdollData);
                 try
                 {
                     item.RagdollData_Property.SetToWithDefault(
@@ -2673,13 +2822,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         def: def?.RagdollData_Property);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)PlacedCreature_FieldIndex.RagdollData, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Scale ?? true)
             {
+                errorMask.PushIndex((int)PlacedCreature_FieldIndex.Scale);
                 try
                 {
                     item.Scale_Property.SetToWithDefault(
@@ -2687,13 +2841,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         def: def?.Scale_Property);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)PlacedCreature_FieldIndex.Scale, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Position ?? true)
             {
+                errorMask.PushIndex((int)PlacedCreature_FieldIndex.Position);
                 try
                 {
                     item.Position_Property.Set(
@@ -2701,13 +2860,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)PlacedCreature_FieldIndex.Position, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Rotation ?? true)
             {
+                errorMask.PushIndex((int)PlacedCreature_FieldIndex.Rotation);
                 try
                 {
                     item.Rotation_Property.Set(
@@ -2715,9 +2879,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)PlacedCreature_FieldIndex.Rotation, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -3062,110 +3230,102 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out PlacedCreature_ErrorMask errorMask,
             string name = null)
         {
-            PlacedCreature_ErrorMask errMaskRet = null;
-            Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_XML(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PlacedCreature_ErrorMask()) : default(Func<PlacedCreature_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = PlacedCreature_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal(
+        public static void Write_XML(
             XElement node,
             IPlacedCreatureGetter item,
-            Func<PlacedCreature_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.PlacedCreature");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.PlacedCreature");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.PlacedCreature");
-                }
-                if (item.Base_Property.HasBeenSet)
-                {
-                    FormIDXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Base),
-                        item: item.Base?.FormID,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.Base,
-                        errorMask: errorMask);
-                }
-                if (item.Owner_Property.HasBeenSet)
-                {
-                    FormIDXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Owner),
-                        item: item.Owner?.FormID,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.Owner,
-                        errorMask: errorMask);
-                }
-                if (item.FactionRank_Property.HasBeenSet)
-                {
-                    Int32XmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.FactionRank),
-                        item: item.FactionRank_Property,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.FactionRank,
-                        errorMask: errorMask);
-                }
-                if (item.GlobalVariable_Property.HasBeenSet)
-                {
-                    FormIDXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.GlobalVariable),
-                        item: item.GlobalVariable?.FormID,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.GlobalVariable,
-                        errorMask: errorMask);
-                }
-                if (item.EnableParent_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<EnableParent, EnableParent_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.EnableParent_Property,
-                        name: nameof(item.EnableParent),
-                        fieldIndex: (int)PlacedCreature_FieldIndex.EnableParent,
-                        errorMask: errorMask);
-                }
-                if (item.RagdollData_Property.HasBeenSet)
-                {
-                    ByteArrayXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.RagdollData),
-                        item: item.RagdollData_Property,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.RagdollData,
-                        errorMask: errorMask);
-                }
-                if (item.Scale_Property.HasBeenSet)
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Scale),
-                        item: item.Scale_Property,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.Scale,
-                        errorMask: errorMask);
-                }
-                P3FloatXmlTranslation.Instance.Write(
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.PlacedCreature");
+            }
+            if (item.Base_Property.HasBeenSet)
+            {
+                FormIDXmlTranslation.Instance.Write(
                     node: elem,
-                    name: nameof(item.Position),
-                    item: item.Position_Property,
-                    fieldIndex: (int)PlacedCreature_FieldIndex.Position,
-                    errorMask: errorMask);
-                P3FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Rotation),
-                    item: item.Rotation_Property,
-                    fieldIndex: (int)PlacedCreature_FieldIndex.Rotation,
+                    name: nameof(item.Base),
+                    item: item.Base?.FormID,
+                    fieldIndex: (int)PlacedCreature_FieldIndex.Base,
                     errorMask: errorMask);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (item.Owner_Property.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Owner),
+                    item: item.Owner?.FormID,
+                    fieldIndex: (int)PlacedCreature_FieldIndex.Owner,
+                    errorMask: errorMask);
             }
+            if (item.FactionRank_Property.HasBeenSet)
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.FactionRank),
+                    item: item.FactionRank_Property,
+                    fieldIndex: (int)PlacedCreature_FieldIndex.FactionRank,
+                    errorMask: errorMask);
+            }
+            if (item.GlobalVariable_Property.HasBeenSet)
+            {
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.GlobalVariable),
+                    item: item.GlobalVariable?.FormID,
+                    fieldIndex: (int)PlacedCreature_FieldIndex.GlobalVariable,
+                    errorMask: errorMask);
+            }
+            if (item.EnableParent_Property.HasBeenSet)
+            {
+                LoquiXmlTranslation<EnableParent>.Instance.Write(
+                    node: elem,
+                    item: item.EnableParent_Property,
+                    name: nameof(item.EnableParent),
+                    fieldIndex: (int)PlacedCreature_FieldIndex.EnableParent,
+                    errorMask: errorMask);
+            }
+            if (item.RagdollData_Property.HasBeenSet)
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.RagdollData),
+                    item: item.RagdollData_Property,
+                    fieldIndex: (int)PlacedCreature_FieldIndex.RagdollData,
+                    errorMask: errorMask);
+            }
+            if (item.Scale_Property.HasBeenSet)
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Scale),
+                    item: item.Scale_Property,
+                    fieldIndex: (int)PlacedCreature_FieldIndex.Scale,
+                    errorMask: errorMask);
+            }
+            P3FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Position),
+                item: item.Position_Property,
+                fieldIndex: (int)PlacedCreature_FieldIndex.Position,
+                errorMask: errorMask);
+            P3FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Rotation),
+                item: item.Rotation_Property,
+                fieldIndex: (int)PlacedCreature_FieldIndex.Rotation,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -3180,43 +3340,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out PlacedCreature_ErrorMask errorMask)
         {
-            PlacedCreature_ErrorMask errMaskRet = null;
-            Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PlacedCreature_ErrorMask()) : default(Func<PlacedCreature_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = PlacedCreature_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_Binary_Internal(
+        public static void Write_Binary(
             MutagenWriter writer,
             PlacedCreature item,
             RecordTypeConverter recordTypeConverter,
-            Func<PlacedCreature_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: PlacedCreature_Registration.ACRE_HEADER,
+                type: ObjectType.Record))
             {
-                using (HeaderExport.ExportHeader(
+                MajorRecordCommon.Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: PlacedCreature_Registration.ACRE_HEADER,
-                    type: ObjectType.Record))
-                {
-                    MajorRecordCommon.Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                    Write_Binary_RecordTypes(
-                        item: item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -3225,7 +3377,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PlacedCreature item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<PlacedCreature_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
@@ -3260,7 +3412,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(PlacedCreature_Registration.XGLB_HEADER),
                 nullable: false);
-            LoquiBinaryTranslation<EnableParent, EnableParent_ErrorMask>.Instance.Write(
+            LoquiBinaryTranslation<EnableParent>.Instance.Write(
                 writer: writer,
                 item: item.EnableParent_Property,
                 fieldIndex: (int)PlacedCreature_FieldIndex.EnableParent,
@@ -3693,6 +3845,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static PlacedCreature_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            return new PlacedCreature_ErrorMask();
         }
         #endregion
 

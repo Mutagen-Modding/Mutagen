@@ -22,7 +22,6 @@ using Noggog.Xml;
 using Loqui.Xml;
 using Loqui.Internal;
 using System.Diagnostics;
-using Loqui.Internal;
 using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
@@ -986,7 +985,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: false);
+                errorMask: null);
         }
 
         public override void Write_XML(
@@ -1011,234 +1010,345 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
-        protected override object Write_XML_Internal(
+        protected override void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
             TreeCommon.Write_XML(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static Tree Create_XML_Internal(
-            XElement root,
-            Func<Tree_ErrorMask> errorMask)
-        {
-            var ret = new Tree();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
 
         protected static void Fill_XML_Internal(
             Tree item,
             XElement root,
             string name,
-            Func<Tree_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Model":
-                    var ModeltryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)Tree_FieldIndex.Model,
-                        errorMask: errorMask);
-                    if (ModeltryGet.Succeeded)
+                    try
                     {
-                        item.SetModel(item: ModeltryGet.Value);
+                        errorMask?.PushIndex((int)Tree_FieldIndex.Model);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            root: root,
+                            item: out Model ModelParse,
+                            errorMask: errorMask))
+                        {
+                            item.Model = ModelParse;
+                        }
+                        else
+                        {
+                            item.UnsetModel();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetModel();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Icon":
-                    var IcontryGet = StringXmlTranslation.Instance.Parse(
-                        root,
-                        fieldIndex: (int)Tree_FieldIndex.Icon,
-                        errorMask: errorMask);
-                    if (IcontryGet.Succeeded)
+                    try
                     {
-                        item.SetIcon(item: IcontryGet.Value);
+                        errorMask?.PushIndex((int)Tree_FieldIndex.Icon);
+                        if (StringXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out String IconParse,
+                            errorMask: errorMask))
+                        {
+                            item.Icon = IconParse;
+                        }
+                        else
+                        {
+                            item.UnsetIcon();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetIcon();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "SpeedTreeSeeds":
-                    item._SpeedTreeSeeds.SetIfSucceededOrDefault(ListXmlTranslation<UInt32, Exception>.Instance.Parse(
+                    ListXmlTranslation<UInt32>.Instance.ParseInto(
                         root: root,
+                        item: item.SpeedTreeSeeds,
                         fieldIndex: (int)Tree_FieldIndex.SpeedTreeSeeds,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return UInt32XmlTranslation.Instance.Parse(
-                                r,
-                                nullable: false,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => o.Value);
-                        }
-                        ));
+                        transl: UInt32XmlTranslation.Instance.Parse);
                     break;
                 case "LeafCurvature":
-                    var LeafCurvaturetryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
-                        errorMask: errorMask);
-                    if (LeafCurvaturetryGet.Succeeded)
+                    try
                     {
-                        item.SetLeafCurvature(item: LeafCurvaturetryGet.Value);
+                        errorMask?.PushIndex((int)Tree_FieldIndex.LeafCurvature);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Single LeafCurvatureParse,
+                            errorMask: errorMask))
+                        {
+                            item.LeafCurvature = LeafCurvatureParse;
+                        }
+                        else
+                        {
+                            item.UnsetLeafCurvature();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetLeafCurvature();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "MinimumLeafAngle":
-                    var MinimumLeafAngletryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Tree_FieldIndex.MinimumLeafAngle,
-                        errorMask: errorMask);
-                    if (MinimumLeafAngletryGet.Succeeded)
+                    try
                     {
-                        item.SetMinimumLeafAngle(item: MinimumLeafAngletryGet.Value);
+                        errorMask?.PushIndex((int)Tree_FieldIndex.MinimumLeafAngle);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Single MinimumLeafAngleParse,
+                            errorMask: errorMask))
+                        {
+                            item.MinimumLeafAngle = MinimumLeafAngleParse;
+                        }
+                        else
+                        {
+                            item.UnsetMinimumLeafAngle();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetMinimumLeafAngle();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "MaximumLeafAngle":
-                    var MaximumLeafAngletryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Tree_FieldIndex.MaximumLeafAngle,
-                        errorMask: errorMask);
-                    if (MaximumLeafAngletryGet.Succeeded)
+                    try
                     {
-                        item.SetMaximumLeafAngle(item: MaximumLeafAngletryGet.Value);
+                        errorMask?.PushIndex((int)Tree_FieldIndex.MaximumLeafAngle);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Single MaximumLeafAngleParse,
+                            errorMask: errorMask))
+                        {
+                            item.MaximumLeafAngle = MaximumLeafAngleParse;
+                        }
+                        else
+                        {
+                            item.UnsetMaximumLeafAngle();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetMaximumLeafAngle();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "BranchDimmingValue":
-                    var BranchDimmingValuetryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Tree_FieldIndex.BranchDimmingValue,
-                        errorMask: errorMask);
-                    if (BranchDimmingValuetryGet.Succeeded)
+                    try
                     {
-                        item.SetBranchDimmingValue(item: BranchDimmingValuetryGet.Value);
+                        errorMask?.PushIndex((int)Tree_FieldIndex.BranchDimmingValue);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Single BranchDimmingValueParse,
+                            errorMask: errorMask))
+                        {
+                            item.BranchDimmingValue = BranchDimmingValueParse;
+                        }
+                        else
+                        {
+                            item.UnsetBranchDimmingValue();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetBranchDimmingValue();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "LeafDimmingValue":
-                    var LeafDimmingValuetryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Tree_FieldIndex.LeafDimmingValue,
-                        errorMask: errorMask);
-                    if (LeafDimmingValuetryGet.Succeeded)
+                    try
                     {
-                        item.SetLeafDimmingValue(item: LeafDimmingValuetryGet.Value);
+                        errorMask?.PushIndex((int)Tree_FieldIndex.LeafDimmingValue);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Single LeafDimmingValueParse,
+                            errorMask: errorMask))
+                        {
+                            item.LeafDimmingValue = LeafDimmingValueParse;
+                        }
+                        else
+                        {
+                            item.UnsetLeafDimmingValue();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetLeafDimmingValue();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "ShadowRadius":
-                    var ShadowRadiustryGet = Int32XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Tree_FieldIndex.ShadowRadius,
-                        errorMask: errorMask);
-                    if (ShadowRadiustryGet.Succeeded)
+                    try
                     {
-                        item.SetShadowRadius(item: ShadowRadiustryGet.Value);
+                        errorMask?.PushIndex((int)Tree_FieldIndex.ShadowRadius);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Int32 ShadowRadiusParse,
+                            errorMask: errorMask))
+                        {
+                            item.ShadowRadius = ShadowRadiusParse;
+                        }
+                        else
+                        {
+                            item.UnsetShadowRadius();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetShadowRadius();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "RockingSpeed":
-                    var RockingSpeedtryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Tree_FieldIndex.RockingSpeed,
-                        errorMask: errorMask);
-                    if (RockingSpeedtryGet.Succeeded)
+                    try
                     {
-                        item.SetRockingSpeed(item: RockingSpeedtryGet.Value);
+                        errorMask?.PushIndex((int)Tree_FieldIndex.RockingSpeed);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Single RockingSpeedParse,
+                            errorMask: errorMask))
+                        {
+                            item.RockingSpeed = RockingSpeedParse;
+                        }
+                        else
+                        {
+                            item.UnsetRockingSpeed();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetRockingSpeed();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "RustleSpeed":
-                    var RustleSpeedtryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
-                        errorMask: errorMask);
-                    if (RustleSpeedtryGet.Succeeded)
+                    try
                     {
-                        item.SetRustleSpeed(item: RustleSpeedtryGet.Value);
+                        errorMask?.PushIndex((int)Tree_FieldIndex.RustleSpeed);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Single RustleSpeedParse,
+                            errorMask: errorMask))
+                        {
+                            item.RustleSpeed = RustleSpeedParse;
+                        }
+                        else
+                        {
+                            item.UnsetRustleSpeed();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetRustleSpeed();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "BillboardWidth":
-                    var BillboardWidthtryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
-                        errorMask: errorMask);
-                    if (BillboardWidthtryGet.Succeeded)
+                    try
                     {
-                        item.SetBillboardWidth(item: BillboardWidthtryGet.Value);
+                        errorMask?.PushIndex((int)Tree_FieldIndex.BillboardWidth);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Single BillboardWidthParse,
+                            errorMask: errorMask))
+                        {
+                            item.BillboardWidth = BillboardWidthParse;
+                        }
+                        else
+                        {
+                            item.UnsetBillboardWidth();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetBillboardWidth();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "BillboardHeight":
-                    var BillboardHeighttryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Tree_FieldIndex.BillboardHeight,
-                        errorMask: errorMask);
-                    if (BillboardHeighttryGet.Succeeded)
+                    try
                     {
-                        item.SetBillboardHeight(item: BillboardHeighttryGet.Value);
+                        errorMask?.PushIndex((int)Tree_FieldIndex.BillboardHeight);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Single BillboardHeightParse,
+                            errorMask: errorMask))
+                        {
+                            item.BillboardHeight = BillboardHeightParse;
+                        }
+                        else
+                        {
+                            item.UnsetBillboardHeight();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetBillboardHeight();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 default:
@@ -1763,18 +1873,11 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet,
             NotifyingFireParameters cmds)
         {
-<<<<<<< HEAD
             SetInt32(
                 index: index,
                 item: item,
                 hasBeenSet: hasBeenSet,
                 cmds: cmds);
-=======
-            this.Write_XML_Internal(
-                node: node,
-                name: name,
-                errorMask: null);
->>>>>>> ErrorMaskRevamp
         }
 
         protected void SetInt32(
@@ -1798,27 +1901,13 @@ namespace Mutagen.Bethesda.Oblivion
             return _hasBeenSetTracker[index];
         }
 
-<<<<<<< HEAD
         void IPropertySupporter<Int32>.SetHasBeenSet(
             int index,
             bool on)
         {
             _hasBeenSetTracker[index] = on;
-=======
-        protected override void Write_XML_Internal(
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            string name = null)
-        {
-            TreeCommon.Write_XML(
-                item: this,
-                node: node,
-                name: name,
-                errorMask: errorMask);
->>>>>>> ErrorMaskRevamp
         }
 
-<<<<<<< HEAD
         void IPropertySupporter<Int32>.Unset(
             int index,
             NotifyingUnsetParameters cmds)
@@ -1866,13 +1955,6 @@ namespace Mutagen.Bethesda.Oblivion
         void IPropertySupporter<Int32>.Unsubscribe(
             int index,
             object owner)
-=======
-        protected static void Fill_XML_Internal(
-            Tree item,
-            XElement root,
-            string name,
-            ErrorMaskBuilder errorMask)
->>>>>>> ErrorMaskRevamp
         {
             _Int32_subscriptions?.Unsubscribe(index, owner);
         }
@@ -1891,122 +1973,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((Tree_FieldIndex)index)
             {
-<<<<<<< HEAD
                 case Tree_FieldIndex.ShadowRadius:
                     return default(Int32);
-=======
-                case "Model":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Tree_FieldIndex.Model);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
-                            root: root,
-                            item: out var ModelParse,
-                            errorMask: errorMask))
-                        {
-                            item._Model.Item = ModelParse;
-                        }
-                        else
-                        {
-                            item._Model.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Icon":
-                    FilePathXmlTranslation.Instance.ParseInto(
-                        root,
-                        fieldIndex: (int)Tree_FieldIndex.Icon,
-                        item: item._Icon,
-                        errorMask: errorMask);
-                    break;
-                case "SpeedTreeSeeds":
-                    ListXmlTranslation<UInt32>.Instance.ParseInto(
-                        root: root,
-                        item: item._SpeedTreeSeeds,
-                        fieldIndex: (int)Tree_FieldIndex.SpeedTreeSeeds,
-                        errorMask: errorMask,
-                        transl: UInt32XmlTranslation.Instance.Parse);
-                    break;
-                case "LeafCurvature":
-                    FloatXmlTranslation.Instance.ParseInto(
-                        root,
-                        fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
-                        item: item._LeafCurvature,
-                        errorMask: errorMask);
-                    break;
-                case "MinimumLeafAngle":
-                    FloatXmlTranslation.Instance.ParseInto(
-                        root,
-                        fieldIndex: (int)Tree_FieldIndex.MinimumLeafAngle,
-                        item: item._MinimumLeafAngle,
-                        errorMask: errorMask);
-                    break;
-                case "MaximumLeafAngle":
-                    FloatXmlTranslation.Instance.ParseInto(
-                        root,
-                        fieldIndex: (int)Tree_FieldIndex.MaximumLeafAngle,
-                        item: item._MaximumLeafAngle,
-                        errorMask: errorMask);
-                    break;
-                case "BranchDimmingValue":
-                    FloatXmlTranslation.Instance.ParseInto(
-                        root,
-                        fieldIndex: (int)Tree_FieldIndex.BranchDimmingValue,
-                        item: item._BranchDimmingValue,
-                        errorMask: errorMask);
-                    break;
-                case "LeafDimmingValue":
-                    FloatXmlTranslation.Instance.ParseInto(
-                        root,
-                        fieldIndex: (int)Tree_FieldIndex.LeafDimmingValue,
-                        item: item._LeafDimmingValue,
-                        errorMask: errorMask);
-                    break;
-                case "ShadowRadius":
-                    Int32XmlTranslation.Instance.ParseInto(
-                        root,
-                        fieldIndex: (int)Tree_FieldIndex.ShadowRadius,
-                        item: item._ShadowRadius,
-                        errorMask: errorMask);
-                    break;
-                case "RockingSpeed":
-                    FloatXmlTranslation.Instance.ParseInto(
-                        root,
-                        fieldIndex: (int)Tree_FieldIndex.RockingSpeed,
-                        item: item._RockingSpeed,
-                        errorMask: errorMask);
-                    break;
-                case "RustleSpeed":
-                    FloatXmlTranslation.Instance.ParseInto(
-                        root,
-                        fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
-                        item: item._RustleSpeed,
-                        errorMask: errorMask);
-                    break;
-                case "BillboardWidth":
-                    FloatXmlTranslation.Instance.ParseInto(
-                        root,
-                        fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
-                        item: item._BillboardWidth,
-                        errorMask: errorMask);
-                    break;
-                case "BillboardHeight":
-                    FloatXmlTranslation.Instance.ParseInto(
-                        root,
-                        fieldIndex: (int)Tree_FieldIndex.BillboardHeight,
-                        item: item._BillboardHeight,
-                        errorMask: errorMask);
-                    break;
->>>>>>> ErrorMaskRevamp
                 default:
                     throw new ArgumentException($"Unknown index for field type Int32: {index}");
             }
@@ -2050,7 +2018,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Tree, Tree_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Tree>(
                 record: new Tree(),
                 frame: frame,
                 errorMask: errorMask,
@@ -2185,24 +2153,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-<<<<<<< HEAD
-        private static Tree Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<Tree_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            return UtilityTranslation.MajorRecordParse<Tree, Tree_ErrorMask>(
-                record: new Tree(),
-                frame: frame,
-                errorMask: errorMask,
-                recType: Tree_Registration.TREE_HEADER,
-                recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
-        }
-
-=======
->>>>>>> ErrorMaskRevamp
         protected static void Fill_Binary_Structs(
             Tree item,
             MutagenFrame frame,
@@ -2227,266 +2177,319 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-<<<<<<< HEAD
+                    try
                     {
-                        var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                        errorMask?.PushIndex((int)Tree_FieldIndex.Model);
+                        if (LoquiBinaryTranslation<Model>.Instance.Parse(
                             frame: frame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)Tree_FieldIndex.Model,
-                            errorMask: errorMask);
-                        if (ModeltryGet.Succeeded)
+                            item: out Model ModelParse,
+                            errorMask: errorMask))
                         {
-                            item.SetModel(item: ModeltryGet.Value);
+                            item.Model = ModelParse;
                         }
                         else
                         {
                             item.UnsetModel();
                         }
                     }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var IcontryGet = StringBinaryTranslation.Instance.Parse(
-=======
-                    LoquiBinaryTranslation<Model>.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)Tree_FieldIndex.Model,
-                        errorMask: errorMask,
-                        item: item._Model);
-                    return TryGet<Tree_FieldIndex?>.Succeed(Tree_FieldIndex.Model);
-                case "ICON":
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.ParseInto(
->>>>>>> ErrorMaskRevamp
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: item._Icon,
-                        fieldIndex: (int)Tree_FieldIndex.Icon,
-<<<<<<< HEAD
-                        parseWhole: true,
-                        errorMask: errorMask);
-                    if (IcontryGet.Succeeded)
+                    try
                     {
-                        item.SetIcon(item: IcontryGet.Value);
+                        errorMask?.PushIndex((int)Tree_FieldIndex.Icon);
+                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            parseWhole: true,
+                            item: out String IconParse,
+                            errorMask: errorMask))
+                        {
+                            item.Icon = IconParse;
+                        }
+                        else
+                        {
+                            item.UnsetIcon();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetIcon();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.Icon);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.SpeedTreeSeeds.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32, Exception>.Instance.ParseRepeatedItem(
-=======
-                        errorMask: errorMask);
-                    return TryGet<Tree_FieldIndex?>.Succeed(Tree_FieldIndex.Icon);
-                case "SNAM":
-                    frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32>.Instance.ParseRepeatedItem(
->>>>>>> ErrorMaskRevamp
                         frame: frame.SpawnWithLength(contentLength),
-                        item: item._SpeedTreeSeeds,
+                        item: item.SpeedTreeSeeds,
                         fieldIndex: (int)Tree_FieldIndex.SpeedTreeSeeds,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-<<<<<<< HEAD
-                        transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                                r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.SpeedTreeSeeds);
-=======
                         transl: UInt32BinaryTranslation.Instance.Parse);
-                    return TryGet<Tree_FieldIndex?>.Succeed(Tree_FieldIndex.SpeedTreeSeeds);
->>>>>>> ErrorMaskRevamp
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.SpeedTreeSeeds);
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-<<<<<<< HEAD
-                        var LeafCurvaturetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
-                            errorMask: errorMask);
-                        if (LeafCurvaturetryGet.Succeeded)
+                        try
                         {
-                            item.SetLeafCurvature(item: LeafCurvaturetryGet.Value);
+                            errorMask?.PushIndex((int)Tree_FieldIndex.LeafCurvature);
+                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out Single LeafCurvatureParse,
+                                errorMask: errorMask))
+                            {
+                                item.LeafCurvature = LeafCurvatureParse;
+                            }
+                            else
+                            {
+                                item.UnsetLeafCurvature();
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.UnsetLeafCurvature();
+                            errorMask.ReportException(ex);
                         }
-                        var MinimumLeafAngletryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)Tree_FieldIndex.MinimumLeafAngle,
-                            errorMask: errorMask);
-                        if (MinimumLeafAngletryGet.Succeeded)
+                        finally
                         {
-                            item.SetMinimumLeafAngle(item: MinimumLeafAngletryGet.Value);
+                            errorMask?.PopIndex();
                         }
-                        else
+                        try
                         {
-                            item.UnsetMinimumLeafAngle();
+                            errorMask?.PushIndex((int)Tree_FieldIndex.MinimumLeafAngle);
+                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out Single MinimumLeafAngleParse,
+                                errorMask: errorMask))
+                            {
+                                item.MinimumLeafAngle = MinimumLeafAngleParse;
+                            }
+                            else
+                            {
+                                item.UnsetMinimumLeafAngle();
+                            }
                         }
-                        var MaximumLeafAngletryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)Tree_FieldIndex.MaximumLeafAngle,
-                            errorMask: errorMask);
-                        if (MaximumLeafAngletryGet.Succeeded)
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.SetMaximumLeafAngle(item: MaximumLeafAngletryGet.Value);
+                            errorMask.ReportException(ex);
                         }
-                        else
+                        finally
                         {
-                            item.UnsetMaximumLeafAngle();
+                            errorMask?.PopIndex();
                         }
-                        var BranchDimmingValuetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)Tree_FieldIndex.BranchDimmingValue,
-                            errorMask: errorMask);
-                        if (BranchDimmingValuetryGet.Succeeded)
+                        try
                         {
-                            item.SetBranchDimmingValue(item: BranchDimmingValuetryGet.Value);
+                            errorMask?.PushIndex((int)Tree_FieldIndex.MaximumLeafAngle);
+                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out Single MaximumLeafAngleParse,
+                                errorMask: errorMask))
+                            {
+                                item.MaximumLeafAngle = MaximumLeafAngleParse;
+                            }
+                            else
+                            {
+                                item.UnsetMaximumLeafAngle();
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.UnsetBranchDimmingValue();
+                            errorMask.ReportException(ex);
                         }
-                        var LeafDimmingValuetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)Tree_FieldIndex.LeafDimmingValue,
-                            errorMask: errorMask);
-                        if (LeafDimmingValuetryGet.Succeeded)
+                        finally
                         {
-                            item.SetLeafDimmingValue(item: LeafDimmingValuetryGet.Value);
+                            errorMask?.PopIndex();
                         }
-                        else
+                        try
                         {
-                            item.UnsetLeafDimmingValue();
+                            errorMask?.PushIndex((int)Tree_FieldIndex.BranchDimmingValue);
+                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out Single BranchDimmingValueParse,
+                                errorMask: errorMask))
+                            {
+                                item.BranchDimmingValue = BranchDimmingValueParse;
+                            }
+                            else
+                            {
+                                item.UnsetBranchDimmingValue();
+                            }
                         }
-                        var ShadowRadiustryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)Tree_FieldIndex.ShadowRadius,
-                            errorMask: errorMask);
-                        if (ShadowRadiustryGet.Succeeded)
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.SetShadowRadius(item: ShadowRadiustryGet.Value);
+                            errorMask.ReportException(ex);
                         }
-                        else
+                        finally
                         {
-                            item.UnsetShadowRadius();
+                            errorMask?.PopIndex();
                         }
-                        var RockingSpeedtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)Tree_FieldIndex.RockingSpeed,
-                            errorMask: errorMask);
-                        if (RockingSpeedtryGet.Succeeded)
+                        try
                         {
-                            item.SetRockingSpeed(item: RockingSpeedtryGet.Value);
+                            errorMask?.PushIndex((int)Tree_FieldIndex.LeafDimmingValue);
+                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out Single LeafDimmingValueParse,
+                                errorMask: errorMask))
+                            {
+                                item.LeafDimmingValue = LeafDimmingValueParse;
+                            }
+                            else
+                            {
+                                item.UnsetLeafDimmingValue();
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.UnsetRockingSpeed();
+                            errorMask.ReportException(ex);
                         }
-                        var RustleSpeedtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
-                            errorMask: errorMask);
-                        if (RustleSpeedtryGet.Succeeded)
+                        finally
                         {
-                            item.SetRustleSpeed(item: RustleSpeedtryGet.Value);
+                            errorMask?.PopIndex();
                         }
-                        else
+                        try
                         {
-                            item.UnsetRustleSpeed();
+                            errorMask?.PushIndex((int)Tree_FieldIndex.ShadowRadius);
+                            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out Int32 ShadowRadiusParse,
+                                errorMask: errorMask))
+                            {
+                                item.ShadowRadius = ShadowRadiusParse;
+                            }
+                            else
+                            {
+                                item.UnsetShadowRadius();
+                            }
                         }
-=======
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
-                            frame: dataFrame,
-                            item: item._LeafCurvature,
-                            fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
-                            errorMask: errorMask);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
-                            frame: dataFrame,
-                            item: item._MinimumLeafAngle,
-                            fieldIndex: (int)Tree_FieldIndex.MinimumLeafAngle,
-                            errorMask: errorMask);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
-                            frame: dataFrame,
-                            item: item._MaximumLeafAngle,
-                            fieldIndex: (int)Tree_FieldIndex.MaximumLeafAngle,
-                            errorMask: errorMask);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
-                            frame: dataFrame,
-                            item: item._BranchDimmingValue,
-                            fieldIndex: (int)Tree_FieldIndex.BranchDimmingValue,
-                            errorMask: errorMask);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
-                            frame: dataFrame,
-                            item: item._LeafDimmingValue,
-                            fieldIndex: (int)Tree_FieldIndex.LeafDimmingValue,
-                            errorMask: errorMask);
-                        Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.ParseInto(
-                            frame: dataFrame,
-                            item: item._ShadowRadius,
-                            fieldIndex: (int)Tree_FieldIndex.ShadowRadius,
-                            errorMask: errorMask);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
-                            frame: dataFrame,
-                            item: item._RockingSpeed,
-                            fieldIndex: (int)Tree_FieldIndex.RockingSpeed,
-                            errorMask: errorMask);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
-                            frame: dataFrame,
-                            item: item._RustleSpeed,
-                            fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
-                            errorMask: errorMask);
->>>>>>> ErrorMaskRevamp
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                        try
+                        {
+                            errorMask?.PushIndex((int)Tree_FieldIndex.RockingSpeed);
+                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out Single RockingSpeedParse,
+                                errorMask: errorMask))
+                            {
+                                item.RockingSpeed = RockingSpeedParse;
+                            }
+                            else
+                            {
+                                item.UnsetRockingSpeed();
+                            }
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                        try
+                        {
+                            errorMask?.PushIndex((int)Tree_FieldIndex.RustleSpeed);
+                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out Single RustleSpeedParse,
+                                errorMask: errorMask))
+                            {
+                                item.RustleSpeed = RustleSpeedParse;
+                            }
+                            else
+                            {
+                                item.UnsetRustleSpeed();
+                            }
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.RustleSpeed);
                 case "BNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-<<<<<<< HEAD
-                        var BillboardWidthtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
-                            errorMask: errorMask);
-                        if (BillboardWidthtryGet.Succeeded)
+                        try
                         {
-                            item.SetBillboardWidth(item: BillboardWidthtryGet.Value);
+                            errorMask?.PushIndex((int)Tree_FieldIndex.BillboardWidth);
+                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out Single BillboardWidthParse,
+                                errorMask: errorMask))
+                            {
+                                item.BillboardWidth = BillboardWidthParse;
+                            }
+                            else
+                            {
+                                item.UnsetBillboardWidth();
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.UnsetBillboardWidth();
+                            errorMask.ReportException(ex);
                         }
-                        var BillboardHeighttryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)Tree_FieldIndex.BillboardHeight,
-                            errorMask: errorMask);
-                        if (BillboardHeighttryGet.Succeeded)
+                        finally
                         {
-                            item.SetBillboardHeight(item: BillboardHeighttryGet.Value);
+                            errorMask?.PopIndex();
                         }
-                        else
+                        try
                         {
-                            item.UnsetBillboardHeight();
+                            errorMask?.PushIndex((int)Tree_FieldIndex.BillboardHeight);
+                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out Single BillboardHeightParse,
+                                errorMask: errorMask))
+                            {
+                                item.BillboardHeight = BillboardHeightParse;
+                            }
+                            else
+                            {
+                                item.UnsetBillboardHeight();
+                            }
                         }
-=======
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
-                            frame: dataFrame,
-                            item: item._BillboardWidth,
-                            fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
-                            errorMask: errorMask);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
-                            frame: dataFrame,
-                            item: item._BillboardHeight,
-                            fieldIndex: (int)Tree_FieldIndex.BillboardHeight,
-                            errorMask: errorMask);
->>>>>>> ErrorMaskRevamp
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.BillboardHeight);
                 default:
@@ -3927,106 +3930,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             node.Add(elem);
             if (name != null)
             {
-<<<<<<< HEAD
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Tree");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Tree");
-                }
-                if (item.Model_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.Model_Property,
-                        name: nameof(item.Model),
-                        fieldIndex: (int)Tree_FieldIndex.Model,
-                        errorMask: errorMask);
-                }
-                if (item.Icon_Property.HasBeenSet)
-                {
-                    StringXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Icon),
-                        item: item.Icon_Property,
-                        fieldIndex: (int)Tree_FieldIndex.Icon,
-                        errorMask: errorMask);
-                }
-                if (item.SpeedTreeSeeds.HasBeenSet)
-                {
-                    ListXmlTranslation<UInt32, Exception>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.SpeedTreeSeeds),
-                        item: item.SpeedTreeSeeds,
-                        fieldIndex: (int)Tree_FieldIndex.SpeedTreeSeeds,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, UInt32 subItem, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            UInt32XmlTranslation.Instance.Write(
-                                node: subNode,
-                                name: "Item",
-                                item: subItem,
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.LeafCurvature),
-                    item: item.LeafCurvature_Property,
-                    fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.MinimumLeafAngle),
-                    item: item.MinimumLeafAngle_Property,
-                    fieldIndex: (int)Tree_FieldIndex.MinimumLeafAngle,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.MaximumLeafAngle),
-                    item: item.MaximumLeafAngle_Property,
-                    fieldIndex: (int)Tree_FieldIndex.MaximumLeafAngle,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.BranchDimmingValue),
-                    item: item.BranchDimmingValue_Property,
-                    fieldIndex: (int)Tree_FieldIndex.BranchDimmingValue,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.LeafDimmingValue),
-                    item: item.LeafDimmingValue_Property,
-                    fieldIndex: (int)Tree_FieldIndex.LeafDimmingValue,
-                    errorMask: errorMask);
-                Int32XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.ShadowRadius),
-                    item: item.ShadowRadius_Property,
-                    fieldIndex: (int)Tree_FieldIndex.ShadowRadius,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.RockingSpeed),
-                    item: item.RockingSpeed_Property,
-                    fieldIndex: (int)Tree_FieldIndex.RockingSpeed,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.RustleSpeed),
-                    item: item.RustleSpeed_Property,
-                    fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-=======
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Tree");
             }
             if (item.Model_Property.HasBeenSet)
             {
                 LoquiXmlTranslation<Model>.Instance.Write(
->>>>>>> ErrorMaskRevamp
                     node: elem,
                     item: item.Model_Property,
                     name: nameof(item.Model),
@@ -4035,7 +3943,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Icon_Property.HasBeenSet)
             {
-                FilePathXmlTranslation.Instance.Write(
+                StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Icon),
                     item: item.Icon_Property,
@@ -4196,21 +4104,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fieldIndex: (int)Tree_FieldIndex.SpeedTreeSeeds,
                 recordType: Tree_Registration.SNAM_HEADER,
                 errorMask: errorMask,
-<<<<<<< HEAD
-                transl: (MutagenWriter subWriter, UInt32 subItem, bool listDoMasks, out Exception listSubMask) =>
-                {
-                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Tree_Registration.CNAM_HEADER)))
-=======
                 transl: UInt32BinaryTranslation.Instance.Write);
-            using (HeaderExport.ExportSubRecordHeader(writer, Tree_Registration.CNAM_HEADER))
->>>>>>> ErrorMaskRevamp
+            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Tree_Registration.CNAM_HEADER)))
             {
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,

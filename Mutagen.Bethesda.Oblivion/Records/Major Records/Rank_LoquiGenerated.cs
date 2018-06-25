@@ -17,8 +17,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using System.Diagnostics;
 using Loqui.Internal;
+using System.Diagnostics;
 using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
@@ -356,8 +356,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -366,23 +365,37 @@ namespace Mutagen.Bethesda.Oblivion
             out Rank_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (Rank Object, Rank_ErrorMask ErrorMask) Create_XML(
+        public static Rank Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            Rank_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Rank_ErrorMask()) : default(Func<Rank_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new Rank();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static Rank Create_XML(string path)
@@ -424,12 +437,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Rank, Rank_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Rank>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -438,13 +450,14 @@ namespace Mutagen.Bethesda.Oblivion
             out Rank_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Rank, Rank_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<Rank>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -500,10 +513,12 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            errorMask = this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as Rank_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
@@ -543,7 +558,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_XML(
@@ -568,107 +583,129 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
-        protected object Write_XML_Internal(
+        protected void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
             RankCommon.Write_XML(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static Rank Create_XML_Internal(
-            XElement root,
-            Func<Rank_ErrorMask> errorMask)
-        {
-            var ret = new Rank();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
 
         protected static void Fill_XML_Internal(
             Rank item,
             XElement root,
             string name,
-            Func<Rank_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "RankNumber":
-                    var RankNumbertryGet = Int32XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Rank_FieldIndex.RankNumber,
-                        errorMask: errorMask);
-                    if (RankNumbertryGet.Succeeded)
+                    try
                     {
-                        item.SetRankNumber(item: RankNumbertryGet.Value);
+                        errorMask?.PushIndex((int)Rank_FieldIndex.RankNumber);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Int32 RankNumberParse,
+                            errorMask: errorMask))
+                        {
+                            item.RankNumber = RankNumberParse;
+                        }
+                        else
+                        {
+                            item.UnsetRankNumber();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetRankNumber();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "MaleName":
-                    var MaleNametryGet = StringXmlTranslation.Instance.Parse(
-                        root,
-                        fieldIndex: (int)Rank_FieldIndex.MaleName,
-                        errorMask: errorMask);
-                    if (MaleNametryGet.Succeeded)
+                    try
                     {
-                        item.SetMaleName(item: MaleNametryGet.Value);
+                        errorMask?.PushIndex((int)Rank_FieldIndex.MaleName);
+                        if (StringXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out String MaleNameParse,
+                            errorMask: errorMask))
+                        {
+                            item.MaleName = MaleNameParse;
+                        }
+                        else
+                        {
+                            item.UnsetMaleName();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetMaleName();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "FemaleName":
-                    var FemaleNametryGet = StringXmlTranslation.Instance.Parse(
-                        root,
-                        fieldIndex: (int)Rank_FieldIndex.FemaleName,
-                        errorMask: errorMask);
-                    if (FemaleNametryGet.Succeeded)
+                    try
                     {
-                        item.SetFemaleName(item: FemaleNametryGet.Value);
+                        errorMask?.PushIndex((int)Rank_FieldIndex.FemaleName);
+                        if (StringXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out String FemaleNameParse,
+                            errorMask: errorMask))
+                        {
+                            item.FemaleName = FemaleNameParse;
+                        }
+                        else
+                        {
+                            item.UnsetFemaleName();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetFemaleName();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Insignia":
-                    var InsigniatryGet = StringXmlTranslation.Instance.Parse(
-                        root,
-                        fieldIndex: (int)Rank_FieldIndex.Insignia,
-                        errorMask: errorMask);
-                    if (InsigniatryGet.Succeeded)
+                    try
                     {
-                        item.SetInsignia(item: InsigniatryGet.Value);
+                        errorMask?.PushIndex((int)Rank_FieldIndex.Insignia);
+                        if (StringXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out String InsigniaParse,
+                            errorMask: errorMask))
+                        {
+                            item.Insignia = InsigniaParse;
+                        }
+                        else
+                        {
+                            item.UnsetInsignia();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetInsignia();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 default:
@@ -972,8 +1009,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -982,26 +1019,50 @@ namespace Mutagen.Bethesda.Oblivion
             out Rank_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (Rank Object, Rank_ErrorMask ErrorMask) Create_Binary(
+        public static Rank Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            Rank_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Rank_ErrorMask()) : default(Func<Rank_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new Rank();
+            try
+            {
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                    int? lastParsed = null;
+                    while (!frame.Complete)
+                    {
+                        var parsed = Fill_Binary_RecordTypes(
+                            item: ret,
+                            frame: frame,
+                            lastParsed: lastParsed,
+                            errorMask: errorMask,
+                            recordTypeConverter: recordTypeConverter);
+                        if (parsed.Failed) break;
+                        lastParsed = parsed.Value;
+                    }
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static Rank Create_Binary(string path)
@@ -1056,10 +1117,12 @@ namespace Mutagen.Bethesda.Oblivion
             out Rank_ErrorMask errorMask,
             bool doMasks = true)
         {
-            errorMask = this.Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: doMasks) as Rank_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Binary(
@@ -1095,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_Binary(string path)
@@ -1114,61 +1177,23 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected object Write_Binary_Internal(
+        protected void Write_Binary_Internal(
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
             RankCommon.Write_Binary(
                 item: this,
-                doMasks: doMasks,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static Rank Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<Rank_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            var ret = new Rank();
-            try
-            {
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                    int? lastParsed = null;
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            lastParsed: lastParsed,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                        lastParsed = parsed.Value;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
 
         protected static void Fill_Binary_Structs(
             Rank item,
             MutagenFrame frame,
-            Func<Rank_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
         }
 
@@ -1176,7 +1201,7 @@ namespace Mutagen.Bethesda.Oblivion
             Rank item,
             MutagenFrame frame,
             int? lastParsed,
-            Func<Rank_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -1188,68 +1213,116 @@ namespace Mutagen.Bethesda.Oblivion
                 case "RNAM":
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var RankNumbertryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        fieldIndex: (int)Rank_FieldIndex.RankNumber,
-                        errorMask: errorMask);
-                    if (RankNumbertryGet.Succeeded)
+                    try
                     {
-                        item.SetRankNumber(item: RankNumbertryGet.Value);
+                        errorMask?.PushIndex((int)Rank_FieldIndex.RankNumber);
+                        if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            item: out Int32 RankNumberParse,
+                            errorMask: errorMask))
+                        {
+                            item.RankNumber = RankNumberParse;
+                        }
+                        else
+                        {
+                            item.UnsetRankNumber();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetRankNumber();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
                 case "MNAM":
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.MaleName) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var MaleNametryGet = StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        fieldIndex: (int)Rank_FieldIndex.MaleName,
-                        parseWhole: true,
-                        errorMask: errorMask);
-                    if (MaleNametryGet.Succeeded)
+                    try
                     {
-                        item.SetMaleName(item: MaleNametryGet.Value);
+                        errorMask?.PushIndex((int)Rank_FieldIndex.MaleName);
+                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            parseWhole: true,
+                            item: out String MaleNameParse,
+                            errorMask: errorMask))
+                        {
+                            item.MaleName = MaleNameParse;
+                        }
+                        else
+                        {
+                            item.UnsetMaleName();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetMaleName();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.MaleName);
                 case "FNAM":
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.FemaleName) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var FemaleNametryGet = StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        fieldIndex: (int)Rank_FieldIndex.FemaleName,
-                        parseWhole: true,
-                        errorMask: errorMask);
-                    if (FemaleNametryGet.Succeeded)
+                    try
                     {
-                        item.SetFemaleName(item: FemaleNametryGet.Value);
+                        errorMask?.PushIndex((int)Rank_FieldIndex.FemaleName);
+                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            parseWhole: true,
+                            item: out String FemaleNameParse,
+                            errorMask: errorMask))
+                        {
+                            item.FemaleName = FemaleNameParse;
+                        }
+                        else
+                        {
+                            item.UnsetFemaleName();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetFemaleName();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.FemaleName);
                 case "INAM":
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var InsigniatryGet = StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        fieldIndex: (int)Rank_FieldIndex.Insignia,
-                        parseWhole: true,
-                        errorMask: errorMask);
-                    if (InsigniatryGet.Succeeded)
+                    try
                     {
-                        item.SetInsignia(item: InsigniatryGet.Value);
+                        errorMask?.PushIndex((int)Rank_FieldIndex.Insignia);
+                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            parseWhole: true,
+                            item: out String InsigniaParse,
+                            errorMask: errorMask))
+                        {
+                            item.Insignia = InsigniaParse;
+                        }
+                        else
+                        {
+                            item.UnsetInsignia();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetInsignia();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.Insignia);
                 default:
@@ -1347,24 +1420,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            Rank_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Rank_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             RankCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IRankGetter rhs,
+            ErrorMaskBuilder errorMask,
+            Rank_CopyMask copyMask = null,
+            IRankGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            RankCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1746,13 +1827,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRank item,
             IRankGetter rhs,
             IRankGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             Rank_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.RankNumber ?? true)
             {
+                errorMask.PushIndex((int)Rank_FieldIndex.RankNumber);
                 try
                 {
                     item.RankNumber_Property.SetToWithDefault(
@@ -1760,13 +1841,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         def: def?.RankNumber_Property);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Rank_FieldIndex.RankNumber, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.MaleName ?? true)
             {
+                errorMask.PushIndex((int)Rank_FieldIndex.MaleName);
                 try
                 {
                     item.MaleName_Property.SetToWithDefault(
@@ -1774,13 +1860,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         def: def?.MaleName_Property);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Rank_FieldIndex.MaleName, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.FemaleName ?? true)
             {
+                errorMask.PushIndex((int)Rank_FieldIndex.FemaleName);
                 try
                 {
                     item.FemaleName_Property.SetToWithDefault(
@@ -1788,13 +1879,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         def: def?.FemaleName_Property);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Rank_FieldIndex.FemaleName, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Insignia ?? true)
             {
+                errorMask.PushIndex((int)Rank_FieldIndex.Insignia);
                 try
                 {
                     item.Insignia_Property.SetToWithDefault(
@@ -1802,9 +1898,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         def: def?.Insignia_Property);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Rank_FieldIndex.Insignia, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -2010,70 +2110,62 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Rank_ErrorMask errorMask,
             string name = null)
         {
-            Rank_ErrorMask errMaskRet = null;
-            Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_XML(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Rank_ErrorMask()) : default(Func<Rank_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal(
+        public static void Write_XML(
             XElement node,
             IRankGetter item,
-            Func<Rank_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Rank");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Rank");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Rank");
-                }
-                if (item.RankNumber_Property.HasBeenSet)
-                {
-                    Int32XmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.RankNumber),
-                        item: item.RankNumber_Property,
-                        fieldIndex: (int)Rank_FieldIndex.RankNumber,
-                        errorMask: errorMask);
-                }
-                if (item.MaleName_Property.HasBeenSet)
-                {
-                    StringXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.MaleName),
-                        item: item.MaleName_Property,
-                        fieldIndex: (int)Rank_FieldIndex.MaleName,
-                        errorMask: errorMask);
-                }
-                if (item.FemaleName_Property.HasBeenSet)
-                {
-                    StringXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.FemaleName),
-                        item: item.FemaleName_Property,
-                        fieldIndex: (int)Rank_FieldIndex.FemaleName,
-                        errorMask: errorMask);
-                }
-                if (item.Insignia_Property.HasBeenSet)
-                {
-                    StringXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Insignia),
-                        item: item.Insignia_Property,
-                        fieldIndex: (int)Rank_FieldIndex.Insignia,
-                        errorMask: errorMask);
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Rank");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (item.RankNumber_Property.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                Int32XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.RankNumber),
+                    item: item.RankNumber_Property,
+                    fieldIndex: (int)Rank_FieldIndex.RankNumber,
+                    errorMask: errorMask);
+            }
+            if (item.MaleName_Property.HasBeenSet)
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.MaleName),
+                    item: item.MaleName_Property,
+                    fieldIndex: (int)Rank_FieldIndex.MaleName,
+                    errorMask: errorMask);
+            }
+            if (item.FemaleName_Property.HasBeenSet)
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.FemaleName),
+                    item: item.FemaleName_Property,
+                    fieldIndex: (int)Rank_FieldIndex.FemaleName,
+                    errorMask: errorMask);
+            }
+            if (item.Insignia_Property.HasBeenSet)
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Insignia),
+                    item: item.Insignia_Property,
+                    fieldIndex: (int)Rank_FieldIndex.Insignia,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -2089,34 +2181,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out Rank_ErrorMask errorMask)
         {
-            Rank_ErrorMask errMaskRet = null;
-            Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Rank_ErrorMask()) : default(Func<Rank_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_Binary_Internal(
+        public static void Write_Binary(
             MutagenWriter writer,
             Rank item,
             RecordTypeConverter recordTypeConverter,
-            Func<Rank_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -2124,7 +2208,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Rank item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<Rank_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
@@ -2438,6 +2522,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static Rank_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            return new Rank_ErrorMask();
         }
         #endregion
 

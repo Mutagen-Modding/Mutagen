@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            string nodeAccessor,
+            string frameAccessor,
             Accessor itemAccessor,
             string maskAccessor)
         {
@@ -92,52 +92,31 @@ namespace Mutagen.Bethesda.Generation
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             if (data.HasTrigger)
             {
-                fg.AppendLine($"{nodeAccessor}.Position += Constants.SUBRECORD_LENGTH;");
+                fg.AppendLine($"{frameAccessor}.Position += Constants.SUBRECORD_LENGTH;");
             }
-            ArgsWrapper args;
-            if (typeGen.PrefersProperty)
+
+
+            List<string> extraArgs = new List<string>();
+            extraArgs.Add($"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : ".Spawn(snapToFinalPosition: false)")}");
+            foreach (var arg in AdditionCopyInParameters(
+                fg: fg,
+                objGen: objGen,
+                typeGen: typeGen,
+                nodeAccessor: frameAccessor,
+                itemAccessor: itemAccessor,
+                maskAccessor: maskAccessor))
             {
-                args = new ArgsWrapper(fg, $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.ParseInto");
+                extraArgs.Add(arg);
             }
-            else
-            {
-                args = new ArgsWrapper(fg, $"var {typeGen.Name}tryGet = {this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse");
-            }
-            using (args)
-            {
-                if (data.HasTrigger)
-                {
-                    args.Add($"frame: {nodeAccessor}.SpawnWithLength(contentLength)");
-                }
-                else
-                {
-                    args.Add($"frame: {nodeAccessor}.Spawn(snapToFinalPosition: false)");
-                }
-                if (itemAccessor.PropertyAccess != null)
-                {
-                    args.Add($"item: {itemAccessor.PropertyAccess}");
-                }
-                if (typeGen.HasIndex)
-                {
-                    args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                    args.Add($"errorMask: {maskAccessor}");
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
-                foreach (var arg in AdditionCopyInParameters(
-                    fg: fg,
-                    objGen: objGen,
-                    typeGen: typeGen,
-                    nodeAccessor: nodeAccessor,
-                    itemAccessor: itemAccessor,
-                    maskAccessor: maskAccessor))
-                {
-                    args.Add(arg);
-                }
-            }
-            TranslationGenerationSnippets.DirectTryGetSetting(fg, itemAccessor, typeGen);
+
+            TranslationGeneration.WrapParseCall(
+                fg: fg,
+                typeGen: typeGen,
+                callLine: $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse",
+                maskAccessor: maskAccessor,
+                itemAccessor: itemAccessor,
+                indexAccessor: typeGen.HasIndex ? typeGen.IndexEnumInt : null,
+                extraargs: extraArgs.ToArray());
         }
 
         protected virtual IEnumerable<string> AdditionCopyInParameters(

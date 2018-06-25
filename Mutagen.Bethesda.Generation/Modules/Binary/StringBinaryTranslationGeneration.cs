@@ -63,32 +63,28 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            string nodeAccessor,
+            string frameAccessor,
             Accessor itemAccessor,
             string maskAccessor)
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             if (data.HasTrigger)
             {
-                fg.AppendLine($"{nodeAccessor}.Position += Constants.SUBRECORD_LENGTH;");
+                fg.AppendLine($"{frameAccessor}.Position += Constants.SUBRECORD_LENGTH;");
             }
-            using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}StringBinaryTranslation.Instance.ParseInto"))
-            {
-                if (data.HasTrigger)
-                {
-                    args.Add($"frame: {nodeAccessor}.SpawnWithLength(contentLength)");
-                }
-                else
-                {
-                    args.Add($"frame: {nodeAccessor}");
-                }
-                args.Add($"item: {itemAccessor.PropertyAccess}");
-                args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                args.Add($"parseWhole: true");
-                args.Add($"errorMask: {maskAccessor}");
-            }
-            TranslationGenerationSnippets.DirectTryGetSetting(fg, itemAccessor, typeGen);
+
+            List<string> extraArgs = new List<string>();
+            extraArgs.Add($"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : null)}");
+            extraArgs.Add($"parseWhole: true");
+
+            TranslationGeneration.WrapParseCall(
+                fg: fg,
+                typeGen: typeGen,
+                callLine: $"{this.Namespace}StringBinaryTranslation.Instance.Parse",
+                maskAccessor: maskAccessor,
+                itemAccessor: itemAccessor,
+                indexAccessor: typeGen.HasIndex ? typeGen.IndexEnumInt : null,
+                extraargs: extraArgs.ToArray());
         }
 
         public override void GenerateCopyInRet(

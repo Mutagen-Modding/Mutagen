@@ -117,47 +117,21 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else
                 {
-                    using (new BraceWrapper(fg))
+                    List<string> extraArgs = new List<string>();
+                    extraArgs.Add($"frame: {frameAccessor}{(loquiGen.TargetObjectGeneration.HasRecordType() ? null : ".Spawn(snapToFinalPosition: false)")}");
+                    if (data?.RecordTypeConverter != null
+                        && data.RecordTypeConverter.FromConversions.Count > 0)
                     {
-                        args = new ArgsWrapper(fg, $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}>.Instance.ParseInto");
+                        extraArgs.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
                     }
-                    else
-                    {
-                        args = new ArgsWrapper(fg, $"var {typeGen.Name}tryGet = LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}>.Instance.Parse");
-                    }
-                    using (args)
-                    {
-                        args.Add($"frame: {frameAccessor}{(loquiGen.TargetObjectGeneration.HasRecordType() ? null : ".Spawn(snapToFinalPosition: false)")}");
-                        if (loquiGen.HasIndex)
-                        {
-                            args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                        }
-                        args.Add($"errorMask: {maskAccessor}");
-                        if (itemAccessor.PropertyAccess != null)
-                        {
-                            args.Add($"item: {itemAccessor.PropertyAccess}");
-                        }
-                        using (args)
-                        {
-                            args.Add($"frame: {frameAccessor}{(loquiGen.TargetObjectGeneration.HasRecordType() ? null : ".Spawn(snapToFinalPosition: false)")}");
-                            if (loquiGen.HasIndex)
-                            {
-                                args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                                args.Add($"errorMask: {maskAccessor}");
-                            }
-                            else
-                            {
-                                args.Add($"doMasks: {doMaskAccessor}");
-                                args.Add($"errorMask: out {maskAccessor}");
-                            }
-                            if (data?.RecordTypeConverter != null
-                                && data.RecordTypeConverter.FromConversions.Count > 0)
-                            {
-                                args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
-                            }
-                        }
-                        TranslationGenerationSnippets.DirectTryGetSetting(fg, itemAccessor, typeGen);
-                    }
+                    TranslationGeneration.WrapParseCall(
+                        fg: fg,
+                        typeGen: typeGen,
+                        callLine: $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}>.Instance.Parse",
+                        maskAccessor: maskAccessor,
+                        itemAccessor: itemAccessor,
+                        indexAccessor: typeGen.HasIndex ? typeGen.IndexEnumInt : null,
+                        extraargs: extraArgs.ToArray());
                 }
             }
             else

@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            string nodeAccessor,
+            string frameAccessor,
             Accessor itemAccessor,
             string maskAccessor)
         {
@@ -65,35 +65,17 @@ namespace Mutagen.Bethesda.Generation
             var eType = typeGen as EnumType;
             if (data.HasTrigger)
             {
-                fg.AppendLine($"{nodeAccessor}.Position += Constants.SUBRECORD_LENGTH;");
+                fg.AppendLine($"{frameAccessor}.Position += Constants.SUBRECORD_LENGTH;");
             }
-            ArgsWrapper args;
-            if (typeGen.PrefersProperty)
-            {
-                args = new ArgsWrapper(fg, $"{this.Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.ParseInto");
-            }
-            else
-            {
-                args = new ArgsWrapper(fg, $"var {typeGen.Name}tryGet = {this.Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse");
-            }
-            using (args)
-            {
-                if (data.HasTrigger)
-                {
-                    args.Add($"{nodeAccessor}.SpawnWithLength(contentLength)");
-                }
-                else
-                {
-                    args.Add($"frame: {nodeAccessor}.SpawnWithLength({eType.ByteLength})");
-                }
-                if (itemAccessor.PropertyAccess != null)
-                {
-                    args.Add($"item: {itemAccessor.PropertyAccess}");
-                }
-                args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                args.Add($"errorMask: {maskAccessor}");
-            }
-            TranslationGenerationSnippets.DirectTryGetSetting(fg, itemAccessor, typeGen);
+
+            TranslationGeneration.WrapParseCall(
+                fg: fg,
+                typeGen: typeGen,
+                callLine: $"EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse",
+                maskAccessor: maskAccessor,
+                itemAccessor: itemAccessor,
+                indexAccessor: typeGen.IndexEnumInt,
+                extraargs: $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : $".SpawnWithLength({eType.ByteLength})")}");
         }
 
         public override void GenerateCopyInRet(

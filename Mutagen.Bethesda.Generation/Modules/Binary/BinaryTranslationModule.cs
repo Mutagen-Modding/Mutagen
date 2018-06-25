@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Generation
             this._typeGenerations[typeof(FormIDLinkType)] = new FormIDLinkBinaryTranslationGeneration();
             this._typeGenerations[typeof(ListType)] = new ListBinaryTranslationGeneration();
             this._typeGenerations[typeof(DictType)] = new DictBinaryTranslationGeneration();
-            this._typeGenerations[typeof(ByteArrayType)] = new ByteArrayTranslationGeneration();
+            this._typeGenerations[typeof(ByteArrayType)] = new ByteArrayBinaryTranslationGeneration();
             this._typeGenerations[typeof(BufferType)] = new BufferBinaryTranslationGeneration();
             this._typeGenerations[typeof(DataType)] = new DataBinaryTranslationGeneration();
             this._typeGenerations[typeof(ColorType)] = new ColorBinaryTranslationGeneration();
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Generation
                 objGen: obj,
                 typeGen: field,
                 readerAccessor: frameAccessor,
-                itemAccessor: new Accessor(field, "item.", protectedAccess: true),
+                itemAccessor: new Accessor(field, "item."),
                 maskAccessor: $"errorMask");
         }
 
@@ -745,7 +745,7 @@ namespace Mutagen.Bethesda.Generation
                 if (data.CustomBinaryEnd)
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"var ret = UtilityTranslation.MajorRecordParse<{obj.Name}, {obj.FieldIndexName}>"))
+                        $"var ret = UtilityTranslation.MajorRecordParse<{obj.Name}>"))
                     {
                         args.Add($"record: new {obj.Name}()");
                         args.Add($"frame: frame");
@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Generation
                 else
                 {
                     using (var args = new ArgsWrapper(fg,
-                    $"return UtilityTranslation.MajorRecordParse<{obj.Name}, {obj.FieldIndexName}>"))
+                    $"return UtilityTranslation.MajorRecordParse<{obj.Name}>"))
                     {
                         args.Add($"record: new {obj.Name}()");
                         args.Add($"frame: frame");
@@ -813,7 +813,7 @@ namespace Mutagen.Bethesda.Generation
                                         suffixLine: ")"))
                                     {
                                         args.Add("frame.Reader");
-                                        args.Add($"{obj.GetTriggeringSource()}");
+                                        args.Add($"recordTypeConverter.ConvertToCustom({obj.GetTriggeringSource()})");
                                     }
                                 }
                                 break;
@@ -823,7 +823,7 @@ namespace Mutagen.Bethesda.Generation
                                     suffixLine: ")"))
                                 {
                                     args.Add("frame.Reader");
-                                    args.Add($"{obj.GetTriggeringSource()}");
+                                    args.Add($"recordTypeConverter.ConvertToCustom({obj.GetTriggeringSource()})");
                                 }
                                 break;
                             case ObjectType.Group:
@@ -853,7 +853,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             if (typelessStruct)
                             {
-                                fg.AppendLine($"{obj.FieldIndexName}? lastParsed = null;");
+                                fg.AppendLine($"int? lastParsed = null;");
                             }
                             fg.AppendLine($"while (!frame.Complete)");
                             using (new BraceWrapper(fg))

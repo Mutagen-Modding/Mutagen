@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
             writer.Write(item.OffsetData);
         }
 
-        static partial void FillBinary_OffsetData_Custom(MutagenFrame frame, Worldspace item, int fieldIndex, ErrorMaskBuilder errorMask)
+        static partial void FillBinary_OffsetData_Custom(MutagenFrame frame, Worldspace item, ErrorMaskBuilder errorMask)
         {
             if (item.usingOffsetLength) return;
             if (!HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var len).Type.Equals("OFST"))
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
             item.OffsetData = frame.Reader.ReadBytes(len);
         }
 
-        static partial void WriteBinary_OffsetData_Custom(MutagenWriter writer, Worldspace item, int fieldIndex, ErrorMaskBuilder errorMask)
+        static partial void WriteBinary_OffsetData_Custom(MutagenWriter writer, Worldspace item, ErrorMaskBuilder errorMask)
         {
             if (item.usingOffsetLength) return;
             if (!item.OffsetData_Property.HasBeenSet) return;
@@ -163,9 +163,10 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     writer.WriteZeros(4);
                 }
+                
                 if (obj.Road_Property.HasBeenSet)
                 {
-                    LoquiBinaryTranslation<Road, Road_ErrorMask>.Instance.Write(
+                    LoquiBinaryTranslation<Road>.Instance.Write(
                         writer,
                         obj.Road,
                         (int)Worldspace_FieldIndex.Road,
@@ -173,24 +174,23 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (obj.TopCell_Property.HasBeenSet)
                 {
-                    LoquiBinaryTranslation<Cell, Cell_ErrorMask>.Instance.Write(
+                    LoquiBinaryTranslation<Cell>.Instance.Write(
                         writer,
                         obj.TopCell,
                         (int)Worldspace_FieldIndex.TopCell,
                         errorMask);
                 }
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock, MaskItem<Exception, WorldspaceBlock_ErrorMask>>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock>.Instance.Write(
                     writer: writer,
-                    item: obj.SubCells,
+                    items: obj.SubCells,
                     fieldIndex: (int)Worldspace_FieldIndex.SubCells,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, WorldspaceBlock subItem, bool listDoMasks, out MaskItem<Exception, WorldspaceBlock_ErrorMask> listSubMask) =>
+                    transl: (MutagenWriter subWriter, WorldspaceBlock subItem, ErrorMaskBuilder listSubMask) =>
                     {
-                        LoquiBinaryTranslation<WorldspaceBlock, WorldspaceBlock_ErrorMask>.Instance.Write(
+                        LoquiBinaryTranslation<WorldspaceBlock>.Instance.Write(
                             writer: subWriter,
                             item: subItem,
-                            doMasks: listDoMasks,
-                            errorMask: out listSubMask);
+                            errorMask: listSubMask);
                     });
             }
         }

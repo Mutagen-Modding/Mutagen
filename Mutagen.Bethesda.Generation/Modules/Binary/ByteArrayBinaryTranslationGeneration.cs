@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Generation
 {
-    public class ByteArrayTranslationGeneration : PrimitiveBinaryTranslationGeneration<byte[]>
+    public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<byte[]>
     {
-        public ByteArrayTranslationGeneration()
+        public ByteArrayBinaryTranslationGeneration()
             : base(nullable: true,
                   typeName: "ByteArray")
         {
@@ -44,38 +44,24 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            string nodeAccessor,
+            string frameAccessor,
             Accessor itemAccessor,
             string maskAccessor)
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             if (data.HasTrigger)
             {
-                fg.AppendLine($"{nodeAccessor}.Position += Constants.SUBRECORD_LENGTH;");
+                fg.AppendLine($"{frameAccessor}.Position += Constants.SUBRECORD_LENGTH;");
             }
-            using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}ByteArrayBinaryTranslation.Instance.ParseInto"))
-            {
-                if (data.HasTrigger)
-                {
-                    args.Add($"{nodeAccessor}.SpawnWithLength(contentLength)");
-                }
-                else
-                {
-                    args.Add($"frame: {nodeAccessor}.SpawnWithLength({data.Length.Value})");
-                }
-                args.Add($"item: {itemAccessor.PropertyAccess}");
-                args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                args.Add($"errorMask: {maskAccessor}");
-            }
-            if (itemAccessor.PropertyAccess == null)
-            {
-                fg.AppendLine($"if ({typeGen.Name}tryGet.Succeeded)");
-                using (new BraceWrapper(fg))
-                {
-                    fg.AppendLine($"{itemAccessor.DirectAccess} = {typeGen.Name}tryGet.Value;");
-                }
-            }
+
+            TranslationGeneration.WrapParseCall(
+                fg: fg,
+                typeGen: typeGen,
+                callLine: $"{this.Namespace}ByteArrayBinaryTranslation.Instance.Parse",
+                maskAccessor: maskAccessor,
+                itemAccessor: itemAccessor,
+                indexAccessor: typeGen.IndexEnumInt,
+                extraargs: $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : $".SpawnWithLength({data.Length.Value})")}");
         }
 
         public override void GenerateCopyInRet(

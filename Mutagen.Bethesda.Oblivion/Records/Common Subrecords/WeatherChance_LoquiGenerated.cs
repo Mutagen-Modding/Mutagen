@@ -17,8 +17,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using System.Diagnostics;
 using Loqui.Internal;
+using System.Diagnostics;
 using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
@@ -186,8 +186,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -196,23 +195,37 @@ namespace Mutagen.Bethesda.Oblivion
             out WeatherChance_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = WeatherChance_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (WeatherChance Object, WeatherChance_ErrorMask ErrorMask) Create_XML(
+        public static WeatherChance Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            WeatherChance_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new WeatherChance_ErrorMask()) : default(Func<WeatherChance_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new WeatherChance();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static WeatherChance Create_XML(string path)
@@ -254,12 +267,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<WeatherChance, WeatherChance_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<WeatherChance>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -268,13 +280,14 @@ namespace Mutagen.Bethesda.Oblivion
             out WeatherChance_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<WeatherChance, WeatherChance_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<WeatherChance>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = WeatherChance_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -330,10 +343,12 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            errorMask = this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as WeatherChance_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = WeatherChance_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
@@ -373,7 +388,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_XML(
@@ -398,71 +413,58 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
-        protected object Write_XML_Internal(
+        protected void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
             WeatherChanceCommon.Write_XML(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static WeatherChance Create_XML_Internal(
-            XElement root,
-            Func<WeatherChance_ErrorMask> errorMask)
-        {
-            var ret = new WeatherChance();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
 
         protected static void Fill_XML_Internal(
             WeatherChance item,
             XElement root,
             string name,
-            Func<WeatherChance_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Weather":
-                    item.Weather_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)WeatherChance_FieldIndex.Weather,
-                        errorMask: errorMask));
+                        item: item.Weather_Property,
+                        errorMask: errorMask);
                     break;
                 case "Chance":
-                    var ChancetryGet = Int32XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)WeatherChance_FieldIndex.Chance,
-                        errorMask: errorMask);
-                    if (ChancetryGet.Succeeded)
+                    try
                     {
-                        item.SetChance(item: ChancetryGet.Value);
+                        errorMask?.PushIndex((int)WeatherChance_FieldIndex.Chance);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Int32 ChanceParse,
+                            errorMask: errorMask))
+                        {
+                            item.Chance = ChanceParse;
+                        }
+                        else
+                        {
+                            item.UnsetChance();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetChance();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 default:
@@ -622,8 +624,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -632,26 +634,38 @@ namespace Mutagen.Bethesda.Oblivion
             out WeatherChance_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = WeatherChance_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (WeatherChance Object, WeatherChance_ErrorMask ErrorMask) Create_Binary(
+        public static WeatherChance Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            WeatherChance_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new WeatherChance_ErrorMask()) : default(Func<WeatherChance_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new WeatherChance();
+            try
+            {
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static WeatherChance Create_Binary(string path)
@@ -706,10 +720,12 @@ namespace Mutagen.Bethesda.Oblivion
             out WeatherChance_ErrorMask errorMask,
             bool doMasks = true)
         {
-            errorMask = this.Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: doMasks) as WeatherChance_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = WeatherChance_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Binary(
@@ -745,7 +761,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_Binary(string path)
@@ -764,65 +780,52 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected object Write_Binary_Internal(
+        protected void Write_Binary_Internal(
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
             WeatherChanceCommon.Write_Binary(
                 item: this,
-                doMasks: doMasks,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
 
-        private static WeatherChance Create_Binary_Internal(
+        protected static void Fill_Binary_Structs(
+            WeatherChance item,
             MutagenFrame frame,
-            Func<WeatherChance_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
+            ErrorMaskBuilder errorMask)
         {
-            var ret = new WeatherChance();
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                frame: frame.Spawn(snapToFinalPosition: false),
+                fieldIndex: (int)WeatherChance_FieldIndex.Weather,
+                item: item.Weather_Property,
+                errorMask: errorMask);
             try
             {
-                using (frame)
+                errorMask?.PushIndex((int)WeatherChance_FieldIndex.Chance);
+                if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out Int32 ChanceParse,
+                    errorMask: errorMask))
                 {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
+                    item.Chance = ChanceParse;
+                }
+                else
+                {
+                    item.UnsetChance();
                 }
             }
             catch (Exception ex)
             when (errorMask != null)
             {
-                errorMask().Overall = ex;
+                errorMask.ReportException(ex);
             }
-            return ret;
-        }
-
-        protected static void Fill_Binary_Structs(
-            WeatherChance item,
-            MutagenFrame frame,
-            Func<WeatherChance_ErrorMask> errorMask)
-        {
-            item.Weather_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                fieldIndex: (int)WeatherChance_FieldIndex.Weather,
-                errorMask: errorMask));
-            var ChancetryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                fieldIndex: (int)WeatherChance_FieldIndex.Chance,
-                errorMask: errorMask);
-            if (ChancetryGet.Succeeded)
+            finally
             {
-                item.SetChance(item: ChancetryGet.Value);
-            }
-            else
-            {
-                item.UnsetChance();
+                errorMask?.PopIndex();
             }
         }
 
@@ -916,24 +919,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            WeatherChance_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new WeatherChance_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             WeatherChanceCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = WeatherChance_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IWeatherChanceGetter rhs,
+            ErrorMaskBuilder errorMask,
+            WeatherChance_CopyMask copyMask = null,
+            IWeatherChanceGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            WeatherChanceCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1235,13 +1246,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherChance item,
             IWeatherChanceGetter rhs,
             IWeatherChanceGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             WeatherChance_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.Weather ?? true)
             {
+                errorMask.PushIndex((int)WeatherChance_FieldIndex.Weather);
                 try
                 {
                     item.Weather_Property.Set(
@@ -1249,13 +1260,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)WeatherChance_FieldIndex.Weather, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Chance ?? true)
             {
+                errorMask.PushIndex((int)WeatherChance_FieldIndex.Chance);
                 try
                 {
                     item.Chance_Property.Set(
@@ -1263,9 +1279,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)WeatherChance_FieldIndex.Chance, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1430,47 +1450,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out WeatherChance_ErrorMask errorMask,
             string name = null)
         {
-            WeatherChance_ErrorMask errMaskRet = null;
-            Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_XML(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new WeatherChance_ErrorMask()) : default(Func<WeatherChance_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = WeatherChance_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal(
+        public static void Write_XML(
             XElement node,
             IWeatherChanceGetter item,
-            Func<WeatherChance_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.WeatherChance");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.WeatherChance");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.WeatherChance");
-                }
-                FormIDXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Weather),
-                    item: item.Weather?.FormID,
-                    fieldIndex: (int)WeatherChance_FieldIndex.Weather,
-                    errorMask: errorMask);
-                Int32XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Chance),
-                    item: item.Chance_Property,
-                    fieldIndex: (int)WeatherChance_FieldIndex.Chance,
-                    errorMask: errorMask);
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.WeatherChance");
             }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            FormIDXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Weather),
+                item: item.Weather?.FormID,
+                fieldIndex: (int)WeatherChance_FieldIndex.Weather,
+                errorMask: errorMask);
+            Int32XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Chance),
+                item: item.Chance_Property,
+                fieldIndex: (int)WeatherChance_FieldIndex.Chance,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -1485,40 +1497,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out WeatherChance_ErrorMask errorMask)
         {
-            WeatherChance_ErrorMask errMaskRet = null;
-            Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new WeatherChance_ErrorMask()) : default(Func<WeatherChance_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = WeatherChance_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_Binary_Internal(
+        public static void Write_Binary(
             MutagenWriter writer,
             WeatherChance item,
             RecordTypeConverter recordTypeConverter,
-            Func<WeatherChance_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask);
         }
         #endregion
 
         public static void Write_Binary_Embedded(
             WeatherChance item,
             MutagenWriter writer,
-            Func<WeatherChance_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -1770,6 +1774,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static WeatherChance_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            return new WeatherChance_ErrorMask();
         }
         #endregion
 

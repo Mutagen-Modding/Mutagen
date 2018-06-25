@@ -17,8 +17,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using System.Diagnostics;
 using Loqui.Internal;
+using System.Diagnostics;
 using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
@@ -228,8 +228,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -238,23 +237,37 @@ namespace Mutagen.Bethesda.Oblivion
             out SkillBoost_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = SkillBoost_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (SkillBoost Object, SkillBoost_ErrorMask ErrorMask) Create_XML(
+        public static SkillBoost Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            SkillBoost_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SkillBoost_ErrorMask()) : default(Func<SkillBoost_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new SkillBoost();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static SkillBoost Create_XML(string path)
@@ -296,12 +309,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<SkillBoost, SkillBoost_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<SkillBoost>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -310,13 +322,14 @@ namespace Mutagen.Bethesda.Oblivion
             out SkillBoost_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<SkillBoost, SkillBoost_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<SkillBoost>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = SkillBoost_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -372,10 +385,12 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            errorMask = this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as SkillBoost_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = SkillBoost_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
@@ -415,7 +430,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_XML(
@@ -440,80 +455,77 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
-        protected object Write_XML_Internal(
+        protected void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
             SkillBoostCommon.Write_XML(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static SkillBoost Create_XML_Internal(
-            XElement root,
-            Func<SkillBoost_ErrorMask> errorMask)
-        {
-            var ret = new SkillBoost();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
 
         protected static void Fill_XML_Internal(
             SkillBoost item,
             XElement root,
             string name,
-            Func<SkillBoost_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Skill":
-                    var SkilltryGet = EnumXmlTranslation<ActorValue>.Instance.Parse(
-                        root,
-                        nullable: false,
-                        fieldIndex: (int)SkillBoost_FieldIndex.Skill,
-                        errorMask: errorMask).Bubble((o) => o.Value);
-                    if (SkilltryGet.Succeeded)
+                    try
                     {
-                        item.SetSkill(item: SkilltryGet.Value);
+                        errorMask?.PushIndex((int)SkillBoost_FieldIndex.Skill);
+                        if (EnumXmlTranslation<ActorValue>.Instance.Parse(
+                            root: root,
+                            item: out ActorValue SkillParse,
+                            errorMask: errorMask))
+                        {
+                            item.Skill = SkillParse;
+                        }
+                        else
+                        {
+                            item.UnsetSkill();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetSkill();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Boost":
-                    var BoosttryGet = Int8XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)SkillBoost_FieldIndex.Boost,
-                        errorMask: errorMask);
-                    if (BoosttryGet.Succeeded)
+                    try
                     {
-                        item.SetBoost(item: BoosttryGet.Value);
+                        errorMask?.PushIndex((int)SkillBoost_FieldIndex.Boost);
+                        if (Int8XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out SByte BoostParse,
+                            errorMask: errorMask))
+                        {
+                            item.Boost = BoostParse;
+                        }
+                        else
+                        {
+                            item.UnsetBoost();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetBoost();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 default:
@@ -797,8 +809,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -807,26 +819,38 @@ namespace Mutagen.Bethesda.Oblivion
             out SkillBoost_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = SkillBoost_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (SkillBoost Object, SkillBoost_ErrorMask ErrorMask) Create_Binary(
+        public static SkillBoost Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            SkillBoost_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SkillBoost_ErrorMask()) : default(Func<SkillBoost_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new SkillBoost();
+            try
+            {
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static SkillBoost Create_Binary(string path)
@@ -881,10 +905,12 @@ namespace Mutagen.Bethesda.Oblivion
             out SkillBoost_ErrorMask errorMask,
             bool doMasks = true)
         {
-            errorMask = this.Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: doMasks) as SkillBoost_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = SkillBoost_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Binary(
@@ -920,7 +946,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_Binary(string path)
@@ -939,73 +965,71 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected object Write_Binary_Internal(
+        protected void Write_Binary_Internal(
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
             SkillBoostCommon.Write_Binary(
                 item: this,
-                doMasks: doMasks,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
 
-        private static SkillBoost Create_Binary_Internal(
+        protected static void Fill_Binary_Structs(
+            SkillBoost item,
             MutagenFrame frame,
-            Func<SkillBoost_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
+            ErrorMaskBuilder errorMask)
         {
-            var ret = new SkillBoost();
             try
             {
-                using (frame)
+                errorMask?.PushIndex((int)SkillBoost_FieldIndex.Skill);
+                if (EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                    frame: frame.SpawnWithLength(1),
+                    item: out ActorValue SkillParse,
+                    errorMask: errorMask))
                 {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
+                    item.Skill = SkillParse;
+                }
+                else
+                {
+                    item.UnsetSkill();
                 }
             }
             catch (Exception ex)
             when (errorMask != null)
             {
-                errorMask().Overall = ex;
+                errorMask.ReportException(ex);
             }
-            return ret;
-        }
-
-        protected static void Fill_Binary_Structs(
-            SkillBoost item,
-            MutagenFrame frame,
-            Func<SkillBoost_ErrorMask> errorMask)
-        {
-            var SkilltryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                frame: frame.SpawnWithLength(1),
-                fieldIndex: (int)SkillBoost_FieldIndex.Skill,
-                errorMask: errorMask);
-            if (SkilltryGet.Succeeded)
+            finally
             {
-                item.SetSkill(item: SkilltryGet.Value);
+                errorMask?.PopIndex();
             }
-            else
+            try
             {
-                item.UnsetSkill();
+                errorMask?.PushIndex((int)SkillBoost_FieldIndex.Boost);
+                if (Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out SByte BoostParse,
+                    errorMask: errorMask))
+                {
+                    item.Boost = BoostParse;
+                }
+                else
+                {
+                    item.UnsetBoost();
+                }
             }
-            var BoosttryGet = Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                fieldIndex: (int)SkillBoost_FieldIndex.Boost,
-                errorMask: errorMask);
-            if (BoosttryGet.Succeeded)
+            catch (Exception ex)
+            when (errorMask != null)
             {
-                item.SetBoost(item: BoosttryGet.Value);
+                errorMask.ReportException(ex);
             }
-            else
+            finally
             {
-                item.UnsetBoost();
+                errorMask?.PopIndex();
             }
         }
 
@@ -1099,24 +1123,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            SkillBoost_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new SkillBoost_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             SkillBoostCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = SkillBoost_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            ISkillBoostGetter rhs,
+            ErrorMaskBuilder errorMask,
+            SkillBoost_CopyMask copyMask = null,
+            ISkillBoostGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            SkillBoostCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1420,13 +1452,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISkillBoost item,
             ISkillBoostGetter rhs,
             ISkillBoostGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             SkillBoost_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.Skill ?? true)
             {
+                errorMask.PushIndex((int)SkillBoost_FieldIndex.Skill);
                 try
                 {
                     item.Skill_Property.Set(
@@ -1434,13 +1466,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)SkillBoost_FieldIndex.Skill, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Boost ?? true)
             {
+                errorMask.PushIndex((int)SkillBoost_FieldIndex.Boost);
                 try
                 {
                     item.Boost_Property.Set(
@@ -1448,9 +1485,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)SkillBoost_FieldIndex.Boost, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1615,47 +1656,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out SkillBoost_ErrorMask errorMask,
             string name = null)
         {
-            SkillBoost_ErrorMask errMaskRet = null;
-            Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_XML(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SkillBoost_ErrorMask()) : default(Func<SkillBoost_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = SkillBoost_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal(
+        public static void Write_XML(
             XElement node,
             ISkillBoostGetter item,
-            Func<SkillBoost_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.SkillBoost");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.SkillBoost");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SkillBoost");
-                }
-                EnumXmlTranslation<ActorValue>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Skill),
-                    item: item.Skill_Property,
-                    fieldIndex: (int)SkillBoost_FieldIndex.Skill,
-                    errorMask: errorMask);
-                Int8XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Boost),
-                    item: item.Boost_Property,
-                    fieldIndex: (int)SkillBoost_FieldIndex.Boost,
-                    errorMask: errorMask);
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SkillBoost");
             }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            EnumXmlTranslation<ActorValue>.Instance.Write(
+                node: elem,
+                name: nameof(item.Skill),
+                item: item.Skill_Property,
+                fieldIndex: (int)SkillBoost_FieldIndex.Skill,
+                errorMask: errorMask);
+            Int8XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Boost),
+                item: item.Boost_Property,
+                fieldIndex: (int)SkillBoost_FieldIndex.Boost,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -1670,40 +1703,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out SkillBoost_ErrorMask errorMask)
         {
-            SkillBoost_ErrorMask errMaskRet = null;
-            Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SkillBoost_ErrorMask()) : default(Func<SkillBoost_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = SkillBoost_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_Binary_Internal(
+        public static void Write_Binary(
             MutagenWriter writer,
             SkillBoost item,
             RecordTypeConverter recordTypeConverter,
-            Func<SkillBoost_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask);
         }
         #endregion
 
         public static void Write_Binary_Embedded(
             SkillBoost item,
             MutagenWriter writer,
-            Func<SkillBoost_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                 writer,
@@ -1956,6 +1981,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static SkillBoost_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            return new SkillBoost_ErrorMask();
         }
         #endregion
 

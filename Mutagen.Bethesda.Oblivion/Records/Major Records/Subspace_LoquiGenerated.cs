@@ -19,8 +19,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using System.Diagnostics;
 using Loqui.Internal;
+using System.Diagnostics;
 using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
@@ -276,8 +276,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -286,23 +285,37 @@ namespace Mutagen.Bethesda.Oblivion
             out Subspace_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (Subspace Object, Subspace_ErrorMask ErrorMask) Create_XML(
+        public static Subspace Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            Subspace_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Subspace_ErrorMask()) : default(Func<Subspace_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new Subspace();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static Subspace Create_XML(string path)
@@ -344,12 +357,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Subspace, Subspace_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Subspace>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -358,13 +370,14 @@ namespace Mutagen.Bethesda.Oblivion
             out Subspace_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Subspace, Subspace_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<Subspace>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -432,10 +445,12 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            errorMask = this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as Subspace_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
@@ -475,7 +490,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: false);
+                errorMask: null);
         }
 
         public override void Write_XML(
@@ -500,93 +515,103 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
-        protected override object Write_XML_Internal(
+        protected override void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
             SubspaceCommon.Write_XML(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static Subspace Create_XML_Internal(
-            XElement root,
-            Func<Subspace_ErrorMask> errorMask)
-        {
-            var ret = new Subspace();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
 
         protected static void Fill_XML_Internal(
             Subspace item,
             XElement root,
             string name,
-            Func<Subspace_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "X":
-                    var XtryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Subspace_FieldIndex.X,
-                        errorMask: errorMask);
-                    if (XtryGet.Succeeded)
+                    try
                     {
-                        item.SetX(item: XtryGet.Value);
+                        errorMask?.PushIndex((int)Subspace_FieldIndex.X);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Single XParse,
+                            errorMask: errorMask))
+                        {
+                            item.X = XParse;
+                        }
+                        else
+                        {
+                            item.UnsetX();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetX();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Y":
-                    var YtryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Subspace_FieldIndex.Y,
-                        errorMask: errorMask);
-                    if (YtryGet.Succeeded)
+                    try
                     {
-                        item.SetY(item: YtryGet.Value);
+                        errorMask?.PushIndex((int)Subspace_FieldIndex.Y);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Single YParse,
+                            errorMask: errorMask))
+                        {
+                            item.Y = YParse;
+                        }
+                        else
+                        {
+                            item.UnsetY();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetY();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Z":
-                    var ZtryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Subspace_FieldIndex.Z,
-                        errorMask: errorMask);
-                    if (ZtryGet.Succeeded)
+                    try
                     {
-                        item.SetZ(item: ZtryGet.Value);
+                        errorMask?.PushIndex((int)Subspace_FieldIndex.Z);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Single ZParse,
+                            errorMask: errorMask))
+                        {
+                            item.Z = ZParse;
+                        }
+                        else
+                        {
+                            item.UnsetZ();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetZ();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 default:
@@ -765,8 +790,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -775,26 +800,29 @@ namespace Mutagen.Bethesda.Oblivion
             out Subspace_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (Subspace Object, Subspace_ErrorMask ErrorMask) Create_Binary(
+        public static Subspace Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            Subspace_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
+            return UtilityTranslation.MajorRecordParse<Subspace>(
+                record: new Subspace(),
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Subspace_ErrorMask()) : default(Func<Subspace_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+                errorMask: errorMask,
+                recType: Subspace_Registration.SBSP_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         public static Subspace Create_Binary(string path)
@@ -849,10 +877,12 @@ namespace Mutagen.Bethesda.Oblivion
             out Subspace_ErrorMask errorMask,
             bool doMasks = true)
         {
-            errorMask = this.Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: doMasks) as Subspace_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Binary(
@@ -888,7 +918,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: false);
+                errorMask: null);
         }
 
         public override void Write_Binary(string path)
@@ -907,40 +937,23 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected override object Write_Binary_Internal(
+        protected override void Write_Binary_Internal(
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
             SubspaceCommon.Write_Binary(
                 item: this,
-                doMasks: doMasks,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static Subspace Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<Subspace_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            return UtilityTranslation.MajorRecordParse<Subspace, Subspace_ErrorMask>(
-                record: new Subspace(),
-                frame: frame,
-                errorMask: errorMask,
-                recType: Subspace_Registration.SBSP_HEADER,
-                recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
-        }
 
         protected static void Fill_Binary_Structs(
             Subspace item,
             MutagenFrame frame,
-            Func<Subspace_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             MajorRecord.Fill_Binary_Structs(
                 item: item,
@@ -951,7 +964,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             Subspace item,
             MutagenFrame frame,
-            Func<Subspace_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -964,41 +977,77 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        var XtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)Subspace_FieldIndex.X,
-                            errorMask: errorMask);
-                        if (XtryGet.Succeeded)
+                        try
                         {
-                            item.SetX(item: XtryGet.Value);
+                            errorMask?.PushIndex((int)Subspace_FieldIndex.X);
+                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out Single XParse,
+                                errorMask: errorMask))
+                            {
+                                item.X = XParse;
+                            }
+                            else
+                            {
+                                item.UnsetX();
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.UnsetX();
+                            errorMask.ReportException(ex);
                         }
-                        var YtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)Subspace_FieldIndex.Y,
-                            errorMask: errorMask);
-                        if (YtryGet.Succeeded)
+                        finally
                         {
-                            item.SetY(item: YtryGet.Value);
+                            errorMask?.PopIndex();
                         }
-                        else
+                        try
                         {
-                            item.UnsetY();
+                            errorMask?.PushIndex((int)Subspace_FieldIndex.Y);
+                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out Single YParse,
+                                errorMask: errorMask))
+                            {
+                                item.Y = YParse;
+                            }
+                            else
+                            {
+                                item.UnsetY();
+                            }
                         }
-                        var ZtryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)Subspace_FieldIndex.Z,
-                            errorMask: errorMask);
-                        if (ZtryGet.Succeeded)
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.SetZ(item: ZtryGet.Value);
+                            errorMask.ReportException(ex);
                         }
-                        else
+                        finally
                         {
-                            item.UnsetZ();
+                            errorMask?.PopIndex();
+                        }
+                        try
+                        {
+                            errorMask?.PushIndex((int)Subspace_FieldIndex.Z);
+                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out Single ZParse,
+                                errorMask: errorMask))
+                            {
+                                item.Z = ZParse;
+                            }
+                            else
+                            {
+                                item.UnsetZ();
+                            }
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     return TryGet<int?>.Succeed((int)Subspace_FieldIndex.Z);
@@ -1088,24 +1137,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            Subspace_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Subspace_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             SubspaceCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            ISubspaceGetter rhs,
+            ErrorMaskBuilder errorMask,
+            Subspace_CopyMask copyMask = null,
+            ISubspaceGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            SubspaceCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1440,8 +1497,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISubspace item,
             ISubspaceGetter rhs,
             ISubspaceGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             Subspace_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1449,12 +1505,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item,
                 rhs,
                 def,
-                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
             if (copyMask?.X ?? true)
             {
+                errorMask.PushIndex((int)Subspace_FieldIndex.X);
                 try
                 {
                     item.X_Property.Set(
@@ -1462,13 +1518,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Subspace_FieldIndex.X, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Y ?? true)
             {
+                errorMask.PushIndex((int)Subspace_FieldIndex.Y);
                 try
                 {
                     item.Y_Property.Set(
@@ -1476,13 +1537,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Subspace_FieldIndex.Y, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Z ?? true)
             {
+                errorMask.PushIndex((int)Subspace_FieldIndex.Z);
                 try
                 {
                     item.Z_Property.Set(
@@ -1490,9 +1556,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Subspace_FieldIndex.Z, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1699,53 +1769,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Subspace_ErrorMask errorMask,
             string name = null)
         {
-            Subspace_ErrorMask errMaskRet = null;
-            Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_XML(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Subspace_ErrorMask()) : default(Func<Subspace_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal(
+        public static void Write_XML(
             XElement node,
             ISubspaceGetter item,
-            Func<Subspace_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Subspace");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Subspace");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Subspace");
-                }
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.X),
-                    item: item.X_Property,
-                    fieldIndex: (int)Subspace_FieldIndex.X,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Y),
-                    item: item.Y_Property,
-                    fieldIndex: (int)Subspace_FieldIndex.Y,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Z),
-                    item: item.Z_Property,
-                    fieldIndex: (int)Subspace_FieldIndex.Z,
-                    errorMask: errorMask);
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Subspace");
             }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.X),
+                item: item.X_Property,
+                fieldIndex: (int)Subspace_FieldIndex.X,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Y),
+                item: item.Y_Property,
+                fieldIndex: (int)Subspace_FieldIndex.Y,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Z),
+                item: item.Z_Property,
+                fieldIndex: (int)Subspace_FieldIndex.Z,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -1760,43 +1822,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out Subspace_ErrorMask errorMask)
         {
-            Subspace_ErrorMask errMaskRet = null;
-            Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Subspace_ErrorMask()) : default(Func<Subspace_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_Binary_Internal(
+        public static void Write_Binary(
             MutagenWriter writer,
             Subspace item,
             RecordTypeConverter recordTypeConverter,
-            Func<Subspace_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: Subspace_Registration.SBSP_HEADER,
+                type: ObjectType.Record))
             {
-                using (HeaderExport.ExportHeader(
+                MajorRecordCommon.Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: Subspace_Registration.SBSP_HEADER,
-                    type: ObjectType.Record))
-                {
-                    MajorRecordCommon.Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                    Write_Binary_RecordTypes(
-                        item: item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -1805,7 +1859,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Subspace item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<Subspace_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
@@ -2087,6 +2141,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static Subspace_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            return new Subspace_ErrorMask();
         }
         #endregion
 

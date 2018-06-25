@@ -20,7 +20,6 @@ using Noggog.Xml;
 using Loqui.Xml;
 using Loqui.Internal;
 using System.Diagnostics;
-using Loqui.Internal;
 using System.Collections.Specialized;
 
 namespace Mutagen.Bethesda.Tests
@@ -496,7 +495,7 @@ namespace Mutagen.Bethesda.Tests
                 case "Moves":
                     ListXmlTranslation<Move>.Instance.ParseInto(
                         root: root,
-                        item: item._Moves,
+                        item: item.Moves,
                         fieldIndex: (int)Instruction_FieldIndex.Moves,
                         errorMask: errorMask,
                         transl: LoquiXmlTranslation<Move>.Instance.Parse);
@@ -504,7 +503,7 @@ namespace Mutagen.Bethesda.Tests
                 case "Substitutions":
                     ListXmlTranslation<DataTarget>.Instance.ParseInto(
                         root: root,
-                        item: item._Substitutions,
+                        item: item.Substitutions,
                         fieldIndex: (int)Instruction_FieldIndex.Substitutions,
                         errorMask: errorMask,
                         transl: LoquiXmlTranslation<DataTarget>.Instance.Parse);
@@ -512,7 +511,7 @@ namespace Mutagen.Bethesda.Tests
                 case "Additions":
                     ListXmlTranslation<DataTarget>.Instance.ParseInto(
                         root: root,
-                        item: item._Additions,
+                        item: item.Additions,
                         fieldIndex: (int)Instruction_FieldIndex.Additions,
                         errorMask: errorMask,
                         transl: LoquiXmlTranslation<DataTarget>.Instance.Parse);
@@ -520,7 +519,7 @@ namespace Mutagen.Bethesda.Tests
                 case "SkipSourceSections":
                     ListXmlTranslation<RangeInt64>.Instance.ParseInto(
                         root: root,
-                        item: item._SkipSourceSections,
+                        item: item.SkipSourceSections,
                         fieldIndex: (int)Instruction_FieldIndex.SkipSourceSections,
                         errorMask: errorMask,
                         transl: RangeInt64XmlTranslation.Instance.Parse);
@@ -528,7 +527,7 @@ namespace Mutagen.Bethesda.Tests
                 case "SkipOutputSections":
                     ListXmlTranslation<RangeInt64>.Instance.ParseInto(
                         root: root,
-                        item: item._SkipOutputSections,
+                        item: item.SkipOutputSections,
                         fieldIndex: (int)Instruction_FieldIndex.SkipOutputSections,
                         errorMask: errorMask,
                         transl: RangeInt64XmlTranslation.Instance.Parse);
@@ -536,7 +535,7 @@ namespace Mutagen.Bethesda.Tests
                 case "IgnoreDifferenceSections":
                     ListXmlTranslation<RangeInt64>.Instance.ParseInto(
                         root: root,
-                        item: item._IgnoreDifferenceSections,
+                        item: item.IgnoreDifferenceSections,
                         fieldIndex: (int)Instruction_FieldIndex.IgnoreDifferenceSections,
                         errorMask: errorMask,
                         transl: RangeInt64XmlTranslation.Instance.Parse);

@@ -18,8 +18,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using System.Diagnostics;
 using Loqui.Internal;
+using System.Diagnostics;
 using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
@@ -212,8 +212,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -222,23 +221,37 @@ namespace Mutagen.Bethesda.Oblivion
             out BodyData_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = BodyData_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (BodyData Object, BodyData_ErrorMask ErrorMask) Create_XML(
+        public static BodyData Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            BodyData_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new BodyData_ErrorMask()) : default(Func<BodyData_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new BodyData();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static BodyData Create_XML(string path)
@@ -280,12 +293,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<BodyData, BodyData_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<BodyData>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -294,13 +306,14 @@ namespace Mutagen.Bethesda.Oblivion
             out BodyData_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<BodyData, BodyData_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<BodyData>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = BodyData_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -356,10 +369,12 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            errorMask = this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as BodyData_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = BodyData_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
@@ -399,7 +414,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_XML(
@@ -424,80 +439,60 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
-        protected object Write_XML_Internal(
+        protected void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
             BodyDataCommon.Write_XML(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static BodyData Create_XML_Internal(
-            XElement root,
-            Func<BodyData_ErrorMask> errorMask)
-        {
-            var ret = new BodyData();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
 
         protected static void Fill_XML_Internal(
             BodyData item,
             XElement root,
             string name,
-            Func<BodyData_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Model":
-                    var ModeltryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)BodyData_FieldIndex.Model,
-                        errorMask: errorMask);
-                    if (ModeltryGet.Succeeded)
+                    try
                     {
-                        item.SetModel(item: ModeltryGet.Value);
+                        errorMask?.PushIndex((int)BodyData_FieldIndex.Model);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            root: root,
+                            item: out Model ModelParse,
+                            errorMask: errorMask))
+                        {
+                            item.Model = ModelParse;
+                        }
+                        else
+                        {
+                            item.UnsetModel();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetModel();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "BodyParts":
-                    item._BodyParts.SetIfSucceededOrDefault(ListXmlTranslation<BodyPart, MaskItem<Exception, BodyPart_ErrorMask>>.Instance.Parse(
+                    ListXmlTranslation<BodyPart>.Instance.ParseInto(
                         root: root,
+                        item: item.BodyParts,
                         fieldIndex: (int)BodyData_FieldIndex.BodyParts,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, BodyPart_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiXmlTranslation<BodyPart, BodyPart_ErrorMask>.Instance.Parse(
-                                root: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: LoquiXmlTranslation<BodyPart>.Instance.Parse);
                     break;
                 default:
                     break;
@@ -647,8 +642,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -657,26 +652,50 @@ namespace Mutagen.Bethesda.Oblivion
             out BodyData_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = BodyData_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (BodyData Object, BodyData_ErrorMask ErrorMask) Create_Binary(
+        public static BodyData Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            BodyData_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new BodyData_ErrorMask()) : default(Func<BodyData_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new BodyData();
+            try
+            {
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                    int? lastParsed = null;
+                    while (!frame.Complete)
+                    {
+                        var parsed = Fill_Binary_RecordTypes(
+                            item: ret,
+                            frame: frame,
+                            lastParsed: lastParsed,
+                            errorMask: errorMask,
+                            recordTypeConverter: recordTypeConverter);
+                        if (parsed.Failed) break;
+                        lastParsed = parsed.Value;
+                    }
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static BodyData Create_Binary(string path)
@@ -731,10 +750,12 @@ namespace Mutagen.Bethesda.Oblivion
             out BodyData_ErrorMask errorMask,
             bool doMasks = true)
         {
-            errorMask = this.Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: doMasks) as BodyData_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = BodyData_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Binary(
@@ -770,7 +791,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_Binary(string path)
@@ -789,61 +810,23 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected object Write_Binary_Internal(
+        protected void Write_Binary_Internal(
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
             BodyDataCommon.Write_Binary(
                 item: this,
-                doMasks: doMasks,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static BodyData Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<BodyData_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            var ret = new BodyData();
-            try
-            {
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                    int? lastParsed = null;
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            lastParsed: lastParsed,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                        lastParsed = parsed.Value;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
 
         protected static void Fill_Binary_Structs(
             BodyData item,
             MutagenFrame frame,
-            Func<BodyData_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
         }
 
@@ -851,7 +834,7 @@ namespace Mutagen.Bethesda.Oblivion
             BodyData item,
             MutagenFrame frame,
             int? lastParsed,
-            Func<BodyData_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -862,38 +845,42 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "MODL":
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Model) return TryGet<int?>.Failure;
+                    try
                     {
-                        var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                        errorMask?.PushIndex((int)BodyData_FieldIndex.Model);
+                        if (LoquiBinaryTranslation<Model>.Instance.Parse(
                             frame: frame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)BodyData_FieldIndex.Model,
-                            errorMask: errorMask);
-                        if (ModeltryGet.Succeeded)
+                            item: out Model ModelParse,
+                            errorMask: errorMask))
                         {
-                            item.SetModel(item: ModeltryGet.Value);
+                            item.Model = ModelParse;
                         }
                         else
                         {
                             item.UnsetModel();
                         }
                     }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Model);
                 case "INDX":
                 case "ICON":
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.BodyParts) return TryGet<int?>.Failure;
-                    item.BodyParts.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<BodyPart, MaskItem<Exception, BodyPart_ErrorMask>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<BodyPart>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: BodyPart_Registration.TriggeringRecordTypes,
+                        item: item.BodyParts,
                         fieldIndex: (int)BodyData_FieldIndex.BodyParts,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, BodyPart_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiBinaryTranslation<BodyPart, BodyPart_ErrorMask>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: LoquiBinaryTranslation<BodyPart>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)BodyData_FieldIndex.BodyParts);
                 default:
                     return TryGet<int?>.Failure;
@@ -990,24 +977,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            BodyData_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new BodyData_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             BodyDataCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = BodyData_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IBodyDataGetter rhs,
+            ErrorMaskBuilder errorMask,
+            BodyData_CopyMask copyMask = null,
+            IBodyDataGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            BodyDataCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1320,13 +1315,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBodyData item,
             IBodyDataGetter rhs,
             IBodyDataGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             BodyData_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)BodyData_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -1344,15 +1339,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         item: item.Model,
                                         rhs: rhs.Model,
                                         def: def?.Model,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            var mask = new Model_ErrorMask();
-                                            baseMask.SetNthMask((int)BodyData_FieldIndex.Model, mask);
-                                            return mask;
-                                        }
-                                        ) : null),
+                                        errorMask: errorMask,
                                         copyMask: copyMask?.Model.Specific,
                                         cmds: cmds);
                                     return r;
@@ -1369,13 +1356,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)BodyData_FieldIndex.Model, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.BodyParts.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)BodyData_FieldIndex.BodyParts);
                 try
                 {
                     item.BodyParts.SetToWithDefault(
@@ -1401,9 +1393,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)BodyData_FieldIndex.BodyParts, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1612,62 +1608,53 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out BodyData_ErrorMask errorMask,
             string name = null)
         {
-            BodyData_ErrorMask errMaskRet = null;
-            Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_XML(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new BodyData_ErrorMask()) : default(Func<BodyData_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = BodyData_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal(
+        public static void Write_XML(
             XElement node,
             IBodyDataGetter item,
-            Func<BodyData_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.BodyData");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.BodyData");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.BodyData");
-                }
-                if (item.Model_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.Model_Property,
-                        name: nameof(item.Model),
-                        fieldIndex: (int)BodyData_FieldIndex.Model,
-                        errorMask: errorMask);
-                }
-                if (item.BodyParts.HasBeenSet)
-                {
-                    ListXmlTranslation<BodyPart, MaskItem<Exception, BodyPart_ErrorMask>>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.BodyParts),
-                        item: item.BodyParts,
-                        fieldIndex: (int)BodyData_FieldIndex.BodyParts,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, BodyPart subItem, bool listDoMasks, out MaskItem<Exception, BodyPart_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<BodyPart, BodyPart_ErrorMask>.Instance.Write(
-                                node: subNode,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.BodyData");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (item.Model_Property.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                LoquiXmlTranslation<Model>.Instance.Write(
+                    node: elem,
+                    item: item.Model_Property,
+                    name: nameof(item.Model),
+                    fieldIndex: (int)BodyData_FieldIndex.Model,
+                    errorMask: errorMask);
+            }
+            if (item.BodyParts.HasBeenSet)
+            {
+                ListXmlTranslation<BodyPart>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.BodyParts),
+                    item: item.BodyParts,
+                    fieldIndex: (int)BodyData_FieldIndex.BodyParts,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, BodyPart subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        LoquiXmlTranslation<BodyPart>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            errorMask: listSubMask);
+                    }
+                    );
             }
         }
         #endregion
@@ -1683,34 +1670,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out BodyData_ErrorMask errorMask)
         {
-            BodyData_ErrorMask errMaskRet = null;
-            Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new BodyData_ErrorMask()) : default(Func<BodyData_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = BodyData_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_Binary_Internal(
+        public static void Write_Binary(
             MutagenWriter writer,
             BodyData item,
             RecordTypeConverter recordTypeConverter,
-            Func<BodyData_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -1718,27 +1697,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BodyData item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<BodyData_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
+            LoquiBinaryTranslation<Model>.Instance.Write(
                 writer: writer,
                 item: item.Model_Property,
                 fieldIndex: (int)BodyData_FieldIndex.Model,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<BodyPart, MaskItem<Exception, BodyPart_ErrorMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<BodyPart>.Instance.Write(
                 writer: writer,
-                item: item.BodyParts,
+                items: item.BodyParts,
                 fieldIndex: (int)BodyData_FieldIndex.BodyParts,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, BodyPart subItem, bool listDoMasks, out MaskItem<Exception, BodyPart_ErrorMask> listSubMask) =>
-                {
-                    LoquiBinaryTranslation<BodyPart, BodyPart_ErrorMask>.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                transl: LoquiBinaryTranslation<BodyPart>.Instance.Write);
         }
 
         #endregion
@@ -2068,6 +2039,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static BodyData_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            return new BodyData_ErrorMask();
         }
         #endregion
 

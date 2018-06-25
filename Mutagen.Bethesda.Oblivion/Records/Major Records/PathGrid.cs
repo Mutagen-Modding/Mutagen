@@ -52,13 +52,22 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (nextRec.Type)
                 {
                     case "PGAG":
-                        using (var subFrame = frame.SpawnWithLength(len))
+                        using (errorMask.PushIndex((int)PathGrid_FieldIndex.Unknown))
                         {
-                            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.ParseInto(
-                               subFrame,
-                               item: item._Unknown,
-                               fieldIndex: (int)PathGrid_FieldIndex.Unknown,
-                               errorMask: errorMask);
+                            using (var subFrame = frame.SpawnWithLength(len))
+                            {
+                                if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                                   subFrame,
+                                   item: out var unknownBytes,
+                                   errorMask: errorMask))
+                                {
+                                    item.Unknown = unknownBytes;
+                                }
+                                else
+                                {
+                                    item.UnsetUnknown();
+                                }
+                            }
                         }
                         break;
                     case "PGRR":

@@ -241,30 +241,6 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write(
             MutagenWriter writer,
-            E? item,
-            RecordType header,
-            long length,
-            int fieldIndex,
-            bool nullable,
-            Func<M> errorMask)
-            where M : IErrorMask
-        {
-            this.Write(
-                writer,
-                item,
-                header,
-                length,
-                nullable,
-                errorMask != null,
-                out var subMask);
-            ErrorMask.HandleException(
-                errorMask,
-                fieldIndex,
-                subMask);
-        }
-
-        public void Write<M>(
-            MutagenWriter writer,
             IHasBeenSetItemGetter<E?> item,
             RecordType header,
             long length,

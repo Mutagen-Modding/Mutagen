@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>190fdebd9d0d6969dc7a1656b182155c2966a1a5</Sha>
+         <Sha>991da12b321c063463638cc63ce43d38f9275122</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>06-18-2018 21:04:41</CommitDate>
-         <Description>SortingListDictionary with some tests</Description>
+         <CommitDate>06-20-2018 23:21:48</CommitDate>
+         <Description>Merge branch 'Laptop' into Desktop</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>877701f6e51bf15c9f1e838e981bb5290e6cd353</Sha>
+         <Sha>5978020cb64e987d9c182a538410c8c3005d3066</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>06-17-2018 01:52:10</CommitDate>
-         <Description>Common interface functionality</Description>
+         <CommitDate>06-24-2018 20:53:27</CommitDate>
+         <Description>Merge fixes and feature meshing</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

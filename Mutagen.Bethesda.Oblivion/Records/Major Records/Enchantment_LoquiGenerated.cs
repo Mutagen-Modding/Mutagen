@@ -20,8 +20,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using System.Diagnostics;
 using Loqui.Internal;
+using System.Diagnostics;
 using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
@@ -356,8 +356,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -366,23 +365,37 @@ namespace Mutagen.Bethesda.Oblivion
             out Enchantment_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = Enchantment_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (Enchantment Object, Enchantment_ErrorMask ErrorMask) Create_XML(
+        public static Enchantment Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            Enchantment_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Enchantment_ErrorMask()) : default(Func<Enchantment_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new Enchantment();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static Enchantment Create_XML(string path)
@@ -424,12 +437,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Enchantment, Enchantment_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Enchantment>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -438,13 +450,14 @@ namespace Mutagen.Bethesda.Oblivion
             out Enchantment_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Enchantment, Enchantment_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<Enchantment>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = Enchantment_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -524,10 +537,12 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            errorMask = this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as Enchantment_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = Enchantment_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
@@ -567,7 +582,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: false);
+                errorMask: null);
         }
 
         public override void Write_XML(
@@ -592,124 +607,138 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
-        protected override object Write_XML_Internal(
+        protected override void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
             EnchantmentCommon.Write_XML(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static Enchantment Create_XML_Internal(
-            XElement root,
-            Func<Enchantment_ErrorMask> errorMask)
-        {
-            var ret = new Enchantment();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
 
         protected static void Fill_XML_Internal(
             Enchantment item,
             XElement root,
             string name,
-            Func<Enchantment_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Type":
-                    var TypetryGet = EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Parse(
-                        root,
-                        nullable: false,
-                        fieldIndex: (int)Enchantment_FieldIndex.Type,
-                        errorMask: errorMask).Bubble((o) => o.Value);
-                    if (TypetryGet.Succeeded)
+                    try
                     {
-                        item.SetType(item: TypetryGet.Value);
+                        errorMask?.PushIndex((int)Enchantment_FieldIndex.Type);
+                        if (EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Parse(
+                            root: root,
+                            item: out Enchantment.EnchantmentType TypeParse,
+                            errorMask: errorMask))
+                        {
+                            item.Type = TypeParse;
+                        }
+                        else
+                        {
+                            item.UnsetType();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetType();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "ChargeAmount":
-                    var ChargeAmounttryGet = UInt32XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
-                        errorMask: errorMask);
-                    if (ChargeAmounttryGet.Succeeded)
+                    try
                     {
-                        item.SetChargeAmount(item: ChargeAmounttryGet.Value);
+                        errorMask?.PushIndex((int)Enchantment_FieldIndex.ChargeAmount);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out UInt32 ChargeAmountParse,
+                            errorMask: errorMask))
+                        {
+                            item.ChargeAmount = ChargeAmountParse;
+                        }
+                        else
+                        {
+                            item.UnsetChargeAmount();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetChargeAmount();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "EnchantCost":
-                    var EnchantCosttryGet = UInt32XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
-                        errorMask: errorMask);
-                    if (EnchantCosttryGet.Succeeded)
+                    try
                     {
-                        item.SetEnchantCost(item: EnchantCosttryGet.Value);
+                        errorMask?.PushIndex((int)Enchantment_FieldIndex.EnchantCost);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out UInt32 EnchantCostParse,
+                            errorMask: errorMask))
+                        {
+                            item.EnchantCost = EnchantCostParse;
+                        }
+                        else
+                        {
+                            item.UnsetEnchantCost();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetEnchantCost();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Flags":
-                    var FlagstryGet = EnumXmlTranslation<Enchantment.Flag>.Instance.Parse(
-                        root,
-                        nullable: false,
-                        fieldIndex: (int)Enchantment_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value);
-                    if (FlagstryGet.Succeeded)
+                    try
                     {
-                        item.SetFlags(item: FlagstryGet.Value);
+                        errorMask?.PushIndex((int)Enchantment_FieldIndex.Flags);
+                        if (EnumXmlTranslation<Enchantment.Flag>.Instance.Parse(
+                            root: root,
+                            item: out Enchantment.Flag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.UnsetFlags();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetFlags();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Effects":
-                    item._Effects.SetIfSucceededOrDefault(ListXmlTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Parse(
+                    ListXmlTranslation<Effect>.Instance.ParseInto(
                         root: root,
+                        item: item.Effects,
                         fieldIndex: (int)Enchantment_FieldIndex.Effects,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiXmlTranslation<Effect, Effect_ErrorMask>.Instance.Parse(
-                                root: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: LoquiXmlTranslation<Effect>.Instance.Parse);
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -1156,8 +1185,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -1166,26 +1195,29 @@ namespace Mutagen.Bethesda.Oblivion
             out Enchantment_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = Enchantment_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (Enchantment Object, Enchantment_ErrorMask ErrorMask) Create_Binary(
+        public static Enchantment Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            Enchantment_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
+            return UtilityTranslation.MajorRecordParse<Enchantment>(
+                record: new Enchantment(),
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Enchantment_ErrorMask()) : default(Func<Enchantment_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+                errorMask: errorMask,
+                recType: Enchantment_Registration.ENCH_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         public static Enchantment Create_Binary(string path)
@@ -1240,10 +1272,12 @@ namespace Mutagen.Bethesda.Oblivion
             out Enchantment_ErrorMask errorMask,
             bool doMasks = true)
         {
-            errorMask = this.Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: doMasks) as Enchantment_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = Enchantment_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Binary(
@@ -1279,7 +1313,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: false);
+                errorMask: null);
         }
 
         public override void Write_Binary(string path)
@@ -1298,40 +1332,23 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected override object Write_Binary_Internal(
+        protected override void Write_Binary_Internal(
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
             EnchantmentCommon.Write_Binary(
                 item: this,
-                doMasks: doMasks,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static Enchantment Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<Enchantment_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            return UtilityTranslation.MajorRecordParse<Enchantment, Enchantment_ErrorMask>(
-                record: new Enchantment(),
-                frame: frame,
-                errorMask: errorMask,
-                recType: Enchantment_Registration.ENCH_HEADER,
-                recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
-        }
 
         protected static void Fill_Binary_Structs(
             Enchantment item,
             MutagenFrame frame,
-            Func<Enchantment_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             NamedMajorRecord.Fill_Binary_Structs(
                 item: item,
@@ -1342,7 +1359,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             Enchantment item,
             MutagenFrame frame,
-            Func<Enchantment_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -1355,71 +1372,113 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        var TypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(4),
-                            fieldIndex: (int)Enchantment_FieldIndex.Type,
-                            errorMask: errorMask);
-                        if (TypetryGet.Succeeded)
+                        try
                         {
-                            item.SetType(item: TypetryGet.Value);
+                            errorMask?.PushIndex((int)Enchantment_FieldIndex.Type);
+                            if (EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Parse(
+                                frame: dataFrame.SpawnWithLength(4),
+                                item: out Enchantment.EnchantmentType TypeParse,
+                                errorMask: errorMask))
+                            {
+                                item.Type = TypeParse;
+                            }
+                            else
+                            {
+                                item.UnsetType();
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.UnsetType();
+                            errorMask.ReportException(ex);
                         }
-                        var ChargeAmounttryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
-                            errorMask: errorMask);
-                        if (ChargeAmounttryGet.Succeeded)
+                        finally
                         {
-                            item.SetChargeAmount(item: ChargeAmounttryGet.Value);
+                            errorMask?.PopIndex();
                         }
-                        else
+                        try
                         {
-                            item.UnsetChargeAmount();
+                            errorMask?.PushIndex((int)Enchantment_FieldIndex.ChargeAmount);
+                            if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out UInt32 ChargeAmountParse,
+                                errorMask: errorMask))
+                            {
+                                item.ChargeAmount = ChargeAmountParse;
+                            }
+                            else
+                            {
+                                item.UnsetChargeAmount();
+                            }
                         }
-                        var EnchantCosttryGet = Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
-                            errorMask: errorMask);
-                        if (EnchantCosttryGet.Succeeded)
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.SetEnchantCost(item: EnchantCosttryGet.Value);
+                            errorMask.ReportException(ex);
                         }
-                        else
+                        finally
                         {
-                            item.UnsetEnchantCost();
+                            errorMask?.PopIndex();
                         }
-                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.Flag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(4),
-                            fieldIndex: (int)Enchantment_FieldIndex.Flags,
-                            errorMask: errorMask);
-                        if (FlagstryGet.Succeeded)
+                        try
                         {
-                            item.SetFlags(item: FlagstryGet.Value);
+                            errorMask?.PushIndex((int)Enchantment_FieldIndex.EnchantCost);
+                            if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out UInt32 EnchantCostParse,
+                                errorMask: errorMask))
+                            {
+                                item.EnchantCost = EnchantCostParse;
+                            }
+                            else
+                            {
+                                item.UnsetEnchantCost();
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.UnsetFlags();
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                        try
+                        {
+                            errorMask?.PushIndex((int)Enchantment_FieldIndex.Flags);
+                            if (EnumBinaryTranslation<Enchantment.Flag>.Instance.Parse(
+                                frame: dataFrame.SpawnWithLength(4),
+                                item: out Enchantment.Flag FlagsParse,
+                                errorMask: errorMask))
+                            {
+                                item.Flags = FlagsParse;
+                            }
+                            else
+                            {
+                                item.UnsetFlags();
+                            }
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Flags);
                 case "EFID":
-                    item.Effects.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Enchantment_Registration.EFID_HEADER,
+                        item: item.Effects,
                         fieldIndex: (int)Enchantment_FieldIndex.Effects,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiBinaryTranslation<Effect, Effect_ErrorMask>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: LoquiBinaryTranslation<Effect>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Effects);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
@@ -1507,24 +1566,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            Enchantment_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Enchantment_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             EnchantmentCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = Enchantment_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IEnchantmentGetter rhs,
+            ErrorMaskBuilder errorMask,
+            Enchantment_CopyMask copyMask = null,
+            IEnchantmentGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            EnchantmentCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -1915,8 +1982,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnchantment item,
             IEnchantmentGetter rhs,
             IEnchantmentGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             Enchantment_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1924,12 +1990,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item,
                 rhs,
                 def,
-                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
             if (copyMask?.Type ?? true)
             {
+                errorMask.PushIndex((int)Enchantment_FieldIndex.Type);
                 try
                 {
                     item.Type_Property.Set(
@@ -1937,13 +2003,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Enchantment_FieldIndex.Type, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.ChargeAmount ?? true)
             {
+                errorMask.PushIndex((int)Enchantment_FieldIndex.ChargeAmount);
                 try
                 {
                     item.ChargeAmount_Property.Set(
@@ -1951,13 +2022,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Enchantment_FieldIndex.ChargeAmount, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.EnchantCost ?? true)
             {
+                errorMask.PushIndex((int)Enchantment_FieldIndex.EnchantCost);
                 try
                 {
                     item.EnchantCost_Property.Set(
@@ -1965,13 +2041,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Enchantment_FieldIndex.EnchantCost, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
+                errorMask.PushIndex((int)Enchantment_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -1979,13 +2060,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Enchantment_FieldIndex.Flags, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Effects.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)Enchantment_FieldIndex.Effects);
                 try
                 {
                     item.Effects.SetToWithDefault(
@@ -2011,9 +2097,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)Enchantment_FieldIndex.Effects, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -2317,77 +2407,68 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Enchantment_ErrorMask errorMask,
             string name = null)
         {
-            Enchantment_ErrorMask errMaskRet = null;
-            Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_XML(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Enchantment_ErrorMask()) : default(Func<Enchantment_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = Enchantment_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal(
+        public static void Write_XML(
             XElement node,
             IEnchantmentGetter item,
-            Func<Enchantment_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Enchantment");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Enchantment");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Enchantment");
-                }
-                EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Type),
-                    item: item.Type_Property,
-                    fieldIndex: (int)Enchantment_FieldIndex.Type,
-                    errorMask: errorMask);
-                UInt32XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.ChargeAmount),
-                    item: item.ChargeAmount_Property,
-                    fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
-                    errorMask: errorMask);
-                UInt32XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.EnchantCost),
-                    item: item.EnchantCost_Property,
-                    fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
-                    errorMask: errorMask);
-                EnumXmlTranslation<Enchantment.Flag>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Flags),
-                    item: item.Flags_Property,
-                    fieldIndex: (int)Enchantment_FieldIndex.Flags,
-                    errorMask: errorMask);
-                if (item.Effects.HasBeenSet)
-                {
-                    ListXmlTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Effects),
-                        item: item.Effects,
-                        fieldIndex: (int)Enchantment_FieldIndex.Effects,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, Effect subItem, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<Effect, Effect_ErrorMask>.Instance.Write(
-                                node: subNode,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Enchantment");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Write(
+                node: elem,
+                name: nameof(item.Type),
+                item: item.Type_Property,
+                fieldIndex: (int)Enchantment_FieldIndex.Type,
+                errorMask: errorMask);
+            UInt32XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.ChargeAmount),
+                item: item.ChargeAmount_Property,
+                fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
+                errorMask: errorMask);
+            UInt32XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.EnchantCost),
+                item: item.EnchantCost_Property,
+                fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
+                errorMask: errorMask);
+            EnumXmlTranslation<Enchantment.Flag>.Instance.Write(
+                node: elem,
+                name: nameof(item.Flags),
+                item: item.Flags_Property,
+                fieldIndex: (int)Enchantment_FieldIndex.Flags,
+                errorMask: errorMask);
+            if (item.Effects.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                ListXmlTranslation<Effect>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Effects),
+                    item: item.Effects,
+                    fieldIndex: (int)Enchantment_FieldIndex.Effects,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, Effect subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        LoquiXmlTranslation<Effect>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            errorMask: listSubMask);
+                    }
+                    );
             }
         }
         #endregion
@@ -2403,43 +2484,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out Enchantment_ErrorMask errorMask)
         {
-            Enchantment_ErrorMask errMaskRet = null;
-            Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Enchantment_ErrorMask()) : default(Func<Enchantment_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = Enchantment_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_Binary_Internal(
+        public static void Write_Binary(
             MutagenWriter writer,
             Enchantment item,
             RecordTypeConverter recordTypeConverter,
-            Func<Enchantment_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: Enchantment_Registration.ENCH_HEADER,
+                type: ObjectType.Record))
             {
-                using (HeaderExport.ExportHeader(
+                MajorRecordCommon.Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: Enchantment_Registration.ENCH_HEADER,
-                    type: ObjectType.Record))
-                {
-                    MajorRecordCommon.Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                    Write_Binary_RecordTypes(
-                        item: item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -2448,7 +2521,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Enchantment item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<Enchantment_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             NamedMajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
@@ -2480,20 +2553,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Enchantment_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Write(
                 writer: writer,
-                item: item.Effects,
+                items: item.Effects,
                 fieldIndex: (int)Enchantment_FieldIndex.Effects,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, Effect subItem, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
-                {
-                    LoquiBinaryTranslation<Effect, Effect_ErrorMask>.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                transl: LoquiBinaryTranslation<Effect>.Instance.Write);
         }
 
         #endregion
@@ -2872,6 +2937,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static Enchantment_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            return new Enchantment_ErrorMask();
         }
         #endregion
 

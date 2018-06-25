@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Loqui;
+using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
@@ -14,7 +15,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         private byte[] _overallTimeStamp;
 
-        static partial void CustomBinaryEnd_Import(MutagenFrame frame, DialogTopic obj, Func<DialogTopic_ErrorMask> errorMask)
+        static partial void CustomBinaryEnd_Import(MutagenFrame frame, DialogTopic obj, ErrorMaskBuilder errorMask)
         {
             if (frame.Reader.Complete) return;
             var next = HeaderTranslation.GetNextType(frame.Reader, out var len, hopGroup: false);
@@ -37,23 +38,24 @@ namespace Mutagen.Bethesda.Oblivion
             }
             using (var subFrame = frame.SpawnWithLength(len - Constants.RECORD_HEADER_LENGTH))
             {
-                obj.Items.SetIfSucceeded(Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem, MaskItem<Exception, DialogItem_ErrorMask>>.Instance.ParseRepeatedItem(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem>.Instance.ParseRepeatedItem(
                     frame: subFrame,
                     fieldIndex: (int)DialogTopic_FieldIndex.Items,
                     lengthLength: 4,
+                    item: obj.Items,
                     errorMask: errorMask,
-                    transl: (MutagenFrame r, RecordType header, bool listDoMasks, out MaskItem<Exception, DialogItem_ErrorMask> listSubMask) =>
+                    transl: (MutagenFrame r, RecordType header, out DialogItem listItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        return LoquiBinaryTranslation<DialogItem, DialogItem_ErrorMask>.Instance.Parse(
+                        return LoquiBinaryTranslation<DialogItem>.Instance.Parse(
                             frame: r,
-                            doMasks: listDoMasks,
-                            errorMask: out listSubMask);
+                            item: out listItem,
+                            errorMask: listErrorMask);
                     }
-                    ));
+                    );
             }
         }
 
-        static partial void CustomBinaryEnd_Export(MutagenWriter writer, DialogTopic obj, Func<DialogTopic_ErrorMask> errorMask)
+        static partial void CustomBinaryEnd_Export(MutagenWriter writer, DialogTopic obj, ErrorMaskBuilder errorMask)
         {
             if (obj.Items.Count == 0) return;
             using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
@@ -68,18 +70,17 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     writer.WriteZeros(4);
                 }
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem, MaskItem<Exception, DialogItem_ErrorMask>>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem>.Instance.Write(
                     writer: writer,
-                    item: obj.Items,
+                    items: obj.Items,
                     fieldIndex: (int)DialogTopic_FieldIndex.Items,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, DialogItem subItem, bool listDoMasks, out MaskItem<Exception, DialogItem_ErrorMask> listSubMask) =>
+                    transl: (MutagenWriter subWriter, DialogItem subItem, ErrorMaskBuilder listErrMask) =>
                     {
-                        LoquiBinaryTranslation<DialogItem, DialogItem_ErrorMask>.Instance.Write(
+                        LoquiBinaryTranslation<DialogItem>.Instance.Write(
                             writer: subWriter,
                             item: subItem,
-                            doMasks: listDoMasks,
-                            errorMask: out listSubMask);
+                            errorMask: listErrMask);
                     });
             }
         }

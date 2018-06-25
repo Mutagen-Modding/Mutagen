@@ -17,8 +17,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using System.Diagnostics;
 using Loqui.Internal;
+using System.Diagnostics;
 using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
@@ -96,7 +96,8 @@ namespace Mutagen.Bethesda
         INotifyingItemGetter<MajorRecord.MajorRecordFlag> IMajorRecordGetter.MajorRecordFlags_Property => this.MajorRecordFlags_Property;
         #endregion
         #region FormID
-        public FormID FormID { get; protected set; }
+        private FormID _FormID;
+        public FormID FormID { get => _FormID; protected set => _FormID = value; }
         #endregion
         #region Version
         protected Byte[] _Version;
@@ -195,7 +196,8 @@ namespace Mutagen.Bethesda
         INotifyingSetItemGetter<String> IMajorRecordGetter.EditorID_Property => this.EditorID_Property;
         #endregion
         #region RecordType
-        public RecordType RecordType { get; protected set; }
+        private RecordType _RecordType;
+        public RecordType RecordType { get => _RecordType; protected set => _RecordType = value; }
         #endregion
 
         #region Loqui Getter Interface
@@ -294,12 +296,11 @@ namespace Mutagen.Bethesda
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<MajorRecord, MajorRecord_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<MajorRecord>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -308,13 +309,14 @@ namespace Mutagen.Bethesda
             out MajorRecord_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<MajorRecord, MajorRecord_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<MajorRecord>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -370,10 +372,12 @@ namespace Mutagen.Bethesda
             bool doMasks = true,
             string name = null)
         {
-            errorMask = this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as MajorRecord_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
@@ -416,18 +420,16 @@ namespace Mutagen.Bethesda
             Stream stream,
             string name = null);
 
-        protected virtual object Write_XML_Internal(
+        protected virtual void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
             MajorRecordCommon.Write_XML(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
 
@@ -435,72 +437,113 @@ namespace Mutagen.Bethesda
             MajorRecord item,
             XElement root,
             string name,
-            Func<MajorRecord_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "MajorRecordFlags":
-                    var MajorRecordFlagstryGet = EnumXmlTranslation<MajorRecord.MajorRecordFlag>.Instance.Parse(
-                        root,
-                        nullable: false,
-                        fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
-                        errorMask: errorMask).Bubble((o) => o.Value);
-                    if (MajorRecordFlagstryGet.Succeeded)
+                    try
                     {
-                        item.SetMajorRecordFlags(item: MajorRecordFlagstryGet.Value);
+                        errorMask?.PushIndex((int)MajorRecord_FieldIndex.MajorRecordFlags);
+                        if (EnumXmlTranslation<MajorRecord.MajorRecordFlag>.Instance.Parse(
+                            root: root,
+                            item: out MajorRecord.MajorRecordFlag MajorRecordFlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.MajorRecordFlags = MajorRecordFlagsParse;
+                        }
+                        else
+                        {
+                            item.UnsetMajorRecordFlags();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetMajorRecordFlags();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "FormID":
-                    var FormIDtryGet = FormIDXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)MajorRecord_FieldIndex.FormID,
-                        errorMask: errorMask);
-                    if (FormIDtryGet.Succeeded)
+                    try
                     {
-                        item.FormID = FormIDtryGet.Value;
+                        errorMask?.PushIndex((int)MajorRecord_FieldIndex.FormID);
+                        if (FormIDXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out FormID FormIDParse,
+                            errorMask: errorMask))
+                        {
+                            item.FormID = FormIDParse;
+                        }
+                        else
+                        {
+                            item.FormID = default(FormID);
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.FormID = default(FormID);
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Version":
-                    var VersiontryGet = ByteArrayXmlTranslation.Instance.Parse(
-                        root,
-                        fieldIndex: (int)MajorRecord_FieldIndex.Version,
-                        errorMask: errorMask);
-                    if (VersiontryGet.Succeeded)
+                    try
                     {
-                        item.SetVersion(item: VersiontryGet.Value);
+                        errorMask?.PushIndex((int)MajorRecord_FieldIndex.Version);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Byte[] VersionParse,
+                            errorMask: errorMask))
+                        {
+                            item.Version = VersionParse;
+                        }
+                        else
+                        {
+                            item.UnsetVersion();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetVersion();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "EditorID":
-                    var EditorIDtryGet = StringXmlTranslation.Instance.Parse(
-                        root,
-                        fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
-                        errorMask: errorMask);
-                    if (EditorIDtryGet.Succeeded)
+                    try
                     {
-                        item.SetEditorID(item: EditorIDtryGet.Value);
+                        errorMask?.PushIndex((int)MajorRecord_FieldIndex.EditorID);
+                        if (StringXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out String EditorIDParse,
+                            errorMask: errorMask))
+                        {
+                            item.EditorID = EditorIDParse;
+                        }
+                        else
+                        {
+                            item.UnsetEditorID();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetEditorID();
+                        errorMask.ReportException(ex);
                     }
-                    break;
-                case "RecordType":
-                    item.RecordType = WildcardXmlTranslation.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)MajorRecord_FieldIndex.RecordType,
-                        errorMask: errorMask).Bubble<RecordType>(i => (RecordType)i).GetOrDefault(item.RecordType);
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     break;
@@ -915,6 +958,16 @@ namespace Mutagen.Bethesda
         {
             yield break;
         }
+        public virtual void Write_XML_Folder(
+            string path,
+            out MajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            Write_XML(
+                path: path,
+                errorMask: out errorMask,
+                doMasks: doMasks);
+        }
         #endregion
 
         #region Binary Translation
@@ -924,10 +977,12 @@ namespace Mutagen.Bethesda
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
-            errorMask = this.Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: doMasks) as MajorRecord_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Binary(
@@ -962,68 +1017,102 @@ namespace Mutagen.Bethesda
         public abstract void Write_Binary(string path);
         public abstract void Write_Binary(Stream stream);
 
-        protected virtual object Write_Binary_Internal(
+        protected virtual void Write_Binary_Internal(
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
             MajorRecordCommon.Write_Binary(
                 item: this,
-                doMasks: doMasks,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
 
         protected static void Fill_Binary_Structs(
             MajorRecord item,
             MutagenFrame frame,
-            Func<MajorRecord_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            var MajorRecordFlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<MajorRecord.MajorRecordFlag>.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
-                errorMask: errorMask);
-            if (MajorRecordFlagstryGet.Succeeded)
+            try
             {
-                item.SetMajorRecordFlags(item: MajorRecordFlagstryGet.Value);
+                errorMask?.PushIndex((int)MajorRecord_FieldIndex.MajorRecordFlags);
+                if (EnumBinaryTranslation<MajorRecord.MajorRecordFlag>.Instance.Parse(
+                    frame: frame.SpawnWithLength(4),
+                    item: out MajorRecord.MajorRecordFlag MajorRecordFlagsParse,
+                    errorMask: errorMask))
+                {
+                    item.MajorRecordFlags = MajorRecordFlagsParse;
+                }
+                else
+                {
+                    item.UnsetMajorRecordFlags();
+                }
             }
-            else
+            catch (Exception ex)
+            when (errorMask != null)
             {
-                item.UnsetMajorRecordFlags();
+                errorMask.ReportException(ex);
             }
-            var FormIDtryGet = Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                fieldIndex: (int)MajorRecord_FieldIndex.FormID,
-                errorMask: errorMask);
-            if (FormIDtryGet.Succeeded)
+            finally
             {
-                item.FormID = FormIDtryGet.Value;
+                errorMask?.PopIndex();
             }
-            else
+            try
             {
-                item.FormID = default(FormID);
+                errorMask?.PushIndex((int)MajorRecord_FieldIndex.FormID);
+                if (Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out FormID FormIDParse,
+                    errorMask: errorMask))
+                {
+                    item.FormID = FormIDParse;
+                }
+                else
+                {
+                    item.FormID = default(FormID);
+                }
             }
-            var VersiontryGet = ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                fieldIndex: (int)MajorRecord_FieldIndex.Version,
-                errorMask: errorMask);
-            if (VersiontryGet.Succeeded)
+            catch (Exception ex)
+            when (errorMask != null)
             {
-                item.SetVersion(item: VersiontryGet.Value);
+                errorMask.ReportException(ex);
             }
-            else
+            finally
             {
-                item.UnsetVersion();
+                errorMask?.PopIndex();
+            }
+            try
+            {
+                errorMask?.PushIndex((int)MajorRecord_FieldIndex.Version);
+                if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    frame: frame.SpawnWithLength(4),
+                    item: out Byte[] VersionParse,
+                    errorMask: errorMask))
+                {
+                    item.Version = VersionParse;
+                }
+                else
+                {
+                    item.UnsetVersion();
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
             }
         }
 
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             MajorRecord item,
             MutagenFrame frame,
-            Func<MajorRecord_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -1034,22 +1123,34 @@ namespace Mutagen.Bethesda
             {
                 case "EDID":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var EditorIDtryGet = StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
-                        parseWhole: true,
-                        errorMask: errorMask);
-                    if (EditorIDtryGet.Succeeded)
+                    try
                     {
-                        item.SetEditorID(item: EditorIDtryGet.Value);
+                        errorMask?.PushIndex((int)MajorRecord_FieldIndex.EditorID);
+                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            parseWhole: true,
+                            item: out String EditorIDParse,
+                            errorMask: errorMask))
+                        {
+                            item.EditorID = EditorIDParse;
+                        }
+                        else
+                        {
+                            item.UnsetEditorID();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetEditorID();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)MajorRecord_FieldIndex.EditorID);
                 default:
-                    errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    errorMask.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + Constants.SUBRECORD_LENGTH;
                     return TryGet<int?>.Succeed(null);
             }
@@ -1129,24 +1230,32 @@ namespace Mutagen.Bethesda
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            MajorRecord_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new MajorRecord_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             MajorRecordCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            MajorRecord_CopyMask copyMask = null,
+            IMajorRecordGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            MajorRecordCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1163,7 +1272,7 @@ namespace Mutagen.Bethesda
                         cmds: cmds);
                     break;
                 case MajorRecord_FieldIndex.FormID:
-                    this.FormID = (FormID)obj;
+                    this._FormID = (FormID)obj;
                     break;
                 case MajorRecord_FieldIndex.Version:
                     this.SetVersion(
@@ -1208,7 +1317,7 @@ namespace Mutagen.Bethesda
                         cmds: null);
                     break;
                 case MajorRecord_FieldIndex.FormID:
-                    obj.FormID = (FormID)pair.Value;
+                    obj._FormID = (FormID)pair.Value;
                     break;
                 case MajorRecord_FieldIndex.Version:
                     obj.SetVersion(
@@ -1645,13 +1754,13 @@ namespace Mutagen.Bethesda.Internals
             IMajorRecord item,
             IMajorRecordGetter rhs,
             IMajorRecordGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             MajorRecord_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.MajorRecordFlags ?? true)
             {
+                errorMask.PushIndex((int)MajorRecord_FieldIndex.MajorRecordFlags);
                 try
                 {
                     item.MajorRecordFlags_Property.Set(
@@ -1659,13 +1768,18 @@ namespace Mutagen.Bethesda.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)MajorRecord_FieldIndex.MajorRecordFlags, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Version ?? true)
             {
+                errorMask.PushIndex((int)MajorRecord_FieldIndex.Version);
                 try
                 {
                     item.Version_Property.Set(
@@ -1673,13 +1787,18 @@ namespace Mutagen.Bethesda.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)MajorRecord_FieldIndex.Version, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.EditorID ?? true)
             {
+                errorMask.PushIndex((int)MajorRecord_FieldIndex.EditorID);
                 try
                 {
                     item.EditorID_Property.SetToWithDefault(
@@ -1687,9 +1806,13 @@ namespace Mutagen.Bethesda.Internals
                         def: def?.EditorID_Property);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)MajorRecord_FieldIndex.EditorID, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1897,61 +2020,53 @@ namespace Mutagen.Bethesda.Internals
             out MajorRecord_ErrorMask errorMask,
             string name = null)
         {
-            MajorRecord_ErrorMask errMaskRet = null;
-            Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_XML(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MajorRecord_ErrorMask()) : default(Func<MajorRecord_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal(
+        public static void Write_XML(
             XElement node,
             IMajorRecordGetter item,
-            Func<MajorRecord_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.MajorRecord");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.MajorRecord");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.MajorRecord");
-                }
-                EnumXmlTranslation<MajorRecord.MajorRecordFlag>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.MajorRecordFlags),
-                    item: item.MajorRecordFlags_Property,
-                    fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
-                    errorMask: errorMask);
-                FormIDXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.FormID),
-                    item: item.FormID,
-                    fieldIndex: (int)MajorRecord_FieldIndex.FormID,
-                    errorMask: errorMask);
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Version),
-                    item: item.Version_Property,
-                    fieldIndex: (int)MajorRecord_FieldIndex.Version,
-                    errorMask: errorMask);
-                if (item.EditorID_Property.HasBeenSet)
-                {
-                    StringXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.EditorID),
-                        item: item.EditorID_Property,
-                        fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
-                        errorMask: errorMask);
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.MajorRecord");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            EnumXmlTranslation<MajorRecord.MajorRecordFlag>.Instance.Write(
+                node: elem,
+                name: nameof(item.MajorRecordFlags),
+                item: item.MajorRecordFlags_Property,
+                fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
+                errorMask: errorMask);
+            FormIDXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.FormID),
+                item: item.FormID,
+                fieldIndex: (int)MajorRecord_FieldIndex.FormID,
+                errorMask: errorMask);
+            ByteArrayXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Version),
+                item: item.Version_Property,
+                fieldIndex: (int)MajorRecord_FieldIndex.Version,
+                errorMask: errorMask);
+            if (item.EditorID_Property.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                StringXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.EditorID),
+                    item: item.EditorID_Property,
+                    fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -1967,45 +2082,37 @@ namespace Mutagen.Bethesda.Internals
             bool doMasks,
             out MajorRecord_ErrorMask errorMask)
         {
-            MajorRecord_ErrorMask errMaskRet = null;
-            Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MajorRecord_ErrorMask()) : default(Func<MajorRecord_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_Binary_Internal(
+        public static void Write_Binary(
             MutagenWriter writer,
             MajorRecord item,
             RecordTypeConverter recordTypeConverter,
-            Func<MajorRecord_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask);
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask);
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
         }
         #endregion
 
         public static void Write_Binary_Embedded(
             MajorRecord item,
             MutagenWriter writer,
-            Func<MajorRecord_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<MajorRecord.MajorRecordFlag>.Instance.Write(
                 writer,
@@ -2029,7 +2136,7 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<MajorRecord_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -2344,6 +2451,14 @@ namespace Mutagen.Bethesda.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static MajorRecord_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            return new MajorRecord_ErrorMask();
         }
         #endregion
 

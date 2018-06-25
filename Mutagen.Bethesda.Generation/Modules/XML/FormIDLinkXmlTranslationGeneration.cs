@@ -34,5 +34,18 @@ namespace Mutagen.Bethesda.Generation
                 args.Add($"errorMask: out {maskAccessor}");
             }
         }
+
+        public override void GenerateCopyIn(FileGeneration fg, TypeGeneration typeGen, string nodeAccessor, Accessor itemAccessor, string maskAccessor)
+        {
+            FormIDLinkType linkType = typeGen as FormIDLinkType;
+            using (var args = new ArgsWrapper(fg,
+                $"{this.TypeName}XmlTranslation.Instance.ParseInto"))
+            {
+                args.Add(nodeAccessor);
+                args.Add($"fieldIndex: {typeGen.IndexEnumInt}");
+                args.Add($"item: {itemAccessor.PropertyAccess}");
+                args.Add($"errorMask: {maskAccessor}");
+            }
+        }
     }
 }

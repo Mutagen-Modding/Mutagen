@@ -72,6 +72,24 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
+        public override void GenerateCopyIn(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string frameAccessor, Accessor itemAccessor, string maskAccessor)
+        {
+            FormIDLinkType linkType = typeGen as FormIDLinkType;
+            if (typeGen.TryGetFieldData(out var data)
+                && data.RecordType.HasValue)
+            {
+                fg.AppendLine($"{frameAccessor}.Position += Constants.SUBRECORD_LENGTH;");
+            }
+            using (var args = new ArgsWrapper(fg,
+                $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.ParseInto"))
+            {
+                args.Add($"frame: {frameAccessor}.Spawn(snapToFinalPosition: false)");
+                args.Add($"fieldIndex: {typeGen.IndexEnumInt}");
+                args.Add($"item: {itemAccessor.PropertyAccess}");
+                args.Add($"errorMask: {maskAccessor}");
+            }
+        }
+
         public override void GenerateWrite(
             FileGeneration fg, 
             ObjectGeneration objGen,

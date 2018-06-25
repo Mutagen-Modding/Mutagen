@@ -17,8 +17,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using System.Diagnostics;
 using Loqui.Internal;
+using System.Diagnostics;
 using System.Collections.Specialized;
 
 namespace Mutagen.Bethesda.Tests
@@ -43,7 +43,8 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region Location
-        public Int64 Location { get; set; }
+        private Int64 _Location;
+        public Int64 Location { get => _Location; set => _Location = value; }
         #endregion
         #region Data
         private Byte[] _Data;
@@ -138,8 +139,7 @@ namespace Mutagen.Bethesda.Tests
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -148,23 +148,37 @@ namespace Mutagen.Bethesda.Tests
             out DataTarget_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = DataTarget_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (DataTarget Object, DataTarget_ErrorMask ErrorMask) Create_XML(
+        public static DataTarget Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            DataTarget_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new DataTarget_ErrorMask()) : default(Func<DataTarget_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new DataTarget();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static DataTarget Create_XML(string path)
@@ -206,12 +220,11 @@ namespace Mutagen.Bethesda.Tests
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<DataTarget, DataTarget_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<DataTarget>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -220,13 +233,14 @@ namespace Mutagen.Bethesda.Tests
             out DataTarget_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<DataTarget, DataTarget_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<DataTarget>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = DataTarget_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -282,10 +296,12 @@ namespace Mutagen.Bethesda.Tests
             bool doMasks = true,
             string name = null)
         {
-            errorMask = this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as DataTarget_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = DataTarget_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
@@ -325,7 +341,7 @@ namespace Mutagen.Bethesda.Tests
             this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_XML(
@@ -350,79 +366,77 @@ namespace Mutagen.Bethesda.Tests
             topNode.Elements().First().Save(stream);
         }
 
-        protected object Write_XML_Internal(
+        protected void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
             DataTargetCommon.Write_XML(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static DataTarget Create_XML_Internal(
-            XElement root,
-            Func<DataTarget_ErrorMask> errorMask)
-        {
-            var ret = new DataTarget();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
 
         protected static void Fill_XML_Internal(
             DataTarget item,
             XElement root,
             string name,
-            Func<DataTarget_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Location":
-                    var LocationtryGet = Int64XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)DataTarget_FieldIndex.Location,
-                        errorMask: errorMask);
-                    if (LocationtryGet.Succeeded)
+                    try
                     {
-                        item.Location = LocationtryGet.Value;
+                        errorMask?.PushIndex((int)DataTarget_FieldIndex.Location);
+                        if (Int64XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Int64 LocationParse,
+                            errorMask: errorMask))
+                        {
+                            item.Location = LocationParse;
+                        }
+                        else
+                        {
+                            item.Location = default(Int64);
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.Location = default(Int64);
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Data":
-                    var DatatryGet = ByteArrayXmlTranslation.Instance.Parse(
-                        root,
-                        fieldIndex: (int)DataTarget_FieldIndex.Data,
-                        errorMask: errorMask);
-                    if (DatatryGet.Succeeded)
+                    try
                     {
-                        item._Data = DatatryGet.Value;
+                        errorMask?.PushIndex((int)DataTarget_FieldIndex.Data);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Byte[] DataParse,
+                            errorMask: errorMask))
+                        {
+                            item.Data = DataParse;
+                        }
+                        else
+                        {
+                            item.Data = default(Byte[]);
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item._Data = default(Byte[]);
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 default:
@@ -520,24 +534,32 @@ namespace Mutagen.Bethesda.Tests
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            DataTarget_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new DataTarget_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             DataTargetCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = DataTarget_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IDataTargetGetter rhs,
+            ErrorMaskBuilder errorMask,
+            DataTarget_CopyMask copyMask = null,
+            IDataTargetGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            DataTargetCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -547,7 +569,7 @@ namespace Mutagen.Bethesda.Tests
             switch (enu)
             {
                 case DataTarget_FieldIndex.Location:
-                    this.Location = (Int64)obj;
+                    this._Location = (Int64)obj;
                     break;
                 case DataTarget_FieldIndex.Data:
                     this._Data = (Byte[])obj;
@@ -590,7 +612,7 @@ namespace Mutagen.Bethesda.Tests
             switch (enu)
             {
                 case DataTarget_FieldIndex.Location:
-                    obj.Location = (Int64)pair.Value;
+                    obj._Location = (Int64)pair.Value;
                     break;
                 case DataTarget_FieldIndex.Data:
                     obj._Data = (Byte[])pair.Value;
@@ -827,18 +849,21 @@ namespace Mutagen.Bethesda.Tests.Internals
             IDataTarget item,
             IDataTargetGetter rhs,
             IDataTargetGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             DataTarget_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.Location ?? true)
             {
+                errorMask.PushIndex((int)DataTarget_FieldIndex.Location);
                 item.Location = rhs.Location;
+                errorMask.PopIndex();
             }
             if (copyMask?.Data ?? true)
             {
+                errorMask.PushIndex((int)DataTarget_FieldIndex.Data);
                 item.Data = rhs.Data;
+                errorMask.PopIndex();
             }
         }
 
@@ -1002,47 +1027,39 @@ namespace Mutagen.Bethesda.Tests.Internals
             out DataTarget_ErrorMask errorMask,
             string name = null)
         {
-            DataTarget_ErrorMask errMaskRet = null;
-            Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_XML(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new DataTarget_ErrorMask()) : default(Func<DataTarget_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = DataTarget_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal(
+        public static void Write_XML(
             XElement node,
             IDataTargetGetter item,
-            Func<DataTarget_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.DataTarget");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.DataTarget");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.DataTarget");
-                }
-                Int64XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Location),
-                    item: item.Location,
-                    fieldIndex: (int)DataTarget_FieldIndex.Location,
-                    errorMask: errorMask);
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Data),
-                    item: item.Data,
-                    fieldIndex: (int)DataTarget_FieldIndex.Data,
-                    errorMask: errorMask);
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.DataTarget");
             }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            Int64XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Location),
+                item: item.Location,
+                fieldIndex: (int)DataTarget_FieldIndex.Location,
+                errorMask: errorMask);
+            ByteArrayXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Data),
+                item: item.Data,
+                fieldIndex: (int)DataTarget_FieldIndex.Data,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -1284,6 +1301,14 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static DataTarget_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            return new DataTarget_ErrorMask();
         }
         #endregion
 

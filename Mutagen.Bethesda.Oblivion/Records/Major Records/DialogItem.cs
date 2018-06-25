@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Loqui;
+using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;
@@ -44,88 +45,83 @@ namespace Mutagen.Bethesda.Oblivion
                 new RecordType("SCHR"),
                 new RecordType("SCHD")));
 
-        static partial void FillBinary_Conditions_Custom(MutagenFrame frame, DialogItem item, int fieldIndex, Func<DialogItem_ErrorMask> errorMask)
+        static partial void FillBinary_Conditions_Custom(MutagenFrame frame, DialogItem item, ErrorMaskBuilder errorMask)
         {
-            item.Conditions.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogCondition, MaskItem<Exception, DialogCondition_ErrorMask>>.Instance.ParseRepeatedItem(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogCondition>.Instance.ParseRepeatedItem(
                frame: new MutagenFrame(frame.Reader),
                triggeringRecord: DialogItem_Registration.CTDA_HEADER,
+               item: item.Conditions,
                fieldIndex: (int)DialogItem_FieldIndex.Conditions,
                lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                errorMask: errorMask,
-               transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, DialogCondition_ErrorMask> listSubMask) =>
+               transl: (MutagenFrame r, out DialogCondition listItem, ErrorMaskBuilder listErrMask) =>
                {
-                   return LoquiBinaryTranslation<DialogCondition, DialogCondition_ErrorMask>.Instance.Parse(
+                   return LoquiBinaryTranslation<DialogCondition>.Instance.Parse(
                        frame: r.Spawn(snapToFinalPosition: false),
-                       doMasks: listDoMasks,
-                       errorMask: out listSubMask);
-               }));
+                       item: out listItem,
+                       errorMask: errorMask);
+               });
         }
 
-        static partial void WriteBinary_Conditions_Custom(MutagenWriter writer, DialogItem item, int fieldIndex, Func<DialogItem_ErrorMask> errorMask)
+        static partial void WriteBinary_Conditions_Custom(MutagenWriter writer, DialogItem item, ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogCondition, MaskItem<Exception, DialogCondition_ErrorMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogCondition>.Instance.Write(
                 writer: writer,
-                item: item.Conditions,
+                items: item.Conditions,
                 fieldIndex: (int)DialogItem_FieldIndex.Conditions,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, DialogCondition subItem, bool listDoMasks, out MaskItem<Exception, DialogCondition_ErrorMask> listSubMask) =>
+                transl: (MutagenWriter subWriter, DialogCondition subItem, ErrorMaskBuilder listSubMask) =>
                 {
-                    LoquiBinaryTranslation<DialogCondition, DialogCondition_ErrorMask>.Instance.Write(
+                    LoquiBinaryTranslation<DialogCondition>.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
+                        errorMask: listSubMask);
                 }
                 );
         }
 
-        static partial void FillBinary_ConditionsOld_Custom(MutagenFrame frame, DialogItem item, Func<DialogItem_ErrorMask> errorMask)
+        static partial void FillBinary_ConditionsOld_Custom(MutagenFrame frame, DialogItem item, ErrorMaskBuilder errorMask)
         {
-            item.Conditions.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogCondition, MaskItem<Exception, DialogCondition_ErrorMask>>.Instance.ParseRepeatedItem(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogCondition>.Instance.ParseRepeatedItem(
                frame: frame,
                triggeringRecord: new RecordType("CTDT"),
+               item: item.Conditions,
                fieldIndex: (int)DialogItem_FieldIndex.Conditions,
                lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                errorMask: errorMask,
-               transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, DialogCondition_ErrorMask> listSubMask) =>
+               transl: (MutagenFrame r, out DialogCondition listItem, ErrorMaskBuilder listSubMask) =>
                {
                    byte[] bytes = r.ReadBytes((int)r.Remaining);
                    bytes[4] = 0x18;
                    byte[] newBytes = new byte[bytes.Length + 4];
                    Array.Copy(bytes, newBytes, bytes.Length);
-                   return LoquiBinaryTranslation<DialogCondition, DialogCondition_ErrorMask>.Instance.Parse(
+                   return LoquiBinaryTranslation<DialogCondition>.Instance.Parse(
                        frame: new MutagenFrame(new BinaryMemoryReadStream(newBytes)),
-                       doMasks: listDoMasks,
-                       errorMask: out listSubMask,
+                       item: out listItem,
+                       errorMask: listSubMask,
                        recordTypeConverter: conditionConverter);
-               }));
+               });
         }
 
-        static partial void WriteBinary_ConditionsOld_Custom(MutagenWriter writer, DialogItem item, Func<DialogItem_ErrorMask> errorMask)
+        static partial void WriteBinary_ConditionsOld_Custom(MutagenWriter writer, DialogItem item, ErrorMaskBuilder errorMask)
         {
         }
 
-        static partial void FillBinary_MetadataSummaryOld_Custom(MutagenFrame frame, DialogItem item, Func<DialogItem_ErrorMask> errorMask)
+        static partial void FillBinary_MetadataSummaryOld_Custom(MutagenFrame frame, DialogItem item, ErrorMaskBuilder errorMask)
         {
             var tmpMetadataSummary = ScriptMetaSummary.Create_Binary(
                 frame: frame,
-                doMasks: errorMask != null,
+                errorMask: errorMask,
                 recordTypeConverter: metaConverter);
             item.MetadataSummary.CopyFieldsFrom(
-                rhs: tmpMetadataSummary.Object,
+                rhs: tmpMetadataSummary,
                 def: null,
                 cmds: null,
                 copyMask: null,
-                doMasks: errorMask != null,
-                errorMask: out ScriptMetaSummary_ErrorMask MetadataSummaryerrorMask);
-            var combinedMetadataSummary = ScriptMetaSummary_ErrorMask.Combine(tmpMetadataSummary.ErrorMask, MetadataSummaryerrorMask);
-            ErrorMask.HandleErrorMask(
-                creator: errorMask,
-                index: (int)DialogItem_FieldIndex.MetadataSummary,
-                errMaskObj: combinedMetadataSummary == null ? null : new MaskItem<Exception, ScriptMetaSummary_ErrorMask>(null, combinedMetadataSummary));
+                errorMask: errorMask);
         }
 
-        static partial void WriteBinary_MetadataSummaryOld_Custom(MutagenWriter writer, DialogItem item, Func<DialogItem_ErrorMask> errorMask)
+        static partial void WriteBinary_MetadataSummaryOld_Custom(MutagenWriter writer, DialogItem item, ErrorMaskBuilder errorMask)
         {
         }
     }

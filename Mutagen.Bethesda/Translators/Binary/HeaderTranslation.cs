@@ -158,6 +158,23 @@ namespace Mutagen.Bethesda.Binary
             return false;
         }
 
+        public static bool TryGetRecordType(
+            IBinaryReadStream reader,
+            int lengthLength,
+            out long contentLength,
+            RecordType expectedHeader)
+        {
+            if (TryGet(
+                reader,
+                expectedHeader,
+                out contentLength,
+                lengthLength))
+            {
+                return true;
+            }
+            return false;
+        }
+
         public static long GetSubrecord(
             IBinaryReadStream reader,
             RecordType expectedHeader)

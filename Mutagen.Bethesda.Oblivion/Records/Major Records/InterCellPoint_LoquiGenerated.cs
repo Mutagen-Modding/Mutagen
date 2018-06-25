@@ -19,7 +19,6 @@ using Noggog.Xml;
 using Loqui.Xml;
 using Loqui.Internal;
 using System.Diagnostics;
-using Loqui.Internal;
 using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
@@ -478,32 +477,55 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "PointID":
-<<<<<<< HEAD
-                    var PointIDtryGet = Int32XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)InterCellPoint_FieldIndex.PointID,
-                        errorMask: errorMask);
-                    if (PointIDtryGet.Succeeded)
+                    try
                     {
-                        item.SetPointID(item: PointIDtryGet.Value);
+                        errorMask?.PushIndex((int)InterCellPoint_FieldIndex.PointID);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Int32 PointIDParse,
+                            errorMask: errorMask))
+                        {
+                            item.PointID = PointIDParse;
+                        }
+                        else
+                        {
+                            item.UnsetPointID();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetPointID();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Point":
-                    var PointtryGet = P3FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)InterCellPoint_FieldIndex.Point,
-                        errorMask: errorMask);
-                    if (PointtryGet.Succeeded)
+                    try
                     {
-                        item.SetPoint(item: PointtryGet.Value);
+                        errorMask?.PushIndex((int)InterCellPoint_FieldIndex.Point);
+                        if (P3FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out P3Float PointParse,
+                            errorMask: errorMask))
+                        {
+                            item.Point = PointParse;
+                        }
+                        else
+                        {
+                            item.UnsetPoint();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetPoint();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 default:
@@ -688,20 +710,6 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case InterCellPoint_FieldIndex.Point:
                     SetPoint(item, hasBeenSet, cmds);
-=======
-                    Int32XmlTranslation.Instance.ParseInto(
-                        root,
-                        fieldIndex: (int)InterCellPoint_FieldIndex.PointID,
-                        item: item._PointID,
-                        errorMask: errorMask);
-                    break;
-                case "Point":
-                    P3FloatXmlTranslation.Instance.ParseInto(
-                        root,
-                        fieldIndex: (int)InterCellPoint_FieldIndex.Point,
-                        item: item._Point,
-                        errorMask: errorMask);
->>>>>>> ErrorMaskRevamp
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type P3Float: {index}");
@@ -975,43 +983,54 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             ErrorMaskBuilder errorMask)
         {
-<<<<<<< HEAD
-            var PointIDtryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                fieldIndex: (int)InterCellPoint_FieldIndex.PointID,
-                errorMask: errorMask);
-            if (PointIDtryGet.Succeeded)
+            try
             {
-                item.SetPointID(item: PointIDtryGet.Value);
+                errorMask?.PushIndex((int)InterCellPoint_FieldIndex.PointID);
+                if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out Int32 PointIDParse,
+                    errorMask: errorMask))
+                {
+                    item.PointID = PointIDParse;
+                }
+                else
+                {
+                    item.UnsetPointID();
+                }
             }
-            else
+            catch (Exception ex)
+            when (errorMask != null)
             {
-                item.UnsetPointID();
+                errorMask.ReportException(ex);
             }
-            var PointtryGet = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                fieldIndex: (int)InterCellPoint_FieldIndex.Point,
-                errorMask: errorMask);
-            if (PointtryGet.Succeeded)
+            finally
             {
-                item.SetPoint(item: PointtryGet.Value);
+                errorMask?.PopIndex();
             }
-            else
+            try
             {
-                item.UnsetPoint();
+                errorMask?.PushIndex((int)InterCellPoint_FieldIndex.Point);
+                if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out P3Float PointParse,
+                    errorMask: errorMask))
+                {
+                    item.Point = PointParse;
+                }
+                else
+                {
+                    item.UnsetPoint();
+                }
             }
-=======
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.ParseInto(
-                frame: frame,
-                item: item._PointID,
-                fieldIndex: (int)InterCellPoint_FieldIndex.PointID,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.ParseInto(
-                frame: frame,
-                item: item._Point,
-                fieldIndex: (int)InterCellPoint_FieldIndex.Point,
-                errorMask: errorMask);
->>>>>>> ErrorMaskRevamp
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
         }
 
         #endregion

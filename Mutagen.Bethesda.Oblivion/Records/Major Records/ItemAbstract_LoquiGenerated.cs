@@ -21,7 +21,6 @@ using Noggog.Xml;
 using Loqui.Xml;
 using Loqui.Internal;
 using System.Diagnostics;
-using Loqui.Internal;
 using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 

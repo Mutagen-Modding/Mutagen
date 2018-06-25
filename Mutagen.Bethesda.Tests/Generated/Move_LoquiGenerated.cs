@@ -17,8 +17,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using System.Diagnostics;
 using Loqui.Internal;
+using System.Diagnostics;
 using System.Collections.Specialized;
 
 namespace Mutagen.Bethesda.Tests
@@ -43,10 +43,12 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region SectionToMove
-        public RangeInt64 SectionToMove { get; set; }
+        private RangeInt64 _SectionToMove;
+        public RangeInt64 SectionToMove { get => _SectionToMove; set => _SectionToMove = value; }
         #endregion
         #region LocationToMove
-        public Int64 LocationToMove { get; set; }
+        private Int64 _LocationToMove;
+        public Int64 LocationToMove { get => _LocationToMove; set => _LocationToMove = value; }
         #endregion
 
         #region Loqui Getter Interface
@@ -133,8 +135,7 @@ namespace Mutagen.Bethesda.Tests
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -143,23 +144,37 @@ namespace Mutagen.Bethesda.Tests
             out Move_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = Move_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (Move Object, Move_ErrorMask ErrorMask) Create_XML(
+        public static Move Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            Move_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Move_ErrorMask()) : default(Func<Move_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new Move();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static Move Create_XML(string path)
@@ -201,12 +216,11 @@ namespace Mutagen.Bethesda.Tests
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Move, Move_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Move>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -215,13 +229,14 @@ namespace Mutagen.Bethesda.Tests
             out Move_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Move, Move_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<Move>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = Move_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -277,10 +292,12 @@ namespace Mutagen.Bethesda.Tests
             bool doMasks = true,
             string name = null)
         {
-            errorMask = this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as Move_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = Move_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
@@ -320,7 +337,7 @@ namespace Mutagen.Bethesda.Tests
             this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_XML(
@@ -345,79 +362,77 @@ namespace Mutagen.Bethesda.Tests
             topNode.Elements().First().Save(stream);
         }
 
-        protected object Write_XML_Internal(
+        protected void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
             MoveCommon.Write_XML(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static Move Create_XML_Internal(
-            XElement root,
-            Func<Move_ErrorMask> errorMask)
-        {
-            var ret = new Move();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
 
         protected static void Fill_XML_Internal(
             Move item,
             XElement root,
             string name,
-            Func<Move_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "SectionToMove":
-                    var SectionToMovetryGet = RangeInt64XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Move_FieldIndex.SectionToMove,
-                        errorMask: errorMask);
-                    if (SectionToMovetryGet.Succeeded)
+                    try
                     {
-                        item.SectionToMove = SectionToMovetryGet.Value;
+                        errorMask?.PushIndex((int)Move_FieldIndex.SectionToMove);
+                        if (RangeInt64XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out RangeInt64 SectionToMoveParse,
+                            errorMask: errorMask))
+                        {
+                            item.SectionToMove = SectionToMoveParse;
+                        }
+                        else
+                        {
+                            item.SectionToMove = default(RangeInt64);
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.SectionToMove = default(RangeInt64);
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "LocationToMove":
-                    var LocationToMovetryGet = Int64XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Move_FieldIndex.LocationToMove,
-                        errorMask: errorMask);
-                    if (LocationToMovetryGet.Succeeded)
+                    try
                     {
-                        item.LocationToMove = LocationToMovetryGet.Value;
+                        errorMask?.PushIndex((int)Move_FieldIndex.LocationToMove);
+                        if (Int64XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Int64 LocationToMoveParse,
+                            errorMask: errorMask))
+                        {
+                            item.LocationToMove = LocationToMoveParse;
+                        }
+                        else
+                        {
+                            item.LocationToMove = default(Int64);
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.LocationToMove = default(Int64);
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 default:
@@ -515,24 +530,32 @@ namespace Mutagen.Bethesda.Tests
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            Move_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new Move_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             MoveCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = Move_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IMoveGetter rhs,
+            ErrorMaskBuilder errorMask,
+            Move_CopyMask copyMask = null,
+            IMoveGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            MoveCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -542,10 +565,10 @@ namespace Mutagen.Bethesda.Tests
             switch (enu)
             {
                 case Move_FieldIndex.SectionToMove:
-                    this.SectionToMove = (RangeInt64)obj;
+                    this._SectionToMove = (RangeInt64)obj;
                     break;
                 case Move_FieldIndex.LocationToMove:
-                    this.LocationToMove = (Int64)obj;
+                    this._LocationToMove = (Int64)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -585,10 +608,10 @@ namespace Mutagen.Bethesda.Tests
             switch (enu)
             {
                 case Move_FieldIndex.SectionToMove:
-                    obj.SectionToMove = (RangeInt64)pair.Value;
+                    obj._SectionToMove = (RangeInt64)pair.Value;
                     break;
                 case Move_FieldIndex.LocationToMove:
-                    obj.LocationToMove = (Int64)pair.Value;
+                    obj._LocationToMove = (Int64)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -822,18 +845,21 @@ namespace Mutagen.Bethesda.Tests.Internals
             IMove item,
             IMoveGetter rhs,
             IMoveGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             Move_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.SectionToMove ?? true)
             {
+                errorMask.PushIndex((int)Move_FieldIndex.SectionToMove);
                 item.SectionToMove = rhs.SectionToMove;
+                errorMask.PopIndex();
             }
             if (copyMask?.LocationToMove ?? true)
             {
+                errorMask.PushIndex((int)Move_FieldIndex.LocationToMove);
                 item.LocationToMove = rhs.LocationToMove;
+                errorMask.PopIndex();
             }
         }
 
@@ -997,47 +1023,39 @@ namespace Mutagen.Bethesda.Tests.Internals
             out Move_ErrorMask errorMask,
             string name = null)
         {
-            Move_ErrorMask errMaskRet = null;
-            Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_XML(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Move_ErrorMask()) : default(Func<Move_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = Move_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal(
+        public static void Write_XML(
             XElement node,
             IMoveGetter item,
-            Func<Move_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.Move");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.Move");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.Move");
-                }
-                RangeInt64XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.SectionToMove),
-                    item: item.SectionToMove,
-                    fieldIndex: (int)Move_FieldIndex.SectionToMove,
-                    errorMask: errorMask);
-                Int64XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.LocationToMove),
-                    item: item.LocationToMove,
-                    fieldIndex: (int)Move_FieldIndex.LocationToMove,
-                    errorMask: errorMask);
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.Move");
             }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            RangeInt64XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.SectionToMove),
+                item: item.SectionToMove,
+                fieldIndex: (int)Move_FieldIndex.SectionToMove,
+                errorMask: errorMask);
+            Int64XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.LocationToMove),
+                item: item.LocationToMove,
+                fieldIndex: (int)Move_FieldIndex.LocationToMove,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -1279,6 +1297,14 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static Move_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            return new Move_ErrorMask();
         }
         #endregion
 

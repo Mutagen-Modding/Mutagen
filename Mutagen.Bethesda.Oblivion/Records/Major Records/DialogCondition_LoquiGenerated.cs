@@ -17,8 +17,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using System.Diagnostics;
 using Loqui.Internal;
+using System.Diagnostics;
 using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
@@ -532,8 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -542,23 +541,37 @@ namespace Mutagen.Bethesda.Oblivion
             out DialogCondition_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = DialogCondition_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (DialogCondition Object, DialogCondition_ErrorMask ErrorMask) Create_XML(
+        public static DialogCondition Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            DialogCondition_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new DialogCondition_ErrorMask()) : default(Func<DialogCondition_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new DialogCondition();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static DialogCondition Create_XML(string path)
@@ -600,12 +613,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<DialogCondition, DialogCondition_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<DialogCondition>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -614,13 +626,14 @@ namespace Mutagen.Bethesda.Oblivion
             out DialogCondition_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<DialogCondition, DialogCondition_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<DialogCondition>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = DialogCondition_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -676,10 +689,12 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            errorMask = this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as DialogCondition_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = DialogCondition_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
@@ -719,7 +734,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_XML(
@@ -744,166 +759,233 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
-        protected object Write_XML_Internal(
+        protected void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
             DialogConditionCommon.Write_XML(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static DialogCondition Create_XML_Internal(
-            XElement root,
-            Func<DialogCondition_ErrorMask> errorMask)
-        {
-            var ret = new DialogCondition();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
 
         protected static void Fill_XML_Internal(
             DialogCondition item,
             XElement root,
             string name,
-            Func<DialogCondition_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "CompareOperator":
-                    var CompareOperatortryGet = EnumXmlTranslation<CompareOperator>.Instance.Parse(
-                        root,
-                        nullable: false,
-                        fieldIndex: (int)DialogCondition_FieldIndex.CompareOperator,
-                        errorMask: errorMask).Bubble((o) => o.Value);
-                    if (CompareOperatortryGet.Succeeded)
+                    try
                     {
-                        item.SetCompareOperator(item: CompareOperatortryGet.Value);
+                        errorMask?.PushIndex((int)DialogCondition_FieldIndex.CompareOperator);
+                        if (EnumXmlTranslation<CompareOperator>.Instance.Parse(
+                            root: root,
+                            item: out CompareOperator CompareOperatorParse,
+                            errorMask: errorMask))
+                        {
+                            item.CompareOperator = CompareOperatorParse;
+                        }
+                        else
+                        {
+                            item.UnsetCompareOperator();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetCompareOperator();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Flags":
-                    var FlagstryGet = EnumXmlTranslation<DialogCondition.Flag>.Instance.Parse(
-                        root,
-                        nullable: false,
-                        fieldIndex: (int)DialogCondition_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value);
-                    if (FlagstryGet.Succeeded)
+                    try
                     {
-                        item.SetFlags(item: FlagstryGet.Value);
+                        errorMask?.PushIndex((int)DialogCondition_FieldIndex.Flags);
+                        if (EnumXmlTranslation<DialogCondition.Flag>.Instance.Parse(
+                            root: root,
+                            item: out DialogCondition.Flag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.UnsetFlags();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetFlags();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Fluff":
-                    var FlufftryGet = ByteArrayXmlTranslation.Instance.Parse(
-                        root,
-                        fieldIndex: (int)DialogCondition_FieldIndex.Fluff,
-                        errorMask: errorMask);
-                    if (FlufftryGet.Succeeded)
+                    try
                     {
-                        item.SetFluff(item: FlufftryGet.Value);
+                        errorMask?.PushIndex((int)DialogCondition_FieldIndex.Fluff);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Byte[] FluffParse,
+                            errorMask: errorMask))
+                        {
+                            item.Fluff = FluffParse;
+                        }
+                        else
+                        {
+                            item.UnsetFluff();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetFluff();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "ComparisonValue":
-                    var ComparisonValuetryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)DialogCondition_FieldIndex.ComparisonValue,
-                        errorMask: errorMask);
-                    if (ComparisonValuetryGet.Succeeded)
+                    try
                     {
-                        item.SetComparisonValue(item: ComparisonValuetryGet.Value);
+                        errorMask?.PushIndex((int)DialogCondition_FieldIndex.ComparisonValue);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Single ComparisonValueParse,
+                            errorMask: errorMask))
+                        {
+                            item.ComparisonValue = ComparisonValueParse;
+                        }
+                        else
+                        {
+                            item.UnsetComparisonValue();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetComparisonValue();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Function":
-                    var FunctiontryGet = EnumXmlTranslation<Function>.Instance.Parse(
-                        root,
-                        nullable: false,
-                        fieldIndex: (int)DialogCondition_FieldIndex.Function,
-                        errorMask: errorMask).Bubble((o) => o.Value);
-                    if (FunctiontryGet.Succeeded)
+                    try
                     {
-                        item.SetFunction(item: FunctiontryGet.Value);
+                        errorMask?.PushIndex((int)DialogCondition_FieldIndex.Function);
+                        if (EnumXmlTranslation<Function>.Instance.Parse(
+                            root: root,
+                            item: out Function FunctionParse,
+                            errorMask: errorMask))
+                        {
+                            item.Function = FunctionParse;
+                        }
+                        else
+                        {
+                            item.UnsetFunction();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetFunction();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "FirstParameter":
-                    var FirstParametertryGet = Int32XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)DialogCondition_FieldIndex.FirstParameter,
-                        errorMask: errorMask);
-                    if (FirstParametertryGet.Succeeded)
+                    try
                     {
-                        item.SetFirstParameter(item: FirstParametertryGet.Value);
+                        errorMask?.PushIndex((int)DialogCondition_FieldIndex.FirstParameter);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Int32 FirstParameterParse,
+                            errorMask: errorMask))
+                        {
+                            item.FirstParameter = FirstParameterParse;
+                        }
+                        else
+                        {
+                            item.UnsetFirstParameter();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetFirstParameter();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "SecondParameter":
-                    var SecondParametertryGet = Int32XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)DialogCondition_FieldIndex.SecondParameter,
-                        errorMask: errorMask);
-                    if (SecondParametertryGet.Succeeded)
+                    try
                     {
-                        item.SetSecondParameter(item: SecondParametertryGet.Value);
+                        errorMask?.PushIndex((int)DialogCondition_FieldIndex.SecondParameter);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Int32 SecondParameterParse,
+                            errorMask: errorMask))
+                        {
+                            item.SecondParameter = SecondParameterParse;
+                        }
+                        else
+                        {
+                            item.UnsetSecondParameter();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetSecondParameter();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "ThirdParameter":
-                    var ThirdParametertryGet = Int32XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)DialogCondition_FieldIndex.ThirdParameter,
-                        errorMask: errorMask);
-                    if (ThirdParametertryGet.Succeeded)
+                    try
                     {
-                        item.SetThirdParameter(item: ThirdParametertryGet.Value);
+                        errorMask?.PushIndex((int)DialogCondition_FieldIndex.ThirdParameter);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Int32 ThirdParameterParse,
+                            errorMask: errorMask))
+                        {
+                            item.ThirdParameter = ThirdParameterParse;
+                        }
+                        else
+                        {
+                            item.UnsetThirdParameter();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetThirdParameter();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 default:
@@ -1743,8 +1825,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -1753,26 +1835,41 @@ namespace Mutagen.Bethesda.Oblivion
             out DialogCondition_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = DialogCondition_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (DialogCondition Object, DialogCondition_ErrorMask ErrorMask) Create_Binary(
+        public static DialogCondition Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            DialogCondition_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new DialogCondition_ErrorMask()) : default(Func<DialogCondition_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new DialogCondition();
+            try
+            {
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                    frame.Reader,
+                    recordTypeConverter.ConvertToCustom(DialogCondition_Registration.CTDA_HEADER)));
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static DialogCondition Create_Binary(string path)
@@ -1827,10 +1924,12 @@ namespace Mutagen.Bethesda.Oblivion
             out DialogCondition_ErrorMask errorMask,
             bool doMasks = true)
         {
-            errorMask = this.Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: doMasks) as DialogCondition_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = DialogCondition_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Binary(
@@ -1866,7 +1965,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_Binary(string path)
@@ -1885,216 +1984,217 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected object Write_Binary_Internal(
+        protected void Write_Binary_Internal(
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
             DialogConditionCommon.Write_Binary(
                 item: this,
-                doMasks: doMasks,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
 
         static partial void FillBinary_CompareOperator_Custom(
             MutagenFrame frame,
             DialogCondition item,
-            int fieldIndex,
-            Func<DialogCondition_ErrorMask> errorMask);
+            ErrorMaskBuilder errorMask);
 
         static partial void WriteBinary_CompareOperator_Custom(
             MutagenWriter writer,
             DialogCondition item,
-            int fieldIndex,
-            Func<DialogCondition_ErrorMask> errorMask);
+            ErrorMaskBuilder errorMask);
 
         public static void WriteBinary_CompareOperator(
             MutagenWriter writer,
             DialogCondition item,
-            int fieldIndex,
-            Func<DialogCondition_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                WriteBinary_CompareOperator_Custom(
-                    writer: writer,
-                    item: item,
-                    fieldIndex: fieldIndex,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            WriteBinary_CompareOperator_Custom(
+                writer: writer,
+                item: item,
+                errorMask: errorMask);
         }
 
         static partial void FillBinary_Flags_Custom(
             MutagenFrame frame,
             DialogCondition item,
-            int fieldIndex,
-            Func<DialogCondition_ErrorMask> errorMask);
+            ErrorMaskBuilder errorMask);
 
         static partial void WriteBinary_Flags_Custom(
             MutagenWriter writer,
             DialogCondition item,
-            int fieldIndex,
-            Func<DialogCondition_ErrorMask> errorMask);
+            ErrorMaskBuilder errorMask);
 
         public static void WriteBinary_Flags(
             MutagenWriter writer,
             DialogCondition item,
-            int fieldIndex,
-            Func<DialogCondition_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                WriteBinary_Flags_Custom(
-                    writer: writer,
-                    item: item,
-                    fieldIndex: fieldIndex,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-        }
-
-        private static DialogCondition Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<DialogCondition_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            var ret = new DialogCondition();
-            try
-            {
-                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                    frame.Reader,
-                    recordTypeConverter.ConvertToCustom(DialogCondition_Registration.CTDA_HEADER)));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
+            WriteBinary_Flags_Custom(
+                writer: writer,
+                item: item,
+                errorMask: errorMask);
         }
 
         protected static void Fill_Binary_Structs(
             DialogCondition item,
             MutagenFrame frame,
-            Func<DialogCondition_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
+            FillBinary_CompareOperator_Custom(
+                frame: frame,
+                item: item,
+                errorMask: errorMask);
+            FillBinary_Flags_Custom(
+                frame: frame,
+                item: item,
+                errorMask: errorMask);
             try
             {
-                FillBinary_CompareOperator_Custom(
-                    frame: frame,
-                    item: item,
-                    fieldIndex: (int)DialogCondition_FieldIndex.CompareOperator,
-                    errorMask: errorMask);
+                errorMask?.PushIndex((int)DialogCondition_FieldIndex.Fluff);
+                if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    frame: frame.SpawnWithLength(4),
+                    item: out Byte[] FluffParse,
+                    errorMask: errorMask))
+                {
+                    item.Fluff = FluffParse;
+                }
+                else
+                {
+                    item.UnsetFluff();
+                }
             }
             catch (Exception ex)
             when (errorMask != null)
             {
-                errorMask().Overall = ex;
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
             }
             try
             {
-                FillBinary_Flags_Custom(
-                    frame: frame,
-                    item: item,
-                    fieldIndex: (int)DialogCondition_FieldIndex.Flags,
-                    errorMask: errorMask);
+                errorMask?.PushIndex((int)DialogCondition_FieldIndex.ComparisonValue);
+                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out Single ComparisonValueParse,
+                    errorMask: errorMask))
+                {
+                    item.ComparisonValue = ComparisonValueParse;
+                }
+                else
+                {
+                    item.UnsetComparisonValue();
+                }
             }
             catch (Exception ex)
             when (errorMask != null)
             {
-                errorMask().Overall = ex;
+                errorMask.ReportException(ex);
             }
-            var FlufftryGet = ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                fieldIndex: (int)DialogCondition_FieldIndex.Fluff,
-                errorMask: errorMask);
-            if (FlufftryGet.Succeeded)
+            finally
             {
-                item.SetFluff(item: FlufftryGet.Value);
+                errorMask?.PopIndex();
             }
-            else
+            try
             {
-                item.UnsetFluff();
+                errorMask?.PushIndex((int)DialogCondition_FieldIndex.Function);
+                if (EnumBinaryTranslation<Function>.Instance.Parse(
+                    frame: frame.SpawnWithLength(4),
+                    item: out Function FunctionParse,
+                    errorMask: errorMask))
+                {
+                    item.Function = FunctionParse;
+                }
+                else
+                {
+                    item.UnsetFunction();
+                }
             }
-            var ComparisonValuetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                fieldIndex: (int)DialogCondition_FieldIndex.ComparisonValue,
-                errorMask: errorMask);
-            if (ComparisonValuetryGet.Succeeded)
+            catch (Exception ex)
+            when (errorMask != null)
             {
-                item.SetComparisonValue(item: ComparisonValuetryGet.Value);
+                errorMask.ReportException(ex);
             }
-            else
+            finally
             {
-                item.UnsetComparisonValue();
+                errorMask?.PopIndex();
             }
-            var FunctiontryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Function>.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                fieldIndex: (int)DialogCondition_FieldIndex.Function,
-                errorMask: errorMask);
-            if (FunctiontryGet.Succeeded)
+            try
             {
-                item.SetFunction(item: FunctiontryGet.Value);
+                errorMask?.PushIndex((int)DialogCondition_FieldIndex.FirstParameter);
+                if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out Int32 FirstParameterParse,
+                    errorMask: errorMask))
+                {
+                    item.FirstParameter = FirstParameterParse;
+                }
+                else
+                {
+                    item.UnsetFirstParameter();
+                }
             }
-            else
+            catch (Exception ex)
+            when (errorMask != null)
             {
-                item.UnsetFunction();
+                errorMask.ReportException(ex);
             }
-            var FirstParametertryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                fieldIndex: (int)DialogCondition_FieldIndex.FirstParameter,
-                errorMask: errorMask);
-            if (FirstParametertryGet.Succeeded)
+            finally
             {
-                item.SetFirstParameter(item: FirstParametertryGet.Value);
+                errorMask?.PopIndex();
             }
-            else
+            try
             {
-                item.UnsetFirstParameter();
+                errorMask?.PushIndex((int)DialogCondition_FieldIndex.SecondParameter);
+                if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out Int32 SecondParameterParse,
+                    errorMask: errorMask))
+                {
+                    item.SecondParameter = SecondParameterParse;
+                }
+                else
+                {
+                    item.UnsetSecondParameter();
+                }
             }
-            var SecondParametertryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                fieldIndex: (int)DialogCondition_FieldIndex.SecondParameter,
-                errorMask: errorMask);
-            if (SecondParametertryGet.Succeeded)
+            catch (Exception ex)
+            when (errorMask != null)
             {
-                item.SetSecondParameter(item: SecondParametertryGet.Value);
+                errorMask.ReportException(ex);
             }
-            else
+            finally
             {
-                item.UnsetSecondParameter();
+                errorMask?.PopIndex();
             }
-            var ThirdParametertryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                fieldIndex: (int)DialogCondition_FieldIndex.ThirdParameter,
-                errorMask: errorMask);
-            if (ThirdParametertryGet.Succeeded)
+            try
             {
-                item.SetThirdParameter(item: ThirdParametertryGet.Value);
+                errorMask?.PushIndex((int)DialogCondition_FieldIndex.ThirdParameter);
+                if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out Int32 ThirdParameterParse,
+                    errorMask: errorMask))
+                {
+                    item.ThirdParameter = ThirdParameterParse;
+                }
+                else
+                {
+                    item.UnsetThirdParameter();
+                }
             }
-            else
+            catch (Exception ex)
+            when (errorMask != null)
             {
-                item.UnsetThirdParameter();
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
             }
         }
 
@@ -2188,24 +2288,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            DialogCondition_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new DialogCondition_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             DialogConditionCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = DialogCondition_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IDialogConditionGetter rhs,
+            ErrorMaskBuilder errorMask,
+            DialogCondition_CopyMask copyMask = null,
+            IDialogConditionGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            DialogConditionCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -2691,13 +2799,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogCondition item,
             IDialogConditionGetter rhs,
             IDialogConditionGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             DialogCondition_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.CompareOperator ?? true)
             {
+                errorMask.PushIndex((int)DialogCondition_FieldIndex.CompareOperator);
                 try
                 {
                     item.CompareOperator_Property.Set(
@@ -2705,13 +2813,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogCondition_FieldIndex.CompareOperator, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
+                errorMask.PushIndex((int)DialogCondition_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -2719,13 +2832,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogCondition_FieldIndex.Flags, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Fluff ?? true)
             {
+                errorMask.PushIndex((int)DialogCondition_FieldIndex.Fluff);
                 try
                 {
                     item.Fluff_Property.Set(
@@ -2733,13 +2851,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogCondition_FieldIndex.Fluff, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.ComparisonValue ?? true)
             {
+                errorMask.PushIndex((int)DialogCondition_FieldIndex.ComparisonValue);
                 try
                 {
                     item.ComparisonValue_Property.Set(
@@ -2747,13 +2870,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogCondition_FieldIndex.ComparisonValue, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Function ?? true)
             {
+                errorMask.PushIndex((int)DialogCondition_FieldIndex.Function);
                 try
                 {
                     item.Function_Property.Set(
@@ -2761,13 +2889,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogCondition_FieldIndex.Function, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.FirstParameter ?? true)
             {
+                errorMask.PushIndex((int)DialogCondition_FieldIndex.FirstParameter);
                 try
                 {
                     item.FirstParameter_Property.Set(
@@ -2775,13 +2908,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogCondition_FieldIndex.FirstParameter, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.SecondParameter ?? true)
             {
+                errorMask.PushIndex((int)DialogCondition_FieldIndex.SecondParameter);
                 try
                 {
                     item.SecondParameter_Property.Set(
@@ -2789,13 +2927,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogCondition_FieldIndex.SecondParameter, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.ThirdParameter ?? true)
             {
+                errorMask.PushIndex((int)DialogCondition_FieldIndex.ThirdParameter);
                 try
                 {
                     item.ThirdParameter_Property.Set(
@@ -2803,9 +2946,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogCondition_FieldIndex.ThirdParameter, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -3054,83 +3201,75 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out DialogCondition_ErrorMask errorMask,
             string name = null)
         {
-            DialogCondition_ErrorMask errMaskRet = null;
-            Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_XML(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new DialogCondition_ErrorMask()) : default(Func<DialogCondition_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = DialogCondition_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal(
+        public static void Write_XML(
             XElement node,
             IDialogConditionGetter item,
-            Func<DialogCondition_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.DialogCondition");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.DialogCondition");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.DialogCondition");
-                }
-                EnumXmlTranslation<CompareOperator>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.CompareOperator),
-                    item: item.CompareOperator_Property,
-                    fieldIndex: (int)DialogCondition_FieldIndex.CompareOperator,
-                    errorMask: errorMask);
-                EnumXmlTranslation<DialogCondition.Flag>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Flags),
-                    item: item.Flags_Property,
-                    fieldIndex: (int)DialogCondition_FieldIndex.Flags,
-                    errorMask: errorMask);
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Fluff),
-                    item: item.Fluff_Property,
-                    fieldIndex: (int)DialogCondition_FieldIndex.Fluff,
-                    errorMask: errorMask);
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.ComparisonValue),
-                    item: item.ComparisonValue_Property,
-                    fieldIndex: (int)DialogCondition_FieldIndex.ComparisonValue,
-                    errorMask: errorMask);
-                EnumXmlTranslation<Function>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Function),
-                    item: item.Function_Property,
-                    fieldIndex: (int)DialogCondition_FieldIndex.Function,
-                    errorMask: errorMask);
-                Int32XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.FirstParameter),
-                    item: item.FirstParameter_Property,
-                    fieldIndex: (int)DialogCondition_FieldIndex.FirstParameter,
-                    errorMask: errorMask);
-                Int32XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.SecondParameter),
-                    item: item.SecondParameter_Property,
-                    fieldIndex: (int)DialogCondition_FieldIndex.SecondParameter,
-                    errorMask: errorMask);
-                Int32XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.ThirdParameter),
-                    item: item.ThirdParameter_Property,
-                    fieldIndex: (int)DialogCondition_FieldIndex.ThirdParameter,
-                    errorMask: errorMask);
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.DialogCondition");
             }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            EnumXmlTranslation<CompareOperator>.Instance.Write(
+                node: elem,
+                name: nameof(item.CompareOperator),
+                item: item.CompareOperator_Property,
+                fieldIndex: (int)DialogCondition_FieldIndex.CompareOperator,
+                errorMask: errorMask);
+            EnumXmlTranslation<DialogCondition.Flag>.Instance.Write(
+                node: elem,
+                name: nameof(item.Flags),
+                item: item.Flags_Property,
+                fieldIndex: (int)DialogCondition_FieldIndex.Flags,
+                errorMask: errorMask);
+            ByteArrayXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Fluff),
+                item: item.Fluff_Property,
+                fieldIndex: (int)DialogCondition_FieldIndex.Fluff,
+                errorMask: errorMask);
+            FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.ComparisonValue),
+                item: item.ComparisonValue_Property,
+                fieldIndex: (int)DialogCondition_FieldIndex.ComparisonValue,
+                errorMask: errorMask);
+            EnumXmlTranslation<Function>.Instance.Write(
+                node: elem,
+                name: nameof(item.Function),
+                item: item.Function_Property,
+                fieldIndex: (int)DialogCondition_FieldIndex.Function,
+                errorMask: errorMask);
+            Int32XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.FirstParameter),
+                item: item.FirstParameter_Property,
+                fieldIndex: (int)DialogCondition_FieldIndex.FirstParameter,
+                errorMask: errorMask);
+            Int32XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.SecondParameter),
+                item: item.SecondParameter_Property,
+                fieldIndex: (int)DialogCondition_FieldIndex.SecondParameter,
+                errorMask: errorMask);
+            Int32XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.ThirdParameter),
+                item: item.ThirdParameter_Property,
+                fieldIndex: (int)DialogCondition_FieldIndex.ThirdParameter,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -3145,38 +3284,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out DialogCondition_ErrorMask errorMask)
         {
-            DialogCondition_ErrorMask errMaskRet = null;
-            Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new DialogCondition_ErrorMask()) : default(Func<DialogCondition_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = DialogCondition_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_Binary_Internal(
+        public static void Write_Binary(
             MutagenWriter writer,
             DialogCondition item,
             RecordTypeConverter recordTypeConverter,
-            Func<DialogCondition_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: DialogCondition_Registration.CTDA_HEADER,
+                type: ObjectType.Subrecord))
             {
-                using (HeaderExport.ExportHeader(
+                Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: DialogCondition_Registration.CTDA_HEADER,
-                    type: ObjectType.Subrecord))
-                {
-                    Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -3184,17 +3315,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary_Embedded(
             DialogCondition item,
             MutagenWriter writer,
-            Func<DialogCondition_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             DialogCondition.WriteBinary_CompareOperator(
                 writer: writer,
                 item: item,
-                fieldIndex: (int)DialogCondition_FieldIndex.CompareOperator,
                 errorMask: errorMask);
             DialogCondition.WriteBinary_Flags(
                 writer: writer,
                 item: item,
-                fieldIndex: (int)DialogCondition_FieldIndex.Flags,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -3599,6 +3728,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static DialogCondition_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            return new DialogCondition_ErrorMask();
         }
         #endregion
 

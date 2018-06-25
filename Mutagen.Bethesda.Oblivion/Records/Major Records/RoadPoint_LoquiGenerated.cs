@@ -17,8 +17,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using System.Diagnostics;
 using Loqui.Internal;
+using System.Diagnostics;
 using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
@@ -248,8 +248,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -258,23 +257,37 @@ namespace Mutagen.Bethesda.Oblivion
             out RoadPoint_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = RoadPoint_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (RoadPoint Object, RoadPoint_ErrorMask ErrorMask) Create_XML(
+        public static RoadPoint Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            RoadPoint_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RoadPoint_ErrorMask()) : default(Func<RoadPoint_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new RoadPoint();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static RoadPoint Create_XML(string path)
@@ -316,12 +329,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<RoadPoint, RoadPoint_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<RoadPoint>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -330,13 +342,14 @@ namespace Mutagen.Bethesda.Oblivion
             out RoadPoint_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<RoadPoint, RoadPoint_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<RoadPoint>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = RoadPoint_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -392,10 +405,12 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            errorMask = this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as RoadPoint_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = RoadPoint_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
@@ -435,7 +450,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_XML(
@@ -460,95 +475,86 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
-        protected object Write_XML_Internal(
+        protected void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
             RoadPointCommon.Write_XML(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static RoadPoint Create_XML_Internal(
-            XElement root,
-            Func<RoadPoint_ErrorMask> errorMask)
-        {
-            var ret = new RoadPoint();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
 
         protected static void Fill_XML_Internal(
             RoadPoint item,
             XElement root,
             string name,
-            Func<RoadPoint_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Point":
-                    var PointtryGet = P3FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)RoadPoint_FieldIndex.Point,
-                        errorMask: errorMask);
-                    if (PointtryGet.Succeeded)
+                    try
                     {
-                        item.SetPoint(item: PointtryGet.Value);
+                        errorMask?.PushIndex((int)RoadPoint_FieldIndex.Point);
+                        if (P3FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out P3Float PointParse,
+                            errorMask: errorMask))
+                        {
+                            item.Point = PointParse;
+                        }
+                        else
+                        {
+                            item.UnsetPoint();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetPoint();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "NumConnectionsFluffBytes":
-                    var NumConnectionsFluffBytestryGet = ByteArrayXmlTranslation.Instance.Parse(
-                        root,
-                        fieldIndex: (int)RoadPoint_FieldIndex.NumConnectionsFluffBytes,
-                        errorMask: errorMask);
-                    if (NumConnectionsFluffBytestryGet.Succeeded)
+                    try
                     {
-                        item.SetNumConnectionsFluffBytes(item: NumConnectionsFluffBytestryGet.Value);
+                        errorMask?.PushIndex((int)RoadPoint_FieldIndex.NumConnectionsFluffBytes);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Byte[] NumConnectionsFluffBytesParse,
+                            errorMask: errorMask))
+                        {
+                            item.NumConnectionsFluffBytes = NumConnectionsFluffBytesParse;
+                        }
+                        else
+                        {
+                            item.UnsetNumConnectionsFluffBytes();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetNumConnectionsFluffBytes();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Connections":
-                    item._Connections.SetIfSucceededOrDefault(ListXmlTranslation<P3Float, Exception>.Instance.Parse(
+                    ListXmlTranslation<P3Float>.Instance.ParseInto(
                         root: root,
+                        item: item.Connections,
                         fieldIndex: (int)RoadPoint_FieldIndex.Connections,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return P3FloatXmlTranslation.Instance.Parse(
-                                r,
-                                nullable: false,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => o.Value);
-                        }
-                        ));
+                        transl: P3FloatXmlTranslation.Instance.Parse);
                     break;
                 default:
                     break;
@@ -831,8 +837,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -841,26 +847,38 @@ namespace Mutagen.Bethesda.Oblivion
             out RoadPoint_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = RoadPoint_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (RoadPoint Object, RoadPoint_ErrorMask ErrorMask) Create_Binary(
+        public static RoadPoint Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            RoadPoint_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RoadPoint_ErrorMask()) : default(Func<RoadPoint_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new RoadPoint();
+            try
+            {
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static RoadPoint Create_Binary(string path)
@@ -915,10 +933,12 @@ namespace Mutagen.Bethesda.Oblivion
             out RoadPoint_ErrorMask errorMask,
             bool doMasks = true)
         {
-            errorMask = this.Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: doMasks) as RoadPoint_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = RoadPoint_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Binary(
@@ -954,7 +974,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_Binary(string path)
@@ -973,87 +993,79 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected object Write_Binary_Internal(
+        protected void Write_Binary_Internal(
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
             RoadPointCommon.Write_Binary(
                 item: this,
-                doMasks: doMasks,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
 
-        private static RoadPoint Create_Binary_Internal(
+        protected static void Fill_Binary_Structs(
+            RoadPoint item,
             MutagenFrame frame,
-            Func<RoadPoint_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
+            ErrorMaskBuilder errorMask)
         {
-            var ret = new RoadPoint();
             try
             {
-                using (frame)
+                errorMask?.PushIndex((int)RoadPoint_FieldIndex.Point);
+                if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out P3Float PointParse,
+                    errorMask: errorMask))
                 {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
+                    item.Point = PointParse;
+                }
+                else
+                {
+                    item.UnsetPoint();
                 }
             }
             catch (Exception ex)
             when (errorMask != null)
             {
-                errorMask().Overall = ex;
+                errorMask.ReportException(ex);
             }
-            return ret;
-        }
-
-        protected static void Fill_Binary_Structs(
-            RoadPoint item,
-            MutagenFrame frame,
-            Func<RoadPoint_ErrorMask> errorMask)
-        {
-            var PointtryGet = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                fieldIndex: (int)RoadPoint_FieldIndex.Point,
-                errorMask: errorMask);
-            if (PointtryGet.Succeeded)
+            finally
             {
-                item.SetPoint(item: PointtryGet.Value);
+                errorMask?.PopIndex();
             }
-            else
+            try
             {
-                item.UnsetPoint();
+                errorMask?.PushIndex((int)RoadPoint_FieldIndex.NumConnectionsFluffBytes);
+                if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    frame: frame.SpawnWithLength(3),
+                    item: out Byte[] NumConnectionsFluffBytesParse,
+                    errorMask: errorMask))
+                {
+                    item.NumConnectionsFluffBytes = NumConnectionsFluffBytesParse;
+                }
+                else
+                {
+                    item.UnsetNumConnectionsFluffBytes();
+                }
             }
-            var NumConnectionsFluffBytestryGet = ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(3),
-                fieldIndex: (int)RoadPoint_FieldIndex.NumConnectionsFluffBytes,
-                errorMask: errorMask);
-            if (NumConnectionsFluffBytestryGet.Succeeded)
+            catch (Exception ex)
+            when (errorMask != null)
             {
-                item.SetNumConnectionsFluffBytes(item: NumConnectionsFluffBytestryGet.Value);
+                errorMask.ReportException(ex);
             }
-            else
+            finally
             {
-                item.UnsetNumConnectionsFluffBytes();
+                errorMask?.PopIndex();
             }
-            item.Connections.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Float, Exception>.Instance.ParseRepeatedItem(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Float>.Instance.ParseRepeatedItem(
                 frame: frame,
+                item: item.Connections,
                 fieldIndex: (int)RoadPoint_FieldIndex.Connections,
                 lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                 errorMask: errorMask,
-                transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
-                {
-                    return Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                        r,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                ));
+                transl: P3FloatBinaryTranslation.Instance.Parse);
         }
 
         #endregion
@@ -1146,24 +1158,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            RoadPoint_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new RoadPoint_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             RoadPointCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = RoadPoint_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IRoadPointGetter rhs,
+            ErrorMaskBuilder errorMask,
+            RoadPoint_CopyMask copyMask = null,
+            IRoadPointGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            RoadPointCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1490,13 +1510,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRoadPoint item,
             IRoadPointGetter rhs,
             IRoadPointGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RoadPoint_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.Point ?? true)
             {
+                errorMask.PushIndex((int)RoadPoint_FieldIndex.Point);
                 try
                 {
                     item.Point_Property.Set(
@@ -1504,13 +1524,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RoadPoint_FieldIndex.Point, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.NumConnectionsFluffBytes ?? true)
             {
+                errorMask.PushIndex((int)RoadPoint_FieldIndex.NumConnectionsFluffBytes);
                 try
                 {
                     item.NumConnectionsFluffBytes_Property.Set(
@@ -1518,13 +1543,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RoadPoint_FieldIndex.NumConnectionsFluffBytes, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Connections != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)RoadPoint_FieldIndex.Connections);
                 try
                 {
                     item.Connections.SetToWithDefault(
@@ -1533,9 +1563,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)RoadPoint_FieldIndex.Connections, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1731,63 +1765,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out RoadPoint_ErrorMask errorMask,
             string name = null)
         {
-            RoadPoint_ErrorMask errMaskRet = null;
-            Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_XML(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RoadPoint_ErrorMask()) : default(Func<RoadPoint_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = RoadPoint_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal(
+        public static void Write_XML(
             XElement node,
             IRoadPointGetter item,
-            Func<RoadPoint_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RoadPoint");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RoadPoint");
-                node.Add(elem);
-                if (name != null)
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RoadPoint");
+            }
+            P3FloatXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Point),
+                item: item.Point_Property,
+                fieldIndex: (int)RoadPoint_FieldIndex.Point,
+                errorMask: errorMask);
+            ByteArrayXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.NumConnectionsFluffBytes),
+                item: item.NumConnectionsFluffBytes_Property,
+                fieldIndex: (int)RoadPoint_FieldIndex.NumConnectionsFluffBytes,
+                errorMask: errorMask);
+            ListXmlTranslation<P3Float>.Instance.Write(
+                node: elem,
+                name: nameof(item.Connections),
+                item: item.Connections,
+                fieldIndex: (int)RoadPoint_FieldIndex.Connections,
+                errorMask: errorMask,
+                transl: (XElement subNode, P3Float subItem, ErrorMaskBuilder listSubMask) =>
                 {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RoadPoint");
+                    P3FloatXmlTranslation.Instance.Write(
+                        node: subNode,
+                        name: "Item",
+                        item: subItem,
+                        errorMask: listSubMask);
                 }
-                P3FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Point),
-                    item: item.Point_Property,
-                    fieldIndex: (int)RoadPoint_FieldIndex.Point,
-                    errorMask: errorMask);
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.NumConnectionsFluffBytes),
-                    item: item.NumConnectionsFluffBytes_Property,
-                    fieldIndex: (int)RoadPoint_FieldIndex.NumConnectionsFluffBytes,
-                    errorMask: errorMask);
-                ListXmlTranslation<P3Float, Exception>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Connections),
-                    item: item.Connections,
-                    fieldIndex: (int)RoadPoint_FieldIndex.Connections,
-                    errorMask: errorMask,
-                    transl: (XElement subNode, P3Float subItem, bool listDoMasks, out Exception listSubMask) =>
-                    {
-                        P3FloatXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: "Item",
-                            item: subItem,
-                            doMasks: errorMask != null,
-                            errorMask: out listSubMask);
-                    }
-                    );
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+                );
         }
         #endregion
 
@@ -1802,40 +1827,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out RoadPoint_ErrorMask errorMask)
         {
-            RoadPoint_ErrorMask errMaskRet = null;
-            Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RoadPoint_ErrorMask()) : default(Func<RoadPoint_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = RoadPoint_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_Binary_Internal(
+        public static void Write_Binary(
             MutagenWriter writer,
             RoadPoint item,
             RecordTypeConverter recordTypeConverter,
-            Func<RoadPoint_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask);
         }
         #endregion
 
         public static void Write_Binary_Embedded(
             RoadPoint item,
             MutagenWriter writer,
-            Func<RoadPoint_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -1847,20 +1864,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.NumConnectionsFluffBytes_Property,
                 fieldIndex: (int)RoadPoint_FieldIndex.NumConnectionsFluffBytes,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Float, Exception>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Float>.Instance.Write(
                 writer: writer,
-                item: item.Connections,
+                items: item.Connections,
                 fieldIndex: (int)RoadPoint_FieldIndex.Connections,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, P3Float subItem, bool listDoMasks, out Exception listSubMask) =>
-                {
-                    Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                transl: P3FloatBinaryTranslation.Instance.Write);
         }
 
         #endregion
@@ -2191,6 +2200,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static RoadPoint_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            return new RoadPoint_ErrorMask();
         }
         #endregion
 

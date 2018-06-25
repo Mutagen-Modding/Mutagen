@@ -261,7 +261,8 @@ namespace Mutagen.Bethesda.Oblivion
                             if (ParseTemporaryOutliers(frame, obj, errorMask))
                             {
                                 listSubMask = null;
-                                return TryGet<Placed>.Failure;
+                                placed = null;
+                                return false;
                             }
                             throw new NotImplementedException();
                     }

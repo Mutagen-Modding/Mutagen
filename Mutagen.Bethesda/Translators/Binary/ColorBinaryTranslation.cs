@@ -16,17 +16,19 @@ namespace Mutagen.Bethesda.Binary
         public readonly static ColorBinaryTranslation Instance = new ColorBinaryTranslation();
         public override int? ExpectedLength => 3;
         
-        public void ParseInto(
+        public bool Parse(
             MutagenFrame frame,
-            int fieldIndex,
-            IHasItem<Color> item,
+            out Color item,
             bool extraByte,
             ErrorMaskBuilder errorMask)
         {
-            this.ParseInto(
+            if (!extraByte)
+            {
+                throw new NotImplementedException();
+            }
+            return this.Parse(
                 frame,
-                fieldIndex,
-                item,
+                out item,
                 errorMask);
         }
 
@@ -77,8 +79,7 @@ namespace Mutagen.Bethesda.Binary
             int fieldIndex,
             bool nullable,
             bool extraByte,
-            Func<M> errorMask)
-            where M : IErrorMask
+            ErrorMaskBuilder errorMask)
         {
             this.Write(
                 writer,
@@ -121,13 +122,12 @@ namespace Mutagen.Bethesda.Binary
                 write: GetWriter(extraByte));
         }
 
-        public void Write<M>(
+        public void Write(
             MutagenWriter writer,
             Color item,
             int fieldIndex,
             bool extraByte,
-            Func<M> errorMask)
-            where M : IErrorMask
+            ErrorMaskBuilder errorMask)
         {
             this.Write(
                 writer,

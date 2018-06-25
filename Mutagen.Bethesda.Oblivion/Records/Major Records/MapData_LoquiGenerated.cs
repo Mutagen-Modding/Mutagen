@@ -17,8 +17,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using System.Diagnostics;
 using Loqui.Internal;
+using System.Diagnostics;
 using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
@@ -278,8 +278,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -288,23 +287,37 @@ namespace Mutagen.Bethesda.Oblivion
             out MapData_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = MapData_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (MapData Object, MapData_ErrorMask ErrorMask) Create_XML(
+        public static MapData Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            MapData_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MapData_ErrorMask()) : default(Func<MapData_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new MapData();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static MapData Create_XML(string path)
@@ -346,12 +359,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<MapData, MapData_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<MapData>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -360,13 +372,14 @@ namespace Mutagen.Bethesda.Oblivion
             out MapData_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<MapData, MapData_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<MapData>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = MapData_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -422,10 +435,12 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            errorMask = this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as MapData_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = MapData_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
@@ -465,7 +480,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_XML(
@@ -490,93 +505,103 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
-        protected object Write_XML_Internal(
+        protected void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
             MapDataCommon.Write_XML(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static MapData Create_XML_Internal(
-            XElement root,
-            Func<MapData_ErrorMask> errorMask)
-        {
-            var ret = new MapData();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
 
         protected static void Fill_XML_Internal(
             MapData item,
             XElement root,
             string name,
-            Func<MapData_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "UsableDimensions":
-                    var UsableDimensionstryGet = P2IntXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)MapData_FieldIndex.UsableDimensions,
-                        errorMask: errorMask);
-                    if (UsableDimensionstryGet.Succeeded)
+                    try
                     {
-                        item.SetUsableDimensions(item: UsableDimensionstryGet.Value);
+                        errorMask?.PushIndex((int)MapData_FieldIndex.UsableDimensions);
+                        if (P2IntXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out P2Int UsableDimensionsParse,
+                            errorMask: errorMask))
+                        {
+                            item.UsableDimensions = UsableDimensionsParse;
+                        }
+                        else
+                        {
+                            item.UnsetUsableDimensions();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetUsableDimensions();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "CellCoordinatesNWCell":
-                    var CellCoordinatesNWCelltryGet = P2Int16XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)MapData_FieldIndex.CellCoordinatesNWCell,
-                        errorMask: errorMask);
-                    if (CellCoordinatesNWCelltryGet.Succeeded)
+                    try
                     {
-                        item.SetCellCoordinatesNWCell(item: CellCoordinatesNWCelltryGet.Value);
+                        errorMask?.PushIndex((int)MapData_FieldIndex.CellCoordinatesNWCell);
+                        if (P2Int16XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out P2Int16 CellCoordinatesNWCellParse,
+                            errorMask: errorMask))
+                        {
+                            item.CellCoordinatesNWCell = CellCoordinatesNWCellParse;
+                        }
+                        else
+                        {
+                            item.UnsetCellCoordinatesNWCell();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetCellCoordinatesNWCell();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "CellCoordinatesSECell":
-                    var CellCoordinatesSECelltryGet = P2Int16XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)MapData_FieldIndex.CellCoordinatesSECell,
-                        errorMask: errorMask);
-                    if (CellCoordinatesSECelltryGet.Succeeded)
+                    try
                     {
-                        item.SetCellCoordinatesSECell(item: CellCoordinatesSECelltryGet.Value);
+                        errorMask?.PushIndex((int)MapData_FieldIndex.CellCoordinatesSECell);
+                        if (P2Int16XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out P2Int16 CellCoordinatesSECellParse,
+                            errorMask: errorMask))
+                        {
+                            item.CellCoordinatesSECell = CellCoordinatesSECellParse;
+                        }
+                        else
+                        {
+                            item.UnsetCellCoordinatesSECell();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetCellCoordinatesSECell();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 default:
@@ -874,8 +899,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -884,26 +909,41 @@ namespace Mutagen.Bethesda.Oblivion
             out MapData_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = MapData_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (MapData Object, MapData_ErrorMask ErrorMask) Create_Binary(
+        public static MapData Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            MapData_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MapData_ErrorMask()) : default(Func<MapData_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new MapData();
+            try
+            {
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                    frame.Reader,
+                    recordTypeConverter.ConvertToCustom(MapData_Registration.MNAM_HEADER)));
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static MapData Create_Binary(string path)
@@ -958,10 +998,12 @@ namespace Mutagen.Bethesda.Oblivion
             out MapData_ErrorMask errorMask,
             bool doMasks = true)
         {
-            errorMask = this.Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: doMasks) as MapData_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = MapData_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Binary(
@@ -997,7 +1039,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_Binary(string path)
@@ -1016,88 +1058,95 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected object Write_Binary_Internal(
+        protected void Write_Binary_Internal(
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
             MapDataCommon.Write_Binary(
                 item: this,
-                doMasks: doMasks,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
 
-        private static MapData Create_Binary_Internal(
+        protected static void Fill_Binary_Structs(
+            MapData item,
             MutagenFrame frame,
-            Func<MapData_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
+            ErrorMaskBuilder errorMask)
         {
-            var ret = new MapData();
             try
             {
-                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                    frame.Reader,
-                    recordTypeConverter.ConvertToCustom(MapData_Registration.MNAM_HEADER)));
-                using (frame)
+                errorMask?.PushIndex((int)MapData_FieldIndex.UsableDimensions);
+                if (Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out P2Int UsableDimensionsParse,
+                    errorMask: errorMask))
                 {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
+                    item.UsableDimensions = UsableDimensionsParse;
+                }
+                else
+                {
+                    item.UnsetUsableDimensions();
                 }
             }
             catch (Exception ex)
             when (errorMask != null)
             {
-                errorMask().Overall = ex;
+                errorMask.ReportException(ex);
             }
-            return ret;
-        }
-
-        protected static void Fill_Binary_Structs(
-            MapData item,
-            MutagenFrame frame,
-            Func<MapData_ErrorMask> errorMask)
-        {
-            var UsableDimensionstryGet = Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                fieldIndex: (int)MapData_FieldIndex.UsableDimensions,
-                errorMask: errorMask);
-            if (UsableDimensionstryGet.Succeeded)
+            finally
             {
-                item.SetUsableDimensions(item: UsableDimensionstryGet.Value);
+                errorMask?.PopIndex();
             }
-            else
+            try
             {
-                item.UnsetUsableDimensions();
+                errorMask?.PushIndex((int)MapData_FieldIndex.CellCoordinatesNWCell);
+                if (Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out P2Int16 CellCoordinatesNWCellParse,
+                    errorMask: errorMask))
+                {
+                    item.CellCoordinatesNWCell = CellCoordinatesNWCellParse;
+                }
+                else
+                {
+                    item.UnsetCellCoordinatesNWCell();
+                }
             }
-            var CellCoordinatesNWCelltryGet = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                fieldIndex: (int)MapData_FieldIndex.CellCoordinatesNWCell,
-                errorMask: errorMask);
-            if (CellCoordinatesNWCelltryGet.Succeeded)
+            catch (Exception ex)
+            when (errorMask != null)
             {
-                item.SetCellCoordinatesNWCell(item: CellCoordinatesNWCelltryGet.Value);
+                errorMask.ReportException(ex);
             }
-            else
+            finally
             {
-                item.UnsetCellCoordinatesNWCell();
+                errorMask?.PopIndex();
             }
-            var CellCoordinatesSECelltryGet = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                fieldIndex: (int)MapData_FieldIndex.CellCoordinatesSECell,
-                errorMask: errorMask);
-            if (CellCoordinatesSECelltryGet.Succeeded)
+            try
             {
-                item.SetCellCoordinatesSECell(item: CellCoordinatesSECelltryGet.Value);
+                errorMask?.PushIndex((int)MapData_FieldIndex.CellCoordinatesSECell);
+                if (Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out P2Int16 CellCoordinatesSECellParse,
+                    errorMask: errorMask))
+                {
+                    item.CellCoordinatesSECell = CellCoordinatesSECellParse;
+                }
+                else
+                {
+                    item.UnsetCellCoordinatesSECell();
+                }
             }
-            else
+            catch (Exception ex)
+            when (errorMask != null)
             {
-                item.UnsetCellCoordinatesSECell();
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
             }
         }
 
@@ -1191,24 +1240,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            MapData_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new MapData_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             MapDataCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = MapData_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IMapDataGetter rhs,
+            ErrorMaskBuilder errorMask,
+            MapData_CopyMask copyMask = null,
+            IMapDataGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            MapDataCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1544,13 +1601,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMapData item,
             IMapDataGetter rhs,
             IMapDataGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             MapData_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.UsableDimensions ?? true)
             {
+                errorMask.PushIndex((int)MapData_FieldIndex.UsableDimensions);
                 try
                 {
                     item.UsableDimensions_Property.Set(
@@ -1558,13 +1615,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)MapData_FieldIndex.UsableDimensions, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.CellCoordinatesNWCell ?? true)
             {
+                errorMask.PushIndex((int)MapData_FieldIndex.CellCoordinatesNWCell);
                 try
                 {
                     item.CellCoordinatesNWCell_Property.Set(
@@ -1572,13 +1634,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)MapData_FieldIndex.CellCoordinatesNWCell, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.CellCoordinatesSECell ?? true)
             {
+                errorMask.PushIndex((int)MapData_FieldIndex.CellCoordinatesSECell);
                 try
                 {
                     item.CellCoordinatesSECell_Property.Set(
@@ -1586,9 +1653,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)MapData_FieldIndex.CellCoordinatesSECell, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1767,53 +1838,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out MapData_ErrorMask errorMask,
             string name = null)
         {
-            MapData_ErrorMask errMaskRet = null;
-            Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_XML(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MapData_ErrorMask()) : default(Func<MapData_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = MapData_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal(
+        public static void Write_XML(
             XElement node,
             IMapDataGetter item,
-            Func<MapData_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.MapData");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.MapData");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.MapData");
-                }
-                P2IntXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.UsableDimensions),
-                    item: item.UsableDimensions_Property,
-                    fieldIndex: (int)MapData_FieldIndex.UsableDimensions,
-                    errorMask: errorMask);
-                P2Int16XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.CellCoordinatesNWCell),
-                    item: item.CellCoordinatesNWCell_Property,
-                    fieldIndex: (int)MapData_FieldIndex.CellCoordinatesNWCell,
-                    errorMask: errorMask);
-                P2Int16XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.CellCoordinatesSECell),
-                    item: item.CellCoordinatesSECell_Property,
-                    fieldIndex: (int)MapData_FieldIndex.CellCoordinatesSECell,
-                    errorMask: errorMask);
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.MapData");
             }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            P2IntXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.UsableDimensions),
+                item: item.UsableDimensions_Property,
+                fieldIndex: (int)MapData_FieldIndex.UsableDimensions,
+                errorMask: errorMask);
+            P2Int16XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.CellCoordinatesNWCell),
+                item: item.CellCoordinatesNWCell_Property,
+                fieldIndex: (int)MapData_FieldIndex.CellCoordinatesNWCell,
+                errorMask: errorMask);
+            P2Int16XmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.CellCoordinatesSECell),
+                item: item.CellCoordinatesSECell_Property,
+                fieldIndex: (int)MapData_FieldIndex.CellCoordinatesSECell,
+                errorMask: errorMask);
         }
         #endregion
 
@@ -1828,38 +1891,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out MapData_ErrorMask errorMask)
         {
-            MapData_ErrorMask errMaskRet = null;
-            Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MapData_ErrorMask()) : default(Func<MapData_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = MapData_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_Binary_Internal(
+        public static void Write_Binary(
             MutagenWriter writer,
             MapData item,
             RecordTypeConverter recordTypeConverter,
-            Func<MapData_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: MapData_Registration.MNAM_HEADER,
+                type: ObjectType.Subrecord))
             {
-                using (HeaderExport.ExportHeader(
+                Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: MapData_Registration.MNAM_HEADER,
-                    type: ObjectType.Subrecord))
-                {
-                    Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -1867,7 +1922,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary_Embedded(
             MapData item,
             MutagenWriter writer,
-            Func<MapData_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -2146,6 +2201,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static MapData_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            return new MapData_ErrorMask();
         }
         #endregion
 

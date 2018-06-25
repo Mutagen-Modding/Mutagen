@@ -17,8 +17,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using System.Diagnostics;
 using Loqui.Internal;
+using System.Diagnostics;
 using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
@@ -154,8 +154,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -164,23 +163,37 @@ namespace Mutagen.Bethesda.Oblivion
             out PointToReferenceMapping_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = PointToReferenceMapping_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (PointToReferenceMapping Object, PointToReferenceMapping_ErrorMask ErrorMask) Create_XML(
+        public static PointToReferenceMapping Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            PointToReferenceMapping_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PointToReferenceMapping_ErrorMask()) : default(Func<PointToReferenceMapping_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new PointToReferenceMapping();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static PointToReferenceMapping Create_XML(string path)
@@ -222,12 +235,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<PointToReferenceMapping, PointToReferenceMapping_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<PointToReferenceMapping>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -236,13 +248,14 @@ namespace Mutagen.Bethesda.Oblivion
             out PointToReferenceMapping_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<PointToReferenceMapping, PointToReferenceMapping_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<PointToReferenceMapping>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = PointToReferenceMapping_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -298,10 +311,12 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            errorMask = this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as PointToReferenceMapping_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = PointToReferenceMapping_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
@@ -341,7 +356,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_XML(
@@ -366,73 +381,41 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
-        protected object Write_XML_Internal(
+        protected void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
             PointToReferenceMappingCommon.Write_XML(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static PointToReferenceMapping Create_XML_Internal(
-            XElement root,
-            Func<PointToReferenceMapping_ErrorMask> errorMask)
-        {
-            var ret = new PointToReferenceMapping();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
 
         protected static void Fill_XML_Internal(
             PointToReferenceMapping item,
             XElement root,
             string name,
-            Func<PointToReferenceMapping_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "Reference":
-                    item.Reference_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)PointToReferenceMapping_FieldIndex.Reference,
-                        errorMask: errorMask));
+                        item: item.Reference_Property,
+                        errorMask: errorMask);
                     break;
                 case "Points":
-                    item._Points.SetIfSucceededOrDefault(ListXmlTranslation<Int16, Exception>.Instance.Parse(
+                    ListXmlTranslation<Int16>.Instance.ParseInto(
                         root: root,
+                        item: item.Points,
                         fieldIndex: (int)PointToReferenceMapping_FieldIndex.Points,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return Int16XmlTranslation.Instance.Parse(
-                                r,
-                                nullable: false,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => o.Value);
-                        }
-                        ));
+                        transl: Int16XmlTranslation.Instance.Parse);
                     break;
                 default:
                     break;
@@ -458,8 +441,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -468,26 +451,41 @@ namespace Mutagen.Bethesda.Oblivion
             out PointToReferenceMapping_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = PointToReferenceMapping_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (PointToReferenceMapping Object, PointToReferenceMapping_ErrorMask ErrorMask) Create_Binary(
+        public static PointToReferenceMapping Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            PointToReferenceMapping_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PointToReferenceMapping_ErrorMask()) : default(Func<PointToReferenceMapping_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+            var ret = new PointToReferenceMapping();
+            try
+            {
+                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                    frame.Reader,
+                    recordTypeConverter.ConvertToCustom(PointToReferenceMapping_Registration.PGRL_HEADER)));
+                using (frame)
+                {
+                    Fill_Binary_Structs(
+                        item: ret,
+                        frame: frame,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static PointToReferenceMapping Create_Binary(string path)
@@ -542,10 +540,12 @@ namespace Mutagen.Bethesda.Oblivion
             out PointToReferenceMapping_ErrorMask errorMask,
             bool doMasks = true)
         {
-            errorMask = this.Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: doMasks) as PointToReferenceMapping_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = PointToReferenceMapping_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Binary(
@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: false);
+                errorMask: null);
         }
 
         public void Write_Binary(string path)
@@ -600,70 +600,36 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected object Write_Binary_Internal(
+        protected void Write_Binary_Internal(
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
             PointToReferenceMappingCommon.Write_Binary(
                 item: this,
-                doMasks: doMasks,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static PointToReferenceMapping Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<PointToReferenceMapping_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            var ret = new PointToReferenceMapping();
-            try
-            {
-                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                    frame.Reader,
-                    recordTypeConverter.ConvertToCustom(PointToReferenceMapping_Registration.PGRL_HEADER)));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
 
         protected static void Fill_Binary_Structs(
             PointToReferenceMapping item,
             MutagenFrame frame,
-            Func<PointToReferenceMapping_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            item.Reference_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)PointToReferenceMapping_FieldIndex.Reference,
-                errorMask: errorMask));
-            item.Points.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16, Exception>.Instance.ParseRepeatedItem(
+                item: item.Reference_Property,
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16>.Instance.ParseRepeatedItem(
                 frame: frame,
+                item: item.Points,
                 fieldIndex: (int)PointToReferenceMapping_FieldIndex.Points,
                 lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                 errorMask: errorMask,
-                transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
-                {
-                    return Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
-                        r,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                ));
+                transl: Int16BinaryTranslation.Instance.Parse);
         }
 
         #endregion
@@ -756,24 +722,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            PointToReferenceMapping_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new PointToReferenceMapping_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             PointToReferenceMappingCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = PointToReferenceMapping_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IPointToReferenceMappingGetter rhs,
+            ErrorMaskBuilder errorMask,
+            PointToReferenceMapping_CopyMask copyMask = null,
+            IPointToReferenceMappingGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            PointToReferenceMappingCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
@@ -1070,13 +1044,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPointToReferenceMapping item,
             IPointToReferenceMappingGetter rhs,
             IPointToReferenceMappingGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             PointToReferenceMapping_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.Reference ?? true)
             {
+                errorMask.PushIndex((int)PointToReferenceMapping_FieldIndex.Reference);
                 try
                 {
                     item.Reference_Property.Set(
@@ -1084,13 +1058,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)PointToReferenceMapping_FieldIndex.Reference, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Points != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)PointToReferenceMapping_FieldIndex.Points);
                 try
                 {
                     item.Points.SetToWithDefault(
@@ -1099,9 +1078,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)PointToReferenceMapping_FieldIndex.Points, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -1283,57 +1266,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out PointToReferenceMapping_ErrorMask errorMask,
             string name = null)
         {
-            PointToReferenceMapping_ErrorMask errMaskRet = null;
-            Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_XML(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PointToReferenceMapping_ErrorMask()) : default(Func<PointToReferenceMapping_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = PointToReferenceMapping_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal(
+        public static void Write_XML(
             XElement node,
             IPointToReferenceMappingGetter item,
-            Func<PointToReferenceMapping_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.PointToReferenceMapping");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.PointToReferenceMapping");
-                node.Add(elem);
-                if (name != null)
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.PointToReferenceMapping");
+            }
+            FormIDXmlTranslation.Instance.Write(
+                node: elem,
+                name: nameof(item.Reference),
+                item: item.Reference?.FormID,
+                fieldIndex: (int)PointToReferenceMapping_FieldIndex.Reference,
+                errorMask: errorMask);
+            ListXmlTranslation<Int16>.Instance.Write(
+                node: elem,
+                name: nameof(item.Points),
+                item: item.Points,
+                fieldIndex: (int)PointToReferenceMapping_FieldIndex.Points,
+                errorMask: errorMask,
+                transl: (XElement subNode, Int16 subItem, ErrorMaskBuilder listSubMask) =>
                 {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.PointToReferenceMapping");
+                    Int16XmlTranslation.Instance.Write(
+                        node: subNode,
+                        name: "Item",
+                        item: subItem,
+                        errorMask: listSubMask);
                 }
-                FormIDXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Reference),
-                    item: item.Reference?.FormID,
-                    fieldIndex: (int)PointToReferenceMapping_FieldIndex.Reference,
-                    errorMask: errorMask);
-                ListXmlTranslation<Int16, Exception>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Points),
-                    item: item.Points,
-                    fieldIndex: (int)PointToReferenceMapping_FieldIndex.Points,
-                    errorMask: errorMask,
-                    transl: (XElement subNode, Int16 subItem, bool listDoMasks, out Exception listSubMask) =>
-                    {
-                        Int16XmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: "Item",
-                            item: subItem,
-                            doMasks: errorMask != null,
-                            errorMask: out listSubMask);
-                    }
-                    );
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+                );
         }
         #endregion
 
@@ -1348,38 +1322,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out PointToReferenceMapping_ErrorMask errorMask)
         {
-            PointToReferenceMapping_ErrorMask errMaskRet = null;
-            Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PointToReferenceMapping_ErrorMask()) : default(Func<PointToReferenceMapping_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = PointToReferenceMapping_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_Binary_Internal(
+        public static void Write_Binary(
             MutagenWriter writer,
             PointToReferenceMapping item,
             RecordTypeConverter recordTypeConverter,
-            Func<PointToReferenceMapping_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: PointToReferenceMapping_Registration.PGRL_HEADER,
+                type: ObjectType.Subrecord))
             {
-                using (HeaderExport.ExportHeader(
+                Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: PointToReferenceMapping_Registration.PGRL_HEADER,
-                    type: ObjectType.Subrecord))
-                {
-                    Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -1387,27 +1353,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary_Embedded(
             PointToReferenceMapping item,
             MutagenWriter writer,
-            Func<PointToReferenceMapping_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Reference_Property,
                 fieldIndex: (int)PointToReferenceMapping_FieldIndex.Reference,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16, Exception>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16>.Instance.Write(
                 writer: writer,
-                item: item.Points,
+                items: item.Points,
                 fieldIndex: (int)PointToReferenceMapping_FieldIndex.Points,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, Int16 subItem, bool listDoMasks, out Exception listSubMask) =>
-                {
-                    Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                transl: Int16BinaryTranslation.Instance.Write);
         }
 
         #endregion
@@ -1716,6 +1674,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static PointToReferenceMapping_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            return new PointToReferenceMapping_ErrorMask();
         }
         #endregion
 

@@ -20,8 +20,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using System.Diagnostics;
 using Loqui.Internal;
+using System.Diagnostics;
 using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
@@ -580,8 +580,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_XML(
                 root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -590,23 +589,37 @@ namespace Mutagen.Bethesda.Oblivion
             out DialogItem_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = DialogItem_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (DialogItem Object, DialogItem_ErrorMask ErrorMask) Create_XML(
+        public static DialogItem Create_XML(
             XElement root,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            DialogItem_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new DialogItem_ErrorMask()) : default(Func<DialogItem_ErrorMask>));
-            return (ret, errMaskRet);
+            var ret = new DialogItem();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            return ret;
         }
 
         public static DialogItem Create_XML(string path)
@@ -648,12 +661,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<DialogItem, DialogItem_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<DialogItem>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: false,
-                mask: out var errorMask,
+                errorMask: null,
                 cmds: cmds);
         }
 
@@ -662,13 +674,14 @@ namespace Mutagen.Bethesda.Oblivion
             out DialogItem_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<DialogItem, DialogItem_ErrorMask>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            LoquiXmlTranslation<DialogItem>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
+                errorMask: errorMaskBuilder,
                 cmds: cmds);
+            errorMask = DialogItem_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -736,10 +749,12 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            errorMask = this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: doMasks) as DialogItem_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = DialogItem_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
@@ -779,7 +794,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_XML_Internal(
                 node: node,
                 name: name,
-                doMasks: false);
+                errorMask: null);
         }
 
         public override void Write_XML(
@@ -804,226 +819,216 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
-        protected override object Write_XML_Internal(
+        protected override void Write_XML_Internal(
             XElement node,
-            bool doMasks,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
             DialogItemCommon.Write_XML(
                 item: this,
-                doMasks: doMasks,
                 node: node,
                 name: name,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
-
-        private static DialogItem Create_XML_Internal(
-            XElement root,
-            Func<DialogItem_ErrorMask> errorMask)
-        {
-            var ret = new DialogItem();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
 
         protected static void Fill_XML_Internal(
             DialogItem item,
             XElement root,
             string name,
-            Func<DialogItem_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             switch (name)
             {
                 case "DialogType":
-                    var DialogTypetryGet = EnumXmlTranslation<DialogType>.Instance.Parse(
-                        root,
-                        nullable: false,
-                        fieldIndex: (int)DialogItem_FieldIndex.DialogType,
-                        errorMask: errorMask).Bubble((o) => o.Value);
-                    if (DialogTypetryGet.Succeeded)
+                    try
                     {
-                        item.SetDialogType(item: DialogTypetryGet.Value);
+                        errorMask?.PushIndex((int)DialogItem_FieldIndex.DialogType);
+                        if (EnumXmlTranslation<DialogType>.Instance.Parse(
+                            root: root,
+                            item: out DialogType DialogTypeParse,
+                            errorMask: errorMask))
+                        {
+                            item.DialogType = DialogTypeParse;
+                        }
+                        else
+                        {
+                            item.UnsetDialogType();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetDialogType();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Flags":
-                    var FlagstryGet = EnumXmlTranslation<DialogItem.Flag>.Instance.Parse(
-                        root,
-                        nullable: false,
-                        fieldIndex: (int)DialogItem_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value);
-                    if (FlagstryGet.Succeeded)
+                    try
                     {
-                        item.SetFlags(item: FlagstryGet.Value);
+                        errorMask?.PushIndex((int)DialogItem_FieldIndex.Flags);
+                        if (EnumXmlTranslation<DialogItem.Flag>.Instance.Parse(
+                            root: root,
+                            item: out DialogItem.Flag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.UnsetFlags();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetFlags();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "Quest":
-                    item.Quest_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)DialogItem_FieldIndex.Quest,
-                        errorMask: errorMask));
+                        item: item.Quest_Property,
+                        errorMask: errorMask);
                     break;
                 case "PreviousTopic":
-                    item.PreviousTopic_Property.SetIfSucceededOrDefault(FormIDXmlTranslation.Instance.ParseNonNull(
+                    FormIDXmlTranslation.Instance.ParseInto(
                         root,
                         fieldIndex: (int)DialogItem_FieldIndex.PreviousTopic,
-                        errorMask: errorMask));
+                        item: item.PreviousTopic_Property,
+                        errorMask: errorMask);
                     break;
                 case "Topics":
-                    item._Topics.SetIfSucceededOrDefault(ListXmlTranslation<FormIDSetLink<DialogTopic>, Exception>.Instance.Parse(
+                    ListXmlTranslation<FormIDSetLink<DialogTopic>>.Instance.ParseInto(
                         root: root,
+                        item: item.Topics,
                         fieldIndex: (int)DialogItem_FieldIndex.Topics,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return FormIDXmlTranslation.Instance.Parse(
-                                r,
-                                nullable: false,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<DialogTopic>(o.Value));
-                        }
-                        ));
+                        transl: FormIDXmlTranslation.Instance.Parse);
                     break;
                 case "Responses":
-                    item._Responses.SetIfSucceededOrDefault(ListXmlTranslation<DialogResponse, MaskItem<Exception, DialogResponse_ErrorMask>>.Instance.Parse(
+                    ListXmlTranslation<DialogResponse>.Instance.ParseInto(
                         root: root,
+                        item: item.Responses,
                         fieldIndex: (int)DialogItem_FieldIndex.Responses,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, DialogResponse_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiXmlTranslation<DialogResponse, DialogResponse_ErrorMask>.Instance.Parse(
-                                root: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: LoquiXmlTranslation<DialogResponse>.Instance.Parse);
                     break;
                 case "Conditions":
-                    item._Conditions.SetIfSucceededOrDefault(ListXmlTranslation<DialogCondition, MaskItem<Exception, DialogCondition_ErrorMask>>.Instance.Parse(
+                    ListXmlTranslation<DialogCondition>.Instance.ParseInto(
                         root: root,
+                        item: item.Conditions,
                         fieldIndex: (int)DialogItem_FieldIndex.Conditions,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, DialogCondition_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiXmlTranslation<DialogCondition, DialogCondition_ErrorMask>.Instance.Parse(
-                                root: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: LoquiXmlTranslation<DialogCondition>.Instance.Parse);
                     break;
                 case "Choices":
-                    item._Choices.SetIfSucceededOrDefault(ListXmlTranslation<FormIDSetLink<DialogTopic>, Exception>.Instance.Parse(
+                    ListXmlTranslation<FormIDSetLink<DialogTopic>>.Instance.ParseInto(
                         root: root,
+                        item: item.Choices,
                         fieldIndex: (int)DialogItem_FieldIndex.Choices,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return FormIDXmlTranslation.Instance.Parse(
-                                r,
-                                nullable: false,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<DialogTopic>(o.Value));
-                        }
-                        ));
+                        transl: FormIDXmlTranslation.Instance.Parse);
                     break;
                 case "LinkFrom":
-                    item._LinkFrom.SetIfSucceededOrDefault(ListXmlTranslation<FormIDSetLink<DialogTopic>, Exception>.Instance.Parse(
+                    ListXmlTranslation<FormIDSetLink<DialogTopic>>.Instance.ParseInto(
                         root: root,
+                        item: item.LinkFrom,
                         fieldIndex: (int)DialogItem_FieldIndex.LinkFrom,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return FormIDXmlTranslation.Instance.Parse(
-                                r,
-                                nullable: false,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<DialogTopic>(o.Value));
-                        }
-                        ));
+                        transl: FormIDXmlTranslation.Instance.Parse);
                     break;
                 case "MetadataSummary":
-                    item.MetadataSummary.CopyFieldsFrom(
-                        rhs: ScriptMetaSummary.Create_XML(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out ScriptMetaSummary_ErrorMask MetadataSummarycreateMask)
-                        ,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out ScriptMetaSummary_ErrorMask MetadataSummarycopyMask);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        index: (int)DialogItem_FieldIndex.MetadataSummary,
-                        errMaskObj: MaskItem<Exception, ScriptMetaSummary_ErrorMask>.WrapValue(ScriptMetaSummary_ErrorMask.Combine(MetadataSummarycreateMask, MetadataSummarycopyMask)));
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogItem_FieldIndex.MetadataSummary);
+                        item.MetadataSummary.CopyFieldsFrom(
+                            rhs: ScriptMetaSummary.Create_XML(
+                                root: root,
+                                errorMask: errorMask)
+                            ,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "CompiledScript":
-                    var CompiledScripttryGet = ByteArrayXmlTranslation.Instance.Parse(
-                        root,
-                        fieldIndex: (int)DialogItem_FieldIndex.CompiledScript,
-                        errorMask: errorMask);
-                    if (CompiledScripttryGet.Succeeded)
+                    try
                     {
-                        item.SetCompiledScript(item: CompiledScripttryGet.Value);
+                        errorMask?.PushIndex((int)DialogItem_FieldIndex.CompiledScript);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Byte[] CompiledScriptParse,
+                            errorMask: errorMask))
+                        {
+                            item.CompiledScript = CompiledScriptParse;
+                        }
+                        else
+                        {
+                            item.UnsetCompiledScript();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetCompiledScript();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "SourceCode":
-                    var SourceCodetryGet = StringXmlTranslation.Instance.Parse(
-                        root,
-                        fieldIndex: (int)DialogItem_FieldIndex.SourceCode,
-                        errorMask: errorMask);
-                    if (SourceCodetryGet.Succeeded)
+                    try
                     {
-                        item.SetSourceCode(item: SourceCodetryGet.Value);
+                        errorMask?.PushIndex((int)DialogItem_FieldIndex.SourceCode);
+                        if (StringXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out String SourceCodeParse,
+                            errorMask: errorMask))
+                        {
+                            item.SourceCode = SourceCodeParse;
+                        }
+                        else
+                        {
+                            item.UnsetSourceCode();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetSourceCode();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "References":
-                    item._References.SetIfSucceededOrDefault(ListXmlTranslation<ScriptObjectReference, MaskItem<Exception, ScriptObjectReference_ErrorMask>>.Instance.Parse(
+                    ListXmlTranslation<ScriptObjectReference>.Instance.ParseInto(
                         root: root,
+                        item: item.References,
                         fieldIndex: (int)DialogItem_FieldIndex.References,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, ScriptObjectReference_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiXmlTranslation<ScriptObjectReference, ScriptObjectReference_ErrorMask>.Instance.Parse(
-                                root: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: LoquiXmlTranslation<ScriptObjectReference>.Instance.Parse);
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(
@@ -1742,8 +1747,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return Create_Binary(
                 frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
+                recordTypeConverter: null,
+                errorMask: null);
         }
 
         [DebuggerStepThrough]
@@ -1752,26 +1757,29 @@ namespace Mutagen.Bethesda.Oblivion
             out DialogItem_ErrorMask errorMask,
             bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
                 recordTypeConverter: null,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
+                errorMask: errorMaskBuilder);
+            errorMask = DialogItem_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
         }
 
         [DebuggerStepThrough]
-        public static (DialogItem Object, DialogItem_ErrorMask ErrorMask) Create_Binary(
+        public static DialogItem Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
-            DialogItem_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
+            return UtilityTranslation.MajorRecordParse<DialogItem>(
+                record: new DialogItem(),
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new DialogItem_ErrorMask()) : default(Func<DialogItem_ErrorMask>),
-                recordTypeConverter: recordTypeConverter);
-            return (ret, errMaskRet);
+                errorMask: errorMask,
+                recType: DialogItem_Registration.INFO_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         public static DialogItem Create_Binary(string path)
@@ -1826,10 +1834,12 @@ namespace Mutagen.Bethesda.Oblivion
             out DialogItem_ErrorMask errorMask,
             bool doMasks = true)
         {
-            errorMask = this.Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: doMasks) as DialogItem_ErrorMask;
+                errorMask: errorMaskBuilder);
+            errorMask = DialogItem_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Binary(
@@ -1865,7 +1875,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
-                doMasks: false);
+                errorMask: null);
         }
 
         public override void Write_Binary(string path)
@@ -1884,131 +1894,86 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected override object Write_Binary_Internal(
+        protected override void Write_Binary_Internal(
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            bool doMasks)
+            ErrorMaskBuilder errorMask)
         {
             DialogItemCommon.Write_Binary(
                 item: this,
-                doMasks: doMasks,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: out var errorMask);
-            return errorMask;
+                errorMask: errorMask);
         }
         #endregion
 
         static partial void FillBinary_Conditions_Custom(
             MutagenFrame frame,
             DialogItem item,
-            int fieldIndex,
-            Func<DialogItem_ErrorMask> errorMask);
+            ErrorMaskBuilder errorMask);
 
         static partial void WriteBinary_Conditions_Custom(
             MutagenWriter writer,
             DialogItem item,
-            int fieldIndex,
-            Func<DialogItem_ErrorMask> errorMask);
+            ErrorMaskBuilder errorMask);
 
         public static void WriteBinary_Conditions(
             MutagenWriter writer,
             DialogItem item,
-            int fieldIndex,
-            Func<DialogItem_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                WriteBinary_Conditions_Custom(
-                    writer: writer,
-                    item: item,
-                    fieldIndex: fieldIndex,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            WriteBinary_Conditions_Custom(
+                writer: writer,
+                item: item,
+                errorMask: errorMask);
         }
 
         static partial void FillBinary_ConditionsOld_Custom(
             MutagenFrame frame,
             DialogItem item,
-            Func<DialogItem_ErrorMask> errorMask);
+            ErrorMaskBuilder errorMask);
 
         static partial void WriteBinary_ConditionsOld_Custom(
             MutagenWriter writer,
             DialogItem item,
-            Func<DialogItem_ErrorMask> errorMask);
+            ErrorMaskBuilder errorMask);
 
         public static void WriteBinary_ConditionsOld(
             MutagenWriter writer,
             DialogItem item,
-            Func<DialogItem_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                WriteBinary_ConditionsOld_Custom(
-                    writer: writer,
-                    item: item,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
+            WriteBinary_ConditionsOld_Custom(
+                writer: writer,
+                item: item,
+                errorMask: errorMask);
         }
 
         static partial void FillBinary_MetadataSummaryOld_Custom(
             MutagenFrame frame,
             DialogItem item,
-            Func<DialogItem_ErrorMask> errorMask);
+            ErrorMaskBuilder errorMask);
 
         static partial void WriteBinary_MetadataSummaryOld_Custom(
             MutagenWriter writer,
             DialogItem item,
-            Func<DialogItem_ErrorMask> errorMask);
+            ErrorMaskBuilder errorMask);
 
         public static void WriteBinary_MetadataSummaryOld(
             MutagenWriter writer,
             DialogItem item,
-            Func<DialogItem_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                WriteBinary_MetadataSummaryOld_Custom(
-                    writer: writer,
-                    item: item,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-        }
-
-        private static DialogItem Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<DialogItem_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            return UtilityTranslation.MajorRecordParse<DialogItem, DialogItem_ErrorMask>(
-                record: new DialogItem(),
-                frame: frame,
-                errorMask: errorMask,
-                recType: DialogItem_Registration.INFO_HEADER,
-                recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
+            WriteBinary_MetadataSummaryOld_Custom(
+                writer: writer,
+                item: item,
+                errorMask: errorMask);
         }
 
         protected static void Fill_Binary_Structs(
             DialogItem item,
             MutagenFrame frame,
-            Func<DialogItem_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             MajorRecord.Fill_Binary_Structs(
                 item: item,
@@ -2019,7 +1984,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             DialogItem item,
             MutagenFrame frame,
-            Func<DialogItem_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -2032,229 +1997,218 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
-                        var DialogTypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<DialogType>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(2),
-                            fieldIndex: (int)DialogItem_FieldIndex.DialogType,
-                            errorMask: errorMask);
-                        if (DialogTypetryGet.Succeeded)
+                        try
                         {
-                            item.SetDialogType(item: DialogTypetryGet.Value);
+                            errorMask?.PushIndex((int)DialogItem_FieldIndex.DialogType);
+                            if (EnumBinaryTranslation<DialogType>.Instance.Parse(
+                                frame: dataFrame.SpawnWithLength(2),
+                                item: out DialogType DialogTypeParse,
+                                errorMask: errorMask))
+                            {
+                                item.DialogType = DialogTypeParse;
+                            }
+                            else
+                            {
+                                item.UnsetDialogType();
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.UnsetDialogType();
+                            errorMask.ReportException(ex);
                         }
-                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<DialogItem.Flag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(1),
-                            fieldIndex: (int)DialogItem_FieldIndex.Flags,
-                            errorMask: errorMask);
-                        if (FlagstryGet.Succeeded)
+                        finally
                         {
-                            item.SetFlags(item: FlagstryGet.Value);
+                            errorMask?.PopIndex();
                         }
-                        else
+                        try
                         {
-                            item.UnsetFlags();
+                            errorMask?.PushIndex((int)DialogItem_FieldIndex.Flags);
+                            if (EnumBinaryTranslation<DialogItem.Flag>.Instance.Parse(
+                                frame: dataFrame.SpawnWithLength(1),
+                                item: out DialogItem.Flag FlagsParse,
+                                errorMask: errorMask))
+                            {
+                                item.Flags = FlagsParse;
+                            }
+                            else
+                            {
+                                item.UnsetFlags();
+                            }
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Flags);
                 case "QSTI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Quest_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                        frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)DialogItem_FieldIndex.Quest,
-                        errorMask: errorMask));
+                        item: item.Quest_Property,
+                        errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Quest);
                 case "PNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.PreviousTopic_Property.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                        frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)DialogItem_FieldIndex.PreviousTopic,
-                        errorMask: errorMask));
+                        item: item.PreviousTopic_Property,
+                        errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.PreviousTopic);
                 case "NAME":
-                    item.Topics.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<DialogTopic>, Exception>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<DialogTopic>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: DialogItem_Registration.NAME_HEADER,
+                        item: item.Topics,
                         fieldIndex: (int)DialogItem_FieldIndex.Topics,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            r.Position += Constants.SUBRECORD_LENGTH;
-                            return Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                                r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<DialogTopic>(o));
-                        }
-                        ));
+                        transl: FormIDBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Topics);
                 case "TRDT":
-                    item.Responses.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogResponse, MaskItem<Exception, DialogResponse_ErrorMask>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogResponse>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: DialogItem_Registration.TRDT_HEADER,
+                        item: item.Responses,
                         fieldIndex: (int)DialogItem_FieldIndex.Responses,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, DialogResponse_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiBinaryTranslation<DialogResponse, DialogResponse_ErrorMask>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: LoquiBinaryTranslation<DialogResponse>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Responses);
                 case "CTDA":
-                    try
+                    using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
                     {
-                        using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
-                        {
-                            FillBinary_Conditions_Custom(
-                                frame: subFrame,
-                                item: item,
-                                fieldIndex: (int)DialogItem_FieldIndex.Conditions,
-                                errorMask: errorMask);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask().Overall = ex;
+                        FillBinary_Conditions_Custom(
+                            frame: subFrame,
+                            item: item,
+                            errorMask: errorMask);
                     }
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Conditions);
                 case "CTDT":
-                    try
+                    using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
                     {
-                        using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
-                        {
-                            FillBinary_ConditionsOld_Custom(
-                                frame: subFrame,
-                                item: item,
-                                errorMask: errorMask);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask().Overall = ex;
+                        FillBinary_ConditionsOld_Custom(
+                            frame: subFrame,
+                            item: item,
+                            errorMask: errorMask);
                     }
                     return TryGet<int?>.Succeed(null);
                 case "TCLT":
-                    item.Choices.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<DialogTopic>, Exception>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<DialogTopic>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: DialogItem_Registration.TCLT_HEADER,
+                        item: item.Choices,
                         fieldIndex: (int)DialogItem_FieldIndex.Choices,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            r.Position += Constants.SUBRECORD_LENGTH;
-                            return Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                                r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<DialogTopic>(o));
-                        }
-                        ));
+                        transl: FormIDBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Choices);
                 case "TCLF":
-                    item.LinkFrom.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<DialogTopic>, Exception>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<DialogTopic>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: DialogItem_Registration.TCLF_HEADER,
+                        item: item.LinkFrom,
                         fieldIndex: (int)DialogItem_FieldIndex.LinkFrom,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            r.Position += Constants.SUBRECORD_LENGTH;
-                            return Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                                r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<DialogTopic>(o));
-                        }
-                        ));
+                        transl: FormIDBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.LinkFrom);
                 case "SCHR":
-                    var tmpMetadataSummary = ScriptMetaSummary.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out ScriptMetaSummary_ErrorMask MetadataSummarycreateMask);
-                    item.MetadataSummary.CopyFieldsFrom(
-                        rhs: tmpMetadataSummary,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out ScriptMetaSummary_ErrorMask MetadataSummaryerrorMask);
-                    var combinedMetadataSummary = ScriptMetaSummary_ErrorMask.Combine(MetadataSummarycreateMask, MetadataSummaryerrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)DialogItem_FieldIndex.MetadataSummary,
-                        errMaskObj: combinedMetadataSummary == null ? null : new MaskItem<Exception, ScriptMetaSummary_ErrorMask>(null, combinedMetadataSummary));
+                    using (errorMask.PushIndex((int)DialogItem_FieldIndex.MetadataSummary))
+                    {
+                        var tmpMetadataSummary = ScriptMetaSummary.Create_Binary(
+                            frame: frame,
+                            errorMask: errorMask,
+                            recordTypeConverter: null);
+                        item.MetadataSummary.CopyFieldsFrom(
+                            rhs: tmpMetadataSummary,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            errorMask: errorMask);
+                    }
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.MetadataSummary);
                 case "SCHD":
-                    try
+                    using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
                     {
-                        using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
-                        {
-                            FillBinary_MetadataSummaryOld_Custom(
-                                frame: subFrame,
-                                item: item,
-                                errorMask: errorMask);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask().Overall = ex;
+                        FillBinary_MetadataSummaryOld_Custom(
+                            frame: subFrame,
+                            item: item,
+                            errorMask: errorMask);
                     }
                     return TryGet<int?>.Succeed(null);
                 case "SCDA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var CompiledScripttryGet = ByteArrayBinaryTranslation.Instance.Parse(
-                        frame.SpawnWithLength(contentLength),
-                        fieldIndex: (int)DialogItem_FieldIndex.CompiledScript,
-                        errorMask: errorMask);
-                    if (CompiledScripttryGet.Succeeded)
+                    try
                     {
-                        item.SetCompiledScript(item: CompiledScripttryGet.Value);
+                        errorMask?.PushIndex((int)DialogItem_FieldIndex.CompiledScript);
+                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            item: out Byte[] CompiledScriptParse,
+                            errorMask: errorMask))
+                        {
+                            item.CompiledScript = CompiledScriptParse;
+                        }
+                        else
+                        {
+                            item.UnsetCompiledScript();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetCompiledScript();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.CompiledScript);
                 case "SCTX":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var SourceCodetryGet = StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        fieldIndex: (int)DialogItem_FieldIndex.SourceCode,
-                        parseWhole: true,
-                        errorMask: errorMask);
-                    if (SourceCodetryGet.Succeeded)
+                    try
                     {
-                        item.SetSourceCode(item: SourceCodetryGet.Value);
+                        errorMask?.PushIndex((int)DialogItem_FieldIndex.SourceCode);
+                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            parseWhole: true,
+                            item: out String SourceCodeParse,
+                            errorMask: errorMask))
+                        {
+                            item.SourceCode = SourceCodeParse;
+                        }
+                        else
+                        {
+                            item.UnsetSourceCode();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetSourceCode();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.SourceCode);
                 case "SCRO":
-                    item.References.SetIfSucceededOrDefault(Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptObjectReference, MaskItem<Exception, ScriptObjectReference_ErrorMask>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptObjectReference>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: DialogItem_Registration.SCRO_HEADER,
+                        item: item.References,
                         fieldIndex: (int)DialogItem_FieldIndex.References,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, ScriptObjectReference_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiBinaryTranslation<ScriptObjectReference, ScriptObjectReference_ErrorMask>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        transl: LoquiBinaryTranslation<ScriptObjectReference>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.References);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
@@ -2342,24 +2296,32 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            DialogItem_ErrorMask retErrorMask = null;
-            Func<IErrorMask> maskGetter = !doMasks ? default(Func<IErrorMask>) : () =>
-            {
-                if (retErrorMask == null)
-                {
-                    retErrorMask = new DialogItem_ErrorMask();
-                }
-                return retErrorMask;
-            };
+            var errorMaskBuilder = new ErrorMaskBuilder();
             DialogItemCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
-                doMasks: true,
-                errorMask: maskGetter,
+                errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = retErrorMask;
+            errorMask = DialogItem_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void CopyFieldsFrom(
+            IDialogItemGetter rhs,
+            ErrorMaskBuilder errorMask,
+            DialogItem_CopyMask copyMask = null,
+            IDialogItemGetter def = null,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
+        {
+            DialogItemCommon.CopyFieldsFrom(
+                item: this,
+                rhs: rhs,
+                def: def,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                cmds: cmds);
         }
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
@@ -2952,8 +2914,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogItem item,
             IDialogItemGetter rhs,
             IDialogItemGetter def,
-            bool doMasks,
-            Func<IErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             DialogItem_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
@@ -2961,12 +2922,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item,
                 rhs,
                 def,
-                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
             if (copyMask?.DialogType ?? true)
             {
+                errorMask.PushIndex((int)DialogItem_FieldIndex.DialogType);
                 try
                 {
                     item.DialogType_Property.Set(
@@ -2974,13 +2935,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogItem_FieldIndex.DialogType, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
+                errorMask.PushIndex((int)DialogItem_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -2988,13 +2954,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogItem_FieldIndex.Flags, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Quest ?? true)
             {
+                errorMask.PushIndex((int)DialogItem_FieldIndex.Quest);
                 try
                 {
                     item.Quest_Property.SetToWithDefault(
@@ -3003,13 +2974,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogItem_FieldIndex.Quest, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.PreviousTopic ?? true)
             {
+                errorMask.PushIndex((int)DialogItem_FieldIndex.PreviousTopic);
                 try
                 {
                     item.PreviousTopic_Property.SetToWithDefault(
@@ -3018,13 +2994,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogItem_FieldIndex.PreviousTopic, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Topics != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)DialogItem_FieldIndex.Topics);
                 try
                 {
                     item.Topics.SetToWithDefault(
@@ -3033,13 +3014,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogItem_FieldIndex.Topics, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Responses.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)DialogItem_FieldIndex.Responses);
                 try
                 {
                     item.Responses.SetToWithDefault(
@@ -3065,13 +3051,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogItem_FieldIndex.Responses, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Conditions.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)DialogItem_FieldIndex.Conditions);
                 try
                 {
                     item.Conditions.SetToWithDefault(
@@ -3097,13 +3088,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogItem_FieldIndex.Conditions, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.Choices != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)DialogItem_FieldIndex.Choices);
                 try
                 {
                     item.Choices.SetToWithDefault(
@@ -3112,13 +3108,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogItem_FieldIndex.Choices, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.LinkFrom != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)DialogItem_FieldIndex.LinkFrom);
                 try
                 {
                     item.LinkFrom.SetToWithDefault(
@@ -3127,39 +3128,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogItem_FieldIndex.LinkFrom, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.MetadataSummary.Overall ?? true)
             {
+                errorMask.PushIndex((int)DialogItem_FieldIndex.MetadataSummary);
                 try
                 {
                     ScriptMetaSummaryCommon.CopyFieldsFrom(
                         item: item.MetadataSummary,
                         rhs: rhs.MetadataSummary,
                         def: def?.MetadataSummary,
-                        doMasks: doMasks,
-                        errorMask: (doMasks ? new Func<ScriptMetaSummary_ErrorMask>(() =>
-                        {
-                            var baseMask = errorMask();
-                            var mask = new ScriptMetaSummary_ErrorMask();
-                            baseMask.SetNthMask((int)DialogItem_FieldIndex.MetadataSummary, mask);
-                            return mask;
-                        }
-                        ) : null),
+                        errorMask: errorMask,
                         copyMask: copyMask?.MetadataSummary.Specific,
                         cmds: cmds);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogItem_FieldIndex.MetadataSummary, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.CompiledScript ?? true)
             {
+                errorMask.PushIndex((int)DialogItem_FieldIndex.CompiledScript);
                 try
                 {
                     item.CompiledScript_Property.SetToWithDefault(
@@ -3167,13 +3170,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         def: def?.CompiledScript_Property);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogItem_FieldIndex.CompiledScript, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.SourceCode ?? true)
             {
+                errorMask.PushIndex((int)DialogItem_FieldIndex.SourceCode);
                 try
                 {
                     item.SourceCode_Property.SetToWithDefault(
@@ -3181,13 +3189,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         def: def?.SourceCode_Property);
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogItem_FieldIndex.SourceCode, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
             if (copyMask?.References.Overall != CopyOption.Skip)
             {
+                errorMask.PushIndex((int)DialogItem_FieldIndex.References);
                 try
                 {
                     item.References.SetToWithDefault(
@@ -3213,9 +3226,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doMasks)
+                when (errorMask != null)
                 {
-                    errorMask().SetNthException((int)DialogItem_FieldIndex.References, ex);
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
                 }
             }
         }
@@ -3814,205 +3831,191 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out DialogItem_ErrorMask errorMask,
             string name = null)
         {
-            DialogItem_ErrorMask errMaskRet = null;
-            Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_XML(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new DialogItem_ErrorMask()) : default(Func<DialogItem_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = DialogItem_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_XML_Internal(
+        public static void Write_XML(
             XElement node,
             IDialogItemGetter item,
-            Func<DialogItem_ErrorMask> errorMask,
+            ErrorMaskBuilder errorMask,
             string name = null)
         {
-            try
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.DialogItem");
+            node.Add(elem);
+            if (name != null)
             {
-                var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.DialogItem");
-                node.Add(elem);
-                if (name != null)
-                {
-                    elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.DialogItem");
-                }
-                EnumXmlTranslation<DialogType>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.DialogType),
-                    item: item.DialogType_Property,
-                    fieldIndex: (int)DialogItem_FieldIndex.DialogType,
-                    errorMask: errorMask);
-                EnumXmlTranslation<DialogItem.Flag>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Flags),
-                    item: item.Flags_Property,
-                    fieldIndex: (int)DialogItem_FieldIndex.Flags,
-                    errorMask: errorMask);
-                if (item.Quest_Property.HasBeenSet)
-                {
-                    FormIDXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Quest),
-                        item: item.Quest?.FormID,
-                        fieldIndex: (int)DialogItem_FieldIndex.Quest,
-                        errorMask: errorMask);
-                }
-                if (item.PreviousTopic_Property.HasBeenSet)
-                {
-                    FormIDXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.PreviousTopic),
-                        item: item.PreviousTopic?.FormID,
-                        fieldIndex: (int)DialogItem_FieldIndex.PreviousTopic,
-                        errorMask: errorMask);
-                }
-                if (item.Topics.HasBeenSet)
-                {
-                    ListXmlTranslation<FormIDSetLink<DialogTopic>, Exception>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Topics),
-                        item: item.Topics,
-                        fieldIndex: (int)DialogItem_FieldIndex.Topics,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, FormIDSetLink<DialogTopic> subItem, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            FormIDXmlTranslation.Instance.Write(
-                                node: subNode,
-                                name: "Item",
-                                item: subItem?.FormID,
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                if (item.Responses.HasBeenSet)
-                {
-                    ListXmlTranslation<DialogResponse, MaskItem<Exception, DialogResponse_ErrorMask>>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Responses),
-                        item: item.Responses,
-                        fieldIndex: (int)DialogItem_FieldIndex.Responses,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, DialogResponse subItem, bool listDoMasks, out MaskItem<Exception, DialogResponse_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<DialogResponse, DialogResponse_ErrorMask>.Instance.Write(
-                                node: subNode,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                if (item.Conditions.HasBeenSet)
-                {
-                    ListXmlTranslation<DialogCondition, MaskItem<Exception, DialogCondition_ErrorMask>>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Conditions),
-                        item: item.Conditions,
-                        fieldIndex: (int)DialogItem_FieldIndex.Conditions,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, DialogCondition subItem, bool listDoMasks, out MaskItem<Exception, DialogCondition_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<DialogCondition, DialogCondition_ErrorMask>.Instance.Write(
-                                node: subNode,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                if (item.Choices.HasBeenSet)
-                {
-                    ListXmlTranslation<FormIDSetLink<DialogTopic>, Exception>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.Choices),
-                        item: item.Choices,
-                        fieldIndex: (int)DialogItem_FieldIndex.Choices,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, FormIDSetLink<DialogTopic> subItem, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            FormIDXmlTranslation.Instance.Write(
-                                node: subNode,
-                                name: "Item",
-                                item: subItem?.FormID,
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                if (item.LinkFrom.HasBeenSet)
-                {
-                    ListXmlTranslation<FormIDSetLink<DialogTopic>, Exception>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.LinkFrom),
-                        item: item.LinkFrom,
-                        fieldIndex: (int)DialogItem_FieldIndex.LinkFrom,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, FormIDSetLink<DialogTopic> subItem, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            FormIDXmlTranslation.Instance.Write(
-                                node: subNode,
-                                name: "Item",
-                                item: subItem?.FormID,
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
-                if (item.MetadataSummary_Property.HasBeenSet)
-                {
-                    LoquiXmlTranslation<ScriptMetaSummary, ScriptMetaSummary_ErrorMask>.Instance.Write(
-                        node: elem,
-                        item: item.MetadataSummary_Property,
-                        name: nameof(item.MetadataSummary),
-                        fieldIndex: (int)DialogItem_FieldIndex.MetadataSummary,
-                        errorMask: errorMask);
-                }
-                if (item.CompiledScript_Property.HasBeenSet)
-                {
-                    ByteArrayXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.CompiledScript),
-                        item: item.CompiledScript_Property,
-                        fieldIndex: (int)DialogItem_FieldIndex.CompiledScript,
-                        errorMask: errorMask);
-                }
-                if (item.SourceCode_Property.HasBeenSet)
-                {
-                    StringXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.SourceCode),
-                        item: item.SourceCode_Property,
-                        fieldIndex: (int)DialogItem_FieldIndex.SourceCode,
-                        errorMask: errorMask);
-                }
-                if (item.References.HasBeenSet)
-                {
-                    ListXmlTranslation<ScriptObjectReference, MaskItem<Exception, ScriptObjectReference_ErrorMask>>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.References),
-                        item: item.References,
-                        fieldIndex: (int)DialogItem_FieldIndex.References,
-                        errorMask: errorMask,
-                        transl: (XElement subNode, ScriptObjectReference subItem, bool listDoMasks, out MaskItem<Exception, ScriptObjectReference_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<ScriptObjectReference, ScriptObjectReference_ErrorMask>.Instance.Write(
-                                node: subNode,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.DialogItem");
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            EnumXmlTranslation<DialogType>.Instance.Write(
+                node: elem,
+                name: nameof(item.DialogType),
+                item: item.DialogType_Property,
+                fieldIndex: (int)DialogItem_FieldIndex.DialogType,
+                errorMask: errorMask);
+            EnumXmlTranslation<DialogItem.Flag>.Instance.Write(
+                node: elem,
+                name: nameof(item.Flags),
+                item: item.Flags_Property,
+                fieldIndex: (int)DialogItem_FieldIndex.Flags,
+                errorMask: errorMask);
+            if (item.Quest_Property.HasBeenSet)
             {
-                errorMask().Overall = ex;
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Quest),
+                    item: item.Quest?.FormID,
+                    fieldIndex: (int)DialogItem_FieldIndex.Quest,
+                    errorMask: errorMask);
+            }
+            if (item.PreviousTopic_Property.HasBeenSet)
+            {
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.PreviousTopic),
+                    item: item.PreviousTopic?.FormID,
+                    fieldIndex: (int)DialogItem_FieldIndex.PreviousTopic,
+                    errorMask: errorMask);
+            }
+            if (item.Topics.HasBeenSet)
+            {
+                ListXmlTranslation<FormIDSetLink<DialogTopic>>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Topics),
+                    item: item.Topics,
+                    fieldIndex: (int)DialogItem_FieldIndex.Topics,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, FormIDSetLink<DialogTopic> subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        FormIDXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Item",
+                            item: subItem?.FormID,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if (item.Responses.HasBeenSet)
+            {
+                ListXmlTranslation<DialogResponse>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Responses),
+                    item: item.Responses,
+                    fieldIndex: (int)DialogItem_FieldIndex.Responses,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, DialogResponse subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        LoquiXmlTranslation<DialogResponse>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if (item.Conditions.HasBeenSet)
+            {
+                ListXmlTranslation<DialogCondition>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Conditions),
+                    item: item.Conditions,
+                    fieldIndex: (int)DialogItem_FieldIndex.Conditions,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, DialogCondition subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        LoquiXmlTranslation<DialogCondition>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if (item.Choices.HasBeenSet)
+            {
+                ListXmlTranslation<FormIDSetLink<DialogTopic>>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Choices),
+                    item: item.Choices,
+                    fieldIndex: (int)DialogItem_FieldIndex.Choices,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, FormIDSetLink<DialogTopic> subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        FormIDXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Item",
+                            item: subItem?.FormID,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if (item.LinkFrom.HasBeenSet)
+            {
+                ListXmlTranslation<FormIDSetLink<DialogTopic>>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.LinkFrom),
+                    item: item.LinkFrom,
+                    fieldIndex: (int)DialogItem_FieldIndex.LinkFrom,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, FormIDSetLink<DialogTopic> subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        FormIDXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Item",
+                            item: subItem?.FormID,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if (item.MetadataSummary_Property.HasBeenSet)
+            {
+                LoquiXmlTranslation<ScriptMetaSummary>.Instance.Write(
+                    node: elem,
+                    item: item.MetadataSummary_Property,
+                    name: nameof(item.MetadataSummary),
+                    fieldIndex: (int)DialogItem_FieldIndex.MetadataSummary,
+                    errorMask: errorMask);
+            }
+            if (item.CompiledScript_Property.HasBeenSet)
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.CompiledScript),
+                    item: item.CompiledScript_Property,
+                    fieldIndex: (int)DialogItem_FieldIndex.CompiledScript,
+                    errorMask: errorMask);
+            }
+            if (item.SourceCode_Property.HasBeenSet)
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.SourceCode),
+                    item: item.SourceCode_Property,
+                    fieldIndex: (int)DialogItem_FieldIndex.SourceCode,
+                    errorMask: errorMask);
+            }
+            if (item.References.HasBeenSet)
+            {
+                ListXmlTranslation<ScriptObjectReference>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.References),
+                    item: item.References,
+                    fieldIndex: (int)DialogItem_FieldIndex.References,
+                    errorMask: errorMask,
+                    transl: (XElement subNode, ScriptObjectReference subItem, ErrorMaskBuilder listSubMask) =>
+                    {
+                        LoquiXmlTranslation<ScriptObjectReference>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            errorMask: listSubMask);
+                    }
+                    );
             }
         }
         #endregion
@@ -4028,43 +4031,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out DialogItem_ErrorMask errorMask)
         {
-            DialogItem_ErrorMask errMaskRet = null;
-            Write_Binary_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new DialogItem_ErrorMask()) : default(Func<DialogItem_ErrorMask>));
-            errorMask = errMaskRet;
+                errorMask: errorMaskBuilder);
+            errorMask = DialogItem_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        private static void Write_Binary_Internal(
+        public static void Write_Binary(
             MutagenWriter writer,
             DialogItem item,
             RecordTypeConverter recordTypeConverter,
-            Func<DialogItem_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
-            try
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: DialogItem_Registration.INFO_HEADER,
+                type: ObjectType.Record))
             {
-                using (HeaderExport.ExportHeader(
+                MajorRecordCommon.Write_Binary_Embedded(
+                    item: item,
                     writer: writer,
-                    record: DialogItem_Registration.INFO_HEADER,
-                    type: ObjectType.Record))
-                {
-                    MajorRecordCommon.Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                    Write_Binary_RecordTypes(
-                        item: item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
+                    errorMask: errorMask);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask);
             }
         }
         #endregion
@@ -4073,7 +4068,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogItem item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<DialogItem_ErrorMask> errorMask)
+            ErrorMaskBuilder errorMask)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
@@ -4109,78 +4104,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.PNAM_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<DialogTopic>, Exception>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<DialogTopic>>.Instance.WriteListOfRecords(
                 writer: writer,
-                item: item.Topics,
+                items: item.Topics,
                 fieldIndex: (int)DialogItem_FieldIndex.Topics,
+                recordType: DialogItem_Registration.NAME_HEADER,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, FormIDSetLink<DialogTopic> subItem, bool listDoMasks, out Exception listSubMask) =>
-                {
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask,
-                        header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.NAME_HEADER),
-                        nullable: false);
-                }
-                );
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogResponse, MaskItem<Exception, DialogResponse_ErrorMask>>.Instance.Write(
+                transl: FormIDBinaryTranslation.Instance.Write);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogResponse>.Instance.Write(
                 writer: writer,
-                item: item.Responses,
+                items: item.Responses,
                 fieldIndex: (int)DialogItem_FieldIndex.Responses,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, DialogResponse subItem, bool listDoMasks, out MaskItem<Exception, DialogResponse_ErrorMask> listSubMask) =>
-                {
-                    LoquiBinaryTranslation<DialogResponse, DialogResponse_ErrorMask>.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                transl: LoquiBinaryTranslation<DialogResponse>.Instance.Write);
             DialogItem.WriteBinary_Conditions(
                 writer: writer,
                 item: item,
-                fieldIndex: (int)DialogItem_FieldIndex.Conditions,
                 errorMask: errorMask);
             DialogItem.WriteBinary_ConditionsOld(
                 writer: writer,
                 item: item,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<DialogTopic>, Exception>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<DialogTopic>>.Instance.WriteListOfRecords(
                 writer: writer,
-                item: item.Choices,
+                items: item.Choices,
                 fieldIndex: (int)DialogItem_FieldIndex.Choices,
+                recordType: DialogItem_Registration.TCLT_HEADER,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, FormIDSetLink<DialogTopic> subItem, bool listDoMasks, out Exception listSubMask) =>
-                {
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask,
-                        header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.TCLT_HEADER),
-                        nullable: false);
-                }
-                );
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<DialogTopic>, Exception>.Instance.Write(
+                transl: FormIDBinaryTranslation.Instance.Write);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<DialogTopic>>.Instance.WriteListOfRecords(
                 writer: writer,
-                item: item.LinkFrom,
+                items: item.LinkFrom,
                 fieldIndex: (int)DialogItem_FieldIndex.LinkFrom,
+                recordType: DialogItem_Registration.TCLF_HEADER,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, FormIDSetLink<DialogTopic> subItem, bool listDoMasks, out Exception listSubMask) =>
-                {
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask,
-                        header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.TCLF_HEADER),
-                        nullable: false);
-                }
-                );
-            LoquiBinaryTranslation<ScriptMetaSummary, ScriptMetaSummary_ErrorMask>.Instance.Write(
+                transl: FormIDBinaryTranslation.Instance.Write);
+            LoquiBinaryTranslation<ScriptMetaSummary>.Instance.Write(
                 writer: writer,
                 item: item.MetadataSummary_Property,
                 fieldIndex: (int)DialogItem_FieldIndex.MetadataSummary,
@@ -4204,20 +4163,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.SCTX_HEADER),
                 nullable: false,
                 nullTerminate: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptObjectReference, MaskItem<Exception, ScriptObjectReference_ErrorMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptObjectReference>.Instance.Write(
                 writer: writer,
-                item: item.References,
+                items: item.References,
                 fieldIndex: (int)DialogItem_FieldIndex.References,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, ScriptObjectReference subItem, bool listDoMasks, out MaskItem<Exception, ScriptObjectReference_ErrorMask> listSubMask) =>
-                {
-                    LoquiBinaryTranslation<ScriptObjectReference, ScriptObjectReference_ErrorMask>.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                transl: LoquiBinaryTranslation<ScriptObjectReference>.Instance.Write);
         }
 
         #endregion
@@ -5142,6 +5093,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static DialogItem_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            return new DialogItem_ErrorMask();
         }
         #endregion
 

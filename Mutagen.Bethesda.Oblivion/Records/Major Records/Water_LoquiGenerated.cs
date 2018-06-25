@@ -21,7 +21,6 @@ using Noggog.Xml;
 using Loqui.Xml;
 using Loqui.Internal;
 using System.Diagnostics;
-using Loqui.Internal;
 using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
@@ -434,7 +433,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            return UtilityTranslation.MajorRecordParse<Water, Water_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Water>(
                 record: new Water(),
                 frame: frame,
                 errorMask: errorMask,
@@ -569,24 +568,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-<<<<<<< HEAD
-        private static Water Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<Water_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            return UtilityTranslation.MajorRecordParse<Water, Water_ErrorMask>(
-                record: new Water(),
-                frame: frame,
-                errorMask: errorMask,
-                recType: Water_Registration.WATR_HEADER,
-                recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: null);
-        }
-
-=======
->>>>>>> ErrorMaskRevamp
         protected static void Fill_Binary_Structs(
             Water item,
             MutagenFrame frame,

@@ -20,7 +20,6 @@ using Noggog.Xml;
 using Loqui.Xml;
 using Loqui.Internal;
 using System.Diagnostics;
-using Loqui.Internal;
 using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
@@ -830,130 +829,237 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "AmbientColor":
-<<<<<<< HEAD
-                    var AmbientColortryGet = ColorXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)CellLighting_FieldIndex.AmbientColor,
-                        errorMask: errorMask);
-                    if (AmbientColortryGet.Succeeded)
+                    try
                     {
-                        item.SetAmbientColor(item: AmbientColortryGet.Value);
+                        errorMask?.PushIndex((int)CellLighting_FieldIndex.AmbientColor);
+                        if (ColorXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Color AmbientColorParse,
+                            errorMask: errorMask))
+                        {
+                            item.AmbientColor = AmbientColorParse;
+                        }
+                        else
+                        {
+                            item.UnsetAmbientColor();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetAmbientColor();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "DirectionalColor":
-                    var DirectionalColortryGet = ColorXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)CellLighting_FieldIndex.DirectionalColor,
-                        errorMask: errorMask);
-                    if (DirectionalColortryGet.Succeeded)
+                    try
                     {
-                        item.SetDirectionalColor(item: DirectionalColortryGet.Value);
+                        errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalColor);
+                        if (ColorXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Color DirectionalColorParse,
+                            errorMask: errorMask))
+                        {
+                            item.DirectionalColor = DirectionalColorParse;
+                        }
+                        else
+                        {
+                            item.UnsetDirectionalColor();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetDirectionalColor();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "FogColor":
-                    var FogColortryGet = ColorXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)CellLighting_FieldIndex.FogColor,
-                        errorMask: errorMask);
-                    if (FogColortryGet.Succeeded)
+                    try
                     {
-                        item.SetFogColor(item: FogColortryGet.Value);
+                        errorMask?.PushIndex((int)CellLighting_FieldIndex.FogColor);
+                        if (ColorXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Color FogColorParse,
+                            errorMask: errorMask))
+                        {
+                            item.FogColor = FogColorParse;
+                        }
+                        else
+                        {
+                            item.UnsetFogColor();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetFogColor();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "FogNear":
-                    var FogNeartryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)CellLighting_FieldIndex.FogNear,
-                        errorMask: errorMask);
-                    if (FogNeartryGet.Succeeded)
+                    try
                     {
-                        item.SetFogNear(item: FogNeartryGet.Value);
+                        errorMask?.PushIndex((int)CellLighting_FieldIndex.FogNear);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Single FogNearParse,
+                            errorMask: errorMask))
+                        {
+                            item.FogNear = FogNearParse;
+                        }
+                        else
+                        {
+                            item.UnsetFogNear();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetFogNear();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "FogFar":
-                    var FogFartryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)CellLighting_FieldIndex.FogFar,
-                        errorMask: errorMask);
-                    if (FogFartryGet.Succeeded)
+                    try
                     {
-                        item.SetFogFar(item: FogFartryGet.Value);
+                        errorMask?.PushIndex((int)CellLighting_FieldIndex.FogFar);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Single FogFarParse,
+                            errorMask: errorMask))
+                        {
+                            item.FogFar = FogFarParse;
+                        }
+                        else
+                        {
+                            item.UnsetFogFar();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetFogFar();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "DirectionalRotationXY":
-                    var DirectionalRotationXYtryGet = Int32XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationXY,
-                        errorMask: errorMask);
-                    if (DirectionalRotationXYtryGet.Succeeded)
+                    try
                     {
-                        item.SetDirectionalRotationXY(item: DirectionalRotationXYtryGet.Value);
+                        errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalRotationXY);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Int32 DirectionalRotationXYParse,
+                            errorMask: errorMask))
+                        {
+                            item.DirectionalRotationXY = DirectionalRotationXYParse;
+                        }
+                        else
+                        {
+                            item.UnsetDirectionalRotationXY();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetDirectionalRotationXY();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "DirectionalRotationZ":
-                    var DirectionalRotationZtryGet = Int32XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationZ,
-                        errorMask: errorMask);
-                    if (DirectionalRotationZtryGet.Succeeded)
+                    try
                     {
-                        item.SetDirectionalRotationZ(item: DirectionalRotationZtryGet.Value);
+                        errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalRotationZ);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Int32 DirectionalRotationZParse,
+                            errorMask: errorMask))
+                        {
+                            item.DirectionalRotationZ = DirectionalRotationZParse;
+                        }
+                        else
+                        {
+                            item.UnsetDirectionalRotationZ();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetDirectionalRotationZ();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "DirectionalFade":
-                    var DirectionalFadetryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)CellLighting_FieldIndex.DirectionalFade,
-                        errorMask: errorMask);
-                    if (DirectionalFadetryGet.Succeeded)
+                    try
                     {
-                        item.SetDirectionalFade(item: DirectionalFadetryGet.Value);
+                        errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalFade);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Single DirectionalFadeParse,
+                            errorMask: errorMask))
+                        {
+                            item.DirectionalFade = DirectionalFadeParse;
+                        }
+                        else
+                        {
+                            item.UnsetDirectionalFade();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetDirectionalFade();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 case "FogClipDistance":
-                    var FogClipDistancetryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)CellLighting_FieldIndex.FogClipDistance,
-                        errorMask: errorMask);
-                    if (FogClipDistancetryGet.Succeeded)
+                    try
                     {
-                        item.SetFogClipDistance(item: FogClipDistancetryGet.Value);
+                        errorMask?.PushIndex((int)CellLighting_FieldIndex.FogClipDistance);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Single FogClipDistanceParse,
+                            errorMask: errorMask))
+                        {
+                            item.FogClipDistance = FogClipDistanceParse;
+                        }
+                        else
+                        {
+                            item.UnsetFogClipDistance();
+                        }
                     }
-                    else
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        item.UnsetFogClipDistance();
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     break;
                 default:
@@ -1173,69 +1279,6 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case CellLighting_FieldIndex.FogClipDistance:
                     SetFogClipDistance(item, hasBeenSet, cmds);
-=======
-                    ColorXmlTranslation.Instance.ParseInto(
-                        root,
-                        fieldIndex: (int)CellLighting_FieldIndex.AmbientColor,
-                        item: item._AmbientColor,
-                        errorMask: errorMask);
-                    break;
-                case "DirectionalColor":
-                    ColorXmlTranslation.Instance.ParseInto(
-                        root,
-                        fieldIndex: (int)CellLighting_FieldIndex.DirectionalColor,
-                        item: item._DirectionalColor,
-                        errorMask: errorMask);
-                    break;
-                case "FogColor":
-                    ColorXmlTranslation.Instance.ParseInto(
-                        root,
-                        fieldIndex: (int)CellLighting_FieldIndex.FogColor,
-                        item: item._FogColor,
-                        errorMask: errorMask);
-                    break;
-                case "FogNear":
-                    FloatXmlTranslation.Instance.ParseInto(
-                        root,
-                        fieldIndex: (int)CellLighting_FieldIndex.FogNear,
-                        item: item._FogNear,
-                        errorMask: errorMask);
-                    break;
-                case "FogFar":
-                    FloatXmlTranslation.Instance.ParseInto(
-                        root,
-                        fieldIndex: (int)CellLighting_FieldIndex.FogFar,
-                        item: item._FogFar,
-                        errorMask: errorMask);
-                    break;
-                case "DirectionalRotationXY":
-                    Int32XmlTranslation.Instance.ParseInto(
-                        root,
-                        fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationXY,
-                        item: item._DirectionalRotationXY,
-                        errorMask: errorMask);
-                    break;
-                case "DirectionalRotationZ":
-                    Int32XmlTranslation.Instance.ParseInto(
-                        root,
-                        fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationZ,
-                        item: item._DirectionalRotationZ,
-                        errorMask: errorMask);
-                    break;
-                case "DirectionalFade":
-                    FloatXmlTranslation.Instance.ParseInto(
-                        root,
-                        fieldIndex: (int)CellLighting_FieldIndex.DirectionalFade,
-                        item: item._DirectionalFade,
-                        errorMask: errorMask);
-                    break;
-                case "FogClipDistance":
-                    FloatXmlTranslation.Instance.ParseInto(
-                        root,
-                        fieldIndex: (int)CellLighting_FieldIndex.FogClipDistance,
-                        item: item._FogClipDistance,
-                        errorMask: errorMask);
->>>>>>> ErrorMaskRevamp
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");
@@ -1527,7 +1570,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
-                    CellLighting_Registration.XCLL_HEADER));
+                    recordTypeConverter.ConvertToCustom(CellLighting_Registration.XCLL_HEADER)));
                 using (frame)
                 {
                     Fill_Binary_Structs(
@@ -1669,203 +1712,230 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-<<<<<<< HEAD
-        private static CellLighting Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<CellLighting_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter)
-        {
-            var ret = new CellLighting();
-            try
-            {
-                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                    frame.Reader,
-                    recordTypeConverter.ConvertToCustom(CellLighting_Registration.XCLL_HEADER)));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
-=======
->>>>>>> ErrorMaskRevamp
         protected static void Fill_Binary_Structs(
             CellLighting item,
             MutagenFrame frame,
             ErrorMaskBuilder errorMask)
         {
-<<<<<<< HEAD
-            var AmbientColortryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                fieldIndex: (int)CellLighting_FieldIndex.AmbientColor,
-                errorMask: errorMask,
-                extraByte: true);
-            if (AmbientColortryGet.Succeeded)
+            try
             {
-                item.SetAmbientColor(item: AmbientColortryGet.Value);
+                errorMask?.PushIndex((int)CellLighting_FieldIndex.AmbientColor);
+                if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    extraByte: true,
+                    item: out Color AmbientColorParse,
+                    errorMask: errorMask))
+                {
+                    item.AmbientColor = AmbientColorParse;
+                }
+                else
+                {
+                    item.UnsetAmbientColor();
+                }
             }
-            else
+            catch (Exception ex)
+            when (errorMask != null)
             {
-                item.UnsetAmbientColor();
+                errorMask.ReportException(ex);
             }
-            var DirectionalColortryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                fieldIndex: (int)CellLighting_FieldIndex.DirectionalColor,
-                errorMask: errorMask,
-                extraByte: true);
-            if (DirectionalColortryGet.Succeeded)
+            finally
             {
-                item.SetDirectionalColor(item: DirectionalColortryGet.Value);
+                errorMask?.PopIndex();
             }
-            else
+            try
             {
-                item.UnsetDirectionalColor();
+                errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalColor);
+                if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    extraByte: true,
+                    item: out Color DirectionalColorParse,
+                    errorMask: errorMask))
+                {
+                    item.DirectionalColor = DirectionalColorParse;
+                }
+                else
+                {
+                    item.UnsetDirectionalColor();
+                }
             }
-            var FogColortryGet = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                fieldIndex: (int)CellLighting_FieldIndex.FogColor,
-                errorMask: errorMask,
-                extraByte: true);
-            if (FogColortryGet.Succeeded)
+            catch (Exception ex)
+            when (errorMask != null)
             {
-                item.SetFogColor(item: FogColortryGet.Value);
+                errorMask.ReportException(ex);
             }
-            else
+            finally
             {
-                item.UnsetFogColor();
+                errorMask?.PopIndex();
             }
-            var FogNeartryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                fieldIndex: (int)CellLighting_FieldIndex.FogNear,
-                errorMask: errorMask);
-            if (FogNeartryGet.Succeeded)
+            try
             {
-                item.SetFogNear(item: FogNeartryGet.Value);
+                errorMask?.PushIndex((int)CellLighting_FieldIndex.FogColor);
+                if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    extraByte: true,
+                    item: out Color FogColorParse,
+                    errorMask: errorMask))
+                {
+                    item.FogColor = FogColorParse;
+                }
+                else
+                {
+                    item.UnsetFogColor();
+                }
             }
-            else
+            catch (Exception ex)
+            when (errorMask != null)
             {
-                item.UnsetFogNear();
+                errorMask.ReportException(ex);
             }
-            var FogFartryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                fieldIndex: (int)CellLighting_FieldIndex.FogFar,
-                errorMask: errorMask);
-            if (FogFartryGet.Succeeded)
+            finally
             {
-                item.SetFogFar(item: FogFartryGet.Value);
+                errorMask?.PopIndex();
             }
-            else
+            try
             {
-                item.UnsetFogFar();
+                errorMask?.PushIndex((int)CellLighting_FieldIndex.FogNear);
+                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out Single FogNearParse,
+                    errorMask: errorMask))
+                {
+                    item.FogNear = FogNearParse;
+                }
+                else
+                {
+                    item.UnsetFogNear();
+                }
             }
-            var DirectionalRotationXYtryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationXY,
-                errorMask: errorMask);
-            if (DirectionalRotationXYtryGet.Succeeded)
+            catch (Exception ex)
+            when (errorMask != null)
             {
-                item.SetDirectionalRotationXY(item: DirectionalRotationXYtryGet.Value);
+                errorMask.ReportException(ex);
             }
-            else
+            finally
             {
-                item.UnsetDirectionalRotationXY();
+                errorMask?.PopIndex();
             }
-            var DirectionalRotationZtryGet = Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationZ,
-                errorMask: errorMask);
-            if (DirectionalRotationZtryGet.Succeeded)
+            try
             {
-                item.SetDirectionalRotationZ(item: DirectionalRotationZtryGet.Value);
+                errorMask?.PushIndex((int)CellLighting_FieldIndex.FogFar);
+                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out Single FogFarParse,
+                    errorMask: errorMask))
+                {
+                    item.FogFar = FogFarParse;
+                }
+                else
+                {
+                    item.UnsetFogFar();
+                }
             }
-            else
+            catch (Exception ex)
+            when (errorMask != null)
             {
-                item.UnsetDirectionalRotationZ();
+                errorMask.ReportException(ex);
             }
-            var DirectionalFadetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                fieldIndex: (int)CellLighting_FieldIndex.DirectionalFade,
-                errorMask: errorMask);
-            if (DirectionalFadetryGet.Succeeded)
+            finally
             {
-                item.SetDirectionalFade(item: DirectionalFadetryGet.Value);
+                errorMask?.PopIndex();
             }
-            else
+            try
             {
-                item.UnsetDirectionalFade();
+                errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalRotationXY);
+                if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out Int32 DirectionalRotationXYParse,
+                    errorMask: errorMask))
+                {
+                    item.DirectionalRotationXY = DirectionalRotationXYParse;
+                }
+                else
+                {
+                    item.UnsetDirectionalRotationXY();
+                }
             }
-            var FogClipDistancetryGet = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                fieldIndex: (int)CellLighting_FieldIndex.FogClipDistance,
-                errorMask: errorMask);
-            if (FogClipDistancetryGet.Succeeded)
+            catch (Exception ex)
+            when (errorMask != null)
             {
-                item.SetFogClipDistance(item: FogClipDistancetryGet.Value);
+                errorMask.ReportException(ex);
             }
-            else
+            finally
             {
-                item.UnsetFogClipDistance();
+                errorMask?.PopIndex();
             }
-=======
-            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.ParseInto(
-                frame: frame,
-                item: item._AmbientColor,
-                fieldIndex: (int)CellLighting_FieldIndex.AmbientColor,
-                errorMask: errorMask,
-                extraByte: true);
-            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.ParseInto(
-                frame: frame,
-                item: item._DirectionalColor,
-                fieldIndex: (int)CellLighting_FieldIndex.DirectionalColor,
-                errorMask: errorMask,
-                extraByte: true);
-            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.ParseInto(
-                frame: frame,
-                item: item._FogColor,
-                fieldIndex: (int)CellLighting_FieldIndex.FogColor,
-                errorMask: errorMask,
-                extraByte: true);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
-                frame: frame,
-                item: item._FogNear,
-                fieldIndex: (int)CellLighting_FieldIndex.FogNear,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
-                frame: frame,
-                item: item._FogFar,
-                fieldIndex: (int)CellLighting_FieldIndex.FogFar,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.ParseInto(
-                frame: frame,
-                item: item._DirectionalRotationXY,
-                fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationXY,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.ParseInto(
-                frame: frame,
-                item: item._DirectionalRotationZ,
-                fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationZ,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
-                frame: frame,
-                item: item._DirectionalFade,
-                fieldIndex: (int)CellLighting_FieldIndex.DirectionalFade,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.ParseInto(
-                frame: frame,
-                item: item._FogClipDistance,
-                fieldIndex: (int)CellLighting_FieldIndex.FogClipDistance,
-                errorMask: errorMask);
->>>>>>> ErrorMaskRevamp
+            try
+            {
+                errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalRotationZ);
+                if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out Int32 DirectionalRotationZParse,
+                    errorMask: errorMask))
+                {
+                    item.DirectionalRotationZ = DirectionalRotationZParse;
+                }
+                else
+                {
+                    item.UnsetDirectionalRotationZ();
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+            try
+            {
+                errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalFade);
+                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out Single DirectionalFadeParse,
+                    errorMask: errorMask))
+                {
+                    item.DirectionalFade = DirectionalFadeParse;
+                }
+                else
+                {
+                    item.UnsetDirectionalFade();
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+            try
+            {
+                errorMask?.PushIndex((int)CellLighting_FieldIndex.FogClipDistance);
+                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out Single FogClipDistanceParse,
+                    errorMask: errorMask))
+                {
+                    item.FogClipDistance = FogClipDistanceParse;
+                }
+                else
+                {
+                    item.UnsetFogClipDistance();
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
         }
 
         #endregion
