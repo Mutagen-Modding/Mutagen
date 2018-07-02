@@ -49,7 +49,6 @@ namespace Mutagen.Bethesda.Binary
                 errorMask?.PushIndex(fieldIndex);
                 if (Parse(
                     frame: frame,
-                    length: ExpectedLength.Value,
                     item: out FormID val,
                     errorMask: errorMask))
                 {
