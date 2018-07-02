@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda
                         reader.Position = pos;
                     }
                     reader.Position += 4; // Skip flags
-                    var formID = FormID.Factory(reader.ReadBytes(4));
+                    var formID = FormID.Factory(reader.ReadUInt32());
                     if (interest?.IsInterested(targetRec) ?? true)
                     {
                         parentGroupLocations.Push(grupLoc);

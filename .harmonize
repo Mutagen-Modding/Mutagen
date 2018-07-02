@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>991da12b321c063463638cc63ce43d38f9275122</Sha>
+         <Sha>5be160db299b2a6d724f46d3f1b3b5487ae546d4</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>06-20-2018 23:21:48</CommitDate>
-         <Description>Merge branch 'Laptop' into Desktop</Description>
+         <CommitDate>07-01-2018 23:26:10</CommitDate>
+         <Description>NotifyingSetItem.SetHasBeenSet own implementation</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

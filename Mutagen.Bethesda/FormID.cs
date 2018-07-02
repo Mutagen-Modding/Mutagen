@@ -80,12 +80,14 @@ namespace Mutagen.Bethesda
 
         public static FormID Factory(byte[] bytes)
         {
-            byte[] arr = new byte[4];
-            Array.Copy(bytes, 0, arr, 0, 3);
-            var i = BitConverter.ToUInt32(arr, 0);
+            return Factory(BitConverter.ToUInt32(bytes, 0));
+        }
+
+        public static FormID Factory(uint i)
+        {
             return new FormID(
-                new ModID(bytes[3]),
-                i);
+                new ModID((byte)(i >> 24)),
+                i & 0x00FFFFFF);
         }
 
         public byte[] ToBytes()
