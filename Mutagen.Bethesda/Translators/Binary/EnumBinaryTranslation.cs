@@ -334,22 +334,7 @@ namespace Mutagen.Bethesda.Binary
                 default:
                     throw new NotImplementedException();
             }
-            return (E)Enum.ToObject(typeof(E), i);
-            //if (EnumExt<E>.IsFlagsEnum())
-            //{
-            //    return (E)Enum.ToObject(typeof(E), i);
-            //    ex = null;
-            //}
-            //else
-            //{
-            //    if (!EnumExt.TryParse<E>(i, out var e))
-            //    {
-            //        ex = new ArgumentException($"Undefined {typeof(E).Name} enum value: {i}");
-            //        return (E)Enum.ToObject(typeof(E), i);
-            //    }
-            //    ex = null;
-            //    return e;
-            //}
+            return EnumExt<E>.Convert(i);
         }
 
         public E ParseValue(MutagenFrame reader)
