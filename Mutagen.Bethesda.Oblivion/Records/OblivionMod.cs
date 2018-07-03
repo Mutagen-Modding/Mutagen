@@ -12,6 +12,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class OblivionMod : IMod, ILinkContainer
     {
+        private static readonly object _subscribeObject = new object();
         public INotifyingListGetter<MasterReference> MasterReferences => this.TES4.MasterReferences;
 
         partial void CustomCtor()
@@ -41,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected void SubscribeToCellBlock(CellBlock block)
         {
-            block.Items.Subscribe_Enumerable_Single(this, (change) =>
+            block.Items.Subscribe_Enumerable_Single(_subscribeObject, (change) =>
             {
                 switch (change.AddRem)
                 {
@@ -49,7 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
                         SubscribeToCellSubBlock(change.Item);
                         break;
                     case AddRemove.Remove:
-                        change.Item.Items.Unsubscribe(this);
+                        change.Item.Items.Unsubscribe(_subscribeObject);
                         break;
                     default:
                         throw new NotImplementedException();
@@ -59,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected void SubscribeToCellSubBlock(CellSubBlock subBlock)
         {
-            subBlock.Items.Subscribe_Enumerable_Single(this, (change) =>
+            subBlock.Items.Subscribe_Enumerable_Single(_subscribeObject, (change) =>
             {
                 switch (change.AddRem)
                 {
@@ -78,10 +79,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected void SubscribeToCell(Cell cell)
         {
-            cell.Persistent.Subscribe_Enumerable_Single(this, (r) => Utility.ModifyButThrow(_majorRecords, r));
-            cell.Temporary.Subscribe_Enumerable_Single(this, (r) => Utility.ModifyButThrow(_majorRecords, r));
-            cell.VisibleWhenDistant.Subscribe_Enumerable_Single(this, (r) => Utility.ModifyButThrow(_majorRecords, r));
-            cell.PathGrid_Property.Subscribe(this, (r) =>
+            cell.Persistent.Subscribe_Enumerable_Single(_subscribeObject, (r) => Utility.ModifyButThrow(_majorRecords, r));
+            cell.Temporary.Subscribe_Enumerable_Single(_subscribeObject, (r) => Utility.ModifyButThrow(_majorRecords, r));
+            cell.VisibleWhenDistant.Subscribe_Enumerable_Single(_subscribeObject, (r) => Utility.ModifyButThrow(_majorRecords, r));
+            cell.PathGrid_Property.Subscribe(_subscribeObject, (r) =>
             {
                 if (r.Old != null)
                 {
@@ -100,10 +101,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected void UnsubscribeFromCellBlock(CellBlock block)
         {
-            block.Items.Unsubscribe(this);
+            block.Items.Unsubscribe(_subscribeObject);
             foreach (var subBlock in block.Items)
             {
-                subBlock.Items.Unsubscribe(this);
+                subBlock.Items.Unsubscribe(_subscribeObject);
                 foreach (var cell in subBlock.Items)
                 {
                     _majorRecords.Remove(cell.FormID);
@@ -113,10 +114,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected void UnsubscribeFromCell(Cell cell)
         {
-            cell.Persistent.Unsubscribe(this);
-            cell.Temporary.Unsubscribe(this);
-            cell.VisibleWhenDistant.Unsubscribe(this);
-            cell.PathGrid_Property.Subscribe(this, (r) => Utility.Modify(_majorRecords, r));
+            cell.Persistent.Unsubscribe(_subscribeObject);
+            cell.Temporary.Unsubscribe(_subscribeObject);
+            cell.VisibleWhenDistant.Unsubscribe(_subscribeObject);
+            cell.PathGrid_Property.Subscribe(_subscribeObject, (r) => Utility.Modify(_majorRecords, r));
         }
         #endregion
 
@@ -141,7 +142,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected void SubscribeToWorldspace(Worldspace worldspace)
         {
-            worldspace.Road_Property.Subscribe(this, (r) =>
+            worldspace.Road_Property.Subscribe(_subscribeObject, (r) =>
             {
                 if (r.Old != null)
                 {
@@ -156,7 +157,7 @@ namespace Mutagen.Bethesda.Oblivion
                     _majorRecords[r.New.FormID] = r.New;
                 }
             });
-            worldspace.TopCell_Property.Subscribe(this, (r) =>
+            worldspace.TopCell_Property.Subscribe(_subscribeObject, (r) =>
             {
                 if (r.Old != null)
                 {
@@ -169,7 +170,7 @@ namespace Mutagen.Bethesda.Oblivion
                     _majorRecords[r.New.FormID] = r.New;
                 }
             });
-            worldspace.SubCells.Subscribe_Enumerable_Single(this, (change) =>
+            worldspace.SubCells.Subscribe_Enumerable_Single(_subscribeObject, (change) =>
             {
                 switch (change.AddRem)
                 {
@@ -177,7 +178,7 @@ namespace Mutagen.Bethesda.Oblivion
                         SubscribeToWorldspaceBlock(change.Item);
                         break;
                     case AddRemove.Remove:
-                        change.Item.Items.Unsubscribe(this);
+                        change.Item.Items.Unsubscribe(_subscribeObject);
                         break;
                     default:
                         break;
@@ -187,7 +188,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected void SubscribeToWorldspaceBlock(WorldspaceBlock block)
         {
-            block.Items.Subscribe_Enumerable_Single(this, (change) =>
+            block.Items.Subscribe_Enumerable_Single(_subscribeObject, (change) =>
             {
                 switch (change.AddRem)
                 {
@@ -195,7 +196,7 @@ namespace Mutagen.Bethesda.Oblivion
                         SubscribeToWorldspaceSubBlock(change.Item);
                         break;
                     case AddRemove.Remove:
-                        change.Item.Items.Unsubscribe(this);
+                        change.Item.Items.Unsubscribe(_subscribeObject);
                         break;
                     default:
                         break;
@@ -205,7 +206,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected void SubscribeToWorldspaceSubBlock(WorldspaceSubBlock block)
         {
-            block.Items.Subscribe_Enumerable_Single(this, (change) =>
+            block.Items.Subscribe_Enumerable_Single(_subscribeObject, (change) =>
             {
                 switch (change.AddRem)
                 {
@@ -224,9 +225,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected void UnsubscribeFromWorldspace(Worldspace worldspace)
         {
-            worldspace.SubCells.Unsubscribe(this);
-            worldspace.TopCell_Property.Unsubscribe(this);
-            worldspace.Road_Property.Unsubscribe(this);
+            worldspace.SubCells.Unsubscribe(_subscribeObject);
+            worldspace.TopCell_Property.Unsubscribe(_subscribeObject);
+            worldspace.Road_Property.Unsubscribe(_subscribeObject);
         }
         #endregion
     }
