@@ -21,7 +21,8 @@ namespace Mutagen.Bethesda
             {
                 using (var inputStreamJumpback = new BinaryReadStream(inputPath.Path))
                 {
-                    using (var writer = new System.IO.BinaryWriter(new FileStream(outputPath.Path, FileMode.Create, FileAccess.Write)))
+                    var fs = new FileStream(outputPath.Path, FileMode.Create, FileAccess.Write);
+                    using (var writer = new System.IO.BinaryWriter(fs))
                     {
                         long runningDiff = 0;
                         var fileLocs = MajorRecordLocator.GetFileLocations(
@@ -55,7 +56,7 @@ namespace Mutagen.Bethesda
                             {
                                 noRecordLength = inputStream.Length - inputStream.Position;
                             }
-                            inputStream.WriteTo(writer.BaseStream, (int)noRecordLength);
+                            inputStream.WriteTo(fs, (int)noRecordLength);
 
                             // If complete overall, return
                             if (inputStream.Complete) break;

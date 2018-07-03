@@ -17,42 +17,6 @@ namespace Mutagen.Bethesda.Tests
 {
     public class Passthrough_Tests
     {
-        public static IEnumerable<(RangeInt64 Source, RangeInt64? Output)> ConstructRanges<T>(
-            IEnumerable<(long Source, long Output, T Item)> items,
-            Func<T, bool> eval)
-        {
-            bool inRange = false;
-            long startRange = 0;
-            long outputStartRange = 0;
-            foreach (var item in items)
-            {
-                if (eval(item.Item))
-                {
-                    if (!inRange)
-                    {
-                        startRange = item.Source;
-                        outputStartRange = item.Output;
-                        inRange = true;
-                    }
-                }
-                else
-                {
-                    if (inRange)
-                    {
-                        var sourceRange = new RangeInt64(startRange, item.Source - 1);
-                        RangeInt64? outputRange = null;
-                        if (startRange != outputStartRange
-                            || item.Source != item.Output)
-                        {
-                            outputRange = new RangeInt64(outputStartRange, item.Output - 1);
-                        }
-                        yield return (sourceRange, outputRange);
-                        inRange = false;
-                    }
-                }
-            }
-        }
-
         public static (Exception Exception, IEnumerable<(RangeInt64 Source, RangeInt64? Output)> Sections) AssertFilesEqual(
             IBinaryReadStream stream,
             string path2,
@@ -64,9 +28,12 @@ namespace Mutagen.Bethesda.Tests
             List<RangeInt32> errorRanges = new List<RangeInt32>();
             using (var reader2 = new BinaryReadStream(path2))
             {
-                var errs = ConstructRanges(
-                        GetDifferences(stream, reader2, ignoreList, sourceSkips, targetSkips),
-                        b => !b).First(amountToReport).ToArray();
+                var errs = GetDifferences(
+                    stream,
+                    reader2,
+                    ignoreList,
+                    sourceSkips.Empty ? null : sourceSkips,
+                    targetSkips.Empty ? null : targetSkips).First(amountToReport).ToArray();
                 if (errs.Length > 0)
                 {
                     var posStr = string.Join(" ", errs.Select((r) =>
@@ -114,38 +81,67 @@ namespace Mutagen.Bethesda.Tests
             return false;
         }
 
-        public static IEnumerable<(long Source, long Output, bool Equal)> GetDifferences(
+        public static IEnumerable<(RangeInt64 Source, RangeInt64? Output)> GetDifferences(
             IBinaryReadStream reader1,
             IBinaryReadStream reader2,
             RangeCollection ignoreList,
             RangeCollection reader1Skips,
             RangeCollection reader2Skips)
         {
+            bool inRange = false;
+            long startRange = 0;
+            long outputStartRange = 0;
             var reader1Len = reader1.Length;
             var reader2Len = reader2.Length;
-            while (reader1.Position < reader1Len
-                && reader2.Position < reader2Len)
+            long pos1 = 0, pos2 = 0;
+            while (pos1 < reader1Len
+                && pos2 < reader2Len)
             {
                 if (reader1Skips != null
-                    && reader1Skips.TryGetCurrentRange(reader1.Position, out var range1))
+                    && reader1Skips.TryGetCurrentRange(pos1, out var range1))
                 {
-                    reader1.Position = range1.Max + 1;
+                    pos1 = range1.Max + 1;
+                    reader1.Position = pos1;
                     continue;
                 }
                 if (reader2Skips != null
-                    && reader2Skips.TryGetCurrentRange(reader2.Position, out var range2))
+                    && reader2Skips.TryGetCurrentRange(pos2, out var range2))
                 {
-                    reader2.Position = range2.Max + 1;
+                    pos2 = range2.Max + 1;
+                    reader2.Position = pos2;
                     continue;
                 }
                 var b1 = reader1.ReadUInt8();
                 var b2 = reader2.ReadUInt8();
-                var pos = reader1.Position - 1;
+                pos1++;
+                pos2++;
+                var pos = pos1 - 1;
+                var pos22 = pos2 - 1;
                 var same = b1 == b2 || (ignoreList?.IsEncapsulated(pos) ?? false);
-                yield return (
-                    pos,
-                    reader2.Position - 1,
-                    same);
+                if (!same)
+                {
+                    if (!inRange)
+                    {
+                        startRange = pos1;
+                        outputStartRange = pos2;
+                        inRange = true;
+                    }
+                }
+                else
+                {
+                    if (inRange)
+                    {
+                        var sourceRange = new RangeInt64(startRange, pos);
+                        RangeInt64? outputRange = null;
+                        if (startRange != outputStartRange
+                            || pos1 != pos2)
+                        {
+                            outputRange = new RangeInt64(outputStartRange, pos22);
+                        }
+                        yield return (sourceRange, outputRange);
+                        inRange = false;
+                    }
+                }
             }
         }
     }

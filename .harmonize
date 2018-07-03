@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>5be160db299b2a6d724f46d3f1b3b5487ae546d4</Sha>
+         <Sha>50187f5d493cc03dfefc82e478f26fddf78636fb</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>07-01-2018 23:26:10</CommitDate>
-         <Description>NotifyingSetItem.SetHasBeenSet own implementation</Description>
+         <CommitDate>07-02-2018 22:01:03</CommitDate>
+         <Description>RangeCollection.Empty and TryGetCurrentRange short circuit</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
