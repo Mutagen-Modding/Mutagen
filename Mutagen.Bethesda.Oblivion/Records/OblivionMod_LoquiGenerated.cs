@@ -10352,6 +10352,59 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Cells;
         public bool Worldspaces;
         public bool DialogTopics;
+        public GroupMask()
+        {
+        }
+        public GroupMask(bool defaultValue)
+        {
+            GameSettings = defaultValue;
+            Globals = defaultValue;
+            Classes = defaultValue;
+            Factions = defaultValue;
+            Hairs = defaultValue;
+            Eyes = defaultValue;
+            Races = defaultValue;
+            Sounds = defaultValue;
+            Skills = defaultValue;
+            MagicEffects = defaultValue;
+            Scripts = defaultValue;
+            LandTextures = defaultValue;
+            Enchantments = defaultValue;
+            Spells = defaultValue;
+            Birthsigns = defaultValue;
+            Activators = defaultValue;
+            AlchemicalApparatus = defaultValue;
+            Armors = defaultValue;
+            Books = defaultValue;
+            Clothes = defaultValue;
+            Containers = defaultValue;
+            Doors = defaultValue;
+            Ingredients = defaultValue;
+            Lights = defaultValue;
+            Miscellaneous = defaultValue;
+            Statics = defaultValue;
+            Grasses = defaultValue;
+            Trees = defaultValue;
+            Flora = defaultValue;
+            Furnature = defaultValue;
+            Weapons = defaultValue;
+            Ammo = defaultValue;
+            NPCs = defaultValue;
+            Creatures = defaultValue;
+            LeveledCreatures = defaultValue;
+            SoulGems = defaultValue;
+            Keys = defaultValue;
+            Potions = defaultValue;
+            Subspaces = defaultValue;
+            SigilStones = defaultValue;
+            LeveledItems = defaultValue;
+            Weathers = defaultValue;
+            Climates = defaultValue;
+            Regions = defaultValue;
+            Cells = defaultValue;
+            Worldspaces = defaultValue;
+            DialogTopics = defaultValue;
+        }
     }
     #endregion
 

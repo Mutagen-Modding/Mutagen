@@ -119,6 +119,23 @@ namespace Mutagen.Bethesda.Generation
                     if (loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group) continue;
                     fg.AppendLine($"public bool {loqui.Name};");
                 }
+
+                fg.AppendLine("public GroupMask()");
+                using (new BraceWrapper(fg))
+                {
+                }
+
+                fg.AppendLine("public GroupMask(bool defaultValue)");
+                using (new BraceWrapper(fg))
+                {
+                    foreach (var field in obj.IterateFields())
+                    {
+                        if (!(field is LoquiType loqui)) continue;
+                        if (loqui.TargetObjectGeneration == null) continue;
+                        if (loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group) continue;
+                        fg.AppendLine($"{loqui.Name} = defaultValue;");
+                    }
+                }
             }
         }
     }
